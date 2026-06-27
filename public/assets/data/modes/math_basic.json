@@ -1,0 +1,60 @@
+{
+  "modeId": "math_basic",
+  "title": "연산 카드",
+  "type": "math_match",
+  "world": "magic_library",
+  "difficulty": 1,
+  "stages": [
+    {
+      "stageId": "math_001",
+      "title": "반짝이는 덧셈",
+      "subtitle": "문제와 답을 연결해요.",
+      "goal": { "type": "match_pairs", "targetCount": 4 },
+      "cards": [
+        { "id": "m1_q1", "frontText": "1 + 2", "frontEmoji": "➕", "answerKey": "3", "rarity": "common" },
+        { "id": "m1_a1", "frontText": "3", "frontEmoji": "✨", "answerKey": "3", "rarity": "common" },
+        { "id": "m1_q2", "frontText": "2 + 3", "frontEmoji": "➕", "answerKey": "5", "rarity": "common" },
+        { "id": "m1_a2", "frontText": "5", "frontEmoji": "⭐", "answerKey": "5", "rarity": "common" },
+        { "id": "m1_q3", "frontText": "4 + 2", "frontEmoji": "➕", "answerKey": "6", "rarity": "uncommon" },
+        { "id": "m1_a3", "frontText": "6", "frontEmoji": "💫", "answerKey": "6", "rarity": "uncommon" },
+        { "id": "m1_q4", "frontText": "5 + 4", "frontEmoji": "➕", "answerKey": "9", "rarity": "rare" },
+        { "id": "m1_a4", "frontText": "9", "frontEmoji": "🌟", "answerKey": "9", "rarity": "rare" }
+      ],
+      "rewards": { "xp": 12, "coins": 24, "packChance": 0.55, "packId": "starter_pack_common" }
+    },
+    {
+      "stageId": "math_002",
+      "title": "마법의 뺄셈",
+      "subtitle": "사라진 숫자를 찾아요.",
+      "goal": { "type": "match_pairs", "targetCount": 4 },
+      "cards": [
+        { "id": "m2_q1", "frontText": "5 - 2", "frontEmoji": "➖", "answerKey": "3", "rarity": "common" },
+        { "id": "m2_a1", "frontText": "3", "frontEmoji": "✨", "answerKey": "3", "rarity": "common" },
+        { "id": "m2_q2", "frontText": "8 - 4", "frontEmoji": "➖", "answerKey": "4", "rarity": "common" },
+        { "id": "m2_a2", "frontText": "4", "frontEmoji": "⭐", "answerKey": "4", "rarity": "common" },
+        { "id": "m2_q3", "frontText": "9 - 3", "frontEmoji": "➖", "answerKey": "6", "rarity": "uncommon" },
+        { "id": "m2_a3", "frontText": "6", "frontEmoji": "💫", "answerKey": "6", "rarity": "uncommon" },
+        { "id": "m2_q4", "frontText": "10 - 1", "frontEmoji": "➖", "answerKey": "9", "rarity": "rare" },
+        { "id": "m2_a4", "frontText": "9", "frontEmoji": "🌟", "answerKey": "9", "rarity": "rare" }
+      ],
+      "rewards": { "xp": 16, "coins": 32, "packChance": 0.65, "packId": "starter_pack_common" }
+    },
+    {
+      "stageId": "math_003",
+      "title": "숫자 별자리",
+      "subtitle": "조금 더 어려운 계산이에요.",
+      "goal": { "type": "match_pairs", "targetCount": 4 },
+      "cards": [
+        { "id": "m3_q1", "frontText": "3 × 2", "frontEmoji": "✖️", "answerKey": "6", "rarity": "uncommon" },
+        { "id": "m3_a1", "frontText": "6", "frontEmoji": "💫", "answerKey": "6", "rarity": "uncommon" },
+        { "id": "m3_q2", "frontText": "4 × 3", "frontEmoji": "✖️", "answerKey": "12", "rarity": "rare" },
+        { "id": "m3_a2", "frontText": "12", "frontEmoji": "🌟", "answerKey": "12", "rarity": "rare" },
+        { "id": "m3_q3", "frontText": "18 ÷ 3", "frontEmoji": "➗", "answerKey": "6_div", "rarity": "rare" },
+        { "id": "m3_a3", "frontText": "6", "frontEmoji": "💫", "answerKey": "6_div", "rarity": "rare" },
+        { "id": "m3_q4", "frontText": "20 ÷ 4", "frontEmoji": "➗", "answerKey": "5", "rarity": "epic" },
+        { "id": "m3_a4", "frontText": "5", "frontEmoji": "💎", "answerKey": "5", "rarity": "epic" }
+      ],
+      "rewards": { "xp": 22, "coins": 44, "packChance": 0.75, "packId": "library_rare_pack" }
+    }
+  ]
+}

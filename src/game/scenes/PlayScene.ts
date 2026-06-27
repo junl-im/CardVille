@@ -4,9 +4,9 @@ import { ModeSystem } from '../systems/ModeSystem';
 import { CardView } from '../ui/CardView';
 import { GlassPanel } from '../ui/GlassPanel';
 import { HapticSystem } from '../systems/HapticSystem';
-import { AuthSystem } from '../systems/AuthSystem';
-import { saveModeProgress } from '../../firebase/firestore';
 import { SceneBackSystem } from '../systems/SceneBackSystem';
+import { ProgressSystem } from '../systems/ProgressSystem';
+import { AudioSystem } from '../systems/AudioSystem';
 
 export class PlayScene extends Phaser.Scene {
   private mode!: ModeData;
@@ -18,6 +18,8 @@ export class PlayScene extends Phaser.Scene {
   private maxCombo = 0;
   private modeId = 'word_ko_basic';
   private stageIndex = 0;
+  private scoreText?: Phaser.GameObjects.Text;
+  private comboText?: Phaser.GameObjects.Text;
 
   constructor() {
     super('PlayScene');
@@ -26,12 +28,23 @@ export class PlayScene extends Phaser.Scene {
   async create(data: { modeId: string; stageIndex?: number }): Promise<void> {
     this.modeId = data.modeId ?? 'word_ko_basic';
     this.stageIndex = data.stageIndex ?? 0;
+    this.selected = [];
+    this.score = 0;
+    this.combo = 0;
+    this.maxCombo = 0;
+
     this.drawBackground();
     this.createHud('불러오는 중...');
 
     try {
       this.mode = await ModeSystem.loadMode(this.modeId);
       this.stage = this.mode.stages[this.stageIndex] ?? this.mode.stages[0];
+      const progress = await ProgressSystem.load(this.mode.modeId);
+      if (!ProgressSystem.isStageUnlocked(progress, this.stageIndex)) {
+        this.scene.start('StageSelectScene', { modeId: this.mode.modeId, toast: '아직 잠긴 장이에요.' });
+        return;
+      }
+
       this.children.removeAll();
       this.drawBackground();
       this.createHud(this.stage.title);
@@ -52,17 +65,21 @@ export class PlayScene extends Phaser.Scene {
     this.add.text(38, 54, '‹', { fontSize: '38px', color: '#ffffff' }).setOrigin(0, 0.5)
       .setInteractive({ useHandCursor: true })
       .on('pointerup', () => this.scene.start('StageSelectScene', { modeId: this.modeId }));
-    this.add.text(195, 44, title, { fontSize: '19px', fontStyle: '900', color: '#ffffff' }).setOrigin(0.5);
-    this.add.text(195, 70, '정답을 찾아 카드를 모으세요', { fontSize: '13px', color: '#cbd8ff' }).setOrigin(0.5);
+    this.add.text(195, 38, title, { fontSize: '18px', fontStyle: '900', color: '#ffffff' }).setOrigin(0.5);
+    this.add.text(195, 63, `Stage ${this.stageIndex + 1} · 정답을 찾아 카드를 모으세요`, { fontSize: '12px', color: '#cbd8ff' }).setOrigin(0.5);
+
+    new GlassPanel(this, 195, 118, 342, 44, 18, 0.1);
+    this.scoreText = this.add.text(58, 118, '점수 0', { fontSize: '15px', fontStyle: '900', color: '#fff0b8' }).setOrigin(0, 0.5);
+    this.comboText = this.add.text(326, 118, '콤보 0', { fontSize: '15px', fontStyle: '900', color: '#dff7ff' }).setOrigin(1, 0.5);
   }
 
   private createCards(): void {
     this.remainingPairs = this.stage.goal.targetCount;
     const positions = [
-      [105, 210], [285, 210],
-      [105, 394], [285, 394],
-      [105, 578], [285, 578],
-      [105, 762], [285, 762]
+      [105, 230], [285, 230],
+      [105, 402], [285, 402],
+      [105, 574], [285, 574],
+      [105, 746], [285, 746]
     ];
 
     this.stage.cards.forEach((card, index) => {
@@ -76,6 +93,7 @@ export class PlayScene extends Phaser.Scene {
   private handleCardSelect(card: CardView): void {
     if (this.selected.includes(card) || this.selected.length >= 2) return;
     HapticSystem.light();
+    AudioSystem.playSfx('card');
     card.setSelected(true);
     this.selected.push(card);
 
@@ -93,7 +111,9 @@ export class PlayScene extends Phaser.Scene {
       this.combo += 1;
       this.maxCombo = Math.max(this.maxCombo, this.combo);
       this.score += 100 + this.combo * 25;
+      this.updateHud();
       HapticSystem.success();
+      AudioSystem.playSfx('correct');
       this.spawnStars((a.x + b.x) / 2, (a.y + b.y) / 2);
       a.playCorrect();
       b.playCorrect();
@@ -104,7 +124,9 @@ export class PlayScene extends Phaser.Scene {
       }
     } else {
       this.combo = 0;
+      this.updateHud();
       HapticSystem.wrong();
+      AudioSystem.playSfx('wrong');
       a.playWrong();
       b.playWrong();
       a.setSelected(false);
@@ -114,17 +136,13 @@ export class PlayScene extends Phaser.Scene {
     this.selected = [];
   }
 
-  private async clearStage(): Promise<void> {
-    const user = AuthSystem.currentUser;
-    if (user) {
-      try {
-        await saveModeProgress(user.uid, this.mode.modeId, this.stageIndex + 2, this.score);
-      } catch (error) {
-        console.warn('[CardVille] Progress save failed.', error);
-      }
-    }
+  private updateHud(): void {
+    this.scoreText?.setText(`점수 ${this.score.toLocaleString('ko-KR')}`);
+    this.comboText?.setText(`콤보 ${this.combo}`);
+  }
 
-    this.scene.start('ResultScene', {
+  private async clearStage(): Promise<void> {
+    const result = {
       modeId: this.mode.modeId,
       stageIndex: this.stageIndex,
       stageTitle: this.stage.title,
@@ -132,7 +150,15 @@ export class PlayScene extends Phaser.Scene {
       combo: this.maxCombo,
       clear: true,
       rewards: this.stage.rewards
-    });
+    };
+
+    try {
+      await ProgressSystem.recordClear(this.mode, result);
+    } catch (error) {
+      console.warn('[CardVille] Progress save failed.', error);
+    }
+
+    this.scene.start('ResultScene', result);
   }
 
   private spawnStars(x: number, y: number): void {

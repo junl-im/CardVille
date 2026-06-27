@@ -6,7 +6,7 @@
 ## 현재 버전
 
 ```txt
-v0.6.2.0
+v0.7.0
 ```
 
 ## 기술 스택
@@ -18,6 +18,7 @@ Vite
 Firebase Auth / Firestore / Analytics
 GitHub Pages
 GitHub Actions
+PWA 기본 구성
 WebP / PNG
 SVG 사용 금지
 ```
@@ -25,14 +26,17 @@ SVG 사용 금지
 ## 실행
 
 ```bash
-npm install
+npm install --no-audit --no-fund --no-package-lock
 npm run dev
 ```
 
-## 빌드
+## 검증 / 빌드
 
 ```bash
+npm run check:imports
+npm run check:json
 npm run build
+npm run verify
 ```
 
 ## 배포 주소
@@ -67,33 +71,27 @@ Reward
 Main Lobby
 ```
 
-## v0.6.2 적용 내용 - 유저 성장 데이터 연동
+## v0.7.0 초대규모 업데이트
 
-v0.6.2부터 메인 로비가 임시 숫자가 아니라 실제 유저 성장 데이터를 사용합니다.
+v0.7.0은 기능 추가만이 아니라 안정성, 검증, UI 겹침, 데이터 구조를 같이 정리한 대규모 패치입니다.
 
 ```txt
-Firestore users/{uid}
-↓
-UserDataSystem
-↓
-Main Lobby 상단 재화 / 레벨 / XP 바
-↓
-RewardScene 보상 저장
-↓
-다시 Main Lobby에서 증가된 성장 데이터 표시
+✅ 스테이지 잠금 / 해금
+✅ 별 1~3개 클리어 등급
+✅ 모드별 진행률 표시
+✅ 꿈의 서고 책별 진행도 표시
+✅ 낱말 / 연산 / 기억력 / 영어 4개 모드 오픈
+✅ 총 12개 스테이지 데이터 추가
+✅ 일일 미션 화면 추가
+✅ 출석 보상 추가
+✅ 설정 화면 추가
+✅ 사운드 / 진동 / 절전 / 데이터 절약 옵션 추가
+✅ PWA manifest / service worker / PNG 아이콘 추가
+✅ 컬렉션 기본 카드 24종 확장
+✅ Firestore progress Rules 확장
+✅ JSON 데이터 검증 스크립트 추가
+✅ GitHub Actions에서 verify 실행
 ```
-
-추가 내용:
-
-- Firestore 유저 프로필 로딩 함수 추가
-- 유저 데이터 캐시 / localStorage fallback 추가
-- 메인 로비 코인 / 보석 / 레벨 실제 데이터 표시
-- XP 진행바 UI 추가
-- 보상 획득 시 XP / 코인 저장 결과 표시
-- 레벨업 토스트 연출 추가
-- 오프라인 또는 Firestore 실패 시 로컬 임시 저장 fallback
-
-자세한 내용은 `docs/USER_GROWTH_SYSTEM.md`와 `docs/PATCH_NOTES_v0.6.2.md`를 확인하세요.
 
 ## Firebase
 
@@ -139,22 +137,12 @@ Aqua Glass + Cute Premium + 2.5D
 ## GitHub Actions
 
 `.github/workflows/deploy.yml`에 GitHub Pages 자동 배포가 들어 있습니다.  
-현재 워크플로는 GitHub Actions에서 npm 오류를 줄이기 위해 lock 파일 없이도 동작하는 안정형 설치 방식을 사용합니다.
+현재 워크플로는 설치 후 아래 검증을 모두 실행합니다.
 
 ```txt
-npm install --no-audit --no-fund --no-package-lock
+npm run check:imports
+npm run check:json
+npm run build
 ```
 
-
-## v0.6.2 Hotfix
-
-- GitHub Actions build error caused by a missing `CollectionTypes` type file in patch application paths was fixed.
-- The patch package now includes `src/game/types/CollectionTypes.ts` and `src/game/types/ModeTypes.ts` explicitly.
-- Full package build was verified with `npm run build`.
-
-
-## v0.6.2 Hotfix
-
-- CollectionSystem.ts 누락으로 인한 TS2307 빌드 오류 수정
-- tools/check-relative-imports.mjs 추가
-- npm run check:imports로 상대 경로 import 누락 검사 가능
+즉, 앞으로는 상대 import 누락, JSON 짝 데이터 오류, TypeScript 빌드 오류를 배포 전에 잡습니다.

@@ -59,13 +59,19 @@ service cloud.firestore {
         allow read: if isOwner(userId);
         allow create, update: if isOwner(userId)
           && request.resource.data.keys().hasOnly([
-            'modeId', 'currentStage', 'clearedStages', 'bestScore', 'totalPlayCount', 'updatedAt'
+            'modeId', 'currentStage', 'maxUnlockedStage', 'clearedStages', 'totalStars',
+            'bestScore', 'totalPlayCount', 'stages', 'updatedAt', 'updatedAtClient'
           ])
           && request.resource.data.modeId == modeId
           && request.resource.data.currentStage is int
+          && request.resource.data.maxUnlockedStage is int
           && request.resource.data.clearedStages is int
+          && request.resource.data.totalStars is int
           && request.resource.data.bestScore is int
-          && request.resource.data.totalPlayCount is int;
+          && request.resource.data.totalPlayCount is int
+          && request.resource.data.currentStage >= 0
+          && request.resource.data.maxUnlockedStage >= 0
+          && request.resource.data.totalStars >= 0;
         allow delete: if false;
       }
 
@@ -92,15 +98,12 @@ service cloud.firestore {
           ])
           && request.resource.data.packId == packId;
         allow update: if isOwner(userId)
-          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
-            'opened', 'openedAt', 'rewards'
-          ]);
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['opened', 'openedAt', 'rewards']);
         allow delete: if false;
       }
 
       match /missions/{missionId} {
-        allow read: if isOwner(userId);
-        allow create, update: if isOwner(userId);
+        allow read, create, update: if isOwner(userId);
         allow delete: if false;
       }
 
@@ -113,9 +116,7 @@ service cloud.firestore {
     match /leaderboards/{modeId}/entries/{userId} {
       allow read: if true;
       allow create, update: if isOwner(userId)
-        && request.resource.data.keys().hasOnly([
-          'uid', 'nickname', 'score', 'stage', 'updatedAt'
-        ])
+        && request.resource.data.keys().hasOnly(['uid', 'nickname', 'score', 'stage', 'updatedAt'])
         && request.resource.data.uid == userId
         && request.resource.data.score is int
         && request.resource.data.score >= 0

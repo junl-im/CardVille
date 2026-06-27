@@ -9,6 +9,7 @@ import {
   PackOpenResult
 } from '../types/CollectionTypes';
 import { AuthSystem } from './AuthSystem';
+import { MissionSystem } from './MissionSystem';
 import { saveCollectedCard } from '../../firebase/firestore';
 
 const OWNED_CARDS_STORAGE_KEY = 'cardville.ownedCards.v1';
@@ -84,6 +85,9 @@ export class CollectionSystem {
     for (const card of cards) {
       ownedAfterOpen.push(await this.addOwnedCard(card));
     }
+
+    MissionSystem.record("open_pack");
+    MissionSystem.record("collect_card", cards.length);
 
     return { pack, cards, ownedAfterOpen };
   }

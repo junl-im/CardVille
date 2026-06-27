@@ -41,7 +41,7 @@ jobs:
           npm install --no-audit --no-fund --no-package-lock
 
       - name: Build
-        run: npm run build
+        run: npm run verify
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

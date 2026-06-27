@@ -1,13 +1,19 @@
+import { SettingsSystem } from './SettingsSystem';
+
+function canVibrate(): boolean {
+  return SettingsSystem.get().haptic && typeof navigator !== 'undefined' && 'vibrate' in navigator;
+}
+
 export class HapticSystem {
   static light(): void {
-    if ('vibrate' in navigator) navigator.vibrate(12);
+    if (canVibrate()) navigator.vibrate(12);
   }
 
   static success(): void {
-    if ('vibrate' in navigator) navigator.vibrate([18, 20, 28]);
+    if (canVibrate()) navigator.vibrate([18, 20, 28]);
   }
 
   static wrong(): void {
-    if ('vibrate' in navigator) navigator.vibrate([40, 20, 40]);
+    if (canVibrate()) navigator.vibrate([40, 20, 40]);
   }
 }

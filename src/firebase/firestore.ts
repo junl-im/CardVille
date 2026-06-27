@@ -2,6 +2,7 @@ import { DocumentData, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'f
 import { User } from 'firebase/auth';
 import { db } from './firebaseApp';
 import { OwnedCardRecord } from '../game/types/CollectionTypes';
+import { ModeProgressRecord } from '../game/types/ProgressTypes';
 
 export interface UserProfileDoc {
   uid: string;
@@ -145,22 +146,26 @@ export async function getUserProfile(uid: string): Promise<UserProfileDoc | null
   return normalizeUserProfile(uid, snap.data());
 }
 
-export async function saveModeProgress(uid: string, modeId: string, currentStage: number, bestScore: number): Promise<void> {
-  const progressRef = doc(db, 'users', uid, 'progress', modeId);
-  const snap = await getDoc(progressRef);
-  const before = snap.exists() ? snap.data() : {};
-  const previousBest = typeof before.bestScore === 'number' ? before.bestScore : 0;
-  const previousPlayCount = typeof before.totalPlayCount === 'number' ? before.totalPlayCount : 0;
+export async function getModeProgress(uid: string, modeId: string): Promise<ModeProgressRecord | null> {
+  const snap = await getDoc(doc(db, 'users', uid, 'progress', modeId));
+  if (!snap.exists()) return null;
+  return snap.data() as ModeProgressRecord;
+}
 
+export async function saveModeProgress(uid: string, progress: ModeProgressRecord): Promise<void> {
   await setDoc(
-    progressRef,
+    doc(db, 'users', uid, 'progress', progress.modeId),
     {
-      modeId,
-      currentStage,
-      clearedStages: Math.max(0, currentStage - 1),
-      bestScore: Math.max(previousBest, bestScore),
-      totalPlayCount: previousPlayCount + 1,
-      updatedAt: serverTimestamp()
+      modeId: progress.modeId,
+      currentStage: progress.currentStage,
+      maxUnlockedStage: progress.maxUnlockedStage,
+      clearedStages: progress.clearedStages,
+      totalStars: progress.totalStars,
+      bestScore: progress.bestScore,
+      totalPlayCount: progress.totalPlayCount,
+      stages: progress.stages,
+      updatedAt: serverTimestamp(),
+      updatedAtClient: progress.updatedAt
     },
     { merge: true }
   );

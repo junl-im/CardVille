@@ -1,0 +1,60 @@
+{
+  "modeId": "english_basic",
+  "title": "영어 카드",
+  "type": "english_match",
+  "world": "magic_library",
+  "difficulty": 1,
+  "stages": [
+    {
+      "stageId": "english_001",
+      "title": "Fruit Words",
+      "subtitle": "영어 단어와 그림을 맞춰요.",
+      "goal": { "type": "match_pairs", "targetCount": 4 },
+      "cards": [
+        { "id": "en1_a", "frontText": "Apple", "frontEmoji": "🍎", "answerKey": "apple", "rarity": "common" },
+        { "id": "en1_b", "frontText": "사과", "frontEmoji": "🍎", "answerKey": "apple", "rarity": "common" },
+        { "id": "en1_c", "frontText": "Banana", "frontEmoji": "🍌", "answerKey": "banana", "rarity": "common" },
+        { "id": "en1_d", "frontText": "바나나", "frontEmoji": "🍌", "answerKey": "banana", "rarity": "common" },
+        { "id": "en1_e", "frontText": "Grape", "frontEmoji": "🍇", "answerKey": "grape", "rarity": "rare" },
+        { "id": "en1_f", "frontText": "포도", "frontEmoji": "🍇", "answerKey": "grape", "rarity": "rare" },
+        { "id": "en1_g", "frontText": "Berry", "frontEmoji": "🍓", "answerKey": "berry", "rarity": "uncommon" },
+        { "id": "en1_h", "frontText": "딸기", "frontEmoji": "🍓", "answerKey": "berry", "rarity": "uncommon" }
+      ],
+      "rewards": { "xp": 12, "coins": 24, "packChance": 0.55, "packId": "starter_pack_common" }
+    },
+    {
+      "stageId": "english_002",
+      "title": "Animal Words",
+      "subtitle": "동물 영어 단어를 익혀요.",
+      "goal": { "type": "match_pairs", "targetCount": 4 },
+      "cards": [
+        { "id": "en2_a", "frontText": "Cat", "frontEmoji": "🐱", "answerKey": "cat", "rarity": "common" },
+        { "id": "en2_b", "frontText": "고양이", "frontEmoji": "🐱", "answerKey": "cat", "rarity": "common" },
+        { "id": "en2_c", "frontText": "Dog", "frontEmoji": "🐶", "answerKey": "dog", "rarity": "common" },
+        { "id": "en2_d", "frontText": "강아지", "frontEmoji": "🐶", "answerKey": "dog", "rarity": "common" },
+        { "id": "en2_e", "frontText": "Lion", "frontEmoji": "🦁", "answerKey": "lion", "rarity": "epic" },
+        { "id": "en2_f", "frontText": "사자", "frontEmoji": "🦁", "answerKey": "lion", "rarity": "epic" },
+        { "id": "en2_g", "frontText": "Whale", "frontEmoji": "🐳", "answerKey": "whale", "rarity": "rare" },
+        { "id": "en2_h", "frontText": "고래", "frontEmoji": "🐳", "answerKey": "whale", "rarity": "rare" }
+      ],
+      "rewards": { "xp": 16, "coins": 32, "packChance": 0.62, "packId": "starter_pack_common" }
+    },
+    {
+      "stageId": "english_003",
+      "title": "Space Words",
+      "subtitle": "우주 영어 단어를 맞춰요.",
+      "goal": { "type": "match_pairs", "targetCount": 4 },
+      "cards": [
+        { "id": "en3_a", "frontText": "Moon", "frontEmoji": "🌙", "answerKey": "moon", "rarity": "rare" },
+        { "id": "en3_b", "frontText": "달", "frontEmoji": "🌙", "answerKey": "moon", "rarity": "rare" },
+        { "id": "en3_c", "frontText": "Star", "frontEmoji": "⭐", "answerKey": "star", "rarity": "common" },
+        { "id": "en3_d", "frontText": "별", "frontEmoji": "⭐", "answerKey": "star", "rarity": "common" },
+        { "id": "en3_e", "frontText": "Rocket", "frontEmoji": "🚀", "answerKey": "rocket", "rarity": "epic" },
+        { "id": "en3_f", "frontText": "로켓", "frontEmoji": "🚀", "answerKey": "rocket", "rarity": "epic" },
+        { "id": "en3_g", "frontText": "Planet", "frontEmoji": "🪐", "answerKey": "planet", "rarity": "legendary" },
+        { "id": "en3_h", "frontText": "행성", "frontEmoji": "🪐", "answerKey": "planet", "rarity": "legendary" }
+      ],
+      "rewards": { "xp": 22, "coins": 44, "packChance": 0.78, "packId": "library_rare_pack" }
+    }
+  ]
+}

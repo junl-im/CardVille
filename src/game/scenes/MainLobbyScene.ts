@@ -94,7 +94,7 @@ export class MainLobbyScene extends Phaser.Scene {
       fontStyle: '900',
       color: '#ffffff'
     }).setOrigin(0.5);
-    this.add.text(338, 54, '⚙️', { fontSize: '24px' }).setOrigin(0.5);
+    this.add.text(338, 54, '⚙️', { fontSize: '24px' }).setOrigin(0.5).setInteractive({ useHandCursor: true }).on('pointerup', () => this.scene.start('SettingsScene'));
   }
 
   private createHeroPanel(profile: UserProfileDoc): void {
@@ -150,14 +150,17 @@ export class MainLobbyScene extends Phaser.Scene {
     const collection = new GameButton(this, 195, 512, '카드 컬렉션', 300, 64, 0x8fd3ff);
     collection.on('pointerup', () => this.scene.start('CollectionScene'));
 
-    const mission = new GameButton(this, 195, 594, '오늘의 미션 준비 중', 300, 64, 0xc59bff);
-    mission.on('pointerup', () => undefined);
+    const mission = new GameButton(this, 195, 594, '오늘의 미션', 300, 64, 0xc59bff);
+    mission.on('pointerup', () => this.scene.start('MissionScene'));
 
-    const logout = new GameButton(this, 195, 676, '로그아웃 / 계정 변경', 300, 54, 0xf5aacb);
+    const settings = new GameButton(this, 195, 676, '설정', 300, 54, 0xb7ffd8);
+    settings.on('pointerup', () => this.scene.start('SettingsScene'));
+
+    const logout = new GameButton(this, 195, 742, '로그아웃 / 계정 변경', 300, 48, 0xf5aacb);
     logout.on('pointerup', () => this.signOut());
 
-    this.add.text(195, 760, 'Aqua Glass + Cute Premium + 2.5D', {
-      fontSize: '15px',
+    this.add.text(195, 806, 'Aqua Glass + Cute Premium + 2.5D', {
+      fontSize: '13px',
       color: '#9fb8e9'
     }).setOrigin(0.5);
   }

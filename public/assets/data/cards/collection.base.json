@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 7,
   "sets": [
     {
       "setId": "starter_fruits",
@@ -9,7 +9,9 @@
         { "cardId": "apple_001", "name": "사과", "rarity": "common", "imageKey": "cards_image/fruits/apple_001.webp" },
         { "cardId": "banana_001", "name": "바나나", "rarity": "common", "imageKey": "cards_image/fruits/banana_001.webp" },
         { "cardId": "grape_001", "name": "포도", "rarity": "rare", "imageKey": "cards_image/fruits/grape_001.webp" },
-        { "cardId": "strawberry_001", "name": "딸기", "rarity": "uncommon", "imageKey": "cards_image/fruits/strawberry_001.webp" }
+        { "cardId": "strawberry_001", "name": "딸기", "rarity": "uncommon", "imageKey": "cards_image/fruits/strawberry_001.webp" },
+        { "cardId": "peach_001", "name": "복숭아", "rarity": "uncommon", "imageKey": "cards_image/fruits/peach_001.webp" },
+        { "cardId": "melon_001", "name": "멜론", "rarity": "rare", "imageKey": "cards_image/fruits/melon_001.webp" }
       ]
     },
     {
@@ -20,7 +22,35 @@
         { "cardId": "cat_001", "name": "고양이", "rarity": "common", "imageKey": "cards_image/animals/cat_001.webp" },
         { "cardId": "dog_001", "name": "강아지", "rarity": "common", "imageKey": "cards_image/animals/dog_001.webp" },
         { "cardId": "lion_001", "name": "사자", "rarity": "epic", "imageKey": "cards_image/animals/lion_001.webp" },
-        { "cardId": "whale_001", "name": "고래", "rarity": "rare", "imageKey": "cards_image/sea/whale_001.webp" }
+        { "cardId": "whale_001", "name": "고래", "rarity": "rare", "imageKey": "cards_image/sea/whale_001.webp" },
+        { "cardId": "rabbit_001", "name": "토끼", "rarity": "common", "imageKey": "cards_image/animals/rabbit_001.webp" },
+        { "cardId": "fox_001", "name": "여우", "rarity": "rare", "imageKey": "cards_image/animals/fox_001.webp" }
+      ]
+    },
+    {
+      "setId": "library_magic",
+      "title": "꿈의 서고",
+      "world": "dream_library",
+      "cards": [
+        { "cardId": "book_001", "name": "마법서", "rarity": "common", "imageKey": "cards_image/objects/book_001.webp" },
+        { "cardId": "candle_001", "name": "촛불", "rarity": "common", "imageKey": "cards_image/objects/candle_001.webp" },
+        { "cardId": "crystal_001", "name": "수정구", "rarity": "epic", "imageKey": "cards_image/objects/crystal_001.webp" },
+        { "cardId": "key_001", "name": "꿈의 열쇠", "rarity": "legendary", "imageKey": "cards_image/objects/key_001.webp" },
+        { "cardId": "scroll_001", "name": "두루마리", "rarity": "uncommon", "imageKey": "cards_image/objects/scroll_001.webp" },
+        { "cardId": "ink_001", "name": "별빛 잉크", "rarity": "rare", "imageKey": "cards_image/objects/ink_001.webp" }
+      ]
+    },
+    {
+      "setId": "space_wonders",
+      "title": "우주 탐험",
+      "world": "space",
+      "cards": [
+        { "cardId": "moon_001", "name": "달", "rarity": "rare", "imageKey": "cards_image/space/moon_001.webp" },
+        { "cardId": "star_001", "name": "별", "rarity": "common", "imageKey": "cards_image/space/star_001.webp" },
+        { "cardId": "rocket_001", "name": "로켓", "rarity": "epic", "imageKey": "cards_image/space/rocket_001.webp" },
+        { "cardId": "planet_001", "name": "행성", "rarity": "legendary", "imageKey": "cards_image/space/planet_001.webp" },
+        { "cardId": "comet_001", "name": "혜성", "rarity": "rare", "imageKey": "cards_image/space/comet_001.webp" },
+        { "cardId": "galaxy_001", "name": "은하", "rarity": "mythic", "imageKey": "cards_image/space/galaxy_001.webp" }
       ]
     }
   ]

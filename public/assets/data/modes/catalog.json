@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 7,
   "worldId": "dream_library",
   "worldTitle": "꿈의 서고",
   "modes": [
@@ -20,8 +20,7 @@
       "bookTitle": "연산의 책",
       "subtitle": "문제와 정답 카드를 연결해요.",
       "icon": "➕",
-      "status": "soon",
-      "unlockText": "기본 카드 엔진 안정화 후 추가",
+      "status": "open",
       "bookColor": "0xffd86f",
       "bookSpine": "MATH",
       "worldNote": "숫자의 빛이 흐르는 계산 마법서"
@@ -30,10 +29,9 @@
       "modeId": "memory_basic",
       "title": "기억력 카드",
       "bookTitle": "기억력의 책",
-      "subtitle": "뒤집힌 카드를 기억하고 맞춰요.",
+      "subtitle": "기호와 기억 단서를 맞춰요.",
       "icon": "🧠",
-      "status": "soon",
-      "unlockText": "v0.4에서 열릴 예정",
+      "status": "open",
       "bookColor": "0xc59bff",
       "bookSpine": "MEMORY",
       "worldNote": "별 조각을 기억하는 집중 마법서"
@@ -44,8 +42,7 @@
       "bookTitle": "영어의 책",
       "subtitle": "한글, 영어, 그림을 함께 익혀요.",
       "icon": "🇬🇧",
-      "status": "soon",
-      "unlockText": "낱말 카드 확장팩으로 추가",
+      "status": "open",
       "bookColor": "0xff8fcf",
       "bookSpine": "ENGLISH",
       "worldNote": "언어의 문을 여는 여행 마법서"
@@ -57,7 +54,7 @@
       "subtitle": "조각과 정답을 맞추는 모드예요.",
       "icon": "🧩",
       "status": "soon",
-      "unlockText": "추후 시즌 월드와 함께 추가",
+      "unlockText": "v0.8 시즌 월드와 함께 추가 예정",
       "bookColor": "0x8fffc8",
       "bookSpine": "PUZZLE",
       "worldNote": "조각난 기억을 맞추는 탐험 마법서"

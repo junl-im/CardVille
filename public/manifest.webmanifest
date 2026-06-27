@@ -1,0 +1,16 @@
+{
+  "name": "카드마을 CardVille",
+  "short_name": "CardVille",
+  "description": "꿈의 서고에서 낱말, 연산, 영어, 기억력 카드를 모으는 모바일 카드 퍼즐 게임",
+  "start_url": "/CardVille/",
+  "scope": "/CardVille/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0d1730",
+  "theme_color": "#1a4e79",
+  "lang": "ko-KR",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

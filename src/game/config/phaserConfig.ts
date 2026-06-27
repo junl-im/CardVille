@@ -10,6 +10,8 @@ import { PlayScene } from '../scenes/PlayScene';
 import { ResultScene } from '../scenes/ResultScene';
 import { RewardScene } from '../scenes/RewardScene';
 import { CollectionScene } from '../scenes/CollectionScene';
+import { MissionScene } from '../scenes/MissionScene';
+import { SettingsScene } from '../scenes/SettingsScene';
 
 export const GAME_WIDTH = 390;
 export const GAME_HEIGHT = 844;
@@ -43,6 +45,8 @@ export const phaserConfig: Phaser.Types.Core.GameConfig = {
     PlayScene,
     ResultScene,
     RewardScene,
-    CollectionScene
+    CollectionScene,
+    MissionScene,
+    SettingsScene
   ]
 };

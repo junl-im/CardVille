@@ -1,0 +1,60 @@
+{
+  "modeId": "memory_basic",
+  "title": "기억력 카드",
+  "type": "memory_match",
+  "world": "dream_library",
+  "difficulty": 1,
+  "stages": [
+    {
+      "stageId": "memory_001",
+      "title": "별빛 기호",
+      "subtitle": "같은 느낌의 기호를 찾아요.",
+      "goal": { "type": "match_pairs", "targetCount": 4 },
+      "cards": [
+        { "id": "mem1_a", "frontText": "별", "frontEmoji": "⭐", "answerKey": "star", "rarity": "common" },
+        { "id": "mem1_b", "frontText": "반짝", "frontEmoji": "✨", "answerKey": "star", "rarity": "common" },
+        { "id": "mem1_c", "frontText": "달", "frontEmoji": "🌙", "answerKey": "moon", "rarity": "common" },
+        { "id": "mem1_d", "frontText": "밤", "frontEmoji": "🌌", "answerKey": "moon", "rarity": "common" },
+        { "id": "mem1_e", "frontText": "책", "frontEmoji": "📘", "answerKey": "book", "rarity": "uncommon" },
+        { "id": "mem1_f", "frontText": "서고", "frontEmoji": "📚", "answerKey": "book", "rarity": "uncommon" },
+        { "id": "mem1_g", "frontText": "보석", "frontEmoji": "💎", "answerKey": "gem", "rarity": "rare" },
+        { "id": "mem1_h", "frontText": "반사광", "frontEmoji": "🔷", "answerKey": "gem", "rarity": "rare" }
+      ],
+      "rewards": { "xp": 12, "coins": 24, "packChance": 0.55, "packId": "starter_pack_common" }
+    },
+    {
+      "stageId": "memory_002",
+      "title": "숲의 기억",
+      "subtitle": "자연의 짝을 기억해요.",
+      "goal": { "type": "match_pairs", "targetCount": 4 },
+      "cards": [
+        { "id": "mem2_a", "frontText": "나무", "frontEmoji": "🌳", "answerKey": "tree", "rarity": "common" },
+        { "id": "mem2_b", "frontText": "잎사귀", "frontEmoji": "🍃", "answerKey": "tree", "rarity": "common" },
+        { "id": "mem2_c", "frontText": "꽃", "frontEmoji": "🌸", "answerKey": "flower", "rarity": "uncommon" },
+        { "id": "mem2_d", "frontText": "향기", "frontEmoji": "🌼", "answerKey": "flower", "rarity": "uncommon" },
+        { "id": "mem2_e", "frontText": "비", "frontEmoji": "🌧️", "answerKey": "rain", "rarity": "common" },
+        { "id": "mem2_f", "frontText": "물방울", "frontEmoji": "💧", "answerKey": "rain", "rarity": "common" },
+        { "id": "mem2_g", "frontText": "무지개", "frontEmoji": "🌈", "answerKey": "rainbow", "rarity": "rare" },
+        { "id": "mem2_h", "frontText": "일곱빛", "frontEmoji": "🎨", "answerKey": "rainbow", "rarity": "rare" }
+      ],
+      "rewards": { "xp": 16, "coins": 32, "packChance": 0.62, "packId": "starter_pack_common" }
+    },
+    {
+      "stageId": "memory_003",
+      "title": "보석 서랍",
+      "subtitle": "색과 보석을 함께 기억해요.",
+      "goal": { "type": "match_pairs", "targetCount": 4 },
+      "cards": [
+        { "id": "mem3_a", "frontText": "루비", "frontEmoji": "🔴", "answerKey": "ruby", "rarity": "rare" },
+        { "id": "mem3_b", "frontText": "빨강", "frontEmoji": "❤️", "answerKey": "ruby", "rarity": "rare" },
+        { "id": "mem3_c", "frontText": "사파이어", "frontEmoji": "🔵", "answerKey": "sapphire", "rarity": "rare" },
+        { "id": "mem3_d", "frontText": "파랑", "frontEmoji": "💙", "answerKey": "sapphire", "rarity": "rare" },
+        { "id": "mem3_e", "frontText": "에메랄드", "frontEmoji": "🟢", "answerKey": "emerald", "rarity": "epic" },
+        { "id": "mem3_f", "frontText": "초록", "frontEmoji": "💚", "answerKey": "emerald", "rarity": "epic" },
+        { "id": "mem3_g", "frontText": "다이아", "frontEmoji": "💎", "answerKey": "diamond", "rarity": "legendary" },
+        { "id": "mem3_h", "frontText": "빛", "frontEmoji": "✨", "answerKey": "diamond", "rarity": "legendary" }
+      ],
+      "rewards": { "xp": 22, "coins": 44, "packChance": 0.78, "packId": "library_rare_pack" }
+    }
+  ]
+}
