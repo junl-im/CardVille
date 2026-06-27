@@ -1,17 +1,10 @@
 {
-  "version": 1,
-  "sets": [
-    {
-      "setId": "base_magic_library",
-      "name": "마법 도서관 기본 세트",
-      "cards": [
-        { "cardId": "cv_common_book", "name": "낡은 마법책", "rarity": "common", "world": "magic_library" },
-        { "cardId": "cv_common_candle", "name": "작은 촛불", "rarity": "common", "world": "magic_library" },
-        { "cardId": "cv_rare_blue_quill", "name": "푸른 깃펜", "rarity": "rare", "world": "magic_library" },
-        { "cardId": "cv_rare_crystal", "name": "기억 수정", "rarity": "rare", "world": "magic_library" },
-        { "cardId": "cv_epic_star_page", "name": "별빛 페이지", "rarity": "epic", "world": "magic_library" },
-        { "cardId": "cv_legendary_cardville_gate", "name": "카드마을의 문", "rarity": "legendary", "world": "magic_library" }
-      ]
-    }
+  "setId": "base_001",
+  "title": "카드마을 첫 번째 앨범",
+  "cards": [
+    { "cardId": "cv_common_001", "name": "도서관 견습생", "rarity": "common", "world": "magic_library" },
+    { "cardId": "cv_rare_001", "name": "푸른 책갈피", "rarity": "rare", "world": "magic_library" },
+    { "cardId": "cv_epic_001", "name": "별빛 주문서", "rarity": "epic", "world": "magic_library" },
+    { "cardId": "cv_legend_001", "name": "황금 마법 카드", "rarity": "legendary", "world": "magic_library" }
   ]
 }

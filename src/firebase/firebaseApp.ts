@@ -10,13 +10,20 @@ export const firebaseConfig = {
   storageBucket: 'cardville.firebasestorage.app',
   messagingSenderId: '285520270113',
   appId: '1:285520270113:web:ef33aedeaf08f4ef806460',
-  measurementId: 'G-8QTT1QSPVL',
+  measurementId: 'G-8QTT1QSPVL'
 };
 
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
-export const analyticsPromise = isSupported().then((supported) => {
-  return supported ? getAnalytics(app) : null;
-});
+export async function initializeFirebaseRuntime(): Promise<void> {
+  try {
+    const supported = await isSupported();
+    if (supported) {
+      getAnalytics(app);
+    }
+  } catch (error) {
+    console.warn('[CardVille] Firebase Analytics disabled in this browser.', error);
+  }
+}

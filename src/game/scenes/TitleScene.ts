@@ -1,6 +1,5 @@
 import Phaser from 'phaser';
-import { GAME_HEIGHT, GAME_WIDTH } from '../config/phaserConfig';
-import { addButton, addGlassPanel, drawWorldBackground } from '../ui/SceneHelpers';
+import { GlassPanel } from '../ui/GlassPanel';
 
 export class TitleScene extends Phaser.Scene {
   constructor() {
@@ -8,74 +7,56 @@ export class TitleScene extends Phaser.Scene {
   }
 
   create(): void {
-    drawWorldBackground(this);
+    this.drawMagicLibraryBackground();
+    new GlassPanel(this, 195, 422, 320, 360, 28);
 
-    this.add
-      .text(GAME_WIDTH / 2, 146, '카드마을', {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: '44px',
-        fontStyle: '900',
-        color: '#ffffff',
-        stroke: '#19214b',
-        strokeThickness: 6,
-      })
-      .setOrigin(0.5);
+    this.add.text(195, 302, '카드마을', {
+      fontFamily: 'system-ui, sans-serif',
+      fontSize: '50px',
+      fontStyle: '900',
+      color: '#ffffff',
+      stroke: '#2b3767',
+      strokeThickness: 8
+    }).setOrigin(0.5);
 
-    this.add
-      .text(GAME_WIDTH / 2, 192, 'CardVille', {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: '25px',
-        fontStyle: '800',
-        color: '#ffd166',
-      })
-      .setOrigin(0.5);
+    this.add.text(195, 354, '< CardVille >', {
+      fontFamily: 'Georgia, serif',
+      fontSize: '24px',
+      color: '#ffe4a3'
+    }).setOrigin(0.5);
 
-    addGlassPanel(this, 48, 250, 294, 250, 32);
+    const start = this.add.text(195, 498, '게임 시작', {
+      fontFamily: 'system-ui, sans-serif',
+      fontSize: '25px',
+      fontStyle: '800',
+      color: '#22152c',
+      backgroundColor: '#ffd86f',
+      padding: { left: 38, right: 38, top: 16, bottom: 16 }
+    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
 
-    this.createHeroCards();
+    start.on('pointerdown', () => this.scene.start('HomeScene'));
 
-    this.add
-      .text(GAME_WIDTH / 2, 546, '수집형 카드 퍼즐 게임', {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: '22px',
-        fontStyle: '800',
-        color: '#f7f1d0',
-      })
-      .setOrigin(0.5);
-
-    addButton(this, GAME_WIDTH / 2, 632, 260, 64, '게임 시작', () => {
-      this.scene.start('HomeScene');
+    this.tweens.add({
+      targets: start,
+      scale: 1.04,
+      yoyo: true,
+      repeat: -1,
+      duration: 900,
+      ease: 'Sine.easeInOut'
     });
-
-    this.add
-      .text(GAME_WIDTH / 2, 720, 'Phaser 3 + Firebase + GitHub Pages', {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: '14px',
-        color: '#9fb0e6',
-      })
-      .setOrigin(0.5);
   }
 
-  private createHeroCards(): void {
-    const centers = [128, 195, 262];
-    centers.forEach((x, index) => {
-      const card = this.add.graphics();
-      const y = 376 + Math.sin(index) * 6;
-      card.fillStyle(0x000000, 0.22);
-      card.fillRoundedRect(x - 40 + 5, y - 62 + 8, 80, 124, 18);
-      card.fillGradientStyle(0xfffbef, 0xfff4d7, 0xf6d28a, 0xf2a84c, 1);
-      card.lineStyle(3, index === 2 ? 0xffd166 : 0xffffff, 0.85);
-      card.fillRoundedRect(x - 40, y - 62, 80, 124, 18);
-      card.strokeRoundedRect(x - 40, y - 62, 80, 124, 18);
-      const text = this.add
-        .text(x, y, ['낱말', '연산', '기억'][index], {
-          fontFamily: 'system-ui, sans-serif',
-          fontSize: '19px',
-          fontStyle: '900',
-          color: '#4a2732',
-        })
-        .setOrigin(0.5);
-      this.tweens.add({ targets: [card, text], y: y - 10, duration: 1600 + index * 220, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-    });
+  private drawMagicLibraryBackground(): void {
+    const g = this.add.graphics();
+    g.fillGradientStyle(0x18264b, 0x18264b, 0x0c132d, 0x070b1b, 1);
+    g.fillRect(0, 0, 390, 844);
+
+    for (let i = 0; i < 70; i += 1) {
+      const x = Phaser.Math.Between(0, 390);
+      const y = Phaser.Math.Between(0, 844);
+      const a = Phaser.Math.FloatBetween(0.08, 0.35);
+      g.fillStyle(0xffe5a3, a);
+      g.fillCircle(x, y, Phaser.Math.FloatBetween(1, 2.5));
+    }
   }
 }

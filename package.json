@@ -1,19 +1,19 @@
 {
   "name": "cardville",
-  "private": true,
   "version": "0.1.0",
+  "private": true,
+  "description": "CardVille - Korean mobile AAA casual card puzzle game built with Phaser 3, TypeScript, Vite and Firebase.",
   "type": "module",
-  "description": "CardVille / 카드마을 - Phaser 3 + TypeScript + Firebase card puzzle engine starter.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview --host 0.0.0.0",
-    "check": "tsc --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@vitejs/plugin-basic-ssl": "latest",
-    "firebase": "^12.15.0",
-    "phaser": "^3.90.0",
+    "firebase": "latest",
+    "phaser": "latest",
     "vite": "latest",
     "typescript": "latest"
   },

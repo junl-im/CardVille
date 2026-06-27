@@ -1,15 +1,5 @@
 import Phaser from 'phaser';
-import { GAME_WIDTH } from '../config/phaserConfig';
-import { addGlassPanel, addTopBar, drawWorldBackground } from '../ui/SceneHelpers';
-
-const SAMPLE_CARDS = [
-  { name: '낡은 마법책', rarity: '일반', color: '#f1d8a8' },
-  { name: '작은 촛불', rarity: '일반', color: '#f1d8a8' },
-  { name: '푸른 깃펜', rarity: '희귀', color: '#8fc9ff' },
-  { name: '기억 수정', rarity: '희귀', color: '#8fc9ff' },
-  { name: '별빛 페이지', rarity: '영웅', color: '#c59cff' },
-  { name: '카드마을의 문', rarity: '전설', color: '#ffd166' },
-];
+import { GlassPanel } from '../ui/GlassPanel';
 
 export class CollectionScene extends Phaser.Scene {
   constructor() {
@@ -17,71 +7,25 @@ export class CollectionScene extends Phaser.Scene {
   }
 
   create(): void {
-    drawWorldBackground(this);
-    addTopBar(this, '카드 컬렉션');
+    const g = this.add.graphics();
+    g.fillGradientStyle(0x1d2751, 0x1d2751, 0x0d1328, 0x070914, 1);
+    g.fillRect(0, 0, 390, 844);
 
-    this.add
-      .text(30, 112, '← 홈', {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: '20px',
-        fontStyle: '800',
-        color: '#ffffff',
-      })
+    this.add.text(34, 54, '‹ 홈', { fontSize: '20px', fontStyle: '800', color: '#ffffff' })
+      .setOrigin(0, 0.5)
       .setInteractive({ useHandCursor: true })
-      .on('pointerup', () => this.scene.start('HomeScene'));
+      .on('pointerdown', () => this.scene.start('HomeScene'));
 
-    this.add
-      .text(GAME_WIDTH / 2, 146, '마법 도서관 기본 세트', {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: '22px',
-        fontStyle: '900',
-        color: '#ffd166',
-      })
-      .setOrigin(0.5);
+    this.add.text(195, 92, '카드 컬렉션', { fontSize: '34px', fontStyle: '900', color: '#ffffff' }).setOrigin(0.5);
+    this.add.text(195, 134, '카드팩, 앨범, 등급 시스템이 연결될 공간', { fontSize: '16px', color: '#cbd8ff' }).setOrigin(0.5);
 
-    SAMPLE_CARDS.forEach((card, index) => {
-      const col = index % 2;
-      const row = Math.floor(index / 2);
-      const x = 40 + col * 166;
-      const y = 188 + row * 146;
-      addGlassPanel(this, x, y, 144, 124, 22);
-      const frame = this.add.graphics();
-      frame.fillStyle(0xfffbef, 1);
-      frame.lineStyle(3, Phaser.Display.Color.HexStringToColor(card.color).color, 1);
-      frame.fillRoundedRect(x + 32, y + 14, 80, 72, 16);
-      frame.strokeRoundedRect(x + 32, y + 14, 80, 72, 16);
-      this.add
-        .text(x + 72, y + 50, '✦', {
-          fontFamily: 'system-ui, sans-serif',
-          fontSize: '26px',
-          color: card.color,
-        })
-        .setOrigin(0.5);
-      this.add
-        .text(x + 72, y + 96, card.name, {
-          fontFamily: 'system-ui, sans-serif',
-          fontSize: '15px',
-          fontStyle: '900',
-          color: '#ffffff',
-          align: 'center',
-          wordWrap: { width: 120 },
-        })
-        .setOrigin(0.5);
-      this.add
-        .text(x + 72, y + 116, card.rarity, {
-          fontFamily: 'system-ui, sans-serif',
-          fontSize: '12px',
-          color: card.color,
-        })
-        .setOrigin(0.5);
+    const rarities = ['일반', '희귀', '영웅', '전설'];
+    rarities.forEach((label, i) => {
+      const x = 104 + (i % 2) * 182;
+      const y = 252 + Math.floor(i / 2) * 210;
+      new GlassPanel(this, x, y, 140, 174, 22);
+      this.add.text(x, y - 24, label, { fontSize: '24px', fontStyle: '900', color: '#ffe4a3' }).setOrigin(0.5);
+      this.add.text(x, y + 22, '준비 중', { fontSize: '16px', color: '#d8e2ff' }).setOrigin(0.5);
     });
-
-    this.add
-      .text(GAME_WIDTH / 2, 700, '다음 단계에서 Firestore 컬렉션과 연결됩니다.', {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: '15px',
-        color: '#dbe3ff',
-      })
-      .setOrigin(0.5);
   }
 }

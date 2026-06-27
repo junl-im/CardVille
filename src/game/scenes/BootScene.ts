@@ -1,4 +1,6 @@
 import Phaser from 'phaser';
+import { AuthSystem } from '../systems/AuthSystem';
+import { KakaoBrowserSystem } from '../systems/KakaoBrowserSystem';
 
 export class BootScene extends Phaser.Scene {
   constructor() {
@@ -6,9 +8,12 @@ export class BootScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.registry.set('coins', 0);
-    this.registry.set('gems', 0);
-    this.registry.set('stageIndex', 0);
-    this.scene.start('PreloadScene');
+    KakaoBrowserSystem.install(() => {
+      this.game.events.emit('cardville:back-button');
+    });
+
+    AuthSystem.boot().finally(() => {
+      this.scene.start('PreloadScene');
+    });
   }
 }

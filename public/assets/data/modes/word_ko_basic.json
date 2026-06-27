@@ -1,0 +1,59 @@
+{
+  "modeId": "word_ko_basic",
+  "title": "낱말 카드",
+  "type": "word_match",
+  "world": "magic_library",
+  "difficulty": 1,
+  "stages": [
+    {
+      "stageId": "word_ko_001",
+      "goal": {
+        "type": "match_pairs",
+        "targetCount": 3
+      },
+      "cards": [
+        {
+          "id": "word_001_a",
+          "frontText": "사과",
+          "answerKey": "apple",
+          "rarity": "common"
+        },
+        {
+          "id": "word_001_b",
+          "frontText": "빨간 과일",
+          "answerKey": "apple",
+          "rarity": "common"
+        },
+        {
+          "id": "word_002_a",
+          "frontText": "바다",
+          "answerKey": "sea",
+          "rarity": "rare"
+        },
+        {
+          "id": "word_002_b",
+          "frontText": "푸른 물결",
+          "answerKey": "sea",
+          "rarity": "rare"
+        },
+        {
+          "id": "word_003_a",
+          "frontText": "마법",
+          "answerKey": "magic",
+          "rarity": "epic"
+        },
+        {
+          "id": "word_003_b",
+          "frontText": "신비한 힘",
+          "answerKey": "magic",
+          "rarity": "epic"
+        }
+      ],
+      "rewards": {
+        "xp": 10,
+        "coins": 20,
+        "packChance": 0.1
+      }
+    }
+  ]
+}

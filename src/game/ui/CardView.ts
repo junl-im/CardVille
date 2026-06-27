@@ -1,162 +1,88 @@
 import Phaser from 'phaser';
-import { GameCardData, Rarity } from '../types/GameData';
+import { CardRarity, ModeCardData } from '../types/ModeTypes';
 
-type CardPalette = {
-  border: number;
-  fill: number;
-  glow: number;
-};
-
-const RARITY_PALETTE: Record<Rarity, CardPalette> = {
-  common: { border: 0xf1d8a8, fill: 0xfffbef, glow: 0xffffff },
-  rare: { border: 0x8fc9ff, fill: 0xf1f8ff, glow: 0x78c6ff },
-  epic: { border: 0xc59cff, fill: 0xf7f0ff, glow: 0xb982ff },
-  legendary: { border: 0xffd166, fill: 0xfff7df, glow: 0xffd166 },
+const RARITY_COLORS: Record<CardRarity, number> = {
+  common: 0xf4ead7,
+  rare: 0x8fd3ff,
+  epic: 0xc59bff,
+  legendary: 0xffd36b
 };
 
 export class CardView extends Phaser.GameObjects.Container {
-  readonly data: GameCardData;
-  private readonly widthValue: number;
-  private readonly heightValue: number;
-  private faceUp = false;
-  private locked = false;
+  readonly dataRef: ModeCardData;
   private bg: Phaser.GameObjects.Graphics;
   private label: Phaser.GameObjects.Text;
+  private selected = false;
 
-  constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, data: GameCardData) {
+  constructor(scene: Phaser.Scene, x: number, y: number, data: ModeCardData) {
     super(scene, x, y);
-    this.data = data;
-    this.widthValue = width;
-    this.heightValue = height;
+    this.dataRef = data;
     this.bg = scene.add.graphics();
-    this.label = scene.add
-      .text(0, 0, '', {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: '21px',
-        fontStyle: '900',
-        color: '#4a2732',
-        align: 'center',
-        wordWrap: { width: width - 22 },
-      })
-      .setOrigin(0.5);
+    this.label = scene.add.text(0, 4, data.frontText, {
+      fontFamily: 'system-ui, sans-serif',
+      fontSize: '24px',
+      fontStyle: '700',
+      color: '#4a2432',
+      align: 'center',
+      wordWrap: { width: 108 }
+    }).setOrigin(0.5);
 
     this.add([this.bg, this.label]);
-    this.setSize(width, height);
+    this.setSize(126, 164);
     this.setInteractive({ useHandCursor: true });
-    this.redraw();
+    this.draw();
     scene.add.existing(this);
   }
 
-  isLocked(): boolean {
-    return this.locked;
-  }
-
-  isFaceUp(): boolean {
-    return this.faceUp;
-  }
-
-  flipUp(): Promise<void> {
-    if (this.locked || this.faceUp) return Promise.resolve();
-    return this.flipTo(true);
-  }
-
-  flipDown(): Promise<void> {
-    if (this.locked || !this.faceUp) return Promise.resolve();
-    return this.flipTo(false);
-  }
-
-  markMatched(): void {
-    this.locked = true;
-    this.disableInteractive();
+  setSelected(value: boolean): void {
+    this.selected = value;
     this.scene.tweens.add({
       targets: this,
-      alpha: 0.68,
-      scale: 0.9,
-      y: this.y + 6,
-      duration: 240,
-      ease: 'Back.easeOut',
+      y: value ? this.y - 10 : this.y + 10,
+      scale: value ? 1.04 : 1,
+      duration: 130,
+      ease: 'Sine.easeOut'
+    });
+    this.draw();
+  }
+
+  playCorrect(): void {
+    this.scene.tweens.add({
+      targets: this,
+      scale: 1.14,
+      alpha: 0.2,
+      angle: Phaser.Math.Between(-4, 4),
+      duration: 260,
+      ease: 'Back.easeIn',
+      onComplete: () => this.destroy()
     });
   }
 
-  bounceSelected(): void {
+  playWrong(): void {
     this.scene.tweens.add({
       targets: this,
-      y: this.y - 8,
-      scale: 1.05,
-      duration: 120,
+      x: { from: this.x - 8, to: this.x + 8 },
       yoyo: true,
-      ease: 'Sine.easeOut',
+      repeat: 3,
+      duration: 42,
+      onComplete: () => {
+        this.x = Math.round(this.x);
+      }
     });
   }
 
-  shake(): void {
-    this.scene.tweens.add({
-      targets: this,
-      x: this.x + 7,
-      duration: 45,
-      yoyo: true,
-      repeat: 4,
-      ease: 'Sine.easeInOut',
-    });
-  }
-
-  private flipTo(nextFaceUp: boolean): Promise<void> {
-    return new Promise((resolve) => {
-      this.scene.tweens.add({
-        targets: this,
-        scaleX: 0.04,
-        duration: 110,
-        ease: 'Sine.easeIn',
-        onComplete: () => {
-          this.faceUp = nextFaceUp;
-          this.redraw();
-          this.scene.tweens.add({
-            targets: this,
-            scaleX: 1,
-            duration: 130,
-            ease: 'Sine.easeOut',
-            onComplete: () => resolve(),
-          });
-        },
-      });
-    });
-  }
-
-  private redraw(): void {
-    const w = this.widthValue;
-    const h = this.heightValue;
-    const palette = RARITY_PALETTE[this.data.rarity];
+  private draw(): void {
+    const border = RARITY_COLORS[this.dataRef.rarity];
     this.bg.clear();
-
-    this.bg.fillStyle(0x000000, 0.22);
-    this.bg.fillRoundedRect(-w / 2 + 4, -h / 2 + 6, w, h, 18);
-
-    if (this.faceUp) {
-      this.bg.fillStyle(palette.glow, this.data.rarity === 'common' ? 0.12 : 0.24);
-      this.bg.fillRoundedRect(-w / 2 - 4, -h / 2 - 4, w + 8, h + 8, 20);
-      this.bg.fillStyle(palette.fill, 1);
-      this.bg.lineStyle(3, palette.border, 1);
-      this.bg.fillRoundedRect(-w / 2, -h / 2, w, h, 18);
-      this.bg.strokeRoundedRect(-w / 2, -h / 2, w, h, 18);
-      this.bg.lineStyle(1, 0xffffff, 0.72);
-      this.bg.strokeRoundedRect(-w / 2 + 6, -h / 2 + 6, w - 12, h - 12, 14);
-      this.label.setText(this.data.frontText);
-      this.label.setColor('#4a2732');
-      return;
-    }
-
-    this.bg.fillGradientStyle(0xf49a36, 0xf27726, 0xdc5f1e, 0xb84618, 1);
-    this.bg.lineStyle(3, 0xffe6b5, 0.92);
-    this.bg.fillRoundedRect(-w / 2, -h / 2, w, h, 18);
-    this.bg.strokeRoundedRect(-w / 2, -h / 2, w, h, 18);
-
-    for (let i = -h / 2 + 16; i < h / 2 - 8; i += 18) {
-      this.bg.fillStyle(0xffc06c, 0.23);
-      this.bg.fillEllipse(-w / 4, i, 28, 16);
-      this.bg.fillEllipse(w / 4, i + 4, 28, 16);
-    }
-
-    this.label.setText('★');
-    this.label.setColor('#fff3cf');
+    this.bg.fillStyle(0x000000, 0.2);
+    this.bg.fillRoundedRect(-58, -70, 120, 154, 18);
+    this.bg.fillStyle(0xfffbf1, 1);
+    this.bg.fillRoundedRect(-63, -82, 126, 158, 18);
+    this.bg.lineStyle(this.selected ? 5 : 4, border, this.selected ? 1 : 0.92);
+    this.bg.strokeRoundedRect(-63, -82, 126, 158, 18);
+    this.bg.lineStyle(1, 0xffffff, 0.9);
+    this.bg.strokeRoundedRect(-55, -74, 110, 142, 14);
+    this.bg.fillStyle(0xffffff, 0.22);
+    this.bg.fillRoundedRect(-50, -72, 100, 42, 12);
   }
 }

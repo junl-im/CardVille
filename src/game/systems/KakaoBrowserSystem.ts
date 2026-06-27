@@ -1,19 +1,14 @@
-import Phaser from 'phaser';
-
 export class KakaoBrowserSystem {
-  static isKakaoBrowser(): boolean {
-    return /KAKAOTALK/i.test(navigator.userAgent);
-  }
+  private static installed = false;
 
-  static installBackGuard(scene: Phaser.Scene, onBack: () => void): void {
-    history.pushState({ cardville: true }, '', location.href);
-    const handler = () => {
-      history.pushState({ cardville: true }, '', location.href);
+  static install(onBack: () => void): void {
+    if (this.installed) return;
+    this.installed = true;
+
+    window.history.pushState({ cardville: true }, '', window.location.href);
+    window.addEventListener('popstate', () => {
+      window.history.pushState({ cardville: true }, '', window.location.href);
       onBack();
-    };
-    window.addEventListener('popstate', handler);
-    scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      window.removeEventListener('popstate', handler);
     });
   }
 }

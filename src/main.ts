@@ -1,24 +1,12 @@
+import Phaser from 'phaser';
 import './styles/index.css';
-import { CardVilleGame } from './game/CardVilleGame';
-import { ensureAnonymousSession } from './firebase/auth';
-import { analyticsPromise } from './firebase/firebaseApp';
+import { phaserConfig } from './game/config/phaserConfig';
+import { initializeFirebaseRuntime } from './firebase/firebaseApp';
 
-const containerId = 'app';
+initializeFirebaseRuntime();
 
-void ensureAnonymousSession().catch((error) => {
-  console.warn('[CardVille] Anonymous auth failed:', error);
+const game = new Phaser.Game(phaserConfig);
+
+window.addEventListener('beforeunload', () => {
+  game.events.emit('cardville:before-unload');
 });
-
-void analyticsPromise.catch((error) => {
-  console.warn('[CardVille] Analytics disabled:', error);
-});
-
-new CardVilleGame(containerId);
-
-if ('serviceWorker' in navigator && import.meta.env.PROD) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker
-      .register(`${import.meta.env.BASE_URL}sw.js`)
-      .catch((error) => console.warn('[CardVille] Service worker registration failed:', error));
-  });
-}

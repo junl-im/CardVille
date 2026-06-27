@@ -1,34 +1,28 @@
 {
-  "version": 1,
   "worlds": [
     {
-      "id": "magic_library",
-      "name": "마법 도서관",
-      "description": "촛불, 책, 마법 입자가 흐르는 첫 번째 카드마을 월드",
-      "theme": {
-        "backgroundTop": "#15214a",
-        "backgroundBottom": "#0b1029",
-        "accent": "#f6c76f"
-      },
-      "unlockedByDefault": true
+      "worldId": "magic_library",
+      "title": "마법 도서관",
+      "theme": "blue_gold_glass",
+      "status": "active"
     },
     {
-      "id": "forest",
-      "name": "숲",
-      "description": "나뭇잎과 햇살이 흐르는 시즌 월드",
-      "unlockedByDefault": false
+      "worldId": "forest",
+      "title": "숲의 정원",
+      "theme": "green_sunlight",
+      "status": "planned"
     },
     {
-      "id": "ocean",
-      "name": "바다",
-      "description": "푸른 물결과 유리빛 카드가 어울리는 월드",
-      "unlockedByDefault": false
+      "worldId": "ocean",
+      "title": "유리 바다",
+      "theme": "aqua_reflection",
+      "status": "planned"
     },
     {
-      "id": "space",
-      "name": "우주",
-      "description": "별, 행성, 네온 카드가 등장하는 월드",
-      "unlockedByDefault": false
+      "worldId": "space",
+      "title": "별빛 우주",
+      "theme": "deep_space_neon",
+      "status": "planned"
     }
   ]
 }
