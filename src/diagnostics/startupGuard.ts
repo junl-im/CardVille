@@ -1,5 +1,5 @@
 const FALLBACK_ID = 'cardville-boot-fallback';
-const BUILD_ID = '1.0.1';
+const BUILD_ID = '1.0.2';
 
 function getBasePath(): string {
   return import.meta.env.BASE_URL || '/CardVille/';
@@ -41,6 +41,8 @@ export function installStartupGuard(): void {
 
 export function markGameBooted(): void {
   if (typeof document === 'undefined') return;
+  window.__CARDVILLE_APP_STARTED__ = true;
+  window.__CARDVILLE_MARK_HTML_BOOTED__?.();
   const fallback = document.getElementById(FALLBACK_ID);
   if (!fallback) return;
   fallback.classList.add('is-hidden');

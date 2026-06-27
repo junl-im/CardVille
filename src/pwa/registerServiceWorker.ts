@@ -1,7 +1,7 @@
 import { getBrowserRuntimeInfo } from '../platform/browserEnv';
 
 const BASE_PATH = import.meta.env.BASE_URL || '/CardVille/';
-const BUILD_ID = '1.0.1';
+const BUILD_ID = '1.0.2';
 const CACHE_PREFIX = 'cardville-cache-';
 const MIGRATION_KEY = `cardville.cache.migration.${BUILD_ID}`;
 const RELOAD_KEY = `cardville.cache.migration.${BUILD_ID}.reloaded`;

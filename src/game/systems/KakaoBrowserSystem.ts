@@ -1,4 +1,4 @@
-import { isKakaoBrowser } from '../../platform/browserEnv';
+import { getBrowserRuntimeInfo } from '../../platform/browserEnv';
 
 export class KakaoBrowserSystem {
   private static installed = false;
@@ -6,6 +6,17 @@ export class KakaoBrowserSystem {
   static install(onBack: () => void): void {
     if (this.installed || typeof window === 'undefined') return;
     this.installed = true;
+
+    const runtime = getBrowserRuntimeInfo();
+
+    // Kakao in-app browser can behave unpredictably with early history.pushState.
+    // Do not allow back-button support to block the first boot path.
+    if (runtime.isKakao) {
+      window.addEventListener('pagehide', () => {
+        window.dispatchEvent(new Event('cardville:kakao-pagehide'));
+      });
+      return;
+    }
 
     try {
       const current = window.location.href;
@@ -24,11 +35,5 @@ export class KakaoBrowserSystem {
       }
       onBack();
     });
-
-    if (isKakaoBrowser()) {
-      window.addEventListener('pagehide', () => {
-        window.dispatchEvent(new Event('cardville:kakao-pagehide'));
-      });
-    }
   }
 }

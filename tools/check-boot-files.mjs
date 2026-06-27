@@ -89,4 +89,13 @@ for (const token of ['prepareRuntimeCache', 'updateViaCache', 'reloadOnceAfterMi
   }
 }
 
+const indexHtml = fs.readFileSync('index.html', 'utf8');
+if (!indexHtml.includes('cardville-html-fallback')) {
+  console.error('Boot file check failed: index.html needs an inline HTML fallback.');
+  process.exit(1);
+}
+if (!indexHtml.includes('__CARDVILLE_MARK_HTML_BOOTED__')) {
+  console.error('Boot file check failed: index.html needs HTML boot completion hook.');
+  process.exit(1);
+}
 console.log(`Boot file check passed. Scenes: ${sceneKeys.length}.`);

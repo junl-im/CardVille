@@ -105,7 +105,7 @@ export class LoginScene extends Phaser.Scene {
       wordWrap: { width: 314 }
     }).setOrigin(0.5);
 
-    this.add.text(195, 790, '1.0.1 · Local Guest First', {
+    this.add.text(195, 790, '1.0.2 · Local Guest First', {
       fontSize: '11px',
       color: '#8da9d8'
     }).setOrigin(0.5);

@@ -6,6 +6,8 @@ export class GameButton extends Phaser.GameObjects.Container {
   private hitZone: Phaser.GameObjects.Zone;
   private readonly widthValue: number;
   private readonly heightValue: number;
+  private readonly hitWidth: number;
+  private readonly hitHeight: number;
   private readonly color: number;
   private isPressed = false;
 
@@ -13,9 +15,11 @@ export class GameButton extends Phaser.GameObjects.Container {
     super(scene, x, y);
     this.widthValue = width;
     this.heightValue = height;
+    this.hitWidth = width + 56;
+    this.hitHeight = Math.max(height + 38, 68);
     this.color = color;
     this.bg = scene.add.graphics();
-    this.hitZone = scene.add.zone(0, 0, width + 34, height + 22).setOrigin(0.5);
+    this.hitZone = scene.add.zone(0, 0, this.hitWidth, this.hitHeight).setOrigin(0.5);
     this.hitZone.setInteractive({ useHandCursor: true });
     this.label = scene.add.text(0, 0, text, {
       fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
@@ -25,9 +29,24 @@ export class GameButton extends Phaser.GameObjects.Container {
     }).setOrigin(0.5);
 
     this.add([this.bg, this.hitZone, this.label]);
-    this.setSize(width + 34, height + 22);
+    this.setSize(this.hitWidth, this.hitHeight);
     this.draw(1);
+    this.bindInput();
+    scene.add.existing(this);
+  }
 
+  setEnabled(enabled: boolean): this {
+    if (this.hitZone.input) this.hitZone.input.enabled = enabled;
+    this.setAlpha(enabled ? 1 : 0.54);
+    return this;
+  }
+
+  setText(text: string): this {
+    this.label.setText(text);
+    return this;
+  }
+
+  private bindInput(): void {
     this.hitZone.on('pointerover', () => this.draw(1.05));
     this.hitZone.on('pointerout', () => {
       this.isPressed = false;
@@ -41,28 +60,15 @@ export class GameButton extends Phaser.GameObjects.Container {
     });
     this.hitZone.on('pointerup', (pointer: Phaser.Input.Pointer) => {
       pointer.event?.preventDefault?.();
-      const wasPressed = this.isPressed;
+      const shouldFire = this.isPressed;
       this.isPressed = false;
       this.scene.tweens.add({ targets: this, scale: 1, duration: 120, ease: 'Back.easeOut' });
-      if (wasPressed) this.emit('pointerup', pointer);
+      if (shouldFire) this.emit('pointerup', pointer);
     });
     this.hitZone.on('pointerupoutside', () => {
       this.isPressed = false;
       this.scene.tweens.add({ targets: this, scale: 1, duration: 90, ease: 'Sine.easeOut' });
     });
-
-    scene.add.existing(this);
-  }
-
-  setEnabled(enabled: boolean): this {
-    this.hitZone.input!.enabled = enabled;
-    this.setAlpha(enabled ? 1 : 0.54);
-    return this;
-  }
-
-  setText(text: string): this {
-    this.label.setText(text);
-    return this;
   }
 
   private draw(brightness: number): void {
@@ -86,5 +92,10 @@ export class GameButton extends Phaser.GameObjects.Container {
     this.bg.fillRoundedRect(-w / 2 + 14, -h / 2 + 8, w - 28, Math.max(14, h * 0.28), 12);
     this.bg.fillStyle(0xffffff, 0.10);
     this.bg.fillCircle(w / 2 - 34, -h / 2 + 22, 18);
+
+    if (import.meta.env.DEV) {
+      this.bg.lineStyle(1, 0x00ffcc, 0.18);
+      this.bg.strokeRoundedRect(-this.hitWidth / 2, -this.hitHeight / 2, this.hitWidth, this.hitHeight, 22);
+    }
   }
 }
