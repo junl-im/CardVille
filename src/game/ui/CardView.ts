@@ -37,6 +37,10 @@ export class CardView extends Phaser.GameObjects.Container {
     this.dataRef = data;
     this.baseY = y;
     this.bg = scene.add.graphics();
+    const frameKey = `frame:${data.rarity}`;
+    const frameImage = scene.textures.exists(frameKey)
+      ? scene.add.image(0, -4, frameKey).setDisplaySize(128, 181).setAlpha(0.98)
+      : null;
 
     const textureKey = VisualSystem.imageTextureKey(data.frontImageKey);
     if (textureKey && scene.textures.exists(textureKey)) {
@@ -74,7 +78,7 @@ export class CardView extends Phaser.GameObjects.Container {
       padding: { left: 8, right: 8, top: 3, bottom: 3 }
     }).setOrigin(0.5);
 
-    this.add([this.bg, this.visual, this.label, this.subLabel, this.rarityBadge]);
+    this.add(frameImage ? [this.bg, frameImage, this.visual, this.label, this.subLabel, this.rarityBadge] : [this.bg, this.visual, this.label, this.subLabel, this.rarityBadge]);
     this.setSize(128, 166);
     this.setInteractive(new Phaser.Geom.Rectangle(-64, -84, 128, 166), Phaser.Geom.Rectangle.Contains);
     this.draw();

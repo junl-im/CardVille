@@ -1,5 +1,5 @@
 {
-  "version": 9,
+  "version": "1.0-preview",
   "game": "CardVille",
   "style": {
     "concept": "Aqua Glass + Cute Premium + 2.5D",
@@ -48,11 +48,11 @@
     "sfx starter pack",
     "world season backgrounds"
   ],
-  "seedAssetPack": {
-    "generatedIn": "v0.9",
-    "totalGeneratedRasterAssets": 329,
-    "note": "These are consistent PNG/WebP seed placeholders for layout, loader and texture pipeline. Replace with final AI art at the same paths."
-  },
-  "introVideo": "assets/video/cardville_intro_loading.mp4",
-  "preloadImagesFile": "src/game/assets/preloadImages.ts"
+  "integratedAt": "2026-06-27",
+  "integrationNotes": [
+    "Applied user Aqua Glass PNG mega asset pack",
+    "5,000 card image index is lazy-loaded",
+    "SVG remains forbidden",
+    "2 damaged PNG files repaired"
+  ]
 }

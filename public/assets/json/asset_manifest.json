@@ -1,0 +1,28 @@
+{
+  "project": "CardVille",
+  "style": "Aqua Glass + Cute Premium + 2.5D",
+  "format": "PNG only, no SVG",
+  "light": "top-left",
+  "shadow": "bottom-right",
+  "counts": {
+    "backgrounds": 44,
+    "card_frames": 72,
+    "card_backs": 20,
+    "card_shadows": 3,
+    "card_shine": 8,
+    "icons": 300,
+    "buttons": 60,
+    "popups": 12,
+    "particles": 60,
+    "effects": 40,
+    "packs": 16,
+    "badges": 12,
+    "progress": 15,
+    "ranks": 7,
+    "numbers": 10,
+    "card_images": 5000,
+    "ui_preview": 1
+  },
+  "total_png": 5680,
+  "note": "카드 이미지 5,000장은 실게임 삽입용 경량 PNG 스타터 일러스트입니다. 출시용 핵심 카드는 같은 스타일 규칙으로 1024 원본 AI 일러스트로 선별 교체 권장."
+}

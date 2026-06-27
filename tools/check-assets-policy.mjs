@@ -19,6 +19,7 @@ function walk(dir) {
 
 for (const file of walk(path.join(root, 'public'))) {
   const ext = path.extname(file).toLowerCase();
+  if (file.endsWith('~')) errors.push(`Backup/temp asset is forbidden: ${path.relative(root, file)}`);
   if (bannedExtensions.has(ext)) errors.push(`SVG is forbidden: ${path.relative(root, file)}`);
   if (file.includes(`${path.sep}assets${path.sep}`) && ['.gif', '.bmp', '.tiff'].includes(ext)) {
     errors.push(`Unsupported asset format: ${path.relative(root, file)}`);

@@ -1,8 +1,8 @@
 {
   "name": "cardville",
-  "version": "0.9.0",
+  "version": "1.0.0-preview",
   "private": true,
-  "description": "CardVille - premium Dream Library card puzzle and collection game with intro video, local guest fallback and generated asset seed pack.",
+  "description": "CardVille - premium Dream Library card puzzle with large Aqua Glass PNG asset pack, image catalog, guest fallback and Phaser/Firebase engine.",
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
@@ -11,9 +11,10 @@
     "typecheck": "tsc --noEmit",
     "check:imports": "node tools/check-relative-imports.mjs",
     "check:json": "node tools/check-json-data.mjs",
-    "verify": "npm run check:imports && npm run check:json && npm run check:assets && npm run build && npm run check:budget",
+    "verify": "npm run check:imports && npm run check:json && npm run check:assets && npm run check:catalog && npm run build && npm run check:budget",
     "check:assets": "node tools/check-assets-policy.mjs",
-    "check:budget": "node tools/check-bundle-budget.mjs"
+    "check:budget": "node tools/check-bundle-budget.mjs",
+    "check:catalog": "node tools/check-asset-catalog.mjs"
   },
   "dependencies": {
     "firebase": "12.15.0",

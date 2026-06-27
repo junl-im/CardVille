@@ -14,6 +14,16 @@ const BACKGROUND_COLORS: Record<PremiumBackgroundVariant, [number, number, numbe
   forest: [0x124d58, 0x1b7067, 0x0d2435, 0x061119]
 };
 
+const BACKGROUND_TEXTURES: Partial<Record<PremiumBackgroundVariant, string>> = {
+  library: 'bg:dream_library_day',
+  play: 'bg:magic_school_day',
+  reward: 'bg:dream_library_event',
+  album: 'bg:crystal_cave_day',
+  settings: 'bg:night_sky_night',
+  space: 'bg:space_night',
+  forest: 'bg:forest_day'
+};
+
 export class VisualSystem {
   static imageTextureKey(imageKey?: string): string | null {
     return imageKey ? `img:${imageKey}` : null;
@@ -26,9 +36,20 @@ export class VisualSystem {
 
   static drawPremiumBackground(scene: Phaser.Scene, variant: PremiumBackgroundVariant = 'library'): Phaser.GameObjects.Graphics {
     const [tl, tr, bl, br] = BACKGROUND_COLORS[variant];
+    const bgKey = BACKGROUND_TEXTURES[variant];
+    if (bgKey && scene.textures.exists(bgKey)) {
+      scene.add.image(195, 422, bgKey).setDisplaySize(844, 844).setAlpha(0.92);
+    }
+
     const g = scene.add.graphics();
-    g.fillGradientStyle(tl, tr, bl, br, 1);
+    g.fillGradientStyle(tl, tr, bl, br, bgKey ? 0.36 : 1);
     g.fillRect(0, 0, 390, 844);
+    if (bgKey) {
+      g.fillStyle(0x020714, 0.20);
+      g.fillRect(0, 0, 390, 844);
+      g.fillStyle(0xffffff, 0.055);
+      g.fillRoundedRect(18, 84, 354, 684, 42);
+    }
 
     // soft premium bokeh
     g.fillStyle(0xffffff, 0.035);

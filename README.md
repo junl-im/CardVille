@@ -182,3 +182,23 @@ npm run check:budget
 ```
 
 즉, 앞으로는 상대 import 누락, JSON 짝 데이터 오류, SVG 유입, TypeScript 빌드 오류, 번들 예산 초과를 배포 전에 잡습니다.
+
+
+## v1.0-preview Mega Asset Update
+
+이번 버전은 업로드된 Aqua Glass PNG 에셋팩을 실제 프로젝트에 통합한 대규모 프리뷰입니다.
+
+- 5,000장 카드 이미지 인덱스 적용
+- 카드 이미지 도감 추가
+- 현재 페이지 9장만 lazy-load하여 모바일 성능 보호
+- 실제 배경 PNG를 VisualSystem에 연결
+- 카드 등급별 프레임 PNG 연결
+- 에셋 검증 스크립트 강화
+- 손상 PNG 2개 복구 및 임시/백업 파일 제거
+
+추가 검증:
+
+```bash
+npm run check:catalog
+npm run verify
+```

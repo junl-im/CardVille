@@ -112,24 +112,27 @@ export class MainLobbyScene extends Phaser.Scene {
   }
 
   private createMenu(): void {
-    const play = new GameButton(this, 195, 430, '꿈의 서고 입장', 306, 64, 0xffd86f);
+    const play = new GameButton(this, 195, 414, '꿈의 서고 입장', 306, 58, 0xffd86f);
     play.on('pointerup', () => this.scene.start('ModeSelectScene'));
 
-    const collection = new GameButton(this, 195, 510, '카드 컬렉션', 306, 58, 0x8fd3ff);
+    const collection = new GameButton(this, 195, 486, '카드 컬렉션', 306, 54, 0x8fd3ff);
     collection.on('pointerup', () => this.scene.start('CollectionScene'));
 
-    const mission = new GameButton(this, 195, 582, '오늘의 미션', 306, 58, 0xc59bff);
+    const gallery = new GameButton(this, 195, 554, '5,000장 이미지 도감', 306, 54, 0xb7ffd8);
+    gallery.on('pointerup', () => this.scene.start('AssetGalleryScene'));
+
+    const mission = new GameButton(this, 195, 622, '오늘의 미션', 306, 54, 0xc59bff);
     mission.on('pointerup', () => this.scene.start('MissionScene'));
 
-    const settings = new GameButton(this, 112, 660, '설정', 144, 50, 0xb7ffd8);
+    const settings = new GameButton(this, 112, 694, '설정', 144, 48, 0xb7ffd8);
     settings.on('pointerup', () => this.scene.start('SettingsScene'));
 
-    const logout = new GameButton(this, 278, 660, '계정', 144, 50, 0xf5aacb);
+    const logout = new GameButton(this, 278, 694, '계정', 144, 48, 0xf5aacb);
     logout.on('pointerup', () => this.signOut());
 
-    new GlassPanel(this, 195, 744, 314, 82, 26, 0.10);
-    this.add.text(195, 728, 'Aqua Glass · Cute Premium · 2.5D', { fontSize: '13px', fontStyle: '900', color: '#dff7ff' }).setOrigin(0.5);
-    this.add.text(195, 752, 'v0.9 · Intro Video + Asset Seed Pack', { fontSize: '11px', color: '#9fb8e9' }).setOrigin(0.5);
+    new GlassPanel(this, 195, 780, 314, 68, 24, 0.11);
+    this.add.text(195, 766, 'Aqua Glass · Cute Premium · 2.5D', { fontSize: '13px', fontStyle: '900', color: '#dff7ff' }).setOrigin(0.5);
+    this.add.text(195, 790, 'v1.0-preview · 5,000 PNG Asset Mega Pack', { fontSize: '11px', color: '#9fb8e9' }).setOrigin(0.5);
   }
 
   private async signOut(): Promise<void> {

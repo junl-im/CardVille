@@ -17,6 +17,8 @@ export class LoadingScene extends Phaser.Scene {
     this.createLoadingUi();
 
     this.load.json('assetManifest', `${import.meta.env.BASE_URL}assets/manifest/assets.manifest.json`);
+    this.load.json('assetPackManifest', `${import.meta.env.BASE_URL}assets/json/asset_manifest.json`);
+    this.load.json('cardsImageIndex', `${import.meta.env.BASE_URL}assets/json/cards_image_index.json`);
     this.load.json('modeCatalog', `${import.meta.env.BASE_URL}assets/data/modes/catalog.json`);
     this.load.json('worlds', `${import.meta.env.BASE_URL}assets/data/worlds/worlds.json`);
     this.load.json('collectionBase', `${import.meta.env.BASE_URL}assets/data/cards/collection.base.json`);
@@ -61,7 +63,7 @@ export class LoadingScene extends Phaser.Scene {
       shadow: { offsetX: 0, offsetY: 0, color: '#8fd3ff', blur: 14, fill: true }
     }).setOrigin(0.5);
 
-    this.loadingNote = this.add.text(195, 650, '인트로와 카드 에셋을 준비하고 있어요.', {
+    this.loadingNote = this.add.text(195, 650, '인트로와 대형 에셋 인덱스를 준비하고 있어요.', {
       fontSize: '13px',
       fontStyle: '800',
       color: '#cfe8ff',
