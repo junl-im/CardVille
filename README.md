@@ -1,4 +1,4 @@
-# 카드마을 CardVille v1.0-rc.1
+# 카드마을 CardVille v1.0-rc.2
 
 CardVille은 `Phaser 3 + TypeScript + Firebase + GitHub Pages` 기반의 모바일 수집형 카드 퍼즐 게임입니다.  
 현재 버전은 **v1.0 출시 후보(RC)** 단계로, 대형 Aqua Glass 에셋팩을 실제 화면에 연결하고 UI/성능/검증 구조를 강화했습니다.
@@ -15,7 +15,7 @@ Firebase 무료 플랜 중심
 게스트 즉시 시작 + Firebase fallback
 ```
 
-## v1.0-rc.1 핵심 업데이트
+## v1.0-rc.2 핵심 업데이트
 
 ```txt
 ✅ 메인 로비 레이아웃 재설계
@@ -141,4 +141,23 @@ v1.0-final
 - 컬렉션 세트 완성 보상
 - 스테이지 밸런스 및 난이도 조정
 - Firebase/로컬 게스트 데이터 마이그레이션 정리
+```
+
+
+## v1.0-rc.2 부팅 안정화 핫픽스
+
+첫 화면이 열리지 않는 문제를 우선 해결하기 위해 부팅 안정화 패치를 적용했습니다.
+
+- 이전 service worker/cache-first 문제 방지
+- `/CardVille/reset.html` 캐시 초기화 페이지 추가
+- production 기본 PWA service worker 등록 비활성화
+- JavaScript 부팅 오류 fallback 화면 추가
+- Firebase Auth restore 타임아웃 추가
+- Phaser 렌더러를 안정 우선 CANVAS로 변경
+- `npm run check:boot` 검증 추가
+
+기존 배포에서 빈 화면이 보이면 아래 주소를 한 번 열어 캐시를 정리하세요.
+
+```txt
+https://junl-im.github.io/CardVille/reset.html
 ```

@@ -1,8 +1,8 @@
 {
   "name": "cardville",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0-rc.2",
   "private": true,
-  "description": "CardVille v1.0-rc - polished Dream Library card collection puzzle with large Aqua Glass assets, safer guest flow, world/card-back customization, premium pack presentation and verification pipeline.",
+  "description": "CardVille v1.0-rc.2 - boot stability, service worker cache recovery, runtime diagnostics and safer first-screen startup.",
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
@@ -11,11 +11,12 @@
     "typecheck": "tsc --noEmit",
     "check:imports": "node tools/check-relative-imports.mjs",
     "check:json": "node tools/check-json-data.mjs",
-    "verify": "npm run check:imports && npm run check:json && npm run check:assets && npm run check:catalog && npm run check:ui && npm run build && npm run check:budget",
+    "verify": "npm run check:boot && npm run check:imports && npm run check:json && npm run check:assets && npm run check:catalog && npm run check:ui && npm run build && npm run check:budget",
     "check:assets": "node tools/check-assets-policy.mjs",
     "check:budget": "node tools/check-bundle-budget.mjs",
     "check:catalog": "node tools/check-asset-catalog.mjs",
-    "check:ui": "node tools/check-ui-layout.mjs"
+    "check:ui": "node tools/check-ui-layout.mjs",
+    "check:boot": "node tools/check-boot-files.mjs"
   },
   "dependencies": {
     "firebase": "12.15.0",

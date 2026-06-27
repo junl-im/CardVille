@@ -125,3 +125,81 @@ canvas {
   border-radius: 13px;
   font-size: 13px;
 }
+
+#app {
+  position: relative;
+}
+
+#cardville-boot-fallback {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  box-sizing: border-box;
+  background: radial-gradient(circle at 50% 18%, #26588e, #111f44 58%, #060816);
+  transition: opacity 360ms ease;
+}
+
+#cardville-boot-fallback.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#cardville-boot-fallback .cv-boot-card {
+  width: min(326px, 100%);
+  padding: 28px 22px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.08));
+  box-shadow: 0 30px 80px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.26);
+  text-align: center;
+  backdrop-filter: blur(14px);
+}
+
+#cardville-boot-fallback .cv-boot-mark {
+  width: 82px;
+  height: 82px;
+  margin: 0 auto 18px;
+  display: grid;
+  place-items: center;
+  border-radius: 28px;
+  color: #15213e;
+  background: linear-gradient(160deg, #e8fbff, #ffd86f);
+  font: 900 32px Georgia, serif;
+  box-shadow: 0 16px 38px rgba(0,0,0,0.22), 0 0 34px rgba(143,211,255,0.28);
+}
+
+#cardville-boot-fallback .cv-boot-title {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+#cardville-boot-fallback .cv-boot-note {
+  margin-top: 10px;
+  color: #d7e9ff;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.55;
+}
+
+#cardville-boot-fallback .cv-boot-reset {
+  width: 100%;
+  height: 48px;
+  margin-top: 18px;
+  border: 0;
+  border-radius: 17px;
+  color: #18213b;
+  background: linear-gradient(180deg, #ffffff, #bfe9ff);
+  box-shadow: 0 12px 26px rgba(0,0,0,0.20), inset 0 1px 0 rgba(255,255,255,0.8);
+  font-size: 15px;
+  font-weight: 900;
+}
+
+#app canvas {
+  position: relative;
+  z-index: 1;
+}

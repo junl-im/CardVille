@@ -22,7 +22,7 @@ export const GAME_WIDTH = 390;
 export const GAME_HEIGHT = 844;
 
 export const phaserConfig: Phaser.Types.Core.GameConfig = {
-  type: Phaser.AUTO,
+  type: Phaser.CANVAS,
   parent: 'app',
   width: GAME_WIDTH,
   height: GAME_HEIGHT,
@@ -33,6 +33,9 @@ export const phaserConfig: Phaser.Types.Core.GameConfig = {
   },
   dom: {
     createContainer: true
+  },
+  input: {
+    activePointers: 3
   },
   render: {
     antialias: true,

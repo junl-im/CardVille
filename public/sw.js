@@ -1,20 +1,12 @@
-const CACHE_NAME = 'cardville-cache-v1-rc1';
+const CACHE_NAME = 'cardville-cache-v1-rc2';
+const CACHE_PREFIX = 'cardville-cache-';
 const CORE_ASSETS = [
-  '/CardVille/',
-  '/CardVille/index.html',
   '/CardVille/manifest.webmanifest',
   '/CardVille/assets/manifest/assets.manifest.json',
   '/CardVille/assets/json/asset_manifest.json',
   '/CardVille/assets/json/cards_image_index.json',
   '/CardVille/assets/data/modes/catalog.json',
-  '/CardVille/assets/data/modes/word_ko_basic.json',
-  '/CardVille/assets/data/modes/math_basic.json',
-  '/CardVille/assets/data/modes/memory_basic.json',
-  '/CardVille/assets/data/modes/english_basic.json',
-  '/CardVille/assets/data/modes/puzzle_basic.json',
-  '/CardVille/assets/data/cards/collection.base.json',
-  '/CardVille/assets/data/packs/card_packs.json',
-  '/CardVille/assets/backgrounds/dream_library_day.png'
+  '/CardVille/assets/data/cards/collection.base.json'
 ];
 
 self.addEventListener('install', (event) => {
@@ -24,7 +16,7 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))))
+    caches.keys().then((keys) => Promise.all(keys.filter((key) => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME).map((key) => caches.delete(key))))
   );
   self.clients.claim();
 });
@@ -34,20 +26,22 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   if (!url.pathname.startsWith('/CardVille/')) return;
 
-  // The 5,000-card image library is intentionally lazy-loaded and not forced into PWA cache.
-  // This protects free hosting users from excessive storage growth on mobile browsers.
-  const skipRuntimeCache = url.pathname.includes('/assets/cards_image/');
+  const isNavigation = event.request.mode === 'navigate' || url.pathname.endsWith('/CardVille/') || url.pathname.endsWith('/index.html');
+  const isBuildAsset = url.pathname.includes('/assets/') && /\.(js|css)$/i.test(url.pathname);
+  const isLargeCardImage = url.pathname.includes('/assets/cards_image/');
+
+  if (isNavigation || isBuildAsset || isLargeCardImage) {
+    event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
+    return;
+  }
 
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) return cached;
-      return fetch(event.request).then((response) => {
-        if (!skipRuntimeCache && response.ok) {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy)).catch(() => undefined);
-        }
-        return response;
-      });
-    })
+    fetch(event.request).then((response) => {
+      if (response.ok) {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy)).catch(() => undefined);
+      }
+      return response;
+    }).catch(() => caches.match(event.request))
   );
 });

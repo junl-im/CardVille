@@ -83,11 +83,15 @@ export class AuthSystem {
     if (this.initialized) return this.currentUser;
 
     let unsubscribe = (): void => undefined;
-    const user = await new Promise<User | null>((resolve) => {
+    const user = await withTimeout(new Promise<User | null>((resolve) => {
       unsubscribe = observeAuth((authUser) => {
         unsubscribe();
         resolve(authUser);
       });
+    }), 3200).catch((error) => {
+      console.warn('[CardVille] Auth restore timed out. Login screen will stay playable.', error);
+      try { unsubscribe(); } catch { /* noop */ }
+      return null;
     });
 
     if (user) {
