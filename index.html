@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <title>카드마을 &lt;CardVille&gt;</title>
     <script>
-      window.__CARDVILLE_BUILD_ID__ = '1.0.2';
+      window.__CARDVILLE_BUILD_ID__ = '1.0.3';
       window.__CARDVILLE_BASE_PATH__ = '/CardVille/';
       window.__CARDVILLE_HTML_BOOT_VISIBLE_AT__ = Date.now();
     </script>
@@ -38,9 +38,9 @@
           <div class="cv-html-bar"><span></span></div>
           <div class="cv-html-actions" id="cardville-html-actions" style="display:none">
             <button type="button" id="cardville-html-reload">다시 불러오기</button>
-            <a href="/CardVille/reset.html?from=html-fallback&v=1.0.2">자동 복구 실행</a>
+            <a href="/CardVille/reset.html?from=html-fallback&v=1.0.3">자동 복구 실행</a>
           </div>
-          <div class="cv-html-small">1.0.2 · GitHub Pages / Kakao safe boot</div>
+          <div class="cv-html-small">1.0.3 · GitHub Pages / Kakao safe boot</div>
         </div>
       </div>
     </div>
@@ -76,5 +76,38 @@
       })();
     </script>
     <script type="module" src="/src/main.ts"></script>
+  <!-- DEPLOY_FILES_CHECK_1_0_3 -->
+
+<script>
+(function(){
+  var base = window.__CARDVILLE_BASE_PATH__ || '/CardVille/';
+  var required = [
+    base + 'reset.html',
+    base + 'health.html',
+    base + 'build.json'
+  ];
+  var moduleEl = document.querySelector('script[type="module"][src]');
+  if (moduleEl) required.unshift(moduleEl.getAttribute('src'));
+  function setNote(msg){
+    var note=document.getElementById('cardville-html-note');
+    if(note) note.textContent=msg;
+    var actions=document.getElementById('cardville-html-actions');
+    if(actions) actions.style.display='grid';
+  }
+  setTimeout(function(){
+    if(window.__CARDVILLE_APP_STARTED__) return;
+    Promise.all(required.map(function(url){
+      return fetch(url, {cache:'no-store'}).then(function(r){return {url:url, ok:r.ok, status:r.status};}).catch(function(e){return {url:url, ok:false, status:'ERR'};});
+    })).then(function(results){
+      if(window.__CARDVILLE_APP_STARTED__) return;
+      var bad=results.filter(function(x){return !x.ok;});
+      if(bad.length){
+        setNote('배포 파일 일부가 없습니다: '+bad.map(function(x){return x.url.split('/').slice(-1)[0]+'('+x.status+')';}).join(', ')+' · 정적 ZIP의 내용물을 루트에 모두 올려주세요.');
+      }
+    });
+  }, 1400);
+})();
+</script>
+
   </body>
 </html>

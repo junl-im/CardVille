@@ -1,8 +1,8 @@
 {
   "name": "cardville",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
-  "description": "CardVille 1.0.2 - visible HTML boot fallback, branch-root deployment diagnostics, Kakao boot guard, and stronger mobile touch handling.",
+  "description": "CardVille 1.0.3 - visible HTML boot fallback, branch-root deployment diagnostics, Kakao boot guard, and stronger mobile touch handling.",
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
