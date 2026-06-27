@@ -1,0 +1,131 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function validUserCreate(userId) {
+      return request.resource.data.keys().hasOnly([
+        'uid', 'nickname', 'displayName', 'provider', 'providerIds', 'isAnonymous', 'emailVerified',
+        'createdAt', 'updatedAt', 'lastLoginAt', 'level', 'xp', 'coins', 'gems',
+        'selectedWorld', 'selectedCardBack'
+      ])
+      && request.resource.data.uid == userId
+      && request.resource.data.nickname is string
+      && request.resource.data.displayName is string
+      && request.resource.data.provider is string
+      && request.resource.data.providerIds is list
+      && request.resource.data.isAnonymous is bool
+      && request.resource.data.emailVerified is bool
+      && request.resource.data.level is int
+      && request.resource.data.xp is int
+      && request.resource.data.coins is int
+      && request.resource.data.gems is int;
+    }
+
+    function validUserUpdate(userId) {
+      return request.resource.data.uid == resource.data.uid
+      && resource.data.uid == userId
+      && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+        'nickname', 'displayName', 'provider', 'providerIds', 'isAnonymous', 'emailVerified',
+        'updatedAt', 'lastLoginAt', 'level', 'xp', 'coins', 'gems',
+        'selectedWorld', 'selectedCardBack'
+      ]);
+    }
+
+    match /publicConfig/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /publicGameData/{collectionId}/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /users/{userId} {
+      allow create: if isOwner(userId) && validUserCreate(userId);
+      allow read: if isOwner(userId);
+      allow update: if isOwner(userId) && validUserUpdate(userId);
+      allow delete: if false;
+
+      match /progress/{modeId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId)
+          && request.resource.data.keys().hasOnly([
+            'modeId', 'currentStage', 'maxUnlockedStage', 'clearedStages', 'totalStars',
+            'bestScore', 'totalPlayCount', 'stages', 'updatedAt', 'updatedAtClient'
+          ])
+          && request.resource.data.modeId == modeId
+          && request.resource.data.currentStage is int
+          && request.resource.data.maxUnlockedStage is int
+          && request.resource.data.clearedStages is int
+          && request.resource.data.totalStars is int
+          && request.resource.data.bestScore is int
+          && request.resource.data.totalPlayCount is int
+          && request.resource.data.currentStage >= 0
+          && request.resource.data.maxUnlockedStage >= 0
+          && request.resource.data.totalStars >= 0;
+        allow delete: if false;
+      }
+
+      match /collections/{cardId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId)
+          && request.resource.data.keys().hasOnly([
+            'cardId', 'name', 'rarity', 'imageKey', 'setId', 'count', 'firstObtainedAt', 'updatedAt'
+          ])
+          && request.resource.data.cardId == cardId
+          && request.resource.data.count is int
+          && request.resource.data.count >= 1
+          && request.resource.data.name is string
+          && request.resource.data.imageKey is string
+          && request.resource.data.setId is string;
+        allow delete: if false;
+      }
+
+      match /packs/{packId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId)
+          && request.resource.data.keys().hasOnly([
+            'packId', 'source', 'opened', 'createdAt', 'openedAt', 'rewards'
+          ])
+          && request.resource.data.packId == packId;
+        allow update: if isOwner(userId)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['opened', 'openedAt', 'rewards']);
+        allow delete: if false;
+      }
+
+      match /missions/{missionId} {
+        allow read, create, update: if isOwner(userId);
+        allow delete: if false;
+      }
+
+      match /settings/{settingId} {
+        allow read, create, update: if isOwner(userId);
+        allow delete: if false;
+      }
+    }
+
+    match /leaderboards/{modeId}/entries/{userId} {
+      allow read: if true;
+      allow create, update: if isOwner(userId)
+        && request.resource.data.keys().hasOnly(['uid', 'nickname', 'score', 'stage', 'updatedAt'])
+        && request.resource.data.uid == userId
+        && request.resource.data.score is int
+        && request.resource.data.score >= 0
+        && request.resource.data.score <= 9999999;
+      allow delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

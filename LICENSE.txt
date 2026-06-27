@@ -1,0 +1,4 @@
+Copyright (c) 2026 CardVille.
+
+Private development package for CardVille / Dream Cards Engine.
+Do not redistribute assets or source code without permission.
