@@ -1,14 +1,33 @@
-export type CardRarity = 'common' | 'rare' | 'epic' | 'legendary';
+export type CardRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic';
+
+export interface ModeCatalogItem {
+  modeId: string;
+  title: string;
+  subtitle: string;
+  icon: string;
+  status: 'open' | 'locked' | 'soon';
+  unlockText?: string;
+}
+
+export interface ModeCatalog {
+  version: number;
+  modes: ModeCatalogItem[];
+}
 
 export interface ModeCardData {
   id: string;
   frontText: string;
+  frontSubText?: string;
+  frontEmoji?: string;
+  frontImageKey?: string;
   answerKey: string;
   rarity: CardRarity;
 }
 
 export interface ModeStageData {
   stageId: string;
+  title: string;
+  subtitle?: string;
   goal: {
     type: 'match_pairs' | 'memory_flip' | 'math_answer' | 'color_select';
     targetCount: number;
@@ -18,6 +37,7 @@ export interface ModeStageData {
     xp: number;
     coins: number;
     packChance: number;
+    packId?: string;
   };
 }
 
@@ -28,4 +48,19 @@ export interface ModeData {
   world: string;
   difficulty: number;
   stages: ModeStageData[];
+}
+
+export interface PlayResultData {
+  modeId: string;
+  stageIndex: number;
+  stageTitle: string;
+  score: number;
+  combo: number;
+  clear: boolean;
+  rewards: {
+    xp: number;
+    coins: number;
+    packChance: number;
+    packId?: string;
+  };
 }

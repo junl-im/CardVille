@@ -1,27 +1,45 @@
 {
+  "version": 1,
   "worlds": [
     {
       "worldId": "magic_library",
-      "title": "마법 도서관",
-      "theme": "blue_gold_glass",
-      "status": "active"
+      "title": "꿈의 도서관",
+      "theme": "aqua_glass_magic",
+      "status": "open",
+      "backgrounds": {
+        "day": "backgrounds/magic_library_day.webp",
+        "night": "backgrounds/magic_library_night.webp",
+        "event": "backgrounds/magic_library_event.webp"
+      }
     },
     {
       "worldId": "forest",
-      "title": "숲의 정원",
-      "theme": "green_sunlight",
+      "title": "숲",
+      "theme": "soft_green_glass",
       "status": "planned"
     },
     {
-      "worldId": "ocean",
-      "title": "유리 바다",
+      "worldId": "sea",
+      "title": "바다",
       "theme": "aqua_reflection",
       "status": "planned"
     },
     {
       "worldId": "space",
-      "title": "별빛 우주",
-      "theme": "deep_space_neon",
+      "title": "우주",
+      "theme": "deep_neon_glass",
+      "status": "planned"
+    },
+    {
+      "worldId": "cherry_blossom",
+      "title": "벚꽃",
+      "theme": "pink_petal_glass",
+      "status": "planned"
+    },
+    {
+      "worldId": "winter",
+      "title": "겨울",
+      "theme": "ice_glass",
       "status": "planned"
     }
   ]

@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "game": "CardVille",
+  "style": {
+    "concept": "Aqua Glass + Cute Premium + 2.5D",
+    "forbidden": ["svg", "flat elementary educational style", "hard black outline", "low resolution"],
+    "allowedFormats": ["webp", "png", "spritesheet png", "texture atlas png/json"],
+    "sourceSize": "1024x1024",
+    "lightDirection": "top-left",
+    "shadowDirection": "bottom-right",
+    "mood": "soft premium, slightly dimensional, glossy, cute but not childish"
+  },
+  "directories": {
+    "backgrounds": "assets/backgrounds/",
+    "cardFrames": "assets/cards/frames/",
+    "cardBacks": "assets/cards/backs/",
+    "cardShine": "assets/cards/shine/",
+    "cardShadows": "assets/cards/shadows/",
+    "icons": "assets/icons/",
+    "buttons": "assets/buttons/",
+    "popup": "assets/popup/",
+    "particles": "assets/particles/",
+    "effects": "assets/effects/",
+    "packs": "assets/packs/",
+    "badges": "assets/badges/",
+    "ui": "assets/ui/",
+    "fonts": "assets/fonts/",
+    "audio": "assets/audio/",
+    "cardImages": "assets/cards_image/",
+    "json": "assets/json/"
+  },
+  "priority": [
+    "magic_library backgrounds",
+    "basic card frame set",
+    "basic card back set",
+    "core icons",
+    "fruit and animal card images",
+    "button and popup atlas",
+    "particle atlas",
+    "sfx starter pack"
+  ]
+}

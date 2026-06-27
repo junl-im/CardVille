@@ -1,8 +1,8 @@
 {
   "name": "cardville",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "description": "CardVille - Korean mobile AAA casual card puzzle game built with Phaser 3, TypeScript, Vite and Firebase.",
+  "description": "CardVille - Aqua Glass premium 2.5D card puzzle and collection game built with Phaser 3, TypeScript, Vite and Firebase.",
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
@@ -11,7 +11,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@vitejs/plugin-basic-ssl": "latest",
     "firebase": "latest",
     "phaser": "latest",
     "vite": "latest",

@@ -1,10 +1,27 @@
 {
-  "setId": "base_001",
-  "title": "카드마을 첫 번째 앨범",
-  "cards": [
-    { "cardId": "cv_common_001", "name": "도서관 견습생", "rarity": "common", "world": "magic_library" },
-    { "cardId": "cv_rare_001", "name": "푸른 책갈피", "rarity": "rare", "world": "magic_library" },
-    { "cardId": "cv_epic_001", "name": "별빛 주문서", "rarity": "epic", "world": "magic_library" },
-    { "cardId": "cv_legend_001", "name": "황금 마법 카드", "rarity": "legendary", "world": "magic_library" }
+  "version": 1,
+  "sets": [
+    {
+      "setId": "starter_fruits",
+      "title": "과일 친구들",
+      "world": "magic_library",
+      "cards": [
+        { "cardId": "apple_001", "name": "사과", "rarity": "common", "imageKey": "cards_image/fruits/apple_001.webp" },
+        { "cardId": "banana_001", "name": "바나나", "rarity": "common", "imageKey": "cards_image/fruits/banana_001.webp" },
+        { "cardId": "grape_001", "name": "포도", "rarity": "rare", "imageKey": "cards_image/fruits/grape_001.webp" },
+        { "cardId": "strawberry_001", "name": "딸기", "rarity": "uncommon", "imageKey": "cards_image/fruits/strawberry_001.webp" }
+      ]
+    },
+    {
+      "setId": "starter_animals",
+      "title": "동물 친구들",
+      "world": "forest",
+      "cards": [
+        { "cardId": "cat_001", "name": "고양이", "rarity": "common", "imageKey": "cards_image/animals/cat_001.webp" },
+        { "cardId": "dog_001", "name": "강아지", "rarity": "common", "imageKey": "cards_image/animals/dog_001.webp" },
+        { "cardId": "lion_001", "name": "사자", "rarity": "epic", "imageKey": "cards_image/animals/lion_001.webp" },
+        { "cardId": "whale_001", "name": "고래", "rarity": "rare", "imageKey": "cards_image/sea/whale_001.webp" }
+      ]
+    }
   ]
 }
