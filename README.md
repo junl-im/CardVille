@@ -46,3 +46,13 @@ https://junl-im.github.io/CardVille/
 - Firebase 익명 로그인 및 유저 문서 생성
 - Firestore 진행도 저장 함수
 - GitHub Actions 자동 배포
+
+## v0.1.1 GitHub Actions fix
+
+The deploy workflow was changed to use `npm install --no-audit --no-fund` without npm cache because the first starter package did not include `package-lock.json`. This fixes the GitHub Actions error:
+
+```txt
+Error: Dependencies lock file is not found
+```
+
+Later, after running `npm install` locally, commit the generated `package-lock.json` and switch back to `npm ci` if you want stricter builds.
