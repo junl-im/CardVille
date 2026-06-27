@@ -32,7 +32,7 @@ export class MainLobbyScene extends Phaser.Scene {
     new GlassPanel(this, 195, 214, 334, 210, 30, 0.14);
     const name = AuthSystem.currentUser?.isAnonymous ? '여행자' : AuthSystem.currentUser?.displayName ?? '카드마을 주민';
     this.add.text(48, 142, `환영해요, ${name}!`, { fontSize: '22px', fontStyle: '900', color: '#ffffff' }).setOrigin(0, 0.5);
-    this.add.text(48, 184, '오늘은 꿈의 도서관에서\n새로운 그림 카드를 모아볼까요?', {
+    this.add.text(48, 184, '오늘은 꿈의 서고에서\n새로운 마법서를 펼쳐볼까요?', {
       fontSize: '18px',
       color: '#d9e8ff',
       lineSpacing: 5
@@ -41,8 +41,8 @@ export class MainLobbyScene extends Phaser.Scene {
   }
 
   private createMenu(): void {
-    const play = new GameButton(this, 195, 390, '게임 선택', 300, 64, 0xffd86f);
-    play.on('pointerup', () => this.scene.start('ModeSelectScene'));
+    const play = new GameButton(this, 195, 390, '꿈의 서고 입장', 300, 64, 0xffd86f);
+    play.on('pointerup', () => this.scene.start('ModeSelectScene')); // Dream Library
 
     const collection = new GameButton(this, 195, 472, '카드 컬렉션', 300, 64, 0x8fd3ff);
     collection.on('pointerup', () => this.scene.start('CollectionScene'));

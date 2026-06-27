@@ -7,6 +7,10 @@ export interface ModeCatalogItem {
   icon: string;
   status: 'open' | 'locked' | 'soon';
   unlockText?: string;
+  bookTitle?: string;
+  bookSpine?: string;
+  bookColor?: string;
+  worldNote?: string;
 }
 
 export interface ModeCatalog {

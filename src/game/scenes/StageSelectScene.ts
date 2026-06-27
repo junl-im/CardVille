@@ -13,7 +13,7 @@ export class StageSelectScene extends Phaser.Scene {
 
   async create(data: { modeId: string }): Promise<void> {
     this.drawBackground();
-    this.add.text(34, 54, '‹ 게임 선택', { fontSize: '20px', fontStyle: '900', color: '#ffffff' })
+    this.add.text(34, 54, '‹ 꿈의 서고', { fontSize: '20px', fontStyle: '900', color: '#ffffff' })
       .setOrigin(0, 0.5)
       .setInteractive({ useHandCursor: true })
       .on('pointerup', () => this.scene.start('ModeSelectScene'));
@@ -21,7 +21,7 @@ export class StageSelectScene extends Phaser.Scene {
     try {
       this.mode = await ModeSystem.loadMode(data.modeId ?? 'word_ko_basic');
       this.add.text(34, 112, this.mode.title, { fontSize: '34px', fontStyle: '900', color: '#ffffff' });
-      this.add.text(34, 152, '스테이지를 선택하세요.', { fontSize: '15px', color: '#cfe3ff' });
+      this.add.text(34, 152, '책 속의 장을 선택하세요.', { fontSize: '15px', color: '#cfe3ff' });
       this.mode.stages.forEach((stage, index) => this.createStageCard(stage, index));
     } catch (error) {
       this.add.text(195, 420, '스테이지를 불러오지 못했어요.', { fontSize: '18px', color: '#ffffff' }).setOrigin(0.5);

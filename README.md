@@ -36,7 +36,7 @@ https://junl-im.github.io/CardVille/
 
 `vite.config.ts`의 base는 `/CardVille/`로 설정되어 있습니다.
 
-## v0.2.1 화면 흐름
+## v0.3.0 화면 흐름
 
 ```txt
 Splash
@@ -96,7 +96,7 @@ Aqua Glass + Cute Premium + 2.5D
 현재 워크플로는 lock 파일 없이도 동작하도록 `npm install --no-audit --no-fund`를 사용합니다.
 
 
-## v0.2.1 Build Fix
+## v0.3.0 Build Fix
 
 이 버전은 GitHub Actions 빌드 오류를 수정했습니다.
 
@@ -106,3 +106,15 @@ Aqua Glass + Cute Premium + 2.5D
 - `latest` 의존성 제거 및 안정 버전 고정
 - `package-lock.json` 포함
 - `npm run build` 검증 완료
+
+
+## v0.3 업데이트 - 꿈의 서고
+
+CardVille의 게임 선택 화면을 단순 메뉴가 아니라 메인 월드인 **꿈의 서고(Dream Library)** 로 전환했습니다.
+
+- 낱말의 책, 연산의 책, 기억력의 책, 영어의 책, 퍼즐의 책 구조 추가
+- 새 모드는 `catalog.json`에 새 마법서 데이터만 추가하는 방식으로 확장
+- Aqua Glass + Cute Premium + 2.5D 방향을 유지하는 책 UI 적용
+- 잠긴 책 안내 토스트와 책 펼치기 전환 연출 추가
+
+자세한 내용은 `docs/DREAM_LIBRARY_WORLD.md`를 확인하세요.
