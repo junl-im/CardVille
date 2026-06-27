@@ -4,8 +4,6 @@ import { phaserConfig } from './game/config/phaserConfig';
 import { prepareRuntimeCache, registerServiceWorker } from './pwa/registerServiceWorker';
 import { installGlobalErrorReporter, installStartupGuard, markGameBooted, showBootError } from './diagnostics/startupGuard';
 
-window.__CARDVILLE_APP_STARTED__ = true;
-window.__CARDVILLE_MARK_HTML_BOOTED__?.();
 installGlobalErrorReporter();
 installStartupGuard();
 
@@ -20,14 +18,17 @@ async function startCardVille(): Promise<void> {
     game.events.once(Phaser.Core.Events.READY, () => {
       window.setTimeout(() => {
         markGameBooted();
-        window.__CARDVILLE_MARK_HTML_BOOTED__?.();
       }, 240);
     });
 
     window.setTimeout(() => {
-      markGameBooted();
-      window.__CARDVILLE_MARK_HTML_BOOTED__?.();
-    }, 1800);
+      if (window.__CARDVILLE_APP_STARTED__) return;
+      const app = document.getElementById('app');
+      const note = app?.querySelector<HTMLElement>('.cv-boot-note');
+      if (note) {
+        note.textContent = '게임 엔진 응답이 늦어지고 있어요. 배포된 JS 파일과 브라우저 호환성을 확인 중입니다.';
+      }
+    }, 4500);
 
     window.addEventListener('beforeunload', () => {
       game.events.emit('cardville:before-unload');

@@ -18,7 +18,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - name: Checkout
@@ -33,6 +33,8 @@ jobs:
         run: |
           node --version
           npm --version
+          pwd
+          ls -la
 
       - name: Install dependencies
         run: |
@@ -40,8 +42,43 @@ jobs:
           rm -f package-lock.json npm-shrinkwrap.json
           npm install --no-audit --no-fund --no-package-lock
 
-      - name: Build
+      - name: Verify and build
         run: npm run verify
+
+      - name: Create deployment proof files
+        run: |
+          test -f dist/index.html
+          test -f dist/reset.html
+          test -f dist/health.html
+          test -f dist/build.json
+          test -d dist/assets
+          ASSET_COUNT=$(find dist/assets -type f | wc -l)
+          INDEX_JS_COUNT=$(find dist/assets -maxdepth 1 -name 'index-*.js' -type f | wc -l)
+          if [ "$INDEX_JS_COUNT" -lt 1 ]; then
+            echo "No built index JS found in dist/assets" >&2
+            find dist/assets -maxdepth 1 -type f | sort >&2
+            exit 1
+          fi
+          cat > dist/deploy-proof.txt <<PROOF
+          CardVille deploy proof
+          version=1.0.4
+          sha=${GITHUB_SHA}
+          run_id=${GITHUB_RUN_ID}
+          run_number=${GITHUB_RUN_NUMBER}
+          built_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          assets=${ASSET_COUNT}
+          index_js=${INDEX_JS_COUNT}
+          PROOF
+          cat > dist/version.json <<JSON
+          {"name":"CardVille","version":"1.0.4","sha":"${GITHUB_SHA}","runId":"${GITHUB_RUN_ID}","runNumber":"${GITHUB_RUN_NUMBER}","builtAt":"$(date -u +%Y-%m-%dT%H:%M:%SZ)"}
+          JSON
+          cat > dist/deploy-proof.html <<HTML
+          <!doctype html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>CardVille Deploy Proof 1.0.4</title><style>body{margin:0;background:#06142e;color:white;font-family:system-ui;display:grid;place-items:center;min-height:100vh}.box{width:min(420px,92vw);border:1px solid rgba(255,255,255,.24);border-radius:28px;padding:24px;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.07));box-shadow:0 24px 70px rgba(0,0,0,.35)}code{word-break:break-all;color:#ffe38a}</style></head><body><main class="box"><h1>CardVille Deploy Proof</h1><p>GitHub Actions artifact is live.</p><p>version: <b>1.0.4</b></p><p>run: <code>${GITHUB_RUN_ID}</code></p><p>sha: <code>${GITHUB_SHA}</code></p><p><a style="color:#8ef5ff" href="/CardVille/">게임 열기</a></p></main></body></html>
+          HTML
+          echo "===== dist root ====="
+          find dist -maxdepth 1 -type f -printf '%f\n' | sort
+          echo "===== dist assets root ====="
+          find dist/assets -maxdepth 1 -type f -printf '%f\n' | sort | head -40
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
@@ -62,3 +99,7 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Print deployed URL
+        run: |
+          echo "${{ steps.deployment.outputs.page_url }}"

@@ -40,6 +40,10 @@ export class SplashScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     this.tweens.add({ targets: orb, scale: 1.06, alpha: 0.82, yoyo: true, repeat: -1, duration: 850 });
+
+    window.__CARDVILLE_APP_STARTED__ = true;
+    window.__CARDVILLE_MARK_HTML_BOOTED__?.();
+
     this.time.delayedCall(1000, () => this.scene.start('LoadingScene'));
   }
 }
