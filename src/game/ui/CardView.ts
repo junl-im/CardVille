@@ -1,14 +1,15 @@
 import Phaser from 'phaser';
 import { CardRarity, ModeCardData } from '../types/ModeTypes';
 import { PerformanceSystem } from '../systems/PerformanceSystem';
+import { VisualSystem } from '../systems/VisualSystem';
 
 const RARITY_COLORS: Record<CardRarity, number> = {
-  common: 0xf4ead7,
-  uncommon: 0xa7f3d0,
+  common: 0xd8ecff,
+  uncommon: 0x9fffd0,
   rare: 0x8fd3ff,
-  epic: 0xc59bff,
-  legendary: 0xffd36b,
-  mythic: 0xff7bc8
+  epic: 0xc49bff,
+  legendary: 0xffd86f,
+  mythic: 0xff8fd8
 };
 
 const RARITY_LABELS: Record<CardRarity, string> = {
@@ -23,7 +24,7 @@ const RARITY_LABELS: Record<CardRarity, string> = {
 export class CardView extends Phaser.GameObjects.Container {
   readonly dataRef: ModeCardData;
   private bg: Phaser.GameObjects.Graphics;
-  private icon: Phaser.GameObjects.Text;
+  private visual: Phaser.GameObjects.Text | Phaser.GameObjects.Image;
   private label: Phaser.GameObjects.Text;
   private subLabel: Phaser.GameObjects.Text;
   private rarityBadge: Phaser.GameObjects.Text;
@@ -36,39 +37,46 @@ export class CardView extends Phaser.GameObjects.Container {
     this.dataRef = data;
     this.baseY = y;
     this.bg = scene.add.graphics();
-    this.icon = scene.add.text(0, -35, data.frontEmoji ?? '✦', {
-      fontFamily: 'system-ui, sans-serif',
-      fontSize: '40px',
-      color: '#ffffff',
-      align: 'center'
-    }).setOrigin(0.5);
-    this.label = scene.add.text(0, 29, data.frontText, {
+
+    const textureKey = VisualSystem.imageTextureKey(data.frontImageKey);
+    if (textureKey && scene.textures.exists(textureKey)) {
+      this.visual = scene.add.image(0, -33, textureKey).setDisplaySize(72, 72).setOrigin(0.5);
+    } else {
+      this.visual = scene.add.text(0, -35, data.frontEmoji ?? '✦', {
+        fontFamily: 'system-ui, sans-serif',
+        fontSize: '40px',
+        color: '#ffffff',
+        align: 'center'
+      }).setOrigin(0.5);
+    }
+
+    this.label = scene.add.text(0, 30, data.frontText, {
       fontFamily: 'system-ui, sans-serif',
       fontSize: this.getLabelSize(data.frontText),
       fontStyle: '900',
-      color: '#35213e',
+      color: '#1c2440',
       align: 'center',
-      wordWrap: { width: 106 }
+      wordWrap: { width: 108 }
     }).setOrigin(0.5);
-    this.subLabel = scene.add.text(0, 53, data.frontSubText ?? '', {
+    this.subLabel = scene.add.text(0, 54, data.frontSubText ?? '', {
       fontFamily: 'system-ui, sans-serif',
       fontSize: '10px',
       fontStyle: '800',
-      color: '#6c5578',
+      color: '#58647e',
       align: 'center',
       wordWrap: { width: 104 }
     }).setOrigin(0.5);
-    this.rarityBadge = scene.add.text(0, -70, RARITY_LABELS[data.rarity], {
+    this.rarityBadge = scene.add.text(0, -72, RARITY_LABELS[data.rarity], {
       fontSize: '10px',
       fontStyle: '900',
-      color: '#17243c',
-      backgroundColor: 'rgba(255, 255, 255, 0.8)',
-      padding: { left: 7, right: 7, top: 3, bottom: 3 }
+      color: '#14233c',
+      backgroundColor: 'rgba(255, 255, 255, 0.86)',
+      padding: { left: 8, right: 8, top: 3, bottom: 3 }
     }).setOrigin(0.5);
 
-    this.add([this.bg, this.icon, this.label, this.subLabel, this.rarityBadge]);
-    this.setSize(126, 164);
-    this.setInteractive(new Phaser.Geom.Rectangle(-63, -82, 126, 164), Phaser.Geom.Rectangle.Contains);
+    this.add([this.bg, this.visual, this.label, this.subLabel, this.rarityBadge]);
+    this.setSize(128, 166);
+    this.setInteractive(new Phaser.Geom.Rectangle(-64, -84, 128, 166), Phaser.Geom.Rectangle.Contains);
     this.draw();
     scene.add.existing(this);
   }
@@ -82,7 +90,7 @@ export class CardView extends Phaser.GameObjects.Container {
       scale: 1,
       y: this.baseY,
       delay: index * 45,
-      duration: 320,
+      duration: 340,
       ease: 'Back.easeOut'
     });
   }
@@ -93,10 +101,10 @@ export class CardView extends Phaser.GameObjects.Container {
     this.scene.tweens.killTweensOf(this);
     this.scene.tweens.add({
       targets: this,
-      y: value ? this.baseY - 12 : this.baseY,
-      scale: value ? 1.055 : 1,
-      angle: value ? -1.2 : 0,
-      duration: PerformanceSystem.motionDuration(150),
+      y: value ? this.baseY - 14 : this.baseY,
+      scale: value ? 1.06 : 1,
+      angle: value ? -1.1 : 0,
+      duration: PerformanceSystem.motionDuration(155),
       ease: 'Sine.easeOut'
     });
     this.draw();
@@ -107,11 +115,11 @@ export class CardView extends Phaser.GameObjects.Container {
     this.matched = true;
     this.disableInteractive();
     this.scene.tweens.killTweensOf(this);
-    const duration = PerformanceSystem.motionDuration(320);
+    const duration = PerformanceSystem.motionDuration(330);
     this.scene.tweens.add({
       targets: this,
-      y: this.baseY - 24,
-      scale: 1.1,
+      y: this.baseY - 28,
+      scale: 1.12,
       angle: Phaser.Math.Between(-3, 3),
       duration: duration / 2,
       ease: 'Back.easeOut',
@@ -119,8 +127,8 @@ export class CardView extends Phaser.GameObjects.Container {
         this.scene.tweens.add({
           targets: this,
           alpha: 0,
-          scale: 0.78,
-          y: this.baseY - 50,
+          scale: 0.76,
+          y: this.baseY - 56,
           duration,
           ease: 'Sine.easeIn',
           onComplete: () => this.destroy()
@@ -148,13 +156,13 @@ export class CardView extends Phaser.GameObjects.Container {
 
   private playShine(): void {
     if (PerformanceSystem.getProfile().reducedMotion) return;
-    const shine = this.scene.add.rectangle(-58, -78, 22, 156, 0xffffff, 0.28).setOrigin(0.5).setAngle(-16);
+    const shine = this.scene.add.rectangle(-60, -78, 24, 158, 0xffffff, 0.30).setOrigin(0.5).setAngle(-16);
     this.add(shine);
     this.scene.tweens.add({
       targets: shine,
-      x: 70,
+      x: 72,
       alpha: 0,
-      duration: 420,
+      duration: 430,
       ease: 'Sine.easeOut',
       onComplete: () => shine.destroy()
     });
@@ -163,29 +171,32 @@ export class CardView extends Phaser.GameObjects.Container {
   private draw(): void {
     const border = RARITY_COLORS[this.dataRef.rarity];
     this.bg.clear();
-    this.bg.fillStyle(0x000000, 0.27);
-    this.bg.fillRoundedRect(-55, -64, 120, 154, 22);
-    this.bg.fillGradientStyle(0xffffff, 0xfffbf1, 0xdceaff, 0xfff3d5, 1);
-    this.bg.fillRoundedRect(-63, -82, 126, 158, 22);
-    this.bg.lineStyle(this.selected ? 6 : 4, border, this.selected ? 1 : 0.92);
-    this.bg.strokeRoundedRect(-63, -82, 126, 158, 22);
-    this.bg.lineStyle(1, 0xffffff, 0.9);
-    this.bg.strokeRoundedRect(-54, -73, 108, 140, 16);
-    this.bg.fillStyle(0xffffff, 0.28);
-    this.bg.fillRoundedRect(-48, -72, 96, 45, 14);
-    this.bg.fillStyle(border, 0.16);
-    this.bg.fillCircle(0, -35, 37);
-    this.bg.fillStyle(border, this.selected ? 0.22 : 0.1);
-    this.bg.fillRoundedRect(-50, 14, 100, 52, 14);
+    this.bg.fillStyle(0x000000, 0.30);
+    this.bg.fillRoundedRect(-55, -62, 122, 154, 24);
+    this.bg.fillGradientStyle(0xffffff, 0xf7fdff, 0xd9e7ff, 0xfff2d7, 1);
+    this.bg.fillRoundedRect(-64, -84, 128, 160, 24);
+    this.bg.lineStyle(this.selected ? 6 : 4, border, this.selected ? 1 : 0.94);
+    this.bg.strokeRoundedRect(-64, -84, 128, 160, 24);
+    this.bg.lineStyle(1, 0xffffff, 0.92);
+    this.bg.strokeRoundedRect(-54, -74, 108, 140, 18);
+    this.bg.fillStyle(0xffffff, 0.30);
+    this.bg.fillRoundedRect(-48, -74, 96, 47, 16);
+    this.bg.fillStyle(border, 0.15);
+    this.bg.fillCircle(0, -35, 43);
+    this.bg.fillStyle(0xffffff, 0.42);
+    this.bg.fillCircle(-16, -51, 18);
+    this.bg.fillStyle(border, this.selected ? 0.24 : 0.11);
+    this.bg.fillRoundedRect(-50, 15, 100, 52, 15);
     if (['epic', 'legendary', 'mythic'].includes(this.dataRef.rarity)) {
-      this.bg.lineStyle(1, border, 0.36);
-      this.bg.strokeCircle(0, -35, 43);
+      this.bg.lineStyle(1, border, 0.42);
+      this.bg.strokeCircle(0, -35, 46);
+      this.bg.strokeCircle(0, -35, 36);
     }
   }
 
   private getLabelSize(text: string): string {
-    if (text.length >= 8) return '15px';
-    if (text.length >= 5) return '18px';
-    return '21px';
+    if (text.length >= 8) return '14px';
+    if (text.length >= 5) return '17px';
+    return '20px';
   }
 }

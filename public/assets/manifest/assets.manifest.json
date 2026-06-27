@@ -1,5 +1,5 @@
 {
-  "version": 8,
+  "version": 9,
   "game": "CardVille",
   "style": {
     "concept": "Aqua Glass + Cute Premium + 2.5D",
@@ -47,5 +47,12 @@
     "card pack opening effects",
     "sfx starter pack",
     "world season backgrounds"
-  ]
+  ],
+  "seedAssetPack": {
+    "generatedIn": "v0.9",
+    "totalGeneratedRasterAssets": 329,
+    "note": "These are consistent PNG/WebP seed placeholders for layout, loader and texture pipeline. Replace with final AI art at the same paths."
+  },
+  "introVideo": "assets/video/cardville_intro_loading.mp4",
+  "preloadImagesFile": "src/game/assets/preloadImages.ts"
 }

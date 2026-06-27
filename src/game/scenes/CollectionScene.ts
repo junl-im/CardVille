@@ -212,11 +212,14 @@ export class CollectionScene extends Phaser.Scene {
     frame.fillStyle(0xffffff, isOwned ? 0.33 : 0.08);
     frame.fillRoundedRect(-22, -38, 44, 10, 6);
 
-    const icon = this.add.text(0, -17, isOwned ? VisualSystem.emojiForCardId(card.cardId) : '?', {
-      fontSize: isOwned ? '28px' : '25px',
-      fontStyle: '900',
-      color: '#ffffff'
-    }).setOrigin(0.5);
+    const textureKey = VisualSystem.imageTextureKey(card.imageKey);
+    const icon = isOwned && textureKey && this.textures.exists(textureKey)
+      ? this.add.image(0, -17, textureKey).setDisplaySize(42, 42).setOrigin(0.5)
+      : this.add.text(0, -17, isOwned ? VisualSystem.emojiForCardId(card.cardId) : '?', {
+        fontSize: isOwned ? '28px' : '25px',
+        fontStyle: '900',
+        color: '#ffffff'
+      }).setOrigin(0.5);
 
     const name = this.add.text(0, 22, isOwned ? card.name : '미획득', {
       fontSize: this.getCardNameSize(card.name),

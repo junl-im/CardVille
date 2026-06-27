@@ -188,9 +188,12 @@ export class RewardScene extends Phaser.Scene {
     frame.fillStyle(0xffffff, 0.4);
     frame.fillRoundedRect(-30, -48, 60, 13, 8);
 
-    const emoji = this.add.text(0, -19, this.getFallbackEmoji(card.cardId), {
-      fontSize: '34px'
-    }).setOrigin(0.5);
+    const textureKey = VisualSystem.imageTextureKey(card.imageKey);
+    const emoji = textureKey && this.textures.exists(textureKey)
+      ? this.add.image(0, -19, textureKey).setDisplaySize(48, 48).setOrigin(0.5)
+      : this.add.text(0, -19, this.getFallbackEmoji(card.cardId), {
+        fontSize: '34px'
+      }).setOrigin(0.5);
 
     const name = this.add.text(0, 31, card.name, {
       fontSize: '15px',

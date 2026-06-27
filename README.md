@@ -1,3 +1,32 @@
+# CardVille v0.9.0
+
+카드마을은 Phaser 3 + TypeScript + Firebase + GitHub Pages 기반의 모바일 수집형 카드 퍼즐 게임입니다.
+
+## v0.9 핵심
+
+- 게스트 시작 실패 방지: Firebase Anonymous 실패 시 로컬 게스트 fallback
+- 업로드 인트로 영상을 3.3초 로딩 영상으로 적용
+- Login/Main Lobby/Glass UI/Button 디자인 대대 개선
+- WebP 카드 이미지 로더 적용
+- PNG/WebP 시드 에셋 329개 추가
+- SVG 사용 금지 유지
+- npm run verify 통과
+
+## 실행
+
+```bash
+npm install --no-audit --no-fund --no-package-lock
+npm run dev
+```
+
+## 검증
+
+```bash
+npm run verify
+```
+
+---
+
 # 카드마을 <CardVille>
 
 **CardVille**은 `Aqua Glass + Cute Premium + 2.5D` 스타일의 모바일 카드 퍼즐/수집 게임입니다.  

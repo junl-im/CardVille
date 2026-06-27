@@ -144,7 +144,8 @@ export class UserDataSystem {
   }
 
   static getLoginStateLabel(profile: UserProfileDoc): string {
-    if (profile.isAnonymous) return '게스트 계정';
+    if (AuthSystem.isLocalGuest() || profile.provider === 'local-guest') return '로컬 게스트';
+    if (profile.isAnonymous) return 'Firebase 게스트';
     if (profile.providerIds.includes('google.com')) return 'Google 계정';
     if (profile.providerIds.includes('password')) return '이메일 계정';
     return 'Firebase 계정';

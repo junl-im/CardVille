@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { AuthSystem } from '../systems/AuthSystem';
 import { GameButton } from '../ui/GameButton';
 import { GlassPanel } from '../ui/GlassPanel';
+import { VisualSystem } from '../systems/VisualSystem';
 
 export class LoginScene extends Phaser.Scene {
   private statusText!: Phaser.GameObjects.Text;
@@ -14,65 +15,93 @@ export class LoginScene extends Phaser.Scene {
 
   async create(): Promise<void> {
     this.drawBackground();
-    new GlassPanel(this, 195, 426, 342, 558, 30, 0.15);
+    this.createBrandHero();
+    this.createActionPanel();
 
-    this.add.text(195, 176, '카드마을 입장', {
-      fontFamily: 'system-ui, sans-serif',
-      fontSize: '34px',
+    try {
+      const user = await AuthSystem.restore();
+      if (user) {
+        this.setStatus(AuthSystem.isLocalGuest()
+          ? '로컬 게스트 진행도를 확인했어요. 바로 입장합니다.'
+          : '기존 로그인 확인 완료. 메인 로비로 이동합니다.');
+        this.time.delayedCall(380, () => this.scene.start('MainLobbyScene'));
+      } else {
+        this.setStatus('게스트로 바로 시작할 수 있어요. Firebase가 막혀도 로컬 게스트로 입장합니다.');
+      }
+    } catch (error) {
+      this.setStatus('로그인 상태 확인 중 문제가 있었지만, 게스트 시작은 계속 사용할 수 있어요.');
+      console.warn(error);
+    }
+  }
+
+  private createBrandHero(): void {
+    new GlassPanel(this, 195, 184, 334, 236, 34, 0.13);
+
+    const halo = this.add.graphics();
+    halo.fillStyle(0x8fd3ff, 0.18);
+    halo.fillCircle(195, 130, 82);
+    halo.fillStyle(0xffd86f, 0.12);
+    halo.fillCircle(195, 130, 52);
+    this.tweens.add({ targets: halo, scale: 1.06, alpha: 0.86, duration: 1200, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+
+    this.add.text(195, 128, 'CardVille', {
+      fontFamily: 'Georgia, serif',
+      fontSize: '42px',
       fontStyle: '900',
-      color: '#ffffff'
+      color: '#ffffff',
+      shadow: { offsetX: 0, offsetY: 0, color: '#8fd3ff', blur: 18, fill: true }
     }).setOrigin(0.5);
 
-    this.add.text(195, 222, '꿈의 서고에 오신 것을 환영해요.\n게스트로 바로 시작하거나 계정을 연결하세요.', {
-      fontFamily: 'system-ui, sans-serif',
+    this.add.text(195, 176, '카드마을 · 꿈의 서고', {
+      fontSize: '22px',
+      fontStyle: '900',
+      color: '#ffe8a6'
+    }).setOrigin(0.5);
+
+    this.add.text(195, 222, '그림과 단서를 맞추고\n카드팩을 열어 앨범을 완성하세요.', {
       fontSize: '15px',
       color: '#d9e8ff',
       align: 'center',
       lineSpacing: 6
     }).setOrigin(0.5);
+  }
 
-    const guest = new GameButton(this, 195, 296, '게스트로 바로 시작', 270, 54, 0xffd86f);
+  private createActionPanel(): void {
+    new GlassPanel(this, 195, 518, 342, 504, 34, 0.15);
+
+    const guest = new GameButton(this, 195, 330, '게스트로 바로 시작', 286, 60, 0xffd86f);
     guest.on('pointerup', () => this.signInGuest());
 
-    const google = new GameButton(this, 195, 366, 'Google로 계속하기', 270, 54, 0x8fd3ff);
+    const google = new GameButton(this, 195, 404, 'Google로 계속하기', 286, 56, 0x8fd3ff);
     google.on('pointerup', () => this.signInGoogle());
+
+    this.add.text(195, 456, '게스트 저장은 기기 안에 보관되고, 나중에 계정 연결을 할 수 있어요.', {
+      fontSize: '12px',
+      color: '#b9ceef',
+      align: 'center',
+      wordWrap: { width: 286 }
+    }).setOrigin(0.5);
 
     this.createEmailForm();
 
-    this.statusText = this.add.text(195, 706, '로그인 상태 확인 중...', {
-      fontFamily: 'system-ui, sans-serif',
-      fontSize: '14px',
-      color: '#bdd6ff',
+    this.statusText = this.add.text(195, 732, '로그인 상태 확인 중...', {
+      fontSize: '13px',
+      fontStyle: '800',
+      color: '#d5e8ff',
       align: 'center',
-      wordWrap: { width: 300 }
+      wordWrap: { width: 304 }
     }).setOrigin(0.5);
 
-    this.add.text(195, 760, '게스트 진행도는 나중에 이메일/Google 계정으로 연결할 수 있어요.', {
-      fontFamily: 'system-ui, sans-serif',
-      fontSize: '12px',
-      color: '#8fb1df',
-      align: 'center',
-      wordWrap: { width: 310 }
+    this.add.text(195, 790, 'v0.9 · Firebase + Local Guest Safety', {
+      fontSize: '11px',
+      color: '#8da9d8'
     }).setOrigin(0.5);
-
-    try {
-      const user = await AuthSystem.restore();
-      if (user) {
-        this.setStatus('기존 로그인 확인 완료. 메인 로비로 이동합니다.');
-        this.time.delayedCall(300, () => this.scene.start('MainLobbyScene'));
-      } else {
-        this.setStatus('로그인 방법을 선택하세요.');
-      }
-    } catch (error) {
-      this.setStatus('로그인 상태 확인 실패. Firebase 설정과 네트워크를 확인해 주세요.');
-      console.warn(error);
-    }
   }
 
   private createEmailForm(): void {
     const html = `
-      <div class="cardville-login-form">
-        <div class="cv-form-title">이메일 계정</div>
+      <div class="cardville-login-form compact">
+        <div class="cv-form-title">이메일 계정 연결</div>
         <input name="email" type="email" placeholder="email@example.com" autocomplete="email" />
         <input name="password" type="password" placeholder="비밀번호 6자 이상" autocomplete="current-password" />
         <div class="cv-form-row">
@@ -82,7 +111,7 @@ export class LoginScene extends Phaser.Scene {
       </div>
     `;
 
-    this.emailPanel = this.add.dom(195, 530).createFromHTML(html);
+    this.emailPanel = this.add.dom(195, 594).createFromHTML(html);
     const root = this.emailPanel.node as HTMLElement;
     root.querySelector<HTMLButtonElement>('[data-action="email-login"]')?.addEventListener('click', () => this.signInEmail());
     root.querySelector<HTMLButtonElement>('[data-action="email-create"]')?.addEventListener('click', () => this.createEmailAccount());
@@ -109,12 +138,15 @@ export class LoginScene extends Phaser.Scene {
   private async signInGuest(): Promise<void> {
     if (this.busy) return;
     this.busy = true;
-    this.setStatus('게스트 로그인 중...');
+    this.setStatus('게스트 입장 준비 중...');
     try {
       await AuthSystem.signInGuest();
-      this.scene.start('MainLobbyScene');
+      this.setStatus(AuthSystem.isLocalGuest()
+        ? 'Firebase 익명 로그인이 막혀 로컬 게스트로 입장합니다. 게임은 바로 플레이할 수 있어요.'
+        : 'Firebase 게스트 로그인 완료. 꿈의 서고로 이동합니다.');
+      this.time.delayedCall(360, () => this.scene.start('MainLobbyScene'));
     } catch (error) {
-      this.setStatus('게스트 로그인 실패. Firebase Auth의 익명 로그인을 확인하세요.');
+      this.setStatus('게스트 입장에 실패했어요. 새로고침 후 다시 시도해 주세요.');
       console.warn(error);
     } finally {
       this.busy = false;
@@ -173,22 +205,17 @@ export class LoginScene extends Phaser.Scene {
   }
 
   private setStatus(message: string): void {
-    this.statusText.setText(message);
+    this.statusText?.setText(message);
   }
 
   private drawBackground(): void {
-    const g = this.add.graphics();
-    g.fillGradientStyle(0x173b70, 0x173b70, 0x0b1534, 0x060918, 1);
-    g.fillRect(0, 0, 390, 844);
+    VisualSystem.drawPremiumBackground(this, 'library');
+    VisualSystem.spawnAmbientStars(this, 38);
 
-    for (let i = 0; i < 54; i += 1) {
-      g.fillStyle(0xffffff, Phaser.Math.FloatBetween(0.05, 0.16));
-      g.fillCircle(Phaser.Math.Between(0, 390), Phaser.Math.Between(0, 844), Phaser.Math.FloatBetween(1, 2.3));
-    }
-
-    g.fillStyle(0x8fd3ff, 0.08);
-    g.fillCircle(315, 172, 130);
-    g.fillStyle(0xffd86f, 0.06);
-    g.fillCircle(62, 724, 170);
+    const floor = this.add.graphics();
+    floor.fillStyle(0x000000, 0.14);
+    floor.fillRoundedRect(18, 70, 354, 738, 36);
+    floor.lineStyle(1, 0xffffff, 0.09);
+    floor.strokeRoundedRect(18, 70, 354, 738, 36);
   }
 }
