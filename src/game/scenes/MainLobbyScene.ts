@@ -6,6 +6,7 @@ import { GlassPanel } from '../ui/GlassPanel';
 import { SceneBackSystem } from '../systems/SceneBackSystem';
 import { UserProfileDoc } from '../../firebase/firestore';
 import { VisualSystem } from '../systems/VisualSystem';
+import { ThemeSystem } from '../systems/ThemeSystem';
 
 export class MainLobbyScene extends Phaser.Scene {
   constructor() {
@@ -34,7 +35,8 @@ export class MainLobbyScene extends Phaser.Scene {
       this.drawBackground();
       this.createTopBar(profile);
       this.createHeroPanel(profile);
-      this.createMenu();
+      this.createPrimaryActions();
+      this.createSystemDock();
     } catch (error) {
       console.warn('[CardVille] Lobby profile load failed.', error);
       this.children.removeAll();
@@ -52,53 +54,57 @@ export class MainLobbyScene extends Phaser.Scene {
     this.drawBackground();
     new GlassPanel(this, 195, 386, 320, 270, 30, 0.14);
     this.add.text(195, 320, '꿈의 서고 입장 준비 중', { fontSize: '25px', fontStyle: '900', color: '#ffffff' }).setOrigin(0.5);
-    this.add.text(195, 372, '레벨 · 코인 · 보석 정보를 불러오고 있어요.', { fontSize: '15px', color: '#d9e8ff', align: 'center', wordWrap: { width: 280 } }).setOrigin(0.5);
+    this.add.text(195, 372, '레벨 · 재화 · 선택 월드를 불러오고 있어요.', { fontSize: '15px', color: '#d9e8ff', align: 'center', wordWrap: { width: 280 } }).setOrigin(0.5);
     const glow = this.add.graphics();
-    glow.fillStyle(0x8fd3ff, 0.18);
+    glow.fillStyle(ThemeSystem.getSelectedWorld().accent, 0.18);
     glow.fillCircle(195, 454, 22);
     this.tweens.add({ targets: glow, alpha: 0.35, scale: 1.35, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
   }
 
   private createTopBar(profile: UserProfileDoc): void {
     new GlassPanel(this, 195, 54, 350, 72, 22, 0.12);
-    this.add.text(42, 54, `COIN ${profile.coins.toLocaleString('ko-KR')}`, { fontSize: '15px', fontStyle: '900', color: '#fff7ce' }).setOrigin(0, 0.5);
-    this.add.text(164, 54, `GEM ${profile.gems.toLocaleString('ko-KR')}`, { fontSize: '15px', fontStyle: '900', color: '#d5fbff' }).setOrigin(0, 0.5);
-    this.add.text(292, 54, `Lv.${profile.level}`, { fontSize: '18px', fontStyle: '900', color: '#ffffff' }).setOrigin(0.5);
-    this.add.text(340, 54, '⚙', { fontSize: '24px', color: '#ffffff' }).setOrigin(0.5).setInteractive({ useHandCursor: true }).on('pointerup', () => this.scene.start('SettingsScene'));
+    this.createChip(82, 54, `COIN ${profile.coins.toLocaleString('ko-KR')}`, '#fff7ce');
+    this.createChip(190, 54, `GEM ${profile.gems.toLocaleString('ko-KR')}`, '#d5fbff');
+    this.createChip(292, 54, `Lv.${profile.level}`, '#ffffff');
+    this.add.text(344, 54, '⚙', { fontSize: '24px', color: '#ffffff' }).setOrigin(0.5).setInteractive({ useHandCursor: true }).on('pointerup', () => this.scene.start('SettingsScene'));
+  }
+
+  private createChip(x: number, y: number, label: string, color: string): void {
+    this.add.text(x, y, label, { fontSize: '14px', fontStyle: '900', color }).setOrigin(0.5);
   }
 
   private createHeroPanel(profile: UserProfileDoc): void {
-    new GlassPanel(this, 195, 236, 334, 268, 34, 0.14);
+    new GlassPanel(this, 195, 220, 334, 236, 34, 0.14);
     const loginLabel = UserDataSystem.getLoginStateLabel(profile);
     const progress = UserDataSystem.getLevelProgress(profile);
+    const world = ThemeSystem.getSelectedWorld();
+    const back = ThemeSystem.getSelectedCardBack();
 
-    this.add.text(48, 120, 'Dream Library', { fontFamily: 'Georgia, serif', fontSize: '18px', color: '#ffe4a3' }).setOrigin(0, 0.5);
-    this.add.text(48, 154, `환영해요, ${profile.nickname}`, { fontSize: '23px', fontStyle: '900', color: '#ffffff' }).setOrigin(0, 0.5);
-    this.add.text(48, 184, `${loginLabel} · 꿈의 서고 주민`, { fontSize: '13px', color: AuthSystem.isLocalGuest() ? '#ffc9d6' : '#cfe8ff' }).setOrigin(0, 0.5);
+    this.add.text(48, 112, 'CardVille', { fontFamily: 'Georgia, serif', fontSize: '28px', fontStyle: '900', color: '#ffffff', shadow: { offsetX: 0, offsetY: 0, color: '#8fd3ff', blur: 12, fill: true } }).setOrigin(0, 0.5);
+    this.add.text(48, 146, `${profile.nickname} · ${loginLabel}`, { fontSize: '14px', fontStyle: '800', color: AuthSystem.isLocalGuest() ? '#ffc9d6' : '#d9e8ff' }).setOrigin(0, 0.5);
+    this.add.text(48, 180, `월드 · ${world.title}`, { fontSize: '13px', fontStyle: '900', color: '#ffe4a3' }).setOrigin(0, 0.5);
+    this.add.text(48, 204, `카드 뒷면 · ${back.title}`, { fontSize: '12px', color: '#cfe8ff' }).setOrigin(0, 0.5);
 
-    this.add.text(48, 226, `레벨 ${profile.level}`, { fontSize: '18px', fontStyle: '900', color: '#ffffff' }).setOrigin(0, 0.5);
-    this.createXpBar(48, 250, 220, 18, progress.ratio);
-    this.add.text(48, 282, `XP ${progress.currentLevelXp}/${progress.requiredXp} · 다음 레벨 ${progress.nextLevel}`, { fontSize: '12px', color: '#cfe8ff' }).setOrigin(0, 0.5);
+    this.add.text(48, 242, `레벨 ${profile.level}`, { fontSize: '17px', fontStyle: '900', color: '#ffffff' }).setOrigin(0, 0.5);
+    this.createXpBar(48, 263, 218, 17, progress.ratio);
+    this.add.text(48, 292, `XP ${progress.currentLevelXp}/${progress.requiredXp} · 다음 레벨 ${progress.nextLevel}`, { fontSize: '12px', color: '#cfe8ff' }).setOrigin(0, 0.5);
 
-    this.add.text(48, 326, '마법서를 펼치고 별을 모아\n카드 앨범을 완성하세요.', { fontSize: '16px', color: '#d9e8ff', lineSpacing: 5 }).setOrigin(0, 0.5);
-
-    this.drawBookTotem(304, 245);
+    this.drawSelectedBackPreview(306, 220);
   }
 
-  private drawBookTotem(x: number, y: number): void {
-    const g = this.add.graphics();
-    g.fillStyle(0x000000, 0.18);
-    g.fillEllipse(x, y + 70, 104, 24);
-    const colors = [0xffd86f, 0x8fd3ff, 0xc59bff];
-    colors.forEach((color, i) => {
-      g.fillStyle(color, 0.88);
-      g.fillRoundedRect(x - 42 + i * 7, y - 56 + i * 38, 84, 32, 10);
-      g.lineStyle(1, 0xffffff, 0.55);
-      g.strokeRoundedRect(x - 42 + i * 7, y - 56 + i * 38, 84, 32, 10);
-      g.fillStyle(0xffffff, 0.18);
-      g.fillRoundedRect(x - 30 + i * 7, y - 50 + i * 38, 60, 8, 5);
-    });
-    this.add.text(x, y + 16, '✦', { fontSize: '32px', color: '#ffffff' }).setOrigin(0.5);
+  private drawSelectedBackPreview(x: number, y: number): void {
+    const back = ThemeSystem.getSelectedCardBack();
+    const shadow = this.add.graphics();
+    shadow.fillStyle(0x000000, 0.24);
+    shadow.fillRoundedRect(x - 39, y - 52 + 8, 78, 112, 20);
+    if (this.textures.exists(back.textureKey)) {
+      this.add.image(x, y, back.textureKey).setDisplaySize(76, 106).setAngle(-4);
+    } else {
+      const g = this.add.graphics();
+      g.fillStyle(back.accent, 0.92);
+      g.fillRoundedRect(x - 38, y - 54, 76, 108, 20);
+    }
+    this.add.text(x, y + 78, 'MY CARD', { fontSize: '10px', fontStyle: '900', color: '#dff7ff' }).setOrigin(0.5);
   }
 
   private createXpBar(x: number, y: number, width: number, height: number, ratio: number): void {
@@ -111,28 +117,50 @@ export class MainLobbyScene extends Phaser.Scene {
     g.strokeRoundedRect(x, y, width, height, height / 2);
   }
 
-  private createMenu(): void {
-    const play = new GameButton(this, 195, 414, '꿈의 서고 입장', 306, 58, 0xffd86f);
+  private createPrimaryActions(): void {
+    const play = new GameButton(this, 195, 384, '꿈의 서고 입장', 316, 60, 0xffd86f);
     play.on('pointerup', () => this.scene.start('ModeSelectScene'));
 
-    const collection = new GameButton(this, 195, 486, '카드 컬렉션', 306, 54, 0x8fd3ff);
-    collection.on('pointerup', () => this.scene.start('CollectionScene'));
+    this.createTile(105, 464, '앨범', '수집 카드', 0x8fd3ff, () => this.scene.start('CollectionScene'));
+    this.createTile(285, 464, '도감', '5,000장', 0xb7ffd8, () => this.scene.start('AssetGalleryScene'));
+    this.createTile(105, 558, '미션', '출석/보상', 0xc59bff, () => this.scene.start('MissionScene'));
+    this.createTile(285, 558, '팩 확률', '보상표', 0xffd86f, () => this.scene.start('PackInfoScene'));
+  }
 
-    const gallery = new GameButton(this, 195, 554, '5,000장 이미지 도감', 306, 54, 0xb7ffd8);
-    gallery.on('pointerup', () => this.scene.start('AssetGalleryScene'));
+  private createTile(x: number, y: number, title: string, subtitle: string, color: number, callback: () => void): void {
+    const tile = this.add.container(x, y);
+    const g = this.add.graphics();
+    g.fillStyle(0x000000, 0.22);
+    g.fillRoundedRect(-76, -38 + 8, 152, 82, 24);
+    g.fillGradientStyle(0xffffff, 0xffffff, color, color, 0.20);
+    g.fillRoundedRect(-78, -42, 156, 84, 24);
+    g.lineStyle(2, 0xffffff, 0.34);
+    g.strokeRoundedRect(-78, -42, 156, 84, 24);
+    g.fillStyle(color, 0.18);
+    g.fillCircle(51, -16, 30);
+    const t = this.add.text(-54, -12, title, { fontSize: '21px', fontStyle: '900', color: '#ffffff' }).setOrigin(0, 0.5);
+    const s = this.add.text(-54, 16, subtitle, { fontSize: '12px', fontStyle: '800', color: '#d9e8ff' }).setOrigin(0, 0.5);
+    tile.add([g, t, s]);
+    tile.setSize(156, 84).setInteractive(new Phaser.Geom.Rectangle(-78, -42, 156, 84), Phaser.Geom.Rectangle.Contains);
+    tile.on('pointerup', callback);
+    tile.on('pointerover', () => this.tweens.add({ targets: tile, scale: 1.025, duration: 100 }));
+    tile.on('pointerout', () => this.tweens.add({ targets: tile, scale: 1, duration: 100 }));
+  }
 
-    const mission = new GameButton(this, 195, 622, '오늘의 미션', 306, 54, 0xc59bff);
-    mission.on('pointerup', () => this.scene.start('MissionScene'));
-
-    const settings = new GameButton(this, 112, 694, '설정', 144, 48, 0xb7ffd8);
+  private createSystemDock(): void {
+    new GlassPanel(this, 195, 686, 334, 92, 30, 0.12);
+    const world = new GameButton(this, 105, 666, '월드', 144, 44, 0x8fd3ff);
+    world.on('pointerup', () => this.scene.start('WorldSelectScene'));
+    const back = new GameButton(this, 285, 666, '뒷면', 144, 44, 0xb7ffd8);
+    back.on('pointerup', () => this.scene.start('CardBackSelectScene'));
+    const settings = new GameButton(this, 105, 720, '설정', 144, 44, 0xc59bff);
     settings.on('pointerup', () => this.scene.start('SettingsScene'));
+    const account = new GameButton(this, 285, 720, '계정', 144, 44, 0xf5aacb);
+    account.on('pointerup', () => this.signOut());
 
-    const logout = new GameButton(this, 278, 694, '계정', 144, 48, 0xf5aacb);
-    logout.on('pointerup', () => this.signOut());
-
-    new GlassPanel(this, 195, 780, 314, 68, 24, 0.11);
-    this.add.text(195, 766, 'Aqua Glass · Cute Premium · 2.5D', { fontSize: '13px', fontStyle: '900', color: '#dff7ff' }).setOrigin(0.5);
-    this.add.text(195, 790, 'v1.0-preview · 5,000 PNG Asset Mega Pack', { fontSize: '11px', color: '#9fb8e9' }).setOrigin(0.5);
+    new GlassPanel(this, 195, 794, 314, 46, 22, 0.10);
+    this.add.text(195, 784, 'Aqua Glass · Cute Premium · 2.5D', { fontSize: '12px', fontStyle: '900', color: '#dff7ff' }).setOrigin(0.5);
+    this.add.text(195, 804, 'v1.0-rc · UI/Engine Quality Pass', { fontSize: '10px', color: '#9fb8e9' }).setOrigin(0.5);
   }
 
   private async signOut(): Promise<void> {
@@ -148,7 +176,7 @@ export class MainLobbyScene extends Phaser.Scene {
   }
 
   private drawBackground(): void {
-    VisualSystem.drawPremiumBackground(this, 'library');
-    VisualSystem.spawnAmbientStars(this, 34);
+    VisualSystem.drawSelectedWorldBackground(this, 'library');
+    VisualSystem.spawnAmbientStars(this, 26);
   }
 }

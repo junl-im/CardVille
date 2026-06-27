@@ -5,6 +5,7 @@ import { GlassPanel } from '../ui/GlassPanel';
 import { SceneBackSystem } from '../systems/SceneBackSystem';
 import { ProgressSystem } from '../systems/ProgressSystem';
 import { PerformanceSystem } from '../systems/PerformanceSystem';
+import { VisualSystem } from '../systems/VisualSystem';
 
 export class ModeSelectScene extends Phaser.Scene {
   private floatingStars: Phaser.GameObjects.GameObject[] = [];
@@ -202,29 +203,16 @@ export class ModeSelectScene extends Phaser.Scene {
   }
 
   private drawDreamLibraryBackground(): void {
-    const g = this.add.graphics();
-    g.fillGradientStyle(0x153b64, 0x193f70, 0x0d1735, 0x060918, 1);
-    g.fillRect(0, 0, 390, 844);
-    g.fillStyle(0x070a19, 0.32);
-    g.fillRoundedRect(25, 218, 340, 538, 28);
+    const g = VisualSystem.drawSelectedWorldBackground(this, 'library');
+    VisualSystem.drawLibraryShelves(this, g);
 
-    for (let i = 0; i < 7; i += 1) {
-      g.fillStyle(i % 2 === 0 ? 0x203f72 : 0x2a4b82, 0.38);
-      g.fillRoundedRect(46, 236 + i * 72, 298, 18, 7);
-    }
-
-    for (let i = 0; i < PerformanceSystem.ambientCount(72); i += 1) {
+    for (let i = 0; i < PerformanceSystem.ambientCount(58); i += 1) {
       const star = this.add.text(Phaser.Math.Between(16, 374), Phaser.Math.Between(70, 812), i % 3 === 0 ? '✦' : '·', {
         fontSize: `${Phaser.Math.Between(11, 22)}px`,
         color: i % 2 === 0 ? '#dff7ff' : '#ffe4a3'
-      }).setAlpha(Phaser.Math.FloatBetween(0.12, 0.4)).setOrigin(0.5);
+      }).setAlpha(Phaser.Math.FloatBetween(0.10, 0.34)).setOrigin(0.5);
       this.floatingStars.push(star);
     }
-
-    g.fillStyle(0x8fd3ff, 0.08);
-    g.fillCircle(318, 128, 120);
-    g.fillStyle(0xffd86f, 0.06);
-    g.fillCircle(54, 744, 170);
   }
 
   private parseBookColor(value: string | undefined, fallback: number): number {

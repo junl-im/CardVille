@@ -103,7 +103,7 @@ export class ResultScene extends Phaser.Scene {
   }
 
   private drawBackground(): void {
-    VisualSystem.drawPremiumBackground(this, 'reward');
+    VisualSystem.drawSelectedWorldBackground(this, 'reward');
     VisualSystem.spawnAmbientStars(this, 26);
     VisualSystem.spawnBurst(this, 195, 274, '#ffe4a3', 16);
   }

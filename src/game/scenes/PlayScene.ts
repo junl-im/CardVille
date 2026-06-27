@@ -193,7 +193,7 @@ export class PlayScene extends Phaser.Scene {
 
   private drawBackground(): void {
     const variant = this.modeId.includes('memory') ? 'space' : this.modeId.includes('math') ? 'library' : 'play';
-    VisualSystem.drawPremiumBackground(this, variant);
+    VisualSystem.drawSelectedWorldBackground(this, variant);
     VisualSystem.spawnAmbientStars(this, 22);
     const table = this.add.graphics();
     table.fillStyle(0x000000, 0.11);

@@ -1,3 +1,5 @@
+import { ThemeSystem } from '../systems/ThemeSystem';
+
 export interface PreloadImageAsset { key: string; path: string; }
 
 export const PRELOAD_IMAGES: PreloadImageAsset[] = [
@@ -82,4 +84,5 @@ export const PRELOAD_IMAGES: PreloadImageAsset[] = [
   { key: 'icon:collection', path: 'assets/icons/collection.webp' },
   { key: 'icon:guest', path: 'assets/icons/guest.webp' },
   { key: 'icon:google', path: 'assets/icons/google.webp' },
+  ...ThemeSystem.preloadableAssets(),
 ];

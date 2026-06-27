@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { PerformanceSystem } from './PerformanceSystem';
 import { CardRarity } from '../types/ModeTypes';
+import { ThemeSystem } from './ThemeSystem';
 
 export type PremiumBackgroundVariant = 'library' | 'play' | 'reward' | 'album' | 'settings' | 'space' | 'forest';
 
@@ -32,6 +33,28 @@ export class VisualSystem {
   static hasImage(scene: Phaser.Scene, imageKey?: string): boolean {
     const key = this.imageTextureKey(imageKey);
     return Boolean(key && scene.textures.exists(key));
+  }
+
+  static drawSelectedWorldBackground(scene: Phaser.Scene, fallback: PremiumBackgroundVariant = 'library'): Phaser.GameObjects.Graphics {
+    const selected = ThemeSystem.getSelectedWorld();
+    if (scene.textures.exists(selected.textureKey)) {
+      scene.add.image(195, 422, selected.textureKey).setDisplaySize(844, 844).setAlpha(0.94);
+      const g = scene.add.graphics();
+      g.fillGradientStyle(selected.accent, 0x8fd3ff, 0x071025, 0x040712, 0.34);
+      g.fillRect(0, 0, 390, 844);
+      g.fillStyle(0x000000, 0.20);
+      g.fillRoundedRect(14, 68, 362, 752, 42);
+      g.lineStyle(1, 0xffffff, 0.10);
+      g.strokeRoundedRect(14, 68, 362, 752, 42);
+      g.fillStyle(0xffffff, 0.045);
+      g.fillCircle(62, 204, 176);
+      g.fillStyle(selected.accent, 0.08);
+      g.fillCircle(326, 138, 132);
+      g.fillStyle(0xffd86f, 0.055);
+      g.fillCircle(74, 748, 172);
+      return g;
+    }
+    return this.drawPremiumBackground(scene, fallback);
   }
 
   static drawPremiumBackground(scene: Phaser.Scene, variant: PremiumBackgroundVariant = 'library'): Phaser.GameObjects.Graphics {

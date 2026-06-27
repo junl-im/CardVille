@@ -13,6 +13,10 @@ import { CollectionScene } from '../scenes/CollectionScene';
 import { MissionScene } from '../scenes/MissionScene';
 import { SettingsScene } from '../scenes/SettingsScene';
 import { AssetGalleryScene } from '../scenes/AssetGalleryScene';
+import { WorldSelectScene } from '../scenes/WorldSelectScene';
+import { CardBackSelectScene } from '../scenes/CardBackSelectScene';
+import { PackInfoScene } from '../scenes/PackInfoScene';
+import { CardDetailScene } from '../scenes/CardDetailScene';
 
 export const GAME_WIDTH = 390;
 export const GAME_HEIGHT = 844;
@@ -49,6 +53,10 @@ export const phaserConfig: Phaser.Types.Core.GameConfig = {
     CollectionScene,
     MissionScene,
     SettingsScene,
-    AssetGalleryScene
+    AssetGalleryScene,
+    WorldSelectScene,
+    CardBackSelectScene,
+    PackInfoScene,
+    CardDetailScene
   ]
 };

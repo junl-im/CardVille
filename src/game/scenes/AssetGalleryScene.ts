@@ -21,7 +21,7 @@ export class AssetGalleryScene extends Phaser.Scene {
   }
 
   async create(): Promise<void> {
-    VisualSystem.drawPremiumBackground(this, 'album');
+    VisualSystem.drawSelectedWorldBackground(this, 'album');
     VisualSystem.spawnAmbientStars(this, 20);
     this.addHeader();
 

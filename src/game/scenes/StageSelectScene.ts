@@ -109,7 +109,7 @@ export class StageSelectScene extends Phaser.Scene {
   }
 
   private drawBackground(): void {
-    VisualSystem.drawPremiumBackground(this, 'library');
+    VisualSystem.drawSelectedWorldBackground(this, 'library');
     VisualSystem.spawnAmbientStars(this, 22);
     const shelf = this.add.graphics();
     shelf.fillStyle(0x000000, 0.12);

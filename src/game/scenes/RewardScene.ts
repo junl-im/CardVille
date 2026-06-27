@@ -69,41 +69,50 @@ export class RewardScene extends Phaser.Scene {
   }
 
   private createPackPreview(): void {
-    const y = 410;
+    const y = 414;
     const pack = this.add.container(195, y);
     const shadow = this.add.graphics();
-    shadow.fillStyle(0x000000, 0.24);
-    shadow.fillEllipse(0, 80, 180, 36);
+    shadow.fillStyle(0x000000, 0.26);
+    shadow.fillEllipse(0, 92, 188, 38);
 
-    const body = this.add.graphics();
-    body.fillStyle(this.hasPack ? 0x8fd3ff : 0x8291a8, this.hasPack ? 0.96 : 0.5);
-    body.fillRoundedRect(-72, -86, 144, 172, 24);
-    body.fillStyle(0xffffff, this.hasPack ? 0.22 : 0.08);
-    body.fillRoundedRect(-58, -70, 116, 44, 18);
-    body.lineStyle(3, this.hasPack ? 0xffffff : 0xb9c4d6, this.hasPack ? 0.58 : 0.22);
-    body.strokeRoundedRect(-72, -86, 144, 172, 24);
-    body.lineStyle(2, 0xffd86f, this.hasPack ? 0.8 : 0.25);
-    body.strokeRoundedRect(-54, -62, 108, 124, 18);
+    const aura = this.add.graphics();
+    aura.fillStyle(this.hasPack ? 0xffd86f : 0x8da0c4, this.hasPack ? 0.16 : 0.06);
+    aura.fillCircle(0, -4, 98);
 
-    const symbol = this.add.text(0, -10, this.hasPack ? '✦' : '?', {
-      fontSize: '58px',
+    const packKey = this.getPackPreviewKey();
+    const packVisual = this.hasPack && this.textures.exists(packKey)
+      ? this.add.image(0, -4, packKey).setDisplaySize(148, 178).setOrigin(0.5)
+      : null;
+
+    const fallbackBody = this.add.graphics();
+    if (!packVisual) {
+      fallbackBody.fillStyle(this.hasPack ? 0x8fd3ff : 0x8291a8, this.hasPack ? 0.96 : 0.5);
+      fallbackBody.fillRoundedRect(-72, -86, 144, 172, 24);
+      fallbackBody.fillStyle(0xffffff, this.hasPack ? 0.22 : 0.08);
+      fallbackBody.fillRoundedRect(-58, -70, 116, 44, 18);
+      fallbackBody.lineStyle(3, this.hasPack ? 0xffffff : 0xb9c4d6, this.hasPack ? 0.58 : 0.22);
+      fallbackBody.strokeRoundedRect(-72, -86, 144, 172, 24);
+    }
+
+    const symbol = this.add.text(0, -12, this.hasPack ? '✦' : '?', {
+      fontSize: this.hasPack ? '42px' : '58px',
       fontStyle: '900',
       color: this.hasPack ? '#fff7bd' : '#d6dbea'
     }).setOrigin(0.5);
 
-    const label = this.add.text(0, 54, this.hasPack ? '카드팩 발견!' : '카드팩은 다음 기회에', {
+    const label = this.add.text(0, 82, this.hasPack ? '카드팩 발견!' : '카드팩은 다음 기회에', {
       fontSize: '17px',
       fontStyle: '900',
       color: '#ffffff'
     }).setOrigin(0.5);
 
-    pack.add([shadow, body, symbol, label]);
+    pack.add(packVisual ? [shadow, aura, packVisual, symbol, label] : [shadow, aura, fallbackBody, symbol, label]);
 
     if (this.hasPack) {
-      pack.setSize(160, 200);
-      pack.setInteractive(new Phaser.Geom.Rectangle(-80, -100, 160, 200), Phaser.Geom.Rectangle.Contains);
+      pack.setSize(170, 220);
+      pack.setInteractive(new Phaser.Geom.Rectangle(-85, -110, 170, 220), Phaser.Geom.Rectangle.Contains);
       pack.on('pointerup', () => this.openPack(pack));
-      this.tweens.add({ targets: pack, y: y - 8, duration: 1200, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      this.tweens.add({ targets: pack, y: y - 9, angle: 1.8, duration: 1180, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
       this.spawnPackSparkles(195, y);
 
       this.add.text(195, 552, '카드팩을 터치해서 열어보세요', {
@@ -117,6 +126,13 @@ export class RewardScene extends Phaser.Scene {
         color: '#d9e8ff'
       }).setOrigin(0.5);
     }
+  }
+
+  private getPackPreviewKey(): string {
+    const id = this.dataRef.rewards.packId ?? 'starter_pack';
+    if (id.includes('legendary') || id.includes('mythic')) return 'pack:legendary_open';
+    if (id.includes('rare')) return 'pack:rare_closed';
+    return 'pack:common_closed';
   }
 
   private async openPack(packContainer: Phaser.GameObjects.Container): Promise<void> {
@@ -339,7 +355,7 @@ export class RewardScene extends Phaser.Scene {
   }
 
   private drawBackground(): void {
-    VisualSystem.drawPremiumBackground(this, 'reward');
+    VisualSystem.drawSelectedWorldBackground(this, 'reward');
     VisualSystem.spawnAmbientStars(this, 20);
   }
 }

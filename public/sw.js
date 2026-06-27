@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cardville-cache-v1-preview';
+const CACHE_NAME = 'cardville-cache-v1-rc1';
 const CORE_ASSETS = [
   '/CardVille/',
   '/CardVille/index.html',

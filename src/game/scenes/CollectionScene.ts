@@ -28,7 +28,7 @@ export class CollectionScene extends Phaser.Scene {
     this.drawBackground();
     this.addHeader();
     this.add.text(195, 104, '카드 컬렉션', { fontSize: '34px', fontStyle: '900', color: '#ffffff' }).setOrigin(0.5);
-    this.add.text(195, 142, '그림 + 텍스트 카드를 모아 앨범을 완성하세요.', { fontSize: '15px', color: '#cbd8ff' }).setOrigin(0.5);
+    this.add.text(195, 142, '카드를 터치하면 상세 보기와 확대 정보를 볼 수 있어요.', { fontSize: '15px', color: '#cbd8ff' }).setOrigin(0.5);
 
     try {
       this.allCards = await CollectionSystem.getAllCards();
@@ -248,6 +248,15 @@ export class CollectionScene extends Phaser.Scene {
       box.add(duplicate);
     }
 
+    box.setSize(72, 112).setInteractive(new Phaser.Geom.Rectangle(-36, -54, 72, 112), Phaser.Geom.Rectangle.Contains);
+    box.on('pointerup', () => {
+      if (isOwned) {
+        this.scene.start('CardDetailScene', { cardId: card.cardId });
+      } else {
+        VisualSystem.toast(this, '카드팩에서 획득하면 상세 정보를 볼 수 있어요.');
+      }
+    });
+
     box.setAlpha(0).setScale(0.9);
     this.tweens.add({ targets: box, alpha: 1, scale: 1, delay: index * 26, duration: 220, ease: 'Back.easeOut' });
 
@@ -267,7 +276,7 @@ export class CollectionScene extends Phaser.Scene {
   }
 
   private drawBackground(): void {
-    VisualSystem.drawPremiumBackground(this, 'album');
+    VisualSystem.drawSelectedWorldBackground(this, 'album');
     VisualSystem.spawnAmbientStars(this, 24);
   }
 }
