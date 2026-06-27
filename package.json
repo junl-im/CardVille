@@ -1,6 +1,6 @@
 {
   "name": "cardville",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "private": true,
   "description": "CardVille - Aqua Glass premium 2.5D card puzzle and collection game built with Phaser 3, TypeScript, Vite and Firebase.",
   "type": "module",

@@ -119,7 +119,7 @@ CardVille의 게임 선택 화면을 단순 메뉴가 아니라 메인 월드인
 
 자세한 내용은 `docs/DREAM_LIBRARY_WORLD.md`를 확인하세요.
 
-## v0.5 업데이트 - 카드팩 + 컬렉션 저장
+## v0.5.1 업데이트 - 카드팩 + 컬렉션 저장
 
 CardVille의 핵심 보상 루프를 추가했습니다.
 
@@ -153,7 +153,7 @@ CardVille의 핵심 보상 루프를 추가했습니다.
 자세한 내용은 `docs/CARD_PACK_COLLECTION_LOOP.md`를 확인하세요.
 
 
-## v0.5 적용 내용
+## v0.5.1 적용 내용
 
 - Firebase Auth 로그인 UI 완성
 - 게스트 / 이메일 / Google 로그인 연결
@@ -161,5 +161,15 @@ CardVille의 핵심 보상 루프를 추가했습니다.
 - 메인 로비 로그인 상태 표시
 - 로그아웃 / 계정 변경 버튼 추가
 - Firestore 유저 프로필 인증 필드 확장
-- Firestore Rules v0.5 반영
+- Firestore Rules v0.5.1 반영
 
+
+
+## v0.5.1 배포 안정화
+
+GitHub Actions에서 npm ci 대신 안정형 npm install 방식을 사용합니다. 빌드 중 package-lock.json을 제거하고 npm 공식 registry를 명시해 설치 오류를 줄였습니다.
+
+
+## npm 설치 안정화
+
+`.npmrc`에서 npm 공식 registry와 `package-lock=false`를 명시합니다. GitHub Actions와 로컬 개발 환경에서 기존 lock 파일로 인한 설치 문제를 줄이기 위한 설정입니다.
