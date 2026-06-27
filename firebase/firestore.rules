@@ -1,0 +1,123 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function isValidNumber(value, min, max) {
+      return value is int && value >= min && value <= max;
+    }
+
+    match /publicConfig/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /publicGameData/{group}/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /users/{userId} {
+      allow create: if isOwner(userId)
+        && request.resource.data.keys().hasOnly([
+          'uid', 'nickname', 'provider', 'createdAt', 'updatedAt', 'lastLoginAt',
+          'level', 'xp', 'coins', 'gems', 'selectedWorld', 'selectedCardBack'
+        ])
+        && request.resource.data.uid == userId
+        && request.resource.data.level == 1
+        && isValidNumber(request.resource.data.xp, 0, 999999999)
+        && isValidNumber(request.resource.data.coins, 0, 999999999)
+        && isValidNumber(request.resource.data.gems, 0, 999999999);
+
+      allow read: if isOwner(userId);
+
+      allow update: if isOwner(userId)
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'nickname', 'provider', 'updatedAt', 'lastLoginAt', 'level', 'xp', 'coins', 'gems',
+          'selectedWorld', 'selectedCardBack'
+        ])
+        && isValidNumber(request.resource.data.level, 1, 9999)
+        && isValidNumber(request.resource.data.xp, 0, 999999999)
+        && isValidNumber(request.resource.data.coins, 0, 999999999)
+        && isValidNumber(request.resource.data.gems, 0, 999999999);
+
+      allow delete: if false;
+
+      match /progress/{modeId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId)
+          && request.resource.data.keys().hasOnly([
+            'modeId', 'currentStage', 'clearedStages', 'bestScore', 'totalPlayCount', 'updatedAt'
+          ])
+          && request.resource.data.modeId == modeId
+          && isValidNumber(request.resource.data.currentStage, 0, 99999)
+          && isValidNumber(request.resource.data.bestScore, 0, 999999999)
+          && isValidNumber(request.resource.data.totalPlayCount, 0, 999999999);
+        allow delete: if false;
+      }
+
+      match /collections/{cardId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId)
+          && request.resource.data.keys().hasOnly([
+            'cardId', 'rarity', 'count', 'firstObtainedAt', 'updatedAt'
+          ])
+          && request.resource.data.cardId == cardId
+          && request.resource.data.rarity in ['common', 'rare', 'epic', 'legendary']
+          && isValidNumber(request.resource.data.count, 1, 999999);
+        allow delete: if false;
+      }
+
+      match /packs/{packId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId)
+          && request.resource.data.keys().hasOnly([
+            'packId', 'source', 'opened', 'createdAt', 'openedAt', 'rewards'
+          ])
+          && request.resource.data.packId == packId
+          && request.resource.data.opened is bool;
+        allow update: if isOwner(userId)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'opened', 'openedAt', 'rewards'
+          ]);
+        allow delete: if false;
+      }
+
+      match /missions/{missionId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId);
+        allow delete: if false;
+      }
+
+      match /settings/{settingId} {
+        allow read, create, update: if isOwner(userId);
+        allow delete: if false;
+      }
+    }
+
+    match /leaderboards/{modeId}/entries/{userId} {
+      allow read: if true;
+      allow create, update: if isOwner(userId)
+        && request.resource.data.keys().hasOnly([
+          'uid', 'nickname', 'score', 'stage', 'updatedAt'
+        ])
+        && request.resource.data.uid == userId
+        && isValidNumber(request.resource.data.score, 0, 9999999)
+        && isValidNumber(request.resource.data.stage, 0, 99999);
+      allow delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

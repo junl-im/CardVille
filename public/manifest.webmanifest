@@ -1,0 +1,12 @@
+{
+  "name": "카드마을 CardVille",
+  "short_name": "CardVille",
+  "description": "수집형 카드 퍼즐 게임",
+  "start_url": "/CardVille/",
+  "scope": "/CardVille/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#111936",
+  "theme_color": "#111936",
+  "icons": []
+}

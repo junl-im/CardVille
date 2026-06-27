@@ -1,0 +1,21 @@
+{
+  "name": "cardville",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "CardVille / 카드마을 - Phaser 3 + TypeScript + Firebase card puzzle engine starter.",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@vitejs/plugin-basic-ssl": "latest",
+    "firebase": "^12.15.0",
+    "phaser": "^3.90.0",
+    "vite": "latest",
+    "typescript": "latest"
+  },
+  "devDependencies": {}
+}
