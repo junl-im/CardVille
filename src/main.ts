@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import './styles/index.css';
 import { phaserConfig } from './game/config/phaserConfig';
 import { initializeFirebaseRuntime } from './firebase/firebaseApp';
-import { registerServiceWorker } from './pwa/registerServiceWorker';
+import { prepareRuntimeCache, registerServiceWorker } from './pwa/registerServiceWorker';
 import { installGlobalErrorReporter, installStartupGuard, markGameBooted, showBootError } from './diagnostics/startupGuard';
 
 installGlobalErrorReporter();
@@ -10,6 +10,8 @@ installStartupGuard();
 
 async function startCardVille(): Promise<void> {
   try {
+    await prepareRuntimeCache();
+
     initializeFirebaseRuntime().catch((error) => {
       console.warn('[CardVille] Firebase runtime init skipped.', error);
     });
@@ -21,6 +23,8 @@ async function startCardVille(): Promise<void> {
     game.events.once(Phaser.Core.Events.READY, () => {
       window.setTimeout(markGameBooted, 240);
     });
+
+    window.setTimeout(markGameBooted, 1800);
 
     window.addEventListener('beforeunload', () => {
       game.events.emit('cardville:before-unload');

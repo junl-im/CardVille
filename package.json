@@ -1,8 +1,8 @@
 {
   "name": "cardville",
-  "version": "1.0.0-rc.2",
+  "version": "1.0.0-rc.3",
   "private": true,
-  "description": "CardVille v1.0-rc.2 - boot stability, service worker cache recovery, runtime diagnostics and safer first-screen startup.",
+  "description": "CardVille v1.0-rc.3 - automatic legacy cache and service worker recovery for production users.",
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",

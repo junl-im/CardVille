@@ -1,0 +1,7 @@
+{
+  "name": "CardVille",
+  "buildId": "1.0-rc.3",
+  "basePath": "/CardVille/",
+  "cacheMigration": "automatic",
+  "pwaRegistration": "disabled-until-final"
+}

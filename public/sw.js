@@ -1,47 +1,65 @@
-const CACHE_NAME = 'cardville-cache-v1-rc2';
+const CARDVILLE_BUILD_ID = '1.0-rc.3';
+const CARDVILLE_SCOPE = '/CardVille/';
 const CACHE_PREFIX = 'cardville-cache-';
-const CORE_ASSETS = [
-  '/CardVille/manifest.webmanifest',
-  '/CardVille/assets/manifest/assets.manifest.json',
-  '/CardVille/assets/json/asset_manifest.json',
-  '/CardVille/assets/json/cards_image_index.json',
-  '/CardVille/assets/data/modes/catalog.json',
-  '/CardVille/assets/data/cards/collection.base.json'
-];
+
+async function deleteLegacyCaches() {
+  if (!self.caches) return;
+  const keys = await caches.keys();
+  await Promise.all(
+    keys
+      .filter((key) => key.startsWith(CACHE_PREFIX))
+      .map((key) => caches.delete(key))
+  );
+}
+
+async function notifyAndRefreshClients() {
+  const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+  await Promise.all(
+    windows.map(async (client) => {
+      try {
+        client.postMessage({ type: 'CARDVILLE_SW_MIGRATED', buildId: CARDVILLE_BUILD_ID });
+        const url = new URL(client.url);
+        if (!url.pathname.startsWith(CARDVILLE_SCOPE)) return;
+        if (url.searchParams.get('cv_sw_migrated') === CARDVILLE_BUILD_ID) return;
+        url.searchParams.set('cv_sw_migrated', CARDVILLE_BUILD_ID);
+        url.searchParams.set('t', String(Date.now()));
+        await client.navigate(url.toString());
+      } catch (error) {
+        // Ignore closed clients or browsers that do not support client.navigate.
+      }
+    })
+  );
+}
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_ASSETS)).catch(() => undefined));
-  self.skipWaiting();
+  event.waitUntil(deleteLegacyCaches().then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => Promise.all(keys.filter((key) => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME).map((key) => caches.delete(key))))
+    deleteLegacyCaches()
+      .then(() => self.clients.claim())
+      .then(() => notifyAndRefreshClients())
   );
-  self.clients.claim();
+});
+
+self.addEventListener('message', (event) => {
+  if (!event.data || event.data.type !== 'CARDVILLE_FORCE_CACHE_MIGRATION') return;
+  event.waitUntil(deleteLegacyCaches().then(() => notifyAndRefreshClients()));
 });
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
-  if (!url.pathname.startsWith('/CardVille/')) return;
+  if (!url.pathname.startsWith(CARDVILLE_SCOPE)) return;
 
-  const isNavigation = event.request.mode === 'navigate' || url.pathname.endsWith('/CardVille/') || url.pathname.endsWith('/index.html');
-  const isBuildAsset = url.pathname.includes('/assets/') && /\.(js|css)$/i.test(url.pathname);
-  const isLargeCardImage = url.pathname.includes('/assets/cards_image/');
+  const isNavigation = event.request.mode === 'navigate' || url.pathname === CARDVILLE_SCOPE || url.pathname.endsWith('/index.html');
+  const isBuildAsset = /\/assets\/.*\.(js|css)$/i.test(url.pathname);
+  const isManifestOrVersion = url.pathname.endsWith('/manifest.webmanifest') || url.pathname.endsWith('/build.json');
 
-  if (isNavigation || isBuildAsset || isLargeCardImage) {
-    event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
-    return;
+  if (isNavigation || isBuildAsset || isManifestOrVersion) {
+    event.respondWith(
+      fetch(event.request, { cache: 'no-store' }).catch(() => fetch(new Request(`${CARDVILLE_SCOPE}reset.html`, { cache: 'reload' })))
+    );
   }
-
-  event.respondWith(
-    fetch(event.request).then((response) => {
-      if (response.ok) {
-        const copy = response.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy)).catch(() => undefined);
-      }
-      return response;
-    }).catch(() => caches.match(event.request))
-  );
 });

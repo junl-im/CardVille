@@ -1,37 +1,89 @@
+const BASE_PATH = import.meta.env.BASE_URL || '/CardVille/';
+const BUILD_ID = '1.0-rc.3';
 const CACHE_PREFIX = 'cardville-cache-';
-const MIGRATION_KEY = 'cardville.sw.migration.rc2';
+const MIGRATION_KEY = `cardville.cache.migration.${BUILD_ID}`;
+const RELOAD_KEY = `cardville.cache.migration.${BUILD_ID}.reloaded`;
 
-async function deleteCardVilleCaches(): Promise<void> {
-  if (!('caches' in window)) return;
+type MigrationResult = {
+  deletedCaches: number;
+  unregisteredWorkers: number;
+  hadController: boolean;
+};
+
+function isCardVilleScope(scope: string): boolean {
+  try {
+    const url = new URL(scope);
+    return url.pathname.includes(BASE_PATH);
+  } catch {
+    return scope.includes(BASE_PATH);
+  }
+}
+
+async function deleteCardVilleCaches(): Promise<number> {
+  if (!('caches' in window)) return 0;
   const keys = await caches.keys();
-  await Promise.all(keys.filter((key) => key.startsWith(CACHE_PREFIX)).map((key) => caches.delete(key)));
+  const targets = keys.filter((key) => key.startsWith(CACHE_PREFIX));
+  await Promise.all(targets.map((key) => caches.delete(key)));
+  return targets.length;
 }
 
-async function unregisterCardVilleWorkers(): Promise<boolean> {
-  if (!('serviceWorker' in navigator)) return false;
+async function unregisterCardVilleWorkers(): Promise<number> {
+  if (!('serviceWorker' in navigator)) return 0;
   const registrations = await navigator.serviceWorker.getRegistrations();
-  const base = import.meta.env.BASE_URL || '/CardVille/';
-  const targets = registrations.filter((registration) => registration.scope.includes(base));
+  const targets = registrations.filter((registration) => isCardVilleScope(registration.scope));
   const results = await Promise.all(targets.map((registration) => registration.unregister()));
-  return results.some(Boolean) || targets.length > 0;
+  return results.filter(Boolean).length || targets.length;
 }
 
-async function cleanupLegacyServiceWorkerOnce(): Promise<void> {
-  if (typeof window === 'undefined') return;
+async function registerMigrationWorker(): Promise<void> {
   if (!('serviceWorker' in navigator)) return;
+  try {
+    const registration = await navigator.serviceWorker.register(`${BASE_PATH}sw.js?v=${BUILD_ID}`, {
+      scope: BASE_PATH,
+      updateViaCache: 'none'
+    });
+    await registration.update().catch(() => undefined);
+    registration.active?.postMessage({ type: 'CARDVILLE_FORCE_CACHE_MIGRATION', buildId: BUILD_ID });
+  } catch (error) {
+    console.warn('[CardVille] Migration service worker registration skipped.', error);
+  }
+}
+
+async function runClientMigration(): Promise<MigrationResult> {
+  const hadController = Boolean(navigator.serviceWorker?.controller);
+  const deletedCaches = await deleteCardVilleCaches();
+  const unregisteredWorkers = await unregisterCardVilleWorkers();
+  window.localStorage.setItem(MIGRATION_KEY, 'done');
+  window.localStorage.setItem('cardville.currentBuildId', BUILD_ID);
+  return { deletedCaches, unregisteredWorkers, hadController };
+}
+
+function shouldReloadAfterMigration(result: MigrationResult): boolean {
+  if (window.sessionStorage.getItem(RELOAD_KEY) === '1') return false;
+  if (new URLSearchParams(window.location.search).get('cv_cache_migrated') === BUILD_ID) return false;
+  return result.hadController || result.unregisteredWorkers > 0 || result.deletedCaches > 0;
+}
+
+function reloadOnceAfterMigration(): void {
+  window.sessionStorage.setItem(RELOAD_KEY, '1');
+  const url = new URL(window.location.href);
+  url.searchParams.set('cv_cache_migrated', BUILD_ID);
+  url.searchParams.set('t', String(Date.now()));
+  window.location.replace(url.toString());
+}
+
+export async function prepareRuntimeCache(): Promise<void> {
+  if (typeof window === 'undefined') return;
+  if (!('serviceWorker' in navigator) && !('caches' in window)) return;
   if (window.localStorage.getItem(MIGRATION_KEY) === 'done') return;
 
   try {
-    await deleteCardVilleCaches();
-    const unregistered = await unregisterCardVilleWorkers();
-    window.localStorage.setItem(MIGRATION_KEY, 'done');
-
-    if (unregistered && navigator.serviceWorker.controller && !window.sessionStorage.getItem(`${MIGRATION_KEY}.reloaded`)) {
-      window.sessionStorage.setItem(`${MIGRATION_KEY}.reloaded`, '1');
-      window.location.reload();
+    const result = await runClientMigration();
+    if (shouldReloadAfterMigration(result)) {
+      reloadOnceAfterMigration();
     }
   } catch (error) {
-    console.warn('[CardVille] Legacy service worker cleanup failed.', error);
+    console.warn('[CardVille] Automatic cache migration failed.', error);
   }
 }
 
@@ -41,14 +93,10 @@ export function registerServiceWorker(): void {
   if (import.meta.env.DEV) return;
 
   window.addEventListener('load', () => {
-    cleanupLegacyServiceWorkerOnce().then(() => {
-      // RC2 intentionally keeps PWA registration disabled by default.
-      // Previous cache-first service workers could serve old index.html files and make the first screen blank.
-      // Re-enable by setting VITE_ENABLE_PWA=true after the final release cache strategy is confirmed.
+    registerMigrationWorker().then(() => {
       if (import.meta.env.VITE_ENABLE_PWA !== 'true') return;
-      navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js?v=rc2`).catch((error) => {
-        console.warn('[CardVille] Service worker registration failed.', error);
-      });
+      // PWA caching is intentionally disabled by default until final release.
+      // When enabled later, use a network-first navigation strategy and keep index.html out of cache-first storage.
     });
   });
 }

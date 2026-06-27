@@ -1,59 +1,19 @@
-# 카드마을 CardVille v1.0-rc.2
+# 카드마을 CardVille v1.0-rc.3
 
-CardVille은 `Phaser 3 + TypeScript + Firebase + GitHub Pages` 기반의 모바일 수집형 카드 퍼즐 게임입니다.  
-현재 버전은 **v1.0 출시 후보(RC)** 단계로, 대형 Aqua Glass 에셋팩을 실제 화면에 연결하고 UI/성능/검증 구조를 강화했습니다.
+**CardVille**은 꿈의 서고를 배경으로 낱말, 연산, 기억력, 영어, 퍼즐 카드를 플레이하고 수집하는 모바일 카드 퍼즐 게임입니다.
 
-## 핵심 방향
+이번 `v1.0-rc.3`은 콘텐츠 추가보다 **상용 서비스 접속 안정성**을 우선한 핫픽스입니다. 사용자가 직접 캐시 초기화 페이지를 열지 않아도, 앱이 자동으로 이전 서비스워커와 오래된 캐시를 정리하도록 변경했습니다.
 
-```txt
-Aqua Glass + Cute Premium + 2.5D
-SVG 사용 금지
-WebP / PNG 기반 그래픽
-모바일 세로 화면 390x844 기준
-GitHub Pages 자동 배포
-Firebase 무료 플랜 중심
-게스트 즉시 시작 + Firebase fallback
-```
+## 핵심 변경
 
-## v1.0-rc.2 핵심 업데이트
-
-```txt
-✅ 메인 로비 레이아웃 재설계
-✅ 월드 배경 선택 시스템 추가
-✅ 카드 뒷면 선택 시스템 추가
-✅ 카드팩 확률표 화면 추가
-✅ 카드 상세/확대 보기 화면 추가
-✅ 컬렉션 카드 터치 상세 보기 연결
-✅ 보상 화면 카드팩 PNG 연출 강화
-✅ 선택 월드를 주요 화면 배경에 반영
-✅ ThemeSystem 추가
-✅ UI 레이아웃 검사 스크립트 추가
-✅ verify 파이프라인 강화
-```
-
-## 화면 흐름
-
-```txt
-Splash
-↓
-Loading Intro Video
-↓
-Login / Guest Start
-↓
-Main Lobby
-↓
-Dream Library / Collection / Gallery / Mission / World / Card Back / Pack Info
-↓
-Stage Select
-↓
-Play
-↓
-Result
-↓
-Reward / Pack Open
-↓
-Collection Detail
-```
+- 자동 캐시 마이그레이션 추가
+- 기존 CardVille 서비스워커 자동 해제
+- `cardville-cache-*` 캐시 자동 삭제
+- 이전 서비스워커가 남아 있을 때 새 migration worker가 클라이언트를 최신 URL로 자동 이동
+- `reset.html`은 수동 복구용 보조 페이지로 유지
+- PWA 캐싱은 v1.0-final 전까지 기본 비활성화
+- 부팅 fallback 오버레이 안정화
+- `check:boot` 검증 강화
 
 ## 실행
 
@@ -62,102 +22,42 @@ npm install --no-audit --no-fund --no-package-lock
 npm run dev
 ```
 
-## 검증 / 빌드
+## 검증
 
 ```bash
-npm run check:imports
-npm run check:json
-npm run check:assets
-npm run check:catalog
-npm run check:ui
-npm run build
-npm run check:budget
 npm run verify
 ```
 
-## 배포 주소
+## 배포
+
+GitHub Pages 주소:
 
 ```txt
 https://junl-im.github.io/CardVille/
 ```
 
-`vite.config.ts`의 base는 `/CardVille/`로 설정되어 있습니다.
-
-## Firebase
-
-지원 로그인:
+저장소 루트에는 아래 파일들이 바로 있어야 합니다.
 
 ```txt
-익명 로그인
-이메일 로그인
-Google 로그인
-로컬 게스트 fallback
+package.json
+src/
+public/
+firebase/
+.github/
+index.html
+vite.config.ts
 ```
 
-Firebase Console에서 아래 항목을 확인하세요.
+## 운영 메모
 
-```txt
-Authentication > Sign-in method
-- Anonymous 활성화
-- Email/Password 활성화
-- Google 활성화
-
-Authentication > Settings > Authorized domains
-- junl-im.github.io 추가
-```
-
-Firestore Rules는 `firebase/firestore.rules`를 사용합니다.
-
-## 대형 에셋팩 상태
-
-```txt
-카드 이미지 인덱스: 5,000장
-SVG: 0개
-배경 / 카드 프레임 / 카드 뒷면 / 카드팩 / 아이콘 / UI PNG-WebP 구조 적용
-카드 이미지 도감은 현재 페이지 9장만 lazy-load
-PWA는 5,000장 카드 이미지를 강제 캐시하지 않음
-```
-
-## 주요 폴더
-
-```txt
-src/game/scenes
-src/game/systems
-src/game/ui
-public/assets
-public/assets/data
-firebase
-tools
-docs
-```
-
-## 다음 목표
-
-```txt
-v1.0-final
-- 실제 사운드 연결
-- 카드팩 오픈 애니메이션 프레임 고도화
-- 카카오 브라우저 뒤로가기/종료 팝업 고도화
-- 컬렉션 세트 완성 보상
-- 스테이지 밸런스 및 난이도 조정
-- Firebase/로컬 게스트 데이터 마이그레이션 정리
-```
-
-
-## v1.0-rc.2 부팅 안정화 핫픽스
-
-첫 화면이 열리지 않는 문제를 우선 해결하기 위해 부팅 안정화 패치를 적용했습니다.
-
-- 이전 service worker/cache-first 문제 방지
-- `/CardVille/reset.html` 캐시 초기화 페이지 추가
-- production 기본 PWA service worker 등록 비활성화
-- JavaScript 부팅 오류 fallback 화면 추가
-- Firebase Auth restore 타임아웃 추가
-- Phaser 렌더러를 안정 우선 CANVAS로 변경
-- `npm run check:boot` 검증 추가
-
-기존 배포에서 빈 화면이 보이면 아래 주소를 한 번 열어 캐시를 정리하세요.
+정상 상용 흐름에서는 사용자가 `reset.html`을 직접 열 필요가 없습니다. 단, 과거 캐시가 매우 강하게 남은 일부 브라우저를 위한 고객지원용 복구 주소로 유지합니다.
 
 ```txt
 https://junl-im.github.io/CardVille/reset.html
+```
+
+## 버전
+
+```txt
+1.0.0-rc.3
 ```

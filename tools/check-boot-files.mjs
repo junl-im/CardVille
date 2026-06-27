@@ -14,6 +14,7 @@ const requiredFiles = [
   'src/pwa/registerServiceWorker.ts',
   'public/reset.html',
   'public/sw.js',
+  'public/build.json',
   'public/assets/video/cardville_intro_loading.mp4',
   'public/assets/manifest/assets.manifest.json',
   'public/assets/json/cards_image_index.json',
@@ -40,7 +41,7 @@ if (!phaserConfig.includes('type: Phaser.CANVAS')) {
 }
 
 const main = fs.readFileSync('src/main.ts', 'utf8');
-for (const token of ['installStartupGuard', 'showBootError', 'Phaser.Core.Events.READY']) {
+for (const token of ['installStartupGuard', 'showBootError', 'prepareRuntimeCache', 'Phaser.Core.Events.READY']) {
   if (!main.includes(token)) {
     console.error(`Boot file check failed. src/main.ts does not contain ${token}.`);
     process.exit(1);
@@ -70,6 +71,22 @@ const resetHtml = fs.readFileSync('public/reset.html', 'utf8');
 if (!resetHtml.includes('getRegistrations') || !resetHtml.includes('caches.keys')) {
   console.error('Boot file check failed. reset.html must unregister service workers and clear caches.');
   process.exit(1);
+}
+
+const sw = fs.readFileSync('public/sw.js', 'utf8');
+for (const token of ['CARDVILLE_BUILD_ID', 'client.navigate', "cache: 'no-store'", 'deleteLegacyCaches']) {
+  if (!sw.includes(token)) {
+    console.error(`Boot file check failed. public/sw.js does not contain ${token}.`);
+    process.exit(1);
+  }
+}
+
+const registerSw = fs.readFileSync('src/pwa/registerServiceWorker.ts', 'utf8');
+for (const token of ['prepareRuntimeCache', 'updateViaCache', 'reloadOnceAfterMigration']) {
+  if (!registerSw.includes(token)) {
+    console.error(`Boot file check failed. registerServiceWorker.ts does not contain ${token}.`);
+    process.exit(1);
+  }
 }
 
 console.log(`Boot file check passed. Scenes: ${sceneKeys.length}.`);
