@@ -4,7 +4,7 @@ import { UserDataSystem } from '../systems/UserDataSystem';
 import { GameButton } from '../ui/GameButton';
 import { GlassPanel } from '../ui/GlassPanel';
 import { SceneBackSystem } from '../systems/SceneBackSystem';
-import { UserProfileDoc } from '../../firebase/firestore';
+import type { UserProfileDoc } from '../../firebase/firestore';
 import { VisualSystem } from '../systems/VisualSystem';
 import { ThemeSystem } from '../systems/ThemeSystem';
 
@@ -160,7 +160,7 @@ export class MainLobbyScene extends Phaser.Scene {
 
     new GlassPanel(this, 195, 794, 314, 46, 22, 0.10);
     this.add.text(195, 784, 'Aqua Glass · Cute Premium · 2.5D', { fontSize: '12px', fontStyle: '900', color: '#dff7ff' }).setOrigin(0.5);
-    this.add.text(195, 804, 'v1.0-rc · UI/Engine Quality Pass', { fontSize: '10px', color: '#9fb8e9' }).setOrigin(0.5);
+    this.add.text(195, 804, '1.0.1 · Kakao Safe / Local Guest', { fontSize: '10px', color: '#9fb8e9' }).setOrigin(0.5);
   }
 
   private async signOut(): Promise<void> {

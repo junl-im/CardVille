@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { PRELOAD_IMAGES } from '../assets/preloadImages';
+import { getBrowserRuntimeInfo } from '../../platform/browserEnv';
 
 export class LoadingScene extends Phaser.Scene {
   private progressBar!: Phaser.GameObjects.Graphics;
@@ -24,7 +25,12 @@ export class LoadingScene extends Phaser.Scene {
     this.load.json('collectionBase', `${import.meta.env.BASE_URL}assets/data/cards/collection.base.json`);
     this.load.json('puzzleBasic', `${import.meta.env.BASE_URL}assets/data/modes/puzzle_basic.json`);
 
-    PRELOAD_IMAGES.forEach((asset) => {
+    const runtime = getBrowserRuntimeInfo();
+    const preloadList = runtime.isKakao
+      ? PRELOAD_IMAGES.filter((asset) => asset.key.startsWith('ui:') || asset.key.startsWith('frame:') || asset.key.startsWith('pack:') || asset.key === 'bg:dream_library_day' || asset.key === 'icon:coin' || asset.key === 'icon:gem')
+      : PRELOAD_IMAGES;
+
+    preloadList.forEach((asset) => {
       if (!this.textures.exists(asset.key)) {
         this.load.image(asset.key, `${import.meta.env.BASE_URL}${asset.path}`);
       }
@@ -54,7 +60,12 @@ export class LoadingScene extends Phaser.Scene {
     g.fillStyle(0xffd86f, 0.06);
     g.fillCircle(62, 710, 176);
 
-    this.createIntroVideo();
+    const runtime = getBrowserRuntimeInfo();
+    if (runtime.shouldSkipDomVideo) {
+      this.createStaticIntroBadge();
+    } else {
+      this.createIntroVideo();
+    }
 
     this.add.text(195, 612, '꿈의 서고를 여는 중', {
       fontSize: '28px',
@@ -78,6 +89,27 @@ export class LoadingScene extends Phaser.Scene {
       color: '#e8f7ff'
     }).setOrigin(0.5);
     this.updateProgress(0);
+  }
+
+  private createStaticIntroBadge(): void {
+    const card = this.add.graphics();
+    card.fillStyle(0xffffff, 0.12);
+    card.fillRoundedRect(45, 142, 300, 326, 34);
+    card.lineStyle(1, 0xffffff, 0.32);
+    card.strokeRoundedRect(45, 142, 300, 326, 34);
+    card.fillStyle(0x8fd3ff, 0.18);
+    card.fillCircle(195, 276, 92);
+    card.fillStyle(0xffd86f, 0.16);
+    card.fillCircle(195, 276, 54);
+    this.add.text(195, 264, 'CV', {
+      fontFamily: 'Georgia, serif',
+      fontSize: '66px',
+      fontStyle: '900',
+      color: '#ffffff',
+      shadow: { offsetX: 0, offsetY: 0, color: '#8fd3ff', blur: 18, fill: true }
+    }).setOrigin(0.5);
+    this.add.text(195, 350, '카드마을', { fontSize: '34px', fontStyle: '900', color: '#ffe8a6' }).setOrigin(0.5);
+    this.add.text(195, 392, '카카오 브라우저 안정 모드', { fontSize: '14px', fontStyle: '800', color: '#cfe8ff' }).setOrigin(0.5);
   }
 
   private createIntroVideo(): void {

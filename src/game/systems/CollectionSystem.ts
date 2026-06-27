@@ -10,7 +10,6 @@ import {
 } from '../types/CollectionTypes';
 import { AuthSystem } from './AuthSystem';
 import { MissionSystem } from './MissionSystem';
-import { saveCollectedCard } from '../../firebase/firestore';
 
 const OWNED_CARDS_STORAGE_KEY = 'cardville.ownedCards.v1';
 
@@ -122,8 +121,9 @@ export class CollectionSystem {
     this.saveOwnedCards(owned);
 
     const user = AuthSystem.currentUser;
-    if (user) {
+    if (user && !AuthSystem.isLocalGuest()) {
       try {
+        const { saveCollectedCard } = await import('../../firebase/firestore');
         await saveCollectedCard(user.uid, record);
       } catch (error) {
         console.warn('[CardVille] Firestore collection save failed.', error);

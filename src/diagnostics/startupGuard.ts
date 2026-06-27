@@ -1,5 +1,5 @@
 const FALLBACK_ID = 'cardville-boot-fallback';
-const BUILD_ID = '1.0-rc.3';
+const BUILD_ID = '1.0.1';
 
 function getBasePath(): string {
   return import.meta.env.BASE_URL || '/CardVille/';

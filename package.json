@@ -1,8 +1,8 @@
 {
   "name": "cardville",
-  "version": "1.0.0-rc.3",
+  "version": "1.0.1",
   "private": true,
-  "description": "CardVille v1.0-rc.3 - automatic legacy cache and service worker recovery for production users.",
+  "description": "CardVille 1.0.1 - Kakao browser safe boot, instant local guest login, and improved mobile touch hit areas.",
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",

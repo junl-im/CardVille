@@ -2,7 +2,6 @@ import { AuthSystem } from './AuthSystem';
 import { MissionSystem } from './MissionSystem';
 import { ModeData, PlayResultData } from '../types/ModeTypes';
 import { ModeProgressRecord, ModeProgressSummary, StageProgressRecord } from '../types/ProgressTypes';
-import { getModeProgress, saveModeProgress } from '../../firebase/firestore';
 
 const STORAGE_PREFIX = 'cardville.progress.v2.';
 
@@ -67,9 +66,10 @@ export class ProgressSystem {
   static async load(modeId: string): Promise<ModeProgressRecord> {
     const local = this.loadLocal(modeId);
     const user = AuthSystem.currentUser;
-    if (!user) return local;
+    if (!user || AuthSystem.isLocalGuest()) return local;
 
     try {
+      const { getModeProgress } = await import('../../firebase/firestore');
       const remote = await getModeProgress(user.uid, modeId);
       if (!remote) return local;
       const merged = this.mergeProgress(local, normalizeProgress(modeId, remote));
@@ -132,8 +132,9 @@ export class ProgressSystem {
     MissionSystem.record('clear_stage');
 
     const user = AuthSystem.currentUser;
-    if (user) {
+    if (user && !AuthSystem.isLocalGuest()) {
       try {
+        const { saveModeProgress } = await import('../../firebase/firestore');
         await saveModeProgress(user.uid, progress);
       } catch (error) {
         console.warn('[CardVille] Remote progress save failed.', error);

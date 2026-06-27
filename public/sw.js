@@ -1,4 +1,4 @@
-const CARDVILLE_BUILD_ID = '1.0-rc.3';
+const CARDVILLE_BUILD_ID = '1.0.1';
 const CARDVILLE_SCOPE = '/CardVille/';
 const CACHE_PREFIX = 'cardville-cache-';
 

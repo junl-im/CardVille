@@ -1,5 +1,7 @@
+import { getBrowserRuntimeInfo } from '../platform/browserEnv';
+
 const BASE_PATH = import.meta.env.BASE_URL || '/CardVille/';
-const BUILD_ID = '1.0-rc.3';
+const BUILD_ID = '1.0.1';
 const CACHE_PREFIX = 'cardville-cache-';
 const MIGRATION_KEY = `cardville.cache.migration.${BUILD_ID}`;
 const RELOAD_KEY = `cardville.cache.migration.${BUILD_ID}.reloaded`;
@@ -19,6 +21,18 @@ function isCardVilleScope(scope: string): boolean {
   }
 }
 
+function timeout<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  return Promise.race([
+    promise,
+    new Promise<T>((resolve) => {
+      timer = setTimeout(() => resolve(fallback), ms);
+    })
+  ]).finally(() => {
+    if (timer) clearTimeout(timer);
+  });
+}
+
 async function deleteCardVilleCaches(): Promise<number> {
   if (!('caches' in window)) return 0;
   const keys = await caches.keys();
@@ -36,7 +50,8 @@ async function unregisterCardVilleWorkers(): Promise<number> {
 }
 
 async function registerMigrationWorker(): Promise<void> {
-  if (!('serviceWorker' in navigator)) return;
+  const runtime = getBrowserRuntimeInfo();
+  if (runtime.shouldSkipServiceWorker || !('serviceWorker' in navigator)) return;
   try {
     const registration = await navigator.serviceWorker.register(`${BASE_PATH}sw.js?v=${BUILD_ID}`, {
       scope: BASE_PATH,
@@ -50,9 +65,14 @@ async function registerMigrationWorker(): Promise<void> {
 }
 
 async function runClientMigration(): Promise<MigrationResult> {
+  const runtime = getBrowserRuntimeInfo();
   const hadController = Boolean(navigator.serviceWorker?.controller);
-  const deletedCaches = await deleteCardVilleCaches();
-  const unregisteredWorkers = await unregisterCardVilleWorkers();
+  const deletedCaches = runtime.supportsCacheStorage
+    ? await timeout(deleteCardVilleCaches(), 1200, 0)
+    : 0;
+  const unregisteredWorkers = runtime.supportsServiceWorker
+    ? await timeout(unregisterCardVilleWorkers(), 1200, 0)
+    : 0;
   window.localStorage.setItem(MIGRATION_KEY, 'done');
   window.localStorage.setItem('cardville.currentBuildId', BUILD_ID);
   return { deletedCaches, unregisteredWorkers, hadController };
@@ -74,11 +94,12 @@ function reloadOnceAfterMigration(): void {
 
 export async function prepareRuntimeCache(): Promise<void> {
   if (typeof window === 'undefined') return;
-  if (!('serviceWorker' in navigator) && !('caches' in window)) return;
+  const runtime = getBrowserRuntimeInfo();
+  if ((!runtime.supportsServiceWorker && !runtime.supportsCacheStorage) || runtime.shouldSkipServiceWorker) return;
   if (window.localStorage.getItem(MIGRATION_KEY) === 'done') return;
 
   try {
-    const result = await runClientMigration();
+    const result = await timeout(runClientMigration(), 1800, { deletedCaches: 0, unregisteredWorkers: 0, hadController: false });
     if (shouldReloadAfterMigration(result)) {
       reloadOnceAfterMigration();
     }
@@ -89,14 +110,14 @@ export async function prepareRuntimeCache(): Promise<void> {
 
 export function registerServiceWorker(): void {
   if (typeof window === 'undefined') return;
-  if (!('serviceWorker' in navigator)) return;
+  const runtime = getBrowserRuntimeInfo();
+  if (runtime.shouldSkipServiceWorker || !runtime.supportsServiceWorker) return;
   if (import.meta.env.DEV) return;
 
   window.addEventListener('load', () => {
     registerMigrationWorker().then(() => {
       if (import.meta.env.VITE_ENABLE_PWA !== 'true') return;
       // PWA caching is intentionally disabled by default until final release.
-      // When enabled later, use a network-first navigation strategy and keep index.html out of cache-first storage.
     });
   });
 }

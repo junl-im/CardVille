@@ -1,7 +1,6 @@
 import Phaser from 'phaser';
 import './styles/index.css';
 import { phaserConfig } from './game/config/phaserConfig';
-import { initializeFirebaseRuntime } from './firebase/firebaseApp';
 import { prepareRuntimeCache, registerServiceWorker } from './pwa/registerServiceWorker';
 import { installGlobalErrorReporter, installStartupGuard, markGameBooted, showBootError } from './diagnostics/startupGuard';
 
@@ -11,10 +10,6 @@ installStartupGuard();
 async function startCardVille(): Promise<void> {
   try {
     await prepareRuntimeCache();
-
-    initializeFirebaseRuntime().catch((error) => {
-      console.warn('[CardVille] Firebase runtime init skipped.', error);
-    });
 
     registerServiceWorker();
 

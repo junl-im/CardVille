@@ -1,5 +1,5 @@
 import { DocumentData, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
-import { User } from 'firebase/auth';
+import type { User } from 'firebase/auth';
 import { db } from './firebaseApp';
 import { OwnedCardRecord } from '../game/types/CollectionTypes';
 import { ModeProgressRecord } from '../game/types/ProgressTypes';

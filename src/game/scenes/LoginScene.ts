@@ -3,6 +3,7 @@ import { AuthSystem } from '../systems/AuthSystem';
 import { GameButton } from '../ui/GameButton';
 import { GlassPanel } from '../ui/GlassPanel';
 import { VisualSystem } from '../systems/VisualSystem';
+import { getBrowserRuntimeInfo } from '../../platform/browserEnv';
 
 export class LoginScene extends Phaser.Scene {
   private statusText!: Phaser.GameObjects.Text;
@@ -21,12 +22,13 @@ export class LoginScene extends Phaser.Scene {
     try {
       const user = await AuthSystem.restore();
       if (user) {
-        this.setStatus(AuthSystem.isLocalGuest()
-          ? '로컬 게스트 진행도를 확인했어요. 바로 입장합니다.'
-          : '기존 로그인 확인 완료. 메인 로비로 이동합니다.');
-        this.time.delayedCall(380, () => this.scene.start('MainLobbyScene'));
+        this.setStatus('로컬 게스트 진행도를 확인했어요. 바로 입장합니다.');
+        this.time.delayedCall(260, () => this.scene.start('MainLobbyScene'));
       } else {
-        this.setStatus('게스트로 바로 시작할 수 있어요. Firebase가 막혀도 로컬 게스트로 입장합니다.');
+        const runtime = getBrowserRuntimeInfo();
+        this.setStatus(runtime.isKakao
+          ? '카카오 브라우저 안정 모드입니다. 게스트는 서버 없이 바로 시작합니다.'
+          : '게스트는 서버 접속 없이 바로 시작합니다. Google/이메일만 서버 로그인을 사용합니다.');
       }
     } catch (error) {
       this.setStatus('로그인 상태 확인 중 문제가 있었지만, 게스트 시작은 계속 사용할 수 있어요.');
@@ -69,52 +71,71 @@ export class LoginScene extends Phaser.Scene {
   private createActionPanel(): void {
     new GlassPanel(this, 195, 518, 342, 504, 34, 0.15);
 
-    const guest = new GameButton(this, 195, 330, '게스트로 바로 시작', 286, 60, 0xffd86f);
+    const guest = new GameButton(this, 195, 324, '게스트로 바로 시작', 304, 68, 0xffd86f);
     guest.on('pointerup', () => this.signInGuest());
 
-    const google = new GameButton(this, 195, 404, 'Google로 계속하기', 286, 56, 0x8fd3ff);
+    this.add.text(195, 376, '서버 대기 없이 즉시 로컬 저장으로 입장', {
+      fontSize: '12px',
+      fontStyle: '900',
+      color: '#ffe8a6'
+    }).setOrigin(0.5);
+
+    const google = new GameButton(this, 195, 436, 'Google로 계속하기', 304, 56, 0x8fd3ff);
     google.on('pointerup', () => this.signInGoogle());
 
-    this.add.text(195, 456, '게스트 저장은 기기 안에 보관되고, 나중에 계정 연결을 할 수 있어요.', {
+    const emailLogin = new GameButton(this, 121, 506, '이메일 로그인', 138, 50, 0xc9f4ff);
+    emailLogin.on('pointerup', () => this.showEmailForm('login'));
+
+    const emailCreate = new GameButton(this, 269, 506, '가입/연결', 138, 50, 0xf0c7ff);
+    emailCreate.on('pointerup', () => this.showEmailForm('create'));
+
+    this.add.text(195, 560, '게스트 진행도는 이 기기에 주기적으로 저장됩니다.\n계정 로그인은 Google/이메일을 선택했을 때만 서버에 접속합니다.', {
       fontSize: '12px',
       color: '#b9ceef',
       align: 'center',
-      wordWrap: { width: 286 }
+      wordWrap: { width: 304 },
+      lineSpacing: 5
     }).setOrigin(0.5);
 
-    this.createEmailForm();
-
-    this.statusText = this.add.text(195, 732, '로그인 상태 확인 중...', {
+    this.statusText = this.add.text(195, 700, '로그인 상태 확인 중...', {
       fontSize: '13px',
       fontStyle: '800',
       color: '#d5e8ff',
       align: 'center',
-      wordWrap: { width: 304 }
+      wordWrap: { width: 314 }
     }).setOrigin(0.5);
 
-    this.add.text(195, 790, 'v0.9 · Firebase + Local Guest Safety', {
+    this.add.text(195, 790, '1.0.1 · Local Guest First', {
       fontSize: '11px',
       color: '#8da9d8'
     }).setOrigin(0.5);
   }
 
-  private createEmailForm(): void {
+  private showEmailForm(mode: 'login' | 'create'): void {
+    this.emailPanel?.destroy();
+    const title = mode === 'login' ? '이메일 로그인' : '이메일 가입/게스트 연결';
+    const primary = mode === 'login' ? '로그인' : '가입/연결';
     const html = `
-      <div class="cardville-login-form compact">
-        <div class="cv-form-title">이메일 계정 연결</div>
-        <input name="email" type="email" placeholder="email@example.com" autocomplete="email" />
-        <input name="password" type="password" placeholder="비밀번호 6자 이상" autocomplete="current-password" />
-        <div class="cv-form-row">
-          <button type="button" data-action="email-login">로그인</button>
-          <button type="button" data-action="email-create">가입/연결</button>
+      <div class="cardville-email-modal">
+        <div class="cv-modal-card">
+          <div class="cv-form-title">${title}</div>
+          <input name="email" type="email" placeholder="email@example.com" autocomplete="email" />
+          <input name="password" type="password" placeholder="비밀번호 6자 이상" autocomplete="current-password" />
+          <div class="cv-form-row">
+            <button type="button" data-action="submit">${primary}</button>
+            <button type="button" data-action="close">닫기</button>
+          </div>
         </div>
       </div>
     `;
 
-    this.emailPanel = this.add.dom(195, 594).createFromHTML(html);
+    this.emailPanel = this.add.dom(195, 422).createFromHTML(html).setDepth(1000);
     const root = this.emailPanel.node as HTMLElement;
-    root.querySelector<HTMLButtonElement>('[data-action="email-login"]')?.addEventListener('click', () => this.signInEmail());
-    root.querySelector<HTMLButtonElement>('[data-action="email-create"]')?.addEventListener('click', () => this.createEmailAccount());
+    root.querySelector<HTMLButtonElement>('[data-action="close"]')?.addEventListener('click', () => this.emailPanel?.destroy());
+    root.querySelector<HTMLButtonElement>('[data-action="submit"]')?.addEventListener('click', () => {
+      if (mode === 'login') void this.signInEmail();
+      else void this.createEmailAccount();
+    });
   }
 
   private readEmailForm(): { email: string; password: string } | null {
@@ -138,15 +159,13 @@ export class LoginScene extends Phaser.Scene {
   private async signInGuest(): Promise<void> {
     if (this.busy) return;
     this.busy = true;
-    this.setStatus('게스트 입장 준비 중...');
+    this.setStatus('로컬 게스트로 바로 입장합니다...');
     try {
       await AuthSystem.signInGuest();
-      this.setStatus(AuthSystem.isLocalGuest()
-        ? 'Firebase 익명 로그인이 막혀 로컬 게스트로 입장합니다. 게임은 바로 플레이할 수 있어요.'
-        : 'Firebase 게스트 로그인 완료. 꿈의 서고로 이동합니다.');
-      this.time.delayedCall(360, () => this.scene.start('MainLobbyScene'));
+      this.setStatus('로컬 게스트 시작 완료. 꿈의 서고로 이동합니다.');
+      this.time.delayedCall(120, () => this.scene.start('MainLobbyScene'));
     } catch (error) {
-      this.setStatus('게스트 입장에 실패했어요. 새로고침 후 다시 시도해 주세요.');
+      this.setStatus('로컬 게스트 시작에 실패했어요. 브라우저 저장소 권한을 확인해 주세요.');
       console.warn(error);
     } finally {
       this.busy = false;
@@ -156,7 +175,7 @@ export class LoginScene extends Phaser.Scene {
   private async signInGoogle(): Promise<void> {
     if (this.busy) return;
     this.busy = true;
-    this.setStatus('Google 로그인 창을 여는 중...');
+    this.setStatus('Google 로그인 서버에 연결 중...');
     try {
       await AuthSystem.signInGoogle();
       this.scene.start('MainLobbyScene');
@@ -174,12 +193,12 @@ export class LoginScene extends Phaser.Scene {
     if (!credentials) return;
 
     this.busy = true;
-    this.setStatus('이메일 로그인 중...');
+    this.setStatus('이메일 로그인 서버에 연결 중...');
     try {
       await AuthSystem.signInEmail(credentials.email, credentials.password);
       this.scene.start('MainLobbyScene');
     } catch (error) {
-      this.setStatus('이메일 로그인 실패. 계정이 없다면 가입/연결을 눌러 주세요.');
+      this.setStatus('이메일 로그인 실패. 계정이 없다면 가입/연결을 사용하세요.');
       console.warn(error);
     } finally {
       this.busy = false;
@@ -210,7 +229,7 @@ export class LoginScene extends Phaser.Scene {
 
   private drawBackground(): void {
     VisualSystem.drawPremiumBackground(this, 'library');
-    VisualSystem.spawnAmbientStars(this, 38);
+    VisualSystem.spawnAmbientStars(this, getBrowserRuntimeInfo().isKakao ? 16 : 38);
 
     const floor = this.add.graphics();
     floor.fillStyle(0x000000, 0.14);
