@@ -118,3 +118,48 @@ CardVille의 게임 선택 화면을 단순 메뉴가 아니라 메인 월드인
 - 잠긴 책 안내 토스트와 책 펼치기 전환 연출 추가
 
 자세한 내용은 `docs/DREAM_LIBRARY_WORLD.md`를 확인하세요.
+
+## v0.5 업데이트 - 카드팩 + 컬렉션 저장
+
+CardVille의 핵심 보상 루프를 추가했습니다.
+
+```txt
+스테이지 클리어
+↓
+결과
+↓
+경험치 / 코인 지급
+↓
+카드팩 획득
+↓
+카드팩 오픈
+↓
+새 카드 획득
+↓
+컬렉션 앨범 등록
+```
+
+추가 내용:
+
+- `card_packs.json` 카드팩 데이터 추가
+- `CollectionSystem` 추가
+- 카드팩 오픈 연출 추가
+- 카드 3장 보상 표시 추가
+- localStorage 기반 앨범 저장 추가
+- Firestore 컬렉션 저장 함수 추가
+- Firestore Rules 컬렉션 필드 확장
+- 컬렉션 앨범 화면 실제 보유/미보유 표시
+
+자세한 내용은 `docs/CARD_PACK_COLLECTION_LOOP.md`를 확인하세요.
+
+
+## v0.5 적용 내용
+
+- Firebase Auth 로그인 UI 완성
+- 게스트 / 이메일 / Google 로그인 연결
+- 게스트 계정의 이메일 또는 Google 계정 연결 로직 추가
+- 메인 로비 로그인 상태 표시
+- 로그아웃 / 계정 변경 버튼 추가
+- Firestore 유저 프로필 인증 필드 확장
+- Firestore Rules v0.5 반영
+

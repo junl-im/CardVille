@@ -12,10 +12,17 @@ service cloud.firestore {
 
     function validUserCreate(userId) {
       return request.resource.data.keys().hasOnly([
-        'uid', 'nickname', 'provider', 'createdAt', 'updatedAt', 'lastLoginAt',
-        'level', 'xp', 'coins', 'gems', 'selectedWorld', 'selectedCardBack'
+        'uid', 'nickname', 'displayName', 'provider', 'providerIds', 'isAnonymous', 'emailVerified',
+        'createdAt', 'updatedAt', 'lastLoginAt', 'level', 'xp', 'coins', 'gems',
+        'selectedWorld', 'selectedCardBack'
       ])
       && request.resource.data.uid == userId
+      && request.resource.data.nickname is string
+      && request.resource.data.displayName is string
+      && request.resource.data.provider is string
+      && request.resource.data.providerIds is list
+      && request.resource.data.isAnonymous is bool
+      && request.resource.data.emailVerified is bool
       && request.resource.data.level is int
       && request.resource.data.xp is int
       && request.resource.data.coins is int
@@ -26,7 +33,8 @@ service cloud.firestore {
       return request.resource.data.uid == resource.data.uid
       && resource.data.uid == userId
       && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
-        'nickname', 'updatedAt', 'lastLoginAt', 'level', 'xp', 'coins', 'gems',
+        'nickname', 'displayName', 'provider', 'providerIds', 'isAnonymous', 'emailVerified',
+        'updatedAt', 'lastLoginAt', 'level', 'xp', 'coins', 'gems',
         'selectedWorld', 'selectedCardBack'
       ]);
     }
@@ -65,11 +73,14 @@ service cloud.firestore {
         allow read: if isOwner(userId);
         allow create, update: if isOwner(userId)
           && request.resource.data.keys().hasOnly([
-            'cardId', 'rarity', 'count', 'firstObtainedAt', 'updatedAt'
+            'cardId', 'name', 'rarity', 'imageKey', 'setId', 'count', 'firstObtainedAt', 'updatedAt'
           ])
           && request.resource.data.cardId == cardId
           && request.resource.data.count is int
-          && request.resource.data.count >= 1;
+          && request.resource.data.count >= 1
+          && request.resource.data.name is string
+          && request.resource.data.imageKey is string
+          && request.resource.data.setId is string;
         allow delete: if false;
       }
 

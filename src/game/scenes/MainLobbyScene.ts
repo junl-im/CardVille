@@ -29,31 +29,52 @@ export class MainLobbyScene extends Phaser.Scene {
   }
 
   private createHeroPanel(): void {
-    new GlassPanel(this, 195, 214, 334, 210, 30, 0.14);
-    const name = AuthSystem.currentUser?.isAnonymous ? '여행자' : AuthSystem.currentUser?.displayName ?? '카드마을 주민';
-    this.add.text(48, 142, `환영해요, ${name}!`, { fontSize: '22px', fontStyle: '900', color: '#ffffff' }).setOrigin(0, 0.5);
-    this.add.text(48, 184, '오늘은 꿈의 서고에서\n새로운 마법서를 펼쳐볼까요?', {
+    new GlassPanel(this, 195, 224, 334, 234, 30, 0.14);
+    const name = AuthSystem.getDisplayName();
+    const loginLabel = AuthSystem.getLoginLabel();
+
+    this.add.text(48, 136, `환영해요, ${name}!`, { fontSize: '22px', fontStyle: '900', color: '#ffffff' }).setOrigin(0, 0.5);
+    this.add.text(48, 176, `현재 상태: ${loginLabel}`, {
+      fontSize: '14px',
+      color: '#ffe4a3'
+    }).setOrigin(0, 0.5);
+    this.add.text(48, 220, '오늘은 꿈의 서고에서\n새로운 마법서를 펼쳐볼까요?', {
       fontSize: '18px',
       color: '#d9e8ff',
       lineSpacing: 5
     }).setOrigin(0, 0.5);
-    this.add.text(300, 218, '📚', { fontSize: '72px' }).setOrigin(0.5);
+    this.add.text(300, 238, '📚', { fontSize: '72px' }).setOrigin(0.5);
   }
 
   private createMenu(): void {
-    const play = new GameButton(this, 195, 390, '꿈의 서고 입장', 300, 64, 0xffd86f);
-    play.on('pointerup', () => this.scene.start('ModeSelectScene')); // Dream Library
+    const play = new GameButton(this, 195, 410, '꿈의 서고 입장', 300, 64, 0xffd86f);
+    play.on('pointerup', () => this.scene.start('ModeSelectScene'));
 
-    const collection = new GameButton(this, 195, 472, '카드 컬렉션', 300, 64, 0x8fd3ff);
+    const collection = new GameButton(this, 195, 492, '카드 컬렉션', 300, 64, 0x8fd3ff);
     collection.on('pointerup', () => this.scene.start('CollectionScene'));
 
-    const mission = new GameButton(this, 195, 554, '오늘의 미션 준비 중', 300, 64, 0xc59bff);
+    const mission = new GameButton(this, 195, 574, '오늘의 미션 준비 중', 300, 64, 0xc59bff);
     mission.on('pointerup', () => undefined);
 
-    this.add.text(195, 676, 'Aqua Glass + Cute Premium + 2.5D', {
+    const logout = new GameButton(this, 195, 656, '로그아웃 / 계정 변경', 300, 54, 0xf5aacb);
+    logout.on('pointerup', () => this.signOut());
+
+    this.add.text(195, 740, 'Aqua Glass + Cute Premium + 2.5D', {
       fontSize: '15px',
       color: '#9fb8e9'
     }).setOrigin(0.5);
+  }
+
+  private async signOut(): Promise<void> {
+    const ok = window.confirm('로그아웃하고 로그인 화면으로 이동할까요?');
+    if (!ok) return;
+
+    try {
+      await AuthSystem.signOut();
+      this.scene.start('LoginScene');
+    } catch (error) {
+      console.warn(error);
+    }
   }
 
   private drawBackground(): void {
