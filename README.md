@@ -36,7 +36,7 @@ https://junl-im.github.io/CardVille/
 
 `vite.config.ts`의 base는 `/CardVille/`로 설정되어 있습니다.
 
-## v0.2 화면 흐름
+## v0.2.1 화면 흐름
 
 ```txt
 Splash
@@ -94,3 +94,15 @@ Aqua Glass + Cute Premium + 2.5D
 `.github/workflows/deploy.yml`에 GitHub Pages 자동 배포가 들어 있습니다.
 
 현재 워크플로는 lock 파일 없이도 동작하도록 `npm install --no-audit --no-fund`를 사용합니다.
+
+
+## v0.2.1 Build Fix
+
+이 버전은 GitHub Actions 빌드 오류를 수정했습니다.
+
+- `moduleResolution`을 `Bundler`로 변경
+- `src/vite-env.d.ts` 추가
+- `import.meta.env` 타입 오류 수정
+- `latest` 의존성 제거 및 안정 버전 고정
+- `package-lock.json` 포함
+- `npm run build` 검증 완료

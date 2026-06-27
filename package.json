@@ -1,6 +1,6 @@
 {
   "name": "cardville",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "description": "CardVille - Aqua Glass premium 2.5D card puzzle and collection game built with Phaser 3, TypeScript, Vite and Firebase.",
   "type": "module",
@@ -11,10 +11,12 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "firebase": "latest",
-    "phaser": "latest",
-    "vite": "latest",
-    "typescript": "latest"
+    "firebase": "12.15.0",
+    "phaser": "3.90.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@vitejs/plugin-basic-ssl": "2.1.0",
+    "typescript": "5.8.3",
+    "vite": "6.3.5"
+  }
 }
