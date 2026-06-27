@@ -1,30 +1,21 @@
 {
   "name": "cardville",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "private": true,
-  "description": "CardVille 1.0.4 - deployment proof, runtime-safe boot fallback, and GitHub Pages artifact diagnostics.",
   "type": "module",
+  "description": "CardVille 1.0.5 clean stable boot - local guest first, GitHub Actions deploy, no service worker.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",
     "preview": "vite preview --host 0.0.0.0",
-    "typecheck": "tsc --noEmit",
-    "check:imports": "node tools/check-relative-imports.mjs",
-    "check:json": "node tools/check-json-data.mjs",
-    "verify": "npm run check:boot && npm run check:deploy && npm run check:imports && npm run check:json && npm run check:assets && npm run check:catalog && npm run check:ui && npm run build && npm run check:budget",
-    "check:assets": "node tools/check-assets-policy.mjs",
-    "check:budget": "node tools/check-bundle-budget.mjs",
-    "check:catalog": "node tools/check-asset-catalog.mjs",
-    "check:ui": "node tools/check-ui-layout.mjs",
-    "check:boot": "node tools/check-boot-files.mjs",
-    "check:deploy": "node tools/check-deployment-mode.mjs"
+    "check:deploy": "node tools/check-deploy.mjs",
+    "verify": "npm run build && npm run check:deploy"
   },
   "dependencies": {
     "firebase": "12.15.0",
     "phaser": "3.90.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-basic-ssl": "2.1.0",
     "typescript": "5.8.3",
     "vite": "6.3.5"
   }

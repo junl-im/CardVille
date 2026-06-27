@@ -4,110 +4,48 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
     <meta name="theme-color" content="#101a35" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <title>카드마을 &lt;CardVille&gt;</title>
-    <script>
-      window.__CARDVILLE_BUILD_ID__ = '1.0.4';
-      window.__CARDVILLE_BASE_PATH__ = '/CardVille/';
-      window.__CARDVILLE_HTML_BOOT_VISIBLE_AT__ = Date.now();
-    </script>
     <style>
-      html,body,#app{width:100%;height:100%;margin:0;padding:0;overflow:hidden;background:#0d1730;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;touch-action:none;-webkit-tap-highlight-color:transparent;}
-      #cardville-html-fallback{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;padding:24px;box-sizing:border-box;background:radial-gradient(circle at 50% 16%,#2c6da0,#132653 58%,#060816);color:#fff;}
-      #cardville-html-fallback.is-hidden{opacity:0;pointer-events:none;transition:opacity .25s ease;}
-      .cv-html-card{width:min(332px,100%);box-sizing:border-box;padding:30px 22px;border-radius:30px;border:1px solid rgba(255,255,255,.28);background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.08));box-shadow:0 30px 80px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.26);text-align:center;backdrop-filter:blur(12px);}
-      .cv-html-logo{width:84px;height:84px;margin:0 auto 18px;display:grid;place-items:center;border-radius:28px;color:#15213e;background:linear-gradient(160deg,#e8fbff,#ffd86f);font:900 32px Georgia,serif;box-shadow:0 16px 38px rgba(0,0,0,.22),0 0 34px rgba(143,211,255,.28);}
-      .cv-html-title{font-size:24px;font-weight:900;letter-spacing:-.03em;}
-      .cv-html-note{margin-top:10px;color:#d7e9ff;font-size:14px;font-weight:800;line-height:1.55;word-break:keep-all;}
-      .cv-html-bar{height:9px;margin:17px 0 18px;overflow:hidden;border-radius:999px;background:rgba(255,255,255,.18);}
-      .cv-html-bar span{display:block;width:42%;height:100%;border-radius:inherit;background:linear-gradient(90deg,rgba(255,255,255,.25),#c9f4ff,#ffe38a);animation:cvHtmlBoot 1.25s ease-in-out infinite alternate;}
-      .cv-html-actions{display:grid;gap:10px;margin-top:14px;}
-      .cv-html-actions a,.cv-html-actions button{height:48px;border:0;border-radius:17px;color:#18213b;background:linear-gradient(180deg,#fff,#bfe9ff);box-shadow:0 12px 26px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.8);font-size:15px;font-weight:900;text-decoration:none;display:grid;place-items:center;cursor:pointer;}
-      .cv-html-small{margin-top:12px;color:#8fb4e8;font-size:11px;font-weight:800;line-height:1.45;}
-      @keyframes cvHtmlBoot{from{transform:translateX(-18%)}to{transform:translateX(150%)}}
+      html,body,#app{margin:0;width:100%;height:100%;overflow:hidden;background:#071126;color:#fff;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;touch-action:none;-webkit-tap-highlight-color:transparent;}
+      #boot-fallback{position:fixed;inset:0;z-index:999999;display:grid;place-items:center;background:radial-gradient(circle at 50% 18%,#315f9d,#132853 55%,#050814);}
+      .boot-card{width:min(330px,88vw);padding:28px 22px;border-radius:28px;text-align:center;border:1px solid rgba(255,255,255,.25);background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.08));box-shadow:0 24px 80px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.28);}
+      .boot-logo{width:82px;height:82px;margin:0 auto 16px;display:grid;place-items:center;border-radius:26px;background:linear-gradient(160deg,#e8fbff,#ffe38a);color:#172445;font:900 30px Georgia,serif;box-shadow:0 16px 40px rgba(0,0,0,.25)}
+      .boot-title{font-size:24px;font-weight:900;letter-spacing:-.04em}.boot-note{margin-top:10px;color:#d8ecff;font-size:14px;font-weight:800;line-height:1.5}.boot-small{margin-top:16px;color:#91b6e8;font-size:11px;font-weight:800}.boot-bar{height:9px;margin:18px 0;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.18)}.boot-bar span{display:block;width:45%;height:100%;background:linear-gradient(90deg,#8fd3ff,#ffe38a);border-radius:inherit;animation:move 1.1s ease-in-out infinite alternate}@keyframes move{from{transform:translateX(-30%)}to{transform:translateX(160%)}}
     </style>
   </head>
   <body>
-    <div id="app" aria-label="CardVille game root">
-      <div id="cardville-html-fallback" role="status" aria-live="polite">
-        <div class="cv-html-card">
-          <div class="cv-html-logo">CV</div>
-          <div class="cv-html-title">카드마을을 여는 중</div>
-          <div class="cv-html-note" id="cardville-html-note">게임 파일을 불러오고 있어요.</div>
-          <div class="cv-html-bar"><span></span></div>
-          <div class="cv-html-actions" id="cardville-html-actions" style="display:none">
-            <button type="button" id="cardville-html-reload">다시 불러오기</button>
-            <a href="/CardVille/reset.html?from=html-fallback&v=1.0.4">자동 복구 실행</a>
-          </div>
-          <div class="cv-html-small">1.0.4 · GitHub Pages / Kakao safe boot</div>
+    <div id="app">
+      <div id="boot-fallback">
+        <div class="boot-card">
+          <div class="boot-logo">CV</div>
+          <div class="boot-title">카드마을을 여는 중</div>
+          <div class="boot-note" id="boot-note">게임 엔진을 준비하고 있어요.</div>
+          <div class="boot-bar"><span></span></div>
+          <div class="boot-small">1.0.5 · Clean Stable Boot</div>
         </div>
       </div>
     </div>
+
     <script>
-      (function () {
-        var started = false;
-        window.__CARDVILLE_MARK_HTML_BOOTED__ = function () {
-          started = true;
-          var fallback = document.getElementById('cardville-html-fallback');
-          if (!fallback) return;
-          fallback.classList.add('is-hidden');
-          setTimeout(function () { fallback && fallback.remove(); }, 300);
-        };
-        setTimeout(function () {
-          if (started || window.__CARDVILLE_APP_STARTED__) return;
-          var note = document.getElementById('cardville-html-note');
-          var actions = document.getElementById('cardville-html-actions');
-          if (note) note.textContent = '로딩이 멈췄어요. 배포 설정, 캐시, 또는 브라우저 호환성을 자동 점검합니다. 이 화면이 계속 보이면 GitHub Pages Source가 GitHub Actions인지 확인해 주세요.';
-          if (actions) actions.style.display = 'grid';
-        }, 3200);
-        setTimeout(function () {
-          if (window.__CARDVILLE_APP_STARTED__) return;
-          var note = document.getElementById('cardville-html-note');
-          if (note) note.textContent = '아직 게임 코드가 시작되지 않았어요. 저장소 원본 index.html이 직접 배포되고 있을 가능성이 큽니다. GitHub Pages 배포 소스를 GitHub Actions로 바꾸거나 정적 배포 ZIP을 사용하세요.';
-        }, 8500);
-        document.addEventListener('click', function (event) {
-          if (event.target && event.target.id === 'cardville-html-reload') {
-            var url = new URL(window.location.href);
-            url.searchParams.set('reload', Date.now().toString());
-            window.location.replace(url.toString());
-          }
-        });
-      })();
+      // Best-effort cleanup for old CardVille service workers. This version does not register a new SW.
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(regs){ regs.forEach(function(r){ r.unregister(); }); }).catch(function(){});
+      }
+    </script>
+    <script>
+      window.__CARDVILLE_VERSION__ = '1.0.5';
+      window.__CARDVILLE_READY__ = false;
+      window.__CARDVILLE_BOOT_OK__ = function(){
+        window.__CARDVILLE_READY__ = true;
+        var el = document.getElementById('boot-fallback');
+        if (el) el.remove();
+      };
+      setTimeout(function(){
+        if (window.__CARDVILLE_READY__) return;
+        var note = document.getElementById('boot-note');
+        if (note) note.textContent = '아직 시작 중입니다. 이 문구가 계속 보이면 GitHub Pages가 최신 dist를 배포했는지 확인하세요.';
+      }, 4500);
     </script>
     <script type="module" src="/src/main.ts"></script>
-  <!-- DEPLOY_FILES_CHECK_1_0_3 -->
-
-<script>
-(function(){
-  var base = window.__CARDVILLE_BASE_PATH__ || '/CardVille/';
-  var required = [
-    base + 'reset.html',
-    base + 'health.html',
-    base + 'build.json'
-  ];
-  var moduleEl = document.querySelector('script[type="module"][src]');
-  if (moduleEl) required.unshift(moduleEl.getAttribute('src'));
-  function setNote(msg){
-    var note=document.getElementById('cardville-html-note');
-    if(note) note.textContent=msg;
-    var actions=document.getElementById('cardville-html-actions');
-    if(actions) actions.style.display='grid';
-  }
-  setTimeout(function(){
-    if(window.__CARDVILLE_APP_STARTED__) return;
-    Promise.all(required.map(function(url){
-      return fetch(url, {cache:'no-store'}).then(function(r){return {url:url, ok:r.ok, status:r.status};}).catch(function(e){return {url:url, ok:false, status:'ERR'};});
-    })).then(function(results){
-      if(window.__CARDVILLE_APP_STARTED__) return;
-      var bad=results.filter(function(x){return !x.ok;});
-      if(bad.length){
-        setNote('배포 파일 일부가 없습니다: '+bad.map(function(x){return x.url.split('/').slice(-1)[0]+'('+x.status+')';}).join(', ')+' · 정적 ZIP의 내용물을 루트에 모두 올려주세요.');
-      }
-    });
-  }, 1400);
-})();
-</script>
-
   </body>
 </html>

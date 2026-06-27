@@ -1,42 +1,53 @@
 import Phaser from 'phaser';
 import './styles/index.css';
-import { phaserConfig } from './game/config/phaserConfig';
-import { prepareRuntimeCache, registerServiceWorker } from './pwa/registerServiceWorker';
-import { installGlobalErrorReporter, installStartupGuard, markGameBooted, showBootError } from './diagnostics/startupGuard';
+import { BootScene } from './game/scenes/BootScene';
+import { LoginScene } from './game/scenes/LoginScene';
+import { MainLobbyScene } from './game/scenes/MainLobbyScene';
+import { ModeSelectScene } from './game/scenes/ModeSelectScene';
+import { StageSelectScene } from './game/scenes/StageSelectScene';
+import { PlayScene } from './game/scenes/PlayScene';
+import { ResultScene } from './game/scenes/ResultScene';
+import { RewardScene } from './game/scenes/RewardScene';
+import { CollectionScene } from './game/scenes/CollectionScene';
 
-installGlobalErrorReporter();
-installStartupGuard();
-
-async function startCardVille(): Promise<void> {
-  try {
-    await prepareRuntimeCache();
-
-    registerServiceWorker();
-
-    const game = new Phaser.Game(phaserConfig);
-
-    game.events.once(Phaser.Core.Events.READY, () => {
-      window.setTimeout(() => {
-        markGameBooted();
-      }, 240);
-    });
-
-    window.setTimeout(() => {
-      if (window.__CARDVILLE_APP_STARTED__) return;
-      const app = document.getElementById('app');
-      const note = app?.querySelector<HTMLElement>('.cv-boot-note');
-      if (note) {
-        note.textContent = '게임 엔진 응답이 늦어지고 있어요. 배포된 JS 파일과 브라우저 호환성을 확인 중입니다.';
-      }
-    }, 4500);
-
-    window.addEventListener('beforeunload', () => {
-      game.events.emit('cardville:before-unload');
-    });
-  } catch (error) {
-    console.error('[CardVille] Fatal boot error', error);
-    showBootError(error);
+declare global {
+  interface Window {
+    __CARDVILLE_BOOT_OK__?: () => void;
+    __CARDVILLE_READY__?: boolean;
   }
 }
 
-void startCardVille();
+const config: Phaser.Types.Core.GameConfig = {
+  type: Phaser.CANVAS,
+  parent: 'app',
+  width: 390,
+  height: 844,
+  backgroundColor: '#101a35',
+  scale: {
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH
+  },
+  input: {
+    activePointers: 3
+  },
+  render: {
+    antialias: true,
+    pixelArt: false,
+    roundPixels: false
+  },
+  scene: [BootScene, LoginScene, MainLobbyScene, ModeSelectScene, StageSelectScene, PlayScene, ResultScene, RewardScene, CollectionScene]
+};
+
+window.addEventListener('error', (event) => {
+  const note = document.getElementById('boot-note');
+  if (note) note.textContent = `실행 오류: ${event.message}`;
+  console.error('[CardVille error]', event.error ?? event.message);
+});
+
+window.addEventListener('unhandledrejection', (event) => {
+  const note = document.getElementById('boot-note');
+  if (note) note.textContent = '비동기 실행 오류가 발생했어요. 콘솔 로그를 확인해 주세요.';
+  console.error('[CardVille promise]', event.reason);
+});
+
+new Phaser.Game(config);

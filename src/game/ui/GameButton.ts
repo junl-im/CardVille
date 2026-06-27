@@ -3,99 +3,34 @@ import Phaser from 'phaser';
 export class GameButton extends Phaser.GameObjects.Container {
   private bg: Phaser.GameObjects.Graphics;
   private label: Phaser.GameObjects.Text;
-  private hitZone: Phaser.GameObjects.Zone;
-  private readonly widthValue: number;
-  private readonly heightValue: number;
-  private readonly hitWidth: number;
-  private readonly hitHeight: number;
-  private readonly color: number;
-  private isPressed = false;
-
-  constructor(scene: Phaser.Scene, x: number, y: number, text: string, width = 240, height = 58, color = 0xffd86f) {
+  constructor(scene: Phaser.Scene, x: number, y: number, text: string, width = 280, height = 58, color = 0x8fd3ff) {
     super(scene, x, y);
-    this.widthValue = width;
-    this.heightValue = height;
-    this.hitWidth = width + 56;
-    this.hitHeight = Math.max(height + 38, 68);
-    this.color = color;
-    this.bg = scene.add.graphics();
-    this.hitZone = scene.add.zone(0, 0, this.hitWidth, this.hitHeight).setOrigin(0.5);
-    this.hitZone.setInteractive({ useHandCursor: true });
-    this.label = scene.add.text(0, 0, text, {
-      fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
-      fontSize: height <= 48 ? '16px' : height <= 54 ? '18px' : '20px',
-      fontStyle: '900',
-      color: '#17223b'
-    }).setOrigin(0.5);
-
-    this.add([this.bg, this.hitZone, this.label]);
-    this.setSize(this.hitWidth, this.hitHeight);
-    this.draw(1);
-    this.bindInput();
     scene.add.existing(this);
+    this.bg = scene.add.graphics();
+    this.label = scene.add.text(0, 0, text, {
+      fontSize: '18px',
+      fontStyle: '900',
+      color: '#14233f',
+      align: 'center'
+    }).setOrigin(0.5);
+    this.add([this.bg, this.label]);
+    this.draw(width, height, color, false);
+    this.setSize(width + 18, height + 18);
+    this.setInteractive(new Phaser.Geom.Rectangle(-(width + 18) / 2, -(height + 18) / 2, width + 18, height + 18), Phaser.Geom.Rectangle.Contains);
+    this.on('pointerdown', () => { this.setScale(0.97); this.draw(width, height, color, true); });
+    this.on('pointerup', () => { this.setScale(1); this.draw(width, height, color, false); });
+    this.on('pointerout', () => { this.setScale(1); this.draw(width, height, color, false); });
   }
 
-  setEnabled(enabled: boolean): this {
-    if (this.hitZone.input) this.hitZone.input.enabled = enabled;
-    this.setAlpha(enabled ? 1 : 0.54);
-    return this;
-  }
-
-  setText(text: string): this {
-    this.label.setText(text);
-    return this;
-  }
-
-  private bindInput(): void {
-    this.hitZone.on('pointerover', () => this.draw(1.05));
-    this.hitZone.on('pointerout', () => {
-      this.isPressed = false;
-      this.draw(1);
-      this.scene.tweens.add({ targets: this, scale: 1, duration: 90, ease: 'Sine.easeOut' });
-    });
-    this.hitZone.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-      pointer.event?.preventDefault?.();
-      this.isPressed = true;
-      this.scene.tweens.add({ targets: this, scale: 0.965, duration: 70, ease: 'Sine.easeOut' });
-    });
-    this.hitZone.on('pointerup', (pointer: Phaser.Input.Pointer) => {
-      pointer.event?.preventDefault?.();
-      const shouldFire = this.isPressed;
-      this.isPressed = false;
-      this.scene.tweens.add({ targets: this, scale: 1, duration: 120, ease: 'Back.easeOut' });
-      if (shouldFire) this.emit('pointerup', pointer);
-    });
-    this.hitZone.on('pointerupoutside', () => {
-      this.isPressed = false;
-      this.scene.tweens.add({ targets: this, scale: 1, duration: 90, ease: 'Sine.easeOut' });
-    });
-  }
-
-  private draw(brightness: number): void {
-    const w = this.widthValue;
-    const h = this.heightValue;
-    const c = Phaser.Display.Color.IntegerToColor(this.color);
-    const top = Phaser.Display.Color.GetColor(
-      Math.min(255, Math.round(c.red * brightness + 24)),
-      Math.min(255, Math.round(c.green * brightness + 24)),
-      Math.min(255, Math.round(c.blue * brightness + 24))
-    );
-
+  private draw(width: number, height: number, color: number, pressed: boolean): void {
     this.bg.clear();
-    this.bg.fillStyle(0x000000, 0.25);
-    this.bg.fillRoundedRect(-w / 2 + 3, -h / 2 + 8, w, h, 20);
-    this.bg.fillGradientStyle(top, top, this.color, this.color, 0.98);
-    this.bg.fillRoundedRect(-w / 2, -h / 2, w, h, 20);
-    this.bg.lineStyle(2, 0xffffff, 0.58);
-    this.bg.strokeRoundedRect(-w / 2 + 3, -h / 2 + 3, w - 6, h - 6, 17);
-    this.bg.fillStyle(0xffffff, 0.24);
-    this.bg.fillRoundedRect(-w / 2 + 14, -h / 2 + 8, w - 28, Math.max(14, h * 0.28), 12);
-    this.bg.fillStyle(0xffffff, 0.10);
-    this.bg.fillCircle(w / 2 - 34, -h / 2 + 22, 18);
-
-    if (import.meta.env.DEV) {
-      this.bg.lineStyle(1, 0x00ffcc, 0.18);
-      this.bg.strokeRoundedRect(-this.hitWidth / 2, -this.hitHeight / 2, this.hitWidth, this.hitHeight, 22);
-    }
+    this.bg.fillStyle(0x000000, pressed ? 0.16 : 0.22);
+    this.bg.fillRoundedRect(-width / 2 + 3, -height / 2 + 7, width, height, 20);
+    this.bg.fillGradientStyle(0xffffff, 0xffffff, color, color, 1);
+    this.bg.fillRoundedRect(-width / 2, -height / 2, width, height, 20);
+    this.bg.lineStyle(2, 0xffffff, 0.5);
+    this.bg.strokeRoundedRect(-width / 2, -height / 2, width, height, 20);
+    this.bg.fillStyle(0xffffff, 0.25);
+    this.bg.fillRoundedRect(-width / 2 + 14, -height / 2 + 8, width - 28, 12, 8);
   }
 }

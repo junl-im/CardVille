@@ -1,42 +1,41 @@
-# CardVille 1.0.4
+# CardVille 1.0.5 Clean Stable
 
-부팅/배포 진단 강화 버전입니다. 정적 배포 시 `health.html`, `reset.html`, `404.html`, `assets/`가 저장소 루트에 모두 있어야 합니다.
+이 버전은 기존 대형 구조를 잠시 멈추고, GitHub Actions 배포에서 반드시 로그인 화면이 열리도록 재구성한 안정화 버전입니다.
 
-# 카드마을 CardVille 1.0.4
+## 핵심 원칙
 
-이번 `1.0.4`은 카카오 브라우저 접속, 게스트 시작 속도, 버튼 터치 영역을 우선으로 고친 안정화 패치입니다.
-
-## 핵심 변경
-
-- 게스트 시작은 Firebase 서버를 기다리지 않고 로컬 게스트로 즉시 입장합니다.
-- Google/이메일 로그인만 Firebase 서버 인증을 사용합니다.
-- 카카오 브라우저에서는 Service Worker와 DOM 비디오를 우회하고 안정 모드로 부팅합니다.
-- 버튼 시각 영역보다 터치 영역을 크게 잡아 특정 부위만 눌리는 문제를 줄였습니다.
-- 버전 표기를 `1.0.4` 숫자 체계로 변경했습니다.
-- Firebase / Firestore 모듈은 필요할 때만 동적 로딩되도록 바꾸었습니다.
+- Service Worker 사용 안 함
+- 자동 캐시 마이그레이션 사용 안 함
+- 인트로 영상 사용 안 함
+- 시작 시 Firebase 사용 안 함
+- 대형 이미지 에셋 시작 preload 안 함
+- 게스트는 서버 접속 없이 localStorage로 즉시 시작
+- Google / 이메일 버튼을 눌렀을 때만 Firebase 동적 로딩
 
 ## 실행
 
 ```bash
-npm install --no-audit --no-fund --no-package-lock
+npm install
 npm run dev
 ```
 
-## 검증
+## 빌드
 
 ```bash
 npm run verify
 ```
 
-## 배포 주소
+## 배포
 
-https://junl-im.github.io/CardVille/
+GitHub Pages 설정은 `GitHub Actions`를 사용하세요.
 
+배포 후 확인 주소:
 
-## 1.0.4 긴급 배포 진단
+- https://junl-im.github.io/CardVille/
+- https://junl-im.github.io/CardVille/health.html
+- https://junl-im.github.io/CardVille/deploy-proof.html
+- https://junl-im.github.io/CardVille/version.json
 
-첫 화면이 완전 빈 화면이면 GitHub Pages가 빌드된 `dist`가 아니라 원본 `index.html`을 직접 서빙하고 있을 가능성이 큽니다.
+## 복구 정책
 
-권장 설정은 GitHub 저장소 `Settings > Pages > Source: GitHub Actions`입니다.
-
-1.0.4부터는 원본 index가 직접 열려도 HTML fallback이 표시되어 완전한 빈 화면을 방지합니다. 그래도 게임이 시작되지 않으면 `docs/DEPLOYMENT_DIAGNOSIS_1.0.4.md`를 확인하세요.
+이 버전은 큰 기능보다 첫 접속과 게스트 시작을 우선합니다. 로그인 화면이 안정적으로 열린 뒤 1.0.6부터 디자인과 시스템을 다시 확장합니다.
