@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "packs": [
+    {
+      "packId": "starter_pack",
+      "title": "꿈의 서고 카드팩",
+      "subtitle": "낱말과 기억의 조각이 담긴 기본 카드팩",
+      "slots": 3,
+      "guaranteedRarity": "common",
+      "rarityWeights": {
+        "common": 62,
+        "uncommon": 24,
+        "rare": 10,
+        "epic": 3,
+        "legendary": 1,
+        "mythic": 0
+      },
+      "availableSets": ["starter_fruits", "starter_animals"],
+      "visual": {
+        "mainColor": "#8fd3ff",
+        "accentColor": "#ffd86f",
+        "symbol": "✦"
+      }
+    },
+    {
+      "packId": "library_rare_pack",
+      "title": "빛나는 서고 카드팩",
+      "subtitle": "희귀 이상 카드 확률이 높은 이벤트 카드팩",
+      "slots": 3,
+      "guaranteedRarity": "uncommon",
+      "rarityWeights": {
+        "common": 38,
+        "uncommon": 34,
+        "rare": 18,
+        "epic": 7,
+        "legendary": 2,
+        "mythic": 1
+      },
+      "availableSets": ["starter_fruits", "starter_animals"],
+      "visual": {
+        "mainColor": "#b389ff",
+        "accentColor": "#fff0a8",
+        "symbol": "◆"
+      }
+    }
+  ]
+}

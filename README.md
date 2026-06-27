@@ -6,7 +6,7 @@
 ## 현재 버전
 
 ```txt
-v0.6.1.0
+v0.6.2.0
 ```
 
 ## 기술 스택
@@ -67,9 +67,9 @@ Reward
 Main Lobby
 ```
 
-## v0.6.1 적용 내용 - 유저 성장 데이터 연동
+## v0.6.2 적용 내용 - 유저 성장 데이터 연동
 
-v0.6.1부터 메인 로비가 임시 숫자가 아니라 실제 유저 성장 데이터를 사용합니다.
+v0.6.2부터 메인 로비가 임시 숫자가 아니라 실제 유저 성장 데이터를 사용합니다.
 
 ```txt
 Firestore users/{uid}
@@ -93,7 +93,7 @@ RewardScene 보상 저장
 - 레벨업 토스트 연출 추가
 - 오프라인 또는 Firestore 실패 시 로컬 임시 저장 fallback
 
-자세한 내용은 `docs/USER_GROWTH_SYSTEM.md`와 `docs/PATCH_NOTES_v0.6.1.md`를 확인하세요.
+자세한 내용은 `docs/USER_GROWTH_SYSTEM.md`와 `docs/PATCH_NOTES_v0.6.2.md`를 확인하세요.
 
 ## Firebase
 
@@ -146,8 +146,15 @@ npm install --no-audit --no-fund --no-package-lock
 ```
 
 
-## v0.6.1 Hotfix
+## v0.6.2 Hotfix
 
 - GitHub Actions build error caused by a missing `CollectionTypes` type file in patch application paths was fixed.
 - The patch package now includes `src/game/types/CollectionTypes.ts` and `src/game/types/ModeTypes.ts` explicitly.
 - Full package build was verified with `npm run build`.
+
+
+## v0.6.2 Hotfix
+
+- CollectionSystem.ts 누락으로 인한 TS2307 빌드 오류 수정
+- tools/check-relative-imports.mjs 추가
+- npm run check:imports로 상대 경로 import 누락 검사 가능

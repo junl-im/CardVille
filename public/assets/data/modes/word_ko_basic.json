@@ -90,7 +90,7 @@
       "rewards": {
         "xp": 10,
         "coins": 20,
-        "packChance": 0.2,
+        "packChance": 1.0,
         "packId": "starter_pack_common"
       }
     },
@@ -171,7 +171,7 @@
       "rewards": {
         "xp": 14,
         "coins": 28,
-        "packChance": 0.25,
+        "packChance": 1.05,
         "packId": "starter_pack_common"
       }
     },
@@ -252,7 +252,7 @@
       "rewards": {
         "xp": 20,
         "coins": 40,
-        "packChance": 0.35,
+        "packChance": 0.75,
         "packId": "starter_pack_rare"
       }
     }
