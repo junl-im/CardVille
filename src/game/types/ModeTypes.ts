@@ -33,7 +33,7 @@ export interface ModeStageData {
   title: string;
   subtitle?: string;
   goal: {
-    type: 'match_pairs' | 'memory_flip' | 'math_answer' | 'color_select';
+    type: 'match_pairs' | 'memory_flip' | 'math_answer' | 'color_select' | 'puzzle_pair';
     targetCount: number;
   };
   cards: ModeCardData[];
@@ -61,6 +61,9 @@ export interface PlayResultData {
   score: number;
   combo: number;
   clear: boolean;
+  moves?: number;
+  mistakes?: number;
+  elapsedSec?: number;
   rewards: {
     xp: number;
     coins: number;

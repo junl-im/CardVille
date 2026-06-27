@@ -4,6 +4,7 @@ import { ModeSystem } from '../systems/ModeSystem';
 import { GlassPanel } from '../ui/GlassPanel';
 import { SceneBackSystem } from '../systems/SceneBackSystem';
 import { ProgressSystem } from '../systems/ProgressSystem';
+import { PerformanceSystem } from '../systems/PerformanceSystem';
 
 export class ModeSelectScene extends Phaser.Scene {
   private floatingStars: Phaser.GameObjects.GameObject[] = [];
@@ -194,6 +195,7 @@ export class ModeSelectScene extends Phaser.Scene {
   }
 
   private animateAmbientObjects(): void {
+    if (!PerformanceSystem.shouldAnimateAmbient()) return;
     this.floatingStars.forEach((star, index) => {
       this.tweens.add({ targets: star, y: '-=18', alpha: 0.15, delay: index * 90, duration: 1300, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     });
@@ -211,7 +213,7 @@ export class ModeSelectScene extends Phaser.Scene {
       g.fillRoundedRect(46, 236 + i * 72, 298, 18, 7);
     }
 
-    for (let i = 0; i < 72; i += 1) {
+    for (let i = 0; i < PerformanceSystem.ambientCount(72); i += 1) {
       const star = this.add.text(Phaser.Math.Between(16, 374), Phaser.Math.Between(70, 812), i % 3 === 0 ? '✦' : '·', {
         fontSize: `${Phaser.Math.Between(11, 22)}px`,
         color: i % 2 === 0 ? '#dff7ff' : '#ffe4a3'

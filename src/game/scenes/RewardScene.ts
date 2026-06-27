@@ -6,6 +6,7 @@ import { SceneBackSystem } from '../systems/SceneBackSystem';
 import { CollectionSystem } from '../systems/CollectionSystem';
 import { UserDataSystem } from '../systems/UserDataSystem';
 import { PackOpenResult } from '../types/CollectionTypes';
+import { VisualSystem } from '../systems/VisualSystem';
 
 export class RewardScene extends Phaser.Scene {
   private dataRef!: PlayResultData;
@@ -230,7 +231,7 @@ export class RewardScene extends Phaser.Scene {
 
       if (result.levelUp) {
         this.cameras.main.flash(280, 255, 216, 111);
-        this.spawnBurst(195, 322);
+        VisualSystem.spawnBurst(this, 195, 322, '#ffd86f', 28);
         this.showLevelUpToast(result.after.level);
       }
     } catch (error) {
@@ -260,15 +261,7 @@ export class RewardScene extends Phaser.Scene {
   }
 
   private getFallbackEmoji(cardId: string): string {
-    if (cardId.includes('apple')) return '🍎';
-    if (cardId.includes('banana')) return '🍌';
-    if (cardId.includes('grape')) return '🍇';
-    if (cardId.includes('strawberry')) return '🍓';
-    if (cardId.includes('cat')) return '🐱';
-    if (cardId.includes('dog')) return '🐶';
-    if (cardId.includes('lion')) return '🦁';
-    if (cardId.includes('whale')) return '🐳';
-    return '✦';
+    return VisualSystem.emojiForCardId(cardId);
   }
 
   private showToast(message: string): void {
@@ -343,13 +336,7 @@ export class RewardScene extends Phaser.Scene {
   }
 
   private drawBackground(): void {
-    const g = this.add.graphics();
-    g.fillGradientStyle(0x214d78, 0x214d78, 0x0d1735, 0x060918, 1);
-    g.fillRect(0, 0, 390, 844);
-    g.fillStyle(0xffd86f, 0.08);
-    g.fillCircle(195, 406, 210);
-    g.fillStyle(0x8fd3ff, 0.06);
-    g.fillCircle(50, 140, 130);
-    g.fillCircle(340, 740, 160);
+    VisualSystem.drawPremiumBackground(this, 'reward');
+    VisualSystem.spawnAmbientStars(this, 20);
   }
 }

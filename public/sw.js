@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cardville-cache-v0.7';
+const CACHE_NAME = 'cardville-cache-v0.8';
 const CORE_ASSETS = [
   '/CardVille/',
   '/CardVille/index.html',
@@ -8,6 +8,7 @@ const CORE_ASSETS = [
   '/CardVille/assets/data/modes/math_basic.json',
   '/CardVille/assets/data/modes/memory_basic.json',
   '/CardVille/assets/data/modes/english_basic.json',
+  '/CardVille/assets/data/modes/puzzle_basic.json',
   '/CardVille/assets/data/cards/collection.base.json',
   '/CardVille/assets/data/packs/card_packs.json'
 ];

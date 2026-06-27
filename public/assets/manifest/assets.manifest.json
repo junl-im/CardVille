@@ -1,10 +1,20 @@
 {
-  "version": 1,
+  "version": 8,
   "game": "CardVille",
   "style": {
     "concept": "Aqua Glass + Cute Premium + 2.5D",
-    "forbidden": ["svg", "flat elementary educational style", "hard black outline", "low resolution"],
-    "allowedFormats": ["webp", "png", "spritesheet png", "texture atlas png/json"],
+    "forbidden": [
+      "svg",
+      "flat elementary educational style",
+      "hard black outline",
+      "low resolution"
+    ],
+    "allowedFormats": [
+      "webp",
+      "png",
+      "spritesheet png",
+      "texture atlas png/json"
+    ],
     "sourceSize": "1024x1024",
     "lightDirection": "top-left",
     "shadowDirection": "bottom-right",
@@ -30,13 +40,12 @@
     "json": "assets/json/"
   },
   "priority": [
-    "magic_library backgrounds",
-    "basic card frame set",
-    "basic card back set",
-    "core icons",
-    "fruit and animal card images",
-    "button and popup atlas",
-    "particle atlas",
-    "sfx starter pack"
+    "magic_library premium background",
+    "basic and rare card frame atlas",
+    "puzzle mode card images",
+    "collection album filter icons",
+    "card pack opening effects",
+    "sfx starter pack",
+    "world season backgrounds"
   ]
 }

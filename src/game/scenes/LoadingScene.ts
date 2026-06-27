@@ -15,6 +15,7 @@ export class LoadingScene extends Phaser.Scene {
     this.load.json('modeCatalog', `${import.meta.env.BASE_URL}assets/data/modes/catalog.json`);
     this.load.json('worlds', `${import.meta.env.BASE_URL}assets/data/worlds/worlds.json`);
     this.load.json('collectionBase', `${import.meta.env.BASE_URL}assets/data/cards/collection.base.json`);
+    this.load.json('puzzleBasic', `${import.meta.env.BASE_URL}assets/data/modes/puzzle_basic.json`);
 
     this.load.on('progress', (value: number) => this.updateProgress(value));
   }
@@ -29,7 +30,7 @@ export class LoadingScene extends Phaser.Scene {
     g.fillGradientStyle(0x182a5a, 0x182a5a, 0x0d1530, 0x070a18, 1);
     g.fillRect(0, 0, 390, 844);
 
-    this.add.text(195, 324, '마법 카드 준비 중', {
+    this.add.text(195, 310, '마법 카드 준비 중', {
       fontFamily: 'system-ui, sans-serif',
       fontSize: '30px',
       fontStyle: '900',
@@ -37,6 +38,15 @@ export class LoadingScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     this.progressBar = this.add.graphics();
+    this.add.text(195, 354, '꿈의 서고 · 모드 데이터 · 카드팩을 확인하고 있어요.', {
+      fontFamily: 'system-ui, sans-serif',
+      fontSize: '14px',
+      fontStyle: '800',
+      color: '#cfe8ff',
+      align: 'center',
+      wordWrap: { width: 300 }
+    }).setOrigin(0.5);
+
     this.progressText = this.add.text(195, 442, '0%', {
       fontFamily: 'system-ui, sans-serif',
       fontSize: '18px',

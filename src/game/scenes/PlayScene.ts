@@ -7,6 +7,8 @@ import { HapticSystem } from '../systems/HapticSystem';
 import { SceneBackSystem } from '../systems/SceneBackSystem';
 import { ProgressSystem } from '../systems/ProgressSystem';
 import { AudioSystem } from '../systems/AudioSystem';
+import { LayoutSystem } from '../systems/LayoutSystem';
+import { VisualSystem } from '../systems/VisualSystem';
 
 export class PlayScene extends Phaser.Scene {
   private mode!: ModeData;
@@ -16,10 +18,16 @@ export class PlayScene extends Phaser.Scene {
   private score = 0;
   private combo = 0;
   private maxCombo = 0;
+  private moves = 0;
+  private mistakes = 0;
+  private startedAt = 0;
+  private resolving = false;
   private modeId = 'word_ko_basic';
   private stageIndex = 0;
   private scoreText?: Phaser.GameObjects.Text;
   private comboText?: Phaser.GameObjects.Text;
+  private remainText?: Phaser.GameObjects.Text;
+  private moveText?: Phaser.GameObjects.Text;
 
   constructor() {
     super('PlayScene');
@@ -32,6 +40,10 @@ export class PlayScene extends Phaser.Scene {
     this.score = 0;
     this.combo = 0;
     this.maxCombo = 0;
+    this.moves = 0;
+    this.mistakes = 0;
+    this.resolving = false;
+    this.startedAt = Date.now();
 
     this.drawBackground();
     this.createHud('불러오는 중...');
@@ -49,6 +61,7 @@ export class PlayScene extends Phaser.Scene {
       this.drawBackground();
       this.createHud(this.stage.title);
       this.createCards();
+      this.updateHud();
     } catch (error) {
       this.add.text(195, 420, '스테이지를 불러오지 못했어요.', { fontSize: '18px', color: '#ffffff' }).setOrigin(0.5);
       console.warn(error);
@@ -61,87 +74,101 @@ export class PlayScene extends Phaser.Scene {
   }
 
   private createHud(title: string): void {
-    new GlassPanel(this, 195, 54, 350, 70, 22, 0.12);
+    new GlassPanel(this, 195, 54, 350, 70, 22, 0.13);
     this.add.text(38, 54, '‹', { fontSize: '38px', color: '#ffffff' }).setOrigin(0, 0.5)
       .setInteractive({ useHandCursor: true })
       .on('pointerup', () => this.scene.start('StageSelectScene', { modeId: this.modeId }));
-    this.add.text(195, 38, title, { fontSize: '18px', fontStyle: '900', color: '#ffffff' }).setOrigin(0.5);
-    this.add.text(195, 63, `Stage ${this.stageIndex + 1} · 정답을 찾아 카드를 모으세요`, { fontSize: '12px', color: '#cbd8ff' }).setOrigin(0.5);
+    this.add.text(195, 37, title, { fontSize: '18px', fontStyle: '900', color: '#ffffff' }).setOrigin(0.5);
+    this.add.text(195, 63, `Stage ${this.stageIndex + 1} · 그림과 단서를 맞춰보세요`, { fontSize: '12px', color: '#cbd8ff' }).setOrigin(0.5);
 
-    new GlassPanel(this, 195, 118, 342, 44, 18, 0.1);
-    this.scoreText = this.add.text(58, 118, '점수 0', { fontSize: '15px', fontStyle: '900', color: '#fff0b8' }).setOrigin(0, 0.5);
-    this.comboText = this.add.text(326, 118, '콤보 0', { fontSize: '15px', fontStyle: '900', color: '#dff7ff' }).setOrigin(1, 0.5);
+    new GlassPanel(this, 195, 118, 342, 46, 18, 0.11);
+    this.scoreText = this.add.text(52, 109, '점수 0', { fontSize: '14px', fontStyle: '900', color: '#fff0b8' }).setOrigin(0, 0.5);
+    this.comboText = this.add.text(338, 109, '콤보 0', { fontSize: '14px', fontStyle: '900', color: '#dff7ff' }).setOrigin(1, 0.5);
+    this.remainText = this.add.text(52, 129, '남은 짝 0', { fontSize: '12px', fontStyle: '800', color: '#d9e8ff' }).setOrigin(0, 0.5);
+    this.moveText = this.add.text(338, 129, '이동 0', { fontSize: '12px', fontStyle: '800', color: '#d9e8ff' }).setOrigin(1, 0.5);
   }
 
   private createCards(): void {
     this.remainingPairs = this.stage.goal.targetCount;
-    const positions = [
-      [105, 230], [285, 230],
-      [105, 402], [285, 402],
-      [105, 574], [285, 574],
-      [105, 746], [285, 746]
-    ];
+    const positions = LayoutSystem.cardGrid(this.stage.cards.length);
 
     this.stage.cards.forEach((card, index) => {
       const pos = positions[index];
       if (!pos) return;
-      const view = new CardView(this, pos[0], pos[1], card);
+      const view = new CardView(this, pos.x, pos.y, card);
+      view.playSpawn(index);
       view.on('pointerup', () => this.handleCardSelect(view));
     });
   }
 
   private handleCardSelect(card: CardView): void {
-    if (this.selected.includes(card) || this.selected.length >= 2) return;
+    if (this.resolving || this.selected.includes(card) || this.selected.length >= 2) return;
     HapticSystem.light();
     AudioSystem.playSfx('card');
     card.setSelected(true);
     this.selected.push(card);
 
     if (this.selected.length === 2) {
+      this.resolving = true;
+      this.moves += 1;
+      this.updateHud();
       this.time.delayedCall(260, () => this.checkSelectedCards());
     }
   }
 
   private checkSelectedCards(): void {
     const [a, b] = this.selected;
-    if (!a || !b) return;
+    if (!a || !b) {
+      this.resolving = false;
+      return;
+    }
 
     const correct = a.dataRef.answerKey === b.dataRef.answerKey && a.dataRef.id !== b.dataRef.id;
     if (correct) {
       this.combo += 1;
       this.maxCombo = Math.max(this.maxCombo, this.combo);
-      this.score += 100 + this.combo * 25;
+      this.score += 100 + this.combo * 25 + Math.max(0, this.remainingPairs - 1) * 5;
       this.updateHud();
       HapticSystem.success();
       AudioSystem.playSfx('correct');
-      this.spawnStars((a.x + b.x) / 2, (a.y + b.y) / 2);
+      VisualSystem.spawnBurst(this, (a.x + b.x) / 2, (a.y + b.y) / 2, '#ffe4a3', 18);
       a.playCorrect();
       b.playCorrect();
       this.remainingPairs -= 1;
+      this.selected = [];
+      this.resolving = false;
+      this.updateHud();
 
       if (this.remainingPairs <= 0) {
         this.time.delayedCall(620, () => this.clearStage());
       }
     } else {
       this.combo = 0;
+      this.mistakes += 1;
+      this.score = Math.max(0, this.score - 15);
       this.updateHud();
       HapticSystem.wrong();
       AudioSystem.playSfx('wrong');
       a.playWrong();
       b.playWrong();
-      a.setSelected(false);
-      b.setSelected(false);
+      this.time.delayedCall(330, () => {
+        a.setSelected(false);
+        b.setSelected(false);
+        this.selected = [];
+        this.resolving = false;
+      });
     }
-
-    this.selected = [];
   }
 
   private updateHud(): void {
     this.scoreText?.setText(`점수 ${this.score.toLocaleString('ko-KR')}`);
     this.comboText?.setText(`콤보 ${this.combo}`);
+    this.remainText?.setText(`남은 짝 ${this.remainingPairs}`);
+    this.moveText?.setText(`이동 ${this.moves}`);
   }
 
   private async clearStage(): Promise<void> {
+    const elapsedSec = Math.max(1, Math.round((Date.now() - this.startedAt) / 1000));
     const result = {
       modeId: this.mode.modeId,
       stageIndex: this.stageIndex,
@@ -149,6 +176,9 @@ export class PlayScene extends Phaser.Scene {
       score: this.score,
       combo: this.maxCombo,
       clear: true,
+      moves: this.moves,
+      mistakes: this.mistakes,
+      elapsedSec,
       rewards: this.stage.rewards
     };
 
@@ -161,29 +191,14 @@ export class PlayScene extends Phaser.Scene {
     this.scene.start('ResultScene', result);
   }
 
-  private spawnStars(x: number, y: number): void {
-    for (let i = 0; i < 16; i += 1) {
-      const star = this.add.text(x, y, '✦', { fontSize: `${Phaser.Math.Between(16, 28)}px`, color: '#ffe4a3' }).setOrigin(0.5);
-      this.tweens.add({
-        targets: star,
-        x: x + Phaser.Math.Between(-110, 110),
-        y: y + Phaser.Math.Between(-95, 95),
-        alpha: 0,
-        scale: 0.2,
-        duration: 640,
-        ease: 'Cubic.easeOut',
-        onComplete: () => star.destroy()
-      });
-    }
-  }
-
   private drawBackground(): void {
-    const g = this.add.graphics();
-    g.fillGradientStyle(0x20376b, 0x20376b, 0x101a35, 0x071023, 1);
-    g.fillRect(0, 0, 390, 844);
-    g.fillStyle(0xffffff, 0.04);
-    g.fillCircle(64, 236, 180);
-    g.fillStyle(0xffd36b, 0.05);
-    g.fillCircle(330, 690, 170);
+    const variant = this.modeId.includes('memory') ? 'space' : this.modeId.includes('math') ? 'library' : 'play';
+    VisualSystem.drawPremiumBackground(this, variant);
+    VisualSystem.spawnAmbientStars(this, 22);
+    const table = this.add.graphics();
+    table.fillStyle(0x000000, 0.11);
+    table.fillRoundedRect(24, 154, 342, 670, 30);
+    table.lineStyle(1, 0xffffff, 0.12);
+    table.strokeRoundedRect(24, 154, 342, 670, 30);
   }
 }

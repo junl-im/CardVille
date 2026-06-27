@@ -5,6 +5,7 @@ const root = process.cwd();
 const modesDir = path.join(root, 'public/assets/data/modes');
 const catalog = JSON.parse(fs.readFileSync(path.join(modesDir, 'catalog.json'), 'utf8'));
 const errors = [];
+const rarities = ['common','uncommon','rare','epic','legendary','mythic'];
 
 function assert(condition, message) {
   if (!condition) errors.push(message);
@@ -36,7 +37,7 @@ for (const item of catalog.modes ?? []) {
       assert(typeof card.id === 'string', `Card missing id in ${stage.stageId}`);
       assert(typeof card.answerKey === 'string', `Card missing answerKey in ${stage.stageId}`);
       counts.set(card.answerKey, (counts.get(card.answerKey) ?? 0) + 1);
-      assert(['common','uncommon','rare','epic','legendary','mythic'].includes(card.rarity), `Invalid rarity ${card.rarity} in ${stage.stageId}`);
+      assert(rarities.includes(card.rarity), `Invalid rarity ${card.rarity} in ${stage.stageId}`);
     }
     for (const [answerKey, count] of counts.entries()) {
       assert(count === 2, `answerKey '${answerKey}' appears ${count} times in ${stage.stageId}; expected 2`);
@@ -48,6 +49,12 @@ const collection = readJson(path.join(root, 'public/assets/data/cards/collection
 const packs = readJson(path.join(root, 'public/assets/data/packs/card_packs.json'));
 const setIds = new Set((collection?.sets ?? []).map((set) => set.setId));
 for (const pack of packs?.packs ?? []) {
+  assert(typeof pack.packId === 'string', 'Pack missing packId');
+  assert(Number.isInteger(pack.slots) && pack.slots > 0 && pack.slots <= 10, `Invalid pack slots: ${pack.packId}`);
+  assert(pack.rarityWeights && typeof pack.rarityWeights === 'object', `Pack missing rarityWeights: ${pack.packId}`);
+  const totalWeight = rarities.reduce((sum, rarity) => sum + Math.max(0, Number(pack.rarityWeights?.[rarity] ?? 0)), 0);
+  assert(totalWeight > 0, `Pack rarity weight total must be positive: ${pack.packId}`);
+  if (pack.guaranteedRarity) assert(rarities.includes(pack.guaranteedRarity), `Invalid guaranteed rarity: ${pack.packId}`);
   for (const setId of pack.availableSets ?? []) {
     assert(setIds.has(setId), `Pack ${pack.packId} references missing set ${setId}`);
   }

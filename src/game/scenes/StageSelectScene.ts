@@ -5,6 +5,7 @@ import { GlassPanel } from '../ui/GlassPanel';
 import { SceneBackSystem } from '../systems/SceneBackSystem';
 import { ProgressSystem } from '../systems/ProgressSystem';
 import { ModeProgressRecord } from '../types/ProgressTypes';
+import { VisualSystem } from '../systems/VisualSystem';
 
 export class StageSelectScene extends Phaser.Scene {
   private mode!: ModeData;
@@ -25,8 +26,8 @@ export class StageSelectScene extends Phaser.Scene {
       this.mode = await ModeSystem.loadMode(data.modeId ?? 'word_ko_basic');
       this.progress = await ProgressSystem.load(this.mode.modeId);
       const summary = ProgressSystem.getSummary(this.mode, this.progress);
-      this.add.text(34, 110, this.mode.title, { fontSize: '34px', fontStyle: '900', color: '#ffffff' });
-      this.add.text(34, 150, `클리어 ${summary.clearedStages}/${summary.stageCount} · 별 ${summary.totalStars}/${summary.maxStars}`, { fontSize: '15px', color: '#cfe3ff' });
+      this.add.text(34, 106, this.mode.title, { fontSize: '34px', fontStyle: '900', color: '#ffffff' });
+      this.add.text(34, 148, `클리어 ${summary.clearedStages}/${summary.stageCount} · 별 ${summary.totalStars}/${summary.maxStars}`, { fontSize: '15px', color: '#cfe3ff' });
       this.createProgressBar(34, 178, 322, 15, summary.completionRatio);
       this.mode.stages.forEach((stage, index) => this.createStageCard(stage, index));
       if (data.toast) this.showToast(data.toast);
@@ -40,7 +41,7 @@ export class StageSelectScene extends Phaser.Scene {
 
   private createStageCard(stage: ModeStageData, index: number): void {
     const x = 105 + (index % 2) * 180;
-    const y = 270 + Math.floor(index / 2) * 150;
+    const y = 272 + Math.floor(index / 2) * 148;
     const unlocked = ProgressSystem.isStageUnlocked(this.progress, index);
     const stageProgress = ProgressSystem.getStage(this.progress, stage.stageId);
     const stars = stageProgress?.stars ?? 0;
@@ -75,7 +76,7 @@ export class StageSelectScene extends Phaser.Scene {
 
     panel.on('pointerup', () => {
       if (!unlocked) {
-        this.showToast('이전 스테이지를 클리어하면 열려요.');
+        VisualSystem.toast(this, '이전 스테이지를 클리어하면 열려요.');
         return;
       }
       this.scene.start('PlayScene', { modeId: this.mode.modeId, stageIndex: index });
@@ -108,12 +109,12 @@ export class StageSelectScene extends Phaser.Scene {
   }
 
   private drawBackground(): void {
-    const g = this.add.graphics();
-    g.fillGradientStyle(0x1a406e, 0x1a406e, 0x0d1735, 0x060918, 1);
-    g.fillRect(0, 0, 390, 844);
-    g.fillStyle(0x8fd3ff, 0.07);
-    g.fillCircle(330, 168, 150);
-    g.fillStyle(0xffd86f, 0.05);
-    g.fillCircle(80, 730, 160);
+    VisualSystem.drawPremiumBackground(this, 'library');
+    VisualSystem.spawnAmbientStars(this, 22);
+    const shelf = this.add.graphics();
+    shelf.fillStyle(0x000000, 0.12);
+    shelf.fillRoundedRect(24, 218, 342, 530, 28);
+    shelf.lineStyle(1, 0xffffff, 0.12);
+    shelf.strokeRoundedRect(24, 218, 342, 530, 28);
   }
 }

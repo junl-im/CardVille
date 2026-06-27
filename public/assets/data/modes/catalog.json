@@ -1,5 +1,5 @@
 {
-  "version": 7,
+  "version": 8,
   "worldId": "dream_library",
   "worldTitle": "꿈의 서고",
   "modes": [
@@ -51,13 +51,13 @@
       "modeId": "puzzle_basic",
       "title": "퍼즐 카드",
       "bookTitle": "퍼즐의 책",
-      "subtitle": "조각과 정답을 맞추는 모드예요.",
+      "subtitle": "조각과 단서를 맞춰 꿈의 그림을 완성해요.",
       "icon": "🧩",
-      "status": "soon",
-      "unlockText": "v0.8 시즌 월드와 함께 추가 예정",
+      "status": "open",
+      "unlockText": "꿈의 퍼즐이 열렸어요.",
       "bookColor": "0x8fffc8",
       "bookSpine": "PUZZLE",
-      "worldNote": "조각난 기억을 맞추는 탐험 마법서"
+      "worldNote": "조각난 꿈을 맞추는 신규 마법서"
     }
   ]
 }

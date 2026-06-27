@@ -6,7 +6,7 @@
 ## 현재 버전
 
 ```txt
-v0.7.0
+v0.8.0
 ```
 
 ## 기술 스택
@@ -35,7 +35,9 @@ npm run dev
 ```bash
 npm run check:imports
 npm run check:json
+npm run check:assets
 npm run build
+npm run check:budget
 npm run verify
 ```
 
@@ -71,26 +73,29 @@ Reward
 Main Lobby
 ```
 
-## v0.7.0 초대규모 업데이트
+## v0.8.0 대규모 품질 개선 업데이트
 
-v0.7.0은 기능 추가만이 아니라 안정성, 검증, UI 겹침, 데이터 구조를 같이 정리한 대규모 패치입니다.
+v0.8.0은 UI 겹침, 카드 연출, 컬렉션 페이지네이션, 성능 옵션, 데이터 검증, 에셋 정책을 함께 정리한 품질 개선 패치입니다.
 
 ```txt
-✅ 스테이지 잠금 / 해금
-✅ 별 1~3개 클리어 등급
-✅ 모드별 진행률 표시
-✅ 꿈의 서고 책별 진행도 표시
-✅ 낱말 / 연산 / 기억력 / 영어 4개 모드 오픈
-✅ 총 12개 스테이지 데이터 추가
-✅ 일일 미션 화면 추가
-✅ 출석 보상 추가
-✅ 설정 화면 추가
-✅ 사운드 / 진동 / 절전 / 데이터 절약 옵션 추가
-✅ PWA manifest / service worker / PNG 아이콘 추가
-✅ 컬렉션 기본 카드 24종 확장
-✅ Firestore progress Rules 확장
-✅ JSON 데이터 검증 스크립트 추가
-✅ GitHub Actions에서 verify 실행
+✅ 퍼즐 카드 모드 오픈
+✅ 총 15개 스테이지로 확장
+✅ 컬렉션 24종 → 48종 확장
+✅ 컬렉션 앨범 페이지네이션 추가
+✅ 컬렉션 필터 추가: 전체 / 보유 / 미획득 / 희귀+ / 전설+
+✅ 카드 선택 부유감 개선
+✅ 카드 등장 애니메이션 추가
+✅ 카드 정답/오답 연출 안정화
+✅ PlayScene 카드 배치 동적 계산
+✅ 점수 / 콤보 / 이동 / 실수 / 시간 결과 표시
+✅ PerformanceSystem 추가
+✅ LayoutSystem 추가
+✅ VisualSystem 추가
+✅ 설정의 절전 / 데이터 절약 옵션을 파티클 예산에 반영
+✅ SVG 금지 에셋 검사 추가
+✅ 번들 용량 예산 검사 추가
+✅ service worker 캐시 v0.8 갱신
+✅ GitHub Actions verify 강화
 ```
 
 ## Firebase
@@ -142,7 +147,9 @@ Aqua Glass + Cute Premium + 2.5D
 ```txt
 npm run check:imports
 npm run check:json
+npm run check:assets
 npm run build
+npm run check:budget
 ```
 
-즉, 앞으로는 상대 import 누락, JSON 짝 데이터 오류, TypeScript 빌드 오류를 배포 전에 잡습니다.
+즉, 앞으로는 상대 import 누락, JSON 짝 데이터 오류, SVG 유입, TypeScript 빌드 오류, 번들 예산 초과를 배포 전에 잡습니다.

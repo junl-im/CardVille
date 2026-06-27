@@ -5,6 +5,7 @@ import { GameButton } from '../ui/GameButton';
 import { GlassPanel } from '../ui/GlassPanel';
 import { SceneBackSystem } from '../systems/SceneBackSystem';
 import { UserProfileDoc } from '../../firebase/firestore';
+import { VisualSystem } from '../systems/VisualSystem';
 
 export class MainLobbyScene extends Phaser.Scene {
   constructor() {
@@ -159,7 +160,7 @@ export class MainLobbyScene extends Phaser.Scene {
     const logout = new GameButton(this, 195, 742, '로그아웃 / 계정 변경', 300, 48, 0xf5aacb);
     logout.on('pointerup', () => this.signOut());
 
-    this.add.text(195, 806, 'Aqua Glass + Cute Premium + 2.5D', {
+    this.add.text(195, 806, 'Aqua Glass + Cute Premium + 2.5D · v0.8', {
       fontSize: '13px',
       color: '#9fb8e9'
     }).setOrigin(0.5);
@@ -178,16 +179,7 @@ export class MainLobbyScene extends Phaser.Scene {
   }
 
   private drawBackground(): void {
-    const g = this.add.graphics();
-    g.fillGradientStyle(0x1a4e79, 0x1d4376, 0x0e1838, 0x060918, 1);
-    g.fillRect(0, 0, 390, 844);
-    for (let i = 0; i < 60; i += 1) {
-      g.fillStyle(0xffffff, Phaser.Math.FloatBetween(0.05, 0.18));
-      g.fillCircle(Phaser.Math.Between(0, 390), Phaser.Math.Between(0, 844), Phaser.Math.FloatBetween(1, 2.5));
-    }
-    g.fillStyle(0x8fd3ff, 0.07);
-    g.fillCircle(320, 174, 142);
-    g.fillStyle(0xffd86f, 0.06);
-    g.fillCircle(76, 746, 176);
+    VisualSystem.drawPremiumBackground(this, 'library');
+    VisualSystem.spawnAmbientStars(this, 34);
   }
 }

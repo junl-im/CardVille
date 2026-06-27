@@ -1,17 +1,47 @@
 {
-  "version": 7,
+  "version": 8,
   "sets": [
     {
       "setId": "starter_fruits",
       "title": "과일 친구들",
       "world": "magic_library",
       "cards": [
-        { "cardId": "apple_001", "name": "사과", "rarity": "common", "imageKey": "cards_image/fruits/apple_001.webp" },
-        { "cardId": "banana_001", "name": "바나나", "rarity": "common", "imageKey": "cards_image/fruits/banana_001.webp" },
-        { "cardId": "grape_001", "name": "포도", "rarity": "rare", "imageKey": "cards_image/fruits/grape_001.webp" },
-        { "cardId": "strawberry_001", "name": "딸기", "rarity": "uncommon", "imageKey": "cards_image/fruits/strawberry_001.webp" },
-        { "cardId": "peach_001", "name": "복숭아", "rarity": "uncommon", "imageKey": "cards_image/fruits/peach_001.webp" },
-        { "cardId": "melon_001", "name": "멜론", "rarity": "rare", "imageKey": "cards_image/fruits/melon_001.webp" }
+        {
+          "cardId": "apple_001",
+          "name": "사과",
+          "rarity": "common",
+          "imageKey": "cards_image/fruits/apple_001.webp"
+        },
+        {
+          "cardId": "banana_001",
+          "name": "바나나",
+          "rarity": "common",
+          "imageKey": "cards_image/fruits/banana_001.webp"
+        },
+        {
+          "cardId": "grape_001",
+          "name": "포도",
+          "rarity": "rare",
+          "imageKey": "cards_image/fruits/grape_001.webp"
+        },
+        {
+          "cardId": "strawberry_001",
+          "name": "딸기",
+          "rarity": "uncommon",
+          "imageKey": "cards_image/fruits/strawberry_001.webp"
+        },
+        {
+          "cardId": "peach_001",
+          "name": "복숭아",
+          "rarity": "uncommon",
+          "imageKey": "cards_image/fruits/peach_001.webp"
+        },
+        {
+          "cardId": "melon_001",
+          "name": "멜론",
+          "rarity": "rare",
+          "imageKey": "cards_image/fruits/melon_001.webp"
+        }
       ]
     },
     {
@@ -19,12 +49,42 @@
       "title": "동물 친구들",
       "world": "forest",
       "cards": [
-        { "cardId": "cat_001", "name": "고양이", "rarity": "common", "imageKey": "cards_image/animals/cat_001.webp" },
-        { "cardId": "dog_001", "name": "강아지", "rarity": "common", "imageKey": "cards_image/animals/dog_001.webp" },
-        { "cardId": "lion_001", "name": "사자", "rarity": "epic", "imageKey": "cards_image/animals/lion_001.webp" },
-        { "cardId": "whale_001", "name": "고래", "rarity": "rare", "imageKey": "cards_image/sea/whale_001.webp" },
-        { "cardId": "rabbit_001", "name": "토끼", "rarity": "common", "imageKey": "cards_image/animals/rabbit_001.webp" },
-        { "cardId": "fox_001", "name": "여우", "rarity": "rare", "imageKey": "cards_image/animals/fox_001.webp" }
+        {
+          "cardId": "cat_001",
+          "name": "고양이",
+          "rarity": "common",
+          "imageKey": "cards_image/animals/cat_001.webp"
+        },
+        {
+          "cardId": "dog_001",
+          "name": "강아지",
+          "rarity": "common",
+          "imageKey": "cards_image/animals/dog_001.webp"
+        },
+        {
+          "cardId": "lion_001",
+          "name": "사자",
+          "rarity": "epic",
+          "imageKey": "cards_image/animals/lion_001.webp"
+        },
+        {
+          "cardId": "whale_001",
+          "name": "고래",
+          "rarity": "rare",
+          "imageKey": "cards_image/sea/whale_001.webp"
+        },
+        {
+          "cardId": "rabbit_001",
+          "name": "토끼",
+          "rarity": "common",
+          "imageKey": "cards_image/animals/rabbit_001.webp"
+        },
+        {
+          "cardId": "fox_001",
+          "name": "여우",
+          "rarity": "rare",
+          "imageKey": "cards_image/animals/fox_001.webp"
+        }
       ]
     },
     {
@@ -32,12 +92,42 @@
       "title": "꿈의 서고",
       "world": "dream_library",
       "cards": [
-        { "cardId": "book_001", "name": "마법서", "rarity": "common", "imageKey": "cards_image/objects/book_001.webp" },
-        { "cardId": "candle_001", "name": "촛불", "rarity": "common", "imageKey": "cards_image/objects/candle_001.webp" },
-        { "cardId": "crystal_001", "name": "수정구", "rarity": "epic", "imageKey": "cards_image/objects/crystal_001.webp" },
-        { "cardId": "key_001", "name": "꿈의 열쇠", "rarity": "legendary", "imageKey": "cards_image/objects/key_001.webp" },
-        { "cardId": "scroll_001", "name": "두루마리", "rarity": "uncommon", "imageKey": "cards_image/objects/scroll_001.webp" },
-        { "cardId": "ink_001", "name": "별빛 잉크", "rarity": "rare", "imageKey": "cards_image/objects/ink_001.webp" }
+        {
+          "cardId": "book_001",
+          "name": "마법서",
+          "rarity": "common",
+          "imageKey": "cards_image/objects/book_001.webp"
+        },
+        {
+          "cardId": "candle_001",
+          "name": "촛불",
+          "rarity": "common",
+          "imageKey": "cards_image/objects/candle_001.webp"
+        },
+        {
+          "cardId": "crystal_001",
+          "name": "수정구",
+          "rarity": "epic",
+          "imageKey": "cards_image/objects/crystal_001.webp"
+        },
+        {
+          "cardId": "key_001",
+          "name": "꿈의 열쇠",
+          "rarity": "legendary",
+          "imageKey": "cards_image/objects/key_001.webp"
+        },
+        {
+          "cardId": "scroll_001",
+          "name": "두루마리",
+          "rarity": "uncommon",
+          "imageKey": "cards_image/objects/scroll_001.webp"
+        },
+        {
+          "cardId": "ink_001",
+          "name": "별빛 잉크",
+          "rarity": "rare",
+          "imageKey": "cards_image/objects/ink_001.webp"
+        }
       ]
     },
     {
@@ -45,12 +135,214 @@
       "title": "우주 탐험",
       "world": "space",
       "cards": [
-        { "cardId": "moon_001", "name": "달", "rarity": "rare", "imageKey": "cards_image/space/moon_001.webp" },
-        { "cardId": "star_001", "name": "별", "rarity": "common", "imageKey": "cards_image/space/star_001.webp" },
-        { "cardId": "rocket_001", "name": "로켓", "rarity": "epic", "imageKey": "cards_image/space/rocket_001.webp" },
-        { "cardId": "planet_001", "name": "행성", "rarity": "legendary", "imageKey": "cards_image/space/planet_001.webp" },
-        { "cardId": "comet_001", "name": "혜성", "rarity": "rare", "imageKey": "cards_image/space/comet_001.webp" },
-        { "cardId": "galaxy_001", "name": "은하", "rarity": "mythic", "imageKey": "cards_image/space/galaxy_001.webp" }
+        {
+          "cardId": "moon_001",
+          "name": "달",
+          "rarity": "rare",
+          "imageKey": "cards_image/space/moon_001.webp"
+        },
+        {
+          "cardId": "star_001",
+          "name": "별",
+          "rarity": "common",
+          "imageKey": "cards_image/space/star_001.webp"
+        },
+        {
+          "cardId": "rocket_001",
+          "name": "로켓",
+          "rarity": "epic",
+          "imageKey": "cards_image/space/rocket_001.webp"
+        },
+        {
+          "cardId": "planet_001",
+          "name": "행성",
+          "rarity": "legendary",
+          "imageKey": "cards_image/space/planet_001.webp"
+        },
+        {
+          "cardId": "comet_001",
+          "name": "혜성",
+          "rarity": "rare",
+          "imageKey": "cards_image/space/comet_001.webp"
+        },
+        {
+          "cardId": "galaxy_001",
+          "name": "은하",
+          "rarity": "mythic",
+          "imageKey": "cards_image/space/galaxy_001.webp"
+        }
+      ]
+    },
+    {
+      "setId": "color_magic",
+      "title": "색깔 마법",
+      "world": "rainbow_garden",
+      "cards": [
+        {
+          "cardId": "red_001",
+          "name": "빨강",
+          "rarity": "common",
+          "imageKey": "cards_image/colors/red_001.webp"
+        },
+        {
+          "cardId": "blue_001",
+          "name": "파랑",
+          "rarity": "common",
+          "imageKey": "cards_image/colors/blue_001.webp"
+        },
+        {
+          "cardId": "green_001",
+          "name": "초록",
+          "rarity": "uncommon",
+          "imageKey": "cards_image/colors/green_001.webp"
+        },
+        {
+          "cardId": "yellow_001",
+          "name": "노랑",
+          "rarity": "uncommon",
+          "imageKey": "cards_image/colors/yellow_001.webp"
+        },
+        {
+          "cardId": "purple_001",
+          "name": "보라",
+          "rarity": "rare",
+          "imageKey": "cards_image/colors/purple_001.webp"
+        },
+        {
+          "cardId": "rainbow_001",
+          "name": "무지개",
+          "rarity": "legendary",
+          "imageKey": "cards_image/colors/rainbow_001.webp"
+        }
+      ]
+    },
+    {
+      "setId": "music_room",
+      "title": "음악 교실",
+      "world": "music_room",
+      "cards": [
+        {
+          "cardId": "piano_001",
+          "name": "피아노",
+          "rarity": "uncommon",
+          "imageKey": "cards_image/music/piano_001.webp"
+        },
+        {
+          "cardId": "guitar_001",
+          "name": "기타",
+          "rarity": "common",
+          "imageKey": "cards_image/music/guitar_001.webp"
+        },
+        {
+          "cardId": "drum_001",
+          "name": "드럼",
+          "rarity": "common",
+          "imageKey": "cards_image/music/drum_001.webp"
+        },
+        {
+          "cardId": "violin_001",
+          "name": "바이올린",
+          "rarity": "rare",
+          "imageKey": "cards_image/music/violin_001.webp"
+        },
+        {
+          "cardId": "bell_001",
+          "name": "종",
+          "rarity": "uncommon",
+          "imageKey": "cards_image/music/bell_001.webp"
+        },
+        {
+          "cardId": "music_star_001",
+          "name": "별의 노래",
+          "rarity": "epic",
+          "imageKey": "cards_image/music/music_star_001.webp"
+        }
+      ]
+    },
+    {
+      "setId": "dream_jobs",
+      "title": "꿈의 직업",
+      "world": "city",
+      "cards": [
+        {
+          "cardId": "doctor_001",
+          "name": "의사",
+          "rarity": "rare",
+          "imageKey": "cards_image/jobs/doctor_001.webp"
+        },
+        {
+          "cardId": "chef_001",
+          "name": "요리사",
+          "rarity": "common",
+          "imageKey": "cards_image/jobs/chef_001.webp"
+        },
+        {
+          "cardId": "pilot_001",
+          "name": "조종사",
+          "rarity": "epic",
+          "imageKey": "cards_image/jobs/pilot_001.webp"
+        },
+        {
+          "cardId": "artist_001",
+          "name": "화가",
+          "rarity": "uncommon",
+          "imageKey": "cards_image/jobs/artist_001.webp"
+        },
+        {
+          "cardId": "teacher_001",
+          "name": "선생님",
+          "rarity": "common",
+          "imageKey": "cards_image/jobs/teacher_001.webp"
+        },
+        {
+          "cardId": "firefighter_001",
+          "name": "소방관",
+          "rarity": "rare",
+          "imageKey": "cards_image/jobs/firefighter_001.webp"
+        }
+      ]
+    },
+    {
+      "setId": "tool_box",
+      "title": "도구 상자",
+      "world": "workshop",
+      "cards": [
+        {
+          "cardId": "hammer_001",
+          "name": "망치",
+          "rarity": "common",
+          "imageKey": "cards_image/tools/hammer_001.webp"
+        },
+        {
+          "cardId": "scissors_001",
+          "name": "가위",
+          "rarity": "common",
+          "imageKey": "cards_image/tools/scissors_001.webp"
+        },
+        {
+          "cardId": "pencil_001",
+          "name": "연필",
+          "rarity": "uncommon",
+          "imageKey": "cards_image/tools/pencil_001.webp"
+        },
+        {
+          "cardId": "camera_001",
+          "name": "카메라",
+          "rarity": "rare",
+          "imageKey": "cards_image/tools/camera_001.webp"
+        },
+        {
+          "cardId": "clock_001",
+          "name": "시계",
+          "rarity": "uncommon",
+          "imageKey": "cards_image/tools/clock_001.webp"
+        },
+        {
+          "cardId": "compass_001",
+          "name": "나침반",
+          "rarity": "legendary",
+          "imageKey": "cards_image/tools/compass_001.webp"
+        }
       ]
     }
   ]
