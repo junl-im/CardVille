@@ -1,15 +1,16 @@
 {
   "name": "cardville",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.7 UI readability and touch hitbox polish.",
+  "description": "CardVille 1.0.8 UI/UX touch mapping and CardVille branding cleanup.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "check:deploy": "node tools/check-deploy.mjs",
-    "verify": "npm run build && npm run check:deploy"
+    "verify": "npm run build && npm run check:deploy && npm run check:brand",
+    "check:brand": "node tools/check-brand.mjs"
   },
   "dependencies": {
     "firebase": "12.15.0",
