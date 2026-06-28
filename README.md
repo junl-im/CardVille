@@ -1,6 +1,30 @@
-# CardVille 1.0.28
+# CardVille 1.0.29
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
+
+## 1.0.29 업데이트 내역
+
+- **콘텐츠 엔진 패스**를 진행해 연구소와 기억의 숲을 더 이상 준비중 안내만 하는 화면이 아니라 실제 플레이 가능한 1차 미니게임으로 열었습니다.
+- 연산 연구소 1차 플레이를 추가했습니다.
+  - `src/game/data/mathStages.ts`
+  - `src/game/scenes/MathLabScene.ts`
+  - 덧셈, 뺄셈, 곱셈, 빈칸 저울 문제를 카드 선택 방식으로 풉니다.
+  - 정답/오답 피드백, 콤보, 생명, 점수, 보상 카드팩 연결을 포함합니다.
+- 기억의 숲 1차 플레이를 추가했습니다.
+  - `src/game/data/memoryStages.ts`
+  - `src/game/scenes/MemoryForestScene.ts`
+  - 시작 프리뷰 후 카드 뒷면을 뒤집어 같은 그림 짝을 찾는 구조입니다.
+  - 선택 횟수, 매칭 수, 점수, 보상 카드팩 연결을 포함합니다.
+- `modeCatalog.ts`에 `routeScene`을 추가해 모드별 목적지를 데이터로 배정했습니다.
+- 연구소 건물은 `MathLabScene`, 기억의 숲 건물은 `MemoryForestScene`으로 직접 이동하게 변경했습니다.
+- `ModeSelectScene`에서도 열린 모드가 각자 알맞은 장면으로 이동하도록 정리했습니다.
+- 카카오/모바일 뒤로가기 오버레이에서 새 장면도 안전하게 정리되도록 `BackButtonSystem`의 관리 장면 목록에 추가했습니다.
+- 콘텐츠 연결 검증을 추가했습니다.
+  - `tools/check-content-engine.mjs`
+  - `npm run check:content-engine`
+  - `npm run verify`에 포함
+- 새 버전별 문서 파일은 만들지 않고, 변경 내역은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 누적했습니다.
+- `package.json`, `public/build.json`, `health.html`, `reset.html`, 앱 내부 버전 표기를 1.0.29로 동기화했습니다.
 
 ## 1.0.28 업데이트 내역
 

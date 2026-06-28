@@ -273,23 +273,56 @@ ZIP 파일
 - 고정 캐릭터 원본 이미지는 그대로 유지해야 하며, `public/assets/brand/cardville_fixed_character_reference.png`는 기준 이미지로만 사용합니다.
 - 새 에셋을 추가할 때는 반드시 `assetManifest.ts`에도 등록하고 `check-assets`를 통과시켜야 합니다.
 
+## 9. 1.0.29 콘텐츠 엔진 패스
+
+1.0.29는 준비중이던 콘텐츠 중 연구소와 기억의 숲을 실제 플레이 가능한 1차 미니게임으로 여는 업데이트입니다.
+
+### 추가/변경 파일
+
+- `src/game/data/mathStages.ts`
+- `src/game/scenes/MathLabScene.ts`
+- `src/game/data/memoryStages.ts`
+- `src/game/scenes/MemoryForestScene.ts`
+- `tools/check-content-engine.mjs`
+- `modeCatalog.ts`에 `routeScene` 추가
+- `dioramaBuildings.ts`에서 연구소/기억의 숲 직접 장면 이동으로 변경
+- `ModeSelectScene.ts`에서 모드별 장면 분기 추가
+- `BackButtonSystem.ts`에 새 장면 정리 대상 추가
+
+### 핵심 동작
+
+- 도서관은 기존처럼 `StageSelectScene` → `PlayScene` 흐름을 유지합니다.
+- 연구소는 `MathLabScene`으로 직접 진입합니다.
+- 기억의 숲은 `MemoryForestScene`으로 직접 진입합니다.
+- 두 신규 미니게임은 성공/실패 후 우선 `RewardScene` 카드팩 보상 흐름으로 연결합니다.
+- 아직 모드별 영구 진행도 저장은 추가하지 않았습니다. 다음 패치에서 `SaveSystem`의 범용 모드 기록 구조를 확장할 수 있습니다.
+
+### 검증
+
+- `npm run check:content-engine`이 추가되었습니다.
+- `npm run verify`는 build, deploy, brand, assets, premium-assets, content-engine, polish, ui, layout, association, security 순서로 확인합니다.
+
+
 ## 12. 현재 버전 상태
 
-현재 기준 버전은 1.0.28입니다.
+현재 기준 버전은 1.0.29입니다.
 
-1.0.28은 기준 이미지 톤에 맞춘 프리미엄 에셋 패스와 `check:premium-assets` 검증을 추가한 업데이트입니다. 1.0.27은 로비 배치 데이터, 건물별 콘텐츠 배정, 성능 품질 정책, CI 검증을 정리한 업데이트였습니다.
+1.0.29는 연구소 연산 미니게임과 기억의 숲 짝찾기 미니게임을 실제 플레이 가능한 1차 콘텐츠로 연결한 콘텐츠 엔진 패스입니다. 1.0.28은 기준 이미지 톤에 맞춘 프리미엄 에셋 패스와 `check:premium-assets` 검증을 추가한 업데이트였습니다.
 
 - GitHub Actions 자동 검증 흐름 유지
 - `check:assets` 유지
 - `check:polish` 유지
-- `check:premium-assets` 추가
+- `check:premium-assets` 유지
+- `check:content-engine` 추가
 - `assetManifest.ts` 유지
 - `lobbyEntities.ts` 추가
 - `modeCatalog.ts` 추가
 - `QualitySystem.ts` 추가
 - Phaser AUTO renderer 적용
-- 연구소/기억의 숲 추천 모드 연결
-- 앱 동작용 버전 상수 1.0.28 동기화
+- 연구소/기억의 숲 실제 1차 미니게임 연결
+- `MathLabScene` 추가
+- `MemoryForestScene` 추가
+- 앱 동작용 버전 상수 1.0.29 동기화
 
 1.0.24는 전달 규칙과 인수인계 정책 정리 업데이트였습니다. 1.0.23의 핵심은 한 화면 디오라마 로비입니다.
 
@@ -312,8 +345,8 @@ ZIP 파일
 우선순위가 높은 다음 작업입니다.
 
 1. 도서관 낱말 카드 콘텐츠를 CardVille 브랜드형 UI로 개편
-2. 연구소 연산 미니게임 1차 구현
-3. 기억의 숲 기억력 미니게임 1차 구현
+2. 연구소 연산 미니게임 스테이지/저장 확장
+3. 기억의 숲 기억력 스테이지/저장 확장
 4. 상점/카드팩 UI를 마을 상점 느낌으로 개편
 5. 소년과 고양이 토큰을 실제 스프라이트 시트 애니메이션으로 교체
 6. 계절 장식 시스템을 개별 오브젝트 에셋으로 추가
@@ -338,6 +371,7 @@ ZIP 파일
 다만 ZIP 덮어쓰기만으로는 삭제가 자동 적용되지 않으므로, 파일 삭제가 필요한 업데이트에서는 최종 보고에 삭제 대상도 함께 알려야 합니다.
 
 1.0.24 통파일에서는 과거 버전별 문서 폴더를 정리했습니다.  
+1.0.29 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.
 1.0.28 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.
 1.0.27 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.
 1.0.25 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다. 완전히 깨끗한 상태가 필요하면 통파일을 사용하세요.

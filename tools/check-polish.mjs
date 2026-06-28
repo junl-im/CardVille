@@ -26,7 +26,7 @@ mustContain('src/game/data/lobbyEntities.ts', ['LOBBY_PROPS', 'LOBBY_NPCS', 'LOB
 mustContain('src/game/data/modeCatalog.ts', ['GAME_MODES', "id: 'math'", "id: 'memory'", 'nextWork']);
 mustContain('src/game/scenes/MainLobbyScene.ts', ['getCardVilleQuality', 'scaledCount', 'qualitySummary', 'LOBBY_SAFE_RULES', 'toastBg?.destroy']);
 mustContain('src/game/scenes/ModeSelectScene.ts', ['GAME_MODES', 'focusModeId', 'showPlannedToast', '추천']);
-mustContain('src/game/data/dioramaBuildings.ts', ["focusModeId: 'math'", "focusModeId: 'memory'", "scene: 'ModeSelectScene'"]);
+mustContain('src/game/data/dioramaBuildings.ts', ["scene: 'MathLabScene'", "scene: 'MemoryForestScene'", "scene: 'ModeSelectScene'"]);
 mustContain('src/game/systems/LayoutSystem.ts', ['b.visibleX + b.visibleWidth / 2', 'b.visibleY + b.visibleHeight / 2']);
 
 const buildings = read('src/game/data/dioramaBuildings.ts');

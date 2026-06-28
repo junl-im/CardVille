@@ -1,6 +1,7 @@
 export type GameModeId = 'word' | 'math' | 'memory' | 'english' | 'daily';
 
 export type GameModeStatus = 'open' | 'planned';
+export type GameModeRoute = 'StageSelectScene' | 'MathLabScene' | 'MemoryForestScene' | 'RewardScene';
 
 export type GameMode = {
   id: GameModeId;
@@ -11,6 +12,7 @@ export type GameMode = {
   note: string;
   status: GameModeStatus;
   nextWork: string;
+  routeScene?: GameModeRoute;
 };
 
 export const GAME_MODES: readonly GameMode[] = [
@@ -22,7 +24,8 @@ export const GAME_MODES: readonly GameMode[] = [
     fallbackIcon: '📚',
     note: '단어 계열을 찾아 카드 스택을 정리하는 기본 모드',
     status: 'open',
-    nextWork: 'CardVille 브랜드형 도서관 UI로 계속 강화'
+    nextWork: 'CardVille 브랜드형 도서관 UI로 계속 강화',
+    routeScene: 'StageSelectScene'
   },
   {
     id: 'math',
@@ -31,8 +34,9 @@ export const GAME_MODES: readonly GameMode[] = [
     iconKey: 'iconCvLab',
     fallbackIcon: '➕',
     note: '숫자 카드, 식 카드, 보너스 연산 콤보를 준비하는 모드',
-    status: 'planned',
-    nextWork: '1차 연산 미니게임 규칙과 보드 생성'
+    status: 'open',
+    nextWork: '연산 연구소 문제팩과 콤보 보상 강화',
+    routeScene: 'MathLabScene'
   },
   {
     id: 'memory',
@@ -41,8 +45,9 @@ export const GAME_MODES: readonly GameMode[] = [
     iconKey: 'iconCvForest',
     fallbackIcon: '🧠',
     note: '잠깐 본 카드를 기억해 짝과 순서를 찾는 모드',
-    status: 'planned',
-    nextWork: '카드 뒤집기/짝찾기 프로토타입'
+    status: 'open',
+    nextWork: '기억의 숲 카드 프리뷰/짝찾기 스테이지 확장',
+    routeScene: 'MemoryForestScene'
   },
   {
     id: 'english',

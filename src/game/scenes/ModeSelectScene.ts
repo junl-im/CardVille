@@ -36,6 +36,7 @@ export class ModeSelectScene extends Phaser.Scene {
       ? `${focus.note} · ${focus.status === 'open' ? '바로 입장 가능' : '다음 작업: ' + focus.nextWork}`
       : '건물별 콘텐츠를 한 곳에서 확인하고, 열린 모드부터 안정적으로 확장합니다.';
     this.add.text(195, 118, copy, applyWrap(mutedText(12), 322)).setOrigin(0.5);
+    this.add.text(195, 146, '열린 모드: 도서관 · 연구소 · 기억의 숲', mutedText(10)).setOrigin(0.5);
   }
 
   private drawModeCard(mode: GameMode, y: number, focused: boolean): void {
@@ -53,10 +54,26 @@ export class ModeSelectScene extends Phaser.Scene {
 
     const zone = this.add.zone(195, y, 334, 86).setInteractive({ useHandCursor: true });
     zone.on('pointerup', () => {
-      if (open) this.scene.start('StageSelectScene', { modeId: mode.id, title: mode.title });
+      if (open) this.startMode(mode);
       else this.showPlannedToast(mode);
     });
     if (hasTouchDebug()) this.add.rectangle(195, y, 334, 86, 0x00ff66, 0.09).setStrokeStyle(1, 0x00ff66, 0.7);
+  }
+
+  private startMode(mode: GameMode): void {
+    if (mode.routeScene === 'MathLabScene') {
+      this.scene.start('MathLabScene', { stage: 1 });
+      return;
+    }
+    if (mode.routeScene === 'MemoryForestScene') {
+      this.scene.start('MemoryForestScene', { stage: 1 });
+      return;
+    }
+    if (mode.routeScene === 'RewardScene') {
+      this.scene.start('RewardScene', { score: 520, bestCombo: 4, stars: 2 });
+      return;
+    }
+    this.scene.start('StageSelectScene', { modeId: mode.id, title: mode.title });
   }
 
   private showPlannedToast(mode: GameMode): void {

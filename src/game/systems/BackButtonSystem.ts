@@ -7,6 +7,8 @@ const GAME_SCENES = [
   'ModeSelectScene',
   'StageSelectScene',
   'PlayScene',
+  'MathLabScene',
+  'MemoryForestScene',
   'ResultScene',
   'RewardScene',
   'CollectionScene',

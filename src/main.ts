@@ -9,6 +9,8 @@ import { MainLobbyScene } from './game/scenes/MainLobbyScene';
 import { ModeSelectScene } from './game/scenes/ModeSelectScene';
 import { StageSelectScene } from './game/scenes/StageSelectScene';
 import { PlayScene } from './game/scenes/PlayScene';
+import { MathLabScene } from './game/scenes/MathLabScene';
+import { MemoryForestScene } from './game/scenes/MemoryForestScene';
 import { ResultScene } from './game/scenes/ResultScene';
 import { RewardScene } from './game/scenes/RewardScene';
 import { CollectionScene } from './game/scenes/CollectionScene';
@@ -47,6 +49,8 @@ const config: Phaser.Types.Core.GameConfig = {
     ModeSelectScene,
     StageSelectScene,
     PlayScene,
+    MathLabScene,
+    MemoryForestScene,
     ResultScene,
     RewardScene,
     CollectionScene,
@@ -69,4 +73,4 @@ window.addEventListener('unhandledrejection', (event) => {
 preventBrowserGestures();
 const game = new Phaser.Game(config);
 BackButtonSystem.install(game);
-console.info('[CardVille] Phaser instance created 1.0.28 premium asset pass / polish audit engine', game.isBooted);
+console.info('[CardVille] Phaser instance created 1.0.29 content engine / polish audit engine', game.isBooted);

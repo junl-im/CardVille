@@ -9,7 +9,7 @@ import { CardVilleQuality, getCardVilleQuality, qualitySummary, scaledCount } fr
 import { DIORAMA_BUILDINGS, DioramaBuilding, DioramaRoute } from '../data/dioramaBuildings';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
-const LOBBY_VERSION = '1.0.28';
+const LOBBY_VERSION = '1.0.29';
 const HERO_HOME = { x: 195, y: 545 } as const;
 const CAT_HOME = { x: 145, y: 585 } as const;
 
