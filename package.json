@@ -1,9 +1,9 @@
 {
   "name": "cardville",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.14 casual 2.5D UI, layout, pack opening and content upgrade.",
+  "description": "CardVille 1.0.15 fullscreen login and comfortable solid-card UI upgrade.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",

@@ -21,7 +21,7 @@ const required = [
   'public/assets/cards/frames/frame_rare_gold_normal.png',
   'public/assets/packs/pack_common_closed.png',
   'public/assets/effects/effect_correct_01.png',
-  'public/assets/buttons/button_large_시작_normal.png'
+  'public/assets/buttons/button_large_plain_normal.png'
 ];
 for (const file of required) {
   if (!fs.existsSync(path.join(root, file))) throw new Error(`Missing UI/system file: ${file}`);
@@ -35,7 +35,7 @@ for (const token of ['첫 화면가기', '나가기', 'requestExit']) {
   if (!back.includes(token)) throw new Error(`BackConfirmScene missing ${token}`);
 }
 const login = fs.readFileSync(path.join(root, 'src/game/scenes/LoginScene.ts'), 'utf8');
-for (const token of ['loginBg', '게스트로 게임 시작', 'Google 로그인']) {
+for (const token of ['loginBg', '게임 시작', 'Google 로그인']) {
   if (!login.includes(token)) throw new Error(`LoginScene missing ${token}`);
 }
 const stages = fs.readFileSync(path.join(root, 'src/game/data/wordStages.ts'), 'utf8');
@@ -54,4 +54,4 @@ function walk(dir) {
 }
 walk(path.join(root, 'public'));
 if (svgHits.length) throw new Error(`SVG files are not allowed: ${svgHits.join(', ')}`);
-console.log(`UI/content check passed. Version ${version}, word stages ${stageCount}, SVG files 0, opening/UI/pack assets OK.`);
+console.log(`UI/content check passed. Version ${version}, word stages ${stageCount}, SVG files 0, opening/UI/solid-card assets OK.`);

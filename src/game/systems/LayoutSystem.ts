@@ -21,9 +21,9 @@ export function layout(): SafeLayout {
     top: 22,
     bottom: GAME_HEIGHT - 24,
     side: 10,
-    boardLeft: 68,
-    boardRight: 384,
-    boardWidth: 316
+    boardLeft: 56,
+    boardRight: 386,
+    boardWidth: 330
   };
 }
 

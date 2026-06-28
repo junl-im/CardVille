@@ -10,44 +10,47 @@ export class LoginScene extends Phaser.Scene {
   constructor() { super('LoginScene'); }
 
   create(): void {
-    this.drawHeroBackground();
+    this.drawFullscreenHero();
+    this.drawStartControls();
+    this.add.text(342, 28, '1.0.15', mutedText(11)).setOrigin(0.5).setAlpha(0.86);
+  }
 
-    // Bottom safe login deck. The uploaded title art stays visible, buttons sit on a readable glass plate.
-    const g = this.add.graphics();
-    g.fillGradientStyle(0x020814, 0x020814, 0x020814, 0x020814, 0, 0, 0.88, 0.96);
-    g.fillRect(0, 558, 390, 286);
-    g.fillStyle(0x061127, 0.58);
-    g.fillRoundedRect(18, 562, 354, 258, 32);
-    g.lineStyle(2, 0xffffff, 0.28);
-    g.strokeRoundedRect(18, 562, 354, 258, 32);
-    g.fillStyle(0xffffff, 0.14);
-    g.fillRoundedRect(42, 578, 306, 14, 8);
+  private drawFullscreenHero(): void {
+    if (this.textures.exists('loginBg')) {
+      this.add.image(195, 422, 'loginBg').setDisplaySize(390, 844);
+    } else {
+      DrawSystem.background(this, '카드마을');
+    }
 
-    this.add.text(195, 604, '카드마을에 오신 걸 환영해요', titleText(22)).setOrigin(0.5);
-    this.add.text(195, 636, '말 카드를 모아 마을을 꾸미는 캐주얼 카드 퍼즐', goldText(14)).setOrigin(0.5);
+    const shade = this.add.graphics();
+    // Keep the key art full-screen, but calm the busy lower area so buttons and text stay readable.
+    shade.fillGradientStyle(0x020814, 0x020814, 0x020814, 0x020814, 0.06, 0.04, 0.28, 0.78);
+    shade.fillRect(0, 0, 390, 844);
+    shade.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0, 0, 0.18, 0.58);
+    shade.fillRect(0, 540, 390, 304);
+    shade.fillStyle(0xffffff, 0.10);
+    shade.fillRoundedRect(26, 592, 338, 92, 30);
+    shade.lineStyle(1, 0xffffff, 0.24);
+    shade.strokeRoundedRect(26, 592, 338, 92, 30);
+    shade.fillStyle(0x081329, 0.48);
+    shade.fillRoundedRect(36, 602, 318, 72, 24);
 
-    new GameButton(this, 195, 684, '게스트로 게임 시작', 316, 62, 0xffd86f).onClick(() => this.guest());
-    new GameButton(this, 195, 752, 'Google 로그인', 316, 54, 0x8fd3ff).onClick(() => void this.google());
-    new GameButton(this, 120, 808, '이메일', 142, 44, 0xc9f4ff).onClick(() => void this.email(false));
-    new GameButton(this, 270, 808, '가입', 142, 44, 0xf0c7ff).onClick(() => void this.email(true));
+    this.add.text(195, 620, '카드를 모아 마을을 완성하세요!', titleText(21)).setOrigin(0.5);
+    this.add.text(195, 653, '말 카드 스택 퍼즐 · 게스트는 바로 시작', goldText(14)).setOrigin(0.5);
+  }
+
+  private drawStartControls(): void {
+    new GameButton(this, 195, 712, '게임 시작', 318, 66, 0xffd86f).onClick(() => this.guest());
+    new GameButton(this, 195, 778, 'Google 로그인', 294, 50, 0x8fd3ff).onClick(() => void this.google());
+    new GameButton(this, 118, 826, '이메일', 134, 40, 0xc9f4ff).onClick(() => void this.email(false));
+    new GameButton(this, 272, 826, '가입', 134, 40, 0xf0c7ff).onClick(() => void this.email(true));
 
     this.status = this.add.text(
       195,
-      546,
-      '처음 시작은 게스트로 바로 들어갈 수 있어요.',
+      566,
+      '처음엔 게임 시작을 눌러 바로 입장하세요.',
       { ...applyWrap(bodyText(13), 330), lineSpacing: 5 }
-    ).setOrigin(0.5);
-    this.add.text(340, 32, '1.0.14', mutedText(12)).setOrigin(0.5);
-  }
-
-  private drawHeroBackground(): void {
-    if (this.textures.exists('loginBg')) {
-      this.add.image(195, 422, 'loginBg').setDisplaySize(390, 844);
-      this.add.rectangle(195, 422, 390, 844, 0x000000, 0.08);
-      this.add.rectangle(195, 54, 390, 108, 0x020814, 0.12);
-      return;
-    }
-    DrawSystem.background(this, '카드마을');
+    ).setOrigin(0.5).setAlpha(0.96);
   }
 
   private guest(): void {
@@ -63,7 +66,7 @@ export class LoginScene extends Phaser.Scene {
     this.busy = true;
     this.status.setText('Google 로그인 연결 중...');
     try { await AuthSystem.signInGoogle(); this.scene.start('MainLobbyScene'); }
-    catch (e) { console.warn(e); this.status.setText('Google 로그인이 취소되었거나 실패했어요. 게스트 시작은 계속 가능합니다.'); this.busy = false; }
+    catch (e) { console.warn(e); this.status.setText('Google 로그인이 취소되었거나 실패했어요. 게임 시작은 계속 가능합니다.'); this.busy = false; }
   }
 
   private async email(create: boolean): Promise<void> {

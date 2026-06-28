@@ -23,12 +23,12 @@ export class BootScene extends Phaser.Scene {
     this.load.image('assetShop', 'assets/icons/icon_game_shop.png');
     this.load.image('assetGift', 'assets/icons/icon_game_gift.png');
 
-    this.load.image('assetButtonLarge', 'assets/buttons/button_large_시작_normal.png');
-    this.load.image('assetButtonLargePress', 'assets/buttons/button_large_시작_press.png');
-    this.load.image('assetButtonMedium', 'assets/buttons/button_medium_확인_normal.png');
-    this.load.image('assetButtonMediumPress', 'assets/buttons/button_medium_확인_press.png');
-    this.load.image('assetButtonSmall', 'assets/buttons/button_small_확인_normal.png');
-    this.load.image('assetButtonSmallPress', 'assets/buttons/button_small_확인_press.png');
+    this.load.image('assetButtonLarge', 'assets/buttons/button_large_plain_normal.png');
+    this.load.image('assetButtonLargePress', 'assets/buttons/button_large_plain_press.png');
+    this.load.image('assetButtonMedium', 'assets/buttons/button_medium_plain_normal.png');
+    this.load.image('assetButtonMediumPress', 'assets/buttons/button_medium_plain_press.png');
+    this.load.image('assetButtonSmall', 'assets/buttons/button_small_plain_normal.png');
+    this.load.image('assetButtonSmallPress', 'assets/buttons/button_small_plain_press.png');
 
     this.load.image('assetCardBackStar', 'assets/cards/backs/card_back_star.png');
     this.load.image('assetCardBackHeart', 'assets/cards/backs/card_back_heart.png');

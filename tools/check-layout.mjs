@@ -4,7 +4,7 @@ import path from 'node:path';
 const root = process.cwd();
 const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
 const mustContain = [
-  ['src/game/scenes/PlayScene.ts', ['layout().boardWidth', 'xs: [108, 187, 266, 345]', 'effectCorrect', 'effectWrong']],
+  ['src/game/scenes/PlayScene.ts', ['layout().boardWidth', 'xs: [96, 179, 262, 345]', 'effectCorrect', 'effectWrong', '0xfffbef']],
   ['src/game/scenes/RewardScene.ts', ['packPrefix', 'assetPackLegendary', '터치해서 열기', 'spawnSparkles']],
   ['src/game/ui/GameButton.ts', ['assetButton${size}', 'chooseButtonSkin', 'skinImage']],
   ['src/game/systems/DrawSystem.ts', ['particleStar', '2.5D plaza', 'assetVillageBg']]
@@ -24,9 +24,9 @@ const requiredAssets = [
   'public/assets/packs/pack_legendary_open.png',
   'public/assets/effects/effect_correct_01.png',
   'public/assets/particles/particle_sparkle_01.png',
-  'public/assets/buttons/button_large_시작_normal.png'
+  'public/assets/buttons/button_large_plain_normal.png'
 ];
 for (const asset of requiredAssets) {
-  if (!fs.existsSync(path.join(root, asset))) throw new Error(`Missing required 1.0.14 asset: ${asset}`);
+  if (!fs.existsSync(path.join(root, asset))) throw new Error(`Missing required 1.0.15 asset: ${asset}`);
 }
-console.log(`Layout/asset check passed. Version ${pkg.version}, pack opening and 2.5D UI assets OK.`);
+console.log(`Layout/asset check passed. Version ${pkg.version}, pack opening, fullscreen login and solid-card UI assets OK.`);
