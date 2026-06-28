@@ -1,9 +1,9 @@
 {
   "name": "cardville",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.9 word-stack card game prototype and touch mapping cleanup.",
+  "description": "CardVille 1.0.10 combo, hint, shuffle, reward and stage progress update.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",

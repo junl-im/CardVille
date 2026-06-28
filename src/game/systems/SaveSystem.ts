@@ -8,9 +8,17 @@ export type PlayerProfile = {
   gems: number;
 };
 
+export type StageRecord = {
+  cleared: boolean;
+  stars: number;
+  bestScore: number;
+  bestCombo: number;
+  bestStepsLeft: number;
+};
+
 const PROFILE_KEY = 'cardville.profile.v105';
 const COLLECTION_KEY = 'cardville.collection.v105';
-const PROGRESS_KEY = 'cardville.progress.v105';
+const PROGRESS_KEY = 'cardville.progress.v110';
 
 function defaultProfile(): PlayerProfile {
   const uid = localStorage.getItem('cardville.guestUid') ?? `guest_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
@@ -67,6 +75,35 @@ export class SaveSystem {
     } catch {
       return {};
     }
+  }
+
+  static loadProgress(): Record<string, StageRecord> {
+    try {
+      return JSON.parse(localStorage.getItem(PROGRESS_KEY) ?? '{}');
+    } catch {
+      return {};
+    }
+  }
+
+  static getStageRecord(stage: number): StageRecord | null {
+    return this.loadProgress()[`word:${stage}`] ?? null;
+  }
+
+  static saveStageResult(stage: number, score: number, bestCombo: number, stepsLeft: number, failed = false): StageRecord {
+    const progress = this.loadProgress();
+    const key = `word:${stage}`;
+    const previous = progress[key];
+    const stars = failed ? 0 : stepsLeft >= 12 ? 3 : stepsLeft >= 6 ? 2 : 1;
+    const next: StageRecord = {
+      cleared: !failed || previous?.cleared === true,
+      stars: Math.max(previous?.stars ?? 0, stars),
+      bestScore: Math.max(previous?.bestScore ?? 0, score),
+      bestCombo: Math.max(previous?.bestCombo ?? 0, bestCombo),
+      bestStepsLeft: Math.max(previous?.bestStepsLeft ?? 0, stepsLeft)
+    };
+    progress[key] = next;
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
+    return next;
   }
 
   static clear(): void {

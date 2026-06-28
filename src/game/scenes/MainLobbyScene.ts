@@ -24,6 +24,6 @@ export class MainLobbyScene extends Phaser.Scene {
     new GameButton(this, 195, 588, '로컬 데이터 초기화', 298, 54, 0xf0c7ff).onClick(() => { SaveSystem.clear(); this.scene.restart(); });
 
     this.add.text(195, 748, '카드마을 핵심 루프: 말 카드 플레이 → 보상 → 앨범 수집', applyWrap(mutedText(12), 336)).setOrigin(0.5);
-    this.add.text(195, 790, '1.0.9', mutedText(12)).setOrigin(0.5);
+    this.add.text(195, 790, '1.0.10', mutedText(12)).setOrigin(0.5);
   }
 }

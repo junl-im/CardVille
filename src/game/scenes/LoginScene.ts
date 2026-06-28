@@ -34,7 +34,7 @@ export class LoginScene extends Phaser.Scene {
       '버튼은 보이는 영역 기준으로 정확히 눌리도록 다시 보정했습니다.',
       { ...applyWrap(mutedText(14), 316), lineSpacing: 6 }
     ).setOrigin(0.5);
-    this.add.text(195, 790, '1.0.9', mutedText(12)).setOrigin(0.5);
+    this.add.text(195, 790, '1.0.10', mutedText(12)).setOrigin(0.5);
   }
 
   private guest(): void {
