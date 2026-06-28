@@ -7,7 +7,7 @@ import { ASSET_COUNTS } from '../data/assetManifest';
 import { DIORAMA_BUILDINGS, DioramaBuilding, DioramaRoute } from '../data/dioramaBuildings';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
-const LOBBY_VERSION = '1.0.25';
+const LOBBY_VERSION = '1.0.26';
 const HERO_HOME = { x: 195, y: 545 } as const;
 const CAT_HOME = { x: 145, y: 585 } as const;
 
@@ -30,6 +30,8 @@ type LobbyNpc = {
   height: number;
   label: string;
   delay: number;
+  animation: 'salute' | 'book' | 'sparkle' | 'wave' | 'teach' | 'cat' | 'cook' | 'child';
+  lines: string[];
 };
 
 const LOBBY_PROPS: LobbyProp[] = [
@@ -52,14 +54,38 @@ const LOBBY_PROPS: LobbyProp[] = [
 ];
 
 const LOBBY_NPCS: LobbyNpc[] = [
-  { key: 'npcGuard', x: 238, y: 196, width: 30, height: 39, label: '경비병', delay: 0 },
-  { key: 'npcLibrarian', x: 123, y: 341, width: 31, height: 40, label: '사서', delay: 100 },
-  { key: 'npcWizard', x: 269, y: 342, width: 31, height: 40, label: '마법사', delay: 200 },
-  { key: 'npcMerchant', x: 125, y: 518, width: 32, height: 41, label: '상인', delay: 300 },
-  { key: 'npcTeacher', x: 267, y: 517, width: 32, height: 41, label: '선생님', delay: 400 },
-  { key: 'npcTownCat', x: 50, y: 707, width: 34, height: 36, label: '마을고양이', delay: 500 },
-  { key: 'npcCook', x: 252, y: 724, width: 31, height: 40, label: '요리사', delay: 600 },
-  { key: 'npcChild01', x: 218, y: 396, width: 28, height: 36, label: '아이', delay: 700 }
+  {
+    key: 'npcGuard', x: 238, y: 196, width: 30, height: 39, label: '경비병', delay: 0, animation: 'salute',
+    lines: ['카드 성은 아직 준비 중이지만, 마을의 불빛은 제가 지키고 있어요.', '건물을 누르면 소년과 고양이가 먼저 길을 열어 줍니다.']
+  },
+  {
+    key: 'npcLibrarian', x: 123, y: 341, width: 31, height: 40, label: '사서', delay: 100, animation: 'book',
+    lines: ['도서관에는 낱말 카드가 가득해요. 오늘은 단어를 모아 볼까요?', '책장이 반짝이면 새 단어 카드가 숨어 있다는 뜻이에요.']
+  },
+  {
+    key: 'npcWizard', x: 269, y: 342, width: 31, height: 40, label: '마법사', delay: 200, animation: 'sparkle',
+    lines: ['연구소의 숫자 마법은 곧 더 강해질 거예요.', '반짝이는 카드는 보너스 보상을 부르는 신호랍니다.']
+  },
+  {
+    key: 'npcMerchant', x: 125, y: 518, width: 32, height: 41, label: '상인', delay: 300, animation: 'wave',
+    lines: ['수집한 카드는 앨범에서 바로 확인할 수 있어요!', '새 카드팩이 들어오면 이벤트 광장에 먼저 놓아둘게요.']
+  },
+  {
+    key: 'npcTeacher', x: 267, y: 517, width: 32, height: 41, label: '선생님', delay: 400, animation: 'teach',
+    lines: ['학교는 영어 카드 수업을 준비 중이에요.', '카드마을 수업은 문제풀이보다 모험처럼 느껴져야 해요.']
+  },
+  {
+    key: 'npcTownCat', x: 50, y: 707, width: 34, height: 36, label: '마을고양이', delay: 500, animation: 'cat',
+    lines: ['야옹! 기억의 숲에는 짝을 찾는 카드가 숨어 있어요.', '검은 고양이를 따라가면 힌트를 놓치지 않을 거예요.']
+  },
+  {
+    key: 'npcCook', x: 252, y: 724, width: 31, height: 40, label: '요리사', delay: 600, animation: 'cook',
+    lines: ['이벤트 광장에는 오늘의 보상 냄새가 솔솔 나요!', '카드팩을 열 때는 반짝임을 꼭 확인하세요.']
+  },
+  {
+    key: 'npcChild01', x: 218, y: 396, width: 28, height: 36, label: '아이', delay: 700, animation: 'child',
+    lines: ['광장에 서 있으면 마을 전체가 한눈에 보여요!', '소년과 고양이가 뛰어가는 모습이 제일 좋아요.']
+  }
 ];
 
 export class MainLobbyScene extends Phaser.Scene {
@@ -70,6 +96,9 @@ export class MainLobbyScene extends Phaser.Scene {
   private walkTimer?: Phaser.Time.TimerEvent;
   private busy = false;
   private hintText?: Phaser.GameObjects.Text;
+  private activeSpeech?: Phaser.GameObjects.Container;
+  private activeSettingsPanel?: Phaser.GameObjects.Container;
+  private npcLineIndexes = new Map<string, number>();
 
   constructor() { super('MainLobbyScene'); }
 
@@ -84,6 +113,7 @@ export class MainLobbyScene extends Phaser.Scene {
     this.drawAmbientLife();
     this.drawDioramaProps();
     this.drawTopBrandHud(profile.coins, profile.level, cleared, cards);
+    this.drawLobbySettingsButton();
     this.drawBuildings();
     this.drawDioramaNPCs();
     this.drawHeroParty();
@@ -210,6 +240,8 @@ export class MainLobbyScene extends Phaser.Scene {
         .setDisplaySize(npc.width, npc.height)
         .setDepth(npc.y + 3);
       this.tweens.add({ targets: npcImage, y: npc.y - 2, duration: 900, delay: npc.delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      this.addNpcIdleGesture(npc, npcImage);
+
       if (npc.key === 'npcMerchant' || npc.key === 'npcWizard' || npc.key === 'npcLibrarian') {
         const marker = this.textures.exists('uiQuestMarker')
           ? this.add.image(npc.x + 17, npc.y - npc.height * 0.55, 'uiQuestMarker').setDisplaySize(18, 18)
@@ -217,6 +249,184 @@ export class MainLobbyScene extends Phaser.Scene {
         marker.setDepth(npc.y + 5);
         this.tweens.add({ targets: marker, y: marker.y - 4, alpha: 0.62, duration: 760, delay: npc.delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
       }
+
+      const zone = this.add.zone(npc.x, npc.y, npc.width + 34, npc.height + 42).setInteractive({ useHandCursor: true });
+      zone.setDepth(npc.y + 8);
+      zone.on('pointerup', () => {
+        if (this.busy) return;
+        this.spawnTouchRipple(npc.x, npc.y);
+        this.showNpcDialogue(npc);
+        this.playNpcGesture(npc, npcImage);
+      });
+      zone.on('pointerover', () => { if (!this.busy) this.tweens.add({ targets: npcImage, scale: 1.08, duration: 120 }); });
+      zone.on('pointerout', () => { if (!this.busy) this.tweens.add({ targets: npcImage, scale: 1, duration: 120 }); });
+
+      if (hasTouchDebug()) {
+        this.add.rectangle(npc.x, npc.y, npc.width + 34, npc.height + 42, 0xffd86f, 0.10)
+          .setStrokeStyle(1, 0xffd86f, 0.75)
+          .setDepth(901);
+      }
+    }
+  }
+
+  private drawLobbySettingsButton(): void {
+    const button = this.add.container(352, 116).setDepth(930);
+    if (this.textures.exists('uiSettingsButton')) button.add(this.add.image(0, 0, 'uiSettingsButton').setDisplaySize(50, 50));
+    else button.add(this.add.circle(0, 0, 24, 0xffd86f, 0.90));
+    button.add(this.add.text(0, 1, '⚙', goldText(18)).setOrigin(0.5));
+    button.setSize(54, 54).setInteractive({ useHandCursor: true });
+    button.on('pointerup', () => {
+      if (this.busy) return;
+      this.spawnTouchRipple(352, 116);
+      this.toggleLobbySettingsPanel();
+    });
+    this.tweens.add({ targets: button, angle: 4, duration: 2200, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+  }
+
+  private toggleLobbySettingsPanel(): void {
+    if (this.activeSettingsPanel) {
+      this.activeSettingsPanel.destroy();
+      this.activeSettingsPanel = undefined;
+      return;
+    }
+    this.activeSpeech?.destroy();
+    this.activeSpeech = undefined;
+
+    const panel = this.add.container(195, 430).setDepth(1200);
+    if (this.textures.exists('uiPanelWood')) panel.add(this.add.image(0, 0, 'uiPanelWood').setDisplaySize(312, 292).setAlpha(0.97));
+    else {
+      const bg = this.add.graphics();
+      bg.fillStyle(0x07142c, 0.94);
+      bg.fillRoundedRect(-156, -146, 312, 292, 28);
+      bg.lineStyle(2, 0xffd86f, 0.64);
+      bg.strokeRoundedRect(-156, -146, 312, 292, 28);
+      panel.add(bg);
+    }
+    panel.add(this.add.text(0, -106, '카드마을 설정', titleText(22)).setOrigin(0.5));
+    panel.add(this.add.text(0, -70, '현재 로비 안전 규칙', goldText(15)).setOrigin(0.5));
+    const lines = [
+      '카메라: 고정',
+      '스크롤: 없음',
+      '건물/오브젝트: 개별 PNG/WebP',
+      'SVG: 사용 안 함',
+      'GitHub Actions: npm run verify'
+    ];
+    lines.forEach((line, index) => {
+      panel.add(this.add.text(-116, -36 + index * 28, `• ${line}`, mutedText(13)).setOrigin(0, 0.5));
+    });
+    const close = this.add.container(0, 106);
+    if (this.textures.exists('uiNameplateGold')) close.add(this.add.image(0, 0, 'uiNameplateGold').setDisplaySize(120, 46));
+    else close.add(this.add.rectangle(0, 0, 118, 42, 0xffd86f, 0.92).setStrokeStyle(2, 0xffffff, 0.44));
+    close.add(this.add.text(0, 0, '닫기', { fontFamily: 'system-ui, sans-serif', fontSize: '15px', color: '#2a160c', fontStyle: '900' }).setOrigin(0.5));
+    close.setSize(120, 46).setInteractive({ useHandCursor: true });
+    close.on('pointerup', () => this.toggleLobbySettingsPanel());
+    panel.add(close);
+    panel.setScale(0.88).setAlpha(0);
+    this.tweens.add({ targets: panel, scale: 1, alpha: 1, duration: 180, ease: 'Back.easeOut' });
+    this.activeSettingsPanel = panel;
+  }
+
+  private addNpcIdleGesture(npc: LobbyNpc, npcImage: Phaser.GameObjects.Image): void {
+    if (npc.animation === 'wave') {
+      this.tweens.add({ targets: npcImage, angle: 4, duration: 840, delay: npc.delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      return;
+    }
+    if (npc.animation === 'sparkle') {
+      this.time.addEvent({ delay: 1700, startAt: npc.delay, loop: true, callback: () => this.spawnNpcSparkle(npc.x + 10, npc.y - 20, 2) });
+      return;
+    }
+    if (npc.animation === 'cat') {
+      this.tweens.add({ targets: npcImage, angle: -3, duration: 620, delay: npc.delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      return;
+    }
+    if (npc.animation === 'book') {
+      this.time.addEvent({ delay: 2100, startAt: npc.delay, loop: true, callback: () => this.spawnFloatingCue('iconCvLibrary', npc.x + 12, npc.y - 24) });
+    }
+  }
+
+  private showNpcDialogue(npc: LobbyNpc): void {
+    this.activeSpeech?.destroy();
+    this.activeSettingsPanel?.destroy();
+    this.activeSettingsPanel = undefined;
+
+    const nextIndex = (this.npcLineIndexes.get(npc.key) ?? 0) % npc.lines.length;
+    this.npcLineIndexes.set(npc.key, nextIndex + 1);
+    const line = npc.lines[nextIndex];
+    const bubbleX = Phaser.Math.Clamp(npc.x + (npc.x < 195 ? 78 : -78), 112, 278);
+    const bubbleY = Phaser.Math.Clamp(npc.y - 74, 112, 690);
+    const bubble = this.add.container(bubbleX, bubbleY).setDepth(1150);
+    if (this.textures.exists('uiSpeechBubble')) bubble.add(this.add.image(0, 0, 'uiSpeechBubble').setDisplaySize(226, 84).setAlpha(0.96));
+    else {
+      const bg = this.add.graphics();
+      bg.fillStyle(0x07142c, 0.92);
+      bg.fillRoundedRect(-113, -42, 226, 84, 22);
+      bg.lineStyle(2, 0xffd86f, 0.55);
+      bg.strokeRoundedRect(-113, -42, 226, 84, 22);
+      bubble.add(bg);
+    }
+    bubble.add(this.add.text(-88, -24, npc.label, goldText(13)).setOrigin(0, 0.5));
+    bubble.add(this.add.text(0, 10, line, applyWrap(bodyText(12), 188)).setOrigin(0.5));
+    bubble.setScale(0.82).setAlpha(0);
+    this.tweens.add({ targets: bubble, scale: 1, alpha: 1, y: bubbleY - 4, duration: 170, ease: 'Back.easeOut' });
+    this.time.delayedCall(3300, () => {
+      if (this.activeSpeech !== bubble) return;
+      this.tweens.add({ targets: bubble, alpha: 0, y: bubble.y - 8, duration: 180, onComplete: () => bubble.destroy() });
+      this.activeSpeech = undefined;
+    });
+    this.activeSpeech = bubble;
+    this.hintText?.setText(`${npc.label}: ${line}`);
+  }
+
+  private playNpcGesture(npc: LobbyNpc, npcImage: Phaser.GameObjects.Image): void {
+    this.tweens.add({ targets: npcImage, scale: 1.14, duration: 90, yoyo: true, ease: 'Quad.easeOut' });
+    if (npc.animation === 'sparkle') {
+      this.spawnNpcSparkle(npc.x, npc.y - 18, 7);
+      return;
+    }
+    if (npc.animation === 'book') {
+      this.spawnFloatingCue('iconCvLibrary', npc.x + 16, npc.y - 26);
+      this.spawnFloatingCue('assetWord', npc.x - 14, npc.y - 18);
+      return;
+    }
+    if (npc.animation === 'wave') {
+      this.tweens.add({ targets: npcImage, angle: 11, duration: 85, yoyo: true, repeat: 3, ease: 'Sine.easeInOut' });
+      this.spawnFloatingCue('assetGift', npc.x + 15, npc.y - 24);
+      return;
+    }
+    if (npc.animation === 'teach') {
+      this.spawnFloatingCue('iconCvSchool', npc.x + 13, npc.y - 24);
+      return;
+    }
+    if (npc.animation === 'cook') {
+      this.spawnFloatingCue('iconCvEvent', npc.x + 12, npc.y - 22);
+      return;
+    }
+    if (npc.animation === 'cat') {
+      this.spawnFloatingCue('catHint', npc.x + 12, npc.y - 20);
+      return;
+    }
+    if (npc.animation === 'salute') {
+      this.spawnFloatingCue('iconCvCastle', npc.x + 12, npc.y - 24);
+      return;
+    }
+    this.spawnNpcSparkle(npc.x, npc.y - 20, 3);
+  }
+
+  private spawnFloatingCue(key: string, x: number, y: number): void {
+    const cue = this.textures.exists(key)
+      ? this.add.image(x, y, key).setDisplaySize(24, 24)
+      : this.add.text(x, y, '✦', goldText(15)).setOrigin(0.5);
+    cue.setDepth(1160).setAlpha(0.92);
+    this.tweens.add({ targets: cue, y: y - 26, scale: 0.76, alpha: 0, duration: 760, ease: 'Sine.easeOut', onComplete: () => cue.destroy() });
+  }
+
+  private spawnNpcSparkle(x: number, y: number, count: number): void {
+    for (let i = 0; i < count; i += 1) {
+      const sparkle = this.textures.exists('particleSparkle')
+        ? this.add.image(x + Phaser.Math.Between(-18, 18), y + Phaser.Math.Between(-18, 18), 'particleSparkle').setDisplaySize(14, 14)
+        : this.add.text(x + Phaser.Math.Between(-18, 18), y + Phaser.Math.Between(-18, 18), '✦', goldText(12)).setOrigin(0.5);
+      sparkle.setDepth(1160).setAlpha(0.85);
+      this.tweens.add({ targets: sparkle, y: sparkle.y - Phaser.Math.Between(14, 30), alpha: 0, scale: 0.45, duration: 700, delay: i * 45, ease: 'Sine.easeOut', onComplete: () => sparkle.destroy() });
     }
   }
 
@@ -253,7 +463,7 @@ export class MainLobbyScene extends Phaser.Scene {
     this.hintText = this.add.text(
       195,
       773,
-      `${nickname} 모험가님, 건물을 터치하면 소년과 고양이가 달려가요.`,
+      `${nickname} 모험가님, 건물이나 NPC를 터치해 보세요.`,
       applyWrap(bodyText(13), 300)
     ).setOrigin(0.5).setDepth(912);
     const assetTotal = Object.values(ASSET_COUNTS).reduce((sum, count) => sum + count, 0);
@@ -322,6 +532,10 @@ export class MainLobbyScene extends Phaser.Scene {
     }
     if (!this.hero || !this.cat) return;
     this.busy = true;
+    this.activeSpeech?.destroy();
+    this.activeSpeech = undefined;
+    this.activeSettingsPanel?.destroy();
+    this.activeSettingsPanel = undefined;
     this.hintText?.setText(`${building.title}(으)로 이동 중... 톡톡톡!`);
     this.tweens.killTweensOf(this.hero);
     this.tweens.killTweensOf(this.cat);

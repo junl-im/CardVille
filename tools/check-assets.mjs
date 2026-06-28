@@ -64,17 +64,17 @@ for (const token of ['ASSET_MANIFEST', 'queuedKeys', 'for (const asset of ASSET_
   if (!intro.includes(token)) throw new Error(`IntroLoadingScene missing manifest loading token: ${token}`);
 }
 const lobby = fs.readFileSync(path.join(root, 'src/game/scenes/MainLobbyScene.ts'), 'utf8');
-for (const token of ['LOBBY_PROPS', 'LOBBY_NPCS', 'startWalkAnimation', 'uiDoorLight', 'uiTouchRipple', 'npcMerchant', 'propFountain']) {
+for (const token of ['LOBBY_PROPS', 'LOBBY_NPCS', 'startWalkAnimation', 'uiDoorLight', 'uiTouchRipple', 'npcMerchant', 'propFountain', 'showNpcDialogue', 'playNpcGesture', 'drawLobbySettingsButton']) {
   if (!lobby.includes(token)) throw new Error(`MainLobbyScene missing asset integration token: ${token}`);
 }
 const workflow = fs.readFileSync(path.join(root, '.github/workflows/deploy.yml'), 'utf8');
 if (!workflow.includes('npm run verify')) throw new Error('GitHub Actions workflow must run npm run verify');
 const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
-for (const token of ['# CardVille 1.0.25', '## 1.0.25 업데이트 내역', 'src/game/data/assetManifest.ts', 'check:assets']) {
+for (const token of [`# CardVille ${pkg.version}`, `## ${pkg.version} 업데이트 내역`, 'src/game/data/assetManifest.ts', 'check:assets']) {
   if (!readme.includes(token)) throw new Error(`README missing ${token}`);
 }
 const handoff = fs.readFileSync(path.join(root, 'AI_HANDOFF_CARDVILLE.md'), 'utf8');
-for (const token of ['현재 기준 버전은 1.0.25', '1.0.25 자산 기반 업데이트', 'assetManifest.ts', 'GitHub Actions']) {
+for (const token of [`현재 기준 버전은 ${pkg.version}`, '1.0.26 NPC 대화/로비 연출 업데이트', 'assetManifest.ts', 'GitHub Actions']) {
   if (!handoff.includes(token)) throw new Error(`AI handoff missing ${token}`);
 }
 const build = JSON.parse(fs.readFileSync(path.join(root, 'public/build.json'), 'utf8'));

@@ -69,4 +69,4 @@ window.addEventListener('unhandledrejection', (event) => {
 preventBrowserGestures();
 const game = new Phaser.Game(config);
 BackButtonSystem.install(game);
-console.info('[CardVille] Phaser instance created 1.0.25 asset foundation and manifest', game.isBooted);
+console.info('[CardVille] Phaser instance created 1.0.26 npc dialogue lobby polish', game.isBooted);

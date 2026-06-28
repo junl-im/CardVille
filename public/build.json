@@ -1,8 +1,8 @@
 {
   "name": "CardVille",
-  "version": "1.0.25",
-  "mode": "asset-foundation",
+  "version": "1.0.26",
+  "mode": "npc-dialogue-lobby-polish",
   "svg": "disabled",
   "pwa": "disabled",
-  "notes": "README-only-history-ai-handoff-full-and-patch-zip-delivery-github-actions-verify-one-screen-diorama-building-npc-prop-ui-asset-manifest-svg-disabled"
+  "notes": "README-only-history-ai-handoff-full-and-patch-zip-delivery-github-actions-verify-one-screen-diorama-npc-dialogue-gesture-lobby-settings-asset-manifest-svg-disabled"
 }

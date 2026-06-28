@@ -5,7 +5,7 @@ import { DrawSystem } from '../systems/DrawSystem';
 import { AuthSystem } from '../systems/AuthSystem';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
-const LOGIN_VERSION = '1.0.25';
+const LOGIN_VERSION = '1.0.26';
 const LOGIN_ACTION_START_Y = 600;
 const LOGIN_ACTION_GOOGLE_Y = LOGIN_ACTION_START_Y + 56;
 const LOGIN_ACTION_SECONDARY_Y = LOGIN_ACTION_START_Y + 102;

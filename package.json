@@ -1,9 +1,9 @@
 {
   "name": "cardville",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.25 secures the asset foundation with buildings, NPCs, props, UI assets, manifest-based loading, and GitHub Actions-safe checks.",
+  "description": "CardVille 1.0.26 adds NPC dialogue, small character gestures, and an in-lobby settings panel while keeping GitHub Actions-safe checks and README-only history.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",
