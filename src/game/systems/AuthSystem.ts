@@ -1,7 +1,97 @@
-import { firebaseConfig } from '../../firebase/firebaseConfig';
-import { SaveSystem, type PlayerProfile } from './SaveSystem';
+type PlayerProfile = {
+  uid: string;
+  provider: 'guest' | 'google' | 'email';
+  nickname: string;
+  level: number;
+  xp: number;
+  coins: number;
+  gems: number;
+};
+
+type AuthMode = 'localGuest' | 'firebase' | 'none';
+
+const PROFILE_KEY = 'cardville.profile.v105';
+const GUEST_UID_KEY = 'cardville.guestUid';
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyD9hJzRf_I4t9LjS7EjO9K8ZcUX39wgecE',
+  authDomain: 'cardville.firebaseapp.com',
+  projectId: 'cardville',
+  storageBucket: 'cardville.firebasestorage.app',
+  messagingSenderId: '285520270113',
+  appId: '1:285520270113:web:ef33aedeaf08f4ef806460',
+  measurementId: 'G-8QTT1QSPVL'
+};
 
 let firebaseApp: unknown;
+
+function safeGet(key: string): string | null {
+  try { return localStorage.getItem(key); } catch { return null; }
+}
+
+function safeSet(key: string, value: string): void {
+  try { localStorage.setItem(key, value); } catch { /* ignore storage failures */ }
+}
+
+function safeRemove(key: string): void {
+  try { localStorage.removeItem(key); } catch { /* ignore storage failures */ }
+}
+
+function createGuestUid(): string {
+  const existing = safeGet(GUEST_UID_KEY);
+  if (existing) return existing;
+  const uid = `guest_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+  safeSet(GUEST_UID_KEY, uid);
+  return uid;
+}
+
+function defaultProfile(): PlayerProfile {
+  return { uid: createGuestUid(), provider: 'guest', nickname: '게스트', level: 1, xp: 0, coins: 300, gems: 10 };
+}
+
+function loadProfile(): PlayerProfile {
+  try {
+    const raw = safeGet(PROFILE_KEY);
+    return raw ? { ...defaultProfile(), ...JSON.parse(raw) } : defaultProfile();
+  } catch {
+    return defaultProfile();
+  }
+}
+
+function saveProfile(profile: PlayerProfile): void {
+  safeSet(PROFILE_KEY, JSON.stringify(profile));
+}
+
+function profileToUser(profile: PlayerProfile): any {
+  const now = new Date().toISOString();
+  const providerId = profile.provider === 'google' ? 'google.com' : profile.provider === 'email' ? 'password' : 'local-guest';
+  const info = {
+    uid: profile.uid,
+    displayName: profile.nickname,
+    email: profile.provider === 'email' ? `${profile.nickname || 'user'}@local.cardville` : null,
+    phoneNumber: null,
+    photoURL: null,
+    providerId
+  };
+  return {
+    ...info,
+    emailVerified: profile.provider !== 'email',
+    isAnonymous: profile.provider === 'guest',
+    metadata: { creationTime: now, lastSignInTime: now },
+    providerData: providerId === 'local-guest' ? [] : [info],
+    refreshToken: '',
+    tenantId: null,
+    delete: async () => undefined,
+    getIdToken: async () => '',
+    getIdTokenResult: async () => ({ token: '', authTime: now, issuedAtTime: now, expirationTime: now, signInProvider: providerId, signInSecondFactor: null, claims: {} }),
+    reload: async () => undefined,
+    toJSON: () => ({ uid: profile.uid, providerId, isAnonymous: profile.provider === 'guest' })
+  };
+}
+
+function firebaseUserToAny(user: any): any {
+  return user;
+}
 
 async function getFirebaseAuth() {
   const appMod = await import('firebase/app');
@@ -11,23 +101,40 @@ async function getFirebaseAuth() {
 }
 
 export class AuthSystem {
-  static restore(): PlayerProfile | null {
-    return SaveSystem.loadProfile();
+  static currentUser: any = null;
+  static lastAuthMode: AuthMode = 'none';
+  static lastProfileSyncError: unknown = null;
+
+  static restore(): any {
+    const profile = loadProfile();
+    this.currentUser = profileToUser(profile);
+    this.lastAuthMode = profile.provider === 'guest' ? 'localGuest' : 'firebase';
+    return this.currentUser;
   }
 
   static signInGuest(): PlayerProfile {
-    return SaveSystem.startGuest();
+    const profile = loadProfile();
+    profile.provider = 'guest';
+    profile.nickname = '게스트';
+    saveProfile(profile);
+    this.currentUser = profileToUser(profile);
+    this.lastAuthMode = 'localGuest';
+    this.lastProfileSyncError = null;
+    return profile;
   }
 
   static async signInGoogle(): Promise<PlayerProfile> {
     const { auth, authMod } = await getFirebaseAuth();
     const provider = new authMod.GoogleAuthProvider();
     const result = await authMod.signInWithPopup(auth, provider);
-    const profile = SaveSystem.loadProfile();
+    const profile = loadProfile();
     profile.uid = result.user.uid;
     profile.provider = 'google';
     profile.nickname = result.user.displayName ?? 'Google 유저';
-    SaveSystem.saveProfile(profile);
+    saveProfile(profile);
+    this.currentUser = firebaseUserToAny(result.user);
+    this.lastAuthMode = 'firebase';
+    this.lastProfileSyncError = null;
     return profile;
   }
 
@@ -36,11 +143,57 @@ export class AuthSystem {
     const result = create
       ? await authMod.createUserWithEmailAndPassword(auth, email, password)
       : await authMod.signInWithEmailAndPassword(auth, email, password);
-    const profile = SaveSystem.loadProfile();
+    const profile = loadProfile();
     profile.uid = result.user.uid;
     profile.provider = 'email';
     profile.nickname = email.split('@')[0] || '이메일 유저';
-    SaveSystem.saveProfile(profile);
+    saveProfile(profile);
+    this.currentUser = firebaseUserToAny(result.user);
+    this.lastAuthMode = 'firebase';
+    this.lastProfileSyncError = null;
     return profile;
+  }
+
+  static async createEmailAccount(email: string, password: string): Promise<PlayerProfile> {
+    return await this.signInEmail(email, password, true);
+  }
+
+  static async signOut(): Promise<void> {
+    if (this.lastAuthMode === 'firebase') {
+      try {
+        const { auth, authMod } = await getFirebaseAuth();
+        await authMod.signOut(auth);
+      } catch (error) {
+        console.warn('[CardVille] Firebase sign-out failed. Local state will still be cleared.', error);
+      }
+    }
+    safeRemove(PROFILE_KEY);
+    this.currentUser = null;
+    this.lastAuthMode = 'none';
+  }
+
+  static isLocalGuest(): boolean {
+    const profile = loadProfile();
+    return this.lastAuthMode === 'localGuest'
+      || profile.provider === 'guest'
+      || this.currentUser?.providerId === 'local-guest'
+      || this.currentUser?.uid?.startsWith?.('guest_') === true
+      || this.currentUser?.uid?.startsWith?.('local_guest_') === true;
+  }
+
+  static isFirebaseUser(): boolean {
+    return !!this.currentUser && !this.isLocalGuest();
+  }
+
+  static getDisplayName(): string {
+    return this.currentUser?.displayName ?? loadProfile().nickname ?? '카드마을 주민';
+  }
+
+  static getLoginLabel(): string {
+    const profile = loadProfile();
+    if (this.isLocalGuest()) return '로컬 게스트';
+    if (profile.provider === 'google') return 'Google 로그인';
+    if (profile.provider === 'email') return '이메일 로그인';
+    return '로그인';
   }
 }

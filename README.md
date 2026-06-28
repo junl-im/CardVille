@@ -1,4 +1,4 @@
-# CardVille 1.0.5 Clean Stable
+# CardVille 1.0.6 Clean Stable
 
 이 버전은 기존 대형 구조를 잠시 멈추고, GitHub Actions 배포에서 반드시 로그인 화면이 열리도록 재구성한 안정화 버전입니다.
 
