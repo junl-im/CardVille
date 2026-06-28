@@ -522,24 +522,24 @@ export const WORD_STAGES: StageDeck[] = [
     goals: [
       { label: '공방 도구', category: 'tool', needed: 5 },
       { label: '손놀림', category: 'motion', needed: 4 },
-      { label: '튼튼한 재료', category: 'strong', needed: 3 }
+      { label: '모양 재료', category: 'shape', needed: 2 }
     ],
     columns: [
       [
         { id: 'work_hammer', label: '나무 망치', category: 'tool', tag: '도구' },
         { id: 'work_spin', label: '빙글 돌리기', category: 'motion', tag: '동작' },
-        { id: 'work_block', label: '단단한 블록', category: 'strong', tag: '재료' },
+        { id: 'work_block', label: '블록', category: 'shape', tag: '모양' },
         { id: 'work_brush', label: '색칠 붓', category: 'tool', tag: '도구' }
       ],
       [
         { id: 'work_cut', label: '싹둑 자르기', category: 'motion', tag: '동작' },
         { id: 'work_scissors', label: '금빛 가위', category: 'tool', tag: '도구' },
-        { id: 'work_plate', label: '두꺼운 판자', category: 'strong', tag: '재료' }
+        { id: 'work_plate', label: '두꺼운 판자', category: 'tool', tag: '재료' }
       ],
       [
         { id: 'work_key', label: '작은 열쇠', category: 'tool', tag: '도구' },
         { id: 'work_jump', label: '폴짝 옮기기', category: 'motion', tag: '동작' },
-        { id: 'work_cube', label: '정육면체', category: 'strong', tag: '모양' }
+        { id: 'work_cube', label: '정육면체', category: 'shape', tag: '모양' }
       ],
       [
         { id: 'work_shovel', label: '미니 삽', category: 'tool', tag: '도구' },

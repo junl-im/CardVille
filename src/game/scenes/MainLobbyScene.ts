@@ -36,6 +36,6 @@ export class MainLobbyScene extends Phaser.Scene {
     new GameButton(this, 195, 632, '로컬 데이터 초기화', 320, 52, 0xffc6d5).onClick(() => { SaveSystem.clear(); this.scene.restart(); });
 
     this.add.text(195, 740, '말 카드 스택 → 별 기록 → 카드팩 보상 → 앨범 수집', applyWrap(mutedText(12), 336)).setOrigin(0.5);
-    this.add.text(195, 790, '1.0.20', mutedText(12)).setOrigin(0.5);
+    this.add.text(195, 790, '1.0.21', mutedText(12)).setOrigin(0.5);
   }
 }

@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { darkText } from './TextStyles';
+import { FeedbackSystem } from '../systems/FeedbackSystem';
 
 export type ButtonAction = () => void;
 
@@ -65,6 +66,7 @@ export class GameButton extends Phaser.GameObjects.Container {
       if (!shouldClick) return;
       this.emit('pointerup', pointer);
       this.emit('click', pointer);
+      FeedbackSystem.pulse('tap');
       this.action?.();
     });
 

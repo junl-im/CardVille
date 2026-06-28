@@ -6,6 +6,7 @@ import { DrawSystem } from '../systems/DrawSystem';
 import { SaveSystem, PlayerProfile } from '../systems/SaveSystem';
 import { RARITY_META, RewardCard, pickRewardCard } from '../data/rewardCards';
 import { applyWrap, bodyText, cardSmallText, cardText, goldText, mutedText, titleText } from '../ui/TextStyles';
+import { FeedbackSystem } from '../systems/FeedbackSystem';
 
 export class RewardScene extends Phaser.Scene {
   private score = 0;
@@ -69,6 +70,7 @@ export class RewardScene extends Phaser.Scene {
   private openPack(): void {
     if (this.opened) return;
     this.opened = true;
+    FeedbackSystem.pulse('reward');
     const group = this.rewardGroup;
     if (!group) return;
     this.tweens.killTweensOf(group);

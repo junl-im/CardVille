@@ -74,27 +74,49 @@ export class IntroLoadingScene extends Phaser.Scene {
     video.muted = true;
     video.autoplay = true;
     video.playsInline = true;
+    video.preload = 'auto';
+    video.controls = false;
+    video.disablePictureInPicture = true;
     video.setAttribute('playsinline', 'true');
     video.setAttribute('webkit-playsinline', 'true');
+    video.setAttribute('controlsList', 'nodownload noplaybackrate noremoteplayback');
+    video.setAttribute('data-cardville-hidden-until-playing', 'true');
     video.style.position = 'fixed';
     video.style.inset = '0';
     video.style.width = '100vw';
-    video.style.height = '100vh';
+    video.style.height = '100dvh';
+    video.style.minHeight = '100vh';
     video.style.objectFit = 'cover';
     video.style.zIndex = '5';
     video.style.pointerEvents = 'none';
     video.style.background = '#071126';
-    video.style.opacity = '1';
+    // Keep the video hidden until it actually plays. This prevents the mobile
+    // browser's native play triangle/placeholder from flashing before the intro.
+    video.style.opacity = '0';
+    video.style.transition = 'opacity 180ms ease';
     app.appendChild(video);
     this.videoEl = video;
 
+    const revealVideo = () => {
+      if (this.videoEl === video) video.style.opacity = '1';
+    };
     const onVideoDone = () => {
       this.minIntroDone = true;
       this.tryFinish();
     };
+    const onVideoBlocked = () => {
+      if (this.videoEl === video) {
+        video.pause();
+        video.remove();
+        this.videoEl = undefined;
+      }
+      onVideoDone();
+    };
+    video.addEventListener('playing', revealVideo, { once: true });
+    video.addEventListener('canplay', () => { if (!video.paused) revealVideo(); }, { once: true });
     video.addEventListener('ended', onVideoDone, { once: true });
-    video.addEventListener('error', onVideoDone, { once: true });
-    void video.play().catch(() => onVideoDone());
+    video.addEventListener('error', onVideoBlocked, { once: true });
+    void video.play().catch(() => onVideoBlocked());
   }
 
   private queueImage(key: string, url: string): void {

@@ -6,7 +6,7 @@ const stagesText = fs.readFileSync(path.join(root, 'src/game/data/wordStages.ts'
 const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
 const stageCount = (stagesText.match(/id: \d+,/g) ?? []).length;
 if (stageCount < 16) throw new Error(`Expected at least 16 word stages, found ${stageCount}`);
-for (const token of ["| 'shape'", "shape: '모양/도형'", "{ label: '정육면체', category: 'shape'"]) {
+for (const token of ["| 'shape'", "shape: '모양/도형'", "{ label: '정육면체', category: 'shape'", "{ id: 'work_cube', label: '정육면체', category: 'shape'", "{ id: 'work_block', label: '블록', category: 'shape'"]) {
   if (!stagesText.includes(token)) throw new Error(`Association data missing token: ${token}`);
 }
 if (stagesText.includes("{ label: '정육면체', category: 'strong'")) {
@@ -26,4 +26,14 @@ for (const block of blocks) {
     if (count < goal.needed) throw new Error(`Stage ${id} category ${goal.category} has ${count} cards but needs ${goal.needed}`);
   }
 }
-console.log(`Association check passed. Version ${pkg.version}, stages ${stageCount}, shape category and goal counts OK.`);
+
+const suspicious = [
+  "{ id: 'work_cube', label: '정육면체', category: 'strong'",
+  "{ id: 'work_block', label: '단단한 블록', category: 'strong'",
+  "{ label: '튼튼한 재료', category: 'strong'"
+];
+for (const token of suspicious) {
+  if (stagesText.includes(token)) throw new Error(`Association mismatch remains: ${token}`);
+}
+
+console.log(`Association check passed. Version ${pkg.version}, stages ${stageCount}, shape/workshop category and goal counts OK.`);

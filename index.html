@@ -11,11 +11,12 @@
       #boot-fallback::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,8,24,.03),rgba(3,8,24,.08) 50%,rgba(3,8,24,.28) 100%)}
       .boot-note{position:absolute;left:50%;bottom:max(24px,calc(env(safe-area-inset-bottom) + 18px));width:min(340px,88vw);transform:translateX(-50%);text-align:center;color:rgba(230,244,255,.82);font-size:11px;font-weight:800;text-shadow:0 2px 8px rgba(0,0,0,.75)}
       #app canvas{position:relative;z-index:1;display:block;background:#071126;}
+    /* no-prestart-button-policy: first visible button is rendered only by Phaser LoginScene */
     </style>
   </head>
   <body>
     <div id="app">
-      <div id="boot-fallback" aria-hidden="true">
+      <div id="boot-fallback" aria-hidden="true" data-cardville-no-prestart-cta="true">
         <div class="boot-note" id="boot-note"></div>
       </div>
     </div>
@@ -33,7 +34,7 @@
       }
     </script>
     <script>
-      window.__CARDVILLE_VERSION__ = '1.0.20';
+      window.__CARDVILLE_VERSION__ = '1.0.21';
       window.__CARDVILLE_READY__ = false;
       window.__CARDVILLE_BOOT_OK__ = function(){
         window.__CARDVILLE_READY__ = true;
@@ -43,7 +44,7 @@
       setTimeout(function(){
         if (window.__CARDVILLE_READY__) return;
         var note = document.getElementById('boot-note');
-        if (note) note.textContent = '시작 화면 준비가 지연되고 있어요. 네트워크 또는 배포 상태를 확인해 주세요.';
+        if (note) note.textContent = '시작 화면 준비가 지연되고 있어요. 새로고침 후에도 반복되면 배포 상태를 확인해 주세요.';
       }, 6500);
     </script>
     <script type="module" src="/src/main.ts"></script>

@@ -18,43 +18,68 @@ export class BackButtonSystem {
   private static game?: Phaser.Game;
   private static overlay?: HTMLDivElement;
   private static exitRequested = false;
-  private static guardDepth = 0;
+  private static lastArmAt = 0;
+  private static lastBackAt = 0;
 
   static install(game: Phaser.Game): void {
     if (this.installed || typeof window === 'undefined') return;
     this.installed = true;
     this.game = game;
-    this.primeHistoryGuard();
+    this.primeHistoryGuard('install');
 
-    window.addEventListener('popstate', () => {
-      if (BackButtonSystem.exitRequested) return;
-      if (BackButtonSystem.overlay) {
-        BackButtonSystem.requestExit();
-        return;
-      }
-      BackButtonSystem.primeHistoryGuard();
-      BackButtonSystem.showOverlay();
-    });
+    const handleBack = (event?: Event) => {
+      event?.preventDefault?.();
+      BackButtonSystem.handleBackAttempt();
+    };
+
+    window.addEventListener('popstate', handleBack, { capture: true });
+    window.addEventListener('hashchange', handleBack, { capture: true });
+
+    // Some mobile webviews arm history more reliably after the first user gesture.
+    const rearm = () => BackButtonSystem.primeHistoryGuard('user-gesture');
+    window.addEventListener('pointerdown', rearm, { passive: true });
+    window.addEventListener('touchstart', rearm, { passive: true });
+    window.addEventListener('pageshow', () => BackButtonSystem.primeHistoryGuard('pageshow'));
+    window.addEventListener('focus', () => BackButtonSystem.primeHistoryGuard('focus'));
 
     window.addEventListener('keydown', (event) => {
       if (event.key !== 'Escape') return;
       event.preventDefault();
-      if (BackButtonSystem.overlay) BackButtonSystem.requestExit();
-      else BackButtonSystem.showOverlay();
+      BackButtonSystem.handleBackAttempt();
     });
   }
 
-  private static primeHistoryGuard(): void {
+  static showConfirm(): void {
+    this.showOverlay();
+  }
+
+  private static handleBackAttempt(): void {
+    if (BackButtonSystem.exitRequested) return;
+    const now = Date.now();
+    if (BackButtonSystem.overlay) {
+      BackButtonSystem.requestExit();
+      return;
+    }
+    // Debounce duplicate popstate/hashchange events from the same hardware-back tap.
+    if (now - BackButtonSystem.lastBackAt < 120) return;
+    BackButtonSystem.lastBackAt = now;
+    BackButtonSystem.primeHistoryGuard('before-overlay');
+    BackButtonSystem.showOverlay();
+  }
+
+  private static primeHistoryGuard(reason = 'manual'): void {
     if (typeof history === 'undefined' || typeof window === 'undefined') return;
+    if (this.exitRequested) return;
+    const now = Date.now();
+    if (now - this.lastArmAt < 280 && reason !== 'before-overlay') return;
+    this.lastArmAt = now;
     try {
       const state = typeof history.state === 'object' && history.state ? history.state : {};
-      history.replaceState({ ...state, cardvilleRoot: true }, '', window.location.href);
-      // Two guard entries make Android/Kakao hardware back more likely to hit popstate
-      // before closing the webview.
-      while (this.guardDepth < 2) {
-        history.pushState({ cardvilleBackGuard: true, depth: this.guardDepth + 1 }, '', window.location.href);
-        this.guardDepth += 1;
-      }
+      history.replaceState({ ...state, cardvilleRoot: true, cardvilleBackGuard: true }, '', window.location.href);
+      // Keep two same-url guards. Android/Kakao hardware back consumes one guard,
+      // then popstate shows our custom overlay instead of leaving immediately.
+      history.pushState({ cardvilleBackGuard: true, reason, layer: 1, t: now }, '', window.location.href);
+      history.pushState({ cardvilleBackGuard: true, reason, layer: 2, t: now + 1 }, '', window.location.href);
     } catch (error) {
       console.warn('[CardVille] back guard history init failed', error);
     }
@@ -69,44 +94,49 @@ export class BackButtonSystem {
 
     const overlay = document.createElement('div');
     overlay.id = 'cardville-back-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('data-cardville-back-overlay-v121', 'true');
     Object.assign(overlay.style, {
       position: 'fixed',
       inset: '0',
-      zIndex: '999998',
+      zIndex: '2147483647',
       display: 'grid',
       placeItems: 'center',
-      background: 'rgba(2, 8, 20, 0.72)',
+      background: 'rgba(2, 8, 20, 0.76)',
       color: '#fff',
       fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
       touchAction: 'none',
-      pointerEvents: 'auto'
+      pointerEvents: 'auto',
+      padding: 'max(18px, env(safe-area-inset-top)) 18px max(18px, env(safe-area-inset-bottom))',
+      boxSizing: 'border-box'
     });
 
     const box = document.createElement('div');
     Object.assign(box.style, {
-      width: 'min(340px, 88vw)',
+      width: 'min(344px, 90vw)',
       padding: '22px 18px 18px',
       borderRadius: '30px',
-      background: 'linear-gradient(180deg, rgba(22, 44, 88, 0.96), rgba(9, 18, 40, 0.96))',
-      border: '1px solid rgba(255,255,255,.28)',
-      boxShadow: '0 28px 70px rgba(0,0,0,.45)',
+      background: 'linear-gradient(180deg, rgba(26, 49, 92, 0.98), rgba(9, 18, 40, 0.98))',
+      border: '1px solid rgba(255,255,255,.30)',
+      boxShadow: '0 28px 70px rgba(0,0,0,.50)',
       textAlign: 'center',
       boxSizing: 'border-box'
     });
 
     const title = document.createElement('div');
-    title.textContent = '게임을 나갈까요?';
-    Object.assign(title.style, { fontSize: '26px', fontWeight: '1000', letterSpacing: '-.06em', textShadow: '0 3px 10px rgba(0,0,0,.5)' });
+    title.textContent = '잠깐! 게임을 나갈까요?';
+    Object.assign(title.style, { fontSize: '25px', fontWeight: '1000', letterSpacing: '-.06em', textShadow: '0 3px 10px rgba(0,0,0,.5)' });
     box.appendChild(title);
 
     const desc = document.createElement('div');
-    desc.textContent = '첫 화면으로 돌아가거나, 나가기를 시도할 수 있어요. 뒤로가기를 한 번 더 누르면 나가기를 시도합니다.';
-    Object.assign(desc.style, { margin: '12px auto 16px', maxWidth: '286px', fontSize: '14px', lineHeight: '1.45', color: 'rgba(230,244,255,.92)', fontWeight: '800' });
+    desc.textContent = '첫 화면으로 돌아가거나 계속할 수 있어요. 이 창이 열린 상태에서 뒤로가기를 한 번 더 누르면 나가기를 시도합니다.';
+    Object.assign(desc.style, { margin: '12px auto 16px', maxWidth: '290px', fontSize: '14px', lineHeight: '1.45', color: 'rgba(230,244,255,.92)', fontWeight: '800' });
     box.appendChild(desc);
 
     box.appendChild(this.makeOverlayButton('첫 화면가기', '#ffd86f', () => this.goFirstScreen()));
-    box.appendChild(this.makeOverlayButton('나가기', '#ff9ab1', () => this.requestExit()));
     box.appendChild(this.makeOverlayButton('계속하기', '#9fe7ff', () => this.closeOverlay()));
+    box.appendChild(this.makeOverlayButton('나가기', '#ff9ab1', () => this.requestExit()));
 
     const note = document.createElement('div');
     note.textContent = '브라우저 정책상 창 닫기가 막히면 이전 페이지로 이동합니다.';
@@ -116,9 +146,7 @@ export class BackButtonSystem {
     overlay.appendChild(box);
     document.body.appendChild(overlay);
     this.overlay = overlay;
-
-    // Phaser scene fallback stays available behind the DOM overlay for platforms that
-    // block fixed DOM layers in webviews.
+    this.primeHistoryGuard('overlay-open');
     this.launchSceneFallback();
   }
 
@@ -129,7 +157,7 @@ export class BackButtonSystem {
     Object.assign(button.style, {
       width: '100%',
       height: '54px',
-      margin: '6px 0',
+      margin: '5px 0',
       borderRadius: '20px',
       border: '2px solid rgba(255,255,255,.72)',
       background: `linear-gradient(180deg, #fff8d8, ${color})`,
@@ -167,7 +195,7 @@ export class BackButtonSystem {
     try {
       if (this.game?.scene.isActive('BackConfirmScene')) this.game.scene.stop('BackConfirmScene');
     } catch { /* ignore */ }
-    this.primeHistoryGuard();
+    this.primeHistoryGuard('close-overlay');
   }
 
   private static goFirstScreen(): void {
@@ -184,7 +212,7 @@ export class BackButtonSystem {
         console.warn('[CardVille] first screen navigation failed', error);
       }
     }
-    this.primeHistoryGuard();
+    this.primeHistoryGuard('first-screen');
   }
 
   static requestExit(): void {
@@ -196,7 +224,7 @@ export class BackButtonSystem {
     window.setTimeout(() => {
       try {
         if (window.closed) return;
-        if (window.history.length > 1) window.history.go(-Math.min(3, window.history.length - 1));
+        if (window.history.length > 1) window.history.go(-Math.min(4, window.history.length - 1));
         else window.location.href = 'about:blank';
       } catch (error) {
         console.warn('[CardVille] fallback exit failed', error);

@@ -1,9 +1,9 @@
 {
   "name": "cardville",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.20 removes pre-start fake buttons, hardens back-button exit UX, improves association rules, solid card readability, and security checks.",
+  "description": "CardVille 1.0.21 fixes duplicated start overlay/video play marker/back navigation UX, compacts login controls, polishes cards, and strengthens association/security checks.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",

@@ -10,14 +10,14 @@ for (const token of ['visibleBounds', 'applyResponsiveCamera', 'addCoverImage'])
   if (!layoutText.includes(token)) throw new Error(`Responsive layout token missing: ${token}`);
 }
 const mustContain = [
-  ['src/game/scenes/PlayScene.ts', ['playArea(this)', 'distributeColumns', 'animateCardSettle', 'spawnMiniSparkles', 'effectCorrect', 'effectWrong', '0xfffbef']],
+  ['src/game/scenes/PlayScene.ts', ['playArea(this)', 'distributeColumns', 'animateCardSettle', 'spawnMiniSparkles', 'effectCorrect', 'effectWrong', '0xfffbef', 'SOLID_CARD_POLISH_V121']],
   ['src/game/scenes/RewardScene.ts', ['packPrefix', 'assetPackLegendary', '터치해서 열기', 'spawnSparkles']],
-  ['src/game/scenes/IntroLoadingScene.ts', ['mountOpeningVideo', 'queueGameAssets', 'this.load.start()']],
-  ['src/game/scenes/LoginScene.ts', ['window.__CARDVILLE_BOOT_OK__', 'IntroLoadingScene', 'LOGIN_ACTION_START_Y', 'LOGIN_ACTION_SECONDARY_Y', '원하는 방식으로 시작하세요']],
+  ['src/game/scenes/IntroLoadingScene.ts', ['mountOpeningVideo', 'queueGameAssets', 'this.load.start()', 'data-cardville-hidden-until-playing']],
+  ['src/game/scenes/LoginScene.ts', ['window.__CARDVILLE_BOOT_OK__', 'IntroLoadingScene', 'LOGIN_ACTION_START_Y', 'LOGIN_ACTION_SECONDARY_Y', 'LOGIN_PANEL_COMPACT', '시작 방식을 선택하세요']],
   ['src/game/scenes/BootScene.ts', ['Only load the opening screen assets here']],
   ['src/game/ui/GameButton.ts', ['assetButton${size}', 'chooseButtonSkin', 'skinImage']],
   ['src/game/systems/DrawSystem.ts', ['particleStar', '2.5D plaza', 'assetVillageBg']],
-  ['src/game/systems/BackButtonSystem.ts', ['cardville-back-overlay', 'primeHistoryGuard', 'makeOverlayButton']],
+  ['src/game/systems/BackButtonSystem.ts', ['cardville-back-overlay', 'primeHistoryGuard', 'makeOverlayButton', 'data-cardville-back-overlay-v121']],
   ['src/game/systems/SecuritySystem.ts', ['sanitizeText', 'safeJsonRecord', 'isSafeEmail']]
 ];
 for (const [file, tokens] of mustContain) {
@@ -45,4 +45,4 @@ const requiredAssets = [
 for (const asset of requiredAssets) {
   if (!fs.existsSync(path.join(root, asset))) throw new Error(`Missing required 1.0.20 asset: ${asset}`);
 }
-console.log(`Layout/asset check passed. Version ${pkg.version}, responsive playfield, compact login, robust back overlay, secure storage, association polish and solid-card UI assets OK.`);
+console.log(`Layout/asset check passed. Version ${pkg.version}, responsive playfield, compact login, robust back overlay, secure storage, v121 back/video/login/card/association polish and solid-card UI assets OK.`);
