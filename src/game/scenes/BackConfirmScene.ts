@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { addFullBleedShade, applyResponsiveCamera } from '../systems/LayoutSystem';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
@@ -21,8 +22,9 @@ export class BackConfirmScene extends Phaser.Scene {
   constructor() { super('BackConfirmScene'); }
 
   create(): void {
+    applyResponsiveCamera(this);
     this.cameras.main.setBackgroundColor('rgba(0,0,0,0)');
-    this.add.rectangle(195, 422, 390, 844, 0x020814, 0.66).setInteractive();
+    addFullBleedShade(this, 0x020814, 0.66).setInteractive();
     panel(this, 195, 420, 340, 304, 34);
     this.add.text(195, 310, '게임을 나갈까요?', titleText(28)).setOrigin(0.5);
     this.add.text(

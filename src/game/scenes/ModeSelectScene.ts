@@ -3,7 +3,7 @@ import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
 import { DrawSystem } from '../systems/DrawSystem';
 import { applyWrap, bodyText, goldText, mutedText } from '../ui/TextStyles';
-import { hasTouchDebug } from '../systems/LayoutSystem';
+import { applyResponsiveCamera, hasTouchDebug } from '../systems/LayoutSystem';
 
 export const MODES = [
   { id: 'word', title: '말 카드', icon: '🃏', note: '단어 계열을 찾아 카드 스택을 정리하는 기본 모드', open: true },
@@ -16,6 +16,7 @@ export class ModeSelectScene extends Phaser.Scene {
   constructor() { super('ModeSelectScene'); }
 
   create(): void {
+    applyResponsiveCamera(this);
     DrawSystem.background(this, '게임 선택');
     this.add.text(195, 92, '카드마을 게임관', goldText(22)).setOrigin(0.5);
     this.add.text(195, 122, '작동 안정화가 끝난 말 카드부터 차례대로 확장합니다.', applyWrap(mutedText(12), 320)).setOrigin(0.5);

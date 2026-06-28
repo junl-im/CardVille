@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { applyResponsiveCamera } from '../systems/LayoutSystem';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
 import { DrawSystem } from '../systems/DrawSystem';
@@ -27,6 +28,7 @@ export class ResultScene extends Phaser.Scene {
   }
 
   create(): void {
+    applyResponsiveCamera(this);
     const record = SaveSystem.saveStageResult(this.stage, this.score, this.bestCombo, this.stepsLeft, this.failed);
     DrawSystem.background(this, this.failed ? '아쉬워요' : '클리어');
     panel(this, 195, 322, 336, 360, 34);

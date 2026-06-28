@@ -3,8 +3,14 @@ import path from 'node:path';
 
 const root = process.cwd();
 const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+const main = fs.readFileSync(path.join(root, 'src/main.ts'), 'utf8');
+if (!main.includes('Phaser.Scale.EXPAND')) throw new Error('Expected Phaser.Scale.EXPAND for full-bleed mobile layout');
+const layoutText = fs.readFileSync(path.join(root, 'src/game/systems/LayoutSystem.ts'), 'utf8');
+for (const token of ['visibleBounds', 'applyResponsiveCamera', 'addCoverImage']) {
+  if (!layoutText.includes(token)) throw new Error(`Responsive layout token missing: ${token}`);
+}
 const mustContain = [
-  ['src/game/scenes/PlayScene.ts', ['layout().boardWidth', 'xs: [96, 179, 262, 345]', 'effectCorrect', 'effectWrong', '0xfffbef']],
+  ['src/game/scenes/PlayScene.ts', ['layout(this).boardWidth', 'xs: [96, 179, 262, 345]', 'effectCorrect', 'effectWrong', '0xfffbef']],
   ['src/game/scenes/RewardScene.ts', ['packPrefix', 'assetPackLegendary', '터치해서 열기', 'spawnSparkles']],
   ['src/game/scenes/IntroLoadingScene.ts', ['mountOpeningVideo', 'queueGameAssets', 'this.load.start()']],
   ['src/game/scenes/LoginScene.ts', ['window.__CARDVILLE_BOOT_OK__', 'IntroLoadingScene']],
@@ -32,4 +38,4 @@ const requiredAssets = [
 for (const asset of requiredAssets) {
   if (!fs.existsSync(path.join(root, asset))) throw new Error(`Missing required 1.0.16 asset: ${asset}`);
 }
-console.log(`Layout/asset check passed. Version ${pkg.version}, delayed intro, instant start, pack opening and solid-card UI assets OK.`);
+console.log(`Layout/asset check passed. Version ${pkg.version}, full-bleed responsive canvas, delayed intro, instant start and solid-card UI assets OK.`);

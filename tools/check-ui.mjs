@@ -45,6 +45,12 @@ for (const token of ['mountOpeningVideo', 'queueGameAssets', 'cardville_intro_lo
   if (!intro.includes(token)) throw new Error(`IntroLoadingScene missing delayed loading token: ${token}`);
 }
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+const main = fs.readFileSync(path.join(root, 'src/main.ts'), 'utf8');
+const layoutSystem = fs.readFileSync(path.join(root, 'src/game/systems/LayoutSystem.ts'), 'utf8');
+if (!main.includes('Phaser.Scale.EXPAND')) throw new Error('Scale mode must use EXPAND to remove side letterboxing');
+for (const token of ['applyResponsiveCamera', 'visibleBounds', 'addCoverImage']) {
+  if (!layoutSystem.includes(token)) throw new Error(`LayoutSystem missing responsive token: ${token}`);
+}
 if (html.includes('카드마을을 여는 중')) throw new Error('Opening boot text must not show before the start screen');
 const stages = fs.readFileSync(path.join(root, 'src/game/data/wordStages.ts'), 'utf8');
 const stageCount = (stages.match(/id: \d+,/g) ?? []).length;
@@ -62,4 +68,4 @@ function walk(dir) {
 }
 walk(path.join(root, 'public'));
 if (svgHits.length) throw new Error(`SVG files are not allowed: ${svgHits.join(', ')}`);
-console.log(`UI/content check passed. Version ${version}, word stages ${stageCount}, SVG files 0, instant start/delayed intro/UI assets OK.`);
+console.log(`UI/content check passed. Version ${version}, word stages ${stageCount}, SVG files 0, full-bleed start/delayed intro/UI assets OK.`);

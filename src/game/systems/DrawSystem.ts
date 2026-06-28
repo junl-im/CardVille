@@ -1,18 +1,20 @@
 import Phaser from 'phaser';
 import { goldText, titleText } from '../ui/TextStyles';
+import { addCoverImage, layout } from './LayoutSystem';
 
 export class DrawSystem {
   static background(scene: Phaser.Scene, title?: string, variant: 'village' | 'forest' = 'village'): void {
     const bgKey = variant === 'forest' ? 'assetForestBg' : 'assetVillageBg';
+    const l = layout(scene);
     if (scene.textures.exists(bgKey)) {
-      scene.add.image(195, 422, bgKey).setDisplaySize(844, 844).setAlpha(0.98);
+      addCoverImage(scene, bgKey, 0.98, 390, 844);
       // Comfort overlay: keep color, reduce visual noise behind cards.
-      scene.add.rectangle(195, 422, 390, 844, 0x08142c, 0.22);
-      scene.add.rectangle(195, 422, 390, 844, 0x123b73, 0.10);
+      scene.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x08142c, 0.22);
+      scene.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x123b73, 0.10);
     } else {
       const g = scene.add.graphics();
       g.fillGradientStyle(0x235aa2, 0x4b9bc5, 0x143e7b, 0x071126, 1, 1, 1, 1);
-      g.fillRect(0, 0, 390, 844);
+      g.fillRect(l.visibleX, l.visibleY, l.visibleWidth, l.visibleHeight);
     }
 
     const g = scene.add.graphics();
@@ -25,10 +27,10 @@ export class DrawSystem {
 
     // Solid 2.5D plaza silhouettes and readable bottom vignette.
     g.fillGradientStyle(0x071126, 0x071126, 0x071126, 0x071126, 0, 0, 0.52, 0.86);
-    g.fillRect(0, 500, 390, 344);
+    g.fillRect(l.visibleX, 500, l.visibleWidth, 344 + l.extraY);
     g.fillStyle(0x102452, 0.52);
-    g.fillRoundedRect(-24, 690, 162, 72, 28);
-    g.fillRoundedRect(248, 690, 168, 72, 28);
+    g.fillRoundedRect(l.visibleX - 20, 690, 162 + l.extraX, 72, 28);
+    g.fillRoundedRect(248, 690, 168 + l.extraX, 72, 28);
     g.fillStyle(0xffcf6f, 0.22);
     g.fillTriangle(18, 690, 78, 640, 138, 690);
     g.fillTriangle(262, 690, 326, 638, 390, 690);

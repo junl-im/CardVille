@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { addCoverImage, applyResponsiveCamera, layout } from '../systems/LayoutSystem';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
 export class IntroLoadingScene extends Phaser.Scene {
@@ -19,6 +20,7 @@ export class IntroLoadingScene extends Phaser.Scene {
   }
 
   create(): void {
+    applyResponsiveCamera(this);
     this.drawLoadingStage();
     this.mountOpeningVideo();
     this.queueGameAssets();
@@ -50,11 +52,12 @@ export class IntroLoadingScene extends Phaser.Scene {
   }
 
   private drawLoadingStage(): void {
-    if (this.textures.exists('loginBg')) this.add.image(195, 422, 'loginBg').setDisplaySize(390, 844);
-    else this.add.rectangle(195, 422, 390, 844, 0x071126);
+    const l = layout(this);
+    if (this.textures.exists('loginBg')) addCoverImage(this, 'loginBg', 1, 390, 844);
+    else this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x071126);
 
-    this.add.rectangle(195, 422, 390, 844, 0x020814, 0.24);
-    this.add.rectangle(195, 724, 390, 240, 0x020814, 0.42);
+    this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x020814, 0.24);
+    this.add.rectangle(l.visibleX + l.visibleWidth / 2, 724, l.visibleWidth, 240 + l.extraY, 0x020814, 0.42);
     this.add.text(195, 72, 'CardVille', titleText(31)).setOrigin(0.5);
     this.add.text(195, 112, '오프닝과 함께 게임을 준비하고 있어요', goldText(16)).setOrigin(0.5);
     this.progressText = this.add.text(195, 754, '게임 준비 중... 0%', goldText(18)).setOrigin(0.5);

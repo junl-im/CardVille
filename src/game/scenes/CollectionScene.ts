@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { applyResponsiveCamera } from '../systems/LayoutSystem';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
 import { DrawSystem } from '../systems/DrawSystem';
@@ -15,6 +16,7 @@ export class CollectionScene extends Phaser.Scene {
   }
 
   create(): void {
+    applyResponsiveCamera(this);
     const profile = SaveSystem.loadProfile();
     DrawSystem.background(this, '카드 앨범');
     DrawSystem.topHud(this, profile.coins, profile.level);

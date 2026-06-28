@@ -26,9 +26,9 @@ const config: Phaser.Types.Core.GameConfig = {
   parent: 'app',
   width: 390,
   height: 844,
-  backgroundColor: '#101a35',
+  backgroundColor: '#071126',
   scale: {
-    mode: Phaser.Scale.FIT,
+    mode: Phaser.Scale.EXPAND,
     autoCenter: Phaser.Scale.CENTER_BOTH
   },
   input: {
@@ -69,4 +69,4 @@ window.addEventListener('unhandledrejection', (event) => {
 preventBrowserGestures();
 const game = new Phaser.Game(config);
 BackButtonSystem.install(game);
-console.info('[CardVille] Phaser instance created 1.0.16', game.isBooted);
+console.info('[CardVille] Phaser instance created 1.0.17 full-bleed', game.isBooted);

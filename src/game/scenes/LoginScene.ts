@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { addCoverImage, applyResponsiveCamera, layout } from '../systems/LayoutSystem';
 import { GameButton } from '../ui/GameButton';
 import { DrawSystem } from '../systems/DrawSystem';
 import { AuthSystem } from '../systems/AuthSystem';
@@ -10,15 +11,16 @@ export class LoginScene extends Phaser.Scene {
   constructor() { super('LoginScene'); }
 
   create(): void {
+    applyResponsiveCamera(this);
     this.drawFullscreenHero();
     this.drawStartControls();
-    this.add.text(342, 28, '1.0.16', mutedText(11)).setOrigin(0.5).setAlpha(0.86);
+    this.add.text(342, 28, '1.0.17', mutedText(11)).setOrigin(0.5).setAlpha(0.86);
     window.__CARDVILLE_BOOT_OK__?.();
   }
 
   private drawFullscreenHero(): void {
     if (this.textures.exists('loginBg')) {
-      this.add.image(195, 422, 'loginBg').setDisplaySize(390, 844);
+      addCoverImage(this, 'loginBg', 1, 390, 844);
     } else {
       DrawSystem.background(this, '카드마을');
     }
@@ -26,9 +28,10 @@ export class LoginScene extends Phaser.Scene {
     const shade = this.add.graphics();
     // Keep the key art full-screen, but calm the busy lower area so buttons and text stay readable.
     shade.fillGradientStyle(0x020814, 0x020814, 0x020814, 0x020814, 0.06, 0.04, 0.28, 0.78);
-    shade.fillRect(0, 0, 390, 844);
+    const l = layout(this);
+    shade.fillRect(l.visibleX, l.visibleY, l.visibleWidth, l.visibleHeight);
     shade.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0, 0, 0.18, 0.58);
-    shade.fillRect(0, 540, 390, 304);
+    shade.fillRect(l.visibleX, 540, l.visibleWidth, 304 + l.extraY);
     shade.fillStyle(0xffffff, 0.10);
     shade.fillRoundedRect(26, 592, 338, 92, 30);
     shade.lineStyle(1, 0xffffff, 0.24);

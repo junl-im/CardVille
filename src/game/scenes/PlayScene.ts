@@ -4,7 +4,7 @@ import { SaveSystem } from '../systems/SaveSystem';
 import { GameButton } from '../ui/GameButton';
 import { applyWrap, bodyText, cardSmallText, cardText, goldText, mutedText, titleText } from '../ui/TextStyles';
 import { CATEGORY_COLOR, CATEGORY_LABELS, getStageDeck, GoalCard, StageDeck, WordCard } from '../data/wordStages';
-import { compactText, fitTextSize, hasTouchDebug, layout } from '../systems/LayoutSystem';
+import { applyResponsiveCamera, compactText, fitTextSize, hasTouchDebug, layout } from '../systems/LayoutSystem';
 
 type ResumeState = {
   columns: WordCard[][];
@@ -62,6 +62,7 @@ export class PlayScene extends Phaser.Scene {
   }
 
   create(): void {
+    applyResponsiveCamera(this);
     const profile = SaveSystem.loadProfile();
     this.deck = getStageDeck(this.stage);
 
@@ -209,9 +210,9 @@ export class PlayScene extends Phaser.Scene {
       cardW: 80,
       cardH: 98,
       gapY: 43,
-      railX: layout().boardLeft,
+      railX: layout(this).boardLeft,
       railY: 378,
-      railW: layout().boardWidth,
+      railW: layout(this).boardWidth,
       railH: 340
     };
   }
@@ -482,7 +483,8 @@ export class PlayScene extends Phaser.Scene {
   }
 
   private flash(color: number): void {
-    const rect = this.add.rectangle(195, 422, 390, 844, color, 0.08);
+    const l = layout(this);
+    const rect = this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, color, 0.08);
     this.effectLayer.add(rect);
     this.tweens.add({ targets: rect, alpha: 0, duration: 180, onComplete: () => rect.destroy() });
   }

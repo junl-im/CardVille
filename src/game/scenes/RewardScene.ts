@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { applyResponsiveCamera, layout } from '../systems/LayoutSystem';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
 import { DrawSystem } from '../systems/DrawSystem';
@@ -24,6 +25,7 @@ export class RewardScene extends Phaser.Scene {
   }
 
   create(): void {
+    applyResponsiveCamera(this);
     this.reward = pickRewardCard(this.stars, this.bestCombo);
     DrawSystem.background(this, '카드팩 보상');
     panel(this, 195, 390, 342, 518, 34);
@@ -122,7 +124,8 @@ export class RewardScene extends Phaser.Scene {
   }
 
   private flashReward(color: number): void {
-    const rect = this.add.rectangle(195, 422, 390, 844, color, 0.12);
+    const l = layout(this);
+    const rect = this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, color, 0.12);
     this.tweens.add({ targets: rect, alpha: 0, duration: 320, onComplete: () => rect.destroy() });
   }
 

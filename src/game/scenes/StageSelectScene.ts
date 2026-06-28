@@ -5,7 +5,7 @@ import { DrawSystem } from '../systems/DrawSystem';
 import { SaveSystem } from '../systems/SaveSystem';
 import { WORD_STAGES } from '../data/wordStages';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
-import { hasTouchDebug } from '../systems/LayoutSystem';
+import { applyResponsiveCamera, hasTouchDebug } from '../systems/LayoutSystem';
 
 const PAGE_SIZE = 4;
 
@@ -23,6 +23,7 @@ export class StageSelectScene extends Phaser.Scene {
   }
 
   create(): void {
+    applyResponsiveCamera(this);
     const maxPage = Math.max(0, Math.ceil(WORD_STAGES.length / PAGE_SIZE) - 1);
     this.page = Phaser.Math.Clamp(this.page, 0, maxPage);
     const start = this.page * PAGE_SIZE;
