@@ -40,7 +40,7 @@ export class MathLabScene extends Phaser.Scene {
     DrawSystem.background(this, '연산 연구소');
     this.drawLabDecor();
     this.add.text(195, 96, this.stage.title, goldText(24)).setOrigin(0.5);
-    this.add.text(195, 124, `${this.stage.subtitle} · ${this.stage.difficulty}`, applyWrap(mutedText(12), 310)).setOrigin(0.5);
+    this.add.text(195, 124, `${this.stage.subtitle} · ${this.stage.difficulty} · ${this.stage.id}단계`, applyWrap(mutedText(12), 310)).setOrigin(0.5);
     this.drawConsole();
     this.drawProblem();
     new GameButton(this, 195, 768, '광장으로', 238, 54, 0xc9f4ff).onClick(() => this.scene.start('MainLobbyScene'));
@@ -139,7 +139,7 @@ export class MathLabScene extends Phaser.Scene {
     const solved = success ? this.stage.problems.length : this.index;
     const stars = success ? (this.hearts >= 3 ? 3 : this.hearts >= 2 ? 2 : 1) : 1;
     const finalScore = Math.max(80, this.score + solved * 25);
-    this.scene.start('RewardScene', { score: finalScore, bestCombo: this.bestCombo, stars });
+    this.scene.start('RewardScene', { modeId: 'math', stage: this.stage.id, score: finalScore, bestCombo: this.bestCombo, stars, stepsLeft: this.hearts });
   }
 
   private currentProblem(): MathProblem {

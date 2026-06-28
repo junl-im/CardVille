@@ -65,9 +65,10 @@ export const GAME_MODES: readonly GameMode[] = [
     buildingId: 'event',
     iconKey: 'iconCvEvent',
     fallbackIcon: '🎁',
-    note: '매일 다른 미션과 보상 카드팩을 받는 이벤트 모드',
-    status: 'planned',
-    nextWork: '일일 보상 저장 구조와 카드팩 오픈 연출 강화'
+    note: '오늘 보상 카드팩을 열어 컬렉션을 채우는 이벤트 모드',
+    status: 'open',
+    nextWork: '일일 미션/출석 보상 주기와 상점 연동 강화',
+    routeScene: 'RewardScene'
   }
 ];
 

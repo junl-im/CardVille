@@ -1,15 +1,15 @@
 {
   "name": "cardville",
-  "version": "1.0.30",
+  "version": "1.0.31",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.30 replaces framed/crop village placeholders with true transparent village building cutout assets and adds building asset validation.",
+  "description": "CardVille 1.0.31 audits lobby overlap and touch zones, adds progression saves for all open modes, expands math/memory stages, and polishes recommended route design.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "check:deploy": "node tools/check-deploy.mjs",
-    "verify": "npm run build && npm run check:deploy && npm run check:brand && npm run check:assets && npm run check:premium-assets && npm run check:building-assets && npm run check:content-engine && npm run check:polish && npm run check:ui && npm run check:layout && npm run check:association && npm run check:security",
+    "verify": "npm run build && npm run check:deploy && npm run check:brand && npm run check:assets && npm run check:premium-assets && npm run check:building-assets && npm run check:lobby-layout && npm run check:content-engine && npm run check:progression && npm run check:polish && npm run check:ui && npm run check:layout && npm run check:association && npm run check:security",
     "check:brand": "node tools/check-brand.mjs",
     "check:ui": "node tools/check-ui.mjs",
     "check:layout": "node tools/check-layout.mjs",
@@ -19,7 +19,9 @@
     "check:polish": "node tools/check-polish.mjs",
     "check:premium-assets": "node tools/check-premium-assets.mjs",
     "check:content-engine": "node tools/check-content-engine.mjs",
-    "check:building-assets": "node tools/check-building-assets.mjs"
+    "check:building-assets": "node tools/check-building-assets.mjs",
+    "check:lobby-layout": "node tools/check-lobby-layout.mjs",
+    "check:progression": "node tools/check-progression.mjs"
   },
   "dependencies": {
     "phaser": "3.90.0"

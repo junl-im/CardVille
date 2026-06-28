@@ -1,6 +1,37 @@
-# CardVille 1.0.30
+# CardVille 1.0.31
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
+
+## 1.0.31 업데이트 내역
+
+- **로비 배치/겹침 감사 패스**를 진행했습니다.
+- `dioramaBuildings.ts`에 건물별 `touchWidth`, `touchHeight`, `touchOffsetY`를 추가해 실제 터치 영역을 개별 관리하도록 바꿨습니다.
+- 건물 이미지가 시각적으로 가까이 있어도 터치존은 서로 겹치지 않도록 분리했습니다.
+- `src/game/data/lobbyLayoutPlan.ts`를 추가해 로비 안전 구역, 최소 터치 크기, 배치 가드 규칙을 데이터로 남겼습니다.
+- `MainLobbyScene` 디자인을 보강했습니다.
+  - 배경 상하 분위기 보정 레이어 추가
+  - 다음 추천 건물 하이라이트 추가
+  - 추천 건물까지 카드 트레일 연출 추가
+  - OPEN 배지 표시 추가
+  - 설정 패널에 배치 플랜/가드 규칙 표시
+- **진행 저장 확장**을 적용했습니다.
+  - `SaveSystem` 진행 저장 키를 `cardville.progress.v131`로 확장
+  - 기존 `word`뿐 아니라 `math`, `memory`, `daily`, `english` 모드 기록을 같은 구조로 저장
+  - 기존 `cardville.progress.v111`, `cardville.progress.v110`은 legacy로 읽어 마이그레이션
+- 연구소/기억의 숲 보상 카드팩이 이제 각 모드 진행 기록을 저장합니다.
+- 연산 연구소 콘텐츠를 3스테이지 15문제로 확장했습니다.
+- 기억의 숲 콘텐츠를 2스테이지 18쌍으로 확장했습니다.
+- 20장 기억 카드가 들어와도 화면을 침범하지 않도록 기억의 숲 보드 compact 레이아웃을 추가했습니다.
+- 이벤트 건물을 `오늘의 카드팩` 모드로 열고, 보상/앨범 진행 흐름에 연결했습니다.
+- 검증 스크립트를 추가했습니다.
+  - `tools/check-lobby-layout.mjs`
+  - `tools/check-progression.mjs`
+  - `npm run check:lobby-layout`
+  - `npm run check:progression`
+  - `npm run verify`에 포함
+- GitHub Actions 자동 배포 흐름은 그대로 유지하며, `.github/workflows/deploy.yml`의 `npm run verify` 기준으로 확인합니다.
+- 새 버전별 문서 파일은 만들지 않고, 변경 내역은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 누적했습니다.
+- `package.json`, `public/build.json`, `health.html`, `reset.html`, 앱 내부 버전 표기를 1.0.31로 동기화했습니다.
 
 ## 1.0.30 업데이트 내역
 
@@ -201,7 +232,9 @@ npm run check:brand
 npm run check:assets
 npm run check:premium-assets
 npm run check:building-assets
+npm run check:lobby-layout
 npm run check:content-engine
+npm run check:progression
 npm run check:polish
 npm run check:ui
 npm run check:layout

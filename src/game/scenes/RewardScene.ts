@@ -3,7 +3,7 @@ import { applyResponsiveCamera, layout } from '../systems/LayoutSystem';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
 import { DrawSystem } from '../systems/DrawSystem';
-import { SaveSystem, PlayerProfile } from '../systems/SaveSystem';
+import { ProgressModeId, SaveSystem } from '../systems/SaveSystem';
 import { RARITY_META, RewardCard, pickRewardCard } from '../data/rewardCards';
 import { applyWrap, bodyText, cardSmallText, cardText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
@@ -12,15 +12,21 @@ export class RewardScene extends Phaser.Scene {
   private bestCombo = 0;
   private stars = 1;
   private reward!: RewardCard;
+  private modeId: ProgressModeId = 'daily';
+  private stage = 1;
+  private stepsLeft = 0;
   private opened = false;
   private rewardGroup?: Phaser.GameObjects.Container;
 
   constructor() { super('RewardScene'); }
 
-  init(data: { score?: number; bestCombo?: number; stars?: number }): void {
+  init(data: { modeId?: ProgressModeId; stage?: number; score?: number; bestCombo?: number; stars?: number; stepsLeft?: number }): void {
+    this.modeId = data.modeId ?? 'daily';
+    this.stage = data.stage ?? 1;
     this.score = data.score ?? 0;
     this.bestCombo = data.bestCombo ?? 0;
     this.stars = data.stars ?? 1;
+    this.stepsLeft = data.stepsLeft ?? this.stars * 4;
     this.opened = false;
   }
 
@@ -29,10 +35,17 @@ export class RewardScene extends Phaser.Scene {
     this.reward = pickRewardCard(this.stars, this.bestCombo);
     DrawSystem.background(this, '카드팩 보상');
     panel(this, 195, 390, 342, 518, 34);
-    this.add.text(195, 150, '말 카드팩 도착!', titleText(30)).setOrigin(0.5);
+    this.add.text(195, 150, this.rewardTitle(), titleText(30)).setOrigin(0.5);
     this.add.text(195, 190, '카드팩을 터치해서 열어보세요.', applyWrap(goldText(15), 300)).setOrigin(0.5);
     this.drawPackClosed();
     new GameButton(this, 195, 718, '광장으로', 248, 56, 0xc9f4ff).onClick(() => this.scene.start('MainLobbyScene'));
+  }
+
+  private rewardTitle(): string {
+    if (this.modeId === 'math') return '연산 카드팩 도착!';
+    if (this.modeId === 'memory') return '숲속 카드팩 도착!';
+    if (this.modeId === 'word') return '말 카드팩 도착!';
+    return '오늘의 카드팩 도착!';
   }
 
   private packPrefix(): string {
@@ -94,6 +107,7 @@ export class RewardScene extends Phaser.Scene {
     const coins = 45 + this.stars * 20 + Math.floor(this.score / 60);
     const gems = this.reward.rarity === 'legendary' ? 1 : 0;
     const profile = SaveSystem.addReward(xp, coins, gems);
+    const record = SaveSystem.saveModeStageResult(this.modeId, this.stage, this.score, this.bestCombo, this.stepsLeft, false, this.stars);
     const count = SaveSystem.addCard(this.reward.id);
 
     this.add.text(195, 210, `${meta.label} 카드 획득!`, goldText(18)).setOrigin(0.5);
@@ -101,7 +115,7 @@ export class RewardScene extends Phaser.Scene {
     this.add.text(
       195,
       548,
-      `+${xp} XP  +${coins} 코인${gems ? `  +${gems} 보석` : ''}\n별 ${this.stars}개 · 최고 콤보 ${this.bestCombo}\n현재 Lv.${profile.level} · 🪙 ${profile.coins} · 보유 ${count}장`,
+      `+${xp} XP  +${coins} 코인${gems ? `  +${gems} 보석` : ''}\n별 ${record.stars}개 · 최고 콤보 ${record.bestCombo} · 플레이 ${record.plays}회\n현재 Lv.${profile.level} · 🪙 ${profile.coins} · 보유 ${count}장`,
       { ...applyWrap(bodyText(14), 318), lineSpacing: 7 }
     ).setOrigin(0.5);
     this.add.text(195, 636, '좋은 카드일수록 앨범 프레임이 더 화려해져요.', applyWrap(mutedText(12), 306)).setOrigin(0.5);

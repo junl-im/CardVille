@@ -340,18 +340,66 @@ ZIP 파일
 - 새 에셋 추가 시 SVG 금지, PNG/WebP 동반, `assetManifest.ts` 등록, 검증 스크립트 통과를 지켜야 합니다.
 
 
+
+## 11. 1.0.31 로비 배치/겹침 감사 및 진행 저장/콘텐츠 확장
+
+1.0.31은 사용자가 요구한 “겹침, 배치, 배정, 체크, 다듬기, 시스템/성능/콘텐츠 업그레이드”를 이어받은 패스입니다. 핵심은 마을 로비의 시각 오브젝트와 실제 터치 영역을 분리해 꼬임을 줄이고, 열린 콘텐츠의 진행 저장을 `word` 전용에서 전체 모드형으로 확장한 것입니다.
+
+### 로비 배치/겹침 감사
+
+- `src/game/data/dioramaBuildings.ts`에 `touchWidth`, `touchHeight`, `touchOffsetY`를 추가했습니다.
+- 실제 터치존은 서로 겹치지 않도록 조정했습니다. 건물 이미지는 디오라마처럼 가까이 보일 수 있지만 입력 영역은 분리되어야 합니다.
+- `src/game/data/lobbyLayoutPlan.ts`를 추가했습니다.
+  - `LOBBY_LAYOUT_PLAN_VERSION = '1.0.31'`
+  - `LOBBY_SAFE_ZONES`
+  - `LOBBY_LAYOUT_GUARDS`
+  - `MIN_TOUCH_SIZE`
+- `MainLobbyScene`은 `drawAtmosphericPolish`, `getRecommendedBuildingId`, `drawRecommendedTrail`을 통해 분위기, 추천 경로, OPEN 배지를 표시합니다.
+- `tools/check-lobby-layout.mjs`가 추가되어 9개 건물 터치존의 최소 크기, 화면 안전 영역, 겹침 여부, 열린 건물 배정을 검증합니다.
+
+### 진행 저장/콘텐츠 확장
+
+- `SaveSystem` 진행 저장 키를 `cardville.progress.v131`로 확장했습니다.
+- `ProgressModeId = 'word' | 'math' | 'memory' | 'daily' | 'english'`를 추가했습니다.
+- 새 저장 메서드:
+  - `getModeStageRecord`
+  - `isModeStageUnlocked`
+  - `nextPlayableModeStage`
+  - `saveModeStageResult`
+- 기존 `saveStageResult`, `getStageRecord` 등 word 전용 wrapper는 유지했습니다.
+- `MathLabScene`과 `MemoryForestScene`은 보상 진입 시 `modeId`, `stage`, `stepsLeft`를 넘깁니다.
+- `RewardScene`은 카드팩 개봉 시 모드별 진행 기록을 저장합니다.
+- 연산 연구소는 3스테이지 15문제로 확장했습니다.
+- 기억의 숲은 2스테이지 18쌍으로 확장했고, 20장 카드용 compact 레이아웃을 추가했습니다.
+- 이벤트 건물은 `daily` 모드의 오늘의 카드팩으로 열립니다.
+
+### 검증
+
+- `tools/check-lobby-layout.mjs` 추가
+- `tools/check-progression.mjs` 추가
+- `npm run verify`에 `check:lobby-layout`, `check:progression` 추가
+
+### 다음 AI 주의사항
+
+- 건물 시각 크기와 터치 영역은 같은 값으로 두지 마세요. 모바일에서는 터치 영역 겹침이 더 큰 문제입니다.
+- 새 모드를 추가할 때는 `SaveSystem`의 mode id, `modeCatalog.ts`, 라우트, 보상 저장을 함께 맞춰야 합니다.
+- 새 스테이지를 추가하면 해당 모드의 `nextPlayableModeStage`가 자연스럽게 이어지도록 최대 스테이지 수를 참조하세요.
+- 새 검증은 GitHub Actions의 `npm run verify`에 들어가므로, 로컬에서 먼저 확인하세요.
+
 ## 12. 현재 버전 상태
 
-현재 기준 버전은 1.0.30입니다.
+현재 기준 버전은 1.0.31입니다.
 
-1.0.30은 프레임형/크롭형 건물 표현을 실제 투명 PNG/WebP 마을 건물 컷아웃으로 교체한 마을 건물 에셋 패스입니다. 1.0.29는 연구소 연산 미니게임과 기억의 숲 짝찾기 미니게임을 실제 플레이 가능한 1차 콘텐츠로 연결한 콘텐츠 엔진 패스였습니다. 1.0.28은 기준 이미지 톤에 맞춘 프리미엄 에셋 패스와 `check:premium-assets` 검증을 추가한 업데이트였습니다.
+1.0.31은 로비 터치존 겹침을 정리하고 `cardville.progress.v131` 기반으로 모드별 진행 저장을 확장한 로비 배치/진행 저장 패스입니다. 1.0.30은 프레임형/크롭형 건물 표현을 실제 투명 PNG/WebP 마을 건물 컷아웃으로 교체한 마을 건물 에셋 패스였습니다. 1.0.29는 연구소 연산 미니게임과 기억의 숲 짝찾기 미니게임을 실제 플레이 가능한 1차 콘텐츠로 연결한 콘텐츠 엔진 패스였습니다. 1.0.28은 기준 이미지 톤에 맞춘 프리미엄 에셋 패스와 `check:premium-assets` 검증을 추가한 업데이트였습니다.
 
 - GitHub Actions 자동 검증 흐름 유지
 - `check:assets` 유지
 - `check:polish` 유지
 - `check:premium-assets` 유지
 - `check:content-engine` 유지
-- `check:building-assets` 추가
+- `check:building-assets` 유지
+- `check:lobby-layout` 추가
+- `check:progression` 추가
 - `assetManifest.ts` 유지
 - `lobbyEntities.ts` 추가
 - `modeCatalog.ts` 추가
@@ -360,7 +408,7 @@ ZIP 파일
 - 연구소/기억의 숲 실제 1차 미니게임 연결
 - `MathLabScene` 추가
 - `MemoryForestScene` 추가
-- 앱 동작용 버전 상수 1.0.30 동기화
+- 앱 동작용 버전 상수 1.0.31 동기화
 
 1.0.24는 전달 규칙과 인수인계 정책 정리 업데이트였습니다. 1.0.23의 핵심은 한 화면 디오라마 로비입니다.
 
@@ -383,8 +431,8 @@ ZIP 파일
 우선순위가 높은 다음 작업입니다.
 
 1. 도서관 낱말 카드 콘텐츠를 CardVille 브랜드형 UI로 개편
-2. 연구소 연산 미니게임 스테이지/저장 확장
-3. 기억의 숲 기억력 스테이지/저장 확장
+2. 연산 연구소 스테이지 선택 화면 추가
+3. 기억의 숲 스테이지 선택 화면 추가
 4. 상점/카드팩 UI를 마을 상점 느낌으로 개편
 5. 소년과 고양이 토큰을 실제 스프라이트 시트 애니메이션으로 교체
 6. 계절 장식 시스템을 개별 오브젝트 에셋으로 추가
@@ -409,6 +457,7 @@ ZIP 파일
 다만 ZIP 덮어쓰기만으로는 삭제가 자동 적용되지 않으므로, 파일 삭제가 필요한 업데이트에서는 최종 보고에 삭제 대상도 함께 알려야 합니다.
 
 1.0.24 통파일에서는 과거 버전별 문서 폴더를 정리했습니다.  
+1.0.31 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.
 1.0.30 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.
 1.0.29 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.
 1.0.28 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.

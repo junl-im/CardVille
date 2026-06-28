@@ -7,9 +7,12 @@ import { ASSET_COUNTS } from '../data/assetManifest';
 import { LOBBY_NPCS, LOBBY_PROPS, LOBBY_SAFE_RULES, LobbyNpc } from '../data/lobbyEntities';
 import { CardVilleQuality, getCardVilleQuality, qualitySummary, scaledCount } from '../systems/QualitySystem';
 import { DIORAMA_BUILDINGS, DioramaBuilding, DioramaRoute } from '../data/dioramaBuildings';
+import { LOBBY_LAYOUT_GUARDS, LOBBY_LAYOUT_PLAN_VERSION } from '../data/lobbyLayoutPlan';
+import { MATH_STAGES } from '../data/mathStages';
+import { MEMORY_STAGES } from '../data/memoryStages';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
-const LOBBY_VERSION = '1.0.30';
+const LOBBY_VERSION = '1.0.31';
 const HERO_HOME = { x: 195, y: 545 } as const;
 const CAT_HOME = { x: 145, y: 585 } as const;
 
@@ -37,11 +40,13 @@ export class MainLobbyScene extends Phaser.Scene {
     const cards = Object.values(SaveSystem.loadCollection()).reduce((sum, count) => sum + count, 0);
 
     this.drawDioramaBackground();
+    this.drawAtmosphericPolish();
     this.drawAmbientLife();
     this.drawDioramaProps();
     this.drawTopBrandHud(profile.coins, profile.level, cleared, cards);
     this.drawLobbySettingsButton();
-    this.drawBuildings();
+    const recommendedBuildingId = this.getRecommendedBuildingId();
+    this.drawBuildings(recommendedBuildingId);
     this.drawDioramaNPCs();
     this.drawHeroParty();
     this.drawBottomHint(profile.nickname);
@@ -57,6 +62,17 @@ export class MainLobbyScene extends Phaser.Scene {
     }
     this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x061126, 0.08);
     this.add.rectangle(l.visibleX + l.visibleWidth / 2, 798, l.visibleWidth, 96 + l.extraY, 0x020814, 0.18);
+  }
+
+  private drawAtmosphericPolish(): void {
+    const top = this.add.rectangle(195, 54, 390, 108, 0xffffff, 0.04).setDepth(6);
+    const bottom = this.add.rectangle(195, 804, 390, 110, 0x020814, 0.14).setDepth(6);
+    const focus = this.add.ellipse(195, 538, 238, 336, 0xffd86f, 0.055).setDepth(7);
+    if (!this.quality.reduceMotion) {
+      this.tweens.add({ targets: focus, scale: 1.05, alpha: 0.025, duration: 1800, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      this.tweens.add({ targets: top, alpha: 0.058, duration: 2200, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      this.tweens.add({ targets: bottom, alpha: 0.18, duration: 2200, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    }
   }
 
   private drawTopBrandHud(coins: number, level: number, cleared: number, cards: number): void {
@@ -89,6 +105,31 @@ export class MainLobbyScene extends Phaser.Scene {
     album.on('pointerup', () => this.scene.start('CollectionScene'));
   }
 
+  private getRecommendedBuildingId(): string {
+    const nextWord = SaveSystem.nextPlayableStage(WORD_STAGES.length);
+    const nextMath = SaveSystem.nextPlayableModeStage('math', MATH_STAGES.length);
+    const nextMemory = SaveSystem.nextPlayableModeStage('memory', MEMORY_STAGES.length);
+    if (!SaveSystem.getStageRecord(nextWord)?.cleared) return 'library';
+    if (!SaveSystem.getModeStageRecord('math', nextMath)?.cleared) return 'laboratory';
+    if (!SaveSystem.getModeStageRecord('memory', nextMemory)?.cleared) return 'forest';
+    return 'event';
+  }
+
+  private drawRecommendedTrail(building: DioramaBuilding): void {
+    if (this.quality.tier === 'lite') return;
+    const dots = 4;
+    for (let i = 1; i <= dots; i += 1) {
+      const t = i / (dots + 1);
+      const x = Phaser.Math.Linear(HERO_HOME.x, building.targetX, t);
+      const y = Phaser.Math.Linear(HERO_HOME.y + 34, building.targetY + 30, t);
+      const dot = this.textures.exists('propCardTrail')
+        ? this.add.image(x, y, 'propCardTrail').setDisplaySize(24, 20)
+        : this.add.circle(x, y, 4, 0xffd86f, 0.42);
+      dot.setDepth(735).setAlpha(0.32);
+      if (!this.quality.reduceMotion) this.tweens.add({ targets: dot, alpha: 0.08, y: y - 8, duration: 900 + i * 140, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    }
+  }
+
   private drawDioramaProps(): void {
     for (const prop of LOBBY_PROPS) {
       if (!this.textures.exists(prop.key)) continue;
@@ -102,16 +143,16 @@ export class MainLobbyScene extends Phaser.Scene {
     }
   }
 
-  private drawBuildings(): void {
+  private drawBuildings(recommendedBuildingId: string): void {
     for (const building of DIORAMA_BUILDINGS) {
-      this.drawBuilding(building);
+      this.drawBuilding(building, building.id === recommendedBuildingId);
     }
   }
 
-  private drawBuilding(building: DioramaBuilding): void {
+  private drawBuilding(building: DioramaBuilding, recommended: boolean): void {
     const container = this.add.container(building.x, building.y).setDepth(building.y);
-    if (building.open && this.textures.exists('uiBuildingGlow')) {
-      const glow = this.add.image(0, 8, 'uiBuildingGlow').setDisplaySize(building.width * 1.55, building.height * 1.55).setAlpha(0.35);
+    if ((building.open || recommended) && this.textures.exists('uiBuildingGlow')) {
+      const glow = this.add.image(0, 8, 'uiBuildingGlow').setDisplaySize(building.width * (recommended ? 1.72 : 1.55), building.height * (recommended ? 1.72 : 1.55)).setAlpha(recommended ? 0.46 : 0.35);
       container.add(glow);
       if (!this.quality.reduceMotion) this.tweens.add({ targets: glow, alpha: 0.12, scale: 1.08, duration: 1100 + (building.x % 3) * 150, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
@@ -126,6 +167,14 @@ export class MainLobbyScene extends Phaser.Scene {
 
     if (this.textures.exists(building.iconKey)) {
       container.add(this.add.image(-building.width * 0.32, -building.height * 0.34, building.iconKey).setDisplaySize(26, 26).setAlpha(0.95));
+    }
+
+    if (building.open && this.textures.exists('badgeOpen')) {
+      container.add(this.add.image(building.width * 0.31, -building.height * 0.34, 'badgeOpen').setDisplaySize(42, 24).setAlpha(0.94));
+    }
+    if (recommended) {
+      container.add(this.add.text(0, -building.height * 0.48, '추천', goldText(11)).setOrigin(0.5));
+      this.drawRecommendedTrail(building);
     }
 
     if (this.textures.exists('uiNameplateGold')) {
@@ -147,7 +196,7 @@ export class MainLobbyScene extends Phaser.Scene {
       container.setAlpha(0.76);
     }
 
-    const zone = this.add.zone(building.x, building.y + 10, building.width + 12, building.height + 42).setInteractive({ useHandCursor: building.open });
+    const zone = this.add.zone(building.x, building.y + (building.touchOffsetY ?? 0), building.touchWidth, building.touchHeight).setInteractive({ useHandCursor: building.open });
     zone.setDepth(building.y + 5);
     zone.on('pointerup', () => {
       this.spawnTouchRipple(building.x, building.y + 10);
@@ -157,7 +206,7 @@ export class MainLobbyScene extends Phaser.Scene {
     zone.on('pointerout', () => { if (!this.busy) this.tweens.add({ targets: container, scale: 1, duration: 120 }); });
 
     if (hasTouchDebug()) {
-      this.add.rectangle(building.x, building.y + 10, building.width + 12, building.height + 42, 0x00ff66, 0.12)
+      this.add.rectangle(building.x, building.y + (building.touchOffsetY ?? 0), building.touchWidth, building.touchHeight, 0x00ff66, 0.12)
         .setStrokeStyle(1, 0x00ff66, 0.8)
         .setDepth(900);
     }
@@ -225,13 +274,13 @@ export class MainLobbyScene extends Phaser.Scene {
     this.activeSpeech = undefined;
 
     const panel = this.add.container(195, 430).setDepth(1200);
-    if (this.textures.exists('uiPanelWood')) panel.add(this.add.image(0, 0, 'uiPanelWood').setDisplaySize(312, 292).setAlpha(0.97));
+    if (this.textures.exists('uiPanelWood')) panel.add(this.add.image(0, 0, 'uiPanelWood').setDisplaySize(312, 328).setAlpha(0.97));
     else {
       const bg = this.add.graphics();
       bg.fillStyle(0x07142c, 0.94);
-      bg.fillRoundedRect(-156, -146, 312, 292, 28);
+      bg.fillRoundedRect(-156, -164, 312, 328, 28);
       bg.lineStyle(2, 0xffd86f, 0.64);
-      bg.strokeRoundedRect(-156, -146, 312, 292, 28);
+      bg.strokeRoundedRect(-156, -164, 312, 328, 28);
       panel.add(bg);
     }
     panel.add(this.add.text(0, -106, '카드마을 설정', titleText(22)).setOrigin(0.5));
@@ -242,13 +291,15 @@ export class MainLobbyScene extends Phaser.Scene {
       '건물/오브젝트: 개별 PNG/WebP',
       'SVG: 사용 안 함',
       'GitHub Actions: npm run verify',
-      `성능 모드: ${qualitySummary(this.quality)}`
+      `성능 모드: ${qualitySummary(this.quality)}`,
+      `배치 플랜: ${LOBBY_LAYOUT_PLAN_VERSION}`
     ];
     lines.forEach((line, index) => {
-      panel.add(this.add.text(-126, -42 + index * 24, `• ${line}`, mutedText(12)).setOrigin(0, 0.5));
+      panel.add(this.add.text(-126, -44 + index * 20, `• ${line}`, mutedText(12)).setOrigin(0, 0.5));
     });
-    panel.add(this.add.text(0, 86, LOBBY_SAFE_RULES.slice(0, 2).join(' · '), applyWrap(mutedText(10), 250)).setOrigin(0.5));
-    const close = this.add.container(0, 118);
+    panel.add(this.add.text(0, 100, LOBBY_SAFE_RULES.slice(0, 2).join(' · '), applyWrap(mutedText(10), 250)).setOrigin(0.5));
+    panel.add(this.add.text(0, 116, LOBBY_LAYOUT_GUARDS.slice(0, 2).join(' · '), applyWrap(mutedText(9), 250)).setOrigin(0.5));
+    const close = this.add.container(0, 140);
     if (this.textures.exists('uiNameplateGold')) close.add(this.add.image(0, 0, 'uiNameplateGold').setDisplaySize(120, 46));
     else close.add(this.add.rectangle(0, 0, 118, 42, 0xffd86f, 0.92).setStrokeStyle(2, 0xffffff, 0.44));
     close.add(this.add.text(0, 0, '닫기', { fontFamily: 'system-ui, sans-serif', fontSize: '15px', color: '#2a160c', fontStyle: '900' }).setOrigin(0.5));
@@ -573,6 +624,14 @@ export class MainLobbyScene extends Phaser.Scene {
   }
 
   private goToRoute(route: DioramaRoute): void {
+    if (route.scene === 'MathLabScene') {
+      this.scene.start('MathLabScene', { stage: SaveSystem.nextPlayableModeStage('math', MATH_STAGES.length) });
+      return;
+    }
+    if (route.scene === 'MemoryForestScene') {
+      this.scene.start('MemoryForestScene', { stage: SaveSystem.nextPlayableModeStage('memory', MEMORY_STAGES.length) });
+      return;
+    }
     this.scene.start(route.scene, 'data' in route ? route.data : undefined);
   }
 

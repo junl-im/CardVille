@@ -47,7 +47,7 @@ export class MemoryForestScene extends Phaser.Scene {
     DrawSystem.background(this, '기억의 숲', 'forest');
     this.drawForestDecor();
     this.add.text(195, 94, this.stage.title, goldText(25)).setOrigin(0.5);
-    this.add.text(195, 124, this.stage.subtitle, applyWrap(mutedText(12), 310)).setOrigin(0.5);
+    this.add.text(195, 124, `${this.stage.subtitle} · ${this.stage.id}단계`, applyWrap(mutedText(12), 310)).setOrigin(0.5);
     panel(this, 195, 428, 342, 518, 34);
     this.statusText = this.add.text(195, 184, '', bodyText(14)).setOrigin(0.5);
     this.drawBoard();
@@ -73,10 +73,11 @@ export class MemoryForestScene extends Phaser.Scene {
 
   private drawBoard(): void {
     const deck = this.shuffle(this.stage.pairs.flatMap((pair) => [pair, pair]));
-    const cardW = 72;
-    const cardH = 92;
-    const gapX = 14;
-    const gapY = 16;
+    const compact = deck.length > 16;
+    const cardW = compact ? 66 : 72;
+    const cardH = compact ? 76 : 92;
+    const gapX = compact ? 10 : 14;
+    const gapY = compact ? 10 : 16;
     const startX = 195 - (cardW * 4 + gapX * 3) / 2 + cardW / 2;
     const startY = 250;
 
@@ -168,7 +169,7 @@ export class MemoryForestScene extends Phaser.Scene {
   private finish(): void {
     const efficiency = Math.max(0, 18 - this.moves);
     const stars = this.moves <= 11 ? 3 : this.moves <= 15 ? 2 : 1;
-    this.scene.start('RewardScene', { score: this.score + efficiency * 20, bestCombo: Math.max(1, efficiency), stars });
+    this.scene.start('RewardScene', { modeId: 'memory', stage: this.stage.id, score: this.score + efficiency * 20, bestCombo: Math.max(1, efficiency), stars, stepsLeft: efficiency });
   }
 
   private refreshStatus(message?: string): void {

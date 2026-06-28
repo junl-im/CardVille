@@ -10,6 +10,8 @@ export type PlayerProfile = {
   gems: number;
 };
 
+export type ProgressModeId = 'word' | 'math' | 'memory' | 'daily' | 'english';
+
 export type StageRecord = {
   cleared: boolean;
   stars: number;
@@ -21,9 +23,10 @@ export type StageRecord = {
 
 const PROFILE_KEY = 'cardville.profile.v105';
 const COLLECTION_KEY = 'cardville.collection.v105';
-const PROGRESS_KEY = 'cardville.progress.v111';
-const LEGACY_PROGRESS_KEYS = ['cardville.progress.v110'];
+const PROGRESS_KEY = 'cardville.progress.v131';
+const LEGACY_PROGRESS_KEYS = ['cardville.progress.v111', 'cardville.progress.v110'];
 const PROVIDERS = new Set(['guest', 'google', 'email']);
+const PROGRESS_MODES = new Set(['word', 'math', 'memory', 'daily', 'english']);
 
 function safeGet(key: string): string | null {
   try { return localStorage.getItem(key); } catch { return null; }
@@ -68,6 +71,24 @@ function normalizeRecord(record: Partial<StageRecord> | undefined): StageRecord 
     bestStepsLeft: clampInt(record.bestStepsLeft, 0, 999, 0),
     plays: clampInt(record.plays, 0, 99_999, 0)
   };
+}
+
+function cleanMode(modeId: string | undefined): ProgressModeId {
+  const mode = String(modeId ?? 'word');
+  return (PROGRESS_MODES.has(mode) ? mode : 'word') as ProgressModeId;
+}
+
+function progressKey(modeId: string | undefined, stage: number): string {
+  const mode = cleanMode(modeId);
+  const cleanStage = clampInt(stage, 1, 999, 1);
+  return `${mode}:${cleanStage}`;
+}
+
+function calcStars(stepsLeft: number, failed: boolean, starsOverride?: number): number {
+  if (typeof starsOverride === 'number') return clampInt(starsOverride, 0, 3, failed ? 0 : 1);
+  if (failed) return 0;
+  const safeStepsLeft = clampInt(stepsLeft, 0, 999, 0);
+  return safeStepsLeft >= 12 ? 3 : safeStepsLeft >= 6 ? 2 : 1;
 }
 
 export class SaveSystem {
@@ -126,7 +147,9 @@ export class SaveSystem {
     const parsed = safeJsonRecord(raw);
     const normalized: Record<string, StageRecord> = {};
     for (const [key, value] of Object.entries(parsed)) {
-      if (!/^word:\d{1,3}$/.test(key)) continue;
+      const legacyWordMatch = /^word:\d{1,3}$/.test(key);
+      const modeMatch = /^(word|math|memory|daily|english):\d{1,3}$/.test(key);
+      if (!legacyWordMatch && !modeMatch) continue;
       const record = normalizeRecord(value as Partial<StageRecord>);
       if (record) normalized[key] = record;
     }
@@ -134,32 +157,43 @@ export class SaveSystem {
     return normalized;
   }
 
+  static getModeStageRecord(modeId: string | undefined, stage: number): StageRecord | null {
+    return this.loadProgress()[progressKey(modeId, stage)] ?? null;
+  }
+
   static getStageRecord(stage: number): StageRecord | null {
-    const cleanStage = clampInt(stage, 1, 999, 1);
-    return this.loadProgress()[`word:${cleanStage}`] ?? null;
+    return this.getModeStageRecord('word', stage);
+  }
+
+  static isModeStageUnlocked(modeId: string | undefined, stage: number): boolean {
+    const mode = cleanMode(modeId);
+    if (stage <= 1 || mode === 'daily') return true;
+    return this.getModeStageRecord(mode, stage - 1)?.cleared === true;
   }
 
   static isStageUnlocked(stage: number): boolean {
-    if (stage <= 1) return true;
-    return this.getStageRecord(stage - 1)?.cleared === true;
+    return this.isModeStageUnlocked('word', stage);
   }
 
-  static nextPlayableStage(maxStage: number): number {
+  static nextPlayableModeStage(modeId: string | undefined, maxStage: number): number {
     const safeMax = clampInt(maxStage, 1, 999, 1);
     for (let stage = 1; stage <= safeMax; stage += 1) {
-      const record = this.getStageRecord(stage);
+      const record = this.getModeStageRecord(modeId, stage);
       if (!record?.cleared) return stage;
     }
     return safeMax;
   }
 
-  static saveStageResult(stage: number, score: number, bestCombo: number, stepsLeft: number, failed = false): StageRecord {
+  static nextPlayableStage(maxStage: number): number {
+    return this.nextPlayableModeStage('word', maxStage);
+  }
+
+  static saveModeStageResult(modeId: string | undefined, stage: number, score: number, bestCombo: number, stepsLeft: number, failed = false, starsOverride?: number): StageRecord {
     const progress = this.loadProgress();
-    const cleanStage = clampInt(stage, 1, 999, 1);
-    const key = `word:${cleanStage}`;
+    const key = progressKey(modeId, stage);
     const previous = progress[key];
     const safeStepsLeft = clampInt(stepsLeft, 0, 999, 0);
-    const stars = failed ? 0 : safeStepsLeft >= 12 ? 3 : safeStepsLeft >= 6 ? 2 : 1;
+    const stars = calcStars(safeStepsLeft, failed, starsOverride);
     const next: StageRecord = {
       cleared: !failed || previous?.cleared === true,
       stars: Math.max(previous?.stars ?? 0, stars),
@@ -171,6 +205,10 @@ export class SaveSystem {
     progress[key] = next;
     safeSet(PROGRESS_KEY, JSON.stringify(progress));
     return next;
+  }
+
+  static saveStageResult(stage: number, score: number, bestCombo: number, stepsLeft: number, failed = false): StageRecord {
+    return this.saveModeStageResult('word', stage, score, bestCombo, stepsLeft, failed);
   }
 
   static clear(): void {

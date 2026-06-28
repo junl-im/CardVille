@@ -5,7 +5,7 @@ export type DioramaRoute =
   | { scene: 'MemoryForestScene'; data?: { stage?: number } }
   | { scene: 'ModeSelectScene'; data?: { focusModeId?: GameModeId; title?: string } }
   | { scene: 'CollectionScene'; data?: Record<string, never> }
-  | { scene: 'RewardScene'; data: { score: number; bestCombo: number; stars: number } };
+  | { scene: 'RewardScene'; data: { modeId?: GameModeId; stage?: number; score: number; bestCombo: number; stars: number; stepsLeft?: number } };
 
 export type DioramaBuilding = {
   id: string;
@@ -20,6 +20,9 @@ export type DioramaBuilding = {
   height: number;
   targetX: number;
   targetY: number;
+  touchWidth: number;
+  touchHeight: number;
+  touchOffsetY?: number;
   open: boolean;
   route?: DioramaRoute;
 };
@@ -38,6 +41,9 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     height: 148,
     targetX: 195,
     targetY: 224,
+    touchWidth: 132,
+    touchHeight: 110,
+    touchOffsetY: 14,
     open: false
   },
   {
@@ -53,6 +59,9 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     height: 122,
     targetX: 105,
     targetY: 358,
+    touchWidth: 98,
+    touchHeight: 92,
+    touchOffsetY: 8,
     open: true,
     route: { scene: 'StageSelectScene', data: { modeId: 'word', title: '낱말 카드' } }
   },
@@ -69,6 +78,9 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     height: 94,
     targetX: 195,
     targetY: 390,
+    touchWidth: 84,
+    touchHeight: 72,
+    touchOffsetY: 8,
     open: false
   },
   {
@@ -84,6 +96,9 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     height: 122,
     targetX: 286,
     targetY: 358,
+    touchWidth: 98,
+    touchHeight: 92,
+    touchOffsetY: 8,
     open: true,
     route: { scene: 'MathLabScene', data: { stage: 1 } }
   },
@@ -100,6 +115,9 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     height: 118,
     targetX: 106,
     targetY: 525,
+    touchWidth: 98,
+    touchHeight: 90,
+    touchOffsetY: 8,
     open: true,
     route: { scene: 'CollectionScene' }
   },
@@ -116,6 +134,9 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     height: 120,
     targetX: 284,
     targetY: 525,
+    touchWidth: 98,
+    touchHeight: 90,
+    touchOffsetY: 8,
     open: false
   },
   {
@@ -131,6 +152,9 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     height: 128,
     targetX: 116,
     targetY: 710,
+    touchWidth: 98,
+    touchHeight: 92,
+    touchOffsetY: 8,
     open: true,
     route: { scene: 'MemoryForestScene', data: { stage: 1 } }
   },
@@ -147,8 +171,11 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     height: 120,
     targetX: 200,
     targetY: 724,
+    touchWidth: 98,
+    touchHeight: 92,
+    touchOffsetY: 8,
     open: true,
-    route: { scene: 'RewardScene', data: { score: 520, bestCombo: 4, stars: 2 } }
+    route: { scene: 'RewardScene', data: { modeId: 'daily', stage: 1, score: 520, bestCombo: 4, stars: 2 } }
   },
   {
     id: 'harbor',
@@ -162,6 +189,9 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     height: 126,
     targetX: 278,
     targetY: 710,
+    touchWidth: 98,
+    touchHeight: 92,
+    touchOffsetY: 8,
     open: false
   }
 ];

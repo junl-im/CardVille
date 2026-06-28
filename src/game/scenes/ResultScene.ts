@@ -29,7 +29,7 @@ export class ResultScene extends Phaser.Scene {
 
   create(): void {
     applyResponsiveCamera(this);
-    const record = SaveSystem.saveStageResult(this.stage, this.score, this.bestCombo, this.stepsLeft, this.failed);
+    const record = SaveSystem.saveModeStageResult(this.modeId, this.stage, this.score, this.bestCombo, this.stepsLeft, this.failed);
     DrawSystem.background(this, this.failed ? '아쉬워요' : '클리어');
     panel(this, 195, 322, 336, 360, 34);
     this.add.text(195, 210, this.failed ? '다시 도전!' : '카드 정리 성공!', titleText(this.failed ? 34 : 31)).setOrigin(0.5);
@@ -47,7 +47,7 @@ export class ResultScene extends Phaser.Scene {
     const reward = new GameButton(this, 195, 510, this.failed ? '다시 하기' : '보상 받기', 276, 64, 0xffd86f);
     reward.onClick(() => {
       if (this.failed) this.scene.start('PlayScene', { modeId: this.modeId, stage: this.stage });
-      else this.scene.start('RewardScene', { modeId: this.modeId, stage: this.stage, score: this.score, bestCombo: this.bestCombo, stars: record.stars });
+      else this.scene.start('RewardScene', { modeId: this.modeId, stage: this.stage, score: this.score, bestCombo: this.bestCombo, stars: record.stars, stepsLeft: this.stepsLeft });
     });
 
     const back = new GameButton(this, 195, 598, '스테이지 선택', 276, 56, 0x8fd3ff);

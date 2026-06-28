@@ -5,6 +5,9 @@ import { DrawSystem } from '../systems/DrawSystem';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
 import { applyResponsiveCamera, hasTouchDebug } from '../systems/LayoutSystem';
 import { GAME_MODES, GameMode, GameModeId, getModeById } from '../data/modeCatalog';
+import { MATH_STAGES } from '../data/mathStages';
+import { MEMORY_STAGES } from '../data/memoryStages';
+import { SaveSystem } from '../systems/SaveSystem';
 
 export const MODES = GAME_MODES;
 
@@ -36,7 +39,7 @@ export class ModeSelectScene extends Phaser.Scene {
       ? `${focus.note} · ${focus.status === 'open' ? '바로 입장 가능' : '다음 작업: ' + focus.nextWork}`
       : '건물별 콘텐츠를 한 곳에서 확인하고, 열린 모드부터 안정적으로 확장합니다.';
     this.add.text(195, 118, copy, applyWrap(mutedText(12), 322)).setOrigin(0.5);
-    this.add.text(195, 146, '열린 모드: 도서관 · 연구소 · 기억의 숲', mutedText(10)).setOrigin(0.5);
+    this.add.text(195, 146, '열린 모드: 도서관 · 연구소 · 기억의 숲 · 이벤트 카드팩', mutedText(10)).setOrigin(0.5);
   }
 
   private drawModeCard(mode: GameMode, y: number, focused: boolean): void {
@@ -50,7 +53,8 @@ export class ModeSelectScene extends Phaser.Scene {
     else this.add.text(68, y, mode.fallbackIcon, { fontSize: '34px' }).setOrigin(0.5).setAlpha(open ? 1 : 0.58);
     this.add.text(114, y - 17, mode.title, bodyText(20)).setOrigin(0, 0.5).setAlpha(open ? 1 : 0.62);
     this.add.text(114, y + 15, mode.note, applyWrap(mutedText(10), 212, 'left')).setOrigin(0, 0.5).setAlpha(open ? 1 : 0.62);
-    this.add.text(305, y + 29, open ? 'OPEN' : '준비중', open ? goldText(10) : mutedText(10)).setOrigin(0.5);
+    const record = SaveSystem.getModeStageRecord(mode.id, 1);
+    this.add.text(305, y + 29, open ? (record?.cleared ? `${record.stars}★` : 'OPEN') : '준비중', open ? goldText(10) : mutedText(10)).setOrigin(0.5);
 
     const zone = this.add.zone(195, y, 334, 86).setInteractive({ useHandCursor: true });
     zone.on('pointerup', () => {
@@ -62,15 +66,15 @@ export class ModeSelectScene extends Phaser.Scene {
 
   private startMode(mode: GameMode): void {
     if (mode.routeScene === 'MathLabScene') {
-      this.scene.start('MathLabScene', { stage: 1 });
+      this.scene.start('MathLabScene', { stage: SaveSystem.nextPlayableModeStage('math', MATH_STAGES.length) });
       return;
     }
     if (mode.routeScene === 'MemoryForestScene') {
-      this.scene.start('MemoryForestScene', { stage: 1 });
+      this.scene.start('MemoryForestScene', { stage: SaveSystem.nextPlayableModeStage('memory', MEMORY_STAGES.length) });
       return;
     }
     if (mode.routeScene === 'RewardScene') {
-      this.scene.start('RewardScene', { score: 520, bestCombo: 4, stars: 2 });
+      this.scene.start('RewardScene', { modeId: 'daily', stage: 1, score: 520, bestCombo: 4, stars: 2, stepsLeft: 8 });
       return;
     }
     this.scene.start('StageSelectScene', { modeId: mode.id, title: mode.title });

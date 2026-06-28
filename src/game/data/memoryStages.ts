@@ -28,7 +28,26 @@ export const MEMORY_STAGES: readonly MemoryStage[] = [
       { id: 'gem', icon: '💎', label: '수정' },
       { id: 'key', icon: '🗝️', label: '열쇠' }
     ]
+  },
+  {
+    id: 2,
+    title: '달빛 숲길 기억하기',
+    subtitle: '더 많은 그림을 짧게 보고 짝을 찾아요',
+    previewSeconds: 3,
+    pairs: [
+      { id: 'crown', icon: '👑', label: '왕관' },
+      { id: 'book', icon: '📖', label: '책' },
+      { id: 'potion', icon: '🧪', label: '물약' },
+      { id: 'bell', icon: '🔔', label: '종' },
+      { id: 'lamp', icon: '🏮', label: '등불' },
+      { id: 'shell', icon: '🐚', label: '조개' },
+      { id: 'apple', icon: '🍎', label: '사과' },
+      { id: 'shield', icon: '🛡️', label: '방패' },
+      { id: 'map', icon: '🗺️', label: '지도' },
+      { id: 'flower', icon: '🌼', label: '꽃' }
+    ]
   }
+
 ];
 
 export function getMemoryStage(stageId: number | undefined): MemoryStage {
