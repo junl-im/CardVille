@@ -1,3 +1,4 @@
+import { isSafeEmail, sanitizeText } from './SecuritySystem';
 type PlayerProfile = {
   uid: string;
   provider: 'guest' | 'google' | 'email';
@@ -38,8 +39,8 @@ function safeRemove(key: string): void {
 }
 
 function createGuestUid(): string {
-  const existing = safeGet(GUEST_UID_KEY);
-  if (existing) return existing;
+  const existing = sanitizeText(safeGet(GUEST_UID_KEY), '', 80);
+  if (/^guest_[a-z0-9_:-]{4,80}$/i.test(existing)) return existing;
   const uid = `guest_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
   safeSet(GUEST_UID_KEY, uid);
   return uid;
@@ -52,7 +53,7 @@ function defaultProfile(): PlayerProfile {
 function loadProfile(): PlayerProfile {
   try {
     const raw = safeGet(PROFILE_KEY);
-    return raw ? { ...defaultProfile(), ...JSON.parse(raw) } : defaultProfile();
+    return raw ? { ...defaultProfile(), ...JSON.parse(raw), nickname: sanitizeText(JSON.parse(raw).nickname, '게스트', 24) } : defaultProfile();
   } catch {
     return defaultProfile();
   }
@@ -145,14 +146,17 @@ export class AuthSystem {
   }
 
   static async signInEmail(email: string, password: string, create = false): Promise<PlayerProfile> {
+    const cleanEmail = sanitizeText(email, '', 254);
+    if (!isSafeEmail(cleanEmail)) throw new Error('Invalid email format');
+    if (password.length < 6 || password.length > 128) throw new Error('Invalid password length');
     const { auth, authMod } = await getFirebaseAuth();
     const result = create
-      ? await authMod.createUserWithEmailAndPassword(auth, email, password)
-      : await authMod.signInWithEmailAndPassword(auth, email, password);
+      ? await authMod.createUserWithEmailAndPassword(auth, cleanEmail, password)
+      : await authMod.signInWithEmailAndPassword(auth, cleanEmail, password);
     const profile = loadProfile();
     profile.uid = result.user.uid;
     profile.provider = 'email';
-    profile.nickname = email.split('@')[0] || '이메일 유저';
+    profile.nickname = sanitizeText(cleanEmail.split('@')[0], '이메일 유저', 24);
     saveProfile(profile);
     this.currentUser = firebaseUserToAny(result.user);
     this.lastAuthMode = 'firebase';

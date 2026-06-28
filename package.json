@@ -1,18 +1,20 @@
 {
   "name": "cardville",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.19 responsive playfield, CDN-lazy Firebase auth, comfort animations, expanded content, and UI/engine polish upgrade.",
+  "description": "CardVille 1.0.20 removes pre-start fake buttons, hardens back-button exit UX, improves association rules, solid card readability, and security checks.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "check:deploy": "node tools/check-deploy.mjs",
-    "verify": "npm run build && npm run check:deploy && npm run check:brand && npm run check:ui && npm run check:layout",
+    "verify": "npm run build && npm run check:deploy && npm run check:brand && npm run check:ui && npm run check:layout && npm run check:association && npm run check:security",
     "check:brand": "node tools/check-brand.mjs",
     "check:ui": "node tools/check-ui.mjs",
-    "check:layout": "node tools/check-layout.mjs"
+    "check:layout": "node tools/check-layout.mjs",
+    "check:security": "node tools/check-security.mjs",
+    "check:association": "node tools/check-association.mjs"
   },
   "dependencies": {
     "phaser": "3.90.0"

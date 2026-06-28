@@ -1,6 +1,7 @@
 export type WordCategory =
   | 'tired'
   | 'strong'
+  | 'shape'
   | 'cute'
   | 'place'
   | 'taste'
@@ -38,6 +39,7 @@ export type StageDeck = {
 export const CATEGORY_LABELS: Record<WordCategory, string> = {
   tired: '피로/졸림',
   strong: '단단함/강함',
+  shape: '모양/도형',
   cute: '귀여움/행운',
   place: '장소',
   taste: '맛/감각',
@@ -53,6 +55,7 @@ export const CATEGORY_LABELS: Record<WordCategory, string> = {
 export const CATEGORY_COLOR: Record<WordCategory, number> = {
   tired: 0x94c8ff,
   strong: 0xffb24f,
+  shape: 0x9bd2ff,
   cute: 0xff8dc7,
   place: 0x8fd3ff,
   taste: 0xb9ff9d,
@@ -139,14 +142,14 @@ export const WORD_STAGES: StageDeck[] = [
     difficulty: '쉬움',
     steps: 22,
     goals: [
-      { label: '정육면체', category: 'strong', needed: 3 },
+      { label: '정육면체', category: 'shape', needed: 3 },
       { label: '장소 카드', category: 'place', needed: 3 }
     ],
     columns: [
       [
         { id: 'village', label: '마을 광장', category: 'place', tag: '장소' },
-        { id: 'block', label: '블록', category: 'strong', tag: '모양' },
-        { id: 'cube', label: '큐브', category: 'strong', tag: '모양' }
+        { id: 'block', label: '블록', category: 'shape', tag: '모양' },
+        { id: 'cube', label: '큐브', category: 'shape', tag: '모양' }
       ],
       [
         { id: 'soft', label: '폭신함', category: 'cute', tag: '감촉' },
@@ -159,7 +162,7 @@ export const WORD_STAGES: StageDeck[] = [
         { id: 'fort', label: '요새', category: 'guard', tag: '장소' }
       ],
       [
-        { id: 'square', label: '정사각형', category: 'strong', tag: '모양' },
+        { id: 'square', label: '정사각형', category: 'shape', tag: '모양' },
         { id: 'look', label: '보다', category: 'taste', tag: '행동' },
         { id: 'grave', label: '지하 묘지', category: 'place', tag: '장소' }
       ]
@@ -602,7 +605,8 @@ export const WORD_STAGES: StageDeck[] = [
       [
         { id: 'parade_dance', label: '빙글 춤', category: 'motion', tag: '동작' },
         { id: 'parade_spell', label: '축복 주문', category: 'magic', tag: '마법' },
-        { id: 'parade_smile', label: '응원 미소', category: 'cute', tag: '표정' }
+        { id: 'parade_smile', label: '응원 미소', category: 'cute', tag: '표정' },
+        { id: 'parade_magic_card', label: '마법 카드', category: 'magic', tag: '마법' }
       ],
       [
         { id: 'parade_castle', label: '왕관 성문', category: 'place', tag: '장소' },

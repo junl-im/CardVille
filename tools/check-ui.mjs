@@ -8,6 +8,7 @@ const required = [
   'src/game/data/rewardCards.ts',
   'src/game/systems/LayoutSystem.ts',
   'src/game/systems/BackButtonSystem.ts',
+  'src/game/systems/SecuritySystem.ts',
   'src/game/ui/GameButton.ts',
   'src/game/scenes/PlayScene.ts',
   'src/game/scenes/IntroLoadingScene.ts',
@@ -35,7 +36,7 @@ for (const token of ['첫 화면가기', '나가기', 'requestExit']) {
   if (!back.includes(token)) throw new Error(`BackConfirmScene missing ${token}`);
 }
 const login = fs.readFileSync(path.join(root, 'src/game/scenes/LoginScene.ts'), 'utf8');
-for (const token of ['loginBg', '게임 시작', 'Google 로그인', 'IntroLoadingScene', 'LOGIN_ACTION_START_Y']) {
+for (const token of ['loginBg', '게임 시작', 'Google 로그인', 'IntroLoadingScene', 'LOGIN_ACTION_START_Y', 'LOGIN_ACTION_SECONDARY_Y']) {
   if (!login.includes(token)) throw new Error(`LoginScene missing ${token}`);
 }
 const boot = fs.readFileSync(path.join(root, 'src/game/scenes/BootScene.ts'), 'utf8');
@@ -52,6 +53,11 @@ for (const token of ['applyResponsiveCamera', 'visibleBounds', 'addCoverImage'])
   if (!layoutSystem.includes(token)) throw new Error(`LayoutSystem missing responsive token: ${token}`);
 }
 if (html.includes('카드마을을 여는 중')) throw new Error('Opening boot text must not show before the start screen');
+if (html.includes('boot-fake-button')) throw new Error('Pre-start fake play button must not show before Phaser LoginScene');
+const backSystem = fs.readFileSync(path.join(root, 'src/game/systems/BackButtonSystem.ts'), 'utf8');
+for (const token of ['cardville-back-overlay', 'primeHistoryGuard', '첫 화면가기']) {
+  if (!backSystem.includes(token)) throw new Error(`BackButtonSystem missing robust overlay token: ${token}`);
+}
 const stages = fs.readFileSync(path.join(root, 'src/game/data/wordStages.ts'), 'utf8');
 const stageCount = (stages.match(/id: \d+,/g) ?? []).length;
 if (stageCount < 16) throw new Error(`Expected at least 16 word stages, found ${stageCount}`);
@@ -68,4 +74,4 @@ function walk(dir) {
 }
 walk(path.join(root, 'public'));
 if (svgHits.length) throw new Error(`SVG files are not allowed: ${svgHits.join(', ')}`);
-console.log(`UI/content check passed. Version ${version}, word stages ${stageCount}, SVG files 0, responsive playfield/comfort animation/expanded content/UI assets OK.`);
+console.log(`UI/content check passed. Version ${version}, word stages ${stageCount}, SVG files 0, responsive playfield/no-prefake-button/back-overlay/association-polish/UI assets OK.`);

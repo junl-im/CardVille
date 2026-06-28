@@ -5,12 +5,11 @@ import { DrawSystem } from '../systems/DrawSystem';
 import { AuthSystem } from '../systems/AuthSystem';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
-const LOGIN_VERSION = '1.0.19';
-const LOGIN_INFO_CARD_Y = 502;
-const LOGIN_ACTION_START_Y = 634;
-const LOGIN_ACTION_GOOGLE_Y = LOGIN_ACTION_START_Y + 66;
-const LOGIN_ACTION_SECONDARY_Y = LOGIN_ACTION_START_Y + 120;
-const LOGIN_STATUS_Y = LOGIN_ACTION_START_Y - 50;
+const LOGIN_VERSION = '1.0.20';
+const LOGIN_ACTION_START_Y = 604;
+const LOGIN_ACTION_GOOGLE_Y = LOGIN_ACTION_START_Y + 58;
+const LOGIN_ACTION_SECONDARY_Y = LOGIN_ACTION_START_Y + 106;
+const LOGIN_STATUS_Y = LOGIN_ACTION_START_Y - 44;
 
 export class LoginScene extends Phaser.Scene {
   private status!: Phaser.GameObjects.Text;
@@ -37,30 +36,28 @@ export class LoginScene extends Phaser.Scene {
     // Keep the key art full screen, but gently calm the lower gameplay CTA area.
     shade.fillGradientStyle(0x020814, 0x020814, 0x020814, 0x020814, 0.03, 0.035, 0.18, 0.60);
     shade.fillRect(l.visibleX, l.visibleY, l.visibleWidth, l.visibleHeight);
-    shade.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0, 0, 0.12, 0.50);
-    shade.fillRect(l.visibleX, 474, l.visibleWidth, 370 + l.extraY);
+    shade.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0, 0, 0.10, 0.42);
+    shade.fillRect(l.visibleX, 500, l.visibleWidth, 344 + l.extraY);
 
-    shade.fillStyle(0xffffff, 0.12);
-    shade.fillRoundedRect(26, LOGIN_INFO_CARD_Y, 338, 86, 28);
-    shade.lineStyle(1, 0xffffff, 0.24);
-    shade.strokeRoundedRect(26, LOGIN_INFO_CARD_Y, 338, 86, 28);
-    shade.fillStyle(0x081329, 0.48);
-    shade.fillRoundedRect(36, LOGIN_INFO_CARD_Y + 9, 318, 66, 22);
+    shade.fillStyle(0x07142c, 0.50);
+    shade.fillRoundedRect(30, 546, 330, 242, 30);
+    shade.lineStyle(1, 0xffffff, 0.20);
+    shade.strokeRoundedRect(30, 546, 330, 242, 30);
 
-    this.add.text(195, LOGIN_INFO_CARD_Y + 24, '카드를 모아 마을을 완성하세요!', titleText(20)).setOrigin(0.5);
-    this.add.text(195, LOGIN_INFO_CARD_Y + 56, '말 카드 스택 퍼즐 · 바로 시작 가능', goldText(13)).setOrigin(0.5);
+    this.add.text(195, 564, '카드를 모아 마을을 완성하세요!', titleText(18)).setOrigin(0.5);
+    this.add.text(195, 587, '게임 시작 후 오프닝 영상이 재생됩니다.', goldText(12)).setOrigin(0.5);
   }
 
   private drawStartControls(): void {
-    new GameButton(this, 195, LOGIN_ACTION_START_Y, '게임 시작', 322, 70, 0xffd86f).onClick(() => this.guest());
-    new GameButton(this, 195, LOGIN_ACTION_GOOGLE_Y, 'Google 로그인', 298, 50, 0x8fd3ff).onClick(() => void this.google());
-    new GameButton(this, 118, LOGIN_ACTION_SECONDARY_Y, '이메일', 134, 40, 0xc9f4ff).onClick(() => void this.email(false));
-    new GameButton(this, 272, LOGIN_ACTION_SECONDARY_Y, '가입', 134, 40, 0xf0c7ff).onClick(() => void this.email(true));
+    new GameButton(this, 195, LOGIN_ACTION_START_Y, '게임 시작', 318, 64, 0xffd86f).onClick(() => this.guest());
+    new GameButton(this, 195, LOGIN_ACTION_GOOGLE_Y, 'Google 로그인', 292, 46, 0x8fd3ff).onClick(() => void this.google());
+    new GameButton(this, 120, LOGIN_ACTION_SECONDARY_Y, '이메일', 136, 42, 0xc9f4ff).onClick(() => void this.email(false));
+    new GameButton(this, 270, LOGIN_ACTION_SECONDARY_Y, '가입', 136, 42, 0xf0c7ff).onClick(() => void this.email(true));
 
     this.status = this.add.text(
       195,
       LOGIN_STATUS_Y,
-      '게임 시작을 누르면 오프닝과 함께 입장해요.',
+      '원하는 방식으로 시작하세요.',
       { ...applyWrap(bodyText(13), 330), lineSpacing: 5 }
     ).setOrigin(0.5).setAlpha(0.96);
   }

@@ -209,13 +209,13 @@ export class PlayScene extends Phaser.Scene {
     const color = CATEGORY_COLOR[goal.category];
     g.fillStyle(0x000000, 0.30);
     g.fillRoundedRect(x - w / 2 + 4, y - h / 2 + 8, w, h, 19);
-    g.fillGradientStyle(0xfffbef, 0xfff6df, 0xffeed2, 0xfff8e8, 1, 1, 1, 1);
+    g.fillGradientStyle(0xfffff7, 0xfffbef, 0xfff3df, 0xfffff8, 1, 1, 1, 1);
     g.fillRoundedRect(x - w / 2, y - h / 2, w, h, 19);
-    g.lineStyle(6, color, 1);
+    g.lineStyle(7, color, 0.96);
     g.strokeRoundedRect(x - w / 2, y - h / 2, w, h, 19);
-    g.fillStyle(color, 0.92);
+    g.fillStyle(color, 0.90);
     g.fillRoundedRect(x - w / 2 + 8, y - h / 2 + 8, w - 16, 28, 11);
-    g.fillStyle(0xffffff, 0.24);
+    g.fillStyle(0x6b3a16, 0.08);
     g.fillRoundedRect(x - w / 2 + 12, y - h / 2 + 45, w - 24, 12, 6);
     const label = this.add.text(x, y - 6, goal.label, applyWrap(cardText(fitTextSize(goal.label, 24, 14)), w - 16)).setOrigin(0.5);
     const tag = this.add.text(x, y + 42, CATEGORY_LABELS[goal.category], cardSmallText(10)).setOrigin(0.5);
@@ -297,29 +297,30 @@ export class PlayScene extends Phaser.Scene {
     const container = this.add.container(x, y).setName(`card:${card.id}`);
     const g = this.add.graphics();
     const color = CATEGORY_COLOR[card.category];
-    g.fillStyle(0x000000, 0.34);
-    g.fillRoundedRect(-w / 2 + 4, -h / 2 + 8, w, h, 16);
-    g.fillGradientStyle(0xfffbef, 0xfff7e8, interactive ? 0xffedd2 : 0xf7e5c8, interactive ? 0xfff8ea : 0xffefcf, 1, 1, 1, 1);
-    g.fillRoundedRect(-w / 2, -h / 2, w, h, 16);
-    g.lineStyle(4, interactive ? color : 0xc99555, interactive ? 1 : 0.92);
-    g.strokeRoundedRect(-w / 2, -h / 2, w, h, 16);
-    g.lineStyle(2, 0xffffff, 0.88);
-    g.strokeRoundedRect(-w / 2 + 5, -h / 2 + 5, w - 10, h - 10, 11);
-    g.fillStyle(color, interactive ? 0.95 : 0.78);
-    g.fillRoundedRect(-w / 2 + 6, -h / 2 + 6, w - 12, 23, 9);
-    g.fillStyle(0xfffbef, interactive ? 0.28 : 0.18);
-    g.fillRoundedRect(-w / 2 + 13, -h / 2 + 38, w - 26, 8, 5);
-    g.fillStyle(0xffffff, interactive ? 0.16 : 0.09);
-    g.fillEllipse(-w / 2 + 15, -h / 2 + 52, 14, 20);
+    g.fillStyle(0x000000, 0.32);
+    g.fillRoundedRect(-w / 2 + 5, -h / 2 + 9, w, h, 17);
+    g.fillGradientStyle(0xfffff7, 0xfffbef, interactive ? 0xfff1dc : 0xf5e6cf, interactive ? 0xfffffb : 0xfff3d8, 1, 1, 1, 1);
+    g.fillRoundedRect(-w / 2, -h / 2, w, h, 17);
+    g.lineStyle(5, interactive ? color : 0xc99555, interactive ? 0.98 : 0.86);
+    g.strokeRoundedRect(-w / 2, -h / 2, w, h, 17);
+    g.lineStyle(2, 0xffffff, 0.92);
+    g.strokeRoundedRect(-w / 2 + 5, -h / 2 + 5, w - 10, h - 10, 12);
+    g.fillStyle(color, interactive ? 0.96 : 0.80);
+    g.fillRoundedRect(-w / 2 + 7, -h / 2 + 7, w - 14, 25, 10);
+    g.fillStyle(0x6b3a16, interactive ? 0.06 : 0.045);
+    g.fillRoundedRect(-w / 2 + 12, -h / 2 + 42, w - 24, 10, 5);
+    g.fillStyle(0xffffff, interactive ? 0.10 : 0.05);
+    g.fillEllipse(-w / 2 + 15, -h / 2 + 54, 12, 18);
 
     const frameKey = interactive ? 'assetFrameRare' : 'assetFrameEpic';
-    const frame = this.textures.exists(frameKey) ? this.add.image(0, 0, frameKey).setDisplaySize(w + 18, h + 18).setAlpha(interactive ? 0.38 : 0.22) : null;
-    const shine = this.textures.exists('effectShine') ? this.add.image(0, -10, 'effectShine').setDisplaySize(w + 10, h + 10).setAlpha(interactive ? 0.026 : 0.01) : null;
-    const tag = this.add.text(0, -h / 2 + 16, compactText(card.tag, 6), cardSmallText(9)).setOrigin(0.5);
-    const label = this.add.text(0, 10, card.label, applyWrap(cardText(fitTextSize(card.label, 22, 12)), w - 12)).setOrigin(0.5);
+    const frame = this.textures.exists(frameKey) ? this.add.image(0, 0, frameKey).setDisplaySize(w + 16, h + 16).setAlpha(interactive ? 0.16 : 0.08) : null;
+    const shine = this.textures.exists('effectShine') ? this.add.image(0, -10, 'effectShine').setDisplaySize(w + 10, h + 10).setAlpha(interactive ? 0.012 : 0.004) : null;
+    const tag = this.add.text(0, -h / 2 + 18, compactText(CATEGORY_LABELS[card.category], 8), cardSmallText(8)).setOrigin(0.5);
+    const label = this.add.text(0, 6, card.label, applyWrap(cardText(fitTextSize(card.label, 22, 12)), w - 12)).setOrigin(0.5);
+    const sub = this.add.text(0, h / 2 - 16, compactText(card.tag, 7), cardSmallText(8)).setOrigin(0.5).setAlpha(0.84);
     const contents: Phaser.GameObjects.GameObject[] = frame ? [frame, g] : [g];
     if (shine) contents.push(shine);
-    contents.push(tag, label);
+    contents.push(tag, label, sub);
     container.add(contents);
 
     if (interactive) {
@@ -393,7 +394,7 @@ export class PlayScene extends Phaser.Scene {
       this.bestCombo = Math.max(this.bestCombo, this.combo);
       this.goalProgress += 1;
       column.pop();
-      this.noteText.setText(meterBonus > 0 ? `보너스 정답! ${card.label} +${earned}` : `정답! ${CATEGORY_LABELS[goal.category]} 계열이에요. +${earned}`);
+      this.noteText.setText(meterBonus > 0 ? `보너스 정답! ${card.label} +${earned}` : `정답! ${card.label}은(는) ${CATEGORY_LABELS[goal.category]} 계열이에요. +${earned}`);
       this.animateCorrect(source, earned);
       this.time.delayedCall(230, () => this.afterCorrect());
       return;
@@ -402,7 +403,7 @@ export class PlayScene extends Phaser.Scene {
     this.combo = 0;
     this.bonusMeter = 0;
     this.score = Math.max(0, this.score - 30);
-    this.noteText.setText(`${card.label}은(는) ${goal.label} 계열이 아니에요. 맨 위 카드만 신중하게 골라요.`);
+    this.noteText.setText(`${card.label}은(는) 현재 목표(${goal.label} · ${CATEGORY_LABELS[goal.category]})와 다른 연상 계열이에요.`);
     this.animateWrong(source);
     this.time.delayedCall(240, () => {
       this.inputLocked = false;
