@@ -26,7 +26,14 @@ export const REWARD_CARDS: RewardCard[] = [
   { id: '맛있는 시장 카드', icon: '🍰', rarity: 'common', category: '음식' },
   { id: '도구 가게 카드', icon: '🔑', rarity: 'rare', category: '도구' },
   { id: '반짝 쇼 카드', icon: '✨', rarity: 'epic', category: '마법' },
-  { id: '카드 타워 카드', icon: '🏰', rarity: 'legendary', category: '장소' }
+  { id: '카드 타워 카드', icon: '🏰', rarity: 'legendary', category: '장소' },
+  { id: '무지개 정원 카드', icon: '🌈', rarity: 'rare', category: '자연' },
+  { id: '공방 장인 카드', icon: '🛠️', rarity: 'epic', category: '도구' },
+  { id: '달빛 방패단 카드', icon: '🌙', rarity: 'epic', category: '보호' },
+  { id: '왕관 퍼레이드 카드', icon: '👑', rarity: 'legendary', category: '축제' },
+  { id: '고양이 상점 카드', icon: '🐱', rarity: 'rare', category: '마을' },
+  { id: '카드 정원사 카드', icon: '🌷', rarity: 'common', category: '자연' }
+
 ];
 
 export function pickRewardCard(stars: number, combo: number, random = Math.random): RewardCard {

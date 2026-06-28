@@ -31,6 +31,41 @@ export function visibleBounds(scene?: Phaser.Scene): Pick<SafeLayout, 'visibleX'
   return { visibleX: -extraX, visibleY: -extraY, visibleWidth, visibleHeight, extraX, extraY };
 }
 
+
+export type PlayArea = {
+  sideX: number;
+  sideLeft: number;
+  sideWidth: number;
+  boardLeft: number;
+  boardRight: number;
+  boardWidth: number;
+  boardCenter: number;
+};
+
+export function playArea(scene?: Phaser.Scene): PlayArea {
+  const bounds = visibleBounds(scene);
+  const sideWidth = 56;
+  const sideLeft = bounds.visibleX + 8;
+  const sideX = sideLeft + sideWidth / 2;
+  const boardLeft = sideLeft + sideWidth + 8;
+  const boardRight = bounds.visibleX + bounds.visibleWidth - 8;
+  const boardWidth = Math.max(300, boardRight - boardLeft);
+  return {
+    sideX,
+    sideLeft,
+    sideWidth,
+    boardLeft,
+    boardRight,
+    boardWidth,
+    boardCenter: boardLeft + boardWidth / 2
+  };
+}
+
+export function distributeColumns(left: number, width: number, count: number): number[] {
+  const spacing = width / Math.max(1, count);
+  return Array.from({ length: count }, (_, index) => left + spacing * (index + 0.5));
+}
+
 export function applyResponsiveCamera(scene: Phaser.Scene): void {
   const apply = () => {
     const bounds = visibleBounds(scene);
@@ -53,9 +88,9 @@ export function layout(scene?: Phaser.Scene): SafeLayout {
     top: 22,
     bottom: GAME_HEIGHT - 24,
     side: 10,
-    boardLeft: 56,
-    boardRight: 386,
-    boardWidth: 330,
+    boardLeft: playArea(scene).boardLeft,
+    boardRight: playArea(scene).boardRight,
+    boardWidth: playArea(scene).boardWidth,
     ...bounds
   };
 }

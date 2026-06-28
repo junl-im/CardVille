@@ -10,7 +10,7 @@ for (const token of ['visibleBounds', 'applyResponsiveCamera', 'addCoverImage'])
   if (!layoutText.includes(token)) throw new Error(`Responsive layout token missing: ${token}`);
 }
 const mustContain = [
-  ['src/game/scenes/PlayScene.ts', ['layout(this).boardWidth', 'xs: [96, 179, 262, 345]', 'effectCorrect', 'effectWrong', '0xfffbef']],
+  ['src/game/scenes/PlayScene.ts', ['playArea(this)', 'distributeColumns', 'animateCardSettle', 'spawnMiniSparkles', 'effectCorrect', 'effectWrong', '0xfffbef']],
   ['src/game/scenes/RewardScene.ts', ['packPrefix', 'assetPackLegendary', '터치해서 열기', 'spawnSparkles']],
   ['src/game/scenes/IntroLoadingScene.ts', ['mountOpeningVideo', 'queueGameAssets', 'this.load.start()']],
   ['src/game/scenes/LoginScene.ts', ['window.__CARDVILLE_BOOT_OK__', 'IntroLoadingScene', 'LOGIN_ACTION_START_Y', 'LOGIN_ACTION_SECONDARY_Y']],
@@ -24,6 +24,11 @@ for (const [file, tokens] of mustContain) {
     if (!text.includes(token)) throw new Error(`${file} missing token: ${token}`);
   }
 }
+
+const stages = fs.readFileSync(path.join(root, 'src/game/data/wordStages.ts'), 'utf8');
+const stageCount = (stages.match(/id: \d+,/g) ?? []).length;
+if (stageCount < 16) throw new Error(`Expected at least 16 stages, found ${stageCount}`);
+
 const build = JSON.parse(fs.readFileSync(path.join(root, 'public/build.json'), 'utf8'));
 if (build.version !== pkg.version) throw new Error(`build.json version ${build.version} != package ${pkg.version}`);
 const requiredAssets = [
@@ -36,6 +41,6 @@ const requiredAssets = [
   'public/assets/buttons/button_large_plain_normal.png'
 ];
 for (const asset of requiredAssets) {
-  if (!fs.existsSync(path.join(root, asset))) throw new Error(`Missing required 1.0.18 asset: ${asset}`);
+  if (!fs.existsSync(path.join(root, asset))) throw new Error(`Missing required 1.0.19 asset: ${asset}`);
 }
-console.log(`Layout/asset check passed. Version ${pkg.version}, full-bleed responsive canvas, lifted login controls, delayed intro and solid-card UI assets OK.`);
+console.log(`Layout/asset check passed. Version ${pkg.version}, responsive playfield, comfort animation, expanded stages, delayed intro and solid-card UI assets OK.`);

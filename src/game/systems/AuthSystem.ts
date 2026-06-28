@@ -93,9 +93,15 @@ function firebaseUserToAny(user: any): any {
   return user;
 }
 
+const FIREBASE_VERSION = '12.15.0';
+const FIREBASE_APP_CDN = `https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}/firebase-app.js`;
+const FIREBASE_AUTH_CDN = `https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}/firebase-auth.js`;
+
 async function getFirebaseAuth() {
-  const appMod = await import('firebase/app');
-  const authMod = await import('firebase/auth');
+  // Firebase is loaded only when Google or email login is pressed.
+  // This keeps guest play and first boot fast while preserving server login paths.
+  const appMod = await import(/* @vite-ignore */ FIREBASE_APP_CDN) as any;
+  const authMod = await import(/* @vite-ignore */ FIREBASE_AUTH_CDN) as any;
   firebaseApp ??= appMod.initializeApp(firebaseConfig);
   return { auth: authMod.getAuth(firebaseApp as never), authMod };
 }

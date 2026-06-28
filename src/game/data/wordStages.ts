@@ -474,7 +474,150 @@ export const WORD_STAGES: StageDeck[] = [
         { id: 'champ_fort', label: '작은 요새', category: 'guard', tag: '방어' }
       ]
     ]
+  },
+  {
+    id: 13,
+    title: '무지개 카드정원',
+    note: '자연, 음식, 귀여움 카드를 넓은 정원에서 정리해요.',
+    difficulty: '보통',
+    steps: 34,
+    goals: [
+      { label: '정원 자연', category: 'nature', needed: 4 },
+      { label: '간식 바구니', category: 'food', needed: 4 },
+      { label: '귀여운 장식', category: 'cute', needed: 3 }
+    ],
+    columns: [
+      [
+        { id: 'garden_leaf', label: '반짝 잎사귀', category: 'nature', tag: '자연' },
+        { id: 'garden_cookie', label: '별 쿠키', category: 'food', tag: '음식' },
+        { id: 'garden_ribbon', label: '꽃 리본', category: 'cute', tag: '장식' },
+        { id: 'garden_flower', label: '무지개 꽃', category: 'nature', tag: '자연' }
+      ],
+      [
+        { id: 'garden_cake', label: '딸기 케이크', category: 'food', tag: '음식' },
+        { id: 'garden_smile', label: '방긋 인사', category: 'cute', tag: '표정' },
+        { id: 'garden_tree', label: '카드나무', category: 'nature', tag: '자연' }
+      ],
+      [
+        { id: 'garden_apple', label: '빛나는 사과', category: 'food', tag: '음식' },
+        { id: 'garden_bow', label: '작은 나비', category: 'cute', tag: '장식' },
+        { id: 'garden_wind', label: '산들바람', category: 'nature', tag: '자연' }
+      ],
+      [
+        { id: 'garden_bread', label: '폭신 빵', category: 'food', tag: '음식' },
+        { id: 'garden_hug', label: '꼬옥 안기', category: 'cute', tag: '행동' },
+        { id: 'garden_grass', label: '초록 잔디', category: 'nature', tag: '자연' }
+      ]
+    ]
+  },
+  {
+    id: 14,
+    title: '공방의 움직임',
+    note: '도구와 움직임을 빠르게 맞춰 카드 공방을 정리해요.',
+    difficulty: '도전',
+    steps: 35,
+    goals: [
+      { label: '공방 도구', category: 'tool', needed: 5 },
+      { label: '손놀림', category: 'motion', needed: 4 },
+      { label: '튼튼한 재료', category: 'strong', needed: 3 }
+    ],
+    columns: [
+      [
+        { id: 'work_hammer', label: '나무 망치', category: 'tool', tag: '도구' },
+        { id: 'work_spin', label: '빙글 돌리기', category: 'motion', tag: '동작' },
+        { id: 'work_block', label: '단단한 블록', category: 'strong', tag: '재료' },
+        { id: 'work_brush', label: '색칠 붓', category: 'tool', tag: '도구' }
+      ],
+      [
+        { id: 'work_cut', label: '싹둑 자르기', category: 'motion', tag: '동작' },
+        { id: 'work_scissors', label: '금빛 가위', category: 'tool', tag: '도구' },
+        { id: 'work_plate', label: '두꺼운 판자', category: 'strong', tag: '재료' }
+      ],
+      [
+        { id: 'work_key', label: '작은 열쇠', category: 'tool', tag: '도구' },
+        { id: 'work_jump', label: '폴짝 옮기기', category: 'motion', tag: '동작' },
+        { id: 'work_cube', label: '정육면체', category: 'strong', tag: '모양' }
+      ],
+      [
+        { id: 'work_shovel', label: '미니 삽', category: 'tool', tag: '도구' },
+        { id: 'work_push', label: '밀어 넣기', category: 'motion', tag: '동작' },
+        { id: 'work_needle', label: '반짝 바늘', category: 'tool', tag: '도구' }
+      ]
+    ]
+  },
+  {
+    id: 15,
+    title: '달빛 방패단',
+    note: '방어, 장소, 마법 계열을 차분하게 분류해요.',
+    difficulty: '도전',
+    steps: 36,
+    goals: [
+      { label: '방패단', category: 'guard', needed: 5 },
+      { label: '달빛 장소', category: 'place', needed: 4 },
+      { label: '보호 마법', category: 'magic', needed: 3 }
+    ],
+    columns: [
+      [
+        { id: 'moon_shield', label: '달빛 방패', category: 'guard', tag: '방어' },
+        { id: 'moon_gate', label: '별문', category: 'place', tag: '장소' },
+        { id: 'moon_spell', label: '수호 주문', category: 'magic', tag: '마법' },
+        { id: 'moon_wall', label: '카드 성벽', category: 'guard', tag: '방어' }
+      ],
+      [
+        { id: 'moon_tower', label: '달빛 탑', category: 'place', tag: '장소' },
+        { id: 'moon_barrier', label: '보호막', category: 'guard', tag: '방어' },
+        { id: 'moon_aura', label: '푸른 오라', category: 'magic', tag: '마법' }
+      ],
+      [
+        { id: 'moon_fort', label: '작은 요새', category: 'place', tag: '장소' },
+        { id: 'moon_guard', label: '지키다', category: 'guard', tag: '행동' },
+        { id: 'moon_wand', label: '수호봉', category: 'magic', tag: '도구' }
+      ],
+      [
+        { id: 'moon_castle', label: '카드 성', category: 'place', tag: '장소' },
+        { id: 'moon_lock', label: '마법 자물쇠', category: 'guard', tag: '방어' },
+        { id: 'moon_watch', label: '경계하기', category: 'guard', tag: '행동' }
+      ]
+    ]
+  },
+  {
+    id: 16,
+    title: '왕관 카드 퍼레이드',
+    note: '카드마을 축제를 마무리하는 종합 퍼레이드예요.',
+    difficulty: '도전',
+    steps: 38,
+    goals: [
+      { label: '마법 퍼레이드', category: 'magic', needed: 4 },
+      { label: '행운 응원단', category: 'cute', needed: 4 },
+      { label: '축제 움직임', category: 'motion', needed: 4 },
+      { label: '마을 장소', category: 'place', needed: 3 }
+    ],
+    columns: [
+      [
+        { id: 'parade_star', label: '별빛 행진', category: 'magic', tag: '마법' },
+        { id: 'parade_wave', label: '손 흔들기', category: 'motion', tag: '동작' },
+        { id: 'parade_plaza', label: '축제 광장', category: 'place', tag: '장소' },
+        { id: 'parade_lucky', label: '행운 왕관', category: 'cute', tag: '행운' }
+      ],
+      [
+        { id: 'parade_dance', label: '빙글 춤', category: 'motion', tag: '동작' },
+        { id: 'parade_spell', label: '축복 주문', category: 'magic', tag: '마법' },
+        { id: 'parade_smile', label: '응원 미소', category: 'cute', tag: '표정' }
+      ],
+      [
+        { id: 'parade_castle', label: '왕관 성문', category: 'place', tag: '장소' },
+        { id: 'parade_jump', label: '폴짝 행진', category: 'motion', tag: '동작' },
+        { id: 'parade_glitter', label: '반짝 축복', category: 'magic', tag: '마법' }
+      ],
+      [
+        { id: 'parade_ribbon', label: '우승 리본', category: 'cute', tag: '장식' },
+        { id: 'parade_road', label: '꽃길', category: 'place', tag: '장소' },
+        { id: 'parade_run', label: '깃발 달리기', category: 'motion', tag: '동작' },
+        { id: 'parade_cute', label: '방긋 응원', category: 'cute', tag: '표정' }
+      ]
+    ]
   }
+
 ];
 
 export const STAGE_DATA: Record<number, StageDeck> = Object.fromEntries(WORD_STAGES.map((stage) => [stage.id, stage]));

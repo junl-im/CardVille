@@ -27,7 +27,7 @@ for (const file of required) {
   if (!fs.existsSync(path.join(root, file))) throw new Error(`Missing UI/system file: ${file}`);
 }
 const play = fs.readFileSync(path.join(root, 'src/game/scenes/PlayScene.ts'), 'utf8');
-for (const token of ['bonusMeter', 'useHint', 'useShuffle', 'fitTextSize', 'hasTouchDebug', 'boardLayout', 'assetCardBackStar', 'effectCorrect']) {
+for (const token of ['bonusMeter', 'useHint', 'useShuffle', 'fitTextSize', 'hasTouchDebug', 'boardLayout', 'playArea', 'distributeColumns', 'animateCardSettle', 'spawnMiniSparkles', 'assetCardBackStar', 'effectCorrect']) {
   if (!play.includes(token)) throw new Error(`PlayScene missing ${token}`);
 }
 const back = fs.readFileSync(path.join(root, 'src/game/scenes/BackConfirmScene.ts'), 'utf8');
@@ -54,7 +54,7 @@ for (const token of ['applyResponsiveCamera', 'visibleBounds', 'addCoverImage'])
 if (html.includes('카드마을을 여는 중')) throw new Error('Opening boot text must not show before the start screen');
 const stages = fs.readFileSync(path.join(root, 'src/game/data/wordStages.ts'), 'utf8');
 const stageCount = (stages.match(/id: \d+,/g) ?? []).length;
-if (stageCount < 8) throw new Error(`Expected at least 8 word stages, found ${stageCount}`);
+if (stageCount < 16) throw new Error(`Expected at least 16 word stages, found ${stageCount}`);
 const build = fs.readFileSync(path.join(root, 'public/build.json'), 'utf8');
 if (!build.includes(version)) throw new Error('public/build.json version does not match package.json');
 const svgHits = [];
@@ -68,4 +68,4 @@ function walk(dir) {
 }
 walk(path.join(root, 'public'));
 if (svgHits.length) throw new Error(`SVG files are not allowed: ${svgHits.join(', ')}`);
-console.log(`UI/content check passed. Version ${version}, word stages ${stageCount}, SVG files 0, full-bleed start/lifted login controls/delayed intro/UI assets OK.`);
+console.log(`UI/content check passed. Version ${version}, word stages ${stageCount}, SVG files 0, responsive playfield/comfort animation/expanded content/UI assets OK.`);
