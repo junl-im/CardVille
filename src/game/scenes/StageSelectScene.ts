@@ -61,12 +61,18 @@ export class StageSelectScene extends Phaser.Scene {
 
   private drawStageBadge(x: number, y: number, id: number, unlocked: boolean): void {
     const g = this.add.graphics();
-    g.fillStyle(unlocked ? 0xffd86f : 0x65708a, 1);
-    g.fillRoundedRect(x - 26, y - 30, 52, 60, 16);
-    g.lineStyle(3, 0xffffff, 0.74);
-    g.strokeRoundedRect(x - 26, y - 30, 52, 60, 16);
-    g.fillStyle(0xffffff, 0.18);
-    g.fillRoundedRect(x - 19, y - 23, 38, 12, 8);
+    g.fillStyle(0x000000, 0.22);
+    g.fillRoundedRect(x - 24, y - 28, 52, 60, 16);
+    if (unlocked && this.textures.exists('assetCardBackCrown')) {
+      this.add.image(x, y, 'assetCardBackCrown').setDisplaySize(58, 66).setAlpha(0.9);
+    } else {
+      g.fillStyle(unlocked ? 0xffd86f : 0x65708a, 1);
+      g.fillRoundedRect(x - 26, y - 30, 52, 60, 16);
+      g.lineStyle(3, 0xffffff, 0.74);
+      g.strokeRoundedRect(x - 26, y - 30, 52, 60, 16);
+      g.fillStyle(0xffffff, 0.18);
+      g.fillRoundedRect(x - 19, y - 23, 38, 12, 8);
+    }
     this.add.text(x, y + 1, unlocked ? `${id}` : '🔒', unlocked ? titleText(28) : { fontSize: '24px' }).setOrigin(0.5);
   }
 }

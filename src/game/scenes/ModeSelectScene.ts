@@ -23,7 +23,9 @@ export class ModeSelectScene extends Phaser.Scene {
     MODES.forEach((mode, i) => {
       const y = 188 + i * 116;
       panel(this, 195, y, 334, 92, 24);
-      this.add.text(68, y, mode.icon, { fontSize: '34px' }).setOrigin(0.5).setAlpha(mode.open ? 1 : 0.58);
+      const iconKey = mode.id === 'word' ? 'assetWord' : mode.id === 'daily' ? 'assetPack' : 'assetStar';
+      if (this.textures.exists(iconKey)) this.add.image(68, y, iconKey).setDisplaySize(44, 44).setAlpha(mode.open ? 1 : 0.58);
+      else this.add.text(68, y, mode.icon, { fontSize: '34px' }).setOrigin(0.5).setAlpha(mode.open ? 1 : 0.58);
       this.add.text(114, y - 17, mode.title, bodyText(21)).setOrigin(0, 0.5).setAlpha(mode.open ? 1 : 0.62);
       this.add.text(114, y + 18, mode.note, applyWrap(mutedText(11), 214, 'left')).setOrigin(0, 0.5).setAlpha(mode.open ? 1 : 0.62);
       const zone = this.add.zone(195, y, 334, 92).setInteractive({ useHandCursor: mode.open });

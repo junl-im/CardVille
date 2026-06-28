@@ -33,7 +33,7 @@ export class RewardScene extends Phaser.Scene {
     this.add.text(195, 174, '말 카드팩 보상', titleText(31)).setOrigin(0.5);
     this.add.text(195, 214, `${meta.label} 카드 획득!`, goldText(16)).setOrigin(0.5);
 
-    this.drawRewardCard(195, 340, 158, 210, reward.icon, reward.id, meta.color, meta.label);
+    this.drawRewardCard(195, 340, 166, 218, reward.icon, reward.id, meta.color, meta.label, reward.rarity);
     this.add.text(
       195,
       520,
@@ -45,11 +45,14 @@ export class RewardScene extends Phaser.Scene {
     new GameButton(this, 195, 682, '카드마을 광장으로', 276, 62, 0xffd86f).onClick(() => this.scene.start('MainLobbyScene'));
   }
 
-  private drawRewardCard(x: number, y: number, w: number, h: number, icon: string, name: string, color: number, rarity: string): void {
+  private drawRewardCard(x: number, y: number, w: number, h: number, icon: string, name: string, color: number, rarity: string, rarityKey: string): void {
     this.add.rectangle(x + 5, y + 8, w, h, 0x000000, 0.22).setOrigin(0.5).setScale(1, 1);
-    this.add.rectangle(x, y, w, h, 0xfffbf1, 1).setStrokeStyle(6, color, 1);
+    const frameKey = rarityKey === 'legendary' ? 'assetFrameLegendary' : rarityKey === 'epic' ? 'assetFrameEpic' : 'assetFrameRare';
+    if (this.textures.exists(frameKey)) this.add.image(x, y, frameKey).setDisplaySize(w + 32, h + 32).setAlpha(0.78);
+    this.add.rectangle(x, y, w, h, 0xfffbf1, 0.92).setStrokeStyle(6, color, 1);
     this.add.rectangle(x, y - h / 2 + 20, w - 20, 28, color, 0.95);
     this.add.text(x, y - h / 2 + 20, rarity, cardSmallTextSafe(12)).setOrigin(0.5);
+    if (this.textures.exists('assetCardBackHeart')) this.add.image(x, y - 18, 'assetCardBackHeart').setDisplaySize(70, 70).setAlpha(0.20);
     this.add.text(x, y - 22, icon, { fontSize: '56px' }).setOrigin(0.5);
     this.add.text(x, y + 62, name, { ...cardText(16), align: 'center', wordWrap: { width: w - 22, useAdvancedWrap: true } }).setOrigin(0.5);
     const glow = this.add.rectangle(x, y, w + 18, h + 18, color, 0.08).setStrokeStyle(2, color, 0.5);

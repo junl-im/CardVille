@@ -1,4 +1,4 @@
-# CardVille 1.0.12 Patch Notes
+# CardVille 1.0.13 Patch Notes
 
 ## 목적
 

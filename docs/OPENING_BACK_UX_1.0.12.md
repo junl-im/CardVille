@@ -1,4 +1,4 @@
-# Opening & Back Button UX 1.0.12
+# Opening & Back Button UX 1.0.13
 
 ## 첫 화면
 

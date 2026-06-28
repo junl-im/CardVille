@@ -46,7 +46,9 @@ export class CollectionScene extends Phaser.Scene {
   private drawAlbumCard(x: number, y: number, id: string, icon: string, rarity: keyof typeof RARITY_META, count: number): void {
     const meta = RARITY_META[rarity];
     this.add.rectangle(x + 4, y + 6, 92, 104, 0x000000, 0.22);
-    this.add.rectangle(x, y, 92, 104, count > 0 ? 0xfffbf1 : 0xd7deeb, 1).setStrokeStyle(3, count > 0 ? meta.color : 0x66708a, 0.95);
+    const frameKey = rarity === 'legendary' ? 'assetFrameLegendary' : rarity === 'epic' ? 'assetFrameEpic' : 'assetFrameRare';
+    if (count > 0 && this.textures.exists(frameKey)) this.add.image(x, y, frameKey).setDisplaySize(108, 120).setAlpha(0.45);
+    this.add.rectangle(x, y, 92, 104, count > 0 ? 0xfffbf1 : 0xd7deeb, 0.94).setStrokeStyle(3, count > 0 ? meta.color : 0x66708a, 0.95);
     this.add.rectangle(x, y - 40, 78, 16, count > 0 ? meta.color : 0x66708a, 0.9);
     this.add.text(x, y - 14, count > 0 ? icon : '？', { fontSize: '24px' }).setOrigin(0.5);
     this.add.text(x, y + 26, count > 0 ? `${id}\nx${count}` : '미획득', { ...cardText(9), align: 'center', wordWrap: { width: 80, useAdvancedWrap: true } }).setOrigin(0.5).setAlpha(count > 0 ? 1 : 0.56);
