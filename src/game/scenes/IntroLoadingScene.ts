@@ -2,53 +2,155 @@ import Phaser from 'phaser';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
 export class IntroLoadingScene extends Phaser.Scene {
+  private readyToContinue = false;
+  private minIntroDone = false;
   private finished = false;
+  private videoEl?: HTMLVideoElement;
+  private progressText?: Phaser.GameObjects.Text;
+  private nextScene = 'MainLobbyScene';
 
   constructor() { super('IntroLoadingScene'); }
 
-  create(): void {
-    this.drawFallbackBackground();
-    this.add.rectangle(195, 422, 390, 844, 0x020814, 0.28);
-    this.add.text(195, 86, 'CardVille', titleText(30)).setOrigin(0.5);
-    this.add.text(195, 780, '카드마을로 들어가는 중...', goldText(18)).setOrigin(0.5);
-    this.add.text(195, 812, '인트로 영상은 로딩 화면으로만 사용됩니다.', mutedText(11)).setOrigin(0.5);
-
-    const hasVideo = this.cache.video.exists('introVideo');
-    if (hasVideo) {
-      const video = this.add.video(195, 422, 'introVideo').setOrigin(0.5);
-      video.setDisplaySize(390, 844);
-      video.setMute(true);
-      video.setDepth(-1);
-      video.on('complete', () => this.finish());
-      video.on('error', () => this.finish());
-      const started = video.play(false);
-      if (!started) this.time.delayedCall(2600, () => this.finish());
-    } else {
-      this.add.text(
-        195,
-        422,
-        '오프닝 영상을 준비하지 못했지만\n게임은 바로 시작할 수 있어요.',
-        { ...applyWrap(bodyText(16), 300), lineSpacing: 8 }
-      ).setOrigin(0.5);
-    }
-
-    this.input.once('pointerdown', () => this.finish());
-    this.time.delayedCall(3600, () => this.finish());
+  init(data: { nextScene?: string } = {}): void {
+    this.nextScene = data.nextScene ?? 'MainLobbyScene';
+    this.readyToContinue = false;
+    this.minIntroDone = false;
+    this.finished = false;
   }
 
-  private drawFallbackBackground(): void {
-    if (this.textures.exists('loginBg')) {
-      this.add.image(195, 422, 'loginBg').setDisplaySize(390, 844);
-      return;
+  create(): void {
+    this.drawLoadingStage();
+    this.mountOpeningVideo();
+    this.queueGameAssets();
+
+    this.load.on('progress', (value: number) => {
+      this.progressText?.setText(`게임 준비 중... ${Math.round(value * 100)}%`);
+    });
+    this.load.once('complete', () => {
+      this.readyToContinue = true;
+      this.progressText?.setText('카드마을 입장 준비 완료!');
+      this.tryFinish();
+    });
+
+    this.input.once('pointerdown', () => {
+      this.minIntroDone = true;
+      this.tryFinish();
+    });
+    this.time.delayedCall(2400, () => {
+      this.minIntroDone = true;
+      this.tryFinish();
+    });
+    this.time.delayedCall(4200, () => this.finish());
+
+    if (this.load.totalToLoad > 0) this.load.start();
+    else {
+      this.readyToContinue = true;
+      this.tryFinish();
     }
-    const g = this.add.graphics();
-    g.fillGradientStyle(0x235aa2, 0x4b9bc5, 0x143e7b, 0x071126, 1, 1, 1, 1);
-    g.fillRect(0, 0, 390, 844);
+  }
+
+  private drawLoadingStage(): void {
+    if (this.textures.exists('loginBg')) this.add.image(195, 422, 'loginBg').setDisplaySize(390, 844);
+    else this.add.rectangle(195, 422, 390, 844, 0x071126);
+
+    this.add.rectangle(195, 422, 390, 844, 0x020814, 0.24);
+    this.add.rectangle(195, 724, 390, 240, 0x020814, 0.42);
+    this.add.text(195, 72, 'CardVille', titleText(31)).setOrigin(0.5);
+    this.add.text(195, 112, '오프닝과 함께 게임을 준비하고 있어요', goldText(16)).setOrigin(0.5);
+    this.progressText = this.add.text(195, 754, '게임 준비 중... 0%', goldText(18)).setOrigin(0.5);
+    this.add.text(195, 792, '화면을 터치하면 빠르게 넘어갈 수 있어요.', applyWrap(mutedText(12), 340)).setOrigin(0.5);
+  }
+
+  private mountOpeningVideo(): void {
+    if (typeof document === 'undefined') return;
+    const app = document.getElementById('app');
+    if (!app) return;
+    const video = document.createElement('video');
+    const base = import.meta.env.BASE_URL || '/';
+    video.src = `${base}assets/video/cardville_intro_loading.mp4`;
+    video.muted = true;
+    video.autoplay = true;
+    video.playsInline = true;
+    video.setAttribute('playsinline', 'true');
+    video.setAttribute('webkit-playsinline', 'true');
+    video.style.position = 'fixed';
+    video.style.inset = '0';
+    video.style.width = '100vw';
+    video.style.height = '100vh';
+    video.style.objectFit = 'cover';
+    video.style.zIndex = '5';
+    video.style.pointerEvents = 'none';
+    video.style.background = '#071126';
+    video.style.opacity = '1';
+    app.appendChild(video);
+    this.videoEl = video;
+
+    const onVideoDone = () => {
+      this.minIntroDone = true;
+      this.tryFinish();
+    };
+    video.addEventListener('ended', onVideoDone, { once: true });
+    video.addEventListener('error', onVideoDone, { once: true });
+    void video.play().catch(() => onVideoDone());
+  }
+
+  private queueImage(key: string, url: string): void {
+    if (!this.textures.exists(key)) this.load.image(key, url);
+  }
+
+  private queueGameAssets(): void {
+    this.queueImage('assetVillageBg', 'assets/backgrounds/cherry_blossom_day.png');
+    this.queueImage('assetForestBg', 'assets/backgrounds/forest_day.png');
+    this.queueImage('assetCoin', 'assets/icons/icon_game_coin.png');
+    this.queueImage('assetGem', 'assets/icons/icon_game_gem.png');
+    this.queueImage('assetStar', 'assets/icons/icon_mode_star.png');
+    this.queueImage('assetWord', 'assets/icons/icon_mode_word.png');
+    this.queueImage('assetAlbum', 'assets/icons/icon_menu_album.png');
+    this.queueImage('assetPack', 'assets/icons/icon_mode_cardpack.png');
+    this.queueImage('assetSettings', 'assets/icons/icon_mode_settings.png');
+    this.queueImage('assetTrophy', 'assets/icons/icon_game_trophy.png');
+    this.queueImage('assetCombo', 'assets/icons/icon_game_combo.png');
+    this.queueImage('assetHome', 'assets/icons/icon_game_home.png');
+    this.queueImage('assetShop', 'assets/icons/icon_game_shop.png');
+    this.queueImage('assetGift', 'assets/icons/icon_game_gift.png');
+    this.queueImage('assetCardBackStar', 'assets/cards/backs/card_back_star.png');
+    this.queueImage('assetCardBackHeart', 'assets/cards/backs/card_back_heart.png');
+    this.queueImage('assetCardBackCrown', 'assets/cards/backs/card_back_crown.png');
+    this.queueImage('assetFrameRare', 'assets/cards/frames/frame_rare_gold_normal.png');
+    this.queueImage('assetFrameEpic', 'assets/cards/frames/frame_epic_purple_normal.png');
+    this.queueImage('assetFrameLegendary', 'assets/cards/frames/frame_legendary_gold_normal.png');
+    for (const rarity of ['common', 'rare', 'epic', 'legendary']) {
+      this.queueImage(`assetPack${this.cap(rarity)}Closed`, `assets/packs/pack_${rarity}_closed.png`);
+      this.queueImage(`assetPack${this.cap(rarity)}Opening1`, `assets/packs/pack_${rarity}_opening_01.png`);
+      this.queueImage(`assetPack${this.cap(rarity)}Opening2`, `assets/packs/pack_${rarity}_opening_02.png`);
+      this.queueImage(`assetPack${this.cap(rarity)}Open`, `assets/packs/pack_${rarity}_open.png`);
+    }
+    this.queueImage('effectCorrect', 'assets/effects/effect_correct_01.png');
+    this.queueImage('effectWrong', 'assets/effects/effect_wrong_01.png');
+    this.queueImage('effectShine', 'assets/effects/effect_shine_01.png');
+    this.queueImage('effectAura', 'assets/effects/effect_aura_01.png');
+    this.queueImage('particleStar', 'assets/particles/particle_star_01.png');
+    this.queueImage('particleSparkle', 'assets/particles/particle_sparkle_01.png');
+    this.queueImage('badgeNew', 'assets/badges/badge_new.png');
+    this.queueImage('badgeOpen', 'assets/badges/badge_open.png');
+  }
+
+  private cap(text: string): string {
+    return `${text.charAt(0).toUpperCase()}${text.slice(1)}`;
+  }
+
+  private tryFinish(): void {
+    if (this.readyToContinue && this.minIntroDone) this.finish();
   }
 
   private finish(): void {
     if (this.finished) return;
     this.finished = true;
-    this.scene.start('LoginScene');
+    if (this.videoEl) {
+      this.videoEl.pause();
+      this.videoEl.remove();
+      this.videoEl = undefined;
+    }
+    this.scene.start(this.nextScene);
   }
 }

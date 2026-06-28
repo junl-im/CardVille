@@ -12,7 +12,8 @@ export class LoginScene extends Phaser.Scene {
   create(): void {
     this.drawFullscreenHero();
     this.drawStartControls();
-    this.add.text(342, 28, '1.0.15', mutedText(11)).setOrigin(0.5).setAlpha(0.86);
+    this.add.text(342, 28, '1.0.16', mutedText(11)).setOrigin(0.5).setAlpha(0.86);
+    window.__CARDVILLE_BOOT_OK__?.();
   }
 
   private drawFullscreenHero(): void {
@@ -40,14 +41,14 @@ export class LoginScene extends Phaser.Scene {
   }
 
   private drawStartControls(): void {
-    new GameButton(this, 195, 712, '게임 시작', 318, 66, 0xffd86f).onClick(() => this.guest());
-    new GameButton(this, 195, 778, 'Google 로그인', 294, 50, 0x8fd3ff).onClick(() => void this.google());
-    new GameButton(this, 118, 826, '이메일', 134, 40, 0xc9f4ff).onClick(() => void this.email(false));
-    new GameButton(this, 272, 826, '가입', 134, 40, 0xf0c7ff).onClick(() => void this.email(true));
+    new GameButton(this, 195, 704, '게임 시작', 322, 70, 0xffd86f).onClick(() => this.guest());
+    new GameButton(this, 195, 774, 'Google 로그인', 298, 50, 0x8fd3ff).onClick(() => void this.google());
+    new GameButton(this, 118, 824, '이메일', 134, 40, 0xc9f4ff).onClick(() => void this.email(false));
+    new GameButton(this, 272, 824, '가입', 134, 40, 0xf0c7ff).onClick(() => void this.email(true));
 
     this.status = this.add.text(
       195,
-      566,
+      560,
       '처음엔 게임 시작을 눌러 바로 입장하세요.',
       { ...applyWrap(bodyText(13), 330), lineSpacing: 5 }
     ).setOrigin(0.5).setAlpha(0.96);
@@ -57,15 +58,15 @@ export class LoginScene extends Phaser.Scene {
     if (this.busy) return;
     this.busy = true;
     AuthSystem.signInGuest();
-    this.status.setText('게스트 입장 완료. 카드마을 광장으로 이동합니다.');
-    this.time.delayedCall(80, () => this.scene.start('MainLobbyScene'));
+    this.status.setText('오프닝 영상과 함께 게임을 준비합니다.');
+    this.time.delayedCall(80, () => this.scene.start('IntroLoadingScene', { nextScene: 'MainLobbyScene' }));
   }
 
   private async google(): Promise<void> {
     if (this.busy) return;
     this.busy = true;
     this.status.setText('Google 로그인 연결 중...');
-    try { await AuthSystem.signInGoogle(); this.scene.start('MainLobbyScene'); }
+    try { await AuthSystem.signInGoogle(); this.scene.start('IntroLoadingScene', { nextScene: 'MainLobbyScene' }); }
     catch (e) { console.warn(e); this.status.setText('Google 로그인이 취소되었거나 실패했어요. 게임 시작은 계속 가능합니다.'); this.busy = false; }
   }
 
@@ -77,7 +78,7 @@ export class LoginScene extends Phaser.Scene {
     if (password.length < 6) { this.status.setText('비밀번호는 6자 이상이어야 해요.'); return; }
     this.busy = true;
     this.status.setText(create ? '이메일 가입 중...' : '이메일 로그인 중...');
-    try { await AuthSystem.signInEmail(email, password, create); this.scene.start('MainLobbyScene'); }
+    try { await AuthSystem.signInEmail(email, password, create); this.scene.start('IntroLoadingScene', { nextScene: 'MainLobbyScene' }); }
     catch (e) { console.warn(e); this.status.setText('이메일 처리 실패. 계정 정보를 확인해 주세요.'); this.busy = false; }
   }
 }

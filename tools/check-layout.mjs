@@ -6,6 +6,9 @@ const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'))
 const mustContain = [
   ['src/game/scenes/PlayScene.ts', ['layout().boardWidth', 'xs: [96, 179, 262, 345]', 'effectCorrect', 'effectWrong', '0xfffbef']],
   ['src/game/scenes/RewardScene.ts', ['packPrefix', 'assetPackLegendary', '터치해서 열기', 'spawnSparkles']],
+  ['src/game/scenes/IntroLoadingScene.ts', ['mountOpeningVideo', 'queueGameAssets', 'this.load.start()']],
+  ['src/game/scenes/LoginScene.ts', ['window.__CARDVILLE_BOOT_OK__', 'IntroLoadingScene']],
+  ['src/game/scenes/BootScene.ts', ['Only load the opening screen assets here']],
   ['src/game/ui/GameButton.ts', ['assetButton${size}', 'chooseButtonSkin', 'skinImage']],
   ['src/game/systems/DrawSystem.ts', ['particleStar', '2.5D plaza', 'assetVillageBg']]
 ];
@@ -27,6 +30,6 @@ const requiredAssets = [
   'public/assets/buttons/button_large_plain_normal.png'
 ];
 for (const asset of requiredAssets) {
-  if (!fs.existsSync(path.join(root, asset))) throw new Error(`Missing required 1.0.15 asset: ${asset}`);
+  if (!fs.existsSync(path.join(root, asset))) throw new Error(`Missing required 1.0.16 asset: ${asset}`);
 }
-console.log(`Layout/asset check passed. Version ${pkg.version}, pack opening, fullscreen login and solid-card UI assets OK.`);
+console.log(`Layout/asset check passed. Version ${pkg.version}, delayed intro, instant start, pack opening and solid-card UI assets OK.`);

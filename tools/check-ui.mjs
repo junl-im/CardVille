@@ -35,9 +35,17 @@ for (const token of ['첫 화면가기', '나가기', 'requestExit']) {
   if (!back.includes(token)) throw new Error(`BackConfirmScene missing ${token}`);
 }
 const login = fs.readFileSync(path.join(root, 'src/game/scenes/LoginScene.ts'), 'utf8');
-for (const token of ['loginBg', '게임 시작', 'Google 로그인']) {
+for (const token of ['loginBg', '게임 시작', 'Google 로그인', 'IntroLoadingScene']) {
   if (!login.includes(token)) throw new Error(`LoginScene missing ${token}`);
 }
+const boot = fs.readFileSync(path.join(root, 'src/game/scenes/BootScene.ts'), 'utf8');
+if (boot.includes('IntroLoadingScene')) throw new Error('BootScene must not auto-play intro before the start screen');
+const intro = fs.readFileSync(path.join(root, 'src/game/scenes/IntroLoadingScene.ts'), 'utf8');
+for (const token of ['mountOpeningVideo', 'queueGameAssets', 'cardville_intro_loading.mp4']) {
+  if (!intro.includes(token)) throw new Error(`IntroLoadingScene missing delayed loading token: ${token}`);
+}
+const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+if (html.includes('카드마을을 여는 중')) throw new Error('Opening boot text must not show before the start screen');
 const stages = fs.readFileSync(path.join(root, 'src/game/data/wordStages.ts'), 'utf8');
 const stageCount = (stages.match(/id: \d+,/g) ?? []).length;
 if (stageCount < 8) throw new Error(`Expected at least 8 word stages, found ${stageCount}`);
@@ -54,4 +62,4 @@ function walk(dir) {
 }
 walk(path.join(root, 'public'));
 if (svgHits.length) throw new Error(`SVG files are not allowed: ${svgHits.join(', ')}`);
-console.log(`UI/content check passed. Version ${version}, word stages ${stageCount}, SVG files 0, opening/UI/solid-card assets OK.`);
+console.log(`UI/content check passed. Version ${version}, word stages ${stageCount}, SVG files 0, instant start/delayed intro/UI assets OK.`);
