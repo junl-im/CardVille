@@ -13,7 +13,7 @@ const mustContain = [
   ['src/game/scenes/PlayScene.ts', ['layout(this).boardWidth', 'xs: [96, 179, 262, 345]', 'effectCorrect', 'effectWrong', '0xfffbef']],
   ['src/game/scenes/RewardScene.ts', ['packPrefix', 'assetPackLegendary', '터치해서 열기', 'spawnSparkles']],
   ['src/game/scenes/IntroLoadingScene.ts', ['mountOpeningVideo', 'queueGameAssets', 'this.load.start()']],
-  ['src/game/scenes/LoginScene.ts', ['window.__CARDVILLE_BOOT_OK__', 'IntroLoadingScene']],
+  ['src/game/scenes/LoginScene.ts', ['window.__CARDVILLE_BOOT_OK__', 'IntroLoadingScene', 'LOGIN_ACTION_START_Y', 'LOGIN_ACTION_SECONDARY_Y']],
   ['src/game/scenes/BootScene.ts', ['Only load the opening screen assets here']],
   ['src/game/ui/GameButton.ts', ['assetButton${size}', 'chooseButtonSkin', 'skinImage']],
   ['src/game/systems/DrawSystem.ts', ['particleStar', '2.5D plaza', 'assetVillageBg']]
@@ -36,6 +36,6 @@ const requiredAssets = [
   'public/assets/buttons/button_large_plain_normal.png'
 ];
 for (const asset of requiredAssets) {
-  if (!fs.existsSync(path.join(root, asset))) throw new Error(`Missing required 1.0.16 asset: ${asset}`);
+  if (!fs.existsSync(path.join(root, asset))) throw new Error(`Missing required 1.0.18 asset: ${asset}`);
 }
-console.log(`Layout/asset check passed. Version ${pkg.version}, full-bleed responsive canvas, delayed intro, instant start and solid-card UI assets OK.`);
+console.log(`Layout/asset check passed. Version ${pkg.version}, full-bleed responsive canvas, lifted login controls, delayed intro and solid-card UI assets OK.`);

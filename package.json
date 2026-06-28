@@ -1,9 +1,9 @@
 {
   "name": "cardville",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.17 full-bleed responsive canvas, delayed intro loading, and comfort UI upgrade.",
+  "description": "CardVille 1.0.18 lifted start/login controls, dynamic deploy proof, and full-bleed comfort UI refinements.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",

@@ -35,7 +35,7 @@ for (const token of ['첫 화면가기', '나가기', 'requestExit']) {
   if (!back.includes(token)) throw new Error(`BackConfirmScene missing ${token}`);
 }
 const login = fs.readFileSync(path.join(root, 'src/game/scenes/LoginScene.ts'), 'utf8');
-for (const token of ['loginBg', '게임 시작', 'Google 로그인', 'IntroLoadingScene']) {
+for (const token of ['loginBg', '게임 시작', 'Google 로그인', 'IntroLoadingScene', 'LOGIN_ACTION_START_Y']) {
   if (!login.includes(token)) throw new Error(`LoginScene missing ${token}`);
 }
 const boot = fs.readFileSync(path.join(root, 'src/game/scenes/BootScene.ts'), 'utf8');
@@ -68,4 +68,4 @@ function walk(dir) {
 }
 walk(path.join(root, 'public'));
 if (svgHits.length) throw new Error(`SVG files are not allowed: ${svgHits.join(', ')}`);
-console.log(`UI/content check passed. Version ${version}, word stages ${stageCount}, SVG files 0, full-bleed start/delayed intro/UI assets OK.`);
+console.log(`UI/content check passed. Version ${version}, word stages ${stageCount}, SVG files 0, full-bleed start/lifted login controls/delayed intro/UI assets OK.`);
