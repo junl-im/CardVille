@@ -9,6 +9,8 @@ export type DioramaBuilding = {
   title: string;
   subtitle: string;
   assetKey: string;
+  iconKey: string;
+  npcKey?: string;
   x: number;
   y: number;
   width: number;
@@ -25,6 +27,8 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     title: '카드 성',
     subtitle: '마을의 중심',
     assetKey: 'dioramaCastle',
+    iconKey: 'iconCvCastle',
+    npcKey: 'npcGuard',
     x: 195,
     y: 138,
     width: 114,
@@ -38,6 +42,8 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     title: '도서관',
     subtitle: '낱말 카드',
     assetKey: 'dioramaLibrary',
+    iconKey: 'iconCvLibrary',
+    npcKey: 'npcLibrarian',
     x: 78,
     y: 280,
     width: 106,
@@ -45,13 +51,15 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     targetX: 103,
     targetY: 350,
     open: true,
-    route: { scene: 'StageSelectScene', data: { modeId: 'word', title: '말 카드' } }
+    route: { scene: 'StageSelectScene', data: { modeId: 'word', title: '낱말 카드' } }
   },
   {
     id: 'plaza',
     title: '광장',
     subtitle: '출발점',
     assetKey: 'dioramaPlaza',
+    iconKey: 'iconCvPlaza',
+    npcKey: 'npcChild01',
     x: 195,
     y: 305,
     width: 82,
@@ -65,6 +73,8 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     title: '연구소',
     subtitle: '연산 준비실',
     assetKey: 'dioramaLab',
+    iconKey: 'iconCvLab',
+    npcKey: 'npcWizard',
     x: 312,
     y: 280,
     width: 106,
@@ -79,6 +89,8 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     title: '상점',
     subtitle: '카드 앨범',
     assetKey: 'dioramaShop',
+    iconKey: 'iconCvAsset',
+    npcKey: 'npcMerchant',
     x: 82,
     y: 455,
     width: 106,
@@ -93,6 +105,8 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     title: '학교',
     subtitle: '영어 예정',
     assetKey: 'dioramaSchool',
+    iconKey: 'iconCvSchool',
+    npcKey: 'npcTeacher',
     x: 308,
     y: 455,
     width: 106,
@@ -106,6 +120,8 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     title: '기억의 숲',
     subtitle: '기억력',
     assetKey: 'dioramaForest',
+    iconKey: 'iconCvForest',
+    npcKey: 'npcTownCat',
     x: 82,
     y: 660,
     width: 106,
@@ -120,6 +136,8 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     title: '이벤트',
     subtitle: '카드팩',
     assetKey: 'dioramaEvent',
+    iconKey: 'iconCvEvent',
+    npcKey: 'npcCook',
     x: 200,
     y: 670,
     width: 106,
@@ -134,6 +152,7 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     title: '항구',
     subtitle: '모험 예정',
     assetKey: 'dioramaHarbor',
+    iconKey: 'iconCvHarbor',
     x: 312,
     y: 660,
     width: 106,

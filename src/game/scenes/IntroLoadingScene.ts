@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { addCoverImage, applyResponsiveCamera, layout } from '../systems/LayoutSystem';
+import { ASSET_MANIFEST } from '../data/assetManifest';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
 export class IntroLoadingScene extends Phaser.Scene {
@@ -9,6 +10,7 @@ export class IntroLoadingScene extends Phaser.Scene {
   private videoEl?: HTMLVideoElement;
   private progressText?: Phaser.GameObjects.Text;
   private nextScene = 'MainLobbyScene';
+  private queuedKeys = new Set<string>();
 
   constructor() { super('IntroLoadingScene'); }
 
@@ -17,6 +19,7 @@ export class IntroLoadingScene extends Phaser.Scene {
     this.readyToContinue = false;
     this.minIntroDone = false;
     this.finished = false;
+    this.queuedKeys.clear();
   }
 
   create(): void {
@@ -120,10 +123,16 @@ export class IntroLoadingScene extends Phaser.Scene {
   }
 
   private queueImage(key: string, url: string): void {
-    if (!this.textures.exists(key)) this.load.image(key, url);
+    if (this.textures.exists(key) || this.queuedKeys.has(key)) return;
+    this.queuedKeys.add(key);
+    this.load.image(key, url);
   }
 
   private queueGameAssets(): void {
+    for (const asset of ASSET_MANIFEST) {
+      this.queueImage(asset.key, asset.path);
+    }
+
     this.queueImage('assetVillageBg', 'assets/backgrounds/cherry_blossom_day.png');
 
     // One-screen CardVille diorama lobby assets. The lobby stays fixed-camera and

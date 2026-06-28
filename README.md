@@ -1,6 +1,20 @@
-# CardVille 1.0.24
+# CardVille 1.0.25
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
+
+## 1.0.25 업데이트 내역
+
+- GitHub는 `.github/workflows/deploy.yml` 기준으로 자동 Actions 배포/검증이 진행되므로, 이번 업데이트도 `npm run verify` 체인에 맞춰 정리했습니다.
+- 초대형 업데이트 전 꼬임 방지를 위해 자산을 `src/game/data/assetManifest.ts` 한 곳에서 관리하도록 추가했습니다.
+- 건물, NPC, 소품, UI, 아이콘, 캐릭터/고양이 프레임을 포함한 핵심 자산 베이스를 확보했습니다.
+- 추가 자산은 SVG 없이 PNG/WebP 중심으로 생성했습니다.
+- 기존 디오라마 건물 PNG에 WebP 동반 파일을 추가해 향후 용량 최적화와 배포 전환을 쉽게 했습니다.
+- 로비에 NPC와 소품을 배치했습니다.
+- 로비 터치 피드백, 건물 선택 글로우, 잠금 배지, 문 열림 빛, 말풍선, 토스트 UI를 새 UI 자산과 연결했습니다.
+- 소년과 검은 고양이 이동 시 간단한 걷기 프레임 교체가 동작하도록 연결했습니다.
+- `tools/check-assets.mjs`를 추가해 자산 누락, 중복 key, SVG 유입, README/인계서 정책을 자동 점검합니다.
+- `package.json`, `public/build.json`, `health.html`, `reset.html`, 앱 내부 버전 표기를 1.0.25로 동기화했습니다.
+- 버전별 문서 파일은 새로 만들지 않고, 누적 기록은 이 `README.md`에만 추가했습니다.
 
 ## 1.0.24 업데이트 내역
 
@@ -91,6 +105,7 @@ npm run verify
 npm run build
 npm run check:deploy
 npm run check:brand
+npm run check:assets
 npm run check:ui
 npm run check:layout
 npm run check:association
@@ -124,7 +139,8 @@ https://junl-im.github.io/CardVille/
 - 시작 화면은 가볍게 유지
 - 게임 리소스는 게임 시작 후 인트로 영상 중 단계적으로 로딩
 - 배경은 큰 판타지 일러스트처럼 보이게 구성
-- 건물과 오브젝트는 개별 에셋으로 분리
+- 건물, NPC, 소품, UI, 아이콘, 캐릭터 프레임은 개별 에셋으로 분리
+- 모든 런타임 자산 key와 경로는 `src/game/data/assetManifest.ts`에서 중복 없이 관리
 - 향후 계절 이벤트, 장식 변경, 신규 건물 추가가 쉽도록 관리
 
 ## ZIP 전달 규칙
@@ -144,6 +160,19 @@ CardVille_Project_Patch_이전버전_to_새버전.zip
 - 대화 인수인계 내용은 `AI_HANDOFF_CARDVILLE.md`에 누적합니다.
 
 ## 누적 업데이트 기록
+
+### 1.0.25
+
+- GitHub Actions 자동 배포 흐름을 유지한 채 `npm run verify`에 `check:assets`를 추가
+- 핵심 자산 매니페스트 `src/game/data/assetManifest.ts` 추가
+- 캐릭터 프레임 추가: 소년 idle/walk/blink/cheer, 검은 고양이 idle/walk/tail/hint
+- NPC 추가: 사서, 마법사, 상인, 선생님, 경비병, 요리사, 아이, 마을고양이
+- 소품 추가: 분수, 나무, 벤치, 깃발, 이정표, 랜턴, 연기, 창문빛, 새, 반딧불, 카드 트레일, 화분, 96 타일 가이드
+- UI 추가: 글래스 패널, 우드 패널, 골드 패널, 이름표, 말풍선, 잠금 배지, 건물 글로우, 문 빛, 토스트, 터치 리플, 퀘스트 마커, 닫기/설정 버튼
+- 모드/건물 아이콘 추가: 도서관, 연구소, 숲, 학교, 이벤트, 성, 항구, 광장, NPC, 자산
+- 기존 디오라마 건물/오브젝트에 WebP 동반 파일 추가
+- 로비에 NPC, 소품, UI 피드백, 걷기 프레임 교체 연결
+- 런타임 버전 1.0.25 동기화
 
 ### 1.0.24
 

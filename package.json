@@ -1,20 +1,21 @@
 {
   "name": "cardville",
-  "version": "1.0.24",
+  "version": "1.0.25",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.24 locks delivery rules, README-only cumulative version notes, and AI handoff documentation.",
+  "description": "CardVille 1.0.25 secures the asset foundation with buildings, NPCs, props, UI assets, manifest-based loading, and GitHub Actions-safe checks.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "check:deploy": "node tools/check-deploy.mjs",
-    "verify": "npm run build && npm run check:deploy && npm run check:brand && npm run check:ui && npm run check:layout && npm run check:association && npm run check:security",
+    "verify": "npm run build && npm run check:deploy && npm run check:brand && npm run check:assets && npm run check:ui && npm run check:layout && npm run check:association && npm run check:security",
     "check:brand": "node tools/check-brand.mjs",
     "check:ui": "node tools/check-ui.mjs",
     "check:layout": "node tools/check-layout.mjs",
     "check:security": "node tools/check-security.mjs",
-    "check:association": "node tools/check-association.mjs"
+    "check:association": "node tools/check-association.mjs",
+    "check:assets": "node tools/check-assets.mjs"
   },
   "dependencies": {
     "phaser": "3.90.0"

@@ -1,8 +1,8 @@
 {
   "name": "CardVille",
-  "version": "1.0.24",
-  "mode": "handoff-delivery-policy",
+  "version": "1.0.25",
+  "mode": "asset-foundation",
   "svg": "disabled",
   "pwa": "disabled",
-  "notes": "README-only-cumulative-version-history-full-and-patch-zip-delivery-ai-handoff-one-screen-diorama-brand-lock-svg-disabled"
+  "notes": "README-only-history-ai-handoff-full-and-patch-zip-delivery-github-actions-verify-one-screen-diorama-building-npc-prop-ui-asset-manifest-svg-disabled"
 }

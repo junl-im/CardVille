@@ -2,7 +2,7 @@ export const CARDVILLE_BRAND = {
   projectNameKo: '카드마을',
   projectNameEn: 'CardVille',
   slogan: '카드를 모아 꿈의 마을을 완성하세요.',
-  version: '1.0.24',
+  version: '1.0.25',
   fixedCharacterReference: 'assets/brand/cardville_fixed_character_reference.png',
   identity: ['소년', '검은 고양이', '카드', '따뜻한 판타지 마을'],
   hero: {
@@ -28,8 +28,10 @@ export const CARDVILLE_BRAND = {
     tileFeeling: '64x64 or 96x96 scale, large illustration look',
     movement: 'boy and black cat run 3 to 5 steps to tapped building before transition',
     backgroundLife: ['clouds', 'flags', 'smoke', 'birds', 'butterflies', 'floating cards', 'fireflies', 'window glow'],
-    assetPolicy: 'large diorama background plus individual PNG/WebP buildings and objects'
+    assetManifest: 'src/game/data/assetManifest.ts',
+    assetPolicy: 'large diorama background plus individual PNG/WebP buildings, NPCs, props, UI assets, and a single TypeScript asset manifest to prevent duplicate loading'
   },
+  npcRoster: ['상인', '요리사', '마법사', '경비병', '아이', '마을고양이', '사서', '선생님'],
   villageBuildings: [
     { id: 'library', title: '도서관', mode: '낱말' },
     { id: 'laboratory', title: '연구소', mode: '연산' },
