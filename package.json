@@ -1,9 +1,9 @@
 {
   "name": "cardville",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.6 AuthSystem compatibility hotfix.",
+  "description": "CardVille 1.0.7 UI readability and touch hitbox polish.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",

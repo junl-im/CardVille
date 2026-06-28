@@ -1,19 +1,32 @@
 import Phaser from 'phaser';
+import { titleText } from '../ui/TextStyles';
 
 export class DrawSystem {
   static background(scene: Phaser.Scene, title?: string): void {
     const g = scene.add.graphics();
-    g.fillGradientStyle(0x1a4d82, 0x2f6fa3, 0x10224b, 0x070b1c, 1);
+    g.fillGradientStyle(0x0d2a58, 0x174d86, 0x07152f, 0x030711, 1);
     g.fillRect(0, 0, 390, 844);
-    g.fillStyle(0x8fd3ff, 0.08); g.fillCircle(318, 120, 142);
-    g.fillStyle(0xffd86f, 0.06); g.fillCircle(66, 732, 180);
-    for (let i = 0; i < 26; i += 1) {
-      const x = 24 + ((i * 83) % 344);
-      const y = 40 + ((i * 127) % 760);
-      scene.add.circle(x, y, 1.4 + (i % 3), 0xffffff, 0.12 + (i % 4) * 0.04);
+
+    g.fillStyle(0x8fd3ff, 0.12);
+    g.fillCircle(320, 112, 150);
+    g.fillStyle(0xffd86f, 0.08);
+    g.fillCircle(58, 734, 190);
+    g.fillStyle(0xffffff, 0.045);
+    g.fillRect(0, 0, 390, 844);
+
+    for (let i = 0; i < 34; i += 1) {
+      const x = 18 + ((i * 83) % 354);
+      const y = 34 + ((i * 127) % 770);
+      scene.add.circle(x, y, 1.2 + (i % 3) * 0.8, 0xffffff, 0.15 + (i % 4) * 0.035);
     }
+
     if (title) {
-      scene.add.text(195, 46, title, { fontSize: '28px', fontStyle: '900', color: '#ffffff' }).setOrigin(0.5);
+      const plate = scene.add.graphics();
+      plate.fillStyle(0x061127, 0.44);
+      plate.fillRoundedRect(42, 20, 306, 54, 22);
+      plate.lineStyle(1, 0xffffff, 0.18);
+      plate.strokeRoundedRect(42, 20, 306, 54, 22);
+      scene.add.text(195, 47, title, titleText(26)).setOrigin(0.5);
     }
   }
 }
