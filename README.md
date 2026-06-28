@@ -1,6 +1,19 @@
-# CardVille 1.0.26
+# CardVille 1.0.27
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
+
+## 1.0.27 업데이트 내역
+
+- 대규모 업데이트 전 꼬임을 줄이기 위해 로비 배치 데이터와 NPC/소품 데이터를 `src/game/data/lobbyEntities.ts`로 분리했습니다.
+- 건물별 콘텐츠 배정을 `src/game/data/modeCatalog.ts`로 정리하고, 연구소는 연산, 기억의 숲은 기억력 모드 안내로 연결했습니다.
+- `ModeSelectScene`을 건물에서 들어온 목적에 맞게 추천 모드가 강조되는 구조로 개선했습니다.
+- `QualitySystem`을 추가해 기기 성능, `prefers-reduced-motion`, URL 플래그에 따라 로비 파티클/반짝임/반복 애니메이션 밀도를 자동 조절합니다.
+- Phaser 렌더러를 `AUTO`로 변경해 가능한 환경에서는 WebGL을 사용하고, 필요하면 Canvas로 fallback되게 정리했습니다.
+- 확장 화면에서 cover 이미지 중심이 어긋날 수 있는 부분을 보정했습니다.
+- 준비중 토스트 배경이 누적될 수 있는 부분을 정리해 반복 터치 시 오브젝트가 남지 않게 했습니다.
+- 로비/콘텐츠/엔진 연결 상태를 검증하는 `tools/check-polish.mjs`와 `check:polish`를 추가했습니다.
+- 새 버전별 문서 파일은 만들지 않고, 변경 내역은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 누적했습니다.
+- `package.json`, `public/build.json`, `health.html`, `reset.html`, 앱 내부 버전 표기를 1.0.27로 동기화했습니다.
 
 ## 1.0.26 업데이트 내역
 
@@ -171,6 +184,18 @@ CardVille_Project_Patch_이전버전_to_새버전.zip
 - 대화 인수인계 내용은 `AI_HANDOFF_CARDVILLE.md`에 누적합니다.
 
 ## 누적 업데이트 기록
+
+### 1.0.27
+
+- 로비 NPC/소품 배치 데이터를 `lobbyEntities.ts`로 분리해 중복과 겹침 점검 기반 마련
+- 건물별 콘텐츠 배정 데이터를 `modeCatalog.ts`로 정리
+- 연구소 → 연산, 기억의 숲 → 기억력 추천 모드 연결
+- 성능 품질 시스템 `QualitySystem.ts` 추가
+- 저사양/모션감소 환경에서 ambient 오브젝트, 반짝임, 반복 tween 밀도 자동 축소
+- Phaser 렌더러를 AUTO로 변경해 WebGL/Canvas fallback 구조 적용
+- cover 이미지 중심 보정과 준비중 토스트 오브젝트 누적 방지
+- `check:polish` 검증 스크립트 추가
+- 런타임 버전 1.0.27 동기화
 
 ### 1.0.26
 

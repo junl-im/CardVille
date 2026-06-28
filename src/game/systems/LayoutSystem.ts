@@ -104,7 +104,7 @@ export function addCoverImage(scene: Phaser.Scene, key: string, alpha = 1, sourc
   if (!scene.textures.exists(key)) return null;
   const b = visibleBounds(scene);
   const scale = Math.max(b.visibleWidth / sourceW, b.visibleHeight / sourceH);
-  return scene.add.image(GAME_WIDTH / 2, GAME_HEIGHT / 2, key).setDisplaySize(sourceW * scale, sourceH * scale).setAlpha(alpha);
+  return scene.add.image(b.visibleX + b.visibleWidth / 2, b.visibleY + b.visibleHeight / 2, key).setDisplaySize(sourceW * scale, sourceH * scale).setAlpha(alpha);
 }
 
 export function addFullBleedShade(scene: Phaser.Scene, color: number, alpha: number): Phaser.GameObjects.Rectangle {

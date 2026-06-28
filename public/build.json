@@ -1,8 +1,8 @@
 {
   "name": "CardVille",
-  "version": "1.0.26",
-  "mode": "npc-dialogue-lobby-polish",
+  "version": "1.0.27",
+  "mode": "polish-audit-engine",
   "svg": "disabled",
   "pwa": "disabled",
-  "notes": "README-only-history-ai-handoff-full-and-patch-zip-delivery-github-actions-verify-one-screen-diorama-npc-dialogue-gesture-lobby-settings-asset-manifest-svg-disabled"
+  "notes": "README-only-history-ai-handoff-full-and-patch-zip-delivery-github-actions-verify-one-screen-diorama-lobby-entities-mode-catalog-quality-system-phaser-auto-svg-disabled"
 }

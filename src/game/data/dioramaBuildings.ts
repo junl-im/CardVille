@@ -1,6 +1,7 @@
+import type { GameModeId } from './modeCatalog';
 export type DioramaRoute =
   | { scene: 'StageSelectScene'; data: { modeId: 'word'; title: string } }
-  | { scene: 'ModeSelectScene'; data?: Record<string, never> }
+  | { scene: 'ModeSelectScene'; data?: { focusModeId?: GameModeId; title?: string } }
   | { scene: 'CollectionScene'; data?: Record<string, never> }
   | { scene: 'RewardScene'; data: { score: number; bestCombo: number; stars: number } };
 
@@ -82,7 +83,7 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     targetX: 286,
     targetY: 350,
     open: true,
-    route: { scene: 'ModeSelectScene' }
+    route: { scene: 'ModeSelectScene', data: { focusModeId: 'math', title: '연산 연구소' } }
   },
   {
     id: 'shop',
@@ -129,7 +130,7 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     targetX: 115,
     targetY: 705,
     open: true,
-    route: { scene: 'ModeSelectScene' }
+    route: { scene: 'ModeSelectScene', data: { focusModeId: 'memory', title: '기억의 숲' } }
   },
   {
     id: 'event',
