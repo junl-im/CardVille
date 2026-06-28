@@ -27,7 +27,7 @@ export class LoginScene extends Phaser.Scene {
     emailCreate.on('pointerup', () => this.email(true));
 
     this.status = this.add.text(195, 624, '로그인 화면 준비 완료. 게스트 버튼은 화면 전체 버튼 영역에서 눌립니다.', { fontSize: '13px', fontStyle: '800', color: '#d8eaff', align: 'center', wordWrap: { width: 310 }, lineSpacing: 5 }).setOrigin(0.5);
-    this.add.text(195, 790, '1.0.5', { fontSize: '12px', color: '#91b6e8' }).setOrigin(0.5);
+    this.add.text(195, 790, '1.0.6', { fontSize: '12px', color: '#91b6e8' }).setOrigin(0.5);
   }
 
   private guest(): void {

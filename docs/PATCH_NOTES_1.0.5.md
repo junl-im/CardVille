@@ -1,4 +1,4 @@
-# Patch Notes 1.0.5
+# Patch Notes 1.0.6
 
 - Clean stable boot reset
 - Local guest first

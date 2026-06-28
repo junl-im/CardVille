@@ -27,6 +27,6 @@ export class MainLobbyScene extends Phaser.Scene {
     reset.on('pointerup', () => { SaveSystem.clear(); this.scene.restart(); });
 
     this.add.text(195, 748, 'GitHub Actions 안정 모드 · Service Worker 없음 · 로컬 게스트 우선', { fontSize: '12px', color: '#a9c4ec', align: 'center', wordWrap: { width: 330 } }).setOrigin(0.5);
-    this.add.text(195, 790, '1.0.5', { fontSize: '12px', color: '#91b6e8' }).setOrigin(0.5);
+    this.add.text(195, 790, '1.0.6', { fontSize: '12px', color: '#91b6e8' }).setOrigin(0.5);
   }
 }

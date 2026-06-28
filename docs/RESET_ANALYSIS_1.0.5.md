@@ -1,4 +1,4 @@
-# CardVille 1.0.5 Reset Analysis
+# CardVille 1.0.6 Reset Analysis
 
 ## 판단
 
@@ -25,7 +25,7 @@
 
 ## 다음 단계
 
-1. GitHub Actions로 1.0.5 배포
+1. GitHub Actions로 1.0.6 배포
 2. deploy-proof.html 확인
 3. 로그인 화면 확인
 4. 게스트 시작 확인
