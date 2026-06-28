@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import './styles/index.css';
+import { preventBrowserGestures } from './game/systems/LayoutSystem';
 import { BootScene } from './game/scenes/BootScene';
 import { LoginScene } from './game/scenes/LoginScene';
 import { MainLobbyScene } from './game/scenes/MainLobbyScene';
@@ -50,4 +51,7 @@ window.addEventListener('unhandledrejection', (event) => {
   console.error('[CardVille promise]', event.reason);
 });
 
-new Phaser.Game(config);
+preventBrowserGestures();
+const game = new Phaser.Game(config);
+window.__CARDVILLE_READY__ = true;
+console.info("[CardVille] booted 1.0.11", game.isBooted);

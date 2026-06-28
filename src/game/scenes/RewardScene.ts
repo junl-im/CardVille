@@ -3,16 +3,8 @@ import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
 import { DrawSystem } from '../systems/DrawSystem';
 import { SaveSystem } from '../systems/SaveSystem';
-import { applyWrap, bodyText, cardText, titleText } from '../ui/TextStyles';
-
-const rewardPool = [
-  { id: '피곤함 카드', icon: '😴' },
-  { id: '럭키 카드', icon: '🍀' },
-  { id: '큐브 카드', icon: '🧊' },
-  { id: '방패 카드', icon: '🛡️' },
-  { id: '동물 친구 카드', icon: '🐾' },
-  { id: '카드마을 주민증', icon: '🏘️' }
-];
+import { RARITY_META, pickRewardCard } from '../data/rewardCards';
+import { applyWrap, bodyText, cardText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
 export class RewardScene extends Phaser.Scene {
   private score = 0;
@@ -28,27 +20,43 @@ export class RewardScene extends Phaser.Scene {
   }
 
   create(): void {
-    const reward = Phaser.Utils.Array.GetRandom(rewardPool);
+    const reward = pickRewardCard(this.stars, this.bestCombo);
+    const meta = RARITY_META[reward.rarity];
     const xp = 30 + this.stars * 10 + this.bestCombo * 2;
     const coins = 45 + this.stars * 20 + Math.floor(this.score / 60);
-    const profile = SaveSystem.addReward(xp, coins);
+    const gems = reward.rarity === 'legendary' ? 1 : 0;
+    const profile = SaveSystem.addReward(xp, coins, gems);
     const count = SaveSystem.addCard(reward.id);
 
     DrawSystem.background(this, '보상');
-    panel(this, 195, 332, 336, 404, 34);
-    this.add.text(195, 188, '말 카드팩 보상', titleText(31)).setOrigin(0.5);
-    this.add.rectangle(195, 332, 156, 204, 0xfffbf1, 1).setStrokeStyle(5, 0xffa320, 1);
-    this.add.rectangle(195, 250, 132, 26, 0xffa320, 0.95);
-    this.add.text(195, 316, reward.icon, { fontSize: '54px' }).setOrigin(0.5);
-    this.add.text(195, 390, `${reward.id}\n보유 ${count}장`, { ...cardText(16), align: 'center' }).setOrigin(0.5);
+    panel(this, 195, 338, 338, 430, 34);
+    this.add.text(195, 174, '말 카드팩 보상', titleText(31)).setOrigin(0.5);
+    this.add.text(195, 214, `${meta.label} 카드 획득!`, goldText(16)).setOrigin(0.5);
+
+    this.drawRewardCard(195, 340, 158, 210, reward.icon, reward.id, meta.color, meta.label);
     this.add.text(
       195,
-      512,
-      `+${xp} XP  +${coins} 코인\n별 ${this.stars}개 · 최고 콤보 ${this.bestCombo}\n현재 Lv.${profile.level} · 🪙 ${profile.coins}`,
-      { ...applyWrap(bodyText(15), 300), lineSpacing: 7 }
+      520,
+      `+${xp} XP  +${coins} 코인${gems ? `  +${gems} 보석` : ''}\n별 ${this.stars}개 · 최고 콤보 ${this.bestCombo}\n현재 Lv.${profile.level} · 🪙 ${profile.coins} · 보유 ${count}장`,
+      { ...applyWrap(bodyText(14), 308), lineSpacing: 7 }
     ).setOrigin(0.5);
 
-    const lobby = new GameButton(this, 195, 656, '카드마을 광장으로', 276, 62, 0xffd86f);
-    lobby.onClick(() => this.scene.start('MainLobbyScene'));
+    this.add.text(195, 610, '희귀도는 별과 콤보가 높을수록 조금 더 좋아져요.', applyWrap(mutedText(12), 306)).setOrigin(0.5);
+    new GameButton(this, 195, 682, '카드마을 광장으로', 276, 62, 0xffd86f).onClick(() => this.scene.start('MainLobbyScene'));
   }
+
+  private drawRewardCard(x: number, y: number, w: number, h: number, icon: string, name: string, color: number, rarity: string): void {
+    this.add.rectangle(x + 5, y + 8, w, h, 0x000000, 0.22).setOrigin(0.5).setScale(1, 1);
+    this.add.rectangle(x, y, w, h, 0xfffbf1, 1).setStrokeStyle(6, color, 1);
+    this.add.rectangle(x, y - h / 2 + 20, w - 20, 28, color, 0.95);
+    this.add.text(x, y - h / 2 + 20, rarity, cardSmallTextSafe(12)).setOrigin(0.5);
+    this.add.text(x, y - 22, icon, { fontSize: '56px' }).setOrigin(0.5);
+    this.add.text(x, y + 62, name, { ...cardText(16), align: 'center', wordWrap: { width: w - 22, useAdvancedWrap: true } }).setOrigin(0.5);
+    const glow = this.add.rectangle(x, y, w + 18, h + 18, color, 0.08).setStrokeStyle(2, color, 0.5);
+    this.tweens.add({ targets: glow, scale: 1.06, alpha: 0, duration: 1100, repeat: -1, yoyo: false });
+  }
+}
+
+function cardSmallTextSafe(size: number) {
+  return { ...cardText(size), strokeThickness: 2 };
 }

@@ -1,16 +1,17 @@
 {
   "name": "cardville",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.10 combo, hint, shuffle, reward and stage progress update.",
+  "description": "CardVille 1.0.11 UI/UX layout polish, expanded word stack content, performance guards and design upgrade.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "check:deploy": "node tools/check-deploy.mjs",
-    "verify": "npm run build && npm run check:deploy && npm run check:brand",
-    "check:brand": "node tools/check-brand.mjs"
+    "verify": "npm run build && npm run check:deploy && npm run check:brand && npm run check:ui",
+    "check:brand": "node tools/check-brand.mjs",
+    "check:ui": "node tools/check-ui.mjs"
   },
   "dependencies": {
     "firebase": "12.15.0",
