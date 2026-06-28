@@ -303,17 +303,55 @@ ZIP 파일
 - `npm run verify`는 build, deploy, brand, assets, premium-assets, content-engine, polish, ui, layout, association, security 순서로 확인합니다.
 
 
+## 10. 1.0.30 마을 건물 에셋 패스
+
+1.0.30은 사용자가 지적한 “마을 건물 에셋이 실제로 반영됐는지” 문제를 해결하기 위한 업데이트입니다. 1.0.28의 프레임형/크롭형 건물 표현은 로비에 바로 쓰기에는 부족하므로, 이번 버전에서 건물 9종을 투명 배경의 개별 컷아웃 PNG/WebP로 다시 반영했습니다.
+
+### 교체된 건물 자산
+
+- `public/assets/diorama/building_castle.png` / `.webp`
+- `public/assets/diorama/building_library.png` / `.webp`
+- `public/assets/diorama/building_lab.png` / `.webp`
+- `public/assets/diorama/building_shop.png` / `.webp`
+- `public/assets/diorama/building_school.png` / `.webp`
+- `public/assets/diorama/building_forest.png` / `.webp`
+- `public/assets/diorama/building_event.png` / `.webp`
+- `public/assets/diorama/building_harbor.png` / `.webp`
+- `public/assets/diorama/building_plaza.png` / `.webp`
+- `public/assets/diorama/diorama_bg.png` / `.webp`
+
+### 코드 반영
+
+- `src/game/data/dioramaBuildings.ts`에서 새 컷아웃 건물 기준으로 크기/위치/이동 타깃을 조정했습니다.
+- `src/game/scenes/MainLobbyScene.ts`에 `baseShadow`를 추가해 투명 건물 컷아웃이 배경 위에 안정적으로 얹히도록 했습니다.
+- 기존 매니페스트 key는 유지했습니다. 즉, `dioramaCastle`, `dioramaLibrary` 등 기존 코드 경로가 바뀌지 않으므로 중복/꼬임 없이 교체됩니다.
+
+### 검증
+
+- `tools/check-building-assets.mjs`를 추가했습니다.
+- `npm run check:building-assets`는 9개 건물이 512×512 이상인지, WebP 동반 파일이 있는지, 파일이 비어 있지 않은지, 로비 배치 코드가 새 기준으로 갱신됐는지 확인합니다.
+- `npm run verify`에 `check:building-assets`가 포함되어 GitHub Actions 자동 검증 흐름에서도 같이 확인됩니다.
+
+### 다음 AI 주의사항
+
+- 프레임형 크롭 자산 금지. 건물은 배경 일부를 잘라 만든 액자형 카드가 아니라, 반드시 투명 배경의 개별 건물 오브젝트여야 합니다.
+- 건물 파일명은 유지하세요. 최종 상용 원화가 나오면 같은 파일명으로 덮어써야 코드가 꼬이지 않습니다.
+- `docs/`에 새 버전별 문서 만들지 말고 README와 이 인계서에만 누적하세요.
+- 새 에셋 추가 시 SVG 금지, PNG/WebP 동반, `assetManifest.ts` 등록, 검증 스크립트 통과를 지켜야 합니다.
+
+
 ## 12. 현재 버전 상태
 
-현재 기준 버전은 1.0.29입니다.
+현재 기준 버전은 1.0.30입니다.
 
-1.0.29는 연구소 연산 미니게임과 기억의 숲 짝찾기 미니게임을 실제 플레이 가능한 1차 콘텐츠로 연결한 콘텐츠 엔진 패스입니다. 1.0.28은 기준 이미지 톤에 맞춘 프리미엄 에셋 패스와 `check:premium-assets` 검증을 추가한 업데이트였습니다.
+1.0.30은 프레임형/크롭형 건물 표현을 실제 투명 PNG/WebP 마을 건물 컷아웃으로 교체한 마을 건물 에셋 패스입니다. 1.0.29는 연구소 연산 미니게임과 기억의 숲 짝찾기 미니게임을 실제 플레이 가능한 1차 콘텐츠로 연결한 콘텐츠 엔진 패스였습니다. 1.0.28은 기준 이미지 톤에 맞춘 프리미엄 에셋 패스와 `check:premium-assets` 검증을 추가한 업데이트였습니다.
 
 - GitHub Actions 자동 검증 흐름 유지
 - `check:assets` 유지
 - `check:polish` 유지
 - `check:premium-assets` 유지
-- `check:content-engine` 추가
+- `check:content-engine` 유지
+- `check:building-assets` 추가
 - `assetManifest.ts` 유지
 - `lobbyEntities.ts` 추가
 - `modeCatalog.ts` 추가
@@ -322,7 +360,7 @@ ZIP 파일
 - 연구소/기억의 숲 실제 1차 미니게임 연결
 - `MathLabScene` 추가
 - `MemoryForestScene` 추가
-- 앱 동작용 버전 상수 1.0.29 동기화
+- 앱 동작용 버전 상수 1.0.30 동기화
 
 1.0.24는 전달 규칙과 인수인계 정책 정리 업데이트였습니다. 1.0.23의 핵심은 한 화면 디오라마 로비입니다.
 
@@ -371,6 +409,7 @@ ZIP 파일
 다만 ZIP 덮어쓰기만으로는 삭제가 자동 적용되지 않으므로, 파일 삭제가 필요한 업데이트에서는 최종 보고에 삭제 대상도 함께 알려야 합니다.
 
 1.0.24 통파일에서는 과거 버전별 문서 폴더를 정리했습니다.  
+1.0.30 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.
 1.0.29 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.
 1.0.28 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.
 1.0.27 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.

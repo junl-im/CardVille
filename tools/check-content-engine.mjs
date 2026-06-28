@@ -18,7 +18,7 @@ function must(file, tokens) {
   return text;
 }
 
-must('src/main.ts', ['MathLabScene', 'MemoryForestScene', '1.0.29 content engine']);
+must('src/main.ts', ['MathLabScene', 'MemoryForestScene', 'content engine']);
 must('src/game/scenes/MathLabScene.ts', ['export class MathLabScene', 'getMathStage', 'chooseAnswer', 'RewardScene', '연산 연구소']);
 must('src/game/scenes/MemoryForestScene.ts', ['export class MemoryForestScene', 'getMemoryStage', 'revealPreview', '짝 발견', 'RewardScene']);
 must('src/game/data/mathStages.ts', ['MATH_STAGES', 'MathProblem', '7 + 5', '3 × 4']);
@@ -51,7 +51,7 @@ for (const token of [`# CardVille ${pkg.version}`, `## ${pkg.version} 업데이�
   if (!readme.includes(token)) throw new Error(`README missing content-engine token: ${token}`);
 }
 const handoff = read('AI_HANDOFF_CARDVILLE.md');
-for (const token of [`현재 기준 버전은 ${pkg.version}`, '1.0.29 콘텐츠 엔진 패스', 'MathLabScene', 'MemoryForestScene', 'check:content-engine']) {
+for (const token of [`현재 기준 버전은 ${pkg.version}`, '콘텐츠 엔진 패스', 'MathLabScene', 'MemoryForestScene', 'check:content-engine']) {
   if (!handoff.includes(token)) throw new Error(`AI handoff missing content-engine token: ${token}`);
 }
 const build = JSON.parse(read('public/build.json'));

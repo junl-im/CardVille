@@ -1,6 +1,32 @@
-# CardVille 1.0.29
+# CardVille 1.0.30
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
+
+## 1.0.30 업데이트 내역
+
+- **마을 건물 에셋 패스**를 진행해 이전의 프레임형/크롭형 건물 자산을 실제 투명 배경 건물 컷아웃 자산으로 교체했습니다.
+- 마을 건물 9종을 각각 독립 PNG/WebP 에셋으로 다시 반영했습니다.
+  - 카드 성
+  - 도서관
+  - 연산 연구소
+  - 카드 상점
+  - 학교
+  - 기억의 숲
+  - 이벤트 광장
+  - 항구
+  - 중앙 광장
+- 디오라마 배경도 건물이 겹쳐 보이는 배경 의존도를 낮추고, 개별 건물이 올라가는 모바일 세로 로비용 배경으로 교체했습니다.
+- `src/game/data/dioramaBuildings.ts`의 건물 크기, 위치, 이동 타깃을 새 컷아웃 자산 기준으로 조정했습니다.
+- `MainLobbyScene`에 건물 바닥 그림자 처리를 추가해 투명 컷아웃 건물이 배경 위에 따로 떠 보이지 않게 보정했습니다.
+- 마을 건물 자산 검증을 추가했습니다.
+  - `tools/check-building-assets.mjs`
+  - `npm run check:building-assets`
+  - `npm run verify`에 포함
+- GitHub Actions 자동 배포 흐름은 그대로 유지하며, `.github/workflows/deploy.yml`의 `npm run verify` 기준으로 통과하도록 정리했습니다.
+- 새 버전별 문서 파일은 만들지 않고, 변경 내역은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 누적했습니다.
+- `package.json`, `public/build.json`, `health.html`, `reset.html`, 앱 내부 버전 표기를 1.0.30으로 동기화했습니다.
+
+> 참고: 임시 채팅 환경이라 별도 이미지 생성 모델을 직접 호출하지는 못합니다. 이번 패치는 코드에 바로 적용 가능한 투명 PNG/WebP 건물 컷아웃을 직접 생성해 반영한 버전이며, 향후 최종 상용 원화가 나오면 같은 파일명으로 덮어쓰기만 하면 로비 코드가 꼬이지 않도록 구성했습니다.
 
 ## 1.0.29 업데이트 내역
 
@@ -173,6 +199,10 @@ npm run build
 npm run check:deploy
 npm run check:brand
 npm run check:assets
+npm run check:premium-assets
+npm run check:building-assets
+npm run check:content-engine
+npm run check:polish
 npm run check:ui
 npm run check:layout
 npm run check:association

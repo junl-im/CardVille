@@ -9,7 +9,7 @@ import { CardVilleQuality, getCardVilleQuality, qualitySummary, scaledCount } fr
 import { DIORAMA_BUILDINGS, DioramaBuilding, DioramaRoute } from '../data/dioramaBuildings';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
-const LOBBY_VERSION = '1.0.29';
+const LOBBY_VERSION = '1.0.30';
 const HERO_HOME = { x: 195, y: 545 } as const;
 const CAT_HOME = { x: 145, y: 585 } as const;
 
@@ -115,6 +115,9 @@ export class MainLobbyScene extends Phaser.Scene {
       container.add(glow);
       if (!this.quality.reduceMotion) this.tweens.add({ targets: glow, alpha: 0.12, scale: 1.08, duration: 1100 + (building.x % 3) * 150, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
+
+    const baseShadow = this.add.ellipse(0, building.height * 0.37, building.width * 0.82, Math.max(16, building.height * 0.18), 0x05030a, building.open ? 0.24 : 0.18);
+    container.add(baseShadow);
 
     const image = this.textures.exists(building.assetKey)
       ? this.add.image(0, 0, building.assetKey).setDisplaySize(building.width, building.height)
