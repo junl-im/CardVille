@@ -3,10 +3,20 @@ import { darkText } from './TextStyles';
 
 export type ButtonAction = () => void;
 
+function chooseButtonSkin(scene: Phaser.Scene, width: number): { normal: string; press: string } | null {
+  const size = width >= 240 ? 'Large' : width >= 130 ? 'Medium' : 'Small';
+  const normal = `assetButton${size}`;
+  const press = `assetButton${size}Press`;
+  if (!scene.textures.exists(normal)) return null;
+  return { normal, press: scene.textures.exists(press) ? press : normal };
+}
+
 export class GameButton extends Phaser.GameObjects.Container {
   private bg: Phaser.GameObjects.Graphics;
   private label: Phaser.GameObjects.Text;
   private hitZone: Phaser.GameObjects.Zone;
+  private skinImage?: Phaser.GameObjects.Image;
+  private skin?: { normal: string; press: string } | null;
   private widthValue: number;
   private heightValue: number;
   private colorValue: number;
@@ -21,26 +31,28 @@ export class GameButton extends Phaser.GameObjects.Container {
     this.heightValue = height;
     this.colorValue = color;
 
-    // 1.0.8의 너무 넓은 hit area가 인접 버튼을 가로챌 수 있어서
-    // 1.0.9부터는 보이는 버튼과 거의 같은 범위만 터치하게 한다.
-    const hitW = Math.max(width + 10, 48);
-    const hitH = Math.max(height + 10, 48);
+    const hitW = Math.max(width + 6, 48);
+    const hitH = Math.max(height + 6, 48);
 
     this.bg = scene.add.graphics();
-    this.label = scene.add.text(0, 0, text, darkText(height >= 64 ? 20 : 17)).setOrigin(0.5);
+    this.skin = chooseButtonSkin(scene, width);
+    if (this.skin) {
+      this.skinImage = scene.add.image(0, 2, this.skin.normal).setDisplaySize(width + 16, height + 16);
+    }
+    this.label = scene.add.text(0, -1, text, darkText(height >= 64 ? 20 : height <= 46 ? 14 : 17)).setOrigin(0.5);
     this.hitZone = scene.add.zone(0, 0, hitW, hitH)
       .setOrigin(0.5)
       .setName(`hit:${text}`)
       .setInteractive({ useHandCursor: true });
 
-    this.add([this.bg, this.label, this.hitZone]);
+    this.add(this.skinImage ? [this.bg, this.skinImage, this.label, this.hitZone] : [this.bg, this.label, this.hitZone]);
     this.setSize(hitW, hitH);
     this.draw(false);
 
     this.hitZone.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
       if (this.disabled) return;
       this.pressedInside = true;
-      this.setScale(0.985);
+      this.setScale(0.982);
       this.draw(true);
       this.emit('buttondown', pointer);
     });
@@ -99,8 +111,18 @@ export class GameButton extends Phaser.GameObjects.Container {
     const height = this.heightValue;
     const color = this.colorValue;
     this.bg.clear();
-    this.bg.fillStyle(0x000000, pressed ? 0.16 : 0.28);
+    this.bg.fillStyle(0x000000, pressed ? 0.10 : 0.22);
     this.bg.fillRoundedRect(-width / 2 + 4, -height / 2 + 8, width, height, 20);
+
+    if (this.skinImage && this.skin) {
+      this.skinImage.setTexture(pressed ? this.skin.press : this.skin.normal);
+      this.skinImage.setDisplaySize(width + 16, height + 16);
+      this.skinImage.setAlpha(pressed ? 0.96 : 1);
+      this.bg.lineStyle(1, 0xffffff, pressed ? 0.10 : 0.18);
+      this.bg.strokeRoundedRect(-width / 2 + 3, -height / 2 + 3, width - 6, height - 6, 18);
+      return;
+    }
+
     this.bg.fillGradientStyle(0xffffff, 0xffffff, color, color, 1, 0.98, 1, 0.96);
     this.bg.fillRoundedRect(-width / 2, -height / 2, width, height, 20);
     this.bg.lineStyle(3, 0xffffff, 0.76);

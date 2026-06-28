@@ -1,0 +1,32 @@
+import fs from 'node:fs';
+import path from 'node:path';
+
+const root = process.cwd();
+const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+const mustContain = [
+  ['src/game/scenes/PlayScene.ts', ['layout().boardWidth', 'xs: [108, 187, 266, 345]', 'effectCorrect', 'effectWrong']],
+  ['src/game/scenes/RewardScene.ts', ['packPrefix', 'assetPackLegendary', '터치해서 열기', 'spawnSparkles']],
+  ['src/game/ui/GameButton.ts', ['assetButton${size}', 'chooseButtonSkin', 'skinImage']],
+  ['src/game/systems/DrawSystem.ts', ['particleStar', '2.5D plaza', 'assetVillageBg']]
+];
+for (const [file, tokens] of mustContain) {
+  const text = fs.readFileSync(path.join(root, file), 'utf8');
+  for (const token of tokens) {
+    if (!text.includes(token)) throw new Error(`${file} missing token: ${token}`);
+  }
+}
+const build = JSON.parse(fs.readFileSync(path.join(root, 'public/build.json'), 'utf8'));
+if (build.version !== pkg.version) throw new Error(`build.json version ${build.version} != package ${pkg.version}`);
+const requiredAssets = [
+  'public/assets/packs/pack_common_closed.png',
+  'public/assets/packs/pack_rare_open.png',
+  'public/assets/packs/pack_epic_open.png',
+  'public/assets/packs/pack_legendary_open.png',
+  'public/assets/effects/effect_correct_01.png',
+  'public/assets/particles/particle_sparkle_01.png',
+  'public/assets/buttons/button_large_시작_normal.png'
+];
+for (const asset of requiredAssets) {
+  if (!fs.existsSync(path.join(root, asset))) throw new Error(`Missing required 1.0.14 asset: ${asset}`);
+}
+console.log(`Layout/asset check passed. Version ${pkg.version}, pack opening and 2.5D UI assets OK.`);

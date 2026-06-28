@@ -37,7 +37,7 @@ export class LoginScene extends Phaser.Scene {
       '처음 시작은 게스트로 바로 들어갈 수 있어요.',
       { ...applyWrap(bodyText(13), 330), lineSpacing: 5 }
     ).setOrigin(0.5);
-    this.add.text(340, 32, '1.0.13', mutedText(12)).setOrigin(0.5);
+    this.add.text(340, 32, '1.0.14', mutedText(12)).setOrigin(0.5);
   }
 
   private drawHeroBackground(): void {

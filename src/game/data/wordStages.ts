@@ -334,6 +334,146 @@ export const WORD_STAGES: StageDeck[] = [
         { id: 'lucky2', label: '행운', category: 'cute', tag: '기분' }
       ]
     ]
+  },
+  {
+    id: 9,
+    title: '고양이 상점가',
+    note: '동물, 음식, 도구를 한 번에 정리해요.',
+    difficulty: '도전',
+    steps: 32,
+    goals: [
+      { label: '동물 손님', category: 'animal', needed: 4 },
+      { label: '맛있는 간식', category: 'food', needed: 3 },
+      { label: '상점 도구', category: 'tool', needed: 3 }
+    ],
+    columns: [
+      [
+        { id: 'cat_shop', label: '고양이 점원', category: 'animal', tag: '동물' },
+        { id: 'fishbread', label: '붕어빵', category: 'food', tag: '음식' },
+        { id: 'ribbon_tool', label: '포장 리본', category: 'tool', tag: '도구' },
+        { id: 'kitten', label: '아기 고양이', category: 'animal', tag: '동물' }
+      ],
+      [
+        { id: 'puppy_shop', label: '강아지 손님', category: 'animal', tag: '동물' },
+        { id: 'cookie_shop', label: '별 쿠키', category: 'food', tag: '음식' },
+        { id: 'stamp', label: '도장', category: 'tool', tag: '도구' }
+      ],
+      [
+        { id: 'spoon', label: '스푼', category: 'tool', tag: '도구' },
+        { id: 'milk', label: '우유', category: 'food', tag: '음식' },
+        { id: 'rabbit_shop', label: '토끼 손님', category: 'animal', tag: '동물' }
+      ],
+      [
+        { id: 'bag', label: '작은 가방', category: 'tool', tag: '도구' },
+        { id: 'cake_shop', label: '딸기 케이크', category: 'food', tag: '음식' },
+        { id: 'bird_shop', label: '파랑새', category: 'animal', tag: '동물' }
+      ]
+    ]
+  },
+  {
+    id: 10,
+    title: '별빛 카드축제',
+    note: '마법, 귀여움, 움직임 카드가 반짝이는 축제예요.',
+    difficulty: '도전',
+    steps: 33,
+    goals: [
+      { label: '반짝 마법', category: 'magic', needed: 4 },
+      { label: '귀여운 장식', category: 'cute', needed: 3 },
+      { label: '축제 움직임', category: 'motion', needed: 3 }
+    ],
+    columns: [
+      [
+        { id: 'festival_spark', label: '별빛 폭죽', category: 'magic', tag: '마법' },
+        { id: 'festival_dance', label: '빙글 춤', category: 'motion', tag: '동작' },
+        { id: 'festival_hat', label: '동글 모자', category: 'cute', tag: '장식' },
+        { id: 'festival_spell', label: '반짝 주문', category: 'magic', tag: '마법' }
+      ],
+      [
+        { id: 'festival_jump', label: '폴짝 뛰기', category: 'motion', tag: '동작' },
+        { id: 'festival_wand', label: '별 마법봉', category: 'magic', tag: '도구' },
+        { id: 'festival_smile', label: '방긋 미소', category: 'cute', tag: '표정' }
+      ],
+      [
+        { id: 'festival_ribbon', label: '축제 리본', category: 'cute', tag: '장식' },
+        { id: 'festival_run', label: '깃발 들고 달리기', category: 'motion', tag: '동작' },
+        { id: 'festival_glow', label: '빛나는 카드', category: 'magic', tag: '마법' }
+      ],
+      [
+        { id: 'festival_twinkle', label: '반짝반짝', category: 'magic', tag: '마법' },
+        { id: 'festival_wave', label: '손 흔들기', category: 'motion', tag: '동작' },
+        { id: 'festival_bow', label: '작은 리본', category: 'cute', tag: '장식' }
+      ]
+    ]
+  },
+  {
+    id: 11,
+    title: '숲속 카드길',
+    note: '자연, 장소, 피로 계열을 넓은 보드에서 분류해요.',
+    difficulty: '도전',
+    steps: 34,
+    goals: [
+      { label: '자연의 길', category: 'nature', needed: 4 },
+      { label: '숲속 장소', category: 'place', needed: 4 },
+      { label: '쉬어가기', category: 'tired', needed: 3 }
+    ],
+    columns: [
+      [
+        { id: 'woods_leaf', label: '푸른 잎', category: 'nature', tag: '자연' },
+        { id: 'woods_bench', label: '나무 벤치', category: 'place', tag: '장소' },
+        { id: 'woods_rest', label: '잠깐 휴식', category: 'tired', tag: '상태' },
+        { id: 'woods_tree', label: '커다란 나무', category: 'nature', tag: '자연' }
+      ],
+      [
+        { id: 'woods_path', label: '숲길', category: 'place', tag: '장소' },
+        { id: 'woods_cloud', label: '몽실 구름', category: 'nature', tag: '자연' },
+        { id: 'woods_yawn', label: '하품', category: 'tired', tag: '상태' }
+      ],
+      [
+        { id: 'woods_pond', label: '작은 연못', category: 'place', tag: '장소' },
+        { id: 'woods_flower', label: '꽃송이', category: 'nature', tag: '자연' },
+        { id: 'woods_sleepy', label: '졸린 눈', category: 'tired', tag: '상태' }
+      ],
+      [
+        { id: 'woods_hut', label: '숲속 오두막', category: 'place', tag: '장소' },
+        { id: 'woods_wind', label: '상쾌한 바람', category: 'nature', tag: '자연' },
+        { id: 'woods_nap', label: '낮잠', category: 'tired', tag: '상태' }
+      ]
+    ]
+  },
+  {
+    id: 12,
+    title: '카드마을 챔피언전',
+    note: '지금까지 배운 계열을 종합해서 정리하는 보스 스테이지예요.',
+    difficulty: '도전',
+    steps: 36,
+    goals: [
+      { label: '방어 준비', category: 'guard', needed: 4 },
+      { label: '마법 지원', category: 'magic', needed: 4 },
+      { label: '행운 응원', category: 'cute', needed: 4 }
+    ],
+    columns: [
+      [
+        { id: 'champ_shield', label: '왕관 방패', category: 'guard', tag: '방어' },
+        { id: 'champ_star', label: '별가루', category: 'magic', tag: '마법' },
+        { id: 'champ_lucky', label: '행운 부적', category: 'cute', tag: '행운' },
+        { id: 'champ_wall', label: '카드 장벽', category: 'guard', tag: '방어' }
+      ],
+      [
+        { id: 'champ_spell', label: '카드 주문', category: 'magic', tag: '마법' },
+        { id: 'champ_smile', label: '응원 미소', category: 'cute', tag: '표정' },
+        { id: 'champ_guard', label: '지키다', category: 'guard', tag: '행동' }
+      ],
+      [
+        { id: 'champ_barrier', label: '반짝 보호막', category: 'guard', tag: '방어' },
+        { id: 'champ_wand', label: '용기 마법봉', category: 'magic', tag: '도구' },
+        { id: 'champ_ribbon', label: '우승 리본', category: 'cute', tag: '장식' }
+      ],
+      [
+        { id: 'champ_crown', label: '왕관 카드', category: 'cute', tag: '행운' },
+        { id: 'champ_aura', label: '황금 오라', category: 'magic', tag: '마법' },
+        { id: 'champ_fort', label: '작은 요새', category: 'guard', tag: '방어' }
+      ]
+    ]
   }
 ];
 

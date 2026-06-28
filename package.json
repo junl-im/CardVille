@@ -1,17 +1,18 @@
 {
   "name": "cardville",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.13 wide mobile UI, casual 2.5D asset integration and readability upgrade.",
+  "description": "CardVille 1.0.14 casual 2.5D UI, layout, pack opening and content upgrade.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "check:deploy": "node tools/check-deploy.mjs",
-    "verify": "npm run build && npm run check:deploy && npm run check:brand && npm run check:ui",
+    "verify": "npm run build && npm run check:deploy && npm run check:brand && npm run check:ui && npm run check:layout",
     "check:brand": "node tools/check-brand.mjs",
-    "check:ui": "node tools/check-ui.mjs"
+    "check:ui": "node tools/check-ui.mjs",
+    "check:layout": "node tools/check-layout.mjs"
   },
   "dependencies": {
     "firebase": "12.15.0",

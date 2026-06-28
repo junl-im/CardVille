@@ -70,4 +70,4 @@ preventBrowserGestures();
 const game = new Phaser.Game(config);
 BackButtonSystem.install(game);
 window.__CARDVILLE_READY__ = true;
-console.info('[CardVille] booted 1.0.13', game.isBooted);
+console.info('[CardVille] booted 1.0.14', game.isBooted);
