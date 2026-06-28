@@ -53,7 +53,7 @@ export function darkText(size = 18): TextStyle {
     fontStyle: '900',
     color: '#14233f',
     stroke: '#ffffff',
-    strokeThickness: 1,
+    strokeThickness: 2,
     shadow: {
       offsetX: 0,
       offsetY: 1,
@@ -70,8 +70,8 @@ export function cardText(size = 24): TextStyle {
     fontFamily: UI_FONT_FAMILY,
     fontSize: `${size}px`,
     fontStyle: '900',
-    color: '#14233f',
-    stroke: '#ffffff',
+    color: '#4a1b28',
+    stroke: '#fffaf0',
     strokeThickness: 3,
     align: 'center',
     shadow: {
@@ -82,6 +82,13 @@ export function cardText(size = 24): TextStyle {
       fill: true
     },
     resolution: RESOLUTION
+  };
+}
+
+export function cardSmallText(size = 12): TextStyle {
+  return {
+    ...cardText(size),
+    strokeThickness: 2
   };
 }
 

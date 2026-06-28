@@ -13,28 +13,28 @@ export class LoginScene extends Phaser.Scene {
   create(): void {
     DrawSystem.background(this, '카드마을');
     panel(this, 195, 188, 340, 260, 32);
-    this.add.text(195, 112, 'CardVille', titleText(44)).setOrigin(0.5);
-    this.add.text(195, 160, '카드마을', goldText(24)).setOrigin(0.5);
+    this.add.text(195, 108, 'CardVille', titleText(44)).setOrigin(0.5);
+    this.add.text(195, 156, '말 카드가 모이는 마을', goldText(22)).setOrigin(0.5);
     this.add.text(
       195,
       220,
-      '카드를 맞추고 보상을 모으는 캐주얼 카드 퍼즐입니다.\n게스트는 서버 없이 바로 시작합니다.',
+      '단어를 고르고, 스택을 정리하고, 카드 앨범을 채워가는 캐주얼 말 카드 게임입니다.',
       { ...applyWrap(bodyText(15), 302), lineSpacing: 7 }
     ).setOrigin(0.5);
 
     panel(this, 195, 530, 348, 470, 34);
-    new GameButton(this, 195, 330, '게스트로 바로 시작', 312, 78, 0xffd86f).onClick(() => this.guest());
-    new GameButton(this, 195, 430, 'Google 로그인', 312, 62, 0x8fd3ff).onClick(() => void this.google());
-    new GameButton(this, 121, 506, '이메일 로그인', 142, 56, 0xc9f4ff).onClick(() => void this.email(false));
-    new GameButton(this, 269, 506, '가입', 142, 56, 0xf0c7ff).onClick(() => void this.email(true));
+    new GameButton(this, 195, 330, '게스트로 바로 시작', 312, 76, 0xffd86f).onClick(() => this.guest());
+    new GameButton(this, 195, 426, 'Google 로그인', 312, 60, 0x8fd3ff).onClick(() => void this.google());
+    new GameButton(this, 121, 504, '이메일 로그인', 142, 54, 0xc9f4ff).onClick(() => void this.email(false));
+    new GameButton(this, 269, 504, '가입', 142, 54, 0xf0c7ff).onClick(() => void this.email(true));
 
     this.status = this.add.text(
       195,
       624,
-      '버튼 전체 영역을 누를 수 있도록 터치 범위를 보정했습니다.',
+      '버튼은 보이는 영역 기준으로 정확히 눌리도록 다시 보정했습니다.',
       { ...applyWrap(mutedText(14), 316), lineSpacing: 6 }
     ).setOrigin(0.5);
-    this.add.text(195, 790, '1.0.8', mutedText(12)).setOrigin(0.5);
+    this.add.text(195, 790, '1.0.9', mutedText(12)).setOrigin(0.5);
   }
 
   private guest(): void {
