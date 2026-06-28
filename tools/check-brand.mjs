@@ -4,7 +4,6 @@ import path from 'node:path';
 const root = process.cwd();
 const banned = ['꿈의 서고', '꿈의서고', 'Dream Library'];
 const allow = new Set([
-  'docs/PATCH_NOTES_1.0.8.md',
   'tools/check-brand.mjs'
 ]);
 const exts = new Set(['.ts', '.tsx', '.js', '.mjs', '.html', '.json', '.md']);

@@ -125,6 +125,24 @@ export class IntroLoadingScene extends Phaser.Scene {
 
   private queueGameAssets(): void {
     this.queueImage('assetVillageBg', 'assets/backgrounds/cherry_blossom_day.png');
+
+    // One-screen CardVille diorama lobby assets. The lobby stays fixed-camera and
+    // uses individual PNG building/object layers instead of an SVG or scrolling tile map.
+    this.queueImage('dioramaBg', 'assets/diorama/diorama_bg.png');
+    this.queueImage('dioramaCastle', 'assets/diorama/building_castle.png');
+    this.queueImage('dioramaLibrary', 'assets/diorama/building_library.png');
+    this.queueImage('dioramaLab', 'assets/diorama/building_lab.png');
+    this.queueImage('dioramaShop', 'assets/diorama/building_shop.png');
+    this.queueImage('dioramaSchool', 'assets/diorama/building_school.png');
+    this.queueImage('dioramaForest', 'assets/diorama/building_forest.png');
+    this.queueImage('dioramaEvent', 'assets/diorama/building_event.png');
+    this.queueImage('dioramaHarbor', 'assets/diorama/building_harbor.png');
+    this.queueImage('dioramaPlaza', 'assets/diorama/building_plaza.png');
+    this.queueImage('dioramaHero', 'assets/diorama/character_boy_token.png');
+    this.queueImage('dioramaCat', 'assets/diorama/mascot_black_cat_token.png');
+    this.queueImage('dioramaFloatingCard', 'assets/diorama/ambient_floating_card.png');
+    this.queueImage('dioramaButterfly', 'assets/diorama/ambient_butterfly.png');
+    this.queueImage('dioramaCloud', 'assets/diorama/ambient_cloud_01.png');
     this.queueImage('assetForestBg', 'assets/backgrounds/forest_day.png');
     this.queueImage('assetCoin', 'assets/icons/icon_game_coin.png');
     this.queueImage('assetGem', 'assets/icons/icon_game_gem.png');

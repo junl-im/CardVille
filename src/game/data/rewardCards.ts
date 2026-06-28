@@ -32,11 +32,7 @@ export const REWARD_CARDS: RewardCard[] = [
   { id: '달빛 방패단 카드', icon: '🌙', rarity: 'epic', category: '보호' },
   { id: '왕관 퍼레이드 카드', icon: '👑', rarity: 'legendary', category: '축제' },
   { id: '고양이 상점 카드', icon: '🐱', rarity: 'rare', category: '마을' },
-  { id: '카드 정원사 카드', icon: '🌷', rarity: 'common', category: '자연' },
-  { id: '아침 산책 카드', icon: '🌤️', rarity: 'common', category: '산책' },
-  { id: '보석 공방 카드', icon: '💎', rarity: 'epic', category: '공방' },
-  { id: '맛 축제 카드', icon: '🍪', rarity: 'rare', category: '축제' },
-  { id: '마스터 배지 카드', icon: '🏅', rarity: 'legendary', category: '마스터' }
+  { id: '카드 정원사 카드', icon: '🌷', rarity: 'common', category: '자연' }
 
 ];
 

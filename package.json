@@ -1,9 +1,9 @@
 {
   "name": "cardville",
-  "version": "1.0.21",
+  "version": "1.0.24",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.21 fixes duplicated start overlay/video play marker/back navigation UX, compacts login controls, polishes cards, and strengthens association/security checks.",
+  "description": "CardVille 1.0.24 locks delivery rules, README-only cumulative version notes, and AI handoff documentation.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",
