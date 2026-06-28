@@ -1,6 +1,5 @@
 import Phaser from 'phaser';
 import { GameButton } from '../ui/GameButton';
-import { panel } from '../ui/Panel';
 import { DrawSystem } from '../systems/DrawSystem';
 import { AuthSystem } from '../systems/AuthSystem';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
@@ -11,30 +10,44 @@ export class LoginScene extends Phaser.Scene {
   constructor() { super('LoginScene'); }
 
   create(): void {
-    DrawSystem.background(this, '카드마을');
-    panel(this, 195, 188, 340, 260, 32);
-    this.add.text(195, 108, 'CardVille', titleText(44)).setOrigin(0.5);
-    this.add.text(195, 156, '말 카드가 모이는 마을', goldText(22)).setOrigin(0.5);
-    this.add.text(
-      195,
-      220,
-      '단어를 고르고, 스택을 정리하고, 카드 앨범을 채워가는 캐주얼 말 카드 게임입니다.',
-      { ...applyWrap(bodyText(15), 302), lineSpacing: 7 }
-    ).setOrigin(0.5);
+    this.drawHeroBackground();
 
-    panel(this, 195, 530, 348, 470, 34);
-    new GameButton(this, 195, 330, '게스트로 바로 시작', 312, 76, 0xffd86f).onClick(() => this.guest());
-    new GameButton(this, 195, 426, 'Google 로그인', 312, 60, 0x8fd3ff).onClick(() => void this.google());
-    new GameButton(this, 121, 504, '이메일 로그인', 142, 54, 0xc9f4ff).onClick(() => void this.email(false));
-    new GameButton(this, 269, 504, '가입', 142, 54, 0xf0c7ff).onClick(() => void this.email(true));
+    // Bottom safe login deck. The uploaded title art stays visible, buttons sit on a readable glass plate.
+    const g = this.add.graphics();
+    g.fillGradientStyle(0x020814, 0x020814, 0x020814, 0x020814, 0, 0, 0.88, 0.96);
+    g.fillRect(0, 558, 390, 286);
+    g.fillStyle(0x061127, 0.58);
+    g.fillRoundedRect(18, 562, 354, 258, 32);
+    g.lineStyle(2, 0xffffff, 0.28);
+    g.strokeRoundedRect(18, 562, 354, 258, 32);
+    g.fillStyle(0xffffff, 0.14);
+    g.fillRoundedRect(42, 578, 306, 14, 8);
+
+    this.add.text(195, 604, '카드마을에 오신 걸 환영해요', titleText(22)).setOrigin(0.5);
+    this.add.text(195, 636, '말 카드를 모아 마을을 꾸미는 캐주얼 카드 퍼즐', goldText(14)).setOrigin(0.5);
+
+    new GameButton(this, 195, 684, '게스트로 게임 시작', 316, 62, 0xffd86f).onClick(() => this.guest());
+    new GameButton(this, 195, 752, 'Google 로그인', 316, 54, 0x8fd3ff).onClick(() => void this.google());
+    new GameButton(this, 120, 808, '이메일', 142, 44, 0xc9f4ff).onClick(() => void this.email(false));
+    new GameButton(this, 270, 808, '가입', 142, 44, 0xf0c7ff).onClick(() => void this.email(true));
 
     this.status = this.add.text(
       195,
-      624,
-      '버튼은 보이는 영역 기준으로 정확히 눌리도록 다시 보정했습니다.',
-      { ...applyWrap(mutedText(14), 316), lineSpacing: 6 }
+      546,
+      '처음 시작은 게스트로 바로 들어갈 수 있어요.',
+      { ...applyWrap(bodyText(13), 330), lineSpacing: 5 }
     ).setOrigin(0.5);
-    this.add.text(195, 790, '1.0.11', mutedText(12)).setOrigin(0.5);
+    this.add.text(340, 32, '1.0.12', mutedText(12)).setOrigin(0.5);
+  }
+
+  private drawHeroBackground(): void {
+    if (this.textures.exists('loginBg')) {
+      this.add.image(195, 422, 'loginBg').setDisplaySize(390, 844);
+      this.add.rectangle(195, 422, 390, 844, 0x000000, 0.08);
+      this.add.rectangle(195, 54, 390, 108, 0x020814, 0.12);
+      return;
+    }
+    DrawSystem.background(this, '카드마을');
   }
 
   private guest(): void {

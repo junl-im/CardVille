@@ -1,7 +1,9 @@
 import Phaser from 'phaser';
 import './styles/index.css';
 import { preventBrowserGestures } from './game/systems/LayoutSystem';
+import { BackButtonSystem } from './game/systems/BackButtonSystem';
 import { BootScene } from './game/scenes/BootScene';
+import { IntroLoadingScene } from './game/scenes/IntroLoadingScene';
 import { LoginScene } from './game/scenes/LoginScene';
 import { MainLobbyScene } from './game/scenes/MainLobbyScene';
 import { ModeSelectScene } from './game/scenes/ModeSelectScene';
@@ -10,6 +12,7 @@ import { PlayScene } from './game/scenes/PlayScene';
 import { ResultScene } from './game/scenes/ResultScene';
 import { RewardScene } from './game/scenes/RewardScene';
 import { CollectionScene } from './game/scenes/CollectionScene';
+import { BackConfirmScene } from './game/scenes/BackConfirmScene';
 
 declare global {
   interface Window {
@@ -36,7 +39,19 @@ const config: Phaser.Types.Core.GameConfig = {
     pixelArt: false,
     roundPixels: false
   },
-  scene: [BootScene, LoginScene, MainLobbyScene, ModeSelectScene, StageSelectScene, PlayScene, ResultScene, RewardScene, CollectionScene]
+  scene: [
+    BootScene,
+    IntroLoadingScene,
+    LoginScene,
+    MainLobbyScene,
+    ModeSelectScene,
+    StageSelectScene,
+    PlayScene,
+    ResultScene,
+    RewardScene,
+    CollectionScene,
+    BackConfirmScene
+  ]
 };
 
 window.addEventListener('error', (event) => {
@@ -53,5 +68,6 @@ window.addEventListener('unhandledrejection', (event) => {
 
 preventBrowserGestures();
 const game = new Phaser.Game(config);
+BackButtonSystem.install(game);
 window.__CARDVILLE_READY__ = true;
-console.info("[CardVille] booted 1.0.11", game.isBooted);
+console.info('[CardVille] booted 1.0.12', game.isBooted);

@@ -1,9 +1,9 @@
 {
   "name": "cardville",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.11 UI/UX layout polish, expanded word stack content, performance guards and design upgrade.",
+  "description": "CardVille 1.0.12 opening UX, login hero background, intro loading video and mobile back-button popup.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",

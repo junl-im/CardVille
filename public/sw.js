@@ -23,5 +23,5 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', () => {
-  // No caching in 1.0.11 clean stable build.
+  // No caching in 1.0.12 clean stable build.
 });
