@@ -25,12 +25,17 @@ mustContain('src/game/systems/QualitySystem.ts', ['getCardVilleQuality', 'scaled
 mustContain('src/game/data/lobbyEntities.ts', ['LOBBY_PROPS', 'LOBBY_NPCS', 'LOBBY_SAFE_RULES', 'npcMerchant', 'propFountain']);
 mustContain('src/game/data/modeCatalog.ts', ['GAME_MODES', "id: 'math'", "id: 'memory'", 'nextWork']);
 mustContain('src/game/scenes/MainLobbyScene.ts', ['addCoverImage', 'allowAmbientMotion', 'ambientCount', 'drawBuildingStatusChip', 'qualitySummary', 'LOBBY_SAFE_RULES', 'toastBg?.destroy']);
-mustContain('src/game/scenes/ModeSelectScene.ts', ['GAME_MODES', 'focusModeId', 'showPlannedToast', '추천']);
+mustContain('src/game/scenes/ModeSelectScene.ts', ['GAME_MODES', 'focusModeId', 'showPlannedToast', 'modeProgressSummary', '문제팩 선택']);
 mustContain('src/game/data/dioramaBuildings.ts', ["scene: 'MathLabScene'", "scene: 'MemoryForestScene'", "scene: 'ModeSelectScene'"]);
 mustContain('src/game/systems/LayoutSystem.ts', ['b.visibleX + b.visibleWidth / 2', 'b.visibleY + b.visibleHeight / 2', 'fitTextSize', 'compactText']);
-mustContain('src/game/ui/GameButton.ts', ['fitTextSize', 'compactText', 'lastActivatedAt']);
+mustContain('src/game/ui/GameButton.ts', ['fitTextSize', 'compactText', 'lastActivatedAt', 'GameButtonOptions', 'shineEnabled', 'debounceMs']);
+mustContain('src/game/scenes/StageSelectScene.ts', ['stageEntries', 'drawProgressStrip', 'MathLabScene', 'MemoryForestScene', 'showLockedHint']);
+mustContain('src/game/scenes/RewardScene.ts', ['drawPackQualityBar', 'lobbyButton', 'ambientCount', '카드 앨범 보기']);
+mustContain('src/game/scenes/CollectionScene.ts', ['drawAlbumStats', '총 ${totalCopies}장', 'LOCKED']);
 mustContain('src/game/scenes/MathLabScene.ts', ['getCardVilleQuality', 'allowAmbientMotion', 'isMotionEnabled']);
 mustContain('src/game/scenes/MemoryForestScene.ts', ['getCardVilleQuality', 'ambientCount', 'scaledDuration']);
+mustContain('src/game/scenes/LoginScene.ts', ['LOGIN_CTA_BUTTON_STYLE', 'skin: false', 'shine: false', 'LOGIN_PANEL_H']);
+mustContain('src/game/scenes/PlayScene.ts', ['drawPremiumBottomRail', '목표 체인', '카드 보드 · TOP 카드만 터치', 'ambientCount(6', 'isMotionEnabled(this.quality)']);
 mustContain('src/game/data/lobbyLayoutPlan.ts', ['LOBBY_DESIGN_CHECKS', 'cover composition', 'double taps']);
 
 const buildings = read('src/game/data/dioramaBuildings.ts');

@@ -5,6 +5,7 @@ import { GameButton } from '../ui/GameButton';
 import { applyWrap, bodyText, cardSmallText, cardText, goldText, mutedText, titleText } from '../ui/TextStyles';
 import { CATEGORY_COLOR, CATEGORY_LABELS, getStageDeck, GoalCard, StageDeck, WordCard } from '../data/wordStages';
 import { applyResponsiveCamera, compactText, distributeColumns, fitTextSize, hasTouchDebug, layout, playArea } from '../systems/LayoutSystem';
+import { ambientCount, CardVilleQuality, getCardVilleQuality, isMotionEnabled, scaledDuration } from '../systems/QualitySystem';
 
 type ResumeState = {
   columns: WordCard[][];
@@ -35,6 +36,7 @@ export class PlayScene extends Phaser.Scene {
   private shufflesLeft = 1;
   private inputLocked = false;
   private bonusMeter = 0;
+  private quality: CardVilleQuality = getCardVilleQuality();
 
   private hudLayer!: Phaser.GameObjects.Container;
   private goalLayer!: Phaser.GameObjects.Container;
@@ -63,6 +65,7 @@ export class PlayScene extends Phaser.Scene {
 
   create(): void {
     applyResponsiveCamera(this);
+    this.quality = getCardVilleQuality();
     const profile = SaveSystem.loadProfile();
     this.deck = getStageDeck(this.stage);
 
@@ -99,9 +102,24 @@ export class PlayScene extends Phaser.Scene {
     this.effectLayer = this.add.container(0, 0);
     this.drawGoalArea();
     this.drawSidePanel();
+    this.drawPremiumBottomRail();
     this.noteText = this.add.text(195, 812, '맨 위 카드만 선택됩니다. 목표 계열을 보고 카드 스택을 정리하세요.', applyWrap(mutedText(12), Math.min(420, layout(this).visibleWidth - 28))).setOrigin(0.5);
     this.redrawBoard();
     this.refreshHud();
+  }
+
+
+  private drawPremiumBottomRail(): void {
+    const l = layout(this);
+    const g = this.add.graphics();
+    g.fillStyle(0x07142c, 0.58);
+    g.fillRoundedRect(l.visibleX + 18, 786, l.visibleWidth - 36, 38, 18);
+    g.lineStyle(1, 0xffffff, 0.12);
+    g.strokeRoundedRect(l.visibleX + 18, 786, l.visibleWidth - 36, 38, 18);
+    g.fillStyle(0x8fd3ff, 0.12);
+    g.fillRoundedRect(l.visibleX + 34, 796, 74, 8, 4);
+    g.fillStyle(0xffd86f, 0.12);
+    g.fillRoundedRect(l.visibleX + l.visibleWidth - 108, 796, 74, 8, 4);
   }
 
   private cloneColumns(columns: WordCard[][]): WordCard[][] {
@@ -194,14 +212,23 @@ export class PlayScene extends Phaser.Scene {
     g.strokeRoundedRect(goalX, 184, goalW, 172, 24);
     g.fillStyle(0xffffff, 0.12);
     g.fillRoundedRect(goalX + 16, 194, goalW - 32, 26, 12);
+    const chainW = goalW - 42;
+    const chainProgress = Phaser.Math.Clamp((this.goalIndex + this.goalProgress / Math.max(1, goal.needed)) / Math.max(1, this.deck.goals.length), 0, 1);
+    g.fillStyle(0x26334f, 0.78);
+    g.fillRoundedRect(goalX + 21, 226, chainW, 9, 5);
+    g.fillStyle(0xffd86f, 0.86);
+    g.fillRoundedRect(goalX + 21, 226, Math.max(10, chainW * chainProgress), 9, 5);
+    g.fillStyle(0xffffff, 0.08);
+    g.fillRoundedRect(goalX + 32, 242, goalW - 64, 22, 11);
     this.goalLayer.add(g);
 
-    this.drawGoalCard(goalCardX, 267, goalCardW, 130, goal);
-    this.drawBackCardToLayer(this.goalLayer, backX, 267, backW, 98, `${Math.max(0, this.deck.goals.length - this.goalIndex - 1)}`);
-    this.goalTitleText = this.add.text(goalCardX, 334, `목표 ${this.goalIndex + 1}/${this.deck.goals.length}`, goldText(13)).setOrigin(0.5);
+    this.drawGoalCard(goalCardX, 273, goalCardW, 124, goal);
+    this.drawBackCardToLayer(this.goalLayer, backX, 273, backW, 94, `${Math.max(0, this.deck.goals.length - this.goalIndex - 1)}`);
+    this.goalTitleText = this.add.text(goalCardX, 335, `목표 ${this.goalIndex + 1}/${this.deck.goals.length}`, goldText(13)).setOrigin(0.5);
     this.goalMetaText = this.add.text(goalCenter, 207, `${this.deck.title} · ${this.deck.difficulty}`, mutedText(11)).setOrigin(0.5);
-    this.progressText = this.add.text(goalCardX, 352, `${this.goalProgress}/${goal.needed}`, bodyText(13)).setOrigin(0.5);
-    this.goalLayer.add([this.goalTitleText, this.goalMetaText, this.progressText]);
+    const chainText = this.add.text(goalCenter, 253, `목표 체인 ${Math.round(chainProgress * 100)}%`, mutedText(9)).setOrigin(0.5);
+    this.progressText = this.add.text(goalCardX, 351, `${this.goalProgress}/${goal.needed}`, bodyText(13)).setOrigin(0.5);
+    this.goalLayer.add([this.goalTitleText, this.goalMetaText, chainText, this.progressText]);
   }
 
   private drawGoalCard(x: number, y: number, w: number, h: number, goal: GoalCard): void {
@@ -250,17 +277,22 @@ export class PlayScene extends Phaser.Scene {
     rail.fillRoundedRect(railX, railY, railW, railH, 26);
     rail.fillStyle(0x1d4d84, 0.14);
     rail.fillRoundedRect(railX + 10, railY + 10, railW - 20, 36, 18);
+    rail.fillStyle(0xffd86f, 0.12);
+    rail.fillRoundedRect(railX + 20, railY + 18, railW - 40, 7, 4);
     rail.lineStyle(2, 0xffffff, 0.24);
     rail.strokeRoundedRect(railX, railY, railW, railH, 26);
     rail.fillStyle(0xfff3d0, 0.12);
     for (const x of xs) rail.fillRoundedRect(x - cardW / 2 - 5, railY + 12, cardW + 10, railH - 24, 18);
     this.boardLayer.add(rail);
+    this.boardLayer.add(this.add.text(railX + 22, railY + 36, '카드 보드 · TOP 카드만 터치', mutedText(9)).setOrigin(0, 0.5));
+    this.boardLayer.add(this.add.text(railX + railW - 22, railY + 36, `${this.columns.flat().length}장 남음`, goldText(10)).setOrigin(1, 0.5));
 
     this.columns.forEach((column, colIndex) => {
       const columnHeight = Math.max(1, column.length);
       const topY = baseY + Math.max(0, columnHeight - 1) * gapY;
       const glow = this.add.rectangle(xs[colIndex], topY, cardW + 12, cardH + 12, 0xffffff, 0.045);
-      this.boardLayer.add(glow);
+      const columnBadge = this.add.text(xs[colIndex], railY + 62, `${column.length}`, mutedText(9)).setOrigin(0.5);
+      this.boardLayer.add([glow, columnBadge]);
       column.forEach((card, rowIndex) => {
         const x = xs[colIndex];
         const y = baseY + rowIndex * gapY;
@@ -282,13 +314,14 @@ export class PlayScene extends Phaser.Scene {
 
   private animateCardSettle(cardObj: Phaser.GameObjects.Container, rowIndex: number, isTop: boolean): void {
     cardObj.setAlpha(isTop ? 1 : 0.96);
+    if (!isMotionEnabled(this.quality)) return;
     const targetY = cardObj.y;
     cardObj.y = targetY - (isTop ? 10 : 5);
     this.tweens.add({
       targets: cardObj,
       y: targetY,
       alpha: isTop ? 1 : 0.96,
-      duration: 120 + rowIndex * 18,
+      duration: scaledDuration(120 + rowIndex * 18, this.quality),
       ease: 'Sine.easeOut'
     });
   }
@@ -511,7 +544,8 @@ export class PlayScene extends Phaser.Scene {
 
   private spawnMiniSparkles(x: number, y: number, color: number): void {
     const texture = this.textures.exists('particleSparkle') ? 'particleSparkle' : undefined;
-    for (let i = 0; i < 6; i += 1) {
+    const count = ambientCount(6, this.quality, 2);
+    for (let i = 0; i < count; i += 1) {
       const obj = texture ? this.add.image(x, y, texture).setDisplaySize(14, 14) : this.add.circle(x, y, 4, color, 0.75);
       this.effectLayer.add(obj);
       this.tweens.add({
@@ -520,7 +554,7 @@ export class PlayScene extends Phaser.Scene {
         y: y + Phaser.Math.Between(-42, -16),
         alpha: 0,
         scale: { from: 0.7, to: 1.3 },
-        duration: 440 + i * 18,
+        duration: scaledDuration(440 + i * 18, this.quality),
         ease: 'Sine.easeOut',
         onComplete: () => obj.destroy()
       });
@@ -528,7 +562,7 @@ export class PlayScene extends Phaser.Scene {
   }
 
   private animateWrong(source: Phaser.GameObjects.Container): void {
-    this.cameras.main.shake(120, 0.004);
+    if (isMotionEnabled(this.quality)) this.cameras.main.shake(120, 0.004);
     this.flash(0xff5e7a);
     if (this.textures.exists('effectWrong')) {
       const effect = this.add.image(source.x, source.y, 'effectWrong').setDisplaySize(94, 94).setAlpha(0.54);
@@ -536,7 +570,7 @@ export class PlayScene extends Phaser.Scene {
       this.tweens.add({ targets: effect, scale: 1.28, alpha: 0, duration: 300, ease: 'Sine.easeOut', onComplete: () => effect.destroy() });
     }
     const originalX = source.x;
-    this.tweens.add({ targets: source, x: originalX + 5, yoyo: true, repeat: 3, duration: 38, onComplete: () => { source.x = originalX; } });
+    if (isMotionEnabled(this.quality)) this.tweens.add({ targets: source, x: originalX + 5, yoyo: true, repeat: 3, duration: scaledDuration(38, this.quality), onComplete: () => { source.x = originalX; } });
     this.flyText(source.x, source.y - 64, '-30', 0xff8aa0);
   }
 

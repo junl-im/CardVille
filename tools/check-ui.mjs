@@ -28,7 +28,7 @@ for (const file of required) {
   if (!fs.existsSync(path.join(root, file))) throw new Error(`Missing UI/system file: ${file}`);
 }
 const play = fs.readFileSync(path.join(root, 'src/game/scenes/PlayScene.ts'), 'utf8');
-for (const token of ['bonusMeter', 'useHint', 'useShuffle', 'fitTextSize', 'hasTouchDebug', 'boardLayout', 'playArea', 'distributeColumns', 'animateCardSettle', 'spawnMiniSparkles', 'assetCardBackStar', 'effectCorrect', 'SOLID_CARD_POLISH_V121']) {
+for (const token of ['bonusMeter', 'useHint', 'useShuffle', 'fitTextSize', 'hasTouchDebug', 'boardLayout', 'playArea', 'distributeColumns', 'animateCardSettle', 'spawnMiniSparkles', 'assetCardBackStar', 'effectCorrect', 'SOLID_CARD_POLISH_V121', 'drawPremiumBottomRail', '목표 체인', '카드 보드 · TOP 카드만 터치']) {
   if (!play.includes(token)) throw new Error(`PlayScene missing ${token}`);
 }
 const back = fs.readFileSync(path.join(root, 'src/game/scenes/BackConfirmScene.ts'), 'utf8');
@@ -36,7 +36,7 @@ for (const token of ['첫 화면가기', '나가기', 'requestExit']) {
   if (!back.includes(token)) throw new Error(`BackConfirmScene missing ${token}`);
 }
 const login = fs.readFileSync(path.join(root, 'src/game/scenes/LoginScene.ts'), 'utf8');
-for (const token of ['loginBg', '게임 시작', 'Google 로그인', 'IntroLoadingScene', 'LOGIN_ACTION_START_Y', 'LOGIN_ACTION_SECONDARY_Y', 'LOGIN_PANEL_COMPACT']) {
+for (const token of ['loginBg', '게임 시작', 'Google 로그인', 'IntroLoadingScene', 'LOGIN_ACTION_START_Y', 'LOGIN_ACTION_SECONDARY_Y', 'LOGIN_PANEL_COMPACT', 'LOGIN_CTA_BUTTON_STYLE', 'skin: false', 'shine: false']) {
   if (!login.includes(token)) throw new Error(`LoginScene missing ${token}`);
 }
 const boot = fs.readFileSync(path.join(root, 'src/game/scenes/BootScene.ts'), 'utf8');

@@ -5,12 +5,16 @@ import { DrawSystem } from '../systems/DrawSystem';
 import { AuthSystem } from '../systems/AuthSystem';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
-const LOGIN_VERSION = '1.0.34';
-const LOGIN_ACTION_START_Y = 600;
-const LOGIN_ACTION_GOOGLE_Y = LOGIN_ACTION_START_Y + 56;
-const LOGIN_ACTION_SECONDARY_Y = LOGIN_ACTION_START_Y + 102;
-const LOGIN_STATUS_Y = LOGIN_ACTION_START_Y - 34;
+const LOGIN_VERSION = '1.0.35';
+const LOGIN_PANEL_Y = 546;
+const LOGIN_PANEL_H = 254;
+const LOGIN_TITLE_Y = LOGIN_PANEL_Y + 28;
+const LOGIN_STATUS_Y = LOGIN_PANEL_Y + 58;
+const LOGIN_ACTION_START_Y = LOGIN_PANEL_Y + 98;
+const LOGIN_ACTION_GOOGLE_Y = LOGIN_ACTION_START_Y + 58;
+const LOGIN_ACTION_SECONDARY_Y = LOGIN_ACTION_START_Y + 110;
 const LOGIN_PANEL_COMPACT = true;
+const LOGIN_CTA_BUTTON_STYLE = { skin: false, shine: false, debounceMs: 520 } as const;
 
 export class LoginScene extends Phaser.Scene {
   private status!: Phaser.GameObjects.Text;
@@ -40,23 +44,26 @@ export class LoginScene extends Phaser.Scene {
     shade.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0, 0, 0.08, 0.34);
     shade.fillRect(l.visibleX, 512, l.visibleWidth, 332 + l.extraY);
 
-    // One compact plate behind all login controls. No fake pre-start button and no
-    // separated gap line between buttons.
-    shade.fillStyle(0x07142c, 0.58);
-    shade.fillRoundedRect(28, 548, 334, 236, 32);
-    shade.lineStyle(1, 0xffffff, 0.14);
-    shade.strokeRoundedRect(28, 548, 334, 236, 32);
-    shade.fillStyle(0xffffff, 0.06);
-    shade.fillRoundedRect(46, 560, 298, 22, 11);
+    // One compact plate behind all login controls. The previous thin highlight
+    // strip could look like an unwanted line above each start/login button, so
+    // 1.0.35 uses a soft matte plate and line-free CTA buttons instead.
+    shade.fillStyle(0x07142c, 0.66);
+    shade.fillRoundedRect(28, LOGIN_PANEL_Y, 334, LOGIN_PANEL_H, 32);
+    shade.lineStyle(1, 0xffffff, 0.12);
+    shade.strokeRoundedRect(28, LOGIN_PANEL_Y, 334, LOGIN_PANEL_H, 32);
+    shade.fillStyle(0xffd86f, 0.09);
+    shade.fillCircle(72, LOGIN_PANEL_Y + 36, 30);
+    shade.fillStyle(0x8fd3ff, 0.08);
+    shade.fillCircle(322, LOGIN_PANEL_Y + 58, 38);
 
-    this.add.text(195, 570, '카드를 모아 마을을 완성하세요!', titleText(17)).setOrigin(0.5);
+    this.add.text(195, LOGIN_TITLE_Y, '카드를 모아 마을을 완성하세요!', titleText(17)).setOrigin(0.5);
   }
 
   private drawStartControls(): void {
-    new GameButton(this, 195, LOGIN_ACTION_START_Y, '게임 시작', 316, 62, 0xffd86f).onClick(() => this.guest());
-    new GameButton(this, 195, LOGIN_ACTION_GOOGLE_Y, 'Google 로그인', 292, 44, 0x8fd3ff).onClick(() => void this.google());
-    new GameButton(this, 121, LOGIN_ACTION_SECONDARY_Y, '이메일', 138, 42, 0xc9f4ff).onClick(() => void this.email(false));
-    new GameButton(this, 269, LOGIN_ACTION_SECONDARY_Y, '가입', 138, 42, 0xf0c7ff).onClick(() => void this.email(true));
+    new GameButton(this, 195, LOGIN_ACTION_START_Y, '게임 시작', 316, 60, 0xffd86f, LOGIN_CTA_BUTTON_STYLE).onClick(() => this.guest());
+    new GameButton(this, 195, LOGIN_ACTION_GOOGLE_Y, 'Google 로그인', 292, 44, 0x8fd3ff, LOGIN_CTA_BUTTON_STYLE).onClick(() => void this.google());
+    new GameButton(this, 121, LOGIN_ACTION_SECONDARY_Y, '이메일', 138, 42, 0xc9f4ff, LOGIN_CTA_BUTTON_STYLE).onClick(() => void this.email(false));
+    new GameButton(this, 269, LOGIN_ACTION_SECONDARY_Y, '가입', 138, 42, 0xf0c7ff, LOGIN_CTA_BUTTON_STYLE).onClick(() => void this.email(true));
 
     this.status = this.add.text(
       195,

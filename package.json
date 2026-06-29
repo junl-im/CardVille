@@ -1,9 +1,9 @@
 {
   "name": "cardville",
-  "version": "1.0.34",
+  "version": "1.0.35",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.34 adds the ShopScene cardpack economy hub, daily free pack guard, purchase spending, and shop-aware reward balancing.",
+  "description": "CardVille 1.0.35 removes start/login CTA highlight-line artifacts, adds optional matte GameButton styling, and upgrades the word-card play board UI with quality-gated motion.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",

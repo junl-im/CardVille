@@ -4,6 +4,12 @@ import { compactText, fitTextSize } from '../systems/LayoutSystem';
 
 export type ButtonAction = () => void;
 
+export type GameButtonOptions = {
+  skin?: boolean;
+  shine?: boolean;
+  debounceMs?: number;
+};
+
 function chooseButtonSkin(scene: Phaser.Scene, width: number): { normal: string; press: string } | null {
   const size = width >= 240 ? 'Large' : width >= 130 ? 'Medium' : 'Small';
   const normal = `assetButton${size}`;
@@ -25,19 +31,23 @@ export class GameButton extends Phaser.GameObjects.Container {
   private action?: ButtonAction;
   private pressedInside = false;
   private lastActivatedAt = -9999;
+  private debounceMs: number;
+  private shineEnabled: boolean;
 
-  constructor(scene: Phaser.Scene, x: number, y: number, text: string, width = 280, height = 58, color = 0x8fd3ff) {
+  constructor(scene: Phaser.Scene, x: number, y: number, text: string, width = 280, height = 58, color = 0x8fd3ff, options: GameButtonOptions = {}) {
     super(scene, x, y);
     scene.add.existing(this);
     this.widthValue = width;
     this.heightValue = height;
     this.colorValue = color;
+    this.debounceMs = options.debounceMs ?? 360;
+    this.shineEnabled = options.shine !== false;
 
     const hitW = Math.max(width + 6, 48);
     const hitH = Math.max(height + 6, 48);
 
     this.bg = scene.add.graphics();
-    this.skin = chooseButtonSkin(scene, width);
+    this.skin = options.skin === false ? null : chooseButtonSkin(scene, width);
     if (this.skin) {
       this.skinImage = scene.add.image(0, 2, this.skin.normal).setDisplaySize(width + 16, height + 16);
     }
@@ -62,7 +72,7 @@ export class GameButton extends Phaser.GameObjects.Container {
 
     this.hitZone.on('pointerup', (pointer: Phaser.Input.Pointer) => {
       if (this.disabled) return;
-      const shouldClick = this.pressedInside && this.scene.time.now - this.lastActivatedAt > 360;
+      const shouldClick = this.pressedInside && this.scene.time.now - this.lastActivatedAt > this.debounceMs;
       this.pressedInside = false;
       this.resetVisual();
       if (!shouldClick) return;
@@ -124,8 +134,10 @@ export class GameButton extends Phaser.GameObjects.Container {
       this.skinImage.setTexture(pressed ? this.skin.press : this.skin.normal);
       this.skinImage.setDisplaySize(width + 16, height + 16);
       this.skinImage.setAlpha(pressed ? 0.96 : 1);
-      this.bg.lineStyle(1, 0xffffff, pressed ? 0.10 : 0.18);
-      this.bg.strokeRoundedRect(-width / 2 + 3, -height / 2 + 3, width - 6, height - 6, 18);
+      if (this.shineEnabled) {
+        this.bg.lineStyle(1, 0xffffff, pressed ? 0.08 : 0.14);
+        this.bg.strokeRoundedRect(-width / 2 + 3, -height / 2 + 3, width - 6, height - 6, 18);
+      }
       return;
     }
 
@@ -135,7 +147,9 @@ export class GameButton extends Phaser.GameObjects.Container {
     this.bg.strokeRoundedRect(-width / 2, -height / 2, width, height, 20);
     this.bg.lineStyle(1, 0x07152f, 0.22);
     this.bg.strokeRoundedRect(-width / 2 + 3, -height / 2 + 3, width - 6, height - 6, 16);
-    this.bg.fillStyle(0xffffff, pressed ? 0.12 : 0.32);
-    this.bg.fillRoundedRect(-width / 2 + 16, -height / 2 + 8, width - 32, 12, 8);
+    if (this.shineEnabled) {
+      this.bg.fillStyle(0xffffff, pressed ? 0.10 : 0.24);
+      this.bg.fillRoundedRect(-width / 2 + 16, -height / 2 + 8, width - 32, 10, 8);
+    }
   }
 }
