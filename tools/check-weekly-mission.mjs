@@ -42,7 +42,7 @@ must('src/game/scenes/DailyMissionScene.ts', [
   'daily_mission_board_v144'
 ]);
 
-must('src/main.ts', ['1.0.45 art bible mission route merge', '1.0.42 streak weekly mission loop']);
+must('src/main.ts', ['1.0.46 premium asset batch apply', '1.0.42 streak weekly mission loop']);
 must('public/health.html', ['streak weekly mission loop', `version ${pkg.version}`]);
 must('public/reset.html', [`CardVille ${pkg.version} Reset`]);
 

@@ -72,6 +72,9 @@ export class MathLabScene extends Phaser.Scene {
 
   private drawConsole(): void {
     panel(this, 195, 396, 342, 458, 34);
+    if (this.textures.exists('uiMathConsole')) {
+      this.add.image(195, 356, 'uiMathConsole').setDisplaySize(318, 212).setAlpha(0.88);
+    }
     this.add.rectangle(195, 216, 276, 48, 0xffffff, 0.10).setStrokeStyle(1, 0xffe08a, 0.45);
     this.statusText = this.add.text(195, 210, '', goldText(13)).setOrigin(0.5);
     this.challengeText = this.add.text(195, 232, '', mutedText(9)).setOrigin(0.5);

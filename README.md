@@ -1,8 +1,38 @@
-# CardVille 1.0.45
+# CardVille 1.0.46
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
 
+
+## 1.0.46 업데이트 내역
+
+- **프리미엄 PNG 배치 에셋 적용 패스**를 진행했습니다.
+- 사용자가 업로드한 3개 에셋 묶음을 기준으로, 바로 적용 가능한 자산과 보류해야 할 자산을 분리했습니다.
+- 적용한 자산:
+  - 마을 건물 9종: `building_castle`, `building_library`, `building_lab`, `building_shop`, `building_school`, `building_forest`, `building_event`, `building_harbor`, `building_plaza`
+  - 상점 NPC: `npc_merchant`
+  - 마을 고양이 NPC: `npc_town_cat`
+  - 고양이 이모션 4종: `cat_hint_happy`, `cat_hint_think`, `cat_hint_surprise`, `cat_hint_sleepy`
+  - 카드팩 오픈 이펙트 4종: `effect_pack_burst_common`, `effect_pack_burst_rare`, `effect_pack_burst_epic`, `effect_pack_burst_legendary`
+  - 보상 연출 보조 이펙트: `effect_reward_burst_premium`
+  - 연산 연구소 콘솔: `ui_math_console`
+  - 기억의 숲 보드: `ui_memory_board`
+  - 보상 상자 장식: `ui_treasure_chest_premium`
+  - 전설 카드 프레임: `frame_legendary_gold_normal`
+- 업로드 PNG가 실제 alpha PNG가 아니라 체크무늬/흰색/검은색 배경이 RGB로 구워진 상태였기 때문에, 자동 배경 제거 후 RGBA PNG로 다시 저장했습니다.
+- 모든 적용 자산에 WebP companion을 생성했습니다.
+- `src/game/data/assetManifest.ts`에 신규 이모션/이펙트/UI 자산을 등록했습니다.
+- `CoachMarkSystem`은 말풍선 톤에 따라 행복/생각/놀람 고양이 이모션을 사용합니다.
+- `RewardPopupSystem`은 놀람/행복/생각/졸림 고양이, 프리미엄 보상 버스트, 보상 상자 장식을 사용합니다.
+- `RewardScene`은 카드팩 희귀도에 따라 common/rare/epic/legendary 버스트 이펙트를 카드팩 개봉과 카드 공개 화면에 표시합니다.
+- `MathLabScene`은 `ui_math_console`을 문제 패널 장식으로 사용합니다.
+- `MemoryForestScene`은 `ui_memory_board`와 `cat_hint_think`를 사용합니다.
+- `cardville_ui_reward_popup_premium.png`는 이미지 안에 영문 텍스트가 박혀 있어 현재 아트 바이블의 no baked text 정책과 충돌하므로 이번 패치에서는 적용하지 않았습니다.
+- `tools/check-applied-assets.mjs`와 `npm run check:applied-assets`를 추가했습니다.
+- `npm run verify`에 `check:applied-assets`를 포함했습니다.
+- 신규 문서 파일은 만들지 않았고, 기존 README/AI_HANDOFF 및 사용자가 추가한 아트 문서만 버전 동기화했습니다.
+- 삭제 파일은 없습니다.
+- `node_modules`, `dist`, `package-lock.json`은 통파일 ZIP에서 제외합니다.
 
 ## 1.0.45 업데이트 내역
 

@@ -36,15 +36,26 @@ export class RewardPopupSystem {
       .setOrigin(0.5)
       .setStrokeStyle(3, color, 0.86);
     const topGlow = scene.add.rectangle(0, -112, 284, 12, color, quality.highContrast ? 0.26 : 0.18).setOrigin(0.5);
-    const icon = scene.textures.exists('catHint')
-      ? scene.add.image(-112, -76, 'catHint').setDisplaySize(52, 52)
+    const rewardBurst = scene.textures.exists('effectRewardBurstPremium')
+      ? scene.add.image(84, -52, 'effectRewardBurstPremium').setDisplaySize(132, 132).setAlpha(quality.highContrast ? 0.14 : 0.24)
+      : null;
+    const catKey = options.tone === 'green' ? 'catHintHappy' : options.tone === 'blue' ? 'catHintThink' : options.tone === 'coral' ? 'catHintSleepy' : 'catHintSurprise';
+    const iconKey = scene.textures.exists(catKey) ? catKey : 'catHint';
+    const icon = scene.textures.exists(iconKey)
+      ? scene.add.image(-112, -76, iconKey).setDisplaySize(52, 52)
       : scene.add.text(-112, -76, '🐾', { fontSize: '34px' }).setOrigin(0.5);
+    const chest = scene.textures.exists('uiTreasureChestPremium')
+      ? scene.add.image(112, 52, 'uiTreasureChestPremium').setDisplaySize(54, 44).setAlpha(0.78)
+      : null;
     const titleStyle = quality.highContrast ? darkText(20) : titleText(20);
     const messageStyle = quality.highContrast ? { ...darkText(12), fontStyle: '800' } : bodyText(12);
     const title = scene.add.text(-76, -78, options.title, titleStyle).setOrigin(0, 0.5);
     const body = scene.add.text(0, -10, options.message, { ...applyWrap(messageStyle, 282, 'center'), lineSpacing: 5 }).setOrigin(0.5);
     const caption = scene.add.text(0, 60, '보상은 프로필과 주간 미션 게이지에 안전하게 저장됩니다.', quality.highContrast ? darkText(9) : mutedText(9)).setOrigin(0.5);
-    popup.add([shadow, bg, topGlow, icon, title, body, caption]);
+    popup.add([shadow, bg, topGlow]);
+    if (rewardBurst) popup.add(rewardBurst);
+    popup.add([icon, title, body, caption]);
+    if (chest) popup.add(chest);
 
     const closePopup = (callback?: () => void) => {
       overlay.disableInteractive();

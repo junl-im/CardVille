@@ -1,4 +1,4 @@
-export const CARDVILLE_ASSET_VERSION = '1.0.45' as const;
+export const CARDVILLE_ASSET_VERSION = '1.0.46' as const;
 export type CardVilleAssetCategory = 'background' | 'diorama' | 'building' | 'hero' | 'mascot' | 'npc' | 'prop' | 'ui' | 'icon' | 'card' | 'pack' | 'effect' | 'particle' | 'badge';
 
 export type CardVilleAsset = {
@@ -38,6 +38,10 @@ export const ASSET_MANIFEST: readonly CardVilleAsset[] = [
   { key: 'catWalk02', path: 'assets/characters/cat_walk_02.png', category: 'mascot', role: 'black cat animation frame', required: true },
   { key: 'catTail', path: 'assets/characters/cat_tail.png', category: 'mascot', role: 'black cat animation frame', required: true },
   { key: 'catHint', path: 'assets/characters/cat_hint.png', category: 'mascot', role: 'black cat animation frame', required: true },
+  { key: 'catHintHappy', path: 'assets/characters/cat_hint_happy.png', category: 'mascot', role: 'happy cat coach expression', required: true },
+  { key: 'catHintThink', path: 'assets/characters/cat_hint_think.png', category: 'mascot', role: 'thinking cat coach expression', required: true },
+  { key: 'catHintSurprise', path: 'assets/characters/cat_hint_surprise.png', category: 'mascot', role: 'surprised cat reward expression', required: true },
+  { key: 'catHintSleepy', path: 'assets/characters/cat_hint_sleepy.png', category: 'mascot', role: 'sleepy cat cooldown expression', required: true },
   { key: 'npcLibrarian', path: 'assets/characters/npc_librarian.png', category: 'npc', role: 'library guide', required: true },
   { key: 'npcWizard', path: 'assets/characters/npc_wizard.png', category: 'npc', role: 'lab guide', required: true },
   { key: 'npcMerchant', path: 'assets/characters/npc_merchant.png', category: 'npc', role: 'shopkeeper', required: true },
@@ -72,6 +76,9 @@ export const ASSET_MANIFEST: readonly CardVilleAsset[] = [
   { key: 'uiQuestMarker', path: 'assets/ui/ui_quest_marker.png', category: 'ui', role: 'quest marker', required: true },
   { key: 'uiCloseRound', path: 'assets/ui/ui_close_round.png', category: 'ui', role: 'close button', required: true },
   { key: 'uiSettingsButton', path: 'assets/ui/ui_settings_button.png', category: 'ui', role: 'settings button', required: true },
+  { key: 'uiMathConsole', path: 'assets/ui/ui_math_console.png', category: 'ui', role: 'premium math lab problem console', required: true },
+  { key: 'uiMemoryBoard', path: 'assets/ui/ui_memory_board.png', category: 'ui', role: 'premium memory forest card board', required: true },
+  { key: 'uiTreasureChestPremium', path: 'assets/ui/ui_treasure_chest_premium.png', category: 'ui', role: 'premium reward chest accent', required: true },
   { key: 'iconCvLibrary', path: 'assets/icons/icon_cv_library.png', category: 'icon', role: 'library icon', required: true },
   { key: 'iconCvLab', path: 'assets/icons/icon_cv_lab.png', category: 'icon', role: 'lab icon', required: true },
   { key: 'iconCvForest', path: 'assets/icons/icon_cv_forest.png', category: 'icon', role: 'forest icon', required: true },
@@ -116,6 +123,11 @@ export const ASSET_MANIFEST: readonly CardVilleAsset[] = [
   { key: 'assetPackLegendaryOpening1', path: 'assets/packs/pack_legendary_opening_01.png', category: 'pack', role: 'card pack state', required: true },
   { key: 'assetPackLegendaryOpening2', path: 'assets/packs/pack_legendary_opening_02.png', category: 'pack', role: 'card pack state', required: true },
   { key: 'assetPackLegendaryOpen', path: 'assets/packs/pack_legendary_open.png', category: 'pack', role: 'card pack state', required: true },
+  { key: 'effectPackBurstCommon', path: 'assets/effects/effect_pack_burst_common.png', category: 'effect', role: 'common card pack burst', required: true },
+  { key: 'effectPackBurstRare', path: 'assets/effects/effect_pack_burst_rare.png', category: 'effect', role: 'rare card pack burst', required: true },
+  { key: 'effectPackBurstEpic', path: 'assets/effects/effect_pack_burst_epic.png', category: 'effect', role: 'epic card pack burst', required: true },
+  { key: 'effectPackBurstLegendary', path: 'assets/effects/effect_pack_burst_legendary.png', category: 'effect', role: 'legendary card pack burst', required: true },
+  { key: 'effectRewardBurstPremium', path: 'assets/effects/effect_reward_burst_premium.png', category: 'effect', role: 'premium reward popup burst', required: true },
   { key: 'effectCorrect', path: 'assets/effects/effect_correct_01.png', category: 'effect', role: 'answer/reward effect', required: true },
   { key: 'effectWrong', path: 'assets/effects/effect_wrong_01.png', category: 'effect', role: 'answer/reward effect', required: true },
   { key: 'effectShine', path: 'assets/effects/effect_shine_01.png', category: 'effect', role: 'answer/reward effect', required: true },

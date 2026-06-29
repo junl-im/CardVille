@@ -4,10 +4,41 @@
 CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고, 그다음 실제 코드를 확인하세요.
 
 
-## 현재 작업 기준: 1.0.45
+## 현재 작업 기준: 1.0.46
 
-현재 기준 버전은 1.0.45입니다.  
-이번 버전은 사용자가 직접 패치한 `1.0.44_ArtDirectionBible_PromptLock` 통파일을 기준으로, 기존 1.0.44 `PerfectDayMissionRouteUX`의 미션 완주/로비 READY 라우팅을 병합한 안정화 패스입니다.
+현재 기준 버전은 1.0.46입니다.  
+이번 버전은 1.0.45 아트 바이블/미션 라우트 병합본을 기준으로, 사용자가 업로드한 프리미엄 판타지 마을 PNG 에셋 일부를 실제 게임에 안전 적용한 첫 이미지 교체 패스입니다.
+
+### 1.0.46 프리미엄 PNG 배치 에셋 적용 패스
+
+- 업로드 파일:
+  - `CardVille_Batch1_PremiumFantasyVillage.zip`
+  - `CardVille_Batch2_PremiumFantasyVillage.zip`
+  - `CardVille_Asset_MassProduction_1.0.45_PNG.zip`
+- 적용 전 확인 결과: 대부분의 PNG가 alpha PNG가 아니라 체크무늬/흰색/검은색 배경이 RGB로 구워진 상태였습니다.
+- 처리: 체크무늬/흰색 배경 RGB 자산을 alpha PNG로 정리하고 WebP companion을 생성했습니다.
+- 실제 교체:
+  - `public/assets/diorama/building_*.png` 9종
+  - `public/assets/characters/npc_merchant.png`
+  - `public/assets/characters/npc_town_cat.png`
+  - `public/assets/cards/frames/frame_legendary_gold_normal.png`
+- 신규 연결:
+  - `cat_hint_happy`, `cat_hint_think`, `cat_hint_surprise`, `cat_hint_sleepy`
+  - `effect_pack_burst_common`, `effect_pack_burst_rare`, `effect_pack_burst_epic`, `effect_pack_burst_legendary`
+  - `effect_reward_burst_premium`
+  - `ui_math_console`, `ui_memory_board`, `ui_treasure_chest_premium`
+- 장면 반영:
+  - `CoachMarkSystem`: 말풍선 톤별 고양이 이모션 사용
+  - `RewardPopupSystem`: 보상 버스트/상자/고양이 이모션 사용
+  - `RewardScene`: 희귀도별 카드팩 버스트 사용
+  - `MathLabScene`: 연산 연구소 콘솔 패널 사용
+  - `MemoryForestScene`: 숲 보드 패널/생각 고양이 사용
+- 보류:
+  - `cardville_ui_reward_popup_premium.png`는 이미지 안에 영문 텍스트가 박혀 있어 no baked text 정책과 충돌하므로 적용하지 않았습니다.
+- 검증:
+  - `tools/check-applied-assets.mjs` 추가
+  - `npm run verify`에 `check:applied-assets` 포함
+- 새 문서 파일은 생성하지 않았습니다.
 
 ### 1.0.45 아트 바이블/미션 라우트 병합 패스
 

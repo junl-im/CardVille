@@ -84,8 +84,10 @@ export class CoachMarkSystem {
     const shadow = scene.add.rectangle(5, 8, width, height, 0x000000, 0.22).setOrigin(0.5);
     const bg = scene.add.rectangle(0, 0, width, height, 0x07142c, 0.96).setOrigin(0.5).setStrokeStyle(2, color, 0.72);
     const glow = scene.add.rectangle(0, -height / 2 + 10, width - 30, 10, color, 0.16).setOrigin(0.5);
-    const icon = scene.textures.exists('catHint')
-      ? scene.add.image(-width / 2 + 34, -height / 2 + 34, 'catHint').setDisplaySize(42, 42)
+    const preferredCatKey = options.tone === 'blue' ? 'catHintThink' : options.tone === 'green' ? 'catHintHappy' : options.tone === 'purple' ? 'catHintSurprise' : 'catHintHappy';
+    const fallbackCatKey = scene.textures.exists(preferredCatKey) ? preferredCatKey : 'catHint';
+    const icon = scene.textures.exists(fallbackCatKey)
+      ? scene.add.image(-width / 2 + 34, -height / 2 + 34, fallbackCatKey).setDisplaySize(42, 42)
       : scene.add.text(-width / 2 + 34, -height / 2 + 34, '🐾', { fontSize: '28px' }).setOrigin(0.5);
     const title = scene.add.text(-width / 2 + 66, -height / 2 + 24, options.title, goldText(titleSize)).setOrigin(0, 0.5);
     const body = scene.add.text(-width / 2 + 24, -14, options.body, applyWrap(bodyText(bodySize), width - 48, 'left')).setOrigin(0, 0.5);

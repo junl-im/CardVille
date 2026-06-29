@@ -101,12 +101,22 @@ export class RewardScene extends Phaser.Scene {
     return 'assetPackCommon';
   }
 
+  private packBurstKey(): string {
+    if (this.reward.rarity === 'legendary') return 'effectPackBurstLegendary';
+    if (this.reward.rarity === 'epic') return 'effectPackBurstEpic';
+    if (this.reward.rarity === 'rare') return 'effectPackBurstRare';
+    return 'effectPackBurstCommon';
+  }
+
   private drawPackClosed(): void {
     const prefix = this.packPrefix();
     const group = this.add.container(195, 404);
     this.rewardGroup = group;
     const glow = this.add.circle(0, 16, 122, RARITY_META[this.reward.rarity].color, 0.16);
+    const burstKey = this.packBurstKey();
+    const burst = this.textures.exists(burstKey) ? this.add.image(0, 8, burstKey).setDisplaySize(248, 248).setAlpha(0.32) : null;
     group.add(glow);
+    if (burst) group.add(burst);
     if (this.textures.exists(`${prefix}Closed`)) {
       group.add(this.add.image(0, 0, `${prefix}Closed`).setDisplaySize(210, 210));
     } else {
@@ -165,6 +175,8 @@ export class RewardScene extends Phaser.Scene {
     if (this.source === 'game') DailyMissionSystem.recordModeClear(this.modeId);
 
     this.add.text(195, 210, `${meta.label} 카드 획득!`, goldText(18)).setOrigin(0.5);
+    const burstKey = this.packBurstKey();
+    if (this.textures.exists(burstKey)) this.add.image(195, 356, burstKey).setDisplaySize(254, 254).setAlpha(0.38);
     this.drawRewardCard(195, 356, 172, 206, this.reward.icon, this.reward.id, meta.color, meta.label, this.reward.rarity);
     this.add.text(
       195,

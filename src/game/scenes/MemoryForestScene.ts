@@ -62,7 +62,8 @@ export class MemoryForestScene extends Phaser.Scene {
     const l = layout(this);
     this.add.rectangle(l.visibleX + l.visibleWidth / 2, 430, l.visibleWidth, 690, 0x063322, 0.12);
     if (this.textures.exists('dioramaForest')) this.add.image(68, 160, 'dioramaForest').setDisplaySize(92, 78).setAlpha(0.92);
-    if (this.textures.exists('catHint')) this.add.image(318, 166, 'catHint').setDisplaySize(58, 62).setAlpha(0.96);
+    if (this.textures.exists('catHintThink')) this.add.image(318, 166, 'catHintThink').setDisplaySize(58, 62).setAlpha(0.96);
+    else if (this.textures.exists('catHint')) this.add.image(318, 166, 'catHint').setDisplaySize(58, 62).setAlpha(0.96);
     for (let i = 0; i < ambientCount(18, this.quality, 5); i += 1) {
       const x = 22 + ((i * 51) % 346);
       const y = 210 + ((i * 83) % 472);
@@ -75,6 +76,7 @@ export class MemoryForestScene extends Phaser.Scene {
   }
 
   private drawBoard(): void {
+    if (this.textures.exists('uiMemoryBoard')) this.add.image(195, 454, 'uiMemoryBoard').setDisplaySize(326, 430).setAlpha(0.82);
     const deck = this.shuffle(this.stage.pairs.flatMap((pair) => [pair, pair]));
     const compact = deck.length > 16;
     const columns = deck.length > 20 ? 5 : 4;

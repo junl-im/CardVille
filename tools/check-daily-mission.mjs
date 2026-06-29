@@ -61,7 +61,7 @@ must('src/game/data/modeCatalog.ts', [
 
 must('src/main.ts', [
   'DailyMissionScene',
-  '1.0.45 art bible mission route merge'
+  '1.0.46 premium asset batch apply'
 ]);
 
 must('src/game/scenes/RewardScene.ts', [

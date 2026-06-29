@@ -43,7 +43,7 @@ must('src/game/scenes/MainLobbyScene.ts', [
   'shouldPrioritizeEvent',
   'lobbyBadgeLabel',
   'lobby_recommended_route_v144',
-  "const LOBBY_VERSION = '1.0.45'"
+  `const LOBBY_VERSION = '${pkg.version}'`
 ]);
 
 must('src/game/scenes/ModeSelectScene.ts', [
@@ -52,7 +52,7 @@ must('src/game/scenes/ModeSelectScene.ts', [
   '대기 보상'
 ]);
 
-must('src/main.ts', ['1.0.45 art bible mission route merge']);
+must('src/main.ts', ['1.0.46 premium asset batch apply']);
 must('public/health.html', [`version ${pkg.version}`, 'perfect-day mission lobby route UX']);
 must('public/reset.html', [`CardVille ${pkg.version} Reset`]);
 
