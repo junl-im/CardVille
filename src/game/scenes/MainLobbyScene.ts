@@ -17,13 +17,15 @@ import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 import { AccessibilitySystem } from '../systems/AccessibilitySystem';
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
-const LOBBY_VERSION = '1.0.53';
+const LOBBY_VERSION = '1.0.54';
 const MISSION_TONE_COLORS = { gold: 0xffd86f, blue: 0x8fd3ff, purple: 0xd7a5ff, green: 0xa9f5b5, coral: 0xffb39a } as const;
 const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-visible-v149' as const;
 const VILLAGE_VISIBLE_BUILDING_SCALE_TAG = 'village-readable-building-scale-v150' as const;
 const SCREEN_UI_STABILITY_TAG = 'screen-ui-stability-pass-v152' as const;
 const MOBILE_READABLE_LAYOUT_TAG = 'mobile-readable-layout-v153' as const;
 const VILLAGE_EDGE_SPACE_TAG = 'village-edge-spacing-v153' as const;
+const LOBBY_BOOT_ASSET_HARDENING_TAG = 'lobby-building-visible-png-v154' as const;
+const LOBBY_TOUCH_RECOVERY_TAG = 'lobby-input-recovery-v154' as const;
 const HERO_HOME = { x: 195, y: 545 } as const;
 const CAT_HOME = { x: 145, y: 585 } as const;
 
@@ -50,6 +52,7 @@ export class MainLobbyScene extends Phaser.Scene {
     const cleared = Object.values(progress).filter((record) => record.cleared).length;
     const cards = Object.values(SaveSystem.loadCollection()).reduce((sum, count) => sum + count, 0);
 
+    this.input.enabled = true;
     this.drawDioramaBackground();
     this.drawAtmosphericPolish();
     this.drawAmbientLife();
@@ -58,11 +61,13 @@ export class MainLobbyScene extends Phaser.Scene {
     this.drawLobbySettingsButton();
     const recommendedBuildingId = this.getRecommendedBuildingId();
     this.drawRouteOverviewRibbon(recommendedBuildingId);
+    this.assertCriticalLobbyTextures();
     this.drawBuildings(recommendedBuildingId);
     this.drawDioramaNPCs();
     this.drawHeroParty();
     this.drawBottomHint(profile.nickname);
     this.add.text(344, 28, LOBBY_VERSION, mutedText(11)).setOrigin(0.5).setAlpha(0.9);
+    console.info('[CardVille] lobby ready', { version: LOBBY_VERSION, tag: LOBBY_TOUCH_RECOVERY_TAG });
     this.showLobbyCoach(recommendedBuildingId);
   }
 
@@ -87,10 +92,12 @@ export class MainLobbyScene extends Phaser.Scene {
     if (this.textures.exists('dioramaBg')) {
       // Keep the 1080x1920 premium lobby illustration as cover image instead of stretching it to 390x844.
       addCoverImage(this, 'dioramaBg', 1, 1080, 1920)?.setDepth(0);
+    } else if (this.textures.exists('bgLobbyDayPremium')) {
+      addCoverImage(this, 'bgLobbyDayPremium', 1, 1024, 1024)?.setDepth(0);
     } else {
       DrawSystem.background(this, '카드마을 광장');
     }
-    this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x061126, 0.08).setDepth(1);
+    this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x061126, 0.035).setDepth(1);
     this.add.rectangle(l.visibleX + l.visibleWidth / 2, 798, l.visibleWidth, 96 + l.extraY, 0x020814, 0.18).setDepth(2);
     this.add.rectangle(l.visibleX + 8, l.visibleY + l.visibleHeight / 2, 16, l.visibleHeight, 0x020814, 0.10).setDepth(3);
     this.add.rectangle(l.visibleX + l.visibleWidth - 8, l.visibleY + l.visibleHeight / 2, 16, l.visibleHeight, 0x020814, 0.10).setDepth(3);
@@ -146,12 +153,12 @@ export class MainLobbyScene extends Phaser.Scene {
     const copy = recommendedBuildingId === 'event'
       ? missionStatus.nextActionCopy
       : '추천 건물을 따라가면 학습, 상점, 미션 보상이 자연스럽게 이어져요.';
-    const ribbon = this.add.container(140, 115).setDepth(925).setName(`${SCREEN_UI_STABILITY_TAG}:${MOBILE_READABLE_LAYOUT_TAG}`);
+    const ribbon = this.add.container(140, 116).setDepth(925).setName(`${SCREEN_UI_STABILITY_TAG}:${MOBILE_READABLE_LAYOUT_TAG}:${LOBBY_BOOT_ASSET_HARDENING_TAG}`);
     ribbon.add(this.add.rectangle(0, 0, 244, 46, 0x07142c, 0.76).setStrokeStyle(1, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.48));
     ribbon.add(this.add.rectangle(-85, 0, 58, 28, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.92).setStrokeStyle(1, 0xffffff, 0.38));
     ribbon.add(this.add.text(-85, 0, '추천', darkText(10)).setOrigin(0.5));
     ribbon.add(this.add.text(-48, -9, label, goldText(12)).setOrigin(0, 0.5));
-    ribbon.add(this.add.text(-48, 11, copy, applyWrap(mutedText(10), 166, 'left')).setOrigin(0, 0.5));
+    ribbon.add(this.add.text(-48, 11, copy, applyWrap(mutedText(11), 166, 'left')).setOrigin(0, 0.5));
     if (allowAmbientMotion(this.quality) && missionStatus.shouldPrioritizeEvent) {
       this.tweens.add({ targets: ribbon, y: 108, alpha: 0.78, duration: scaledDuration(1100, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
@@ -199,6 +206,14 @@ export class MainLobbyScene extends Phaser.Scene {
     }
   }
 
+  private assertCriticalLobbyTextures(): void {
+    const missing = DIORAMA_BUILDINGS.filter((building) => !this.textures.exists(building.assetKey)).map((building) => building.assetKey);
+    if (missing.length) {
+      console.warn('[CardVille] critical lobby building textures missing before draw', missing, LOBBY_BOOT_ASSET_HARDENING_TAG);
+      this.add.text(195, 162, '마을 이미지 로딩 점검 중', goldText(13)).setOrigin(0.5).setDepth(935).setName('lobby-critical-texture-warning-v154');
+    }
+  }
+
   private drawBuildings(recommendedBuildingId: string): void {
     for (const building of DIORAMA_BUILDINGS) {
       this.drawBuilding(building, building.id === recommendedBuildingId);
@@ -215,7 +230,7 @@ export class MainLobbyScene extends Phaser.Scene {
   }
 
   private drawBuilding(building: DioramaBuilding, recommended: boolean): void {
-    const container = this.add.container(building.x, building.y).setDepth(building.y);
+    const container = this.add.container(building.x, building.y).setDepth(building.y).setName(`building:${building.id}:${LOBBY_BOOT_ASSET_HARDENING_TAG}`);
     if ((building.open || recommended) && this.textures.exists('uiBuildingGlow')) {
       const glow = this.add.image(0, 8, 'uiBuildingGlow').setDisplaySize(building.width * (recommended ? 1.72 : 1.55), building.height * (recommended ? 1.72 : 1.55)).setAlpha(recommended ? 0.46 : 0.35);
       container.add(glow);
@@ -232,10 +247,16 @@ export class MainLobbyScene extends Phaser.Scene {
     premiumStage.setStrokeStyle(1, building.open ? 0xffd86f : 0xffffff, building.open ? 0.22 : 0.10);
     container.add(premiumStage);
 
+    const imageY = building.imageY ?? 0;
     const image = this.textures.exists(building.assetKey)
-      ? this.fitImageToBox(this.add.image(0, 0, building.assetKey), visualWidth, visualHeight)
+      ? this.fitImageToBox(this.add.image(0, imageY, building.assetKey).setName(`visible:${building.assetKey}:${LOBBY_BOOT_ASSET_HARDENING_TAG}`).setAlpha(1), visualWidth, visualHeight)
       : this.drawMissingBuildingFallback(building, visualWidth, visualHeight);
     container.add(image);
+    if (this.textures.exists(building.assetKey)) {
+      const rim = this.add.ellipse(0, imageY + visualHeight * 0.34, visualWidth * 0.86, Math.max(22, visualHeight * 0.14), 0xfff0c2, building.open ? 0.11 : 0.07);
+      rim.setStrokeStyle(1, 0xffffff, 0.16);
+      container.addAt(rim, Math.max(0, container.getAll().length - 1));
+    }
 
     if (building.open && this.textures.exists('uiDoorLight')) {
       container.add(this.add.image(0, visualHeight * 0.19, 'uiDoorLight').setDisplaySize(visualWidth * 0.34, visualHeight * 0.24).setAlpha(recommended ? 0.48 : 0.24));
@@ -274,7 +295,9 @@ export class MainLobbyScene extends Phaser.Scene {
       container.setAlpha(0.76);
     }
 
-    const zone = this.add.zone(building.x, building.y + (building.touchOffsetY ?? 0), building.touchWidth, building.touchHeight).setInteractive({ useHandCursor: building.open });
+    const zoneWidth = Math.max(building.touchWidth, visualWidth * 0.66);
+    const zoneHeight = Math.max(building.touchHeight, visualHeight * 0.58);
+    const zone = this.add.zone(building.x, building.y + (building.touchOffsetY ?? 0), zoneWidth, zoneHeight).setInteractive({ useHandCursor: building.open });
     zone.setDepth(building.y + 5);
     zone.on('pointerup', () => {
       this.spawnTouchRipple(building.x, building.y + 10);
@@ -284,7 +307,7 @@ export class MainLobbyScene extends Phaser.Scene {
     zone.on('pointerout', () => { if (!this.busy) this.tweens.add({ targets: container, scale: 1, duration: 120 }); });
 
     if (hasTouchDebug()) {
-      this.add.rectangle(building.x, building.y + (building.touchOffsetY ?? 0), building.touchWidth, building.touchHeight, 0x00ff66, 0.12)
+      this.add.rectangle(building.x, building.y + (building.touchOffsetY ?? 0), zoneWidth, zoneHeight, 0x00ff66, 0.12)
         .setStrokeStyle(1, 0x00ff66, 0.8)
         .setDepth(900);
     }
@@ -307,7 +330,7 @@ export class MainLobbyScene extends Phaser.Scene {
       ? this.add.image(0, -height * 0.08, building.iconKey).setDisplaySize(Math.min(48, width * 0.38), Math.min(48, height * 0.38))
       : this.add.text(0, -height * 0.07, '□', goldText(22)).setOrigin(0.5);
     fallback.add(icon);
-    fallback.add(this.add.text(0, height * 0.30, '에셋 확인', mutedText(11)).setOrigin(0.5));
+    fallback.add(this.add.text(0, height * 0.30, '이미지 재시도', mutedText(12)).setOrigin(0.5));
     fallback.setName(`missing:${building.assetKey}`);
     console.warn('[CardVille] lobby building texture missing', building.assetKey, building.title);
     return fallback;
@@ -407,7 +430,7 @@ export class MainLobbyScene extends Phaser.Scene {
       '건물/오브젝트: 개별 PNG/WebP',
       `성능 모드: ${qualitySummary(this.quality)}`,
       `접근성: ${AccessibilitySystem.summary()}`,
-      `배치 플랜: ${LOBBY_LAYOUT_PLAN_VERSION} · ${PREMIUM_LOBBY_FIT_TAG} · ${VILLAGE_VISIBLE_BUILDING_SCALE_TAG} · ${SCREEN_UI_STABILITY_TAG} · ${MOBILE_READABLE_LAYOUT_TAG} · ${VILLAGE_EDGE_SPACE_TAG}`
+      `배치 플랜: ${LOBBY_LAYOUT_PLAN_VERSION} · ${PREMIUM_LOBBY_FIT_TAG} · ${VILLAGE_VISIBLE_BUILDING_SCALE_TAG} · ${SCREEN_UI_STABILITY_TAG} · ${MOBILE_READABLE_LAYOUT_TAG} · ${VILLAGE_EDGE_SPACE_TAG} · ${LOBBY_BOOT_ASSET_HARDENING_TAG}`
     ];
     lines.forEach((line, index) => {
       panel.add(this.add.text(-126, -48 + index * 20, `• ${line}`, mutedText(11)).setOrigin(0, 0.5));

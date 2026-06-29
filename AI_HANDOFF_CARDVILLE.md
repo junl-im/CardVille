@@ -4,11 +4,53 @@
 CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고, 그다음 실제 코드를 확인하세요.
 
 
-## 현재 작업 기준: 1.0.53
+## 현재 작업 기준: 1.0.54
 
-현재 기준 버전은 1.0.53입니다.  
-이번 버전은 1.0.52 UI 안정화 패스를 기준으로, 나가기 버튼을 실제 창 닫기 시도 중심으로 다시 고치고, 모바일 글씨 가독성/로비 좌우 공간 배치/UI 전용 보상 버스트 에셋을 함께 다듬은 패스입니다.
+현재 기준 버전은 1.0.54입니다.  
+이번 버전은 1.0.53 RealExitMobileUILayout을 기준으로, 마을 진입 직후 먹통처럼 보일 수 있는 장면 전환 잠금과 마을 건물 이미지 미표시 가능성을 최우선으로 막은 핫픽스입니다. `mobile-readable-text-v154`, `lobby-critical-png-runtime-v154`, `lobby-building-visible-png-v154`, `scene-navigation-no-freeze-v154`가 핵심 기준입니다.
 
+
+
+### 1.0.54 마을 진입/건물 이미지 핫픽스 패스
+
+- 목적:
+  - 게임 진입 후 마을에서 먹통처럼 보인다는 피드백을 최우선으로 반영했습니다.
+  - 마을 건물 이미지가 없는 것처럼 보이는 문제를 런타임 로드 경로와 표시 크기 양쪽에서 막았습니다.
+- 로딩 안정화:
+  - `src/game/scenes/IntroLoadingScene.ts`
+  - `CARDVILLE_LOBBY_BOOT_HARDENING_TAG = lobby-boot-asset-hardening-v154`
+  - `src/game/data/assetManifest.ts`
+  - `LOBBY_CRITICAL_PNG_ASSET_KEYS`, `LOBBY_CRITICAL_PNG_RUNTIME_TAG = lobby-critical-png-runtime-v154`
+  - WebP companion은 유지하지만, 마을 배경/건물/핵심 디오라마 토큰은 PNG master를 직접 로드합니다.
+  - WebP 자동 치환 실패로 건물 텍스처가 빠지는 경우를 방지합니다.
+- 장면 전환 안정화:
+  - `src/game/systems/NavigationSystem.ts`
+  - `CARDVILLE_NAVIGATION_HARDENING_TAG = scene-navigation-no-freeze-v154`
+  - `safeStart()`가 Phaser delayedCall과 native `window.setTimeout`을 같이 사용합니다.
+  - 전환 중 입력 잠금이 남지 않도록 `restoreInput()`을 보강했습니다.
+- 로비 표시:
+  - `src/game/scenes/MainLobbyScene.ts`
+  - `LOBBY_BOOT_ASSET_HARDENING_TAG = lobby-building-visible-png-v154`
+  - `assertCriticalLobbyTextures()` 추가
+  - 로비 생성 시 `this.input.enabled = true`로 입력 회복을 명시합니다.
+  - 건물 이미지 오브젝트에 `visible:<assetKey>:lobby-building-visible-png-v154` 이름을 붙였습니다.
+- 마을 배치:
+  - `src/game/data/dioramaBuildings.ts`
+  - `imageY` 추가
+  - 성 `visualWidth: 232`, 좌우 건물 `visualWidth: 182`, 이벤트 `visualWidth: 160` 기준으로 확대했습니다.
+  - 좌우 끝 공간 활용은 유지하되, 이름표와 하단 힌트 패널이 겹치지 않게 y좌표를 보정했습니다.
+- 모바일 글씨:
+  - `src/game/ui/TextStyles.ts`
+  - `mobile-readable-text-v154`
+  - 기본 배율 1.14, 큰 안내 문구 배율 1.30으로 상향했습니다.
+- 검증:
+  - `tools/check-lobby-boot-assets.mjs` 추가
+  - `check:lobby-boot-assets` 추가
+  - 기존 로비/빌딩/모바일/런타임 검증을 1.0.54 토큰으로 갱신했습니다.
+- 패치 정책:
+  - 1.0.54 패치 ZIP도 self-contained 안정형 패치로 유지합니다.
+  - `src/`, `tools/`, `public/assets`, 버전 동기화 파일, README, AI_HANDOFF, docs를 포함합니다.
+- 신규 문서 파일은 생성하지 않았습니다.
 
 
 ### 1.0.53 실제 나가기/모바일 가독성/로비 배치 패스

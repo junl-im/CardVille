@@ -1,4 +1,4 @@
-export const LOBBY_LAYOUT_PLAN_VERSION = '1.0.53' as const;
+export const LOBBY_LAYOUT_PLAN_VERSION = '1.0.54' as const;
 
 export type LobbySafeZone = {
   id: string;
@@ -29,7 +29,9 @@ export const LOBBY_LAYOUT_GUARDS = [
   'scene navigation must pass through NavigationSystem.safeStart or safeRestart',
   'route ribbon must not overlap the top HUD, settings button, or building touch zones',
   'mobile text should keep a readable minimum size on 390px wide screens',
-  'village buildings should use left/right edge columns with enough center breathing room'
+  'village buildings should use left/right edge columns with enough center breathing room',
+  'critical lobby background and building textures use stable PNG master loading',
+  'scene navigation includes native timer fallback so input locks cannot linger'
 ] as const;
 
 export const LOBBY_DESIGN_CHECKS = [
@@ -46,7 +48,11 @@ export const LOBBY_DESIGN_CHECKS = [
   'scene-navigation-guard-v152',
   'mobile-readable-layout-v153',
   'village-edge-spacing-v153',
-  'exit-real-close-v153'
+  'exit-real-close-v153',
+  'lobby-building-visible-png-v154',
+  'lobby-critical-png-runtime-v154',
+  'scene-navigation-no-freeze-v154',
+  'mobile-readable-text-v154'
 ] as const;
 
 
@@ -65,11 +71,13 @@ export function rectsOverlap(a: { x: number; y: number; width: number; height: n
 }
 
 export const LOBBY_VISIBLE_ASSET_ROUTE_AUDIT = [
-  '1.0.53 keeps premium lobby assets and UI-only selected assets self-contained in patch ZIPs',
+  '1.0.54 keeps premium lobby assets and UI-only selected assets self-contained in patch ZIPs',
   'IntroLoadingScene loads public assets with BASE_URL and CARDVILLE_ASSET_VERSION cache busting',
   'GameButton defaults to premium vector CTA styling instead of old baked button skins',
   'GameButton disabled state remains styled and readable instead of looking broken',
   'major scene transitions are guarded against duplicate taps and modal leftovers',
   'exit flow attempts real close only and never sends the player to a blank page',
-  'button and panel text use mobile-readable minimum sizing'
+  'button and panel text use mobile-readable minimum sizing',
+  '1.0.54 uses PNG source for critical lobby assets instead of runtime WebP substitution',
+  '1.0.54 lobby transition uses scene-navigation-no-freeze-v154 native timer fallback'
 ] as const;

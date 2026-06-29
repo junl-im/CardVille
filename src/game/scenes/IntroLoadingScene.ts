@@ -1,10 +1,11 @@
 import Phaser from 'phaser';
 import { NavigationSystem } from '../systems/NavigationSystem';
 import { addCoverImage, applyResponsiveCamera, layout } from '../systems/LayoutSystem';
-import { ASSET_MANIFEST, CARDVILLE_ASSET_VERSION } from '../data/assetManifest';
+import { ASSET_MANIFEST, CARDVILLE_ASSET_VERSION, LOBBY_CRITICAL_PNG_ASSET_KEY_SET, LOBBY_CRITICAL_PNG_RUNTIME_TAG } from '../data/assetManifest';
+import { applyWrap, goldText, mutedText, titleText } from '../ui/TextStyles';
 
 export const CARDVILLE_WEBP_RUNTIME_TAG = 'webp-asset-runtime-v152' as const;
-import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
+export const CARDVILLE_LOBBY_BOOT_HARDENING_TAG = 'lobby-boot-asset-hardening-v154' as const;
 
 export class IntroLoadingScene extends Phaser.Scene {
   private readyToContinue = false;
@@ -133,7 +134,7 @@ export class IntroLoadingScene extends Phaser.Scene {
   private queueImage(key: string, url: string): void {
     if (this.textures.exists(key) || this.queuedKeys.has(key)) return;
     this.queuedKeys.add(key);
-    this.load.image(key, this.resolveAssetUrl(this.preferredAssetPath(url)));
+    this.load.image(key, this.resolveAssetUrl(this.preferredAssetPath(key, url)));
   }
 
 
@@ -149,7 +150,11 @@ export class IntroLoadingScene extends Phaser.Scene {
     }
   }
 
-  private preferredAssetPath(url: string): string {
+  private preferredAssetPath(key: string, url: string): string {
+    // 1.0.54: Do not swap the one-screen village background/buildings into WebP at runtime.
+    // Several mobile/deploy combinations can report WebP support but still fail a specific WebP request,
+    // which leaves the lobby with fallback cards instead of visible buildings. PNG is the stable source.
+    if (LOBBY_CRITICAL_PNG_ASSET_KEY_SET.has(key)) return url;
     if (!this.preferWebp || !url.endsWith('.png')) return url;
     if (!url.startsWith('assets/')) return url;
     return url.replace(/\.png$/, '.webp');
@@ -167,6 +172,7 @@ export class IntroLoadingScene extends Phaser.Scene {
     for (const asset of ASSET_MANIFEST) {
       this.queueImage(asset.key, asset.path);
     }
+    console.info('[CardVille] lobby critical assets use PNG source', LOBBY_CRITICAL_PNG_RUNTIME_TAG, CARDVILLE_LOBBY_BOOT_HARDENING_TAG);
 
     this.queueImage('assetVillageBg', 'assets/backgrounds/cherry_blossom_day.png');
 

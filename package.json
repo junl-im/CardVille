@@ -1,15 +1,15 @@
 {
   "name": "cardville",
-  "version": "1.0.53",
+  "version": "1.0.54",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.53 fixes real exit-button behavior, improves mobile-readable text, spreads the village layout across edge space, and applies selected UI-only reward polish.",
+  "description": "CardVille 1.0.54 hardens lobby boot/navigation, forces critical village assets to stable PNG loading, enlarges visible building placement, and improves mobile text readability.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "check:deploy": "node tools/check-deploy.mjs",
-    "verify": "npm run build && npm run check:mobile-exit-layout && npm run check:screen-ui-stability && npm run check:webp-runtime && npm run check:navigation-guard && npm run check:full-individual-assets && npm run check:village-visuals && npm run check:exit-flow && npm run check:art-direction && npm run check:applied-assets && npm run check:premium-asset-select && npm run check:premium-buttons && npm run check:asset-runtime && npm run check:deploy && npm run check:brand && npm run check:assets && npm run check:premium-assets && npm run check:building-assets && npm run check:lobby-layout && npm run check:lobby-premium-fit && npm run check:content-engine && npm run check:progression && npm run check:shop-economy && npm run check:polish && npm run check:ci-coherence && npm run check:coach && npm run check:daily-mission && npm run check:weekly-mission && npm run check:reward-popup && npm run check:accessibility && npm run check:mission-route && npm run check:ui && npm run check:ux-safety && npm run check:content-scale && npm run check:english-school && npm run check:layout && npm run check:association && npm run check:security",
+    "verify": "npm run build && npm run check:lobby-boot-assets && npm run check:mobile-exit-layout && npm run check:screen-ui-stability && npm run check:webp-runtime && npm run check:navigation-guard && npm run check:full-individual-assets && npm run check:village-visuals && npm run check:exit-flow && npm run check:art-direction && npm run check:applied-assets && npm run check:premium-asset-select && npm run check:premium-buttons && npm run check:asset-runtime && npm run check:deploy && npm run check:brand && npm run check:assets && npm run check:premium-assets && npm run check:building-assets && npm run check:lobby-layout && npm run check:lobby-premium-fit && npm run check:content-engine && npm run check:progression && npm run check:shop-economy && npm run check:polish && npm run check:ci-coherence && npm run check:coach && npm run check:daily-mission && npm run check:weekly-mission && npm run check:reward-popup && npm run check:accessibility && npm run check:mission-route && npm run check:ui && npm run check:ux-safety && npm run check:content-scale && npm run check:english-school && npm run check:layout && npm run check:association && npm run check:security",
     "check:brand": "node tools/check-brand.mjs",
     "check:ui": "node tools/check-ui.mjs",
     "check:layout": "node tools/check-layout.mjs",
@@ -45,7 +45,8 @@
     "check:navigation-guard": "node tools/check-navigation-guard.mjs",
     "check:webp-runtime": "node tools/check-webp-runtime.mjs",
     "check:screen-ui-stability": "node tools/check-screen-ui-stability.mjs",
-    "check:mobile-exit-layout": "node tools/check-mobile-exit-layout.mjs"
+    "check:mobile-exit-layout": "node tools/check-mobile-exit-layout.mjs",
+    "check:lobby-boot-assets": "node tools/check-lobby-boot-assets.mjs"
   },
   "dependencies": {
     "phaser": "3.90.0"

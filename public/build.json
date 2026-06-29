@@ -1,11 +1,11 @@
 {
-  "name": "CardVille 1.0.53 Real Exit and Mobile Readable UI Layout",
-  "version": "1.0.53",
+  "name": "CardVille 1.0.54 Real Exit and Mobile Readable UI Layout",
+  "version": "1.0.54",
   "mode": "exit-real-close-v153-mobile-readable-layout-v153-village-edge-spacing",
   "svg": "disabled",
   "pwa": "disabled",
   "notes": "Exit button attempts real window/app close only, removes blank-page fallback, enlarges mobile text, spreads village building columns across edge space, and applies selected UI-only reward burst polish.",
   "label": "Real exit + mobile readable UI + edge-spaced village",
   "description": "Fixes exit behavior, improves mobile legibility and layout spacing, keeps UI from crowding, and refreshes selected reward burst asset with alpha processing.",
-  "assetVersion": "1.0.53"
+  "assetVersion": "1.0.54"
 }

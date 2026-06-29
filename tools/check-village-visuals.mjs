@@ -27,11 +27,11 @@ for (const rel of [
   if (!fs.existsSync(webp) || fs.statSync(webp).size < 5_000) throw new Error(`Missing/empty WebP companion for ${rel}`);
 }
 const lobby = read('src/game/scenes/MainLobbyScene.ts');
-for (const token of ['VILLAGE_VISIBLE_BUILDING_SCALE_TAG', 'village-readable-building-scale-v150', 'premiumStage', 'fitImageToBox', 'drawMissingBuildingFallback']) {
+for (const token of ['VILLAGE_VISIBLE_BUILDING_SCALE_TAG', 'village-readable-building-scale-v150', 'premiumStage', 'fitImageToBox', 'drawMissingBuildingFallback', 'lobby-building-visible-png-v154']) {
   if (!lobby.includes(token)) throw new Error(`MainLobbyScene missing village visual token: ${token}`);
 }
 const diorama = read('src/game/data/dioramaBuildings.ts');
-for (const token of ['visualWidth: 194', 'visualWidth: 156', 'visualWidth: 136', 'nameplateWidth']) {
+for (const token of ['visualWidth: 232', 'visualWidth: 182', 'visualWidth: 160', 'imageY:', 'nameplateWidth']) {
   if (!diorama.includes(token)) throw new Error(`dioramaBuildings missing readable-size token: ${token}`);
 }
 const readme = read('README.md');

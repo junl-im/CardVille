@@ -1,4 +1,27 @@
-export const CARDVILLE_ASSET_VERSION = '1.0.53' as const;
+export const CARDVILLE_ASSET_VERSION = '1.0.54' as const;
+
+export const LOBBY_CRITICAL_PNG_ASSET_KEYS = [
+  'dioramaBg',
+  'dioramaCastle',
+  'dioramaLibrary',
+  'dioramaLab',
+  'dioramaShop',
+  'dioramaSchool',
+  'dioramaForest',
+  'dioramaEvent',
+  'dioramaHarbor',
+  'dioramaPlaza',
+  'dioramaHero',
+  'dioramaCat',
+  'dioramaFloatingCard',
+  'dioramaButterfly',
+  'dioramaCloud'
+] as const;
+export type LobbyCriticalPngAssetKey = typeof LOBBY_CRITICAL_PNG_ASSET_KEYS[number];
+
+export const LOBBY_CRITICAL_PNG_ASSET_KEY_SET = new Set<string>(LOBBY_CRITICAL_PNG_ASSET_KEYS);
+export const LOBBY_CRITICAL_PNG_RUNTIME_TAG = 'lobby-critical-png-runtime-v154' as const;
+
 export type CardVilleAssetCategory = 'background' | 'diorama' | 'building' | 'hero' | 'mascot' | 'npc' | 'prop' | 'ui' | 'icon' | 'card' | 'pack' | 'effect' | 'particle' | 'badge';
 
 export type CardVilleAsset = {

@@ -18,11 +18,11 @@ for (const forbidden of ['about:blank', '빈 페이지로 이동', 'history.back
   if (exitMethods.includes(forbidden) || blockedRecovery.includes(forbidden)) throw new Error(`Forbidden exit fallback remains in exit flow: ${forbidden}`);
 }
 const text = read('src/game/ui/TextStyles.ts');
-for (const token of ['mobile-readable-text-v153', 'return prefs.largeText ? 1.24 : 1.10', 'size <= 9 ? 10', 'size <= 11 ? 12']) {
+for (const token of ['mobile-readable-text-v154', 'return prefs.largeText ? 1.30 : 1.14', 'size <= 9 ? 11', 'size <= 11 ? 13']) {
   if (!text.includes(token)) throw new Error(`Mobile text sizing missing token: ${token}`);
 }
 const diorama = read('src/game/data/dioramaBuildings.ts');
-for (const token of ['x: 62', 'x: 328', 'x: 58', 'x: 332', 'visualWidth: 156', 'visualWidth: 136', 'statusX: -22', 'statusX: 22']) {
+for (const token of ['x: 70', 'x: 320', 'x: 70', 'x: 320', 'visualWidth: 182', 'visualWidth: 160', 'statusX: -31', 'statusX: 31']) {
   if (!diorama.includes(token)) throw new Error(`Village edge spacing missing token: ${token}`);
 }
 const blocks = [...diorama.matchAll(/\{\n\s+id: '([^']+)'[\s\S]*?\n\s+\}/g)].filter((match) => match[0].includes('assetKey:'));
@@ -58,7 +58,7 @@ const handoff = read('AI_HANDOFF_CARDVILLE.md');
 for (const token of [`# CardVille ${pkg.version}`, `## ${pkg.version} 업데이트 내역`, '모바일 글씨 가독성', '좌우 끝 공간']) {
   if (!readme.includes(token)) throw new Error(`README missing mobile layout note: ${token}`);
 }
-for (const token of [`현재 기준 버전은 ${pkg.version}`, 'mobile-readable-text-v153', 'village-edge-spacing-v153']) {
+for (const token of [`현재 기준 버전은 ${pkg.version}`, 'mobile-readable-text-v154', 'village-edge-spacing-v153']) {
   if (!handoff.includes(token)) throw new Error(`AI handoff missing mobile layout note: ${token}`);
 }
 if (pkg.scripts?.['check:mobile-exit-layout'] !== 'node tools/check-mobile-exit-layout.mjs') throw new Error('check:mobile-exit-layout script mismatch');

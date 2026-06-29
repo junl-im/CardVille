@@ -2,21 +2,21 @@ import Phaser from 'phaser';
 
 export const UI_FONT_FAMILY = "'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', Arial, sans-serif";
 const RESOLUTION = Math.min(typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1, 2);
-export const CARDVILLE_MOBILE_TEXT_TAG = 'mobile-readable-text-v153' as const;
+export const CARDVILLE_MOBILE_TEXT_TAG = 'mobile-readable-text-v154' as const;
 
 function mobileTextScale(): number {
   if (typeof window === 'undefined') return 1.08;
   try {
     const raw = window.localStorage?.getItem('cardville.accessibility.v143');
     const prefs = raw ? JSON.parse(raw) as { largeText?: boolean } : {};
-    return prefs.largeText ? 1.24 : 1.10;
+    return prefs.largeText ? 1.30 : 1.14;
   } catch {
-    return 1.10;
+    return 1.14;
   }
 }
 
 function readableSize(size: number): number {
-  const minReadable = size <= 9 ? 10 : size <= 11 ? 12 : size <= 13 ? 14 : size;
+  const minReadable = size <= 9 ? 11 : size <= 11 ? 13 : size <= 13 ? 15 : size;
   return Math.round(minReadable * mobileTextScale());
 }
 

@@ -1,7 +1,41 @@
-# CardVille 1.0.53
+# CardVille 1.0.54
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
+
+
+## 1.0.54 업데이트 내역
+
+- **마을 진입 먹통/건물 이미지 미표시 핫픽스 패스**를 진행했습니다.
+- 핵심 원인으로 의심되는 2가지를 직접 보강했습니다.
+  - `IntroLoadingScene`이 WebP 지원 브라우저에서 마을 핵심 PNG를 WebP로 자동 치환하면서, 모바일/배포 환경에서 특정 WebP 요청이 실패하면 건물 텍스처가 빠질 수 있었습니다.
+  - `NavigationSystem.safeStart()`가 전환 중 입력을 잠깐 끄는 구조였는데, 모바일 생명주기 엣지에서 delayedCall이 누락되면 멈춘 것처럼 보일 수 있었습니다.
+- 마을 핵심 에셋은 안정성을 우선해 PNG master로 강제 로드합니다.
+  - `LOBBY_CRITICAL_PNG_ASSET_KEYS`
+  - `lobby-critical-png-runtime-v154`
+  - `lobby-boot-asset-hardening-v154`
+  - WebP companion은 계속 보존하지만, 마을 배경/건물/핵심 토큰은 런타임에서 PNG를 우선 사용합니다.
+- 마을 건물 표시를 다시 키웠습니다.
+  - `dioramaBuildings.ts`에 `imageY`를 추가했습니다.
+  - 성, 도서관, 연구소, 상점, 학교, 숲, 이벤트, 항구, 광장 `visualWidth/visualHeight`를 확대했습니다.
+  - 좌우 끝 공간을 쓰되, 이름표와 하단 HUD가 겹치지 않도록 y좌표와 터치존을 다시 잡았습니다.
+  - `lobby-building-visible-png-v154`, `lobby-input-recovery-v154` 태그를 추가했습니다.
+- 마을 진입 안정성을 보강했습니다.
+  - `NavigationSystem`에 `scene-navigation-no-freeze-v154` 추가
+  - Phaser delayedCall + native `window.setTimeout` 이중 안전장치로 전환 중 입력 잠금이 남지 않게 했습니다.
+  - 전환 실패 시 즉시 입력을 복구하고 콘솔에 원인을 남깁니다.
+- 모바일 글씨 가독성을 한 단계 더 키웠습니다.
+  - `mobile-readable-text-v154`
+  - 기본 배율 1.14, 큰 안내 문구 1.30
+  - 9~13px급 작은 텍스트 최소 가독 크기 상향
+- 검증 추가/갱신:
+  - `tools/check-lobby-boot-assets.mjs`
+  - `npm run check:lobby-boot-assets`
+  - `check:mobile-exit-layout`, `check:screen-ui-stability`, `check:building-assets`, `check:village-visuals`, `check:lobby-premium-fit`, `check:asset-runtime`를 1.0.54 기준으로 갱신했습니다.
+- `npm run verify`에 `check:lobby-boot-assets`를 포함했습니다.
+- 신규 문서 파일은 만들지 않았습니다.
+- 삭제 파일은 없습니다.
+- `node_modules`, `dist`, `package-lock.json`은 통파일 ZIP에서 제외합니다.
 
 
 ## 1.0.53 업데이트 내역

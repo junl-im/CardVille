@@ -30,6 +30,7 @@ function getNum(block, name, required = false) {
 const diorama = mustContain('src/game/data/dioramaBuildings.ts', [
   'visualWidth?: number',
   'visualHeight?: number',
+  'imageY?: number',
   'nameplateY?: number',
   'statusY?: number',
   'visualWidth:',
@@ -78,7 +79,7 @@ for (const [id, block] of blocks.map((match) => [match[1], match[0]])) {
   if (visualWidth !== undefined && Math.abs(visualWidth - visualHeight) > 8) {
     throw new Error(`Premium square building should render near-square to avoid squashing: ${id} ${visualWidth}x${visualHeight}`);
   }
-  if (visualWidth !== undefined && (visualWidth < 108 || visualWidth > 196)) throw new Error(`Unexpected visualWidth for ${id}: ${visualWidth}`);
+  if (visualWidth !== undefined && (visualWidth < 108 || visualWidth > 236)) throw new Error(`Unexpected visualWidth for ${id}: ${visualWidth}`);
   const touchOffsetY = getNum(block, 'touchOffsetY') ?? 0;
   const zoneY = y + touchOffsetY;
   if (x - touchWidth / 2 < 8 || x + touchWidth / 2 > 382 || zoneY - touchHeight / 2 < 92 || zoneY + touchHeight / 2 > 746) {
