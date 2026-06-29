@@ -12,6 +12,7 @@ const GAME_SCENES = [
   'ResultScene',
   'RewardScene',
   'CollectionScene',
+  'ShopScene',
   'BackConfirmScene'
 ];
 

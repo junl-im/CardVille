@@ -12,6 +12,13 @@ export type PlayerProfile = {
 
 export type ProgressModeId = 'word' | 'math' | 'memory' | 'daily' | 'english';
 
+export type DailyShopStatus = {
+  token: string;
+  claimed: boolean;
+  canClaim: boolean;
+  nextResetAt: number;
+};
+
 export type StageRecord = {
   cleared: boolean;
   stars: number;
@@ -24,6 +31,7 @@ export type StageRecord = {
 const PROFILE_KEY = 'cardville.profile.v105';
 const COLLECTION_KEY = 'cardville.collection.v105';
 const PROGRESS_KEY = 'cardville.progress.v131';
+const DAILY_SHOP_PACK_KEY = 'cardville.shop.dailyPack.v134';
 const LEGACY_PROGRESS_KEYS = ['cardville.progress.v111', 'cardville.progress.v110'];
 const PROVIDERS = new Set(['guest', 'google', 'email']);
 const PROGRESS_MODES = new Set(['word', 'math', 'memory', 'daily', 'english']);
@@ -84,6 +92,19 @@ function progressKey(modeId: string | undefined, stage: number): string {
   return `${mode}:${cleanStage}`;
 }
 
+function dailyToken(now: number): string {
+  const d = new Date(now);
+  const year = d.getUTCFullYear();
+  const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(d.getUTCDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function nextUtcMidnight(now: number): number {
+  const d = new Date(now);
+  return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + 1, 0, 0, 0, 0);
+}
+
 function calcStars(stepsLeft: number, failed: boolean, starsOverride?: number): number {
   if (typeof starsOverride === 'number') return clampInt(starsOverride, 0, 3, failed ? 0 : 1);
   if (failed) return 0;
@@ -107,6 +128,37 @@ export class SaveSystem {
     profile.nickname = '게스트';
     this.saveProfile(profile);
     return profile;
+  }
+
+  static spendCoins(amount: number): { ok: boolean; profile: PlayerProfile } {
+    const profile = this.loadProfile();
+    const cost = clampInt(amount, 0, 99_999_999, 0);
+    if (profile.coins < cost) return { ok: false, profile };
+    profile.coins = clampInt(profile.coins - cost, 0, 99_999_999, profile.coins);
+    this.saveProfile(profile);
+    return { ok: true, profile };
+  }
+
+  static spendGems(amount: number): { ok: boolean; profile: PlayerProfile } {
+    const profile = this.loadProfile();
+    const cost = clampInt(amount, 0, 999_999, 0);
+    if (profile.gems < cost) return { ok: false, profile };
+    profile.gems = clampInt(profile.gems - cost, 0, 999_999, profile.gems);
+    this.saveProfile(profile);
+    return { ok: true, profile };
+  }
+
+  static getDailyShopStatus(now = Date.now()): DailyShopStatus {
+    const token = dailyToken(now);
+    const claimedToken = safeId(safeGet(DAILY_SHOP_PACK_KEY), '');
+    const claimed = claimedToken === token;
+    return { token, claimed, canClaim: !claimed, nextResetAt: nextUtcMidnight(now) };
+  }
+
+  static claimDailyShopPack(now = Date.now()): DailyShopStatus {
+    const status = this.getDailyShopStatus(now);
+    if (status.canClaim) safeSet(DAILY_SHOP_PACK_KEY, status.token);
+    return this.getDailyShopStatus(now);
   }
 
   static addReward(xp: number, coins: number, gems = 0): PlayerProfile {
@@ -215,6 +267,7 @@ export class SaveSystem {
     safeRemove(PROFILE_KEY);
     safeRemove(COLLECTION_KEY);
     safeRemove(PROGRESS_KEY);
+    safeRemove(DAILY_SHOP_PACK_KEY);
     for (const key of LEGACY_PROGRESS_KEYS) safeRemove(key);
   }
 }

@@ -5,6 +5,7 @@ export type DioramaRoute =
   | { scene: 'MemoryForestScene'; data?: { stage?: number } }
   | { scene: 'ModeSelectScene'; data?: { focusModeId?: GameModeId; title?: string } }
   | { scene: 'CollectionScene'; data?: Record<string, never> }
+  | { scene: 'ShopScene'; data?: Record<string, never> }
   | { scene: 'RewardScene'; data: { modeId?: GameModeId; stage?: number; score: number; bestCombo: number; stars: number; stepsLeft?: number } };
 
 export type DioramaBuilding = {
@@ -105,7 +106,7 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
   {
     id: 'shop',
     title: '상점',
-    subtitle: '카드 앨범',
+    subtitle: '카드팩 상점',
     assetKey: 'dioramaShop',
     iconKey: 'iconCvAsset',
     npcKey: 'npcMerchant',
@@ -119,7 +120,7 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     touchHeight: 90,
     touchOffsetY: 8,
     open: true,
-    route: { scene: 'CollectionScene' }
+    route: { scene: 'ShopScene' }
   },
   {
     id: 'school',

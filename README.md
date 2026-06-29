@@ -1,6 +1,54 @@
-# CardVille 1.0.32
+# CardVille 1.0.34
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
+
+## 1.0.34 업데이트 내역
+
+- **상점 허브/경제 UX 패스**를 진행했습니다.
+- `ShopScene`을 추가해 상점 건물이 더 이상 바로 앨범으로 이동하지 않고 실제 카드팩 상점 허브로 열립니다.
+  - 일일 무료팩
+  - 코인 구매팩
+  - 보석 구매팩
+  - 카드 앨범 바로가기
+  - 게임관/광장 복귀 버튼
+- `SaveSystem`에 상점 경제 보조 메서드를 추가했습니다.
+  - `spendCoins`
+  - `spendGems`
+  - `getDailyShopStatus`
+  - `claimDailyShopPack`
+  - 일일 무료팩 저장 키 `cardville.shop.dailyPack.v134`
+- `RewardScene`이 `source: 'shop'`과 `packLabel`을 받을 수 있게 되어 상점 구매팩과 플레이 보상팩의 보상 문구/재화 지급을 분리했습니다.
+- 상점 구매팩은 이미 비용을 지불했기 때문에 카드와 XP 중심으로 보상하고, 코인 환급 루프가 생기지 않도록 조정했습니다.
+- `dioramaBuildings.ts`에서 상점 건물 라우트를 `ShopScene`으로 변경하고, 부제를 `카드팩 상점`으로 바꿨습니다.
+- `BackButtonSystem`과 `src/main.ts`에 `ShopScene`을 등록했습니다.
+- `tools/check-shop-economy.mjs`와 `npm run check:shop-economy`를 추가해 상점 허브, 일일 무료팩, 재화 차감, 보상 소스 분기를 검증합니다.
+- `npm run verify`에 `check:shop-economy`를 포함했습니다.
+- 기존 로비 배치/겹침 감사, 진행 저장 확장, QualitySystem, GameButton 중복 터치 방어, 프리미엄 PNG/WebP, SVG 금지 정책은 유지했습니다.
+- 새 버전별 문서 파일은 만들지 않고, 변경 내역은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 누적했습니다.
+- `package.json`, `public/build.json`, `health.html`, `reset.html`, 앱 내부 버전 표기를 1.0.34로 동기화했습니다.
+
+## 1.0.33 업데이트 내역
+
+- **스테이지/카드팩/앨범 폴리시 패스**를 진행했습니다.
+- `StageSelectScene`을 모드 공용 스테이지 선택 화면으로 확장했습니다.
+  - 도서관 `word` 스테이지뿐 아니라 연산 연구소 `math`, 기억의 숲 `memory` 스테이지도 같은 선택 화면에서 고를 수 있습니다.
+  - 모드별 진행 기록은 `SaveSystem.getModeStageRecord`, `SaveSystem.isModeStageUnlocked`, `SaveSystem.nextPlayableModeStage` 기준으로 따로 표시합니다.
+  - 클리어 수, 별 개수, 다음 추천 단계가 상단 진행 스트립에 표시됩니다.
+- `ModeSelectScene`을 다듬었습니다.
+  - 열린 모드 카드에 진행 요약과 다음 단계 안내를 추가했습니다.
+  - 연구소/기억의 숲은 바로 플레이로 뛰지 않고 스테이지 선택 화면을 거쳐 입장합니다.
+- `MainLobbyScene`의 연구소/기억의 숲 건물 이동도 스테이지 선택 화면으로 연결했습니다.
+- `RewardScene` 카드팩 화면을 재배치했습니다.
+  - 팩 기대치 바, 모드별 보상 설명, 품질 모드 기반 반짝임 수 조절을 추가했습니다.
+  - 카드 획득 후 보상 설명, 앨범 보기 버튼, 광장 버튼이 겹치지 않도록 세로 위치를 정리했습니다.
+- `CollectionScene` 카드 앨범을 보강했습니다.
+  - 총 보유 카드 수와 희귀/영웅/전설 수집 칩을 추가했습니다.
+  - 미획득 카드와 보유 카드의 상태 표현을 더 명확히 했습니다.
+- `check:polish`, `check:content-engine`, `check:progression`, `check:lobby-layout` 검증 기준을 1.0.33 패치 내용까지 확인하도록 보강했습니다.
+- `npm run verify` 전체 통과를 확인했습니다.
+- 기존 로비 배치/겹침 감사, 진행 저장 확장, QualitySystem, GameButton 중복 터치 방어, 프리미엄 PNG/WebP, SVG 금지 정책은 유지했습니다.
+- 새 버전별 문서 파일은 만들지 않고, 변경 내역은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 누적했습니다.
+- `package.json`, `public/build.json`, `health.html`, `reset.html`, 앱 내부 버전 표기를 1.0.33으로 동기화했습니다.
 
 ## 1.0.32 업데이트 내역
 

@@ -5,6 +5,7 @@ import { panel } from '../ui/Panel';
 import { DrawSystem } from '../systems/DrawSystem';
 import { ProgressModeId, SaveSystem } from '../systems/SaveSystem';
 import { RARITY_META, RewardCard, pickRewardCard } from '../data/rewardCards';
+import { allowAmbientMotion, ambientCount, CardVilleQuality, getCardVilleQuality, isMotionEnabled, scaledDuration } from '../systems/QualitySystem';
 import { applyWrap, bodyText, cardSmallText, cardText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
 export class RewardScene extends Phaser.Scene {
@@ -16,11 +17,15 @@ export class RewardScene extends Phaser.Scene {
   private stage = 1;
   private stepsLeft = 0;
   private opened = false;
+  private source: 'game' | 'shop' = 'game';
+  private packLabel = '';
   private rewardGroup?: Phaser.GameObjects.Container;
+  private lobbyButton?: GameButton;
+  private quality: CardVilleQuality = getCardVilleQuality();
 
   constructor() { super('RewardScene'); }
 
-  init(data: { modeId?: ProgressModeId; stage?: number; score?: number; bestCombo?: number; stars?: number; stepsLeft?: number }): void {
+  init(data: { modeId?: ProgressModeId; stage?: number; score?: number; bestCombo?: number; stars?: number; stepsLeft?: number; source?: 'game' | 'shop'; packLabel?: string }): void {
     this.modeId = data.modeId ?? 'daily';
     this.stage = data.stage ?? 1;
     this.score = data.score ?? 0;
@@ -28,24 +33,62 @@ export class RewardScene extends Phaser.Scene {
     this.stars = data.stars ?? 1;
     this.stepsLeft = data.stepsLeft ?? this.stars * 4;
     this.opened = false;
+    this.source = data.source ?? 'game';
+    this.packLabel = data.packLabel ?? '';
   }
 
   create(): void {
     applyResponsiveCamera(this);
+    this.quality = getCardVilleQuality();
     this.reward = pickRewardCard(this.stars, this.bestCombo);
     DrawSystem.background(this, '카드팩 보상');
-    panel(this, 195, 390, 342, 518, 34);
-    this.add.text(195, 150, this.rewardTitle(), titleText(30)).setOrigin(0.5);
-    this.add.text(195, 190, '카드팩을 터치해서 열어보세요.', applyWrap(goldText(15), 300)).setOrigin(0.5);
+    this.drawRewardShowcase();
     this.drawPackClosed();
-    new GameButton(this, 195, 718, '광장으로', 248, 56, 0xc9f4ff).onClick(() => this.scene.start('MainLobbyScene'));
+    this.lobbyButton = new GameButton(this, 195, 736, '광장으로', 238, 52, 0xc9f4ff).onClick(() => this.scene.start('MainLobbyScene'));
+  }
+
+  private drawRewardShowcase(): void {
+    panel(this, 195, 408, 342, 548, 34);
+    this.add.rectangle(195, 124, 304, 48, 0xffffff, 0.08).setStrokeStyle(1, 0xffd86f, 0.32);
+    this.add.text(195, 116, this.rewardTitle(), titleText(28)).setOrigin(0.5);
+    this.add.text(195, 146, this.packFlavor(), applyWrap(mutedText(11), 292)).setOrigin(0.5);
+    this.drawPackQualityBar();
+    this.add.text(195, 214, '카드팩을 터치해서 열어보세요.', applyWrap(goldText(15), 300)).setOrigin(0.5);
   }
 
   private rewardTitle(): string {
+    if (this.source === 'shop') return `${this.packLabel || '상점 카드팩'} 개봉!`;
     if (this.modeId === 'math') return '연산 카드팩 도착!';
     if (this.modeId === 'memory') return '숲속 카드팩 도착!';
     if (this.modeId === 'word') return '말 카드팩 도착!';
     return '오늘의 카드팩 도착!';
+  }
+
+  private packFlavor(): string {
+    if (this.source === 'shop') return `상점 카드팩 · 별 ${this.stars}개 기대치 · 카드와 XP 중심 보상`;
+    if (this.modeId === 'math') return `점수 ${this.score} · 콤보 ${this.bestCombo} · ${this.stage}단계 실험 보상`;
+    if (this.modeId === 'memory') return `점수 ${this.score} · 기억력 ${this.bestCombo} · ${this.stage}단계 숲 보상`;
+    if (this.modeId === 'word') return `점수 ${this.score} · 콤보 ${this.bestCombo} · ${this.stage}단계 도서관 보상`;
+    return `별 ${this.stars}개 · 오늘의 보너스 카드팩`;
+  }
+
+  private drawPackQualityBar(): void {
+    const labels = ['COMMON', 'RARE', 'EPIC', 'LEGEND'];
+    const colors = [RARITY_META.common.color, RARITY_META.rare.color, RARITY_META.epic.color, RARITY_META.legendary.color];
+    this.add.text(68, 174, '팩 기대치', mutedText(10)).setOrigin(0, 0.5);
+    labels.forEach((label, index) => {
+      const x = 138 + index * 54;
+      const active = this.expectedRarityIndex() >= index;
+      this.add.rectangle(x, 174, 48, 18, active ? colors[index] : 0x26334f, active ? 0.82 : 0.52).setStrokeStyle(1, 0xffffff, active ? 0.42 : 0.16);
+      this.add.text(x, 174, label, active ? { fontFamily: 'system-ui, sans-serif', fontSize: '7px', color: '#301b0c', fontStyle: '900' } : mutedText(7)).setOrigin(0.5);
+    });
+  }
+
+  private expectedRarityIndex(): number {
+    if (this.stars >= 3 || this.bestCombo >= 8) return 3;
+    if (this.stars >= 2 || this.bestCombo >= 5) return 2;
+    if (this.bestCombo >= 2) return 1;
+    return 0;
   }
 
   private packPrefix(): string {
@@ -57,7 +100,7 @@ export class RewardScene extends Phaser.Scene {
 
   private drawPackClosed(): void {
     const prefix = this.packPrefix();
-    const group = this.add.container(195, 382);
+    const group = this.add.container(195, 404);
     this.rewardGroup = group;
     const glow = this.add.circle(0, 16, 122, RARITY_META[this.reward.rarity].color, 0.16);
     group.add(glow);
@@ -75,8 +118,10 @@ export class RewardScene extends Phaser.Scene {
     const zone = this.add.zone(0, 0, 240, 280).setOrigin(0.5).setInteractive({ useHandCursor: true });
     group.add(zone);
     zone.on('pointerup', () => this.openPack());
-    this.tweens.add({ targets: group, y: 370, duration: 850, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-    this.tweens.add({ targets: glow, scale: 1.08, alpha: 0.08, duration: 650, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    if (allowAmbientMotion(this.quality)) {
+      this.tweens.add({ targets: group, y: 392, duration: scaledDuration(850, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      this.tweens.add({ targets: glow, scale: 1.08, alpha: 0.08, duration: scaledDuration(650, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    }
   }
 
   private openPack(): void {
@@ -85,7 +130,7 @@ export class RewardScene extends Phaser.Scene {
     const group = this.rewardGroup;
     if (!group) return;
     this.tweens.killTweensOf(group);
-    group.y = 382;
+    group.y = 404;
     const prefix = this.packPrefix();
     const opening1 = `${prefix}Opening1`;
     const opening2 = `${prefix}Opening2`;
@@ -103,24 +148,36 @@ export class RewardScene extends Phaser.Scene {
 
   private revealReward(): void {
     const meta = RARITY_META[this.reward.rarity];
-    const xp = 30 + this.stars * 10 + this.bestCombo * 2;
-    const coins = 45 + this.stars * 20 + Math.floor(this.score / 60);
-    const gems = this.reward.rarity === 'legendary' ? 1 : 0;
+    const baseXp = 30 + this.stars * 10 + this.bestCombo * 2;
+    const baseCoins = 45 + this.stars * 20 + Math.floor(this.score / 60);
+    const baseGems = this.reward.rarity === 'legendary' ? 1 : 0;
+    const xp = this.source === 'shop' ? Math.max(18, Math.floor(baseXp * 0.62)) : baseXp;
+    const coins = this.source === 'shop' ? 0 : baseCoins;
+    const gems = this.source === 'shop' ? 0 : baseGems;
     const profile = SaveSystem.addReward(xp, coins, gems);
     const record = SaveSystem.saveModeStageResult(this.modeId, this.stage, this.score, this.bestCombo, this.stepsLeft, false, this.stars);
     const count = SaveSystem.addCard(this.reward.id);
 
     this.add.text(195, 210, `${meta.label} 카드 획득!`, goldText(18)).setOrigin(0.5);
-    this.drawRewardCard(195, 372, 174, 226, this.reward.icon, this.reward.id, meta.color, meta.label, this.reward.rarity);
+    this.drawRewardCard(195, 356, 172, 206, this.reward.icon, this.reward.id, meta.color, meta.label, this.reward.rarity);
     this.add.text(
       195,
-      548,
-      `+${xp} XP  +${coins} 코인${gems ? `  +${gems} 보석` : ''}\n별 ${record.stars}개 · 최고 콤보 ${record.bestCombo} · 플레이 ${record.plays}회\n현재 Lv.${profile.level} · 🪙 ${profile.coins} · 보유 ${count}장`,
-      { ...applyWrap(bodyText(14), 318), lineSpacing: 7 }
+      526,
+      `${this.rewardLine(xp, coins, gems)}\n별 ${record.stars}개 · 최고 콤보 ${record.bestCombo} · 플레이 ${record.plays}회\n현재 Lv.${profile.level} · 🪙 ${profile.coins} · 보유 ${count}장`,
+      { ...applyWrap(bodyText(13), 318), lineSpacing: 6 }
     ).setOrigin(0.5);
-    this.add.text(195, 636, '좋은 카드일수록 앨범 프레임이 더 화려해져요.', applyWrap(mutedText(12), 306)).setOrigin(0.5);
-    new GameButton(this, 195, 658, '카드 앨범 보기', 248, 52, 0xf0c7ff).onClick(() => this.scene.start('CollectionScene'));
+    this.add.text(195, 612, '획득 카드는 앨범에서 희귀도 프레임과 함께 다시 볼 수 있어요.', applyWrap(mutedText(11), 306)).setOrigin(0.5);
+    new GameButton(this, 195, 668, '카드 앨범 보기', 238, 50, 0xf0c7ff).onClick(() => this.scene.start('CollectionScene'));
+    this.lobbyButton?.setPosition(195, 742).setLabel('광장으로 돌아가기');
     this.spawnSparkles(meta.color);
+  }
+
+  private rewardLine(xp: number, coins: number, gems: number): string {
+    const parts = [`+${xp} XP`];
+    if (coins > 0) parts.push(`+${coins} 코인`);
+    if (gems > 0) parts.push(`+${gems} 보석`);
+    if (this.source === 'shop') parts.push('상점 구매팩');
+    return parts.join('  ');
   }
 
   private drawRewardCard(x: number, y: number, w: number, h: number, icon: string, name: string, color: number, rarity: string, rarityKey: string): void {
@@ -131,10 +188,10 @@ export class RewardScene extends Phaser.Scene {
     this.add.rectangle(x, y - h / 2 + 20, w - 20, 28, color, 0.95);
     this.add.text(x, y - h / 2 + 20, rarity, cardSmallText(12)).setOrigin(0.5);
     if (this.textures.exists('effectAura')) this.add.image(x, y - 18, 'effectAura').setDisplaySize(122, 122).setAlpha(0.22);
-    this.add.text(x, y - 22, icon, { fontSize: '58px' }).setOrigin(0.5);
-    this.add.text(x, y + 66, name, { ...cardText(16), align: 'center', wordWrap: { width: w - 22, useAdvancedWrap: true } }).setOrigin(0.5);
+    this.add.text(x, y - 22, icon, { fontSize: '56px' }).setOrigin(0.5);
+    this.add.text(x, y + 58, name, { ...cardText(15), align: 'center', wordWrap: { width: w - 22, useAdvancedWrap: true } }).setOrigin(0.5);
     const glow = this.add.rectangle(x, y, w + 20, h + 20, color, 0.08).setStrokeStyle(2, color, 0.55);
-    this.tweens.add({ targets: glow, scale: 1.06, alpha: 0, duration: 1100, repeat: -1 });
+    if (isMotionEnabled(this.quality)) this.tweens.add({ targets: glow, scale: 1.06, alpha: 0, duration: scaledDuration(1100, this.quality), repeat: -1 });
   }
 
   private flashReward(color: number): void {
@@ -145,12 +202,13 @@ export class RewardScene extends Phaser.Scene {
 
   private spawnSparkles(color: number): void {
     const texture = this.textures.exists('particleSparkle') ? 'particleSparkle' : undefined;
-    for (let i = 0; i < 18; i += 1) {
+    const count = ambientCount(18, this.quality, 6);
+    for (let i = 0; i < count; i += 1) {
       const x = 195 + Phaser.Math.Between(-132, 132);
-      const y = 390 + Phaser.Math.Between(-128, 110);
+      const y = 374 + Phaser.Math.Between(-118, 108);
       const obj = texture ? this.add.image(x, y, texture).setDisplaySize(22, 22) : this.add.circle(x, y, 5, color, 0.8);
       obj.setAlpha(0);
-      this.tweens.add({ targets: obj, alpha: { from: 0, to: 0.82 }, scale: { from: 0.3, to: 1.1 }, y: y - Phaser.Math.Between(18, 58), duration: 520, delay: i * 24, yoyo: true, onComplete: () => obj.destroy() });
+      this.tweens.add({ targets: obj, alpha: { from: 0, to: 0.82 }, scale: { from: 0.3, to: 1.1 }, y: y - Phaser.Math.Between(18, 58), duration: scaledDuration(520, this.quality), delay: i * 24, yoyo: true, onComplete: () => obj.destroy() });
     }
   }
 }

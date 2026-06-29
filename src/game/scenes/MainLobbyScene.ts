@@ -12,7 +12,7 @@ import { MATH_STAGES } from '../data/mathStages';
 import { MEMORY_STAGES } from '../data/memoryStages';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
-const LOBBY_VERSION = '1.0.32';
+const LOBBY_VERSION = '1.0.34';
 const HERO_HOME = { x: 195, y: 545 } as const;
 const CAT_HOME = { x: 145, y: 585 } as const;
 
@@ -641,11 +641,11 @@ export class MainLobbyScene extends Phaser.Scene {
 
   private goToRoute(route: DioramaRoute): void {
     if (route.scene === 'MathLabScene') {
-      this.scene.start('MathLabScene', { stage: SaveSystem.nextPlayableModeStage('math', MATH_STAGES.length) });
+      this.scene.start('StageSelectScene', { modeId: 'math', title: '연산 연구소', recommendedStage: SaveSystem.nextPlayableModeStage('math', MATH_STAGES.length) });
       return;
     }
     if (route.scene === 'MemoryForestScene') {
-      this.scene.start('MemoryForestScene', { stage: SaveSystem.nextPlayableModeStage('memory', MEMORY_STAGES.length) });
+      this.scene.start('StageSelectScene', { modeId: 'memory', title: '기억의 숲', recommendedStage: SaveSystem.nextPlayableModeStage('memory', MEMORY_STAGES.length) });
       return;
     }
     this.scene.start(route.scene, 'data' in route ? route.data : undefined);
