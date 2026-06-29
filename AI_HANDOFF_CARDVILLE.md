@@ -4,10 +4,34 @@
 CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고, 그다음 실제 코드를 확인하세요.
 
 
-## 현재 작업 기준: 1.0.47
+## 현재 작업 기준: 1.0.48
 
-현재 기준 버전은 1.0.47입니다.  
-이번 버전은 1.0.46 프리미엄 PNG 배치 에셋 적용본을 기준으로, 새 건물/캐릭터 이미지가 눌리거나 겹쳐 보일 수 있는 로비 배치와 렌더링 방식을 보정한 프리미엄 로비 에셋 배치 패스입니다.
+현재 기준 버전은 1.0.48입니다.  
+이번 버전은 1.0.47 프리미엄 로비 에셋 배치 보정본을 기준으로, 마을 이미지 누락 가능성과 공통 버튼 디자인 품질 차이를 바로잡은 마을 이미지 표시/버튼 프리미엄 복구 패스입니다.
+
+
+### 1.0.48 마을 이미지 표시/버튼 프리미엄 복구 패스
+
+- 사용자 피드백: “왜 마을은 이미지가 없는가, 버튼 디자인도 시작 버튼만큼 신경 써야 한다.”
+- 원인 판단:
+  - 1.0.47 패치 ZIP은 1.0.46 프리미엄 에셋 적용본을 기준으로 한 델타 패치였습니다. 기준 통파일에 `public/assets/diorama/building_*.png` 프리미엄 PNG가 없으면 마을 이미지가 누락될 수 있습니다.
+  - 1.0.46/1.0.47에서 에셋은 들어갔지만, 패치만 적용하는 상황을 충분히 고려하지 못했습니다.
+  - 시작 화면 버튼은 `skin:false` 무광 벡터 CTA였지만, 다른 장면의 `GameButton`은 기본적으로 기존 baked button skin을 사용할 수 있어 품질 차이가 났습니다.
+- 수정:
+  - `IntroLoadingScene`에 `resolveAssetUrl()` 추가
+  - `import.meta.env.BASE_URL` 기반으로 `assets/...`를 로드
+  - `CARDVILLE_ASSET_VERSION`을 URL query로 붙여 캐시 갱신
+  - `loaderror` 로그 추가
+  - `MainLobbyScene.drawMissingBuildingFallback()` 추가
+  - `GameButton` 기본값을 시작 버튼과 유사한 프리미엄 벡터 CTA로 변경
+  - 기존 PNG 버튼 스킨은 `options.skin === true`일 때만 사용
+  - 1.0.48 패치 ZIP은 마을 핵심 이미지와 WebP companion을 포함하는 self-contained 패치로 작성
+- 검증:
+  - `tools/check-asset-runtime.mjs` 추가
+  - `tools/check-premium-buttons.mjs` 추가
+  - `npm run verify`에 `check:asset-runtime`, `check:premium-buttons` 포함
+- 핵심 기록: 앞으로 “이미지 적용 패치” 뒤의 보정 패치라도, 사용자가 패치 ZIP만 적용할 수 있으므로 로비 핵심 이미지 파일을 패치 표면에 포함합니다.
+- 신규 문서 파일은 생성하지 않았습니다.
 
 ### 1.0.47 프리미엄 로비 에셋 배치 보정 패스
 

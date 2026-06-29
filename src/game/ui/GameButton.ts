@@ -18,6 +18,22 @@ function chooseButtonSkin(scene: Phaser.Scene, width: number): { normal: string;
   return { normal, press: scene.textures.exists(press) ? press : normal };
 }
 
+
+export const CARDVILLE_PREMIUM_BUTTON_STYLE_TAG = 'premium-vector-button-v148' as const;
+
+type ButtonPalette = { top: number; bottom: number; stroke: number; glow: number; text: string };
+
+function resolveButtonPalette(color: number): ButtonPalette {
+  if (color === 0xffd86f) return { top: 0xfff4b8, bottom: 0xffbf48, stroke: 0xffffff, glow: 0xffd86f, text: '#2f1906' };
+  if (color === 0x8fd3ff) return { top: 0xd8f6ff, bottom: 0x66c2ff, stroke: 0xffffff, glow: 0x8fd3ff, text: '#071a34' };
+  if (color === 0xf0c7ff) return { top: 0xf8e7ff, bottom: 0xd79aff, stroke: 0xffffff, glow: 0xf0c7ff, text: '#26133c' };
+  if (color === 0xc9f4ff) return { top: 0xf2feff, bottom: 0xa9e9f7, stroke: 0xffffff, glow: 0xc9f4ff, text: '#0b2635' };
+  if (color === 0xff9ab1) return { top: 0xffd2dc, bottom: 0xff7e9b, stroke: 0xffffff, glow: 0xff9ab1, text: '#3a0b18' };
+  if (color === 0x9fe7ff) return { top: 0xe3fbff, bottom: 0x82d9ff, stroke: 0xffffff, glow: 0x9fe7ff, text: '#08243a' };
+  if (color === 0x9aa4ba) return { top: 0xdce3ef, bottom: 0x9aa4ba, stroke: 0xffffff, glow: 0x8a93a8, text: '#172033' };
+  return { top: 0xffffff, bottom: color, stroke: 0xffffff, glow: color, text: '#07152f' };
+}
+
 export class GameButton extends Phaser.GameObjects.Container {
   private bg: Phaser.GameObjects.Graphics;
   private label: Phaser.GameObjects.Text;
@@ -47,12 +63,12 @@ export class GameButton extends Phaser.GameObjects.Container {
     const hitH = Math.max(height + 6, 48);
 
     this.bg = scene.add.graphics();
-    this.skin = options.skin === false ? null : chooseButtonSkin(scene, width);
+    this.skin = options.skin === true ? chooseButtonSkin(scene, width) : null;
     if (this.skin) {
       this.skinImage = scene.add.image(0, 2, this.skin.normal).setDisplaySize(width + 16, height + 16);
     }
     const baseLabelSize = height >= 64 ? 20 : height <= 46 ? 14 : 17;
-    this.label = scene.add.text(0, -1, compactText(text, Math.max(5, Math.floor(width / 24))), darkText(fitTextSize(text, baseLabelSize, 11))).setOrigin(0.5);
+    this.label = scene.add.text(0, -1, compactText(text, Math.max(5, Math.floor(width / 24))), { ...darkText(fitTextSize(text, baseLabelSize, 11)), color: resolveButtonPalette(color).text, fontStyle: '900' }).setOrigin(0.5);
     this.hitZone = scene.add.zone(0, 0, hitW, hitH)
       .setOrigin(0.5)
       .setName(`hit:${text}`)
@@ -113,7 +129,7 @@ export class GameButton extends Phaser.GameObjects.Container {
   setLabel(text: string): this {
     const baseLabelSize = this.heightValue >= 64 ? 20 : this.heightValue <= 46 ? 14 : 17;
     this.label.setText(compactText(text, Math.max(5, Math.floor(this.widthValue / 24))));
-    this.label.setStyle(darkText(fitTextSize(text, baseLabelSize, 11)));
+    this.label.setStyle({ ...darkText(fitTextSize(text, baseLabelSize, 11)), color: resolveButtonPalette(this.colorValue).text, fontStyle: '900' });
     return this;
   }
 
@@ -141,15 +157,22 @@ export class GameButton extends Phaser.GameObjects.Container {
       return;
     }
 
-    this.bg.fillGradientStyle(0xffffff, 0xffffff, color, color, 1, 0.98, 1, 0.96);
-    this.bg.fillRoundedRect(-width / 2, -height / 2, width, height, 20);
-    this.bg.lineStyle(3, 0xffffff, 0.76);
-    this.bg.strokeRoundedRect(-width / 2, -height / 2, width, height, 20);
-    this.bg.lineStyle(1, 0x07152f, 0.22);
-    this.bg.strokeRoundedRect(-width / 2 + 3, -height / 2 + 3, width - 6, height - 6, 16);
+    const palette = resolveButtonPalette(color);
+    const yOffset = pressed ? 2 : 0;
+    const radius = Math.min(22, Math.max(15, height * 0.36));
+    this.bg.fillStyle(palette.glow, pressed ? 0.12 : 0.20);
+    this.bg.fillRoundedRect(-width / 2 - 3, -height / 2 + yOffset - 2, width + 6, height + 6, radius + 3);
+    this.bg.fillGradientStyle(palette.top, palette.top, palette.bottom, palette.bottom, 1, 1, 1, 1);
+    this.bg.fillRoundedRect(-width / 2, -height / 2 + yOffset, width, height, radius);
+    this.bg.fillStyle(0x5f3608, pressed ? 0.10 : 0.18);
+    this.bg.fillRoundedRect(-width / 2 + 8, height / 2 - 13 + yOffset, width - 16, 8, 7);
+    this.bg.lineStyle(3, palette.stroke, pressed ? 0.58 : 0.82);
+    this.bg.strokeRoundedRect(-width / 2, -height / 2 + yOffset, width, height, radius);
+    this.bg.lineStyle(1, 0x07152f, pressed ? 0.18 : 0.28);
+    this.bg.strokeRoundedRect(-width / 2 + 4, -height / 2 + 4 + yOffset, width - 8, height - 8, Math.max(10, radius - 5));
     if (this.shineEnabled) {
-      this.bg.fillStyle(0xffffff, pressed ? 0.10 : 0.24);
-      this.bg.fillRoundedRect(-width / 2 + 16, -height / 2 + 8, width - 32, 10, 8);
+      this.bg.fillStyle(0xffffff, pressed ? 0.07 : 0.16);
+      this.bg.fillRoundedRect(-width / 2 + 18, -height / 2 + 8 + yOffset, width - 36, Math.max(6, height * 0.13), 8);
     }
   }
 }

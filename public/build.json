@@ -1,10 +1,10 @@
 {
   "name": "CardVille",
-  "version": "1.0.47",
-  "mode": "premium-lobby-fit-v147",
+  "version": "1.0.48",
+  "mode": "visible-premium-assets-v148",
   "svg": "disabled",
   "pwa": "disabled",
-  "notes": "Premium lobby buildings and NPCs render with aspect-fit boxes after the PNG batch; nameplates, READY chips, props, and touch zones were retuned for the new art.",
-  "label": "Premium lobby fit + safe status chip route",
-  "description": "Keeps 1.0.46 asset batch while correcting forced display-size stretching, bottom-row HUD collisions, NPC readability, and CI visual-fit guards."
+  "notes": "Premium lobby images are included in the patch surface, loaded with BASE_URL and CARDVILLE_ASSET_VERSION cache busting, and all GameButton CTAs use the premium vector style by default.",
+  "label": "Visible village assets + premium buttons",
+  "description": "Prevents blank village art after patch-only application and replaces old baked button skins with the start-screen style CTA system."
 }

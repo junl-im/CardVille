@@ -1,8 +1,31 @@
-# CardVille 1.0.47
+# CardVille 1.0.48
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
 
+
+## 1.0.48 업데이트 내역
+
+- **마을 이미지 표시 복구/버튼 프리미엄 복구 패스**를 진행했습니다.
+- 사용자 피드백 기준 핵심 문제를 인정하고 바로잡았습니다.
+  - 마을 이미지가 안 보이는 경우: 1.0.47 패치 ZIP이 1.0.46 에셋 적용본 위에 올라가는 델타 패치였기 때문에, 기준 통파일에 프리미엄 PNG가 없으면 로비가 텍스처 누락 상태가 될 수 있었습니다.
+  - 버튼 디자인 문제: 시작 화면은 무광 벡터 CTA였지만 다른 장면의 `GameButton`은 기존 구운 버튼 스킨을 기본값으로 계속 사용할 수 있었습니다.
+- `IntroLoadingScene`을 수정해 모든 런타임 에셋을 `import.meta.env.BASE_URL` 기준 절대 경로로 로드합니다.
+- 모든 에셋 로드 URL에 `CARDVILLE_ASSET_VERSION` 쿼리를 붙여 GitHub Pages/브라우저 캐시가 오래된 마을 이미지를 붙잡는 문제를 줄였습니다.
+- 에셋 로드 실패 시 콘솔에 `[CardVille] asset load failed` 경고를 남기도록 했습니다.
+- `MainLobbyScene`에 `drawMissingBuildingFallback`을 추가해, 어떤 이유로 건물 텍스처가 빠져도 빈 네모가 아니라 프리미엄 대체 카드와 아이콘으로 표시되게 했습니다.
+- 시작 화면 CTA 품질을 공통 GameButton 기본값으로 확장했습니다.
+- `GameButton` 기본 디자인을 시작 화면 CTA와 같은 프리미엄 벡터 버튼으로 변경했습니다.
+  - 기존 구운 PNG 버튼 스킨은 `options.skin === true`일 때만 사용합니다.
+  - 기본 버튼은 골드/블루/퍼플/코랄 톤별 그라데이션, 외곽선, 하단 베벨, 굵은 라벨을 사용합니다.
+- 1.0.48 패치 ZIP은 더 이상 얇은 델타만 담지 않고, 마을 표시 핵심 에셋을 포함하는 **self-contained 안정형 패치**로 만듭니다.
+- `tools/check-asset-runtime.mjs`와 `npm run check:asset-runtime`을 추가했습니다.
+- `tools/check-premium-buttons.mjs`와 `npm run check:premium-buttons`를 추가했습니다.
+- `npm run verify`에 두 검증을 포함했습니다.
+- 신규 이미지 에셋은 추가하지 않았고, 1.0.46에서 적용된 프리미엄 건물/캐릭터/UI 에셋을 패치 표면에 다시 포함합니다.
+- 신규 문서 파일은 만들지 않았습니다.
+- 삭제 파일은 없습니다.
+- `node_modules`, `dist`, `package-lock.json`은 통파일 ZIP에서 제외합니다.
 
 ## 1.0.47 업데이트 내역
 

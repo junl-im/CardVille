@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { addCoverImage, applyResponsiveCamera, layout } from '../systems/LayoutSystem';
-import { ASSET_MANIFEST } from '../data/assetManifest';
+import { ASSET_MANIFEST, CARDVILLE_ASSET_VERSION } from '../data/assetManifest';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
 export class IntroLoadingScene extends Phaser.Scene {
@@ -30,6 +30,9 @@ export class IntroLoadingScene extends Phaser.Scene {
 
     this.load.on('progress', (value: number) => {
       this.progressText?.setText(`게임 준비 중... ${Math.round(value * 100)}%`);
+    });
+    this.load.on('loaderror', (file: Phaser.Loader.File) => {
+      console.warn('[CardVille] asset load failed', file.key, file.url, CARDVILLE_ASSET_VERSION);
     });
     this.load.once('complete', () => {
       this.readyToContinue = true;
@@ -125,7 +128,15 @@ export class IntroLoadingScene extends Phaser.Scene {
   private queueImage(key: string, url: string): void {
     if (this.textures.exists(key) || this.queuedKeys.has(key)) return;
     this.queuedKeys.add(key);
-    this.load.image(key, url);
+    this.load.image(key, this.resolveAssetUrl(url));
+  }
+
+  private resolveAssetUrl(url: string): string {
+    const base = import.meta.env.BASE_URL || '/';
+    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+    const cleanUrl = url.startsWith('/') ? url.slice(1) : url;
+    const separator = cleanUrl.includes('?') ? '&' : '?';
+    return `${normalizedBase}${cleanUrl}${separator}v=${CARDVILLE_ASSET_VERSION}`;
   }
 
   private queueGameAssets(): void {

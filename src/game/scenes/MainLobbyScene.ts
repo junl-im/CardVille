@@ -16,9 +16,9 @@ import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 import { AccessibilitySystem } from '../systems/AccessibilitySystem';
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
-const LOBBY_VERSION = '1.0.47';
+const LOBBY_VERSION = '1.0.48';
 const MISSION_TONE_COLORS = { gold: 0xffd86f, blue: 0x8fd3ff, purple: 0xd7a5ff, green: 0xa9f5b5, coral: 0xffb39a } as const;
-const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-fit-v147' as const;
+const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-visible-v148' as const;
 const HERO_HOME = { x: 195, y: 545 } as const;
 const CAT_HOME = { x: 145, y: 585 } as const;
 
@@ -206,7 +206,7 @@ export class MainLobbyScene extends Phaser.Scene {
 
     const image = this.textures.exists(building.assetKey)
       ? this.fitImageToBox(this.add.image(0, 0, building.assetKey), visualWidth, visualHeight)
-      : this.add.rectangle(0, 0, visualWidth, visualHeight, building.open ? 0xffd86f : 0x66708a, 0.86).setStrokeStyle(3, 0xffffff, 0.7);
+      : this.drawMissingBuildingFallback(building, visualWidth, visualHeight);
     container.add(image);
 
     if (building.open && this.textures.exists('uiDoorLight')) {
@@ -262,6 +262,28 @@ export class MainLobbyScene extends Phaser.Scene {
     }
   }
 
+
+  private drawMissingBuildingFallback(building: DioramaBuilding, width: number, height: number): Phaser.GameObjects.Container {
+    const fallback = this.add.container(0, 0);
+    const g = this.add.graphics();
+    g.fillGradientStyle(0xfff8dd, 0xfff8dd, building.open ? 0xffd86f : 0x8b96ad, building.open ? 0xffd86f : 0x8b96ad, 1, 1, 0.95, 0.95);
+    g.fillRoundedRect(-width / 2, -height / 2, width, height, 28);
+    g.fillStyle(0x07142c, 0.12);
+    g.fillRoundedRect(-width * 0.32, -height * 0.10, width * 0.64, height * 0.44, 18);
+    g.lineStyle(3, 0xffffff, 0.72);
+    g.strokeRoundedRect(-width / 2, -height / 2, width, height, 28);
+    g.lineStyle(2, 0xffd86f, 0.58);
+    g.strokeRoundedRect(-width / 2 + 7, -height / 2 + 7, width - 14, height - 14, 22);
+    fallback.add(g);
+    const icon = this.textures.exists(building.iconKey)
+      ? this.add.image(0, -height * 0.08, building.iconKey).setDisplaySize(Math.min(48, width * 0.38), Math.min(48, height * 0.38))
+      : this.add.text(0, -height * 0.07, '□', goldText(22)).setOrigin(0.5);
+    fallback.add(icon);
+    fallback.add(this.add.text(0, height * 0.30, '에셋 확인', mutedText(8)).setOrigin(0.5));
+    fallback.setName(`missing:${building.assetKey}`);
+    console.warn('[CardVille] lobby building texture missing', building.assetKey, building.title);
+    return fallback;
+  }
 
   private drawBuildingStatusChip(container: Phaser.GameObjects.Container, building: DioramaBuilding, recommended: boolean): void {
     const missionStatus = building.id === 'event' ? DailyMissionSystem.getLobbyStatus() : null;
