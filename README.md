@@ -1,8 +1,28 @@
-# CardVille 1.0.46
+# CardVille 1.0.47
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
 
+
+## 1.0.47 업데이트 내역
+
+- **프리미엄 로비 에셋 배치 보정 패스**를 진행했습니다.
+- 1.0.46에서 적용한 1254×1254 프리미엄 건물 PNG들이 기존 직사각형 `setDisplaySize(width,height)` 렌더링 때문에 세로/가로 비율이 눌려 보일 수 있는 문제를 수정했습니다.
+- `MainLobbyScene`에 `fitImageToBox`를 추가해 건물과 NPC 이미지를 원본 비율 유지 방식으로 렌더링합니다.
+- 건물 데이터에 `visualWidth`, `visualHeight`, `nameplateY`, `statusY`, `statusX` 같은 프리미엄 로비 배치 필드를 추가했습니다.
+- 새 건물 이미지 기준으로 성/도서관/연구소/광장/상점/학교/숲/이벤트/항구의 y좌표, 터치존, 이름표, 상태칩 위치를 다시 조정했습니다.
+- `npc_merchant`와 `npc_town_cat`은 새 고해상도 에셋을 알아보기 쉽게 조금 더 크게 보이도록 배치와 크기를 보정했습니다.
+- 광장 소품, 벤치, 랜턴, 표지판 위치를 새 건물 크기에 맞춰 재배치했습니다.
+- 열린 건물에는 `uiDoorLight`와 접지 글로우를 더해 문이 살아 있는 느낌을 강화했습니다.
+- 이벤트 건물의 `READY n` 상태칩은 숲/항구 칩과 겹치지 않도록 안쪽으로 보정했습니다.
+- `src/game/data/lobbyLayoutPlan.ts`에 `LOBBY_PREMIUM_VISUAL_FIT_AUDIT`를 추가했습니다.
+- `tools/check-lobby-premium-fit.mjs`와 `npm run check:lobby-premium-fit`을 추가했습니다.
+- `npm run verify`에 `check:lobby-premium-fit`을 포함했습니다.
+- 기존 아트 바이블, no-SVG, PNG/WebP companion, 마을 건물 에셋 패스, 로비 배치/겹침 감사, 패치 표면 완전성 규칙은 유지했습니다.
+- 신규 이미지 에셋은 추가하지 않았습니다.
+- 신규 문서 파일은 만들지 않았습니다.
+- 삭제 파일은 없습니다.
+- `node_modules`, `dist`, `package-lock.json`은 통파일 ZIP에서 제외합니다.
 
 ## 1.0.46 업데이트 내역
 

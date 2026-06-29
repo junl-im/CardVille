@@ -36,11 +36,11 @@ const uniqueSizes = new Set(sizes);
 if (uniqueSizes.size < buildingFiles.length - 1) throw new Error('Building assets look duplicated; expected distinct file footprints');
 
 const diorama = read('src/game/data/dioramaBuildings.ts');
-for (const token of ['width: 166', 'height: 148', 'width: 142', 'height: 128', 'targetY: 724']) {
+for (const token of ['visualWidth: 162', 'visualHeight: 162', 'nameplateY: 64', 'statusY: -76', 'targetY: 720']) {
   if (!diorama.includes(token)) throw new Error(`dioramaBuildings.ts missing updated building placement token: ${token}`);
 }
 const lobby = read('src/game/scenes/MainLobbyScene.ts');
-for (const token of ['baseShadow', 'building.width * 0.82', 'building.assetKey']) {
+for (const token of ['baseShadow', 'fitImageToBox', 'visualWidth', 'building.assetKey']) {
   if (!lobby.includes(token)) throw new Error(`MainLobbyScene missing true-building presentation token: ${token}`);
 }
 const manifest = read('src/game/data/assetManifest.ts');

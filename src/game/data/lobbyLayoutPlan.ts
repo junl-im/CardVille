@@ -1,4 +1,4 @@
-export const LOBBY_LAYOUT_PLAN_VERSION = '1.0.46' as const;
+export const LOBBY_LAYOUT_PLAN_VERSION = '1.0.47' as const;
 
 export type LobbySafeZone = {
   id: string;
@@ -23,7 +23,8 @@ export const LOBBY_LAYOUT_GUARDS = [
   'all building touch zones are separate from each other',
   'hero and black cat remain visually centered',
   'open/planned/locked building assignment must be visible',
-  'no SVG and no emoji-only production asset dependency'
+  'no SVG and no emoji-only production asset dependency',
+  'premium 1254 PNG buildings must be aspect-fit into visual boxes without forced stretch'
 ] as const;
 
 export const LOBBY_DESIGN_CHECKS = [
@@ -31,7 +32,18 @@ export const LOBBY_DESIGN_CHECKS = [
   'ambient loops must pass through QualitySystem gates',
   'large button labels use fitTextSize and compactText before rendering',
   'double taps should not trigger duplicate scene navigation',
-  'motion-reduced users keep readable static scene without flashing shake'
+  'motion-reduced users keep readable static scene without flashing shake',
+  'premium buildings use visualWidth/visualHeight and fitImageToBox to prevent squashed art',
+  'new merchant and town cat NPCs must remain large enough to read but outside bottom HUD'
+] as const;
+
+
+export const LOBBY_PREMIUM_VISUAL_FIT_AUDIT = [
+  'building_castle/library/lab/shop/school/forest/event/harbor/plaza are square 1254 PNG cutouts after 1.0.46',
+  '1.0.47 renders those square assets with fitImageToBox instead of setDisplaySize(width,height) stretch',
+  'bottom row nameplates stay above y=746 bottom hint safe zone',
+  'event READY badge is offset inward so READY n does not collide with forest/harbor chips',
+  'npc_merchant and npc_town_cat use aspect-fit readable sizes after premium asset import'
 ] as const;
 
 export const MIN_TOUCH_SIZE = 44;

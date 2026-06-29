@@ -16,8 +16,9 @@ import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 import { AccessibilitySystem } from '../systems/AccessibilitySystem';
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
-const LOBBY_VERSION = '1.0.46';
+const LOBBY_VERSION = '1.0.47';
 const MISSION_TONE_COLORS = { gold: 0xffd86f, blue: 0x8fd3ff, purple: 0xd7a5ff, green: 0xa9f5b5, coral: 0xffb39a } as const;
+const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-fit-v147' as const;
 const HERO_HOME = { x: 195, y: 545 } as const;
 const CAT_HOME = { x: 145, y: 585 } as const;
 
@@ -179,6 +180,15 @@ export class MainLobbyScene extends Phaser.Scene {
     }
   }
 
+  private fitImageToBox(image: Phaser.GameObjects.Image, maxWidth: number, maxHeight: number): Phaser.GameObjects.Image {
+    const frame = image.texture.get();
+    const sourceWidth = Math.max(1, frame.width);
+    const sourceHeight = Math.max(1, frame.height);
+    const scale = Math.min(maxWidth / sourceWidth, maxHeight / sourceHeight);
+    image.setScale(scale);
+    return image;
+  }
+
   private drawBuilding(building: DioramaBuilding, recommended: boolean): void {
     const container = this.add.container(building.x, building.y).setDepth(building.y);
     if ((building.open || recommended) && this.textures.exists('uiBuildingGlow')) {
@@ -187,43 +197,52 @@ export class MainLobbyScene extends Phaser.Scene {
       if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: glow, alpha: 0.12, scale: 1.08, duration: scaledDuration(1100 + (building.x % 3) * 150, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
 
-    const baseShadow = this.add.ellipse(0, building.height * 0.37, building.width * 0.82, Math.max(16, building.height * 0.18), 0x05030a, building.open ? 0.24 : 0.18);
+    const visualWidth = building.visualWidth ?? building.width;
+    const visualHeight = building.visualHeight ?? building.height;
+    const baseShadow = this.add.ellipse(0, building.shadowY ?? visualHeight * 0.39, visualWidth * 0.86, Math.max(18, visualHeight * 0.17), 0x05030a, building.open ? 0.28 : 0.19);
     container.add(baseShadow);
+    const contactGlow = this.add.ellipse(0, (building.shadowY ?? visualHeight * 0.39) - 4, visualWidth * 0.72, Math.max(12, visualHeight * 0.10), building.open ? 0xffd86f : 0x8fd3ff, building.open ? 0.08 : 0.04);
+    container.add(contactGlow);
 
     const image = this.textures.exists(building.assetKey)
-      ? this.add.image(0, 0, building.assetKey).setDisplaySize(building.width, building.height)
-      : this.add.rectangle(0, 0, building.width, building.height, building.open ? 0xffd86f : 0x66708a, 0.86).setStrokeStyle(3, 0xffffff, 0.7);
+      ? this.fitImageToBox(this.add.image(0, 0, building.assetKey), visualWidth, visualHeight)
+      : this.add.rectangle(0, 0, visualWidth, visualHeight, building.open ? 0xffd86f : 0x66708a, 0.86).setStrokeStyle(3, 0xffffff, 0.7);
     container.add(image);
 
+    if (building.open && this.textures.exists('uiDoorLight')) {
+      container.add(this.add.image(0, visualHeight * 0.19, 'uiDoorLight').setDisplaySize(visualWidth * 0.34, visualHeight * 0.24).setAlpha(recommended ? 0.48 : 0.24));
+    }
+
     if (this.textures.exists(building.iconKey)) {
-      container.add(this.add.image(-building.width * 0.32, -building.height * 0.34, building.iconKey).setDisplaySize(26, 26).setAlpha(0.95));
+      container.add(this.add.image(building.iconX ?? -visualWidth * 0.31, building.iconY ?? -visualHeight * 0.31, building.iconKey).setDisplaySize(25, 25).setAlpha(0.95));
     }
 
     if (building.open && this.textures.exists('badgeOpen')) {
-      container.add(this.add.image(building.width * 0.31, -building.height * 0.34, 'badgeOpen').setDisplaySize(42, 24).setAlpha(0.94));
+      container.add(this.add.image(visualWidth * 0.31, -visualHeight * 0.32, 'badgeOpen').setDisplaySize(42, 24).setAlpha(0.94));
     }
     if (recommended) {
-      container.add(this.add.text(0, -building.height * 0.48, '추천', goldText(11)).setOrigin(0.5));
+      container.add(this.add.text(0, building.recommendLabelY ?? -visualHeight * 0.47, '추천', goldText(11)).setOrigin(0.5));
       this.drawRecommendedTrail(building);
     }
 
+    const plateY = building.nameplateY ?? visualHeight * 0.36;
     if (this.textures.exists('uiNameplateGold')) {
-      container.add(this.add.image(0, building.height * 0.33 + 16, 'uiNameplateGold').setDisplaySize(104, 42).setAlpha(building.open ? 0.96 : 0.72));
+      container.add(this.add.image(0, plateY + 16, 'uiNameplateGold').setDisplaySize(building.nameplateWidth ?? 108, 42).setAlpha(building.open ? 0.96 : 0.72));
     } else {
       const plate = this.add.graphics();
       plate.fillStyle(0x07142c, building.open ? 0.78 : 0.58);
-      plate.fillRoundedRect(-48, building.height * 0.33, 96, 36, 15);
+      plate.fillRoundedRect(-50, plateY, 100, 36, 15);
       plate.lineStyle(1, building.open ? 0xffd86f : 0xffffff, building.open ? 0.56 : 0.22);
-      plate.strokeRoundedRect(-48, building.height * 0.33, 96, 36, 15);
+      plate.strokeRoundedRect(-50, plateY, 100, 36, 15);
       container.add(plate);
     }
-    container.add(this.add.text(0, building.height * 0.33 + 10, building.title, goldText(13)).setOrigin(0.5));
-    container.add(this.add.text(0, building.height * 0.33 + 25, building.subtitle, mutedText(9)).setOrigin(0.5));
+    container.add(this.add.text(0, plateY + 10, building.title, goldText(13)).setOrigin(0.5));
+    container.add(this.add.text(0, plateY + 25, building.subtitle, mutedText(9)).setOrigin(0.5));
     this.drawBuildingStatusChip(container, building, recommended);
 
     if (!building.open) {
-      if (this.textures.exists('uiLockBadge')) container.add(this.add.image(37, -building.height * 0.30, 'uiLockBadge').setDisplaySize(31, 31));
-      else container.add(this.add.text(35, -building.height * 0.30, '준비중', goldText(9)).setOrigin(0.5));
+      if (this.textures.exists('uiLockBadge')) container.add(this.add.image(building.lockX ?? 37, building.lockY ?? -visualHeight * 0.30, 'uiLockBadge').setDisplaySize(31, 31));
+      else container.add(this.add.text(building.lockX ?? 35, building.lockY ?? -visualHeight * 0.30, '준비중', goldText(9)).setOrigin(0.5));
       container.setAlpha(0.76);
     }
 
@@ -247,11 +266,13 @@ export class MainLobbyScene extends Phaser.Scene {
   private drawBuildingStatusChip(container: Phaser.GameObjects.Container, building: DioramaBuilding, recommended: boolean): void {
     const missionStatus = building.id === 'event' ? DailyMissionSystem.getLobbyStatus() : null;
     const label = missionStatus ? missionStatus.lobbyBadgeLabel : recommended ? 'NEXT' : building.open ? 'OPEN' : 'LOCK';
-    const chipY = -building.height * 0.46;
+    const visualWidth = building.visualWidth ?? building.width;
+    const visualHeight = building.visualHeight ?? building.height;
+    const chipY = building.statusY ?? -visualHeight * 0.45;
     const chipW = Math.max(recommended ? 54 : 48, label.length * 8 + 14);
     const color = missionStatus ? MISSION_TONE_COLORS[missionStatus.lobbyBadgeTone] : 0xffd86f;
     const active = building.open || recommended || Boolean(missionStatus?.rewardReadyCount);
-    const chip = this.add.container(building.width * 0.18, chipY);
+    const chip = this.add.container(building.statusX ?? visualWidth * 0.18, chipY);
     chip.add(this.add.rectangle(0, 0, chipW, 18, active ? color : 0x2d3854, active ? 0.92 : 0.82).setStrokeStyle(1, 0xffffff, 0.42));
     chip.add(this.add.text(0, 0, label, active ? { fontFamily: 'system-ui, sans-serif', fontSize: '9px', color: '#301b0c', fontStyle: '900' } : mutedText(9)).setOrigin(0.5));
     chip.setAlpha(active ? 0.96 : 0.72);
@@ -261,8 +282,7 @@ export class MainLobbyScene extends Phaser.Scene {
   private drawDioramaNPCs(): void {
     for (const npc of LOBBY_NPCS) {
       if (!this.textures.exists(npc.key)) continue;
-      const npcImage = this.add.image(npc.x, npc.y, npc.key)
-        .setDisplaySize(npc.width, npc.height)
+      const npcImage = this.fitImageToBox(this.add.image(npc.x, npc.y, npc.key), npc.width, npc.height)
         .setDepth(npc.y + 3);
       if (allowAmbientMotion(this.quality)) {
         this.tweens.add({ targets: npcImage, y: npc.y - 2, duration: scaledDuration(900, this.quality), delay: npc.delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
@@ -337,7 +357,7 @@ export class MainLobbyScene extends Phaser.Scene {
       '건물/오브젝트: 개별 PNG/WebP',
       `성능 모드: ${qualitySummary(this.quality)}`,
       `접근성: ${AccessibilitySystem.summary()}`,
-      `배치 플랜: ${LOBBY_LAYOUT_PLAN_VERSION}`
+      `배치 플랜: ${LOBBY_LAYOUT_PLAN_VERSION} · ${PREMIUM_LOBBY_FIT_TAG}`
     ];
     lines.forEach((line, index) => {
       panel.add(this.add.text(-126, -48 + index * 18, `• ${line}`, mutedText(10)).setOrigin(0, 0.5));

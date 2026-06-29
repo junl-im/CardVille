@@ -4,10 +4,31 @@
 CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고, 그다음 실제 코드를 확인하세요.
 
 
-## 현재 작업 기준: 1.0.46
+## 현재 작업 기준: 1.0.47
 
-현재 기준 버전은 1.0.46입니다.  
-이번 버전은 1.0.45 아트 바이블/미션 라우트 병합본을 기준으로, 사용자가 업로드한 프리미엄 판타지 마을 PNG 에셋 일부를 실제 게임에 안전 적용한 첫 이미지 교체 패스입니다.
+현재 기준 버전은 1.0.47입니다.  
+이번 버전은 1.0.46 프리미엄 PNG 배치 에셋 적용본을 기준으로, 새 건물/캐릭터 이미지가 눌리거나 겹쳐 보일 수 있는 로비 배치와 렌더링 방식을 보정한 프리미엄 로비 에셋 배치 패스입니다.
+
+### 1.0.47 프리미엄 로비 에셋 배치 보정 패스
+
+- 기준: `CardVille_Project_Starter_1.0.46_PremiumAssetBatchApply_Full.zip`
+- 문제 원인: 1.0.46에서 들어온 마을 건물 PNG 9종은 1254×1254 정사각 고해상도 컷아웃인데, 로비 렌더링은 기존 직사각형 박스에 `setDisplaySize(width,height)`로 강제 맞추고 있었습니다. 이 때문에 건물 원본 비율이 눌리거나 세부 장식이 작게 보일 수 있었습니다.
+- 수정:
+  - `MainLobbyScene.fitImageToBox()` 추가
+  - 건물/NPC 이미지를 원본 비율 유지 방식으로 렌더링
+  - `visualWidth`, `visualHeight`, `nameplateY`, `statusY`, `statusX` 추가
+  - 성/도서관/연구소/광장/상점/학교/숲/이벤트/항구 위치와 터치존 보정
+  - `npc_merchant`, `npc_town_cat` 크기/위치 보정
+  - 광장 소품, 벤치, 랜턴, 표지판 위치 보정
+  - 열린 건물 `uiDoorLight` 접지 글로우 추가
+  - 이벤트 건물 `READY n` 칩이 숲/항구와 겹치지 않도록 안쪽 배치
+- 검증:
+  - `LOBBY_PREMIUM_VISUAL_FIT_AUDIT` 추가
+  - `tools/check-lobby-premium-fit.mjs` 추가
+  - `npm run verify`에 `check:lobby-premium-fit` 포함
+- 핵심 기록: setDisplaySize 강제 비율 왜곡을 fitImageToBox로 교체했습니다.
+- 신규 이미지 에셋은 없습니다.
+- 신규 문서 파일은 생성하지 않았습니다.
 
 ### 1.0.46 프리미엄 PNG 배치 에셋 적용 패스
 

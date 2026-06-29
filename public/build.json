@@ -1,10 +1,10 @@
 {
   "name": "CardVille",
-  "version": "1.0.46",
-  "mode": "ci-build-guard-mode-select-coherence-patch",
+  "version": "1.0.47",
+  "mode": "premium-lobby-fit-v147",
   "svg": "disabled",
   "pwa": "disabled",
-  "notes": "Premium PNG asset batch applied with transparent cutout cleanup, WebP companions, expression cats, pack burst effects, math console, memory board, and active scene wiring.",
-  "label": "Art bible + perfect-day mission route merge",
-  "description": "Premium AAA art direction bible, prompt system, no-SVG policy, and asset generation rules."
+  "notes": "Premium lobby buildings and NPCs render with aspect-fit boxes after the PNG batch; nameplates, READY chips, props, and touch zones were retuned for the new art.",
+  "label": "Premium lobby fit + safe status chip route",
+  "description": "Keeps 1.0.46 asset batch while correcting forced display-size stretching, bottom-row HUD collisions, NPC readability, and CI visual-fit guards."
 }
