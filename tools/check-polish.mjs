@@ -21,13 +21,17 @@ function mustContain(file, tokens) {
 const main = mustContain('src/main.ts', ['type: Phaser.AUTO', 'Phaser.Scale.EXPAND', 'polish audit engine']);
 if (main.includes('type: Phaser.CANVAS')) throw new Error('Renderer must not be hard-forced to Phaser.CANVAS');
 
-mustContain('src/game/systems/QualitySystem.ts', ['getCardVilleQuality', 'scaledCount', 'qualitySummary', 'prefers-reduced-motion']);
+mustContain('src/game/systems/QualitySystem.ts', ['getCardVilleQuality', 'scaledCount', 'ambientCount', 'allowAmbientMotion', 'isMotionEnabled', 'scaledDuration', 'qualitySummary', 'prefers-reduced-motion']);
 mustContain('src/game/data/lobbyEntities.ts', ['LOBBY_PROPS', 'LOBBY_NPCS', 'LOBBY_SAFE_RULES', 'npcMerchant', 'propFountain']);
 mustContain('src/game/data/modeCatalog.ts', ['GAME_MODES', "id: 'math'", "id: 'memory'", 'nextWork']);
-mustContain('src/game/scenes/MainLobbyScene.ts', ['getCardVilleQuality', 'scaledCount', 'qualitySummary', 'LOBBY_SAFE_RULES', 'toastBg?.destroy']);
+mustContain('src/game/scenes/MainLobbyScene.ts', ['addCoverImage', 'allowAmbientMotion', 'ambientCount', 'drawBuildingStatusChip', 'qualitySummary', 'LOBBY_SAFE_RULES', 'toastBg?.destroy']);
 mustContain('src/game/scenes/ModeSelectScene.ts', ['GAME_MODES', 'focusModeId', 'showPlannedToast', '추천']);
 mustContain('src/game/data/dioramaBuildings.ts', ["scene: 'MathLabScene'", "scene: 'MemoryForestScene'", "scene: 'ModeSelectScene'"]);
-mustContain('src/game/systems/LayoutSystem.ts', ['b.visibleX + b.visibleWidth / 2', 'b.visibleY + b.visibleHeight / 2']);
+mustContain('src/game/systems/LayoutSystem.ts', ['b.visibleX + b.visibleWidth / 2', 'b.visibleY + b.visibleHeight / 2', 'fitTextSize', 'compactText']);
+mustContain('src/game/ui/GameButton.ts', ['fitTextSize', 'compactText', 'lastActivatedAt']);
+mustContain('src/game/scenes/MathLabScene.ts', ['getCardVilleQuality', 'allowAmbientMotion', 'isMotionEnabled']);
+mustContain('src/game/scenes/MemoryForestScene.ts', ['getCardVilleQuality', 'ambientCount', 'scaledDuration']);
+mustContain('src/game/data/lobbyLayoutPlan.ts', ['LOBBY_DESIGN_CHECKS', 'cover composition', 'double taps']);
 
 const buildings = read('src/game/data/dioramaBuildings.ts');
 const buildingIds = [...buildings.matchAll(/id: '([^']+)'/g)].map((match) => match[1]);
@@ -51,12 +55,12 @@ if (!pkgScripts.verify?.includes('check:polish')) throw new Error('verify must i
 if (pkgScripts['check:polish'] !== 'node tools/check-polish.mjs') throw new Error('check:polish script mismatch');
 
 const readme = read('README.md');
-for (const token of [`# CardVille ${pkg.version}`, `## ${pkg.version} 업데이트 내역`, 'QualitySystem', 'modeCatalog.ts', 'check:polish']) {
+for (const token of [`# CardVille ${pkg.version}`, `## ${pkg.version} 업데이트 내역`, 'QualitySystem', 'GameButton', 'check:polish']) {
   if (!readme.includes(token)) throw new Error(`README missing ${token}`);
 }
 const handoff = read('AI_HANDOFF_CARDVILLE.md');
-for (const token of [`현재 기준 버전은 ${pkg.version}`, 'QualitySystem.ts', 'modeCatalog.ts', 'Phaser AUTO']) {
+for (const token of [`현재 기준 버전은 ${pkg.version}`, 'QualitySystem.ts', 'GameButton.ts', 'Phaser AUTO']) {
   if (!handoff.includes(token)) throw new Error(`AI handoff missing ${token}`);
 }
 
-console.log(`Polish check passed. Version ${pkg.version}, renderer AUTO, quality system, lobby entities, mode catalog, and diorama assignments OK.`);
+console.log(`Polish check passed. Version ${pkg.version}, renderer AUTO, quality system, safe buttons, lobby entities, mode catalog, and diorama assignments OK.`);

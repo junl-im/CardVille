@@ -4,31 +4,30 @@
 
 ## 1.0.32 업데이트 내역
 
-- **시작화면 버튼 간격/글씨 겹침 수정 패스**를 진행했습니다.
-- 로그인 패널의 버튼 배치를 다시 잡았습니다.
-  - `게임 시작`
-  - `Google 로그인`
-  - `이메일`
-  - `가입`
-- 버튼 사이 간격을 넓히고, 상태 문구가 버튼과 겹치지 않도록 `LOGIN_CONTROL_RECTS` 기반으로 분리했습니다.
-- `GameButton`에 글자 줄바꿈/최대 줄 수/버튼 내부 텍스트 폭 제한을 넣어 긴 문구가 버튼 밖으로 튀거나 겹치지 않게 했습니다.
-- 새 시작화면 배치 데이터 파일을 추가했습니다.
-  - `src/game/data/loginLayoutPlan.ts`
-- 새 검증을 추가했습니다.
-  - `tools/check-login-layout.mjs`
-  - `npm run check:login-layout`
-  - `npm run verify`에 포함
-- 코드 꼬임/중복 방지용 무결성 검증을 추가했습니다.
-  - `tools/check-code-integrity.mjs`
-  - `npm run check:code-integrity`
-  - scene registry 중복
-  - asset manifest key/path 중복
-  - mode/building id 중복
-  - 주요 버전 상수 동기화
-- 마을 로비는 현재 임시 에셋 기반이라 최종 상용 원화 품질이 아닙니다. 이번 패치에서는 가짜로 이미지를 꾸며서 해결한 척하지 않고, 사용자가 준비 중인 고퀄리티 PNG/WebP를 같은 파일명으로 덮어쓰기만 하면 바로 반영되도록 교체 슬롯과 코드 무결성을 고정했습니다.
-- 로비 건물에는 약한 톤 보정/그림자 보정만 추가해, 새 원화가 들어오기 전까지 너무 따로 떠 보이는 느낌을 줄였습니다.
-- `package.json`, `public/build.json`, `health.html`, `reset.html`, 앱 내부 버전 표기를 1.0.32로 동기화했습니다.
+- **디자인/성능/품질 패스**를 진행했습니다.
+- 로비 배경 `dioramaBg`를 1080×1920 원본 비율 기준 `addCoverImage` cover 배경으로 표시하도록 바꿔, 모바일 세로 화면에서 강제 늘림 느낌을 줄였습니다.
+- 로비 좌우 가장자리 톤 보정 레이어를 추가해 넓은 기기에서도 배경과 HUD가 따로 노는 느낌을 줄였습니다.
+- 건물별 상태를 더 명확하게 보이도록 `drawBuildingStatusChip`을 추가했습니다.
+  - 추천 건물: `NEXT`
+  - 열린 건물: `OPEN`
+  - 준비중 건물: `LOCK`
+- `QualitySystem`을 확장했습니다.
+  - `allowAmbientMotion`
+  - `ambientCount`
+  - `isMotionEnabled`
+  - `scaledDuration`
+  - `qualitySummary`의 sparkle 상한 표시
+- 로비, 연산 연구소, 기억의 숲의 반복 파티클/트윈/흔들림을 `QualitySystem` 게이트에 연결했습니다. 저사양, URL `?lite`, 또는 모션 감소 환경에서는 장식 수와 움직임을 줄입니다.
+- `MathLabScene`에서 오답 카메라 shake와 정답 바운스를 모션 허용 환경에서만 실행하도록 조정했습니다.
+- `MemoryForestScene`에서 반딧불 수와 매칭 바운스, 결과 텍스트 지속시간을 품질 모드에 맞춰 조정했습니다.
+- `GameButton`을 다듬었습니다.
+  - 긴 라벨은 `fitTextSize`와 `compactText`로 버튼 안에 맞춥니다.
+  - `lastActivatedAt` 중복 터치 방어를 추가해 빠른 더블 탭으로 장면 이동이 중복 실행되는 위험을 줄였습니다.
+- `lobbyLayoutPlan.ts`에 `LOBBY_DESIGN_CHECKS`를 추가해 cover 배경, 상태 칩, 모션 게이트, 버튼 라벨, 더블 탭 방어 같은 디자인/품질 기준을 데이터로 남겼습니다.
+- `check:polish`와 `check:lobby-layout` 검증 기준을 1.0.32 패치 내용까지 확인하도록 보강했습니다.
+- 기존 로비 배치/겹침 감사, 진행 저장, 프리미엄 PNG/WebP, SVG 금지 정책은 유지했습니다.
 - 새 버전별 문서 파일은 만들지 않고, 변경 내역은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 누적했습니다.
+- `package.json`, `public/build.json`, `health.html`, `reset.html`, 앱 내부 버전 표기를 1.0.32로 동기화했습니다.
 
 ## 1.0.31 업데이트 내역
 
@@ -60,6 +59,20 @@
 - GitHub Actions 자동 배포 흐름은 그대로 유지하며, `.github/workflows/deploy.yml`의 `npm run verify` 기준으로 확인합니다.
 - 새 버전별 문서 파일은 만들지 않고, 변경 내역은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 누적했습니다.
 - `package.json`, `public/build.json`, `health.html`, `reset.html`, 앱 내부 버전 표기를 1.0.31로 동기화했습니다.
+
+
+### 2026-06-29 통파일/에셋 분석 체크포인트
+
+- 입력 통파일 `CardVille_Project_Starter_1.0.31_LayoutProgressionPolish.zip`과 적용 후보 에셋팩 `CardVille_Assets_Full_PNG.zip`을 함께 확인했습니다.
+- 현재 통파일은 루트 기준 `README.md`, `AI_HANDOFF_CARDVILLE.md`, `src/`, `public/`, `tools/`, `.github/workflows/deploy.yml` 중심으로 정리되어 있고, 별도 버전별 문서 파일은 없습니다.
+- 로컬 검증 환경은 Node v22.16.0, npm 10.9.2 기준으로 확인했습니다.
+- `npm install --no-audit --no-fund --no-package-lock` 후 `npm run verify`를 실행했고, build/deploy/brand/assets/premium-assets/building-assets/lobby-layout/content-engine/progression/polish/ui/layout/association/security 검증이 모두 통과했습니다.
+- 통파일 내 프로젝트 파일은 269개, `public/assets` 파일은 204개이며, 매니페스트 등록 자산은 114개입니다.
+- 업로드 에셋팩은 `ASSET_INDEX.txt` 기준 PNG 84개입니다. SVG는 없고, WebP 동반 파일은 포함되어 있지 않습니다.
+- 업로드 에셋에는 1080×1920 로비 배경, 1254×1254 건물/고양이 일부, 1024×1536 소년 프레임, 1024×1024 카드/팩, 2172×724 버튼/대형 UI가 포함되어 있습니다.
+- 바로 덮어쓰기 가능한 파일도 있지만 현재 런타임 매니페스트와 파일명이 다른 자산이 많습니다. 예: `npc_chef.png` → 현재 `npc_cook.png`, `npc_child.png` → 현재 `npc_child_01.png`, `npc_village_cat.png` → 현재 `npc_town_cat.png`, `prop_banner.png` → 현재 `prop_flag_red.png`, `prop_tree.png` → 현재 `prop_tree_oak.png`, `prop_smoke.png` → 현재 `prop_smoke_puff.png`, `tile_cobblestone_96.png` → 현재 `tile_plaza_96.png`, `ui/panel_*` 계열 → 현재 `ui/ui_panel_*` 계열.
+- 다음 에셋 적용 패치는 원본 PNG를 무작정 복사하지 말고, 현재 매니페스트 key 유지, 파일명 매핑, WebP 동반 생성, 390×844 모바일 로비 크롭/스케일 확인, `check:premium-assets`와 `check:building-assets` 통과 순서로 진행해야 합니다.
+- 이번 체크포인트에서는 런타임 에셋 교체는 하지 않고, 끊김 대비 분석 기록만 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에 남겼습니다.
 
 ## 1.0.30 업데이트 내역
 

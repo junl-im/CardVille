@@ -73,4 +73,4 @@ window.addEventListener('unhandledrejection', (event) => {
 preventBrowserGestures();
 const game = new Phaser.Game(config);
 BackButtonSystem.install(game);
-console.info('[CardVille] Phaser instance created 1.0.32 content engine / polish audit engine / lobby layout / progression polish engine', game.isBooted);
+console.info('[CardVille] Phaser instance created 1.0.32 design-performance quality engine / cover layout / safe button polish / content engine / polish audit engine', game.isBooted);

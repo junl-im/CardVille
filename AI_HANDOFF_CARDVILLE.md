@@ -341,7 +341,51 @@ ZIP 파일
 
 
 
-## 11. 1.0.31 로비 배치/겹침 감사 및 진행 저장/콘텐츠 확장
+## 11. 1.0.32 디자인/성능/품질 패스
+
+1.0.32는 1.0.31 분석 체크포인트 이후 이어진 디자인/성능/기술 품질 패스입니다. 런타임 구조를 크게 흔들지 않고, 눈에 보이는 로비 디자인 안정성, 저사양/모션 감소 대응, 버튼 터치 안정성을 우선 개선했습니다.
+
+### 변경 파일
+
+- `package.json`
+- `public/build.json`
+- `public/health.html`
+- `public/reset.html`
+- `index.html`
+- `src/main.ts`
+- `src/game/data/assetManifest.ts`
+- `src/game/data/brandRules.ts`
+- `src/game/data/lobbyLayoutPlan.ts`
+- `src/game/scenes/LoginScene.ts`
+- `src/game/scenes/MainLobbyScene.ts`
+- `src/game/scenes/MathLabScene.ts`
+- `src/game/scenes/MemoryForestScene.ts`
+- `src/game/systems/QualitySystem.ts`
+- `src/game/ui/GameButton.ts`
+- `tools/check-lobby-layout.mjs`
+- `tools/check-polish.mjs`
+- `README.md`
+- `AI_HANDOFF_CARDVILLE.md`
+
+### 핵심 변경
+
+- 로비 `dioramaBg`는 이제 `addCoverImage(this, 'dioramaBg', 1, 1080, 1920)` 기준으로 표시합니다. 기존처럼 390×844에 직접 맞추는 방식보다 원본 세로 배경의 비율과 초점이 안전합니다.
+- `MainLobbyScene`에 `drawBuildingStatusChip`을 추가했습니다. 추천은 `NEXT`, 열린 건물은 `OPEN`, 준비중 건물은 `LOCK`으로 표시됩니다.
+- `LOBBY_LAYOUT_PLAN_VERSION = '1.0.32'`로 갱신했습니다.
+- `LOBBY_DESIGN_CHECKS`를 추가해 상태 칩, 모션 게이트, 버튼 라벨, 더블 탭 방어, 모션 감소 사용자 대응을 기록했습니다.
+- `QualitySystem.ts`에 `allowAmbientMotion`, `ambientCount`, `isMotionEnabled`, `scaledDuration`을 추가했습니다.
+- 로비/연산 연구소/기억의 숲의 반복 트윈, 파티클 개수, 카메라 shake 일부를 품질 모드에 연결했습니다.
+- `GameButton.ts`는 `fitTextSize`, `compactText`, `lastActivatedAt`을 사용해 긴 라벨과 빠른 중복 터치를 방어합니다.
+- `check:polish`, `check:lobby-layout` 검증이 1.0.32 디자인/품질 패스 토큰까지 확인합니다.
+
+### 주의할 점
+
+- 진행 저장 키 `cardville.progress.v131`은 그대로 유지했습니다. 이번 업데이트는 진행 데이터 구조 변경이 아니라 디자인/성능/품질 패스이므로 저장소 마이그레이션을 추가하지 않았습니다.
+- 신규 에셋 파일은 추가하지 않았습니다. 기존 PNG/WebP 자산을 그대로 사용합니다.
+- 새 문서 파일은 만들지 않았고, 기록은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 남겼습니다.
+- 다음에 실제 디자인을 더 꾸밀 때는 상태 칩 위치가 건물 상단 아이콘/OPEN 배지와 겹치지 않는지 실기기에서 확인해야 합니다.
+
+## 12. 1.0.31 로비 배치/겹침 감사 및 진행 저장/콘텐츠 확장
 
 1.0.31은 사용자가 요구한 “겹침, 배치, 배정, 체크, 다듬기, 시스템/성능/콘텐츠 업그레이드”를 이어받은 패스입니다. 핵심은 마을 로비의 시각 오브젝트와 실제 터치 영역을 분리해 꼬임을 줄이고, 열린 콘텐츠의 진행 저장을 `word` 전용에서 전체 모드형으로 확장한 것입니다.
 
@@ -386,57 +430,11 @@ ZIP 파일
 - 새 스테이지를 추가하면 해당 모드의 `nextPlayableModeStage`가 자연스럽게 이어지도록 최대 스테이지 수를 참조하세요.
 - 새 검증은 GitHub Actions의 `npm run verify`에 들어가므로, 로컬에서 먼저 확인하세요.
 
-## 12. 1.0.32 시작화면 간격/코드 무결성/원화 교체 슬롯 패스
-
-1.0.32는 사용자가 지적한 “시작화면 버튼 간격, 글씨 겹침, 코드 꼬임, 예전 코드 중복, 마을 에셋 품질” 문제를 정리한 패스입니다. 핵심은 새 원화를 임시 생성물로 대체하려고 하지 않고, 준비 중인 고퀄리티 에셋을 같은 파일명으로 안전하게 덮어쓸 수 있도록 런타임 슬롯과 검증 체인을 고정한 것입니다.
-
-### 시작화면 버튼 간격/글씨 겹침
-
-- `src/game/data/loginLayoutPlan.ts`를 추가했습니다.
-  - `LOGIN_LAYOUT_PLAN_VERSION = '1.0.32'`
-  - `LOGIN_CONTROL_RECTS`
-  - `LOGIN_PANEL`
-  - `LOGIN_LAYOUT_GUARDS`
-- `LoginScene.ts`는 더 이상 버튼 Y 좌표를 촘촘하게 하드코딩하지 않고 `LOGIN_CONTROL_RECTS` 기준으로 배치합니다.
-- `GameButton.ts`에 `setWordWrapWidth`, `setMaxLines`, `setLineSpacing`을 적용해 버튼 내부 글씨가 겹치거나 밖으로 튀는 위험을 줄였습니다.
-- `tools/check-login-layout.mjs`가 로그인 버튼/상태 문구의 안전 영역과 겹침 여부를 검증합니다.
-
-### 코드 무결성
-
-- `tools/check-code-integrity.mjs`를 추가했습니다.
-- 검증 항목:
-  - 주요 버전 상수 동기화
-  - 중복 scene import / 중복 scene registry 방지
-  - asset manifest key/path 중복 방지
-  - diorama building id 중복 방지
-  - mode id 중복 방지
-  - `queuedKeys` 기반 중복 자산 로드 가드 유지
-- GitHub Actions의 `npm run verify`에 `check:login-layout`, `check:code-integrity`를 추가했습니다.
-
-### 원화 교체 슬롯
-
-- 현재 로비 이미지와 캐릭터는 최종 상용 원화가 아닙니다. 사용자가 준비 중인 고퀄리티 이미지가 들어오면 아래 파일명을 그대로 덮어쓰는 방식으로 반영합니다.
-  - `public/assets/characters/hero_idle.png`
-  - `public/assets/characters/cat_idle.png`
-  - `public/assets/diorama/diorama_bg.png`
-  - `public/assets/diorama/building_*.png`
-  - 필요한 경우 같은 이름의 `.webp` 동반 파일
-- 코드 경로는 이미 `assetManifest.ts`와 `IntroLoadingScene`의 `queuedKeys`로 관리되므로, 파일명만 지키면 기존 코드와 꼬이지 않습니다.
-- 임시 에셋을 “프리미엄 완성본”으로 착각하지 말 것. 최종 원화가 들어오기 전에는 품질 개선보다 경로/검증/배치 안정성이 우선입니다.
-
-### 다음 AI 주의사항
-
-- 새 이미지가 들어오면 파일명을 바꾸지 말고 기존 파일 위에 덮어쓰세요.
-- 이미지 교체 후 `npm run verify`를 반드시 실행하세요.
-- 시작화면 버튼을 추가하거나 문구를 길게 바꾸면 `LOGIN_CONTROL_RECTS`와 `check-login-layout`도 같이 수정하세요.
-- 코드 무결성 검증이 실패하면 중복 scene, asset key, mode id부터 확인하세요.
-
-
-## 13. 현재 버전 상태
+## 12. 현재 버전 상태
 
 현재 기준 버전은 1.0.32입니다.
 
-1.0.32는 시작화면 버튼 간격/글씨 겹침을 정리하고 코드 무결성 검증을 추가한 패스입니다. 1.0.31은 로비 터치존 겹침을 정리하고 `cardville.progress.v131` 기반으로 모드별 진행 저장을 확장한 로비 배치/진행 저장 패스입니다. 1.0.30은 프레임형/크롭형 건물 표현을 실제 투명 PNG/WebP 마을 건물 컷아웃으로 교체한 마을 건물 에셋 패스였습니다. 1.0.29는 연구소 연산 미니게임과 기억의 숲 짝찾기 미니게임을 실제 플레이 가능한 1차 콘텐츠로 연결한 콘텐츠 엔진 패스였습니다. 1.0.28은 기준 이미지 톤에 맞춘 프리미엄 에셋 패스와 `check:premium-assets` 검증을 추가한 업데이트였습니다.
+1.0.32는 cover 배경, 상태 칩, 품질 모드 게이트, 버튼 중복 터치 방어를 다듬은 디자인/성능/품질 패스입니다. 1.0.31은 로비 터치존 겹침을 정리하고 `cardville.progress.v131` 기반으로 모드별 진행 저장을 확장한 로비 배치/진행 저장 패스입니다. 1.0.30은 프레임형/크롭형 건물 표현을 실제 투명 PNG/WebP 마을 건물 컷아웃으로 교체한 마을 건물 에셋 패스였습니다. 1.0.29는 연구소 연산 미니게임과 기억의 숲 짝찾기 미니게임을 실제 플레이 가능한 1차 콘텐츠로 연결한 콘텐츠 엔진 패스였습니다. 1.0.28은 기준 이미지 톤에 맞춘 프리미엄 에셋 패스와 `check:premium-assets` 검증을 추가한 업데이트였습니다.
 
 - GitHub Actions 자동 검증 흐름 유지
 - `check:assets` 유지
@@ -444,10 +442,8 @@ ZIP 파일
 - `check:premium-assets` 유지
 - `check:content-engine` 유지
 - `check:building-assets` 유지
-- `check:lobby-layout` 유지
-- `check:progression` 유지
-- `check:login-layout` 추가
-- `check:code-integrity` 추가
+- `check:lobby-layout` 추가
+- `check:progression` 추가
 - `assetManifest.ts` 유지
 - `lobbyEntities.ts` 추가
 - `modeCatalog.ts` 추가
@@ -459,6 +455,102 @@ ZIP 파일
 - 앱 동작용 버전 상수 1.0.32 동기화
 
 1.0.24는 전달 규칙과 인수인계 정책 정리 업데이트였습니다. 1.0.23의 핵심은 한 화면 디오라마 로비입니다.
+
+
+### 2026-06-29 통파일/에셋 분석 체크포인트
+
+이번 작업은 대화 끊김 이후 최신 통파일과 사용자가 함께 올린 적용 후보 에셋팩을 먼저 분석한 체크포인트입니다. 런타임 코드나 에셋 교체는 아직 적용하지 않았고, 다음 AI가 같은 문서만 보고도 이어갈 수 있도록 분석 결과와 필수 검수 순서를 기록했습니다.
+
+#### 입력 파일
+
+- 통파일: `CardVille_Project_Starter_1.0.32_DesignPerformanceQuality_Full.zip`
+- 적용 후보 에셋팩: `CardVille_Assets_Full_PNG.zip`
+
+#### 현재 통파일 상태
+
+- 루트 주요 파일: `README.md`, `AI_HANDOFF_CARDVILLE.md`, `index.html`, `package.json`, `vite.config.ts`, `tsconfig.json`, `.github/workflows/deploy.yml`, `src/`, `public/`, `tools/`
+- 전체 프로젝트 파일 수: 269개
+- `public/assets` 파일 수: 204개
+- 매니페스트 등록 자산 수: 114개
+- 별도 버전별 문서 파일은 없음. 기록은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 누적하는 정책이 지켜지고 있음.
+- `node_modules`와 `dist`는 검증 중 로컬 작업 폴더에 생길 수 있지만 통파일/패치파일에는 넣지 말 것.
+
+#### 검증 환경과 결과
+
+- Node: v22.16.0
+- npm: 10.9.2
+- 패키지 설치 명령: `npm install --no-audit --no-fund --no-package-lock`
+- 전체 검증 명령: `npm run verify`
+- 검증 결과: 통과
+- 통과 항목: build, check:deploy, check:brand, check:assets, check:premium-assets, check:building-assets, check:lobby-layout, check:content-engine, check:progression, check:polish, check:ui, check:layout, check:association, check:security
+
+#### 업로드 에셋팩 분석
+
+- `ASSET_INDEX.txt` 기준 PNG 84개 포함
+- SVG 없음
+- WebP 동반 파일 없음. 다음 적용 시 기존 정책에 맞춰 WebP를 생성해야 함.
+- 대표 크기:
+  - `public/assets/diorama/diorama_bg.png`: 1080×1920
+  - `public/assets/diorama/building_castle.png`, `building_event.png`, `building_forest.png`, `building_harbor.png`, `building_plaza.png`, `building_school.png`: 1254×1254
+  - `public/assets/diorama/building_lab.png`, `building_library.png`, `building_shop.png`: 512×512
+  - `public/assets/characters/hero_walk_*`, `hero_blink`, `hero_cheer`: 1024×1536
+  - `public/assets/characters/hero_idle.png`: 512×768
+  - `public/assets/characters/cat_walk_*`, `cat_tail`, `cat_hint`: 1254×1254
+  - `public/assets/characters/cat_idle.png`: 384×384
+  - 카드/팩 계열: 1024×1024
+  - `public/assets/ui/button_primary.png`, `button_secondary.png`, `button_small.png`: 2172×724
+
+#### 현재 매니페스트와 이름이 다른 적용 후보
+
+현재 코드는 기존 key와 경로를 유지해야 안정적입니다. 다음 패치에서 아래 매핑을 우선 검토하세요.
+
+```txt
+characters/npc_chef.png        -> characters/npc_cook.png
+characters/npc_child.png       -> characters/npc_child_01.png
+characters/npc_village_cat.png -> characters/npc_town_cat.png
+props/prop_banner.png          -> props/prop_flag_red.png
+props/prop_tree.png            -> props/prop_tree_oak.png
+props/prop_smoke.png           -> props/prop_smoke_puff.png
+props/tile_cobblestone_96.png  -> props/tile_plaza_96.png
+ui/building_glow.png           -> ui/ui_building_glow.png
+ui/door_light.png              -> ui/ui_door_light.png
+ui/lock_badge.png              -> ui/ui_lock_badge.png
+ui/nameplate.png               -> ui/ui_nameplate_gold.png
+ui/panel_glass.png             -> ui/ui_panel_glass.png
+ui/panel_gold.png              -> ui/ui_panel_gold.png
+ui/panel_wood.png              -> ui/ui_panel_wood.png
+ui/speech_bubble.png           -> ui/ui_speech_bubble.png
+ui/toast_panel.png             -> ui/ui_toast.png
+ui/touch_ripple.png            -> ui/ui_touch_ripple.png
+icons/icon_library.png         -> icons/icon_cv_library.png
+icons/icon_math_lab.png        -> icons/icon_cv_lab.png
+icons/icon_forest.png          -> icons/icon_cv_forest.png
+icons/icon_school.png          -> icons/icon_cv_school.png
+icons/icon_event.png           -> icons/icon_cv_event.png
+icons/icon_castle.png          -> icons/icon_cv_castle.png
+icons/icon_harbor.png          -> icons/icon_cv_harbor.png
+cards/card_pack_*.png          -> packs/pack_*_closed.png 또는 별도 카드팩 매니페스트 확장 검토
+```
+
+#### 다음 에셋 적용 시 필수 순서
+
+1. 현재 `assetManifest.ts` key를 먼저 유지한다.
+2. 업로드 PNG를 현재 경로로 매핑하되, 기존 파일명을 무작정 바꾸지 않는다.
+3. WebP 동반 파일을 생성한다.
+4. 1254×1254 건물/고양이 에셋은 모바일 로비 배치에서 시각 크기와 터치존이 어긋나지 않는지 확인한다.
+5. 1080×1920 배경은 현재 390×844/780×1688 cover 처리에서 초점이 안전한지 확인한다.
+6. 대형 버튼/UI는 바로 런타임 교체하면 스케일이 과할 수 있으므로 `GameButton`/패널 코드의 9-slice 또는 표시 크기를 먼저 확인한다.
+7. `npm run verify` 전체 통과 전까지 통파일을 확정하지 않는다.
+8. 삭제가 필요한 파일이 생기면 패치 ZIP만으로는 삭제가 자동 반영되지 않으므로 최종 보고에 삭제 대상도 별도 고지한다.
+
+#### 이번 체크포인트 산출 정책
+
+- 런타임 코드 변경 없음
+- 런타임 에셋 교체 없음
+- 새 문서 파일 생성 없음
+- 변경 기록은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 반영
+- 통파일 ZIP은 전체 프로젝트에서 `node_modules`와 `dist`를 제외
+- 패치 ZIP은 이번에 바뀐 `README.md`, `AI_HANDOFF_CARDVILLE.md`만 포함
 
 ## 14. 절대 유지해야 할 정책
 

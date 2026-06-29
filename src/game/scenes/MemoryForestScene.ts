@@ -1,10 +1,11 @@
 import Phaser from 'phaser';
 import { DrawSystem } from '../systems/DrawSystem';
 import { applyResponsiveCamera, layout } from '../systems/LayoutSystem';
+import { allowAmbientMotion, ambientCount, CardVilleQuality, getCardVilleQuality, isMotionEnabled, scaledDuration } from '../systems/QualitySystem';
 import { getMemoryStage, MemoryPair, MemoryStage } from '../data/memoryStages';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
-import { applyWrap, bodyText, cardSmallText, cardText, goldText, mutedText, titleText } from '../ui/TextStyles';
+import { applyWrap, bodyText, cardSmallText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
 type MemoryCard = {
   uid: string;
@@ -27,6 +28,7 @@ export class MemoryForestScene extends Phaser.Scene {
   private matchedPairs = 0;
   private score = 0;
   private statusText?: Phaser.GameObjects.Text;
+  private quality: CardVilleQuality = getCardVilleQuality();
 
   constructor() { super('MemoryForestScene'); }
 
@@ -36,6 +38,7 @@ export class MemoryForestScene extends Phaser.Scene {
 
   create(): void {
     applyResponsiveCamera(this);
+    this.quality = getCardVilleQuality();
     this.stage = getMemoryStage(this.stageId);
     this.cards = [];
     this.opened = [];
@@ -60,14 +63,14 @@ export class MemoryForestScene extends Phaser.Scene {
     this.add.rectangle(l.visibleX + l.visibleWidth / 2, 430, l.visibleWidth, 690, 0x063322, 0.12);
     if (this.textures.exists('dioramaForest')) this.add.image(68, 160, 'dioramaForest').setDisplaySize(92, 78).setAlpha(0.92);
     if (this.textures.exists('catHint')) this.add.image(318, 166, 'catHint').setDisplaySize(58, 62).setAlpha(0.96);
-    for (let i = 0; i < 18; i += 1) {
+    for (let i = 0; i < ambientCount(18, this.quality, 5); i += 1) {
       const x = 22 + ((i * 51) % 346);
       const y = 210 + ((i * 83) % 472);
       const light = this.textures.exists('propFirefly')
         ? this.add.image(x, y, 'propFirefly').setDisplaySize(12, 12)
         : this.add.circle(x, y, 3, 0xffee8a, 0.4);
       light.setAlpha(0.28).setDepth(4);
-      this.tweens.add({ targets: light, x: x + (i % 2 ? 14 : -14), y: y - 18, alpha: 0.05, duration: 1200 + i * 75, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: light, x: x + (i % 2 ? 14 : -14), y: y - 18, alpha: 0.05, duration: scaledDuration(1200 + i * 75, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
   }
 
@@ -137,7 +140,7 @@ export class MemoryForestScene extends Phaser.Scene {
       this.score += 150 + Math.max(0, 10 - this.moves) * 10;
       this.opened = [];
       this.spawnPairText(second.container.x, second.container.y - 56, '짝 발견!');
-      this.tweens.add({ targets: [first.container, second.container], scale: 1.08, duration: 100, yoyo: true, ease: 'Back.easeOut' });
+      if (isMotionEnabled(this.quality)) this.tweens.add({ targets: [first.container, second.container], scale: 1.08, duration: 100, yoyo: true, ease: 'Back.easeOut' });
       this.time.delayedCall(360, () => {
         this.lock = false;
         if (this.matchedPairs >= this.stage.pairs.length) this.finish();
@@ -178,7 +181,7 @@ export class MemoryForestScene extends Phaser.Scene {
 
   private spawnPairText(x: number, y: number, labelText: string): void {
     const text = this.add.text(x, y, labelText, titleText(17)).setOrigin(0.5).setDepth(2000);
-    this.tweens.add({ targets: text, y: y - 25, alpha: 0, duration: 620, ease: 'Sine.easeOut', onComplete: () => text.destroy() });
+    this.tweens.add({ targets: text, y: y - 25, alpha: 0, duration: scaledDuration(620, this.quality), ease: 'Sine.easeOut', onComplete: () => text.destroy() });
   }
 
   private shuffle<T>(items: readonly T[]): T[] {

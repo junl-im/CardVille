@@ -43,11 +43,30 @@ export function getCardVilleQuality(): CardVilleQuality {
   return { tier, reduceMotion, ambientScale: 1, maxSparkles: 9, label: 'High', reasons };
 }
 
+export function isMotionEnabled(quality: CardVilleQuality): boolean {
+  return !quality.reduceMotion && quality.tier !== 'lite';
+}
+
+export function allowAmbientMotion(quality: CardVilleQuality): boolean {
+  return !quality.reduceMotion;
+}
+
+export function ambientCount(base: number, quality: CardVilleQuality, minimum = 0): number {
+  if (quality.reduceMotion) return minimum;
+  return Math.max(minimum, Math.min(base, Math.round(base * quality.ambientScale)));
+}
+
 export function scaledCount(base: number, quality: CardVilleQuality): number {
   return Math.max(1, Math.round(base * quality.ambientScale));
 }
 
+export function scaledDuration(baseMs: number, quality: CardVilleQuality): number {
+  if (quality.tier === 'lite') return Math.round(baseMs * 0.72);
+  if (quality.tier === 'balanced') return Math.round(baseMs * 0.88);
+  return baseMs;
+}
+
 export function qualitySummary(quality: CardVilleQuality): string {
   const reasonText = quality.reasons.length ? ` · ${quality.reasons.join(', ')}` : '';
-  return `${quality.label} · ambient ${Math.round(quality.ambientScale * 100)}%${reasonText}`;
+  return `${quality.label} · ambient ${Math.round(quality.ambientScale * 100)}% · sparkles ${quality.maxSparkles}${reasonText}`;
 }

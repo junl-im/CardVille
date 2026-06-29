@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { darkText } from './TextStyles';
+import { compactText, fitTextSize } from '../systems/LayoutSystem';
 
 export type ButtonAction = () => void;
 
@@ -23,6 +24,7 @@ export class GameButton extends Phaser.GameObjects.Container {
   private disabled = false;
   private action?: ButtonAction;
   private pressedInside = false;
+  private lastActivatedAt = -9999;
 
   constructor(scene: Phaser.Scene, x: number, y: number, text: string, width = 280, height = 58, color = 0x8fd3ff) {
     super(scene, x, y);
@@ -39,12 +41,8 @@ export class GameButton extends Phaser.GameObjects.Container {
     if (this.skin) {
       this.skinImage = scene.add.image(0, 2, this.skin.normal).setDisplaySize(width + 16, height + 16);
     }
-    const labelSize = height >= 58 ? 18 : height <= 46 ? 14 : 16;
-    this.label = scene.add.text(0, -1, text, darkText(labelSize)).setOrigin(0.5);
-    this.label.setAlign('center');
-    this.label.setWordWrapWidth(Math.max(80, width - 34), true);
-    this.label.setLineSpacing(-3);
-    this.label.setMaxLines(height <= 46 ? 1 : 2);
+    const baseLabelSize = height >= 64 ? 20 : height <= 46 ? 14 : 17;
+    this.label = scene.add.text(0, -1, compactText(text, Math.max(5, Math.floor(width / 24))), darkText(fitTextSize(text, baseLabelSize, 11))).setOrigin(0.5);
     this.hitZone = scene.add.zone(0, 0, hitW, hitH)
       .setOrigin(0.5)
       .setName(`hit:${text}`)
@@ -64,10 +62,11 @@ export class GameButton extends Phaser.GameObjects.Container {
 
     this.hitZone.on('pointerup', (pointer: Phaser.Input.Pointer) => {
       if (this.disabled) return;
-      const shouldClick = this.pressedInside;
+      const shouldClick = this.pressedInside && this.scene.time.now - this.lastActivatedAt > 360;
       this.pressedInside = false;
       this.resetVisual();
       if (!shouldClick) return;
+      this.lastActivatedAt = this.scene.time.now;
       this.emit('pointerup', pointer);
       this.emit('click', pointer);
       this.action?.();
@@ -102,12 +101,10 @@ export class GameButton extends Phaser.GameObjects.Container {
   }
 
   setLabel(text: string): this {
-    this.label.setText(text);
+    const baseLabelSize = this.heightValue >= 64 ? 20 : this.heightValue <= 46 ? 14 : 17;
+    this.label.setText(compactText(text, Math.max(5, Math.floor(this.widthValue / 24))));
+    this.label.setStyle(darkText(fitTextSize(text, baseLabelSize, 11)));
     return this;
-  }
-
-  getBoundsForAudit(): { width: number; height: number } {
-    return { width: this.widthValue, height: this.heightValue };
   }
 
   private resetVisual(): void {

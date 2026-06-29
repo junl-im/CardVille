@@ -19,8 +19,8 @@ function must(file, tokens) {
 }
 
 const diorama = must('src/game/data/dioramaBuildings.ts', ['touchWidth', 'touchHeight', 'touchOffsetY', "modeId: 'daily'"]);
-must('src/game/data/lobbyLayoutPlan.ts', ['LOBBY_LAYOUT_PLAN_VERSION', 'LOBBY_SAFE_ZONES', 'MIN_TOUCH_SIZE', 'rectsOverlap']);
-must('src/game/scenes/MainLobbyScene.ts', ['drawAtmosphericPolish', 'getRecommendedBuildingId', 'drawRecommendedTrail', 'LOBBY_LAYOUT_PLAN_VERSION', 'building.touchWidth']);
+must('src/game/data/lobbyLayoutPlan.ts', ['LOBBY_LAYOUT_PLAN_VERSION', 'LOBBY_SAFE_ZONES', 'LOBBY_DESIGN_CHECKS', 'MIN_TOUCH_SIZE', 'rectsOverlap']);
+must('src/game/scenes/MainLobbyScene.ts', ['drawAtmosphericPolish', 'getRecommendedBuildingId', 'drawRecommendedTrail', 'drawBuildingStatusChip', 'addCoverImage', 'LOBBY_LAYOUT_PLAN_VERSION', 'building.touchWidth']);
 
 const objectBlocks = [...diorama.matchAll(/\{\n\s+id: '([^']+)'[\s\S]*?\n\s+\}/g)].filter((match) => match[0].includes('assetKey:'));
 if (objectBlocks.length !== 9) throw new Error(`Expected 9 diorama buildings, found ${objectBlocks.length}`);
@@ -61,14 +61,14 @@ for (const required of ['library', 'laboratory', 'shop', 'forest', 'event']) {
 }
 
 const readme = read('README.md');
-for (const token of [`# CardVille ${pkg.version}`, `## ${pkg.version} 업데이트 내역`, '로비 배치/겹침 감사', 'check:lobby-layout']) {
+for (const token of [`# CardVille ${pkg.version}`, `## ${pkg.version} 업데이트 내역`, '로비 배치/겹침 감사', 'cover 배경', 'check:lobby-layout']) {
   if (!readme.includes(token)) throw new Error(`README missing lobby-layout token: ${token}`);
 }
 const handoff = read('AI_HANDOFF_CARDVILLE.md');
-for (const token of [`현재 기준 버전은 ${pkg.version}`, '1.0.31 로비 배치/겹침 감사', 'touchWidth']) {
+for (const token of [`현재 기준 버전은 ${pkg.version}`, '1.0.32 디자인/성능/품질 패스', 'touchWidth']) {
   if (!handoff.includes(token)) throw new Error(`AI handoff missing lobby-layout token: ${token}`);
 }
 if (pkg.scripts?.['check:lobby-layout'] !== 'node tools/check-lobby-layout.mjs') throw new Error('check:lobby-layout script mismatch');
 if (!pkg.scripts?.verify?.includes('check:lobby-layout')) throw new Error('verify must include check:lobby-layout');
 
-console.log(`Lobby layout check passed. Version ${pkg.version}, ${rects.length} non-overlapping touch zones verified.`);
+console.log(`Lobby layout check passed. Version ${pkg.version}, ${rects.length} non-overlapping touch zones and design status checks verified.`);

@@ -1,11 +1,11 @@
 import Phaser from 'phaser';
-import { applyResponsiveCamera, hasTouchDebug, layout } from '../systems/LayoutSystem';
+import { addCoverImage, applyResponsiveCamera, hasTouchDebug, layout } from '../systems/LayoutSystem';
 import { DrawSystem } from '../systems/DrawSystem';
 import { SaveSystem } from '../systems/SaveSystem';
 import { WORD_STAGES } from '../data/wordStages';
 import { ASSET_COUNTS } from '../data/assetManifest';
 import { LOBBY_NPCS, LOBBY_PROPS, LOBBY_SAFE_RULES, LobbyNpc } from '../data/lobbyEntities';
-import { CardVilleQuality, getCardVilleQuality, qualitySummary, scaledCount } from '../systems/QualitySystem';
+import { allowAmbientMotion, ambientCount, CardVilleQuality, getCardVilleQuality, isMotionEnabled, qualitySummary, scaledCount, scaledDuration } from '../systems/QualitySystem';
 import { DIORAMA_BUILDINGS, DioramaBuilding, DioramaRoute } from '../data/dioramaBuildings';
 import { LOBBY_LAYOUT_GUARDS, LOBBY_LAYOUT_PLAN_VERSION } from '../data/lobbyLayoutPlan';
 import { MATH_STAGES } from '../data/mathStages';
@@ -56,22 +56,25 @@ export class MainLobbyScene extends Phaser.Scene {
   private drawDioramaBackground(): void {
     const l = layout(this);
     if (this.textures.exists('dioramaBg')) {
-      this.add.image(195, 422, 'dioramaBg').setDisplaySize(390, 844);
+      // Keep the 1080x1920 premium lobby illustration as cover image instead of stretching it to 390x844.
+      addCoverImage(this, 'dioramaBg', 1, 1080, 1920)?.setDepth(0);
     } else {
       DrawSystem.background(this, '카드마을 광장');
     }
-    this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x061126, 0.08);
-    this.add.rectangle(l.visibleX + l.visibleWidth / 2, 798, l.visibleWidth, 96 + l.extraY, 0x020814, 0.18);
+    this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x061126, 0.08).setDepth(1);
+    this.add.rectangle(l.visibleX + l.visibleWidth / 2, 798, l.visibleWidth, 96 + l.extraY, 0x020814, 0.18).setDepth(2);
+    this.add.rectangle(l.visibleX + 8, l.visibleY + l.visibleHeight / 2, 16, l.visibleHeight, 0x020814, 0.10).setDepth(3);
+    this.add.rectangle(l.visibleX + l.visibleWidth - 8, l.visibleY + l.visibleHeight / 2, 16, l.visibleHeight, 0x020814, 0.10).setDepth(3);
   }
 
   private drawAtmosphericPolish(): void {
     const top = this.add.rectangle(195, 54, 390, 108, 0xffffff, 0.04).setDepth(6);
     const bottom = this.add.rectangle(195, 804, 390, 110, 0x020814, 0.14).setDepth(6);
     const focus = this.add.ellipse(195, 538, 238, 336, 0xffd86f, 0.055).setDepth(7);
-    if (!this.quality.reduceMotion) {
-      this.tweens.add({ targets: focus, scale: 1.05, alpha: 0.025, duration: 1800, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-      this.tweens.add({ targets: top, alpha: 0.058, duration: 2200, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-      this.tweens.add({ targets: bottom, alpha: 0.18, duration: 2200, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    if (allowAmbientMotion(this.quality)) {
+      this.tweens.add({ targets: focus, scale: 1.05, alpha: 0.025, duration: scaledDuration(1800, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      this.tweens.add({ targets: top, alpha: 0.058, duration: scaledDuration(2200, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      this.tweens.add({ targets: bottom, alpha: 0.18, duration: scaledDuration(2200, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
   }
 
@@ -126,7 +129,7 @@ export class MainLobbyScene extends Phaser.Scene {
         ? this.add.image(x, y, 'propCardTrail').setDisplaySize(24, 20)
         : this.add.circle(x, y, 4, 0xffd86f, 0.42);
       dot.setDepth(735).setAlpha(0.32);
-      if (!this.quality.reduceMotion) this.tweens.add({ targets: dot, alpha: 0.08, y: y - 8, duration: 900 + i * 140, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: dot, alpha: 0.08, y: y - 8, duration: scaledDuration(900 + i * 140, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
   }
 
@@ -137,8 +140,8 @@ export class MainLobbyScene extends Phaser.Scene {
         .setDisplaySize(prop.width, prop.height)
         .setAlpha(prop.alpha ?? 1)
         .setDepth(prop.depth ?? prop.y);
-      if (prop.bob && !this.quality.reduceMotion) {
-        this.tweens.add({ targets: image, y: prop.y - prop.bob, duration: 1200 + Math.floor(prop.x) * 3, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      if (prop.bob && allowAmbientMotion(this.quality)) {
+        this.tweens.add({ targets: image, y: prop.y - prop.bob, duration: scaledDuration(1200 + Math.floor(prop.x) * 3, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
       }
     }
   }
@@ -154,18 +157,16 @@ export class MainLobbyScene extends Phaser.Scene {
     if ((building.open || recommended) && this.textures.exists('uiBuildingGlow')) {
       const glow = this.add.image(0, 8, 'uiBuildingGlow').setDisplaySize(building.width * (recommended ? 1.72 : 1.55), building.height * (recommended ? 1.72 : 1.55)).setAlpha(recommended ? 0.46 : 0.35);
       container.add(glow);
-      if (!this.quality.reduceMotion) this.tweens.add({ targets: glow, alpha: 0.12, scale: 1.08, duration: 1100 + (building.x % 3) * 150, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: glow, alpha: 0.12, scale: 1.08, duration: scaledDuration(1100 + (building.x % 3) * 150, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
 
     const baseShadow = this.add.ellipse(0, building.height * 0.37, building.width * 0.82, Math.max(16, building.height * 0.18), 0x05030a, building.open ? 0.24 : 0.18);
     container.add(baseShadow);
 
     const image = this.textures.exists(building.assetKey)
-      ? this.add.image(0, 0, building.assetKey).setDisplaySize(building.width, building.height).setTint(0xfff1d0)
+      ? this.add.image(0, 0, building.assetKey).setDisplaySize(building.width, building.height)
       : this.add.rectangle(0, 0, building.width, building.height, building.open ? 0xffd86f : 0x66708a, 0.86).setStrokeStyle(3, 0xffffff, 0.7);
     container.add(image);
-    const depthGlaze = this.add.rectangle(0, -building.height * 0.05, building.width * 0.82, building.height * 0.54, 0xffffff, building.open ? 0.035 : 0.018);
-    container.add(depthGlaze);
 
     if (this.textures.exists(building.iconKey)) {
       container.add(this.add.image(-building.width * 0.32, -building.height * 0.34, building.iconKey).setDisplaySize(26, 26).setAlpha(0.95));
@@ -191,6 +192,7 @@ export class MainLobbyScene extends Phaser.Scene {
     }
     container.add(this.add.text(0, building.height * 0.33 + 10, building.title, goldText(13)).setOrigin(0.5));
     container.add(this.add.text(0, building.height * 0.33 + 25, building.subtitle, mutedText(9)).setOrigin(0.5));
+    this.drawBuildingStatusChip(container, building, recommended);
 
     if (!building.open) {
       if (this.textures.exists('uiLockBadge')) container.add(this.add.image(37, -building.height * 0.30, 'uiLockBadge').setDisplaySize(31, 31));
@@ -214,14 +216,26 @@ export class MainLobbyScene extends Phaser.Scene {
     }
   }
 
+
+  private drawBuildingStatusChip(container: Phaser.GameObjects.Container, building: DioramaBuilding, recommended: boolean): void {
+    const label = recommended ? 'NEXT' : building.open ? 'OPEN' : 'LOCK';
+    const chipY = -building.height * 0.46;
+    const chipW = recommended ? 54 : 48;
+    const chip = this.add.container(building.width * 0.18, chipY);
+    chip.add(this.add.rectangle(0, 0, chipW, 18, building.open || recommended ? 0xffd86f : 0x2d3854, building.open || recommended ? 0.92 : 0.82).setStrokeStyle(1, 0xffffff, 0.42));
+    chip.add(this.add.text(0, 0, label, building.open || recommended ? { fontFamily: 'system-ui, sans-serif', fontSize: '9px', color: '#301b0c', fontStyle: '900' } : mutedText(9)).setOrigin(0.5));
+    chip.setAlpha(building.open || recommended ? 0.96 : 0.72);
+    container.add(chip);
+  }
+
   private drawDioramaNPCs(): void {
     for (const npc of LOBBY_NPCS) {
       if (!this.textures.exists(npc.key)) continue;
       const npcImage = this.add.image(npc.x, npc.y, npc.key)
         .setDisplaySize(npc.width, npc.height)
         .setDepth(npc.y + 3);
-      if (!this.quality.reduceMotion) {
-        this.tweens.add({ targets: npcImage, y: npc.y - 2, duration: 900, delay: npc.delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      if (allowAmbientMotion(this.quality)) {
+        this.tweens.add({ targets: npcImage, y: npc.y - 2, duration: scaledDuration(900, this.quality), delay: npc.delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
         this.addNpcIdleGesture(npc, npcImage);
       }
 
@@ -230,7 +244,7 @@ export class MainLobbyScene extends Phaser.Scene {
           ? this.add.image(npc.x + 17, npc.y - npc.height * 0.55, 'uiQuestMarker').setDisplaySize(18, 18)
           : this.add.text(npc.x + 17, npc.y - npc.height * 0.55, '!', goldText(14)).setOrigin(0.5);
         marker.setDepth(npc.y + 5);
-        if (!this.quality.reduceMotion) this.tweens.add({ targets: marker, y: marker.y - 4, alpha: 0.62, duration: 760, delay: npc.delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+        if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: marker, y: marker.y - 4, alpha: 0.62, duration: scaledDuration(760, this.quality), delay: npc.delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
       }
 
       const zone = this.add.zone(npc.x, npc.y, npc.width + 34, npc.height + 42).setInteractive({ useHandCursor: true });
@@ -263,7 +277,7 @@ export class MainLobbyScene extends Phaser.Scene {
       this.spawnTouchRipple(352, 116);
       this.toggleLobbySettingsPanel();
     });
-    if (!this.quality.reduceMotion) this.tweens.add({ targets: button, angle: 4, duration: 2200, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: button, angle: 4, duration: scaledDuration(2200, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
   }
 
   private toggleLobbySettingsPanel(): void {
@@ -314,13 +328,13 @@ export class MainLobbyScene extends Phaser.Scene {
   }
 
   private addNpcIdleGesture(npc: LobbyNpc, npcImage: Phaser.GameObjects.Image): void {
-    if (this.quality.reduceMotion) return;
+    if (!allowAmbientMotion(this.quality)) return;
     if (npc.animation === 'wave') {
       this.tweens.add({ targets: npcImage, angle: 4, duration: 840, delay: npc.delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
       return;
     }
     if (npc.animation === 'sparkle') {
-      this.time.addEvent({ delay: 1700, startAt: npc.delay, loop: true, callback: () => this.spawnNpcSparkle(npc.x + 10, npc.y - 20, 2) });
+      this.time.addEvent({ delay: scaledDuration(1700, this.quality), startAt: npc.delay, loop: true, callback: () => this.spawnNpcSparkle(npc.x + 10, npc.y - 20, 2) });
       return;
     }
     if (npc.animation === 'cat') {
@@ -376,7 +390,7 @@ export class MainLobbyScene extends Phaser.Scene {
       this.spawnFloatingCue('assetWord', npc.x - 14, npc.y - 18);
       return;
     }
-    if (this.quality.reduceMotion) return;
+    if (!allowAmbientMotion(this.quality)) return;
     if (npc.animation === 'wave') {
       this.tweens.add({ targets: npcImage, angle: 11, duration: 85, yoyo: true, repeat: 3, ease: 'Sine.easeInOut' });
       this.spawnFloatingCue('assetGift', npc.x + 15, npc.y - 24);
@@ -423,25 +437,22 @@ export class MainLobbyScene extends Phaser.Scene {
   private drawHeroParty(): void {
     this.cat = this.add.container(CAT_HOME.x, CAT_HOME.y).setDepth(CAT_HOME.y + 2);
     if (this.textures.exists('catIdle')) {
-      this.catImage = this.add.image(0, 0, 'catIdle').setDisplaySize(58, 68).setTint(0xfff4e3);
+      this.catImage = this.add.image(0, 0, 'catIdle').setDisplaySize(54, 57);
       this.cat.add(this.catImage);
     } else if (this.textures.exists('dioramaCat')) this.cat.add(this.add.image(0, 0, 'dioramaCat').setDisplaySize(54, 57));
     else this.cat.add(this.add.text(0, 0, '🐈‍⬛', { fontSize: '44px' }).setOrigin(0.5));
 
     this.hero = this.add.container(HERO_HOME.x, HERO_HOME.y).setDepth(HERO_HOME.y + 4);
     if (this.textures.exists('heroIdle')) {
-      this.heroImage = this.add.image(0, 0, 'heroIdle').setDisplaySize(82, 132).setTint(0xfff4e3);
+      this.heroImage = this.add.image(0, 0, 'heroIdle').setDisplaySize(74, 115);
       this.hero.add(this.heroImage);
     } else if (this.textures.exists('dioramaHero')) this.hero.add(this.add.image(0, 0, 'dioramaHero').setDisplaySize(74, 115));
     else this.hero.add(this.add.text(0, 0, '🧒', { fontSize: '60px' }).setOrigin(0.5));
 
-    const heroGlow = this.add.ellipse(0, 42, 86, 28, 0xffd86f, 0.16);
-    this.hero.addAt(heroGlow, 0);
-
-    if (!this.quality.reduceMotion) {
-      this.tweens.add({ targets: this.hero, y: HERO_HOME.y - 3, duration: 1050, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-      this.tweens.add({ targets: this.cat, y: CAT_HOME.y - 2, duration: 820, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-      this.tweens.add({ targets: this.cat, angle: 2, duration: 520, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    if (allowAmbientMotion(this.quality)) {
+      this.tweens.add({ targets: this.hero, y: HERO_HOME.y - 3, duration: scaledDuration(1050, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      this.tweens.add({ targets: this.cat, y: CAT_HOME.y - 2, duration: scaledDuration(820, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      this.tweens.add({ targets: this.cat, angle: 2, duration: scaledDuration(520, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
   }
 
@@ -468,11 +479,11 @@ export class MainLobbyScene extends Phaser.Scene {
   private drawAmbientLife(): void {
     this.addMovingCloud(75, 128, 116, 0.26, 31000);
     this.addMovingCloud(300, 204, 142, 0.20, 39000);
-    const floatingCards = scaledCount(5, this.quality);
-    const butterflies = scaledCount(4, this.quality);
-    const birds = scaledCount(3, this.quality);
-    const fireflies = scaledCount(9, this.quality);
-    const sparkleDots = scaledCount(24, this.quality);
+    const floatingCards = ambientCount(5, this.quality, 1);
+    const butterflies = ambientCount(4, this.quality, 1);
+    const birds = ambientCount(3, this.quality, this.quality.tier === 'lite' ? 0 : 1);
+    const fireflies = ambientCount(9, this.quality, 2);
+    const sparkleDots = Math.min(this.quality.maxSparkles * 3, scaledCount(24, this.quality));
     for (let i = 0; i < floatingCards; i += 1) this.addFloatingCard(54 + i * 70, 160 + (i % 2) * 88, i * 230);
     for (let i = 0; i < butterflies; i += 1) this.addButterfly(58 + i * 86, 386 + (i % 3) * 98, i * 480);
     for (let i = 0; i < birds; i += 1) this.addBird(70 + i * 108, 112 + i * 50, i * 760);
@@ -481,7 +492,7 @@ export class MainLobbyScene extends Phaser.Scene {
       const x = Phaser.Math.Between(20, 370);
       const y = Phaser.Math.Between(260, 735);
       const dot = this.add.circle(x, y, Phaser.Math.FloatBetween(1.2, 2.4), 0xffdf7a, Phaser.Math.FloatBetween(0.20, 0.54)).setDepth(800);
-      if (!this.quality.reduceMotion) this.tweens.add({ targets: dot, y: y - Phaser.Math.Between(8, 26), alpha: 0.05, duration: Phaser.Math.Between(1200, 2600), delay: i * 70, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: dot, y: y - Phaser.Math.Between(8, 26), alpha: 0.05, duration: scaledDuration(Phaser.Math.Between(1200, 2600), this.quality), delay: i * 70, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
   }
 
@@ -490,7 +501,7 @@ export class MainLobbyScene extends Phaser.Scene {
       ? this.add.image(x, y, 'dioramaCloud').setDisplaySize(width, width * 0.42).setAlpha(alpha)
       : this.add.ellipse(x, y, width, width * 0.34, 0xffffff, alpha);
     cloud.setDepth(5);
-    if (!this.quality.reduceMotion) this.tweens.add({ targets: cloud, x: x + 85, duration, repeat: -1, yoyo: true, ease: 'Sine.easeInOut' });
+    if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: cloud, x: x + 85, duration: scaledDuration(duration, this.quality), repeat: -1, yoyo: true, ease: 'Sine.easeInOut' });
   }
 
   private addFloatingCard(x: number, y: number, delay: number): void {
@@ -498,7 +509,7 @@ export class MainLobbyScene extends Phaser.Scene {
       ? this.add.image(x, y, 'dioramaFloatingCard').setDisplaySize(26, 35)
       : this.add.rectangle(x, y, 22, 30, 0x7a4ed5, 0.8).setStrokeStyle(1, 0xffe08d, 0.8);
     card.setAlpha(0.62).setDepth(20).setAngle(Phaser.Math.Between(-10, 10));
-    if (!this.quality.reduceMotion) this.tweens.add({ targets: card, y: y - 20, angle: card.angle + 12, alpha: 0.22, duration: 2500, delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: card, y: y - 20, angle: card.angle + 12, alpha: 0.22, duration: scaledDuration(2500, this.quality), delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
   }
 
   private addButterfly(x: number, y: number, delay: number): void {
@@ -506,13 +517,13 @@ export class MainLobbyScene extends Phaser.Scene {
       ? this.add.image(x, y, 'dioramaButterfly').setDisplaySize(30, 22)
       : this.add.text(x, y, '✦', goldText(16)).setOrigin(0.5);
     butterfly.setAlpha(0.78).setDepth(650);
-    if (!this.quality.reduceMotion) this.tweens.add({ targets: butterfly, x: x + Phaser.Math.Between(-24, 28), y: y - Phaser.Math.Between(16, 34), scale: 0.82, duration: 1500, delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: butterfly, x: x + Phaser.Math.Between(-24, 28), y: y - Phaser.Math.Between(16, 34), scale: 0.82, duration: scaledDuration(1500, this.quality), delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
   }
 
   private addBird(x: number, y: number, delay: number): void {
     if (!this.textures.exists('propBird')) return;
     const bird = this.add.image(x, y, 'propBird').setDisplaySize(28, 22).setAlpha(0.62).setDepth(50);
-    if (!this.quality.reduceMotion) this.tweens.add({ targets: bird, x: x + 80, y: y - 16, alpha: 0.18, duration: 4200, delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: bird, x: x + 80, y: y - 16, alpha: 0.18, duration: scaledDuration(4200, this.quality), delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
   }
 
   private addFirefly(x: number, y: number, delay: number): void {
@@ -520,7 +531,7 @@ export class MainLobbyScene extends Phaser.Scene {
       ? this.add.image(x, y, 'propFirefly').setDisplaySize(14, 14)
       : this.add.circle(x, y, 4, 0xffdf7a, 0.7);
     firefly.setDepth(760).setAlpha(0.58);
-    if (!this.quality.reduceMotion) this.tweens.add({ targets: firefly, x: x + Phaser.Math.Between(-18, 22), y: y - Phaser.Math.Between(12, 30), alpha: 0.18, scale: 0.72, duration: 1800, delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: firefly, x: x + Phaser.Math.Between(-18, 22), y: y - Phaser.Math.Between(12, 30), alpha: 0.18, scale: 0.72, duration: scaledDuration(1800, this.quality), delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
   }
 
   private enterBuilding(building: DioramaBuilding, buildingContainer: Phaser.GameObjects.Container): void {
@@ -559,7 +570,7 @@ export class MainLobbyScene extends Phaser.Scene {
       ease: 'Sine.easeInOut',
       onComplete: () => this.openBuildingDoor(building, buildingContainer, route)
     });
-    if (!this.quality.reduceMotion) {
+    if (isMotionEnabled(this.quality)) {
       this.addStepBounce(this.hero, 6, 4);
       this.addStepBounce(this.cat, 5, 3);
     }

@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { DrawSystem } from '../systems/DrawSystem';
 import { applyResponsiveCamera, layout } from '../systems/LayoutSystem';
+import { allowAmbientMotion, ambientCount, CardVilleQuality, getCardVilleQuality, isMotionEnabled, scaledDuration } from '../systems/QualitySystem';
 import { getMathStage, MathProblem, MathStage } from '../data/mathStages';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
@@ -20,6 +21,7 @@ export class MathLabScene extends Phaser.Scene {
   private promptText?: Phaser.GameObjects.Text;
   private statusText?: Phaser.GameObjects.Text;
   private hintText?: Phaser.GameObjects.Text;
+  private quality: CardVilleQuality = getCardVilleQuality();
 
   constructor() { super('MathLabScene'); }
 
@@ -29,6 +31,7 @@ export class MathLabScene extends Phaser.Scene {
 
   create(): void {
     applyResponsiveCamera(this);
+    this.quality = getCardVilleQuality();
     this.stage = getMathStage(this.stageId);
     this.index = 0;
     this.score = 0;
@@ -53,14 +56,14 @@ export class MathLabScene extends Phaser.Scene {
     if (this.textures.exists('npcWizard')) this.add.image(72, 182, 'npcWizard').setDisplaySize(54, 72).setAlpha(0.96);
     if (this.textures.exists('effectAura')) {
       const aura = this.add.image(195, 332, 'effectAura').setDisplaySize(230, 230).setAlpha(0.18);
-      this.tweens.add({ targets: aura, scale: 1.12, alpha: 0.07, duration: 1100, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: aura, scale: 1.12, alpha: 0.07, duration: scaledDuration(1100, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
-    for (let i = 0; i < 10; i += 1) {
+    for (let i = 0; i < ambientCount(10, this.quality, 3); i += 1) {
       const sparkle = this.textures.exists('particleSparkle')
         ? this.add.image(35 + i * 36, 170 + (i % 4) * 94, 'particleSparkle').setDisplaySize(14, 14)
         : this.add.circle(35 + i * 36, 170 + (i % 4) * 94, 3, 0xffe08a, 0.48);
       sparkle.setAlpha(0.35).setDepth(2);
-      this.tweens.add({ targets: sparkle, y: sparkle.y - 18, alpha: 0.08, duration: 1200 + i * 80, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: sparkle, y: sparkle.y - 18, alpha: 0.08, duration: scaledDuration(1200 + i * 80, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
   }
 
@@ -114,13 +117,13 @@ export class MathLabScene extends Phaser.Scene {
       this.bestCombo = Math.max(this.bestCombo, this.combo);
       this.score += 120 + this.combo * 15;
       this.flash(0xffe08a, 0.14);
-      this.tweens.add({ targets: group, scale: 1.18, duration: 110, yoyo: true, ease: 'Back.easeOut' });
+      if (isMotionEnabled(this.quality)) this.tweens.add({ targets: group, scale: 1.18, duration: 110, yoyo: true, ease: 'Back.easeOut' });
       this.spawnResultText(group.x, group.y - 56, '정답!', 0xffe08a);
     } else {
       this.combo = 0;
       this.hearts -= 1;
       this.flash(0xff6f91, 0.13);
-      this.cameras.main.shake(130, 0.004);
+      if (isMotionEnabled(this.quality)) this.cameras.main.shake(130, 0.004);
       this.spawnResultText(group.x, group.y - 56, `정답은 ${problem.answer}`, 0xff9bb0);
     }
 
