@@ -50,7 +50,7 @@ export class StageSelectScene extends Phaser.Scene {
     const start = this.page * PAGE_SIZE;
     const stages = entries.slice(start, start + PAGE_SIZE);
 
-    DrawSystem.background(this, this.title, this.modeId === 'memory' ? 'forest' : 'village');
+    DrawSystem.background(this, this.title, this.modeId === 'memory' ? 'forest' : this.modeId === 'math' ? 'lab' : this.modeId === 'word' ? 'library' : 'village');
     this.drawHeader(entries.length, maxPage);
     this.drawProgressStrip(entries);
 

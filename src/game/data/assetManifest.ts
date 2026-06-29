@@ -1,4 +1,4 @@
-export const CARDVILLE_ASSET_VERSION = '1.0.54' as const;
+export const CARDVILLE_ASSET_VERSION = '1.0.55' as const;
 
 export const LOBBY_CRITICAL_PNG_ASSET_KEYS = [
   'dioramaBg',
@@ -38,6 +38,10 @@ export const ASSET_MANIFEST: readonly CardVilleAsset[] = [
   { key: 'bgLobbyDayPremium', path: 'assets/backgrounds/bg_lobby_day.png', category: 'background', role: 'premium village day backdrop reference', required: true },
   { key: 'bgLobbyNightPremium', path: 'assets/backgrounds/bg_lobby_night.png', category: 'background', role: 'premium village night backdrop reference', required: true },
   { key: 'bgShopInteriorPremium', path: 'assets/backgrounds/bg_shop_interior.png', category: 'background', role: 'premium shop interior header', required: true },
+  { key: 'bgLibraryGreatHallPremium', path: 'assets/backgrounds/bg_library_great_hall.png', category: 'background', role: 'premium word library gameplay backdrop', required: true },
+  { key: 'bgStarMagicLabPremium', path: 'assets/backgrounds/bg_star_magic_lab.png', category: 'background', role: 'premium math laboratory gameplay backdrop', required: true },
+  { key: 'bgMemoryForestPremium', path: 'assets/backgrounds/bg_memory_forest_path.png', category: 'background', role: 'premium memory forest gameplay backdrop', required: true },
+  { key: 'bgGrandPalacePremium', path: 'assets/backgrounds/bg_grand_palace_hall.png', category: 'background', role: 'premium card album hall backdrop', required: true },
   { key: 'dioramaBg', path: 'assets/diorama/diorama_bg.png', category: 'diorama', role: 'one-screen lobby background', required: true },
   { key: 'dioramaCastle', path: 'assets/diorama/building_castle.png', category: 'building', role: 'card castle', required: true },
   { key: 'dioramaLibrary', path: 'assets/diorama/building_library.png', category: 'building', role: 'word library', required: true },
@@ -74,6 +78,7 @@ export const ASSET_MANIFEST: readonly CardVilleAsset[] = [
   { key: 'npcWizard', path: 'assets/characters/npc_wizard.png', category: 'npc', role: 'lab guide', required: true },
   { key: 'npcMerchant', path: 'assets/characters/npc_merchant.png', category: 'npc', role: 'shopkeeper', required: true },
   { key: 'npcShopkeeperPremium', path: 'assets/characters/npc_shopkeeper.png', category: 'npc', role: 'individual premium shopkeeper source', required: true },
+  { key: 'npcForestSagePremium', path: 'assets/characters/npc_forest_sage.png', category: 'npc', role: 'premium memory forest guide source', required: true },
   { key: 'npcTeacher', path: 'assets/characters/npc_teacher.png', category: 'npc', role: 'school guide', required: true },
   { key: 'npcGuard', path: 'assets/characters/npc_guard.png', category: 'npc', role: 'castle guard', required: true },
   { key: 'npcCook', path: 'assets/characters/npc_cook.png', category: 'npc', role: 'food/event NPC', required: true },

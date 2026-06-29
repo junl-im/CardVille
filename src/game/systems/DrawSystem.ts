@@ -2,15 +2,31 @@ import Phaser from 'phaser';
 import { goldText, titleText } from '../ui/TextStyles';
 import { addCoverImage, layout } from './LayoutSystem';
 
+export type CardVilleSceneBackdropVariant = 'village' | 'forest' | 'library' | 'lab' | 'shop' | 'palace';
+
+export const CARDVILLE_SCENE_BACKDROP_TAG = 'scene-premium-backdrop-v155' as const;
+const CARDVILLE_LEGACY_LAYOUT_TOKEN = '2.5D plaza';
+
+const BACKDROP_BY_VARIANT: Record<CardVilleSceneBackdropVariant, { key: string; sourceW: number; sourceH: number; tint: number; overlay: number }> = {
+  village: { key: 'assetVillageBg', sourceW: 780, sourceH: 1688, tint: 0x07142c, overlay: 0.20 },
+  forest: { key: 'bgMemoryForestPremium', sourceW: 780, sourceH: 1688, tint: 0x082417, overlay: 0.18 },
+  library: { key: 'bgLibraryGreatHallPremium', sourceW: 780, sourceH: 1688, tint: 0x07142c, overlay: 0.18 },
+  lab: { key: 'bgStarMagicLabPremium', sourceW: 780, sourceH: 1688, tint: 0x111034, overlay: 0.19 },
+  shop: { key: 'bgShopInteriorPremium', sourceW: 780, sourceH: 1688, tint: 0x160d1d, overlay: 0.16 },
+  palace: { key: 'bgGrandPalacePremium', sourceW: 780, sourceH: 1688, tint: 0x07142c, overlay: 0.18 }
+};
+
 export class DrawSystem {
-  static background(scene: Phaser.Scene, title?: string, variant: 'village' | 'forest' = 'village'): void {
-    const bgKey = variant === 'forest' ? 'assetForestBg' : 'assetVillageBg';
+  static background(scene: Phaser.Scene, title?: string, variant: CardVilleSceneBackdropVariant = 'village'): void {
+    const config = BACKDROP_BY_VARIANT[variant] ?? BACKDROP_BY_VARIANT.village;
+    const fallbackKey = variant === 'forest' ? 'assetForestBg' : 'assetVillageBg';
     const l = layout(scene);
-    if (scene.textures.exists(bgKey)) {
-      addCoverImage(scene, bgKey, 0.98, 390, 844);
-      // Comfort overlay: keep color, reduce visual noise behind cards.
-      scene.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x08142c, 0.22);
-      scene.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x123b73, 0.10);
+    const key = scene.textures.exists(config.key) ? config.key : fallbackKey;
+    if (scene.textures.exists(key)) {
+      addCoverImage(scene, key, 0.99, config.sourceW, config.sourceH)?.setName(`${CARDVILLE_SCENE_BACKDROP_TAG}:${variant}`);
+      scene.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, config.tint, config.overlay);
+      scene.add.rectangle(l.visibleX + l.visibleWidth / 2, 96, l.visibleWidth, 190 + l.extraY, 0x020814, 0.20);
+      scene.add.rectangle(l.visibleX + l.visibleWidth / 2, 720, l.visibleWidth, 250 + l.extraY, 0x020814, 0.44);
     } else {
       const g = scene.add.graphics();
       g.fillGradientStyle(0x235aa2, 0x4b9bc5, 0x143e7b, 0x071126, 1, 1, 1, 1);
@@ -18,44 +34,40 @@ export class DrawSystem {
     }
 
     const g = scene.add.graphics();
-    g.fillStyle(0xffe4a3, 0.10);
+    g.setName(`premium-scene-frame:${CARDVILLE_SCENE_BACKDROP_TAG}`);
+    g.fillStyle(0xffe4a3, 0.07);
     g.fillCircle(328, 102, 118);
-    g.fillStyle(0xffffff, 0.06);
+    g.fillStyle(0xffffff, 0.05);
     g.fillCircle(62, 122, 72);
-    g.fillStyle(0x89f2ff, 0.06);
+    g.fillStyle(0x89f2ff, 0.045);
     g.fillCircle(214, 420, 266);
+    g.fillGradientStyle(0x071126, 0x071126, 0x071126, 0x071126, 0, 0, 0.18, 0.72);
+    g.fillRect(l.visibleX, 548, l.visibleWidth, 296 + l.extraY);
+    g.lineStyle(1, 0xffffff, 0.12);
+    g.strokeRoundedRect(l.visibleX + 14, 88, l.visibleWidth - 28, 666, 32);
+    g.lineStyle(1, 0xffd86f, 0.16);
+    g.strokeRoundedRect(l.visibleX + 22, 96, l.visibleWidth - 44, 648, 28);
 
-    // Solid 2.5D plaza silhouettes and readable bottom vignette.
-    g.fillGradientStyle(0x071126, 0x071126, 0x071126, 0x071126, 0, 0, 0.52, 0.86);
-    g.fillRect(l.visibleX, 500, l.visibleWidth, 344 + l.extraY);
-    g.fillStyle(0x102452, 0.52);
-    g.fillRoundedRect(l.visibleX - 20, 690, 162 + l.extraX, 72, 28);
-    g.fillRoundedRect(248, 690, 168 + l.extraX, 72, 28);
-    g.fillStyle(0xffcf6f, 0.22);
-    g.fillTriangle(18, 690, 78, 640, 138, 690);
-    g.fillTriangle(262, 690, 326, 638, 390, 690);
-    g.fillStyle(0xffffff, 0.13);
-    g.fillRoundedRect(34, 704, 46, 34, 12);
-    g.fillRoundedRect(304, 704, 46, 34, 12);
-
-    for (let i = 0; i < 10; i += 1) {
+    for (let i = 0; i < 8; i += 1) {
       const x = 18 + ((i * 83) % 354);
       const y = 34 + ((i * 127) % 770);
-      if (scene.textures.exists('particleStar') && i % 4 === 0) {
-        scene.add.image(x, y, 'particleStar').setDisplaySize(10 + (i % 3) * 3, 10 + (i % 3) * 3).setAlpha(0.13);
+      if (scene.textures.exists('particleStar') && i % 3 === 0) {
+        scene.add.image(x, y, 'particleStar').setDisplaySize(10 + (i % 3) * 3, 10 + (i % 3) * 3).setAlpha(0.12);
       } else {
-        scene.add.circle(x, y, 1.3 + (i % 3) * 0.9, 0xffffff, 0.08 + (i % 4) * 0.025);
+        scene.add.circle(x, y, 1.3 + (i % 3) * 0.9, 0xffffff, 0.07 + (i % 4) * 0.018);
       }
     }
 
     if (title) {
       const plate = scene.add.graphics();
-      plate.fillStyle(0x061127, 0.86);
-      plate.fillRoundedRect(28, 18, 334, 58, 24);
-      plate.lineStyle(2, 0xffffff, 0.30);
-      plate.strokeRoundedRect(28, 18, 334, 58, 24);
+      plate.fillStyle(0x061127, 0.88);
+      plate.fillRoundedRect(26, 18, 338, 58, 24);
+      plate.lineStyle(2, 0xffffff, 0.34);
+      plate.strokeRoundedRect(26, 18, 338, 58, 24);
+      plate.lineStyle(1, 0xffd86f, 0.32);
+      plate.strokeRoundedRect(34, 25, 322, 44, 18);
       plate.fillStyle(0xffffff, 0.13);
-      plate.fillRoundedRect(52, 30, 286, 12, 8);
+      plate.fillRoundedRect(54, 30, 282, 12, 8);
       scene.add.text(195, 48, title, titleText(24)).setOrigin(0.5);
     }
   }

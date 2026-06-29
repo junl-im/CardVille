@@ -43,7 +43,7 @@ export class MathLabScene extends Phaser.Scene {
     this.hearts = 3;
     this.locked = false;
 
-    DrawSystem.background(this, '연산 연구소');
+    DrawSystem.background(this, '연산 연구소', 'lab');
     this.drawLabDecor();
     this.add.text(195, 96, this.stage.title, goldText(24)).setOrigin(0.5);
     this.add.text(195, 124, `${this.stage.subtitle} · ${this.stage.difficulty} · ${this.stage.id}단계`, applyWrap(mutedText(12), 310)).setOrigin(0.5);

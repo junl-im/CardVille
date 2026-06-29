@@ -1,7 +1,52 @@
-# CardVille 1.0.54
+# CardVille 1.0.55
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
+
+
+## 1.0.55 업데이트 내역
+
+- **로비/NPC/건물/배경 에셋 UIUX 패스**를 진행했습니다.
+- 업로드 에셋 `CardVille_Lobby_NPC_Buildings_Backgrounds_1.0.50_PNG.zip`을 분석하고, 적용 가치가 높은 로비/장면용 에셋만 선별했습니다.
+- 적용한 마을 건물 에셋:
+  - `building_royal_castle_hall.png` → `building_castle.png`
+  - `building_library_premium.png` → `building_library.png`
+  - `building_alchemy_astronomy_lab.png` → `building_lab.png`
+  - `building_memory_forest_gate.png` → `building_forest.png`
+- 적용한 NPC 에셋:
+  - `npc_magic_scholar.png` → `npc_librarian.png`
+  - `npc_alchemist_inventor.png` → `npc_wizard.png`
+  - `npc_shopkeeper_premium.png` → `npc_merchant.png`, `npc_shopkeeper.png`
+  - `npc_forest_sage.png` → `npc_forest_sage.png`, `npcForestSagePremium`
+- 적용한 배경 에셋:
+  - 새 로비 배경 `diorama_bg.png`를 1080×1920 cover 구도로 재가공했습니다.
+  - 도서관/연구소/기억의 숲/상점/앨범 전용 프리미엄 배경을 추가했습니다.
+  - `bgLibraryGreatHallPremium`, `bgStarMagicLabPremium`, `bgMemoryForestPremium`, `bgGrandPalacePremium` 키를 `assetManifest.ts`에 등록했습니다.
+- 체크무늬/흰색 배경이 구워진 건물/NPC PNG는 배경을 alpha로 정리하고 WebP companion을 다시 생성했습니다.
+- 장면별 배경을 실제 콘텐츠에 맞게 변경했습니다.
+  - `PlayScene` → 도서관 대강당 배경
+  - `MathLabScene` → 별빛 연금 연구소 배경
+  - `MemoryForestScene` → 기억의 숲 길 배경
+  - `ShopScene` → 카드 포션 상점 배경
+  - `CollectionScene` → 궁전/앨범 홀 배경
+  - `scene-premium-backdrop-v155`
+- 로비 배치/디자인을 다시 조정했습니다.
+  - 좌우 컬럼 x=74/x=316 기준으로 너무 끝에 붙지 않으면서 화면 양옆 공간을 씁니다.
+  - 중앙 성/광장/이벤트 공간은 숨 쉴 여백을 유지합니다.
+  - 새 건물 비율에 맞춰 `visualWidth: 226/172/146` 기준으로 재조정했습니다.
+  - `lobby-art-placement-v155` 태그를 추가했습니다.
+- 모바일 가독성을 다시 올렸습니다.
+  - `mobile-readable-text-v155`
+  - 기본 텍스트 배율 1.17, 큰 안내 문구 1.34
+  - 9~13px급 작은 문구의 최소 크기를 더 올렸습니다.
+- 검증 추가/갱신:
+  - `tools/check-lobby-art-ui.mjs`
+  - `npm run check:lobby-art-ui`
+  - `check:mobile-exit-layout`, `check:screen-ui-stability`, `check:building-assets`, `check:village-visuals`, `check:lobby-boot-assets`를 1.0.55 배치/가독성 기준으로 갱신했습니다.
+- `npm run verify`에 `check:lobby-art-ui`를 포함했습니다.
+- 신규 문서 파일은 만들지 않았습니다.
+- 삭제 파일은 없습니다.
+- `node_modules`, `dist`, `package-lock.json`은 통파일 ZIP에서 제외합니다.
 
 
 ## 1.0.54 업데이트 내역

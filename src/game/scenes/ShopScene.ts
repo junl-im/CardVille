@@ -93,7 +93,7 @@ export class ShopScene extends Phaser.Scene {
     const recommendedOfferId = this.recommendedOfferId(profile, daily);
     const lastOffer = SaveSystem.getLastShopOffer();
 
-    DrawSystem.background(this, '카드팩 상점');
+    DrawSystem.background(this, '카드팩 상점', 'shop');
     this.drawShopInteriorBackdrop();
     DrawSystem.topHud(this, profile.coins, profile.level);
     panel(this, 195, 420, 340, 572, 34);

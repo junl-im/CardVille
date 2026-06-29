@@ -1,4 +1,4 @@
-export const LOBBY_LAYOUT_PLAN_VERSION = '1.0.54' as const;
+export const LOBBY_LAYOUT_PLAN_VERSION = '1.0.55' as const;
 
 export type LobbySafeZone = {
   id: string;
@@ -31,7 +31,9 @@ export const LOBBY_LAYOUT_GUARDS = [
   'mobile text should keep a readable minimum size on 390px wide screens',
   'village buildings should use left/right edge columns with enough center breathing room',
   'critical lobby background and building textures use stable PNG master loading',
-  'scene navigation includes native timer fallback so input locks cannot linger'
+  'scene navigation includes native timer fallback so input locks cannot linger',
+  'selected 1.0.55 lobby/NPC/building/background assets must be paired with layout and backdrop checks',
+  'scene-premium-backdrop-v155 must be used by gameplay scenes with content-specific backgrounds'
 ] as const;
 
 export const LOBBY_DESIGN_CHECKS = [
@@ -52,7 +54,10 @@ export const LOBBY_DESIGN_CHECKS = [
   'lobby-building-visible-png-v154',
   'lobby-critical-png-runtime-v154',
   'scene-navigation-no-freeze-v154',
-  'mobile-readable-text-v154'
+  'mobile-readable-text-v154',
+  'mobile-readable-text-v155',
+  'scene-premium-backdrop-v155',
+  'lobby-art-placement-v155'
 ] as const;
 
 
@@ -61,7 +66,9 @@ export const LOBBY_PREMIUM_VISUAL_FIT_AUDIT = [
   '1.0.51 renders those square assets with fitImageToBox instead of setDisplaySize(width,height) stretch',
   'bottom row nameplates stay above y=746 bottom hint safe zone',
   'event READY badge is offset inward so READY n does not collide with forest/harbor chips',
-  'npc_merchant and npc_town_cat use aspect-fit readable sizes after premium asset import'
+  'npc_merchant and npc_forest_sage use aspect-fit readable sizes after premium asset import',
+  '1.0.55 selected castle/library/lab/forest buildings use new 1254 RGBA cutouts',
+  '1.0.55 scene backdrops use library/lab/forest/shop/palace variants for screen-specific readability'
 ] as const;
 
 export const MIN_TOUCH_SIZE = 44;
@@ -71,13 +78,14 @@ export function rectsOverlap(a: { x: number; y: number; width: number; height: n
 }
 
 export const LOBBY_VISIBLE_ASSET_ROUTE_AUDIT = [
-  '1.0.54 keeps premium lobby assets and UI-only selected assets self-contained in patch ZIPs',
+  '1.0.55 keeps premium lobby assets and UI-only selected assets self-contained in patch ZIPs',
   'IntroLoadingScene loads public assets with BASE_URL and CARDVILLE_ASSET_VERSION cache busting',
   'GameButton defaults to premium vector CTA styling instead of old baked button skins',
   'GameButton disabled state remains styled and readable instead of looking broken',
   'major scene transitions are guarded against duplicate taps and modal leftovers',
   'exit flow attempts real close only and never sends the player to a blank page',
   'button and panel text use mobile-readable minimum sizing',
-  '1.0.54 uses PNG source for critical lobby assets instead of runtime WebP substitution',
-  '1.0.54 lobby transition uses scene-navigation-no-freeze-v154 native timer fallback'
+  '1.0.55 uses PNG source for critical lobby assets instead of runtime WebP substitution',
+  '1.0.55 lobby transition uses scene-navigation-no-freeze-v154 native timer fallback',
+  '1.0.55 art placement uses lobby-art-placement-v155 and scene-premium-backdrop-v155'
 ] as const;

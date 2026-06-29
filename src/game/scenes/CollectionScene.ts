@@ -19,7 +19,7 @@ export class CollectionScene extends Phaser.Scene {
   create(): void {
     applyResponsiveCamera(this);
     const profile = SaveSystem.loadProfile();
-    DrawSystem.background(this, '카드 앨범');
+    DrawSystem.background(this, '카드 앨범', 'palace');
     DrawSystem.topHud(this, profile.coins, profile.level);
     const collection = SaveSystem.loadCollection();
     const entries = REWARD_CARDS.map((card) => ({ card, count: collection[card.id] ?? 0 }));

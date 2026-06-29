@@ -1,11 +1,11 @@
 {
-  "name": "CardVille 1.0.54 Real Exit and Mobile Readable UI Layout",
-  "version": "1.0.54",
-  "mode": "exit-real-close-v153-mobile-readable-layout-v153-village-edge-spacing",
+  "name": "CardVille 1.0.55 Lobby NPC Buildings Backgrounds Visual UX",
+  "version": "1.0.55",
+  "mode": "lobby-art-placement-v155-scene-premium-backdrop-v155-mobile-readable-text-v155",
   "svg": "disabled",
   "pwa": "disabled",
-  "notes": "Exit button attempts real window/app close only, removes blank-page fallback, enlarges mobile text, spreads village building columns across edge space, and applies selected UI-only reward burst polish.",
-  "label": "Real exit + mobile readable UI + edge-spaced village",
-  "description": "Fixes exit behavior, improves mobile legibility and layout spacing, keeps UI from crowding, and refreshes selected reward burst asset with alpha processing.",
-  "assetVersion": "1.0.54"
+  "notes": "Selected lobby/NPC/building/background assets are alpha-cleaned, registered, and applied to lobby/game scenes with mobile readable text and non-overlapping edge-spaced village layout.",
+  "label": "Premium lobby art + scene UI backdrops",
+  "description": "Applies selected 1.0.50 lobby asset batch, replaces key buildings/NPCs, adds scene-specific backdrops, and verifies mobile layout/UI placement.",
+  "assetVersion": "1.0.55"
 }

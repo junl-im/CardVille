@@ -4,11 +4,63 @@
 CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고, 그다음 실제 코드를 확인하세요.
 
 
-## 현재 작업 기준: 1.0.54
+## 현재 작업 기준: 1.0.55
 
-현재 기준 버전은 1.0.54입니다.  
-이번 버전은 1.0.53 RealExitMobileUILayout을 기준으로, 마을 진입 직후 먹통처럼 보일 수 있는 장면 전환 잠금과 마을 건물 이미지 미표시 가능성을 최우선으로 막은 핫픽스입니다. `mobile-readable-text-v154`, `lobby-critical-png-runtime-v154`, `lobby-building-visible-png-v154`, `scene-navigation-no-freeze-v154`가 핵심 기준입니다.
+현재 기준 버전은 1.0.55입니다.  
+이번 버전은 1.0.54 LobbyBootAssetHardening을 기준으로, 새 로비/NPC/건물/배경 에셋을 선별 적용하고 각 게임 화면 배경/UIUX를 모바일 기준으로 다시 다듬은 패스입니다. `lobby-art-placement-v155`, `scene-premium-backdrop-v155`, `mobile-readable-text-v155`, `lobby-critical-png-runtime-v154`가 핵심 기준입니다.
 
+
+
+### 1.0.55 로비/NPC/건물/배경 에셋 UIUX 패스
+
+- 업로드 파일:
+  - `CardVille_Lobby_NPC_Buildings_Backgrounds_1.0.50_PNG.zip`
+- 적용 목적:
+  - 새 에셋을 전부 넣기보다, 로비와 각 게임 화면에서 실제 체감 품질이 올라가는 것만 선별했습니다.
+  - 1.0.54의 마을 진입/건물 PNG 안정화는 유지합니다.
+- 에셋 처리:
+  - 체크무늬/흰색 배경이 RGB로 구워진 건물/NPC PNG를 alpha cutout으로 재가공했습니다.
+  - 모든 적용 에셋에 WebP companion을 재생성했습니다.
+  - 건물 4종: 성/도서관/연구소/기억의 숲을 새 프리미엄 컷아웃으로 교체했습니다.
+  - NPC 4종: 사서/연구소 마법사/상점 상인/숲지기를 새 프리미엄 컷아웃으로 교체 또는 추가했습니다.
+  - 배경 6종: 로비, 도서관, 연구소, 숲, 상점, 앨범 홀 배경을 재가공했습니다.
+- 코드 반영:
+  - `src/game/data/assetManifest.ts`
+    - `bgLibraryGreatHallPremium`, `bgStarMagicLabPremium`, `bgMemoryForestPremium`, `bgGrandPalacePremium`, `npcForestSagePremium` 추가
+    - `CARDVILLE_ASSET_VERSION = 1.0.55`
+  - `src/game/systems/DrawSystem.ts`
+    - `CardVilleSceneBackdropVariant` 추가
+    - `scene-premium-backdrop-v155` 추가
+    - 도서관/연구소/상점/앨범/숲 배경을 장면별로 분리
+  - `src/game/data/dioramaBuildings.ts`
+    - 좌우 컬럼 x=74/x=316 기준으로 재배치
+    - 새 건물 비율에 맞춰 `visualWidth: 226/172/146` 기준으로 조정
+    - `npcForestSagePremium`를 기억의 숲 역할에 연결
+  - `src/game/data/lobbyEntities.ts`
+    - 새 NPC 위치와 터치존을 이름표/하단 HUD와 겹치지 않게 조정
+  - `src/game/scenes/MainLobbyScene.ts`
+    - `LOBBY_VERSION = 1.0.55`
+    - `lobby-art-placement-v155` 추가
+- 장면별 UIUX:
+  - `PlayScene`: 도서관 대강당 배경
+  - `MathLabScene`: 별빛 연금 연구소 배경
+  - `MemoryForestScene`: 기억의 숲 길 배경
+  - `ShopScene`: 카드 포션 상점 배경
+  - `CollectionScene`: 궁전/앨범 홀 배경
+- 모바일 텍스트:
+  - `TextStyles.ts`
+  - `mobile-readable-text-v155`
+  - 기본 배율 1.17, 큰 글씨 1.34
+  - 작은 텍스트 최소 가독 크기를 다시 상향
+- 검증:
+  - `tools/check-lobby-art-ui.mjs` 추가
+  - `check:lobby-art-ui` 추가
+  - `npm run verify`에 포함
+  - 기존 모바일/로비/빌딩/화면 안정성 검증도 1.0.55 기준으로 갱신
+- 패치 정책:
+  - 1.0.55 패치 ZIP도 self-contained 안정형 패치로 유지합니다.
+  - `src/`, `tools/`, `public/assets`, 버전 동기화 파일, README, AI_HANDOFF, docs를 포함합니다.
+- 신규 문서 파일은 생성하지 않았습니다.
 
 
 ### 1.0.54 마을 진입/건물 이미지 핫픽스 패스

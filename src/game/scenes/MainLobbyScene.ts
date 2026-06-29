@@ -17,7 +17,7 @@ import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 import { AccessibilitySystem } from '../systems/AccessibilitySystem';
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
-const LOBBY_VERSION = '1.0.54';
+const LOBBY_VERSION = '1.0.55';
 const MISSION_TONE_COLORS = { gold: 0xffd86f, blue: 0x8fd3ff, purple: 0xd7a5ff, green: 0xa9f5b5, coral: 0xffb39a } as const;
 const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-visible-v149' as const;
 const VILLAGE_VISIBLE_BUILDING_SCALE_TAG = 'village-readable-building-scale-v150' as const;
@@ -26,6 +26,7 @@ const MOBILE_READABLE_LAYOUT_TAG = 'mobile-readable-layout-v153' as const;
 const VILLAGE_EDGE_SPACE_TAG = 'village-edge-spacing-v153' as const;
 const LOBBY_BOOT_ASSET_HARDENING_TAG = 'lobby-building-visible-png-v154' as const;
 const LOBBY_TOUCH_RECOVERY_TAG = 'lobby-input-recovery-v154' as const;
+const LOBBY_ART_PLACEMENT_TAG = 'lobby-art-placement-v155' as const;
 const HERO_HOME = { x: 195, y: 545 } as const;
 const CAT_HOME = { x: 145, y: 585 } as const;
 
@@ -67,6 +68,7 @@ export class MainLobbyScene extends Phaser.Scene {
     this.drawHeroParty();
     this.drawBottomHint(profile.nickname);
     this.add.text(344, 28, LOBBY_VERSION, mutedText(11)).setOrigin(0.5).setAlpha(0.9);
+    console.info('[CardVille] premium lobby art placement', LOBBY_ART_PLACEMENT_TAG);
     console.info('[CardVille] lobby ready', { version: LOBBY_VERSION, tag: LOBBY_TOUCH_RECOVERY_TAG });
     this.showLobbyCoach(recommendedBuildingId);
   }
@@ -230,7 +232,7 @@ export class MainLobbyScene extends Phaser.Scene {
   }
 
   private drawBuilding(building: DioramaBuilding, recommended: boolean): void {
-    const container = this.add.container(building.x, building.y).setDepth(building.y).setName(`building:${building.id}:${LOBBY_BOOT_ASSET_HARDENING_TAG}`);
+    const container = this.add.container(building.x, building.y).setDepth(building.y).setName(`building:${building.id}:${LOBBY_BOOT_ASSET_HARDENING_TAG}:${LOBBY_ART_PLACEMENT_TAG}`);
     if ((building.open || recommended) && this.textures.exists('uiBuildingGlow')) {
       const glow = this.add.image(0, 8, 'uiBuildingGlow').setDisplaySize(building.width * (recommended ? 1.72 : 1.55), building.height * (recommended ? 1.72 : 1.55)).setAlpha(recommended ? 0.46 : 0.35);
       container.add(glow);
@@ -249,7 +251,7 @@ export class MainLobbyScene extends Phaser.Scene {
 
     const imageY = building.imageY ?? 0;
     const image = this.textures.exists(building.assetKey)
-      ? this.fitImageToBox(this.add.image(0, imageY, building.assetKey).setName(`visible:${building.assetKey}:${LOBBY_BOOT_ASSET_HARDENING_TAG}`).setAlpha(1), visualWidth, visualHeight)
+      ? this.fitImageToBox(this.add.image(0, imageY, building.assetKey).setName(`visible:${building.assetKey}:${LOBBY_BOOT_ASSET_HARDENING_TAG}:${LOBBY_ART_PLACEMENT_TAG}`).setAlpha(1), visualWidth, visualHeight)
       : this.drawMissingBuildingFallback(building, visualWidth, visualHeight);
     container.add(image);
     if (this.textures.exists(building.assetKey)) {
@@ -362,7 +364,7 @@ export class MainLobbyScene extends Phaser.Scene {
         this.addNpcIdleGesture(npc, npcImage);
       }
 
-      if (npc.key === 'npcMerchant' || npc.key === 'npcWizard' || npc.key === 'npcLibrarian' || npc.key === 'npcTeacher') {
+      if (npc.key === 'npcMerchant' || npc.key === 'npcWizard' || npc.key === 'npcLibrarian' || npc.key === 'npcTeacher' || npc.key === 'npcForestSagePremium') {
         const marker = this.textures.exists('uiQuestMarker')
           ? this.add.image(npc.x + 17, npc.y - npc.height * 0.55, 'uiQuestMarker').setDisplaySize(18, 18)
           : this.add.text(npc.x + 17, npc.y - npc.height * 0.55, '!', goldText(14)).setOrigin(0.5);

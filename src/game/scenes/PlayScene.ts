@@ -100,7 +100,7 @@ export class PlayScene extends Phaser.Scene {
       this.bonusMeter = 0;
     }
 
-    DrawSystem.background(this, `말 카드 · ${this.stage}`);
+    DrawSystem.background(this, `말 카드 · ${this.stage}`, 'library');
     DrawSystem.topHud(this, profile.coins, profile.level);
     this.drawHud();
     this.goalLayer = this.add.container(0, 0);

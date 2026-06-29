@@ -55,11 +55,11 @@ mustContain('src/game/data/lobbyLayoutPlan.ts', [
   'LOBBY_PREMIUM_VISUAL_FIT_AUDIT',
   'fitImageToBox instead of setDisplaySize(width,height) stretch',
   'bottom row nameplates stay above y=746',
-  'npc_merchant and npc_town_cat use aspect-fit readable sizes', 'village-readable-building-scale-v150'
+  'npc_merchant and npc_forest_sage use aspect-fit readable sizes', 'village-readable-building-scale-v150'
 ]);
 mustContain('src/game/data/lobbyEntities.ts', [
-  "npcMerchant', x: 104, y: 584, width: 42, height: 62",
-  "npcTownCat', x: 28, y: 730, width: 48, height: 48",
+  "npcMerchant', x: 108, y: 578, width: 46, height: 58",
+  "npcForestSagePremium', x: 45, y: 724, width: 48, height: 60",
   "propFountain', x: 195, y: 408"
 ]);
 
