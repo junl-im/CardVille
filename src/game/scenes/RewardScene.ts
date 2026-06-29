@@ -4,6 +4,7 @@ import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
 import { DrawSystem } from '../systems/DrawSystem';
 import { ProgressModeId, SaveSystem } from '../systems/SaveSystem';
+import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 import { RARITY_META, RewardCard, pickRewardCard } from '../data/rewardCards';
 import { allowAmbientMotion, ambientCount, CardVilleQuality, getCardVilleQuality, isMotionEnabled, scaledDuration } from '../systems/QualitySystem';
 import { applyWrap, bodyText, cardSmallText, cardText, goldText, mutedText, titleText } from '../ui/TextStyles';
@@ -160,6 +161,8 @@ export class RewardScene extends Phaser.Scene {
     const profile = SaveSystem.addReward(xp, coins, gems);
     const record = SaveSystem.saveModeStageResult(this.modeId, this.stage, this.score, this.bestCombo, this.stepsLeft, false, this.stars);
     const count = SaveSystem.addCard(this.reward.id);
+    DailyMissionSystem.recordPackOpen();
+    if (this.source === 'game') DailyMissionSystem.recordModeClear(this.modeId);
 
     this.add.text(195, 210, `${meta.label} 카드 획득!`, goldText(18)).setOrigin(0.5);
     this.drawRewardCard(195, 356, 172, 206, this.reward.icon, this.reward.id, meta.color, meta.label, this.reward.rarity);

@@ -41,7 +41,7 @@ export class ModeSelectScene extends Phaser.Scene {
       ? `${focus.note} · ${focus.status === 'open' ? '바로 입장 가능' : '다음 작업: ' + focus.nextWork}`
       : '건물별 콘텐츠를 한 곳에서 확인하고, 열린 모드부터 안정적으로 확장합니다.';
     this.add.text(195, 118, copy, applyWrap(mutedText(12), 322)).setOrigin(0.5);
-    this.add.text(195, 146, '열린 모드: 도서관 · 학교 · 연구소 · 기억의 숲 · 이벤트 카드팩', mutedText(10)).setOrigin(0.5);
+    this.add.text(195, 146, '열린 모드: 도서관 · 학교 · 연구소 · 기억의 숲 · 오늘의 미션', mutedText(10)).setOrigin(0.5);
   }
 
   private drawModeCard(mode: GameMode, y: number, focused: boolean): void {
@@ -87,7 +87,7 @@ export class ModeSelectScene extends Phaser.Scene {
       const cleared = ENGLISH_STAGES.filter((stage) => SaveSystem.getModeStageRecord('english', stage.id)?.cleared).length;
       return { badge: `${cleared}/${ENGLISH_STAGES.length}`, copy: `다음 ${next}교시 · 뜻 카드 연결` };
     }
-    if (mode.id === 'daily') return { badge: 'PACK', copy: '오늘 보상 카드팩 열기' };
+    if (mode.id === 'daily') return { badge: 'DAILY', copy: '출석 · 미션 · 카드팩 보상' };
     return { badge: 'PLAN', copy: mode.nextWork };
   }
 
@@ -104,8 +104,8 @@ export class ModeSelectScene extends Phaser.Scene {
       this.scene.start('StageSelectScene', { modeId: 'english', title: mode.title, recommendedStage: SaveSystem.nextPlayableModeStage('english', ENGLISH_STAGES.length) });
       return;
     }
-    if (mode.routeScene === 'RewardScene') {
-      this.scene.start('RewardScene', { modeId: 'daily', stage: 1, score: 520, bestCombo: 4, stars: 2, stepsLeft: 8 });
+    if (mode.routeScene === 'DailyMissionScene') {
+      this.scene.start('DailyMissionScene');
       return;
     }
     this.scene.start('StageSelectScene', { modeId: mode.id, title: mode.title });

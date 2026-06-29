@@ -18,7 +18,7 @@ function must(file, tokens) {
   return text;
 }
 
-const diorama = must('src/game/data/dioramaBuildings.ts', ['touchWidth', 'touchHeight', 'touchOffsetY', "modeId: 'daily'"]);
+const diorama = must('src/game/data/dioramaBuildings.ts', ['touchWidth', 'touchHeight', 'touchOffsetY', "scene: 'DailyMissionScene'", "subtitle: '일일 미션'"]);
 must('src/game/data/lobbyLayoutPlan.ts', ['LOBBY_LAYOUT_PLAN_VERSION', 'LOBBY_SAFE_ZONES', 'LOBBY_DESIGN_CHECKS', 'MIN_TOUCH_SIZE', 'rectsOverlap']);
 must('src/game/scenes/MainLobbyScene.ts', ['drawAtmosphericPolish', 'getRecommendedBuildingId', 'drawRecommendedTrail', 'drawBuildingStatusChip', 'addCoverImage', 'LOBBY_LAYOUT_PLAN_VERSION', 'building.touchWidth']);
 

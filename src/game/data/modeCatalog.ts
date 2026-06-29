@@ -1,7 +1,7 @@
 export type GameModeId = 'word' | 'math' | 'memory' | 'english' | 'daily';
 
 export type GameModeStatus = 'open' | 'planned';
-export type GameModeRoute = 'StageSelectScene' | 'MathLabScene' | 'MemoryForestScene' | 'EnglishSchoolScene' | 'RewardScene';
+export type GameModeRoute = 'StageSelectScene' | 'MathLabScene' | 'MemoryForestScene' | 'EnglishSchoolScene' | 'RewardScene' | 'DailyMissionScene';
 
 export type GameMode = {
   id: GameModeId;
@@ -62,14 +62,14 @@ export const GAME_MODES: readonly GameMode[] = [
   },
   {
     id: 'daily',
-    title: '오늘의 카드팩',
+    title: '오늘의 미션',
     buildingId: 'event',
     iconKey: 'iconCvEvent',
     fallbackIcon: '🎁',
-    note: '오늘 보상 카드팩을 열어 컬렉션을 채우는 이벤트 모드',
+    note: '출석과 모드별 클리어를 묶어 하루 보상 루프를 만드는 이벤트 보드',
     status: 'open',
-    nextWork: '일일 미션/출석 보상 주기와 상점 연동 강화',
-    routeScene: 'RewardScene'
+    nextWork: '주간 미션, 연속 출석, 시즌 보상 확장',
+    routeScene: 'DailyMissionScene'
   }
 ];
 

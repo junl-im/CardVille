@@ -17,7 +17,8 @@ const GAME_SCENES = [
   'ResultScene',
   'RewardScene',
   'CollectionScene',
-  'ShopScene'
+  'ShopScene',
+  'DailyMissionScene'
 ];
 
 export class BackConfirmScene extends Phaser.Scene {

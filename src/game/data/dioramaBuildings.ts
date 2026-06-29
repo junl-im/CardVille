@@ -6,6 +6,7 @@ export type DioramaRoute =
   | { scene: 'ModeSelectScene'; data?: { focusModeId?: GameModeId; title?: string } }
   | { scene: 'CollectionScene'; data?: Record<string, never> }
   | { scene: 'ShopScene'; data?: Record<string, never> }
+  | { scene: 'DailyMissionScene'; data?: Record<string, never> }
   | { scene: 'RewardScene'; data: { modeId?: GameModeId; stage?: number; score: number; bestCombo: number; stars: number; stepsLeft?: number } };
 
 export type DioramaBuilding = {
@@ -163,7 +164,7 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
   {
     id: 'event',
     title: '이벤트',
-    subtitle: '카드팩',
+    subtitle: '일일 미션',
     assetKey: 'dioramaEvent',
     iconKey: 'iconCvEvent',
     npcKey: 'npcCook',
@@ -177,7 +178,7 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     touchHeight: 92,
     touchOffsetY: 8,
     open: true,
-    route: { scene: 'RewardScene', data: { modeId: 'daily', stage: 1, score: 520, bestCombo: 4, stars: 2 } }
+    route: { scene: 'DailyMissionScene' }
   },
   {
     id: 'harbor',

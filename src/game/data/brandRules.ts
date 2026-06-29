@@ -2,7 +2,7 @@ export const CARDVILLE_BRAND = {
   projectNameKo: '카드마을',
   projectNameEn: 'CardVille',
   slogan: '카드를 모아 꿈의 마을을 완성하세요.',
-  version: '1.0.40',
+  version: '1.0.41',
   fixedCharacterReference: 'assets/brand/cardville_fixed_character_reference.png',
   identity: ['소년', '검은 고양이', '카드', '따뜻한 판타지 마을'],
   hero: {

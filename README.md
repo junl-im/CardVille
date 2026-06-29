@@ -1,8 +1,47 @@
-# CardVille 1.0.40
+# CardVille 1.0.41
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
 
+## 1.0.41 업데이트 내역
+
+- **무에셋 일일 미션/출석 보상 루프 패스**를 진행했습니다.
+- 새 이미지 에셋은 아직 준비 전이므로 기존 에셋과 벡터 UI만 사용했습니다.
+- `src/game/systems/DailyMissionSystem.ts`를 신규 추가했습니다.
+  - 저장 키: `cardville.dailyMission.v141`
+  - UTC 일자 토큰 기반으로 매일 미션 상태가 갱신됩니다.
+  - `clear_word`, `clear_english`, `clear_math`, `clear_memory`, `open_pack` 미션을 관리합니다.
+  - `recordModeClear`, `recordPackOpen`, `claimAttendanceReward`, `claimMissionReward`를 제공합니다.
+  - localStorage 차단 환경에서도 게임 진행이 끊기지 않도록 안전 처리했습니다.
+- `src/game/scenes/DailyMissionScene.ts`를 신규 추가했습니다.
+  - 출석 보상 READY/완료 상태 표시
+  - 오늘 진행도 바
+  - 미션별 진행도/보상/수령 버튼
+  - 게임 선택, 상점, 광장 복귀 버튼
+  - 고양이 코치 말풍선 `daily_mission_board_v141` 연결
+- 이벤트 건물 라우트를 변경했습니다.
+  - 기존: 즉시 `RewardScene` 카드팩 보상
+  - 변경: `DailyMissionScene` 일일 미션 보드
+  - 건물 부제: `일일 미션`
+- `RewardScene`에 일일 미션 훅을 연결했습니다.
+  - 카드팩 개봉 시 `DailyMissionSystem.recordPackOpen()` 호출
+  - 게임 보상팩 개봉 시 모드별 `recordModeClear()` 호출
+  - 상점팩은 카드팩 개봉 미션만 반영해 미션 루프가 과도하게 중복되지 않도록 했습니다.
+- `ModeSelectScene`의 일일 콘텐츠 설명을 `오늘의 미션` 기준으로 정리했습니다.
+- `BackConfirmScene`, `src/main.ts`에 `DailyMissionScene`을 등록했습니다.
+- `tools/check-daily-mission.mjs`와 `npm run check:daily-mission`을 추가했습니다.
+  - 미션 시스템 저장 키
+  - 이벤트 건물 라우팅
+  - 보상팩/모드 클리어 훅
+  - README/AI_HANDOFF 기록 동기화
+  - 버전 동기화를 검증합니다.
+- `npm run verify`에 `check:daily-mission`을 포함했습니다.
+- 1.0.39에서 잡은 패치 표면 완전성 규칙을 유지합니다.
+- 신규 이미지 에셋은 추가하지 않았습니다.
+- 신규 문서 파일은 만들지 않고, 변경 내역은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 누적했습니다.
+- 삭제 파일은 없습니다.
+- `package.json`, `public/build.json`, `health.html`, `reset.html`, `index.html`, 앱 내부 버전 표기를 1.0.41로 동기화했습니다.
+- `npm run verify` 전체 통과 기준으로 확정했습니다.
 
 ## 1.0.40 업데이트 내역
 
