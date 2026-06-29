@@ -151,8 +151,9 @@ export class RewardScene extends Phaser.Scene {
     const baseXp = 30 + this.stars * 10 + this.bestCombo * 2;
     const baseCoins = 45 + this.stars * 20 + Math.floor(this.score / 60);
     const baseGems = this.reward.rarity === 'legendary' ? 1 : 0;
-    const xp = this.source === 'shop' ? Math.max(18, Math.floor(baseXp * 0.62)) : baseXp;
-    const coins = this.source === 'shop' ? 0 : baseCoins;
+    const progressionBonus = this.progressionRewardBonus();
+    const xp = this.source === 'shop' ? Math.max(18, Math.floor(baseXp * 0.62)) : baseXp + progressionBonus.xp;
+    const coins = this.source === 'shop' ? 0 : baseCoins + progressionBonus.coins;
     const gems = this.source === 'shop' ? 0 : baseGems;
     const profile = SaveSystem.addReward(xp, coins, gems);
     const record = SaveSystem.saveModeStageResult(this.modeId, this.stage, this.score, this.bestCombo, this.stepsLeft, false, this.stars);
@@ -163,7 +164,7 @@ export class RewardScene extends Phaser.Scene {
     this.add.text(
       195,
       526,
-      `${this.rewardLine(xp, coins, gems)}\n별 ${record.stars}개 · 최고 콤보 ${record.bestCombo} · 플레이 ${record.plays}회\n현재 Lv.${profile.level} · 🪙 ${profile.coins} · 보유 ${count}장`,
+      `${this.rewardLine(xp, coins, gems)}${progressionBonus.label ? `\n${progressionBonus.label}` : ''}\n별 ${record.stars}개 · 최고 콤보 ${record.bestCombo} · 플레이 ${record.plays}회\n현재 Lv.${profile.level} · 🪙 ${profile.coins} · 보유 ${count}장`,
       { ...applyWrap(bodyText(13), 318), lineSpacing: 6 }
     ).setOrigin(0.5);
     this.add.text(195, 612, '획득 카드는 앨범에서 희귀도 프레임과 함께 다시 볼 수 있어요.', applyWrap(mutedText(11), 306)).setOrigin(0.5);
@@ -175,6 +176,17 @@ export class RewardScene extends Phaser.Scene {
     }
     this.lobbyButton?.setPosition(195, 742).setLabel('광장으로 돌아가기');
     this.spawnSparkles(meta.color);
+  }
+
+  private progressionRewardBonus(): { xp: number; coins: number; label: string } {
+    if (this.source === 'shop') return { xp: 0, coins: 0, label: '' };
+    const stageTierBonus = Math.max(0, this.stage - 1);
+    const modeBonus = this.modeId === 'math' ? 12 : this.modeId === 'memory' ? 14 : this.modeId === 'word' ? 10 : 6;
+    const starBonus = this.stars * 6;
+    const xp = stageTierBonus * modeBonus + starBonus;
+    const coins = stageTierBonus * 18 + this.stars * 8;
+    const modeLabel = this.modeId === 'math' ? '연구소 난이도 보너스' : this.modeId === 'memory' ? '숲 기억력 보너스' : this.modeId === 'word' ? '도서관 숙련 보너스' : '일일 보너스';
+    return { xp, coins, label: `${modeLabel} +${xp}XP/+${coins}코인` };
   }
 
   private rewardLine(xp: number, coins: number, gems: number): string {

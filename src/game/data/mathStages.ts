@@ -57,6 +57,32 @@ export const MATH_STAGES: readonly MathStage[] = [
       { id: 'm3-4', kind: 'add', prompt: '도서관과 학교의 별가루 합', expression: '47 + 26', answer: 73, choices: [71, 72, 73, 74], hint: '47 + 20 + 6으로 나눠요.' },
       { id: 'm3-5', kind: 'balance', prompt: '연구소 문양을 완성할 수', expression: '8 × ? = 48', answer: 6, choices: [5, 6, 7, 8], hint: '48 안에 8이 몇 번 들어가는지 찾아요.' }
     ]
+  },
+  {
+    id: 4,
+    title: '상점 계산 장부',
+    subtitle: '구매팩 가격을 빠르게 맞춰요',
+    difficulty: '집중',
+    problems: [
+      { id: 'm4-1', kind: 'add', prompt: '일반팩 2개와 반짝 카드의 합', expression: '24 + 18', answer: 42, choices: [40, 41, 42, 44], hint: '24에 20을 더하고 2를 빼요.' },
+      { id: 'm4-2', kind: 'subtract', prompt: '상점 코인에서 남은 금액', expression: '85 - 39', answer: 46, choices: [44, 45, 46, 48], hint: '85 - 40 + 1로 계산해요.' },
+      { id: 'm4-3', kind: 'multiply', prompt: '진열대 6칸, 한 칸에 카드 7장', expression: '6 × 7', answer: 42, choices: [36, 40, 42, 49], hint: '7을 여섯 번 더하거나 3 × 7을 두 번 해요.' },
+      { id: 'm4-4', kind: 'balance', prompt: '상점 저울이 맞는 빈칸', expression: '64 = ? + 28', answer: 36, choices: [34, 35, 36, 38], hint: '64에서 28을 빼요.' },
+      { id: 'm4-5', kind: 'subtract', prompt: '카드팩을 사고 남은 보석 조각', expression: '93 - 57', answer: 36, choices: [34, 36, 38, 40], hint: '93 - 60 + 3으로 되돌려요.' }
+    ]
+  },
+  {
+    id: 5,
+    title: '왕관 회로 시험',
+    subtitle: '큰 수와 곱셈을 섞은 보스 문제팩',
+    difficulty: '도전',
+    problems: [
+      { id: 'm5-1', kind: 'multiply', prompt: '왕관 회로 8줄, 한 줄에 6개', expression: '8 × 6', answer: 48, choices: [42, 46, 48, 54], hint: '6을 4번 더한 값을 두 배로 해요.' },
+      { id: 'm5-2', kind: 'add', prompt: '성문 양쪽 별가루 합', expression: '68 + 27', answer: 95, choices: [93, 94, 95, 96], hint: '68 + 30 - 3으로 생각해요.' },
+      { id: 'm5-3', kind: 'balance', prompt: '빈 카드가 왕관을 완성하려면?', expression: '9 × ? = 72', answer: 8, choices: [6, 7, 8, 9], hint: '72 안에 9가 몇 번 들어가나요?' },
+      { id: 'm5-4', kind: 'subtract', prompt: '마법 열차가 떠난 뒤 남은 카드', expression: '120 - 75', answer: 45, choices: [35, 40, 45, 55], hint: '120 - 70 - 5로 나눠요.' },
+      { id: 'm5-5', kind: 'balance', prompt: '마지막 회로의 빠진 숫자', expression: '? + 49 = 108', answer: 59, choices: [57, 58, 59, 60], hint: '108에서 49를 빼면 됩니다.' }
+    ]
   }
 
 ];

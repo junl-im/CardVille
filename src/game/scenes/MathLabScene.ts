@@ -21,6 +21,8 @@ export class MathLabScene extends Phaser.Scene {
   private promptText?: Phaser.GameObjects.Text;
   private statusText?: Phaser.GameObjects.Text;
   private hintText?: Phaser.GameObjects.Text;
+  private progressFill?: Phaser.GameObjects.Rectangle;
+  private challengeText?: Phaser.GameObjects.Text;
   private quality: CardVilleQuality = getCardVilleQuality();
 
   constructor() { super('MathLabScene'); }
@@ -44,6 +46,7 @@ export class MathLabScene extends Phaser.Scene {
     this.drawLabDecor();
     this.add.text(195, 96, this.stage.title, goldText(24)).setOrigin(0.5);
     this.add.text(195, 124, `${this.stage.subtitle} · ${this.stage.difficulty} · ${this.stage.id}단계`, applyWrap(mutedText(12), 310)).setOrigin(0.5);
+    this.add.text(195, 150, this.difficultyRewardLabel(), goldText(10)).setOrigin(0.5).setAlpha(0.9);
     this.drawConsole();
     this.drawProblem();
     new GameButton(this, 195, 768, '광장으로', 238, 54, 0xc9f4ff).onClick(() => this.scene.start('MainLobbyScene'));
@@ -70,8 +73,11 @@ export class MathLabScene extends Phaser.Scene {
   private drawConsole(): void {
     panel(this, 195, 396, 342, 458, 34);
     this.add.rectangle(195, 216, 276, 48, 0xffffff, 0.10).setStrokeStyle(1, 0xffe08a, 0.45);
-    this.statusText = this.add.text(195, 216, '', goldText(14)).setOrigin(0.5);
-    this.promptText = this.add.text(195, 284, '', applyWrap(bodyText(15), 294)).setOrigin(0.5);
+    this.statusText = this.add.text(195, 210, '', goldText(13)).setOrigin(0.5);
+    this.challengeText = this.add.text(195, 232, '', mutedText(9)).setOrigin(0.5);
+    this.add.rectangle(195, 252, 276, 10, 0x07142c, 0.62).setStrokeStyle(1, 0xffffff, 0.16);
+    this.progressFill = this.add.rectangle(57, 252, 0, 8, 0xffd86f, 0.9).setOrigin(0, 0.5);
+    this.promptText = this.add.text(195, 292, '', applyWrap(bodyText(15), 294)).setOrigin(0.5);
     this.add.rectangle(195, 352, 252, 86, 0x080b1f, 0.82).setStrokeStyle(3, 0xffd86f, 0.56);
     this.equationText = this.add.text(195, 352, '', titleText(38)).setOrigin(0.5);
     this.hintText = this.add.text(195, 447, '', applyWrap(mutedText(12), 288)).setOrigin(0.5);
@@ -83,6 +89,8 @@ export class MathLabScene extends Phaser.Scene {
     this.answerLayer?.destroy(true);
     this.answerLayer = this.add.container(0, 0);
     this.statusText?.setText(`문제 ${this.index + 1}/${this.stage.problems.length} · 점수 ${this.score} · 콤보 ${this.combo} · 생명 ${'♥'.repeat(this.hearts)}`);
+    this.challengeText?.setText(`${this.stage.difficulty} 문제팩 · 연속 정답 보너스와 단계 보상이 같이 적용됩니다.`);
+    this.progressFill?.setDisplaySize(276 * ((this.index + 1) / this.stage.problems.length), 8);
     this.promptText?.setText(problem.prompt);
     this.equationText?.setText(problem.expression);
     this.hintText?.setText(`힌트: ${problem.hint}`);
@@ -140,9 +148,15 @@ export class MathLabScene extends Phaser.Scene {
 
   private finish(success: boolean): void {
     const solved = success ? this.stage.problems.length : this.index;
+    const difficultyBonus = this.stage.difficulty === '도전' ? 80 : this.stage.difficulty === '집중' ? 40 : 0;
     const stars = success ? (this.hearts >= 3 ? 3 : this.hearts >= 2 ? 2 : 1) : 1;
-    const finalScore = Math.max(80, this.score + solved * 25);
+    const finalScore = Math.max(80, this.score + solved * 25 + difficultyBonus + this.stage.id * 12);
     this.scene.start('RewardScene', { modeId: 'math', stage: this.stage.id, score: finalScore, bestCombo: this.bestCombo, stars, stepsLeft: this.hearts });
+  }
+
+  private difficultyRewardLabel(): string {
+    const bonus = this.stage.difficulty === '도전' ? '보스 보상 +++' : this.stage.difficulty === '집중' ? '집중 보상 ++' : '기본 보상 +';
+    return `${bonus} · 단계 ${this.stage.id} 클리어 시 카드팩 기대치 상승`;
   }
 
   private currentProblem(): MathProblem {

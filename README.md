@@ -1,6 +1,143 @@
-# CardVille 1.0.36
+# CardVille 1.0.37
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
+
+
+## 1.0.37 업데이트 내역
+
+- **콘텐츠 스케일/보상 차등/디자인 에셋 요청 패스**를 진행했습니다.
+- 연산 연구소 `mathStages.ts`를 5스테이지 25문제로 확장했습니다.
+  - 신규 4단계: `상점 계산 장부`
+  - 신규 5단계: `왕관 회로 시험`
+  - `MathLabScene`에 단계 진행 바, 난이도 보상 문구, 단계/난이도 점수 보너스를 추가했습니다.
+- 기억의 숲 `memoryStages.ts`를 4스테이지 42쌍으로 확장했습니다.
+  - 신규 3단계: `반딧불 카드길`
+  - 신규 4단계: `고양이 그림자 숲`
+  - `MemoryForestScene` 보드를 카드 수에 따라 4열/5열 동적 그리드로 전환해 많은 카드가 들어와도 하단 버튼을 침범하지 않게 했습니다.
+  - 기억의 숲 별 산정은 고정 선택 수가 아니라 `targetMoves` 기준으로 바꿔 스테이지 규모가 커져도 보상이 공정하게 계산됩니다.
+- `StageSelectScene`에 모드별 보상 프리뷰 문구를 추가했습니다.
+  - `단어 보상`
+  - `집중/도전 보상`
+  - `기억 보상`
+- `RewardScene`에 `progressionRewardBonus`를 추가했습니다.
+  - 연구소: `연구소 난이도 보너스`
+  - 기억의 숲: `숲 기억력 보너스`
+  - 도서관: `도서관 숙련 보너스`
+  - 상점 구매팩은 기존처럼 코인 환급 루프 방지를 위해 보상 차등에서 제외합니다.
+- `tools/check-content-scale.mjs`와 `npm run check:content-scale`을 추가했습니다.
+  - 수학 스테이지/문제 수
+  - 기억 스테이지/짝 카드 수
+  - 동적 기억 보드
+  - 난이도/진행 보상
+  - README/AI_HANDOFF 기록 동기화를 검증합니다.
+- `npm run verify`에 `check:content-scale`을 포함했습니다.
+- 기존 시작 화면 무광 CTA, 상점 허브, 카드팩 보상, 앨범, 로비 배치, 진행 저장, 프리미엄 PNG/WebP, SVG 금지 정책은 유지했습니다.
+- `npm run verify` 전체 통과를 확인했습니다.
+- 새 버전별 문서 파일은 만들지 않고, 변경 내역은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 누적했습니다.
+- `package.json`, `public/build.json`, `health.html`, `reset.html`, 앱 내부 버전 표기를 1.0.37로 동기화했습니다.
+
+### 추가 디자인 이미지 에셋 요청서
+
+현재 코드 구조상 아래 에셋이 있으면 CardVille 스타일 연계성이 크게 좋아집니다. 새 에셋을 만들 때는 **프리미엄 2.5D 판타지, 따뜻한 골드/보라/블루, 소년과 검은 고양이 브랜드 고정, 투명 PNG + WebP 동반** 기준으로 제작하는 것이 좋습니다. SVG는 현재 정책상 사용하지 않습니다.
+
+#### 최우선 S급 에셋
+
+1. **상점 주인 NPC 전신 컷아웃**
+   - 경로 후보: `public/assets/characters/npc_shopkeeper.png`
+   - 크기 권장: 1024×1536 또는 1254×1254 투명 PNG
+   - 스타일: 따뜻한 상인, 카드팩/코인 주머니/작은 망토, 소년 캐릭터와 같은 동화풍 비율
+   - 용도: `ShopScene` 상단 오퍼 추천, 로비 상점 앞 NPC, 구매 성공 연출
+
+2. **연산 연구소 프리미엄 문제 콘솔**
+   - 경로 후보: `public/assets/ui/ui_math_console.png`
+   - 크기 권장: 1024×720 투명 PNG
+   - 스타일: 마법 회로, 숫자 룬, 노란 빛, 보라 유리판
+   - 용도: `MathLabScene` 중앙 식 카드 배경, 난이도 보스 문제팩 연출
+
+3. **기억의 숲 카드 보드 패널**
+   - 경로 후보: `public/assets/ui/ui_memory_board.png`
+   - 크기 권장: 1024×1024 또는 1200×900 투명 PNG
+   - 스타일: 숲 잎사귀 프레임, 반딧불, 어두운 초록+골드 테두리
+   - 용도: `MemoryForestScene` 카드 그리드 배경, 프리뷰/짝 발견 연출
+
+4. **고양이 힌트 이모션 세트**
+   - 경로 후보:
+     - `public/assets/characters/cat_hint_happy.png`
+     - `public/assets/characters/cat_hint_think.png`
+     - `public/assets/characters/cat_hint_surprise.png`
+     - `public/assets/characters/cat_hint_sleepy.png`
+   - 크기 권장: 각 512×512 투명 PNG
+   - 용도: 힌트, 실패 복구, 무료팩 READY, 콤보 코치
+
+5. **카드팩 오픈 이펙트 스프라이트 4종**
+   - 경로 후보:
+     - `public/assets/effects/effect_pack_burst_common.png`
+     - `public/assets/effects/effect_pack_burst_rare.png`
+     - `public/assets/effects/effect_pack_burst_epic.png`
+     - `public/assets/effects/effect_pack_burst_legendary.png`
+   - 크기 권장: 1024×1024 투명 PNG
+   - 용도: `RewardScene`, 상점 구매팩 전환, 희귀도별 보상 체감 강화
+
+#### A급 UI/UX 에셋
+
+6. **스테이지 선택 카드 프레임 세트**
+   - 경로 후보:
+     - `public/assets/ui/ui_stage_card_word.png`
+     - `public/assets/ui/ui_stage_card_math.png`
+     - `public/assets/ui/ui_stage_card_memory.png`
+   - 크기 권장: 900×300 투명 PNG
+   - 용도: `StageSelectScene`에서 모드별 카드 정체성 강화
+
+7. **보상 리본/배지 세트**
+   - 경로 후보:
+     - `public/assets/ui/badge_next.png`
+     - `public/assets/ui/badge_best.png`
+     - `public/assets/ui/badge_ready.png`
+     - `public/assets/ui/badge_locked.png`
+   - 크기 권장: 512×256 투명 PNG
+   - 용도: 로비 상태 칩, 상점 추천 오퍼, 무료팩, 스테이지 잠금
+
+8. **코인/보석/XP 대형 아이콘**
+   - 경로 후보:
+     - `public/assets/icons/icon_coin_premium.png`
+     - `public/assets/icons/icon_gem_premium.png`
+     - `public/assets/icons/icon_xp_star.png`
+   - 크기 권장: 512×512 투명 PNG
+   - 용도: 상점, 보상 화면, 진행 보너스 줄
+
+9. **도서관/연구소/숲 모드별 작은 배경 삽화**
+   - 경로 후보:
+     - `public/assets/illustrations/illust_library_corner.png`
+     - `public/assets/illustrations/illust_math_lab_corner.png`
+     - `public/assets/illustrations/illust_memory_forest_corner.png`
+   - 크기 권장: 1024×768 투명 PNG
+   - 용도: 모드 선택/스테이지 선택/결과 화면의 빈 공간 장식
+
+10. **튜토리얼 말풍선 캐릭터 포인터**
+    - 경로 후보: `public/assets/ui/ui_tutorial_pointer_catpaw.png`
+    - 크기 권장: 512×512 투명 PNG
+    - 스타일: 검은 고양이 발자국/금빛 화살표 조합
+    - 용도: 첫 플레이, 힌트, 복구 버튼 안내
+
+#### B급 분위기/계절 에셋
+
+11. **계절 장식 팩**
+    - 봄: 꽃잎, 작은 화분, 벚꽃 잎
+    - 여름: 반짝 물방울, 축제 깃발
+    - 가을: 낙엽, 호박, 따뜻한 랜턴
+    - 겨울: 눈송이, 리본, 작은 트리
+    - 크기 권장: 각 512×512 또는 1024×1024 투명 PNG
+    - 용도: 로비 이벤트/상점/출석 보상 분위기
+
+12. **미니게임별 실패/성공 스탬프**
+    - 경로 후보:
+      - `public/assets/ui/stamp_clear.png`
+      - `public/assets/ui/stamp_try_again.png`
+      - `public/assets/ui/stamp_combo.png`
+    - 크기 권장: 768×512 투명 PNG
+    - 용도: 결과 화면, 콤보 코치, 실패 복구
+
+제작 우선순위는 **상점 주인 NPC → 고양이 힌트 이모션 → 연구소 콘솔 → 기억의 숲 보드 → 카드팩 오픈 이펙트** 순서가 가장 효율적입니다. 이 5개가 들어오면 현재 1.0.37 코드에 큰 구조 변경 없이 매니페스트 추가와 장면별 조건부 표시로 바로 흡수하기 좋습니다.
 
 ## 1.0.36 업데이트 내역
 

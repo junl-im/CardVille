@@ -46,6 +46,46 @@ export const MEMORY_STAGES: readonly MemoryStage[] = [
       { id: 'map', icon: '🗺️', label: '지도' },
       { id: 'flower', icon: '🌼', label: '꽃' }
     ]
+  },
+  {
+    id: 3,
+    title: '반딧불 카드길',
+    subtitle: '반딧불이 비춘 위치를 기억해요',
+    previewSeconds: 3.5,
+    pairs: [
+      { id: 'acorn', icon: '🌰', label: '도토리' },
+      { id: 'fox', icon: '🦊', label: '여우' },
+      { id: 'owl', icon: '🦉', label: '부엉이' },
+      { id: 'clover', icon: '☘️', label: '클로버' },
+      { id: 'crystal', icon: '🔮', label: '수정구' },
+      { id: 'scroll', icon: '📜', label: '두루마리' },
+      { id: 'wand', icon: '🪄', label: '지팡이' },
+      { id: 'rainbow', icon: '🌈', label: '무지개' },
+      { id: 'teacup', icon: '🫖', label: '찻주전자' },
+      { id: 'cookie', icon: '🍪', label: '쿠키' },
+      { id: 'compass', icon: '🧭', label: '나침반' },
+      { id: 'feather', icon: '🪶', label: '깃털' }
+    ]
+  },
+  {
+    id: 4,
+    title: '고양이 그림자 숲',
+    subtitle: '작은 카드가 많아도 차분히 짝을 찾아요',
+    previewSeconds: 4,
+    pairs: [
+      { id: 'castle', icon: '🏰', label: '성' },
+      { id: 'ticket', icon: '🎟️', label: '티켓' },
+      { id: 'violin', icon: '🎻', label: '바이올린' },
+      { id: 'planet', icon: '🪐', label: '행성' },
+      { id: 'dragon', icon: '🐉', label: '용' },
+      { id: 'basket', icon: '🧺', label: '바구니' },
+      { id: 'seed', icon: '🌱', label: '새싹' },
+      { id: 'candle', icon: '🕯️', label: '촛불' },
+      { id: 'mirror', icon: '🪞', label: '거울' },
+      { id: 'ribbon', icon: '🎀', label: '리본' },
+      { id: 'anchor', icon: '⚓', label: '닻' },
+      { id: 'hat', icon: '🎩', label: '모자' }
+    ]
   }
 
 ];

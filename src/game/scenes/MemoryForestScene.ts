@@ -77,16 +77,20 @@ export class MemoryForestScene extends Phaser.Scene {
   private drawBoard(): void {
     const deck = this.shuffle(this.stage.pairs.flatMap((pair) => [pair, pair]));
     const compact = deck.length > 16;
-    const cardW = compact ? 66 : 72;
-    const cardH = compact ? 76 : 92;
-    const gapX = compact ? 10 : 14;
-    const gapY = compact ? 10 : 16;
-    const startX = 195 - (cardW * 4 + gapX * 3) / 2 + cardW / 2;
-    const startY = 250;
+    const columns = deck.length > 20 ? 5 : 4;
+    const rows = Math.ceil(deck.length / columns);
+    const gapX = columns === 5 ? 8 : compact ? 10 : 14;
+    const gapY = columns === 5 ? 8 : compact ? 10 : 16;
+    const maxBoardHeight = 462;
+    const cardW = columns === 5 ? 58 : compact ? 66 : 72;
+    const cardH = Math.min(columns === 5 ? 68 : compact ? 76 : 92, Math.floor((maxBoardHeight - gapY * (rows - 1)) / rows));
+    const startX = 195 - (cardW * columns + gapX * (columns - 1)) / 2 + cardW / 2;
+    const startY = 236 + cardH / 2;
+    this.add.text(195, 208, `보드 ${columns}열 · ${deck.length}장 · 프리뷰 ${this.stage.previewSeconds}초`, mutedText(10)).setOrigin(0.5);
 
     deck.forEach((pair, index) => {
-      const col = index % 4;
-      const row = Math.floor(index / 4);
+      const col = index % columns;
+      const row = Math.floor(index / columns);
       const x = startX + col * (cardW + gapX);
       const y = startY + row * (cardH + gapY);
       const card = this.createCard(`${pair.id}-${index}`, pair, x, y, cardW, cardH);
@@ -99,8 +103,10 @@ export class MemoryForestScene extends Phaser.Scene {
     const container = this.add.container(x, y).setDepth(y);
     const shadow = this.add.rectangle(4, 7, w, h, 0x000000, 0.24).setOrigin(0.5);
     const front = this.add.rectangle(0, 0, w, h, 0xfffbf1, 0.98).setStrokeStyle(4, 0x78d9a1, 0.95).setOrigin(0.5);
-    const face = this.add.text(0, -14, pair.icon, { fontSize: '30px' }).setOrigin(0.5);
-    const label = this.add.text(0, 30, pair.label, cardSmallText(10)).setOrigin(0.5);
+    const iconSize = h <= 70 ? 25 : 30;
+    const labelY = h / 2 - 14;
+    const face = this.add.text(0, h <= 70 ? -10 : -14, pair.icon, { fontSize: `${iconSize}px` }).setOrigin(0.5);
+    const label = this.add.text(0, labelY, pair.label, cardSmallText(h <= 70 ? 8 : 10)).setOrigin(0.5);
     const back = this.textures.exists('assetCardBackCrown')
       ? this.add.image(0, 0, 'assetCardBackCrown').setDisplaySize(w + 4, h + 6)
       : undefined;
@@ -170,9 +176,11 @@ export class MemoryForestScene extends Phaser.Scene {
   }
 
   private finish(): void {
-    const efficiency = Math.max(0, 18 - this.moves);
-    const stars = this.moves <= 11 ? 3 : this.moves <= 15 ? 2 : 1;
-    this.scene.start('RewardScene', { modeId: 'memory', stage: this.stage.id, score: this.score + efficiency * 20, bestCombo: Math.max(1, efficiency), stars, stepsLeft: efficiency });
+    const targetMoves = this.stage.pairs.length + Math.ceil(this.stage.pairs.length * 0.45);
+    const efficiency = Math.max(0, targetMoves + 4 - this.moves);
+    const stageBonus = this.stage.id * 35 + Math.max(0, this.stage.pairs.length - 8) * 12;
+    const stars = this.moves <= targetMoves ? 3 : this.moves <= targetMoves + 4 ? 2 : 1;
+    this.scene.start('RewardScene', { modeId: 'memory', stage: this.stage.id, score: this.score + efficiency * 20 + stageBonus, bestCombo: Math.max(1, efficiency), stars, stepsLeft: efficiency });
   }
 
   private refreshStatus(message?: string): void {

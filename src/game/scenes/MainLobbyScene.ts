@@ -12,7 +12,7 @@ import { MATH_STAGES } from '../data/mathStages';
 import { MEMORY_STAGES } from '../data/memoryStages';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
-const LOBBY_VERSION = '1.0.36';
+const LOBBY_VERSION = '1.0.37';
 const HERO_HOME = { x: 195, y: 545 } as const;
 const CAT_HOME = { x: 145, y: 585 } as const;
 
