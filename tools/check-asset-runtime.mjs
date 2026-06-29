@@ -56,7 +56,7 @@ for (const rel of [
 }
 
 const lobby = read('src/game/scenes/MainLobbyScene.ts');
-for (const token of ['premium-asset-visible-v148', 'drawMissingBuildingFallback', 'lobby building texture missing']) {
+for (const token of ['premium-asset-visible-v149', 'drawMissingBuildingFallback', 'lobby building texture missing']) {
   if (!lobby.includes(token)) throw new Error(`MainLobbyScene missing visible asset fallback token: ${token}`);
 }
 

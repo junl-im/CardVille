@@ -1,8 +1,31 @@
-# CardVille 1.0.48
+# CardVille 1.0.49
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
 
+
+## 1.0.49 업데이트 내역
+
+- **PremiumAAA 선별 에셋 적용 패스**를 진행했습니다.
+- 업로드된 `CardVille_New_Assets_PremiumAAA_1.0.46_PNG.zip`를 분석해 실제 런타임에 도움이 되는 자산만 선별했습니다.
+- 적용한 자산:
+  - `building_card_shop_premium.png` → `public/assets/diorama/building_shop.png`로 정리 적용
+  - `hero_traveler_premium.png` → `heroTravelerPremium`, `diorama/character_boy_token`으로 적용
+  - `black_cat_mascot_premium.png` → `blackCatMascotPremium`, `diorama/mascot_black_cat_token`으로 적용
+  - `card_frame_legendary_premium.png` → `frame_legendary_gold_normal`으로 적용
+  - `vfx_reward_burst_premium.png` → `effect_reward_burst_premium`으로 적용
+  - `treasure_chest_premium.png` → `ui_treasure_chest_premium`으로 적용
+- 모든 적용 자산은 RGB 배경을 alpha PNG로 재정리하고 WebP companion을 다시 생성했습니다.
+- `MainLobbyScene`은 로비 파티에서 `heroTravelerPremium`과 `blackCatMascotPremium`을 우선 사용합니다.
+- `ShopScene`은 새 카드 상점 건물과 상점 NPC를 상단 액센트로 보여줍니다.
+- 텍스트 박힘 보상 팝업은 보류했습니다. no baked text 정책과 충돌합니다.
+- tavern 건물은 키즈/교육 톤과 현재 콘텐츠 역할이 맞지 않아 보류했습니다.
+- `tools/check-premium-asset-select.mjs`와 `npm run check:premium-asset-select`를 추가했습니다.
+- `npm run verify`에 `check:premium-asset-select`를 포함했습니다.
+- 마을 이미지 표시 복구, 공통 프리미엄 버튼, BASE_URL 캐시버스터, self-contained 에셋 패치 정책은 유지했습니다.
+- 신규 문서 파일은 만들지 않았습니다.
+- 삭제 파일은 없습니다.
+- `node_modules`, `dist`, `package-lock.json`은 통파일 ZIP에서 제외합니다.
 
 ## 1.0.48 업데이트 내역
 

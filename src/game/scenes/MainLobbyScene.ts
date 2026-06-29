@@ -16,9 +16,9 @@ import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 import { AccessibilitySystem } from '../systems/AccessibilitySystem';
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
-const LOBBY_VERSION = '1.0.48';
+const LOBBY_VERSION = '1.0.49';
 const MISSION_TONE_COLORS = { gold: 0xffd86f, blue: 0x8fd3ff, purple: 0xd7a5ff, green: 0xa9f5b5, coral: 0xffb39a } as const;
-const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-visible-v148' as const;
+const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-visible-v149' as const;
 const HERO_HOME = { x: 195, y: 545 } as const;
 const CAT_HOME = { x: 145, y: 585 } as const;
 
@@ -527,17 +527,23 @@ export class MainLobbyScene extends Phaser.Scene {
 
   private drawHeroParty(): void {
     this.cat = this.add.container(CAT_HOME.x, CAT_HOME.y).setDepth(CAT_HOME.y + 2);
-    if (this.textures.exists('catIdle')) {
-      this.catImage = this.add.image(0, 0, 'catIdle').setDisplaySize(54, 57);
+    if (this.textures.exists('blackCatMascotPremium')) {
+      this.catImage = this.fitImageToBox(this.add.image(0, 0, 'blackCatMascotPremium'), 64, 70);
       this.cat.add(this.catImage);
-    } else if (this.textures.exists('dioramaCat')) this.cat.add(this.add.image(0, 0, 'dioramaCat').setDisplaySize(54, 57));
+    } else if (this.textures.exists('catIdle')) {
+      this.catImage = this.fitImageToBox(this.add.image(0, 0, 'catIdle'), 54, 57);
+      this.cat.add(this.catImage);
+    } else if (this.textures.exists('dioramaCat')) this.cat.add(this.fitImageToBox(this.add.image(0, 0, 'dioramaCat'), 54, 57));
     else this.cat.add(this.add.text(0, 0, '🐈‍⬛', { fontSize: '44px' }).setOrigin(0.5));
 
     this.hero = this.add.container(HERO_HOME.x, HERO_HOME.y).setDepth(HERO_HOME.y + 4);
-    if (this.textures.exists('heroIdle')) {
-      this.heroImage = this.add.image(0, 0, 'heroIdle').setDisplaySize(74, 115);
+    if (this.textures.exists('heroTravelerPremium')) {
+      this.heroImage = this.fitImageToBox(this.add.image(0, 0, 'heroTravelerPremium'), 84, 116);
       this.hero.add(this.heroImage);
-    } else if (this.textures.exists('dioramaHero')) this.hero.add(this.add.image(0, 0, 'dioramaHero').setDisplaySize(74, 115));
+    } else if (this.textures.exists('heroIdle')) {
+      this.heroImage = this.fitImageToBox(this.add.image(0, 0, 'heroIdle'), 74, 115);
+      this.hero.add(this.heroImage);
+    } else if (this.textures.exists('dioramaHero')) this.hero.add(this.fitImageToBox(this.add.image(0, 0, 'dioramaHero'), 74, 115));
     else this.hero.add(this.add.text(0, 0, '🧒', { fontSize: '60px' }).setOrigin(0.5));
 
     if (allowAmbientMotion(this.quality)) {

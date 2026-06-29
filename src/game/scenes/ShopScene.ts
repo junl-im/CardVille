@@ -95,9 +95,10 @@ export class ShopScene extends Phaser.Scene {
     DrawSystem.background(this, '카드팩 상점');
     DrawSystem.topHud(this, profile.coins, profile.level);
     panel(this, 195, 420, 340, 572, 34);
+    this.drawPremiumShopAccents();
 
     this.add.text(195, 96, '상인의 카드팩 가게', goldText(23)).setOrigin(0.5);
-    this.add.text(195, 126, '무료팩, 코인팩, 보석팩을 한 화면에서 고르고 앨범으로 바로 이동합니다.', applyWrap(mutedText(11), 318)).setOrigin(0.5);
+    this.add.text(195, 126, '무료팩, 코인팩, 보석팩을 한 화면에서 고르고 앨범으로 바로 이동합니다.', applyWrap(mutedText(11), 286)).setOrigin(0.5);
     this.drawCurrencyStrip(profile.coins, profile.gems, daily.canClaim ? '수령 가능' : this.nextDailyCopy(daily.nextResetAt));
     this.drawDailyStatusMeter(daily, lastOffer);
 
@@ -107,6 +108,15 @@ export class ShopScene extends Phaser.Scene {
     new GameButton(this, 278, 670, '게임관', 126, 50, 0xc9f4ff).onClick(() => this.scene.start('ModeSelectScene'));
     new GameButton(this, 195, 746, '광장으로', 248, 56, 0xc9f4ff).onClick(() => this.scene.start('MainLobbyScene'));
     this.showShopCoach(daily.canClaim);
+  }
+
+
+  private drawPremiumShopAccents(): void {
+    if (this.textures.exists('dioramaShop')) {
+      this.add.image(319, 108, 'dioramaShop').setDisplaySize(72, 72).setAlpha(0.34).setDepth(1);
+    }
+    const merchantKey = this.textures.exists('npcMerchant') ? 'npcMerchant' : this.textures.exists('heroTravelerPremium') ? 'heroTravelerPremium' : '';
+    if (merchantKey) this.add.image(52, 127, merchantKey).setDisplaySize(42, 66).setAlpha(0.9).setDepth(2);
   }
 
   private showShopCoach(canClaimDaily: boolean): void {

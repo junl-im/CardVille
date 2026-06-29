@@ -1,4 +1,4 @@
-export const CARDVILLE_ASSET_VERSION = '1.0.48' as const;
+export const CARDVILLE_ASSET_VERSION = '1.0.49' as const;
 export type CardVilleAssetCategory = 'background' | 'diorama' | 'building' | 'hero' | 'mascot' | 'npc' | 'prop' | 'ui' | 'icon' | 'card' | 'pack' | 'effect' | 'particle' | 'badge';
 
 export type CardVilleAsset = {
@@ -27,6 +27,8 @@ export const ASSET_MANIFEST: readonly CardVilleAsset[] = [
   { key: 'dioramaFloatingCard', path: 'assets/diorama/ambient_floating_card.png', category: 'diorama', role: 'floating card ambient', required: true },
   { key: 'dioramaButterfly', path: 'assets/diorama/ambient_butterfly.png', category: 'diorama', role: 'butterfly ambient', required: true },
   { key: 'dioramaCloud', path: 'assets/diorama/ambient_cloud_01.png', category: 'diorama', role: 'cloud ambient', required: true },
+  { key: 'heroTravelerPremium', path: 'assets/characters/hero_traveler_premium.png', category: 'hero', role: 'premium AAA traveler lobby avatar', required: true },
+  { key: 'blackCatMascotPremium', path: 'assets/characters/black_cat_mascot_premium.png', category: 'mascot', role: 'premium AAA black cat lobby mascot', required: true },
   { key: 'heroIdle', path: 'assets/characters/hero_idle.png', category: 'hero', role: 'hero animation frame', required: true },
   { key: 'heroWalk01', path: 'assets/characters/hero_walk_01.png', category: 'hero', role: 'hero animation frame', required: true },
   { key: 'heroWalk02', path: 'assets/characters/hero_walk_02.png', category: 'hero', role: 'hero animation frame', required: true },

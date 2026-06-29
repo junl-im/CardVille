@@ -4,11 +4,34 @@
 CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고, 그다음 실제 코드를 확인하세요.
 
 
-## 현재 작업 기준: 1.0.48
+## 현재 작업 기준: 1.0.49
 
-현재 기준 버전은 1.0.48입니다.  
-이번 버전은 1.0.47 프리미엄 로비 에셋 배치 보정본을 기준으로, 마을 이미지 누락 가능성과 공통 버튼 디자인 품질 차이를 바로잡은 마을 이미지 표시/버튼 프리미엄 복구 패스입니다.
+현재 기준 버전은 1.0.49입니다.  
+이번 버전은 1.0.48 마을 이미지 표시/버튼 프리미엄 복구본을 기준으로, 새 PremiumAAA 에셋 묶음에서 역할과 정책에 맞는 자산만 선별해 적용한 패스입니다.
 
+
+### 1.0.49 PremiumAAA 선별 에셋 적용 패스
+
+- 업로드 파일: `CardVille_New_Assets_PremiumAAA_1.0.46_PNG.zip`
+- 선별 적용:
+  - `building_card_shop_premium.png` → `public/assets/diorama/building_shop.png`
+  - `hero_traveler_premium.png` → `public/assets/characters/hero_traveler_premium.png`, `public/assets/diorama/character_boy_token.png`
+  - `black_cat_mascot_premium.png` → `public/assets/characters/black_cat_mascot_premium.png`, `public/assets/diorama/mascot_black_cat_token.png`
+  - `card_frame_legendary_premium.png` → `public/assets/cards/frames/frame_legendary_gold_normal.png`
+  - `vfx_reward_burst_premium.png` → `public/assets/effects/effect_reward_burst_premium.png`
+  - `treasure_chest_premium.png` → `public/assets/ui/ui_treasure_chest_premium.png`
+- 처리: 흰색/체크무늬/검은색 RGB 배경을 alpha PNG로 정리하고 WebP companion을 생성했습니다.
+- 장면 반영:
+  - `MainLobbyScene`: 로비 파티에서 `heroTravelerPremium`, `blackCatMascotPremium` 우선 사용
+  - `ShopScene`: 새 `dioramaShop`과 `npcMerchant`를 상점 상단 액센트로 표시
+- 보류:
+  - `ui_reward_popup_premium.png`: 이미지 안에 `REWARDS`, `YOU RECEIVED`, `CLAIM` 같은 영문 텍스트가 박혀 있어 no baked text 정책과 충돌합니다.
+  - `building_tavern_premium.png`: tavern 건물은 키즈/교육 톤과 역할이 맞지 않아 보류했습니다. 추후 `guild hall` 또는 `adventure inn`으로 텍스트/술집 인상을 제거한 버전이 오면 이벤트/원정 건물 후보로 재검토합니다.
+- 검증:
+  - `tools/check-premium-asset-select.mjs` 추가
+  - `npm run verify`에 `check:premium-asset-select` 포함
+- 핵심 기록: 앞으로 업로드 에셋은 전부 넣지 말고, 아트 바이블/역할/텍스트 박힘/no-SVG/투명도 기준을 통과한 것만 선별 적용합니다.
+- 신규 문서 파일은 생성하지 않았습니다.
 
 ### 1.0.48 마을 이미지 표시/버튼 프리미엄 복구 패스
 

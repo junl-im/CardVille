@@ -1,10 +1,11 @@
 {
-  "name": "CardVille",
-  "version": "1.0.48",
+  "name": "CardVille 1.0.49 PremiumAAA selected asset polish",
+  "version": "1.0.49",
   "mode": "visible-premium-assets-v148",
   "svg": "disabled",
   "pwa": "disabled",
   "notes": "Premium lobby images are included in the patch surface, loaded with BASE_URL and CARDVILLE_ASSET_VERSION cache busting, and all GameButton CTAs use the premium vector style by default.",
   "label": "Visible village assets + premium buttons",
-  "description": "Prevents blank village art after patch-only application and replaces old baked button skins with the start-screen style CTA system."
+  "description": "Prevents blank village art after patch-only application and replaces old baked button skins with the start-screen style CTA system.",
+  "assetVersion": "1.0.49"
 }
