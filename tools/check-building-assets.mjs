@@ -36,11 +36,11 @@ const uniqueSizes = new Set(sizes);
 if (uniqueSizes.size < buildingFiles.length - 1) throw new Error('Building assets look duplicated; expected distinct file footprints');
 
 const diorama = read('src/game/data/dioramaBuildings.ts');
-for (const token of ['visualWidth: 162', 'visualHeight: 162', 'nameplateY: 64', 'statusY: -76', 'targetY: 720']) {
+for (const token of ['visualWidth: 188', 'visualHeight: 188', 'visualWidth: 164', 'visualWidth: 148', 'nameplateWidth', 'targetY: 720']) {
   if (!diorama.includes(token)) throw new Error(`dioramaBuildings.ts missing updated building placement token: ${token}`);
 }
 const lobby = read('src/game/scenes/MainLobbyScene.ts');
-for (const token of ['baseShadow', 'fitImageToBox', 'visualWidth', 'building.assetKey']) {
+for (const token of ['baseShadow', 'fitImageToBox', 'visualWidth', 'building.assetKey', 'premiumStage']) {
   if (!lobby.includes(token)) throw new Error(`MainLobbyScene missing true-building presentation token: ${token}`);
 }
 const manifest = read('src/game/data/assetManifest.ts');
@@ -48,7 +48,7 @@ for (const token of [`CARDVILLE_ASSET_VERSION = '${pkg.version}'`, 'dioramaCastl
   if (!manifest.includes(token)) throw new Error(`assetManifest missing building token: ${token}`);
 }
 const readme = read('README.md');
-for (const token of [`# CardVille ${pkg.version}`, `## ${pkg.version} 업데이트 내역`, '마을 건물 에셋 패스', 'check:building-assets']) {
+for (const token of [`# CardVille ${pkg.version}`, `## ${pkg.version} 업데이트 내역`, '마을 건물', 'check:building-assets']) {
   if (!readme.includes(token)) throw new Error(`README missing building-asset token: ${token}`);
 }
 const handoff = read('AI_HANDOFF_CARDVILLE.md');

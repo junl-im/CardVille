@@ -1,4 +1,4 @@
-export const LOBBY_LAYOUT_PLAN_VERSION = '1.0.49' as const;
+export const LOBBY_LAYOUT_PLAN_VERSION = '1.0.50' as const;
 
 export type LobbySafeZone = {
   id: string;
@@ -34,13 +34,15 @@ export const LOBBY_DESIGN_CHECKS = [
   'double taps should not trigger duplicate scene navigation',
   'motion-reduced users keep readable static scene without flashing shake',
   'premium buildings use visualWidth/visualHeight and fitImageToBox to prevent squashed art',
-  'new merchant and town cat NPCs must remain large enough to read but outside bottom HUD'
+  'new merchant and town cat NPCs must remain large enough to read but outside bottom HUD',
+  '1.0.50 village buildings render larger with readable premium stage shadows and no empty texture feel',
+  'village-readable-building-scale-v150'
 ] as const;
 
 
 export const LOBBY_PREMIUM_VISUAL_FIT_AUDIT = [
   'building_castle/library/lab/shop/school/forest/event/harbor/plaza are square 1254 PNG cutouts after 1.0.46',
-  '1.0.49 renders those square assets with fitImageToBox instead of setDisplaySize(width,height) stretch',
+  '1.0.50 renders those square assets with fitImageToBox instead of setDisplaySize(width,height) stretch',
   'bottom row nameplates stay above y=746 bottom hint safe zone',
   'event READY badge is offset inward so READY n does not collide with forest/harbor chips',
   'npc_merchant and npc_town_cat use aspect-fit readable sizes after premium asset import'
@@ -53,7 +55,7 @@ export function rectsOverlap(a: { x: number; y: number; width: number; height: n
 }
 
 export const LOBBY_VISIBLE_ASSET_ROUTE_AUDIT = [
-  '1.0.49 keeps premium lobby assets self-contained in patch ZIPs',
+  '1.0.50 keeps premium lobby assets self-contained in patch ZIPs',
   'IntroLoadingScene loads public assets with BASE_URL and CARDVILLE_ASSET_VERSION cache busting',
   'GameButton defaults to premium vector CTA styling instead of old baked button skins'
 ] as const;

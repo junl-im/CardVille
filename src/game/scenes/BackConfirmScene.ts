@@ -3,6 +3,7 @@ import { addFullBleedShade, applyResponsiveCamera } from '../systems/LayoutSyste
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
+import { BackButtonSystem } from '../systems/BackButtonSystem';
 
 const GAME_SCENES = [
   'IntroLoadingScene',
@@ -35,15 +36,15 @@ export class BackConfirmScene extends Phaser.Scene {
     this.add.text(
       195,
       357,
-      '휴대폰 뒤로가기를 한 번 더 누르면 나가기를 시도합니다. 진행 중인 게스트 데이터는 기기에 저장돼요.',
+      '브라우저가 닫기를 막아도 게임 화면이 멈추지 않도록 첫 화면/계속하기로 안전 복구됩니다.',
       { ...applyWrap(bodyText(14), 286), lineSpacing: 6 }
     ).setOrigin(0.5);
 
     new GameButton(this, 195, 438, '첫 화면가기', 282, 60, 0xffd86f).onClick(() => this.goFirstScreen());
-    new GameButton(this, 195, 510, '나가기', 282, 58, 0xff9ab1).onClick(() => this.requestExit());
+    new GameButton(this, 195, 510, '나가기 시도', 282, 58, 0xff9ab1).onClick(() => this.requestExit());
     new GameButton(this, 195, 580, '계속하기', 282, 52, 0x9fe7ff).onClick(() => this.closePopup());
 
-    this.add.text(195, 642, '브라우저 정책상 창 닫기가 막히면 이전 페이지로 이동합니다.', mutedText(12)).setOrigin(0.5);
+    this.add.text(195, 642, '닫기가 막혀도 자동 복구 안내가 뜹니다.', mutedText(12)).setOrigin(0.5);
     this.add.text(195, 272, 'CardVille', goldText(16)).setOrigin(0.5);
   }
 
@@ -61,17 +62,10 @@ export class BackConfirmScene extends Phaser.Scene {
   requestExit(): void {
     if (this.exiting) return;
     this.exiting = true;
-    this.add.text(195, 686, '나가는 중...', mutedText(13)).setOrigin(0.5);
-    try { window.close(); } catch (error) { console.warn('[CardVille] window.close failed', error); }
-    this.time.delayedCall(180, () => {
-      if (window.closed) return;
-      try {
-        if (window.history.length > 1) window.history.back();
-        else window.location.href = 'about:blank';
-      } catch (error) {
-        console.warn('[CardVille] fallback exit failed', error);
-        window.location.href = 'about:blank';
-      }
+    this.add.text(195, 686, '나가기 시도 중... 막히면 자동 복구돼요.', mutedText(13)).setOrigin(0.5);
+    BackButtonSystem.requestExit();
+    this.time.delayedCall(80, () => {
+      if (this.scene.isActive()) this.scene.stop();
     });
   }
 }

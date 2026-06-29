@@ -45,6 +45,8 @@ const lobby = mustContain('src/game/scenes/MainLobbyScene.ts', [
   'visualHeight = building.visualHeight',
   'uiDoorLight',
   'contactGlow',
+  'premiumStage',
+  'VILLAGE_VISIBLE_BUILDING_SCALE_TAG',
   'this.fitImageToBox(this.add.image(npc.x, npc.y, npc.key), npc.width, npc.height)'
 ]);
 mustContain('src/game/data/lobbyLayoutPlan.ts', [
@@ -52,7 +54,7 @@ mustContain('src/game/data/lobbyLayoutPlan.ts', [
   'LOBBY_PREMIUM_VISUAL_FIT_AUDIT',
   'fitImageToBox instead of setDisplaySize(width,height) stretch',
   'bottom row nameplates stay above y=746',
-  'npc_merchant and npc_town_cat use aspect-fit readable sizes'
+  'npc_merchant and npc_town_cat use aspect-fit readable sizes', 'village-readable-building-scale-v150'
 ]);
 mustContain('src/game/data/lobbyEntities.ts', [
   "npcMerchant', x: 124, y: 557, width: 42, height: 62",
@@ -76,7 +78,7 @@ for (const [id, block] of blocks.map((match) => [match[1], match[0]])) {
   if (visualWidth !== undefined && Math.abs(visualWidth - visualHeight) > 8) {
     throw new Error(`Premium square building should render near-square to avoid squashing: ${id} ${visualWidth}x${visualHeight}`);
   }
-  if (visualWidth !== undefined && (visualWidth < 108 || visualWidth > 168)) throw new Error(`Unexpected visualWidth for ${id}: ${visualWidth}`);
+  if (visualWidth !== undefined && (visualWidth < 108 || visualWidth > 196)) throw new Error(`Unexpected visualWidth for ${id}: ${visualWidth}`);
   const touchOffsetY = getNum(block, 'touchOffsetY') ?? 0;
   const zoneY = y + touchOffsetY;
   if (x - touchWidth / 2 < 16 || x + touchWidth / 2 > 374 || zoneY - touchHeight / 2 < 98 || zoneY + touchHeight / 2 > 738) {

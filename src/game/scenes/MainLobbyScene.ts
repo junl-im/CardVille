@@ -16,9 +16,10 @@ import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 import { AccessibilitySystem } from '../systems/AccessibilitySystem';
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
-const LOBBY_VERSION = '1.0.49';
+const LOBBY_VERSION = '1.0.50';
 const MISSION_TONE_COLORS = { gold: 0xffd86f, blue: 0x8fd3ff, purple: 0xd7a5ff, green: 0xa9f5b5, coral: 0xffb39a } as const;
 const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-visible-v149' as const;
+const VILLAGE_VISIBLE_BUILDING_SCALE_TAG = 'village-readable-building-scale-v150' as const;
 const HERO_HOME = { x: 195, y: 545 } as const;
 const CAT_HOME = { x: 145, y: 585 } as const;
 
@@ -203,6 +204,9 @@ export class MainLobbyScene extends Phaser.Scene {
     container.add(baseShadow);
     const contactGlow = this.add.ellipse(0, (building.shadowY ?? visualHeight * 0.39) - 4, visualWidth * 0.72, Math.max(12, visualHeight * 0.10), building.open ? 0xffd86f : 0x8fd3ff, building.open ? 0.08 : 0.04);
     container.add(contactGlow);
+    const premiumStage = this.add.ellipse(0, visualHeight * 0.38, visualWidth * 0.98, Math.max(24, visualHeight * 0.19), 0xfff0c2, building.open ? 0.12 : 0.06);
+    premiumStage.setStrokeStyle(1, building.open ? 0xffd86f : 0xffffff, building.open ? 0.22 : 0.10);
+    container.add(premiumStage);
 
     const image = this.textures.exists(building.assetKey)
       ? this.fitImageToBox(this.add.image(0, 0, building.assetKey), visualWidth, visualHeight)
@@ -379,7 +383,7 @@ export class MainLobbyScene extends Phaser.Scene {
       '건물/오브젝트: 개별 PNG/WebP',
       `성능 모드: ${qualitySummary(this.quality)}`,
       `접근성: ${AccessibilitySystem.summary()}`,
-      `배치 플랜: ${LOBBY_LAYOUT_PLAN_VERSION} · ${PREMIUM_LOBBY_FIT_TAG}`
+      `배치 플랜: ${LOBBY_LAYOUT_PLAN_VERSION} · ${PREMIUM_LOBBY_FIT_TAG} · ${VILLAGE_VISIBLE_BUILDING_SCALE_TAG}`
     ];
     lines.forEach((line, index) => {
       panel.add(this.add.text(-126, -48 + index * 18, `• ${line}`, mutedText(10)).setOrigin(0, 0.5));

@@ -65,7 +65,7 @@ for (const forbidden of ['uiRewardPopupPremium', 'buildingTavernPremium', 'ui_re
 for (const token of [`# CardVille ${pkg.version}`, `## ${pkg.version} 업데이트 내역`, 'PremiumAAA 선별 에셋 적용', '텍스트 박힘 보상 팝업은 보류', 'check:premium-asset-select']) {
   if (!read('README.md').includes(token)) throw new Error(`README missing selected PremiumAAA token: ${token}`);
 }
-for (const token of [`현재 기준 버전은 ${pkg.version}`, '1.0.49 PremiumAAA 선별 에셋 적용 패스', 'tavern 건물은 키즈/교육 톤과 역할이 맞지 않아 보류']) {
+for (const token of [`현재 기준 버전은 ${pkg.version}`, 'PremiumAAA 선별 에셋 적용 패스', 'tavern 건물은 키즈/교육 톤과 역할이 맞지 않아 보류']) {
   if (!read('AI_HANDOFF_CARDVILLE.md').includes(token)) throw new Error(`AI handoff missing selected PremiumAAA token: ${token}`);
 }
 if (pkg.scripts?.['check:premium-asset-select'] !== 'node tools/check-premium-asset-select.mjs') throw new Error('check:premium-asset-select script mismatch');

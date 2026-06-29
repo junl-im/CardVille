@@ -4,11 +4,37 @@
 CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고, 그다음 실제 코드를 확인하세요.
 
 
-## 현재 작업 기준: 1.0.49
+## 현재 작업 기준: 1.0.50
 
-현재 기준 버전은 1.0.49입니다.  
-이번 버전은 1.0.48 마을 이미지 표시/버튼 프리미엄 복구본을 기준으로, 새 PremiumAAA 에셋 묶음에서 역할과 정책에 맞는 자산만 선별해 적용한 패스입니다.
+현재 기준 버전은 1.0.50입니다.  
+이번 버전은 1.0.49 PremiumAAA 선별 에셋 적용본을 기준으로, 나가기 버튼 멈춤 가능성과 마을 건물 가독성 문제를 먼저 복구한 긴급 안정화 패스입니다.
 
+
+### 1.0.50 나가기/마을 비주얼 긴급 복구 패스
+
+- 사용자 피드백:
+  - “나가기 버튼 눌러도 별반응없고 오히려 멈추는 것 같다.”
+  - “마을 건물 이쁜 이미지 에셋이 더 잘 보여야 한다.”
+- 원인 판단:
+  - DOM 뒤로가기 확인창과 Phaser `BackConfirmScene` fallback이 동시에 남을 수 있었습니다.
+  - `window.close()`는 대부분의 모바일 브라우저에서 차단되므로, 기존 `나가는 중...` 상태가 복구 안내 없이 화면을 막아 멈춘 것처럼 보일 수 있었습니다.
+  - 새 마을 건물은 고해상도지만 로비 내 렌더 크기가 작아 체감상 이미지가 없는 것처럼 약하게 보일 수 있었습니다.
+- 수정:
+  - `BackButtonSystem`에 `CARDVILLE_EXIT_FLOW_TAG = exit-no-freeze-v150` 추가
+  - DOM 오버레이가 정상 생성되면 `BackConfirmScene` fallback을 남기지 않도록 `stopSceneFallback()` 추가
+  - 브라우저가 닫기를 막으면 `showExitBlockedRecovery()` 복구 오버레이 표시
+  - `BackConfirmScene.requestExit()`를 `BackButtonSystem.requestExit()`로 통합
+  - `GAME_SCENES` 정리 대상에 `EnglishSchoolScene`, `DailyMissionScene` 포함
+  - `diorama_bg.png`를 1080×1920 프리미엄 마을 배경으로 재생성
+  - 9개 건물의 `visualWidth/visualHeight`를 확대하고 `premiumStage` 접지 패널 추가
+  - `VILLAGE_VISIBLE_BUILDING_SCALE_TAG = village-readable-building-scale-v150` 추가
+- 검증:
+  - `tools/check-exit-flow.mjs` 추가
+  - `tools/check-village-visuals.mjs` 추가
+  - `npm run verify`에 `check:exit-flow`, `check:village-visuals` 포함
+- 패치 정책:
+  - 1.0.50 패치 ZIP은 마을 건물 PNG/WebP와 배경 에셋을 포함하는 self-contained 안정형 패치로 구성해야 합니다.
+- 신규 문서 파일은 생성하지 않았습니다.
 
 ### 1.0.49 PremiumAAA 선별 에셋 적용 패스
 

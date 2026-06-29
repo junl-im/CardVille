@@ -9,12 +9,16 @@ const GAME_SCENES = [
   'PlayScene',
   'MathLabScene',
   'MemoryForestScene',
+  'EnglishSchoolScene',
   'ResultScene',
   'RewardScene',
   'CollectionScene',
   'ShopScene',
+  'DailyMissionScene',
   'BackConfirmScene'
 ];
+
+export const CARDVILLE_EXIT_FLOW_TAG = 'exit-no-freeze-v150' as const;
 
 export class BackButtonSystem {
   private static installed = false;
@@ -23,6 +27,7 @@ export class BackButtonSystem {
   private static exitRequested = false;
   private static lastArmAt = 0;
   private static lastBackAt = 0;
+  private static exitFallbackTimer?: number;
 
   static install(game: Phaser.Game): void {
     if (this.installed || typeof window === 'undefined') return;
@@ -38,7 +43,6 @@ export class BackButtonSystem {
     window.addEventListener('popstate', handleBack, { capture: true });
     window.addEventListener('hashchange', handleBack, { capture: true });
 
-    // Some mobile webviews arm history more reliably after the first user gesture.
     const rearm = () => BackButtonSystem.primeHistoryGuard('user-gesture');
     window.addEventListener('pointerdown', rearm, { passive: true });
     window.addEventListener('touchstart', rearm, { passive: true });
@@ -63,7 +67,6 @@ export class BackButtonSystem {
       BackButtonSystem.requestExit();
       return;
     }
-    // Debounce duplicate popstate/hashchange events from the same hardware-back tap.
     if (now - BackButtonSystem.lastBackAt < 120) return;
     BackButtonSystem.lastBackAt = now;
     BackButtonSystem.primeHistoryGuard('before-overlay');
@@ -79,8 +82,6 @@ export class BackButtonSystem {
     try {
       const state = typeof history.state === 'object' && history.state ? history.state : {};
       history.replaceState({ ...state, cardvilleRoot: true, cardvilleBackGuard: true }, '', window.location.href);
-      // Keep two same-url guards. Android/Kakao hardware back consumes one guard,
-      // then popstate shows our custom overlay instead of leaving immediately.
       history.pushState({ cardvilleBackGuard: true, reason, layer: 1, t: now }, '', window.location.href);
       history.pushState({ cardvilleBackGuard: true, reason, layer: 2, t: now + 1 }, '', window.location.href);
     } catch (error) {
@@ -100,6 +101,7 @@ export class BackButtonSystem {
     overlay.setAttribute('role', 'dialog');
     overlay.setAttribute('aria-modal', 'true');
     overlay.setAttribute('data-cardville-back-overlay-v121', 'true');
+    overlay.setAttribute('data-cardville-back-overlay-v150', 'true');
     Object.assign(overlay.style, {
       position: 'fixed',
       inset: '0',
@@ -115,6 +117,29 @@ export class BackButtonSystem {
       boxSizing: 'border-box'
     });
 
+    const box = this.makeOverlayBox('잠깐! 게임을 나갈까요?', '첫 화면으로 돌아가거나 계속할 수 있어요. 브라우저 정책상 직접 닫기가 막히면 안전 안내로 돌아옵니다.');
+    box.appendChild(this.makeOverlayButton('첫 화면가기', '#ffd86f', () => this.goFirstScreen()));
+    box.appendChild(this.makeOverlayButton('계속하기', '#9fe7ff', () => this.closeOverlay()));
+    box.appendChild(this.makeOverlayButton('나가기 시도', '#ff9ab1', () => this.requestExit()));
+
+    const note = document.createElement('div');
+    note.textContent = '닫기가 막혀도 화면을 막은 채 멈추지 않도록 자동 복구합니다.';
+    Object.assign(note.style, { marginTop: '12px', fontSize: '11px', color: 'rgba(230,244,255,.72)', fontWeight: '800' });
+    box.appendChild(note);
+
+    overlay.appendChild(box);
+    try {
+      document.body.appendChild(overlay);
+      this.overlay = overlay;
+      this.stopSceneFallback();
+      this.primeHistoryGuard('overlay-open');
+    } catch (error) {
+      console.warn('[CardVille] DOM back overlay failed; using scene fallback', error);
+      this.launchSceneFallback();
+    }
+  }
+
+  private static makeOverlayBox(titleText: string, descText: string): HTMLDivElement {
     const box = document.createElement('div');
     Object.assign(box.style, {
       width: 'min(344px, 90vw)',
@@ -128,29 +153,15 @@ export class BackButtonSystem {
     });
 
     const title = document.createElement('div');
-    title.textContent = '잠깐! 게임을 나갈까요?';
+    title.textContent = titleText;
     Object.assign(title.style, { fontSize: '25px', fontWeight: '1000', letterSpacing: '-.06em', textShadow: '0 3px 10px rgba(0,0,0,.5)' });
     box.appendChild(title);
 
     const desc = document.createElement('div');
-    desc.textContent = '첫 화면으로 돌아가거나 계속할 수 있어요. 이 창이 열린 상태에서 뒤로가기를 한 번 더 누르면 나가기를 시도합니다.';
-    Object.assign(desc.style, { margin: '12px auto 16px', maxWidth: '290px', fontSize: '14px', lineHeight: '1.45', color: 'rgba(230,244,255,.92)', fontWeight: '800' });
+    desc.textContent = descText;
+    Object.assign(desc.style, { margin: '12px auto 16px', maxWidth: '292px', fontSize: '14px', lineHeight: '1.45', color: 'rgba(230,244,255,.92)', fontWeight: '800' });
     box.appendChild(desc);
-
-    box.appendChild(this.makeOverlayButton('첫 화면가기', '#ffd86f', () => this.goFirstScreen()));
-    box.appendChild(this.makeOverlayButton('계속하기', '#9fe7ff', () => this.closeOverlay()));
-    box.appendChild(this.makeOverlayButton('나가기', '#ff9ab1', () => this.requestExit()));
-
-    const note = document.createElement('div');
-    note.textContent = '브라우저 정책상 창 닫기가 막히면 이전 페이지로 이동합니다.';
-    Object.assign(note.style, { marginTop: '12px', fontSize: '11px', color: 'rgba(230,244,255,.70)', fontWeight: '800' });
-    box.appendChild(note);
-
-    overlay.appendChild(box);
-    document.body.appendChild(overlay);
-    this.overlay = overlay;
-    this.primeHistoryGuard('overlay-open');
-    this.launchSceneFallback();
+    return box;
   }
 
   private static makeOverlayButton(label: string, color: string, action: () => void): HTMLButtonElement {
@@ -162,13 +173,13 @@ export class BackButtonSystem {
       height: '54px',
       margin: '5px 0',
       borderRadius: '20px',
-      border: '2px solid rgba(255,255,255,.72)',
-      background: `linear-gradient(180deg, #fff8d8, ${color})`,
+      border: '2px solid rgba(255,255,255,.78)',
+      background: `linear-gradient(180deg, #fff8d8 0%, ${color} 72%, #d8842f 100%)`,
       color: '#3f210f',
       fontSize: '17px',
       fontWeight: '1000',
       letterSpacing: '-.05em',
-      boxShadow: '0 8px 0 rgba(63,31,9,.38)',
+      boxShadow: '0 8px 0 rgba(63,31,9,.34), 0 16px 30px rgba(0,0,0,.24)',
       cursor: 'pointer'
     });
     button.addEventListener('click', (event) => {
@@ -192,16 +203,30 @@ export class BackButtonSystem {
     }
   }
 
-  private static closeOverlay(): void {
-    this.overlay?.remove();
-    this.overlay = undefined;
+  private static stopSceneFallback(): void {
     try {
       if (this.game?.scene.isActive('BackConfirmScene')) this.game.scene.stop('BackConfirmScene');
     } catch { /* ignore */ }
+  }
+
+  private static closeOverlay(): void {
+    if (this.exitFallbackTimer !== undefined) {
+      window.clearTimeout(this.exitFallbackTimer);
+      this.exitFallbackTimer = undefined;
+    }
+    this.exitRequested = false;
+    this.overlay?.remove();
+    this.overlay = undefined;
+    this.stopSceneFallback();
     this.primeHistoryGuard('close-overlay');
   }
 
   private static goFirstScreen(): void {
+    if (this.exitFallbackTimer !== undefined) {
+      window.clearTimeout(this.exitFallbackTimer);
+      this.exitFallbackTimer = undefined;
+    }
+    this.exitRequested = false;
     this.overlay?.remove();
     this.overlay = undefined;
     const currentGame = this.game;
@@ -223,16 +248,46 @@ export class BackButtonSystem {
     this.exitRequested = true;
     this.overlay?.remove();
     this.overlay = undefined;
+    this.stopSceneFallback();
     try { window.close(); } catch (error) { console.warn('[CardVille] window.close failed', error); }
-    window.setTimeout(() => {
-      try {
-        if (window.closed) return;
-        if (window.history.length > 1) window.history.go(-Math.min(4, window.history.length - 1));
-        else window.location.href = 'about:blank';
-      } catch (error) {
-        console.warn('[CardVille] fallback exit failed', error);
-        window.location.href = 'about:blank';
-      }
-    }, 160);
+    try {
+      if (window.history.length > 1) window.history.back();
+    } catch (error) {
+      console.warn('[CardVille] history back exit failed', error);
+    }
+    this.exitFallbackTimer = window.setTimeout(() => this.showExitBlockedRecovery(), 900);
+  }
+
+  private static showExitBlockedRecovery(): void {
+    this.exitFallbackTimer = undefined;
+    if (typeof window !== 'undefined' && window.closed) return;
+    this.exitRequested = false;
+    this.stopSceneFallback();
+    if (typeof document === 'undefined') {
+      this.goFirstScreen();
+      return;
+    }
+    this.overlay?.remove();
+    const overlay = document.createElement('div');
+    overlay.id = 'cardville-back-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('data-cardville-exit-blocked-v150', 'true');
+    Object.assign(overlay.style, {
+      position: 'fixed', inset: '0', zIndex: '2147483647', display: 'grid', placeItems: 'center', background: 'rgba(2, 8, 20, 0.80)', color: '#fff',
+      fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", touchAction: 'none', pointerEvents: 'auto', padding: '18px', boxSizing: 'border-box'
+    });
+    const box = this.makeOverlayBox('브라우저가 닫기를 막았어요', '게임은 멈춘 것이 아니에요. 첫 화면으로 돌아가거나 계속 플레이할 수 있습니다.');
+    box.appendChild(this.makeOverlayButton('첫 화면가기', '#ffd86f', () => this.goFirstScreen()));
+    box.appendChild(this.makeOverlayButton('계속하기', '#9fe7ff', () => this.closeOverlay()));
+    box.appendChild(this.makeOverlayButton('빈 페이지로 이동', '#ff9ab1', () => {
+      this.exitRequested = true;
+      this.overlay?.remove();
+      this.overlay = undefined;
+      try { window.location.replace('about:blank'); } catch { window.location.href = 'about:blank'; }
+    }));
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+    this.overlay = overlay;
   }
 }
