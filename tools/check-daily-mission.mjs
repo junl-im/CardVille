@@ -21,6 +21,8 @@ function must(file, tokens) {
 must('src/game/systems/DailyMissionSystem.ts', [
   'DAILY_MISSION_KEY',
   'cardville.dailyMission.v141',
+  'DAILY_MISSION_STREAK_VERSION',
+  'v142-streak-weekly',
   'DAILY_MISSIONS',
   'clear_word',
   'clear_english',
@@ -37,7 +39,8 @@ must('src/game/scenes/DailyMissionScene.ts', [
   'DailyMissionScene',
   '오늘의 미션',
   '출석 보상 READY',
-  'daily_mission_board_v141',
+  'daily_mission_board_v142',
+  'drawStreakWeekly',
   'claimAttendance',
   'claimMission'
 ]);
@@ -54,7 +57,7 @@ must('src/game/data/modeCatalog.ts', [
 
 must('src/main.ts', [
   'DailyMissionScene',
-  '1.0.41 daily mission attendance loop'
+  '1.0.42 streak weekly mission loop'
 ]);
 
 must('src/game/scenes/RewardScene.ts', [

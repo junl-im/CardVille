@@ -1,7 +1,41 @@
-# CardVille 1.0.41
+# CardVille 1.0.42
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
+
+## 1.0.42 업데이트 내역
+
+- **무에셋 연속 출석/주간 미션 루프 패스**를 진행했습니다.
+- 새 이미지 에셋은 아직 준비 전이므로 기존 에셋과 벡터 UI만 사용했습니다.
+- 기존 `cardville.dailyMission.v141` 저장 키는 유지했습니다.
+  - 기존 사용자 일일 미션 데이터를 갑자기 끊지 않기 위해 저장소 이름은 유지합니다.
+  - 내부 스키마 표식으로 `v142-streak-weekly`를 추가했습니다.
+- `src/game/systems/DailyMissionSystem.ts`를 확장했습니다.
+  - `streakDays`, `bestStreakDays`, `lastAttendanceToken` 추가
+  - `weeklyToken`, `weeklyProgress`, `weeklyTarget`, `weeklyReady`, `weeklyClaimed`, `weeklyCompletionRatio` 추가
+  - `claimWeeklyReward()` 추가
+  - 출석 보상 코인을 연속 출석에 따라 소폭 증가하도록 변경
+  - 출석/미션 보상 수령 시 주간 목표 게이지가 함께 채워지도록 연결
+- `src/game/scenes/DailyMissionScene.ts`를 개선했습니다.
+  - 오늘 진행도 위아래 배치를 재정리해 390×844 하단 버튼과 겹치지 않게 조정
+  - 연속 출석/최고 연속 출석 표시 추가
+  - 주간 보상 게이지와 `주간 수령` 버튼 추가
+  - 고양이 코치 말풍선을 `daily_mission_board_v142`로 갱신
+- `tools/check-weekly-mission.mjs`와 `npm run check:weekly-mission`을 추가했습니다.
+  - 연속 출석 필드
+  - 주간 미션 필드
+  - 주간 보상 수령 API
+  - 일일 미션 장면 UI 토큰
+  - README/AI_HANDOFF 기록 동기화
+  - 버전 동기화를 검증합니다.
+- `tools/check-daily-mission.mjs`도 1.0.42 구조에 맞게 보강했습니다.
+- `npm run verify`에 `check:weekly-mission`을 포함했습니다.
+- 1.0.39에서 잡은 패치 표면 완전성 규칙을 유지합니다.
+- 신규 이미지 에셋은 추가하지 않았습니다.
+- 신규 문서 파일은 만들지 않고, 변경 내역은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 누적했습니다.
+- 삭제 파일은 없습니다.
+- `package.json`, `public/build.json`, `health.html`, `reset.html`, `index.html`, 앱 내부 버전 표기를 1.0.42로 동기화했습니다.
+- `npm run verify` 전체 통과 기준으로 확정했습니다.
 
 ## 1.0.41 업데이트 내역
 
