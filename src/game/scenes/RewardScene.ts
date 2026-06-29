@@ -101,6 +101,13 @@ export class RewardScene extends Phaser.Scene {
     return 'assetPackCommon';
   }
 
+  private chestKey(): string {
+    if (this.reward.rarity === 'legendary') return 'chestLegendaryPremium';
+    if (this.reward.rarity === 'epic') return 'chestEpicPremium';
+    if (this.reward.rarity === 'rare') return 'chestRarePremium';
+    return 'chestCommonPremium';
+  }
+
   private packBurstKey(): string {
     if (this.reward.rarity === 'legendary') return 'effectPackBurstLegendary';
     if (this.reward.rarity === 'epic') return 'effectPackBurstEpic';
@@ -174,7 +181,11 @@ export class RewardScene extends Phaser.Scene {
     DailyMissionSystem.recordPackOpen();
     if (this.source === 'game') DailyMissionSystem.recordModeClear(this.modeId);
 
+    if (this.textures.exists('uiResultRibbon')) this.add.image(195, 196, 'uiResultRibbon').setDisplaySize(236, 66).setAlpha(0.82);
+    if (this.textures.exists('uiResultStars')) this.add.image(195, 350, 'uiResultStars').setDisplaySize(300, 150).setAlpha(0.16);
     this.add.text(195, 210, `${meta.label} 카드 획득!`, goldText(18)).setOrigin(0.5);
+    const chestKey = this.chestKey();
+    if (this.textures.exists(chestKey)) this.add.image(308, 220, chestKey).setDisplaySize(58, 48).setAlpha(0.82);
     const burstKey = this.packBurstKey();
     if (this.textures.exists(burstKey)) this.add.image(195, 356, burstKey).setDisplaySize(254, 254).setAlpha(0.38);
     this.drawRewardCard(195, 356, 172, 206, this.reward.icon, this.reward.id, meta.color, meta.label, this.reward.rarity);

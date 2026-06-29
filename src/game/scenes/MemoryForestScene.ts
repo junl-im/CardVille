@@ -109,8 +109,8 @@ export class MemoryForestScene extends Phaser.Scene {
     const labelY = h / 2 - 14;
     const face = this.add.text(0, h <= 70 ? -10 : -14, pair.icon, { fontSize: `${iconSize}px` }).setOrigin(0.5);
     const label = this.add.text(0, labelY, pair.label, cardSmallText(h <= 70 ? 8 : 10)).setOrigin(0.5);
-    const back = this.textures.exists('assetCardBackCrown')
-      ? this.add.image(0, 0, 'assetCardBackCrown').setDisplaySize(w + 4, h + 6)
+    const back = this.textures.exists('cardBackMemoryPremium')
+      ? this.add.image(0, 0, 'cardBackMemoryPremium').setDisplaySize(w + 4, h + 8)
       : undefined;
     if (back) back.setVisible(false);
     container.add([shadow, front, face, label]);

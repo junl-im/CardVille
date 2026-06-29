@@ -52,6 +52,8 @@ export class ModeSelectScene extends Phaser.Scene {
       this.add.text(304, y - 28, '추천', goldText(10)).setOrigin(0.5);
     }
     const open = mode.status === 'open';
+    const illustrationKey = this.modeIllustrationKey(mode.id);
+    if (illustrationKey && this.textures.exists(illustrationKey)) this.add.image(70, y + 2, illustrationKey).setDisplaySize(72, 52).setAlpha(open ? 0.30 : 0.14).setName('mode-illustration-v151');
     if (this.textures.exists(mode.iconKey)) this.add.image(68, y, mode.iconKey).setDisplaySize(44, 44).setAlpha(open ? 1 : 0.58);
     else this.add.text(68, y, mode.fallbackIcon, { fontSize: '34px' }).setOrigin(0.5).setAlpha(open ? 1 : 0.58);
     this.add.text(114, y - 17, mode.title, bodyText(20)).setOrigin(0, 0.5).setAlpha(open ? 1 : 0.62);
@@ -66,6 +68,13 @@ export class ModeSelectScene extends Phaser.Scene {
       else this.showPlannedToast(mode);
     });
     if (hasTouchDebug()) this.add.rectangle(195, y, 334, 86, 0x00ff66, 0.09).setStrokeStyle(1, 0x00ff66, 0.7);
+  }
+
+  private modeIllustrationKey(modeId: GameModeId): string {
+    if (modeId === 'word') return 'illuLibraryCorner';
+    if (modeId === 'math') return 'illuMathLabCorner';
+    if (modeId === 'memory') return 'illuMemoryForestCorner';
+    return '';
   }
 
   private modeProgressSummary(mode: GameMode): { badge: string; copy: string } {

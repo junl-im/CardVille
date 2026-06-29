@@ -1,11 +1,11 @@
 {
-  "name": "CardVille 1.0.50 Exit and Village Visual Guard",
-  "version": "1.0.50",
+  "name": "CardVille 1.0.51 Exit and Village Visual Guard",
+  "version": "1.0.51",
   "mode": "exit-no-freeze-v150-village-readable-buildings",
   "svg": "disabled",
   "pwa": "disabled",
   "notes": "Back/exit flows recover when browser close is blocked; premium village background and building assets are included self-contained with readable visual sizing.",
   "label": "Exit no-freeze + readable premium village",
   "description": "Fixes blocked exit/no-response cases and makes premium village building imagery more visible with self-contained assets and enlarged fit boxes.",
-  "assetVersion": "1.0.50"
+  "assetVersion": "1.0.51"
 }

@@ -423,8 +423,9 @@ export class PlayScene extends Phaser.Scene {
     g.fillStyle(0x000000, 0.24);
     g.fillRoundedRect(x - w / 2 + 4, y - h / 2 + 8, w, h, 16);
     layer.add(g);
-    if (this.textures.exists('assetCardBackStar')) {
-      const back = this.add.image(x, y, 'assetCardBackStar').setDisplaySize(w, h);
+    const backKey = this.textures.exists('cardBackLibraryPremium') ? 'cardBackLibraryPremium' : this.textures.exists('assetCardBackStar') ? 'assetCardBackStar' : '';
+    if (backKey) {
+      const back = this.add.image(x, y, backKey).setDisplaySize(w, h);
       layer.add(back);
     } else {
       const card = this.add.graphics();

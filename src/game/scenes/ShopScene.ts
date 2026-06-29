@@ -93,6 +93,7 @@ export class ShopScene extends Phaser.Scene {
     const lastOffer = SaveSystem.getLastShopOffer();
 
     DrawSystem.background(this, '카드팩 상점');
+    this.drawShopInteriorBackdrop();
     DrawSystem.topHud(this, profile.coins, profile.level);
     panel(this, 195, 420, 340, 572, 34);
     this.drawPremiumShopAccents();
@@ -110,6 +111,13 @@ export class ShopScene extends Phaser.Scene {
     this.showShopCoach(daily.canClaim);
   }
 
+
+  private drawShopInteriorBackdrop(): void {
+    if (!this.textures.exists('bgShopInteriorPremium')) return;
+    const bg = this.add.image(195, 434, 'bgShopInteriorPremium').setDisplaySize(390, 292).setAlpha(0.22).setDepth(0);
+    bg.setName('shop-interior-backdrop-v151');
+    this.add.rectangle(195, 434, 390, 292, 0x020814, 0.28).setDepth(0);
+  }
 
   private drawPremiumShopAccents(): void {
     if (this.textures.exists('dioramaShop')) {
@@ -135,8 +143,12 @@ export class ShopScene extends Phaser.Scene {
 
   private drawCurrencyStrip(coins: number, gems: number, dailyText: string): void {
     this.add.rectangle(195, 166, 318, 42, 0x07142c, 0.58).setStrokeStyle(1, 0xffffff, 0.2);
-    this.add.text(60, 166, `🪙 ${coins}`, goldText(12)).setOrigin(0, 0.5);
-    this.add.text(156, 166, `💎 ${gems}`, goldText(12)).setOrigin(0, 0.5);
+    if (this.textures.exists('iconCoinPremium')) this.add.image(60, 166, 'iconCoinPremium').setDisplaySize(23, 23);
+    else this.add.text(60, 166, '🪙', goldText(12)).setOrigin(0.5);
+    this.add.text(76, 166, `${coins}`, goldText(12)).setOrigin(0, 0.5);
+    if (this.textures.exists('iconGemPremium')) this.add.image(156, 166, 'iconGemPremium').setDisplaySize(23, 23);
+    else this.add.text(156, 166, '💎', goldText(12)).setOrigin(0.5);
+    this.add.text(172, 166, `${gems}`, goldText(12)).setOrigin(0, 0.5);
     this.add.text(324, 166, `무료팩 ${dailyText}`, mutedText(10)).setOrigin(1, 0.5);
   }
 
@@ -153,10 +165,16 @@ export class ShopScene extends Phaser.Scene {
   private drawOfferCard(offer: ShopOffer, y: number, profile: ShopProfile, daily: ShopDaily, recommended: boolean): void {
     const canBuy = this.canBuy(offer, profile, daily);
     const alpha = canBuy ? 0.95 : 0.62;
-    const bg = this.add.rectangle(195, y, 316, 94, 0xfffbf1, alpha).setStrokeStyle(recommended ? 4 : 2, recommended ? 0xfff0b3 : offer.color, canBuy ? 0.94 : 0.36);
+    const frameKey = this.offerCardFrameKey(offer, recommended);
+    const bg = this.textures.exists(frameKey)
+      ? this.add.image(195, y, frameKey).setDisplaySize(324, 112).setAlpha(canBuy ? 0.94 : 0.46)
+      : this.add.rectangle(195, y, 316, 94, 0xfffbf1, alpha).setStrokeStyle(recommended ? 4 : 2, recommended ? 0xfff0b3 : offer.color, canBuy ? 0.94 : 0.36);
+    bg.setName('shop-offer-premium-frame-v151');
     if (recommended) this.add.rectangle(195, y, 324, 102, offer.color, 0.10).setStrokeStyle(2, offer.color, 0.55);
-    this.add.rectangle(77, y, 64, 68, offer.color, canBuy ? 0.22 : 0.12).setStrokeStyle(1, 0xffffff, 0.34);
-    this.add.text(77, y - 4, offer.icon, { fontSize: '30px' }).setOrigin(0.5).setAlpha(canBuy ? 1 : 0.55);
+    this.add.rectangle(77, y, 64, 68, offer.color, canBuy ? 0.16 : 0.08).setStrokeStyle(1, 0xffffff, 0.28);
+    const iconKey = this.offerIconKey(offer);
+    if (iconKey && this.textures.exists(iconKey)) this.add.image(77, y - 2, iconKey).setDisplaySize(40, 40).setAlpha(canBuy ? 1 : 0.48);
+    else this.add.text(77, y - 4, offer.icon, { fontSize: '30px' }).setOrigin(0.5).setAlpha(canBuy ? 1 : 0.55);
     this.add.text(116, y - 27, offer.title, darkText(15)).setOrigin(0, 0.5).setAlpha(canBuy ? 1 : 0.6);
     this.add.text(116, y - 4, offer.subtitle, applyWrap(bodyText(10), 150, 'left')).setOrigin(0, 0.5).setAlpha(canBuy ? 0.9 : 0.56);
     this.add.text(116, y + 20, offer.detail, applyWrap(mutedText(9), 150, 'left')).setOrigin(0, 0.5).setAlpha(canBuy ? 0.88 : 0.54);
@@ -175,6 +193,19 @@ export class ShopScene extends Phaser.Scene {
     if (allowAmbientMotion(this.quality) && canBuy && recommended) {
       this.tweens.add({ targets: bg, alpha: 0.78, duration: scaledDuration(1020, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
+  }
+
+  private offerCardFrameKey(offer: ShopOffer, recommended: boolean): string {
+    if (recommended && this.textures.exists('uiOfferCardFeatured')) return 'uiOfferCardFeatured';
+    if (offer.id === 'daily_free') return 'uiOfferCardDaily';
+    if (offer.id === 'gem_pack') return 'uiOfferCardGem';
+    return 'uiOfferCardCoin';
+  }
+
+  private offerIconKey(offer: ShopOffer): string {
+    if (offer.id === 'daily_free') return 'uiTreasureChestPremium';
+    if (offer.id === 'gem_pack') return 'iconGemPremium';
+    return 'iconCoinPremium';
   }
 
   private drawOfferBadge(x: number, y: number, offer: ShopOffer, recommended: boolean): void {

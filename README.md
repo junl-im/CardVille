@@ -1,8 +1,47 @@
-# CardVille 1.0.50
+# CardVille 1.0.51
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
 
+
+
+## 1.0.51 업데이트 내역
+
+- **FullIndividual 프리미엄 에셋 적용 패스**를 진행했습니다.
+- 업로드된 `CardVille_New_Assets_FullIndividual_1.0.47_PNG_ONLY.zip`를 분석해, 기존 1.0.50 통파일에 적용 가치가 높은 자산만 선별했습니다.
+- 적용/갱신한 자산:
+  - 상점 내부 배경 `bg_shop_interior.png`
+  - 마을 낮/밤 배경 레퍼런스 `bg_lobby_day.png`, `bg_lobby_night.png`
+  - 상점 건물 `building_shop.png` 재정리
+  - 상점 주인 `npc_shopkeeper.png` 및 `npc_merchant.png` 교체
+  - 고양이 힌트 이모션 4종 재적용
+  - 모드별 카드 뒷면 4종
+  - 상점 오퍼 카드 프레임 4종
+  - 스테이지 선택 카드 프레임 3종
+  - 희귀도별 보상 상자 4종
+  - 프리미엄 코인/보석/XP/카드더스트 아이콘 4종
+  - 상태 배지 5종
+  - 결과 리본/왕관/별 장식
+  - 도서관/연구소/숲 코너 삽화 3종
+  - 고양이 발자국 튜토리얼 포인터 2종
+- 장면 반영:
+  - `ShopScene`은 상점 내부 배경, 오퍼 카드 프레임, 프리미엄 재화 아이콘을 사용합니다.
+  - `StageSelectScene`은 모드별 스테이지 카드 프레임과 카드 뒷면을 사용합니다.
+  - `ModeSelectScene`은 도서관/연구소/숲 코너 삽화를 약한 액센트로 사용합니다.
+  - `RewardPopupSystem`과 `RewardScene`은 리본/별/왕관/희귀도별 보상 상자를 사용합니다.
+  - `PlayScene`과 `MemoryForestScene`은 프리미엄 카드 뒷면을 사용합니다.
+  - `CoachMarkSystem`은 고양이 발자국 포인터를 앵커 안내에 사용합니다.
+- 보류:
+  - `ui_reward_popup_premium.png`는 이미지 안에 `REWARDS`, `YOU RECEIVED`, `CLAIM` 텍스트가 박혀 있어 no baked text 정책과 충돌하므로 계속 보류했습니다.
+  - `building_tavern_premium.png`는 파일은 보존하지만, 현재 교육/카드마을 역할에 맞지 않아 런타임에는 연결하지 않았습니다.
+- 검증 추가:
+  - `tools/check-full-individual-assets.mjs`
+  - `npm run check:full-individual-assets`
+- `npm run verify`에 `check:full-individual-assets`를 포함했습니다.
+- `PremiumAAA 선별 에셋 적용` 정책은 유지합니다. 텍스트 박힘 보상 팝업은 보류하고, tavern 건물도 역할이 맞기 전까지 보류합니다.
+- 신규 문서 파일은 만들지 않았습니다.
+- 삭제 파일은 없습니다.
+- `node_modules`, `dist`, `package-lock.json`은 통파일 ZIP에서 제외합니다.
 
 ## 1.0.50 업데이트 내역
 

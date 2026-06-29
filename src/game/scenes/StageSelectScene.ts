@@ -58,7 +58,12 @@ export class StageSelectScene extends Phaser.Scene {
       const record = SaveSystem.getModeStageRecord(this.modeId, stage.id);
       const unlocked = SaveSystem.isModeStageUnlocked(this.modeId, stage.id);
       const recommended = unlocked && (!record?.cleared || stage.id === SaveSystem.nextPlayableModeStage(this.modeId, entries.length));
-      panel(this, 195, y, 332, 90, 26);
+      const frameKey = this.stageFrameKey();
+      if (this.textures.exists(frameKey)) {
+        this.add.image(195, y, frameKey).setDisplaySize(342, 98).setAlpha(unlocked ? 0.92 : 0.42).setName('stage-card-frame-v151');
+      } else {
+        panel(this, 195, y, 332, 90, 26);
+      }
       if (recommended) this.add.rectangle(195, y, 338, 96, 0xffd86f, 0.09).setStrokeStyle(2, 0xffd86f, 0.54);
       this.drawStageBadge(62, y, stage.id, unlocked, recommended);
       this.add.text(108, y - 25, stage.title, bodyText(17)).setOrigin(0, 0.5).setAlpha(unlocked ? 1 : 0.62);
@@ -186,12 +191,25 @@ export class StageSelectScene extends Phaser.Scene {
     this.time.delayedCall(1300, () => this.tweens.add({ targets: toast, alpha: 0, y: 610, duration: 220, onComplete: () => toast.destroy() }));
   }
 
+  private stageFrameKey(): string {
+    if (this.modeId === 'math') return 'uiStageCardMath';
+    if (this.modeId === 'memory') return 'uiStageCardMemory';
+    return 'uiStageCardWord';
+  }
+
+  private stageCardBackKey(): string {
+    if (this.modeId === 'math') return 'cardBackMathPremium';
+    if (this.modeId === 'memory') return 'cardBackMemoryPremium';
+    return 'cardBackLibraryPremium';
+  }
+
   private drawStageBadge(x: number, y: number, id: number, unlocked: boolean, recommended: boolean): void {
     const g = this.add.graphics();
     g.fillStyle(0x000000, 0.22);
     g.fillRoundedRect(x - 24, y - 28, 52, 60, 16);
-    if (unlocked && this.textures.exists('assetCardBackCrown')) {
-      this.add.image(x, y, 'assetCardBackCrown').setDisplaySize(58, 66).setAlpha(recommended ? 1 : 0.9);
+    const cardKey = this.stageCardBackKey();
+    if (unlocked && this.textures.exists(cardKey)) {
+      this.add.image(x, y, cardKey).setDisplaySize(54, 72).setAlpha(recommended ? 1 : 0.9);
     } else {
       g.fillStyle(unlocked ? 0xffd86f : 0x65708a, 1);
       g.fillRoundedRect(x - 26, y - 30, 52, 60, 16);

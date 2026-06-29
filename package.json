@@ -1,15 +1,15 @@
 {
   "name": "cardville",
-  "version": "1.0.50",
+  "version": "1.0.51",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.50 fixes blocked exit/no-freeze flows, makes premium village assets self-contained and visibly larger, and adds AAA lobby stage polish.",
+  "description": "CardVille 1.0.51 applies FullIndividual premium assets to shop, stage cards, reward popups, card backs, icons, and coach pointers with runtime checks.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "check:deploy": "node tools/check-deploy.mjs",
-    "verify": "npm run build && npm run check:village-visuals && npm run check:exit-flow && npm run check:art-direction && npm run check:applied-assets && npm run check:premium-asset-select && npm run check:premium-buttons && npm run check:asset-runtime && npm run check:deploy && npm run check:brand && npm run check:assets && npm run check:premium-assets && npm run check:building-assets && npm run check:lobby-layout && npm run check:lobby-premium-fit && npm run check:content-engine && npm run check:progression && npm run check:shop-economy && npm run check:polish && npm run check:ci-coherence && npm run check:coach && npm run check:daily-mission && npm run check:weekly-mission && npm run check:reward-popup && npm run check:accessibility && npm run check:mission-route && npm run check:ui && npm run check:ux-safety && npm run check:content-scale && npm run check:english-school && npm run check:layout && npm run check:association && npm run check:security",
+    "verify": "npm run build && npm run check:full-individual-assets && npm run check:village-visuals && npm run check:exit-flow && npm run check:art-direction && npm run check:applied-assets && npm run check:premium-asset-select && npm run check:premium-buttons && npm run check:asset-runtime && npm run check:deploy && npm run check:brand && npm run check:assets && npm run check:premium-assets && npm run check:building-assets && npm run check:lobby-layout && npm run check:lobby-premium-fit && npm run check:content-engine && npm run check:progression && npm run check:shop-economy && npm run check:polish && npm run check:ci-coherence && npm run check:coach && npm run check:daily-mission && npm run check:weekly-mission && npm run check:reward-popup && npm run check:accessibility && npm run check:mission-route && npm run check:ui && npm run check:ux-safety && npm run check:content-scale && npm run check:english-school && npm run check:layout && npm run check:association && npm run check:security",
     "check:brand": "node tools/check-brand.mjs",
     "check:ui": "node tools/check-ui.mjs",
     "check:layout": "node tools/check-layout.mjs",
@@ -40,7 +40,8 @@
     "check:premium-buttons": "node tools/check-premium-buttons.mjs",
     "check:premium-asset-select": "node tools/check-premium-asset-select.mjs",
     "check:exit-flow": "node tools/check-exit-flow.mjs",
-    "check:village-visuals": "node tools/check-village-visuals.mjs"
+    "check:village-visuals": "node tools/check-village-visuals.mjs",
+    "check:full-individual-assets": "node tools/check-full-individual-assets.mjs"
   },
   "dependencies": {
     "phaser": "3.90.0"

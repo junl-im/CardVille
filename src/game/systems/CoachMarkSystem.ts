@@ -101,6 +101,10 @@ export class CoachMarkSystem {
       const arrowY = options.anchorY > y ? height / 2 + 9 : -height / 2 - 9;
       const arrow = scene.add.triangle(ax, arrowY, 0, options.anchorY > y ? 0 : 18, 18, options.anchorY > y ? 0 : 18, 9, options.anchorY > y ? 18 : 0, color, 0.88).setOrigin(0.5);
       container.add(arrow);
+      if (scene.textures.exists('uiCatPawPointer')) {
+        const paw = scene.add.image(ax + 24, arrowY + (options.anchorY > y ? 18 : -18), 'uiCatPawPointer').setDisplaySize(34, 34).setAlpha(0.92).setName('coach-paw-pointer-v151');
+        container.add(paw);
+      }
     }
 
     const close = () => {
