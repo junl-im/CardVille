@@ -1,4 +1,4 @@
-# CardVille Premium Asset Prompt Pack 1.0.52
+# CardVille Premium Asset Prompt Pack 1.0.53
 
 Use this file when generating or requesting CardVille image assets. Do not request SVG. Runtime delivery must be PNG/WebP.
 

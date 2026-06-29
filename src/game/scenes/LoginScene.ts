@@ -6,7 +6,7 @@ import { DrawSystem } from '../systems/DrawSystem';
 import { AuthSystem } from '../systems/AuthSystem';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
-const LOGIN_VERSION = '1.0.51';
+const LOGIN_VERSION = '1.0.53';
 const LOGIN_PANEL_Y = 546;
 const LOGIN_PANEL_H = 254;
 const LOGIN_TITLE_Y = LOGIN_PANEL_Y + 28;

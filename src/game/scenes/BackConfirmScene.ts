@@ -33,20 +33,20 @@ export class BackConfirmScene extends Phaser.Scene {
     this.cameras.main.setBackgroundColor('rgba(0,0,0,0)');
     addFullBleedShade(this, 0x020814, 0.66).setInteractive();
     panel(this, 195, 420, 340, 304, 34);
-    this.add.text(195, 310, '게임을 나갈까요?', titleText(28)).setOrigin(0.5);
+    this.add.text(195, 306, '게임을 나갈까요?', titleText(30)).setOrigin(0.5);
     this.add.text(
       195,
       357,
-      '브라우저가 닫기를 막아도 게임 화면이 멈추지 않도록 첫 화면/계속하기로 안전 복구됩니다.',
-      { ...applyWrap(bodyText(14), 286), lineSpacing: 6 }
+      '나가기를 누르면 창 닫기를 바로 시도합니다. 닫기가 막히면 다른 페이지로 보내지 않고 게임으로 복구됩니다.',
+      { ...applyWrap(bodyText(16), 286), lineSpacing: 7 }
     ).setOrigin(0.5);
 
-    new GameButton(this, 195, 438, '첫 화면가기', 282, 60, 0xffd86f).onClick(() => this.goFirstScreen());
-    new GameButton(this, 195, 510, '나가기 시도', 282, 58, 0xff9ab1).onClick(() => this.requestExit());
-    new GameButton(this, 195, 580, '계속하기', 282, 52, 0x9fe7ff).onClick(() => this.closePopup());
+    new GameButton(this, 195, 438, '나가기', 282, 62, 0xff9ab1).onClick(() => this.requestExit());
+    new GameButton(this, 195, 514, '첫 화면가기', 282, 58, 0xffd86f).onClick(() => this.goFirstScreen());
+    new GameButton(this, 195, 586, '계속하기', 282, 54, 0x9fe7ff).onClick(() => this.closePopup());
 
-    this.add.text(195, 642, '닫기가 막혀도 자동 복구 안내가 뜹니다.', mutedText(12)).setOrigin(0.5);
-    this.add.text(195, 272, 'CardVille', goldText(16)).setOrigin(0.5);
+    this.add.text(195, 646, '빈 페이지 이동 없이 창 닫기만 시도합니다.', mutedText(14)).setOrigin(0.5);
+    this.add.text(195, 266, 'CardVille', goldText(17)).setOrigin(0.5);
   }
 
   private closePopup(): void {
@@ -63,7 +63,7 @@ export class BackConfirmScene extends Phaser.Scene {
   requestExit(): void {
     if (this.exiting) return;
     this.exiting = true;
-    this.add.text(195, 686, '나가기 시도 중... 막히면 자동 복구돼요.', mutedText(13)).setOrigin(0.5);
+    this.add.text(195, 686, '창 닫기 시도 중... 막히면 게임으로 복구돼요.', mutedText(14)).setOrigin(0.5);
     BackButtonSystem.requestExit();
     this.time.delayedCall(80, () => {
       if (this.scene.isActive()) this.scene.stop();

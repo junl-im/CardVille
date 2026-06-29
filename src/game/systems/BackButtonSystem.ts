@@ -18,7 +18,7 @@ const GAME_SCENES = [
   'BackConfirmScene'
 ];
 
-export const CARDVILLE_EXIT_FLOW_TAG = 'exit-no-freeze-v150' as const;
+export const CARDVILLE_EXIT_FLOW_TAG = 'exit-real-close-v153' as const;
 
 export class BackButtonSystem {
   private static installed = false;
@@ -101,7 +101,7 @@ export class BackButtonSystem {
     overlay.setAttribute('role', 'dialog');
     overlay.setAttribute('aria-modal', 'true');
     overlay.setAttribute('data-cardville-back-overlay-v121', 'true');
-    overlay.setAttribute('data-cardville-back-overlay-v150', 'true');
+    overlay.setAttribute('data-cardville-back-overlay-v153', 'true');
     Object.assign(overlay.style, {
       position: 'fixed',
       inset: '0',
@@ -117,14 +117,14 @@ export class BackButtonSystem {
       boxSizing: 'border-box'
     });
 
-    const box = this.makeOverlayBox('잠깐! 게임을 나갈까요?', '첫 화면으로 돌아가거나 계속할 수 있어요. 브라우저 정책상 직접 닫기가 막히면 안전 안내로 돌아옵니다.');
+    const box = this.makeOverlayBox('잠깐! 게임을 나갈까요?', '나가기를 누르면 창 닫기를 바로 시도합니다. 닫기가 브라우저에서 막히면 게임은 그대로 복구되고, 빈 페이지 이동은 하지 않습니다.');
+    box.appendChild(this.makeOverlayButton('나가기', '#ff9ab1', () => this.requestExit()));
     box.appendChild(this.makeOverlayButton('첫 화면가기', '#ffd86f', () => this.goFirstScreen()));
     box.appendChild(this.makeOverlayButton('계속하기', '#9fe7ff', () => this.closeOverlay()));
-    box.appendChild(this.makeOverlayButton('나가기 시도', '#ff9ab1', () => this.requestExit()));
 
     const note = document.createElement('div');
-    note.textContent = '닫기가 막혀도 화면을 막은 채 멈추지 않도록 자동 복구합니다.';
-    Object.assign(note.style, { marginTop: '12px', fontSize: '11px', color: 'rgba(230,244,255,.72)', fontWeight: '800' });
+    note.textContent = '모바일 브라우저가 닫기를 막을 수 있지만, 게임 안에서는 다른 페이지로 보내지 않습니다.';
+    Object.assign(note.style, { marginTop: '12px', fontSize: '13px', lineHeight: '1.35', color: 'rgba(230,244,255,.78)', fontWeight: '900' });
     box.appendChild(note);
 
     overlay.appendChild(box);
@@ -154,12 +154,12 @@ export class BackButtonSystem {
 
     const title = document.createElement('div');
     title.textContent = titleText;
-    Object.assign(title.style, { fontSize: '25px', fontWeight: '1000', letterSpacing: '-.06em', textShadow: '0 3px 10px rgba(0,0,0,.5)' });
+    Object.assign(title.style, { fontSize: '27px', fontWeight: '1000', letterSpacing: '-.06em', textShadow: '0 3px 10px rgba(0,0,0,.5)' });
     box.appendChild(title);
 
     const desc = document.createElement('div');
     desc.textContent = descText;
-    Object.assign(desc.style, { margin: '12px auto 16px', maxWidth: '292px', fontSize: '14px', lineHeight: '1.45', color: 'rgba(230,244,255,.92)', fontWeight: '800' });
+    Object.assign(desc.style, { margin: '12px auto 16px', maxWidth: '292px', fontSize: '16px', lineHeight: '1.48', color: 'rgba(230,244,255,.92)', fontWeight: '800' });
     box.appendChild(desc);
     return box;
   }
@@ -170,13 +170,13 @@ export class BackButtonSystem {
     button.textContent = label;
     Object.assign(button.style, {
       width: '100%',
-      height: '54px',
+      height: '58px',
       margin: '5px 0',
       borderRadius: '20px',
       border: '2px solid rgba(255,255,255,.78)',
       background: `linear-gradient(180deg, #fff8d8 0%, ${color} 72%, #d8842f 100%)`,
       color: '#3f210f',
-      fontSize: '17px',
+      fontSize: '18px',
       fontWeight: '1000',
       letterSpacing: '-.05em',
       boxShadow: '0 8px 0 rgba(63,31,9,.34), 0 16px 30px rgba(0,0,0,.24)',
@@ -249,13 +249,22 @@ export class BackButtonSystem {
     this.overlay?.remove();
     this.overlay = undefined;
     this.stopSceneFallback();
+    this.requestNativeCloseBridge();
     try { window.close(); } catch (error) { console.warn('[CardVille] window.close failed', error); }
-    try {
-      if (window.history.length > 1) window.history.back();
-    } catch (error) {
-      console.warn('[CardVille] history back exit failed', error);
-    }
     this.exitFallbackTimer = window.setTimeout(() => this.showExitBlockedRecovery(), 900);
+  }
+
+  private static requestNativeCloseBridge(): void {
+    const w = window as unknown as {
+      CardVilleNative?: { close?: () => void; exitApp?: () => void };
+      Android?: { closeApp?: () => void; exitApp?: () => void };
+      webkit?: { messageHandlers?: { cardvilleClose?: { postMessage?: (message: string) => void } } };
+    };
+    try { w.CardVilleNative?.close?.(); } catch (error) { console.warn('[CardVille] CardVilleNative.close failed', error); }
+    try { w.CardVilleNative?.exitApp?.(); } catch (error) { console.warn('[CardVille] CardVilleNative.exitApp failed', error); }
+    try { w.Android?.closeApp?.(); } catch (error) { console.warn('[CardVille] Android.closeApp failed', error); }
+    try { w.Android?.exitApp?.(); } catch (error) { console.warn('[CardVille] Android.exitApp failed', error); }
+    try { w.webkit?.messageHandlers?.cardvilleClose?.postMessage?.('close'); } catch (error) { console.warn('[CardVille] iOS close bridge failed', error); }
   }
 
   private static showExitBlockedRecovery(): void {
@@ -272,20 +281,15 @@ export class BackButtonSystem {
     overlay.id = 'cardville-back-overlay';
     overlay.setAttribute('role', 'dialog');
     overlay.setAttribute('aria-modal', 'true');
-    overlay.setAttribute('data-cardville-exit-blocked-v150', 'true');
+    overlay.setAttribute('data-cardville-exit-blocked-v153', 'true');
     Object.assign(overlay.style, {
       position: 'fixed', inset: '0', zIndex: '2147483647', display: 'grid', placeItems: 'center', background: 'rgba(2, 8, 20, 0.80)', color: '#fff',
-      fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", touchAction: 'none', pointerEvents: 'auto', padding: '18px', boxSizing: 'border-box'
+      fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", touchAction: 'none', pointerEvents: 'auto', padding: '20px', boxSizing: 'border-box'
     });
-    const box = this.makeOverlayBox('브라우저가 닫기를 막았어요', '게임은 멈춘 것이 아니에요. 첫 화면으로 돌아가거나 계속 플레이할 수 있습니다.');
+    const box = this.makeOverlayBox('창 닫기가 브라우저에서 막혔어요', 'CardVille는 창 닫기만 시도했고, 빈 페이지 이동은 하지 않았습니다. 앱/WebView 빌드에서는 native close bridge가 연결되면 나가기 버튼으로 바로 닫힙니다.');
+    box.appendChild(this.makeOverlayButton('다시 나가기', '#ff9ab1', () => this.requestExit()));
     box.appendChild(this.makeOverlayButton('첫 화면가기', '#ffd86f', () => this.goFirstScreen()));
     box.appendChild(this.makeOverlayButton('계속하기', '#9fe7ff', () => this.closeOverlay()));
-    box.appendChild(this.makeOverlayButton('빈 페이지로 이동', '#ff9ab1', () => {
-      this.exitRequested = true;
-      this.overlay?.remove();
-      this.overlay = undefined;
-      try { window.location.replace('about:blank'); } catch { window.location.href = 'about:blank'; }
-    }));
     overlay.appendChild(box);
     document.body.appendChild(overlay);
     this.overlay = overlay;

@@ -1,7 +1,41 @@
-# CardVille 1.0.52
+# CardVille 1.0.53
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
+
+
+## 1.0.53 업데이트 내역
+
+- **실제 나가기/모바일 가독성/로비 배치/UI 에셋 선별 패스**를 진행했습니다.
+- 나가기 버튼 동작을 다시 고쳤습니다.
+  - `BackButtonSystem` 태그를 `exit-real-close-v153`로 갱신했습니다.
+  - 나가기 버튼은 `window.close()`와 앱/WebView native close bridge만 시도합니다.
+  - `history.back`, `location.href`, blank-page fallback을 제거했습니다. 빈 페이지 이동 제거 기준을 검증합니다.
+  - 브라우저가 닫기를 막으면 게임을 멈추거나 다른 페이지로 보내지 않고, `다시 나가기`, `첫 화면가기`, `계속하기` 복구 UI만 보여줍니다.
+- 모바일 글씨 가독성을 개선했습니다.
+  - `TextStyles.ts`에 `mobile-readable-text-v153`를 추가했습니다.
+  - 390px 폭 모바일 화면에서 8~11px급 작은 글씨가 너무 작게 보이지 않도록 최소 가독 크기와 접근성 큰 글씨 배율을 적용했습니다.
+  - `GameButton` 기본 라벨 크기와 최소 축소 크기를 키웠습니다.
+- 로비 배치를 다시 넓혔습니다.
+  - 도서관/상점/숲은 왼쪽 끝 공간을 더 사용하고, 연구소/학교/항구는 오른쪽 끝 공간을 더 사용합니다.
+  - 중앙에는 광장/이벤트/주인공 동선 숨 쉴 공간을 남겼고, 좌우 끝 공간을 더 적극적으로 활용했습니다.
+  - `village-edge-spacing-v153`, `mobile-readable-layout-v153` 태그를 추가했습니다.
+  - 건물 터치존이 서로 겹치지 않도록 `check:mobile-exit-layout`에서 다시 검사합니다.
+- UI 전용 추가 에셋을 선별 적용했습니다.
+  - `CardVille_UI_Only_1.0.48_PNG.zip`를 비교했습니다.
+  - 대부분은 1.0.51에 이미 동일하게 적용되어 있어 중복 적용하지 않았습니다.
+  - `vfx_reward_burst_premium.png`는 검은 배경을 alpha로 정리해 `effect_reward_burst_premium` 보상 버스트로 갱신했습니다.
+  - 텍스트가 이미지 안에 박힌 `ui_reward_popup_premium.png`는 정책상 계속 보류합니다.
+- 검증 추가/갱신:
+  - `tools/check-mobile-exit-layout.mjs`
+  - `tools/check-exit-flow.mjs` real-close 기준 갱신
+  - `tools/check-screen-ui-stability.mjs` 모바일 가독성 기준 갱신
+  - `tools/check-building-assets.mjs`, `tools/check-village-visuals.mjs` 새 로비 배치 기준 갱신
+  - `npm run check:mobile-exit-layout`
+- `npm run verify`에 `check:mobile-exit-layout`을 포함했습니다.
+- 신규 문서 파일은 만들지 않았습니다.
+- 삭제 파일은 없습니다.
+- `node_modules`, `dist`, `package-lock.json`은 통파일 ZIP에서 제외합니다.
 
 
 ## 1.0.52 업데이트 내역
@@ -83,8 +117,8 @@
 - 나가기 버튼 멈춤 복구:
   - DOM 뒤로가기 오버레이와 Phaser `BackConfirmScene`이 동시에 남아 화면을 막을 수 있던 구조를 정리했습니다.
   - `BackButtonSystem`에 `exit-no-freeze-v150` 가드를 추가했습니다.
-  - 브라우저가 `window.close()`를 막아도 `브라우저가 닫기를 막았어요` 복구 오버레이를 띄워 `첫 화면가기`, `계속하기`, `빈 페이지로 이동` 중 하나를 선택할 수 있게 했습니다.
-  - `BackConfirmScene`의 직접 `window.close/history.back` 경로를 `BackButtonSystem.requestExit()`로 통합했습니다.
+  - 1.0.53에서 이 복구 흐름은 실제 창 닫기 시도와 `첫 화면가기`, `계속하기`만 남기고 blank-page 이동을 제거했습니다.
+  - `BackConfirmScene`의 직접 종료 경로를 `BackButtonSystem.requestExit()`로 통합했습니다.
 - 마을 건물 가독성 확대:
   - `diorama_bg.png`를 1080×1920 프리미엄 마을 배경으로 재생성했습니다.
   - 9개 마을 건물 PNG/WebP를 self-contained 패치 표면에 포함합니다.

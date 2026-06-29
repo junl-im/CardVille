@@ -57,8 +57,8 @@ mustContain('src/game/data/lobbyLayoutPlan.ts', [
   'npc_merchant and npc_town_cat use aspect-fit readable sizes', 'village-readable-building-scale-v150'
 ]);
 mustContain('src/game/data/lobbyEntities.ts', [
-  "npcMerchant', x: 124, y: 557, width: 42, height: 62",
-  "npcTownCat', x: 44, y: 722, width: 48, height: 48",
+  "npcMerchant', x: 104, y: 584, width: 42, height: 62",
+  "npcTownCat', x: 28, y: 730, width: 48, height: 48",
   "propFountain', x: 195, y: 408"
 ]);
 
@@ -81,7 +81,7 @@ for (const [id, block] of blocks.map((match) => [match[1], match[0]])) {
   if (visualWidth !== undefined && (visualWidth < 108 || visualWidth > 196)) throw new Error(`Unexpected visualWidth for ${id}: ${visualWidth}`);
   const touchOffsetY = getNum(block, 'touchOffsetY') ?? 0;
   const zoneY = y + touchOffsetY;
-  if (x - touchWidth / 2 < 16 || x + touchWidth / 2 > 374 || zoneY - touchHeight / 2 < 98 || zoneY + touchHeight / 2 > 738) {
+  if (x - touchWidth / 2 < 8 || x + touchWidth / 2 > 382 || zoneY - touchHeight / 2 < 92 || zoneY + touchHeight / 2 > 746) {
     throw new Error(`Premium touch zone outside safe playfield: ${id}`);
   }
   if (nameplateY !== undefined && y + nameplateY + 42 > 746) throw new Error(`Nameplate would collide with bottom HUD: ${id}`);

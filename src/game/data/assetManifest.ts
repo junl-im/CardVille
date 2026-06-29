@@ -1,4 +1,4 @@
-export const CARDVILLE_ASSET_VERSION = '1.0.52' as const;
+export const CARDVILLE_ASSET_VERSION = '1.0.53' as const;
 export type CardVilleAssetCategory = 'background' | 'diorama' | 'building' | 'hero' | 'mascot' | 'npc' | 'prop' | 'ui' | 'icon' | 'card' | 'pack' | 'effect' | 'particle' | 'badge';
 
 export type CardVilleAsset = {

@@ -4,11 +4,54 @@
 CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고, 그다음 실제 코드를 확인하세요.
 
 
-## 현재 작업 기준: 1.0.52
+## 현재 작업 기준: 1.0.53
 
-현재 기준 버전은 1.0.52입니다.  
-이번 버전은 1.0.51 FullIndividual 비주얼 패스를 기준으로, 장면 전환 불안정/버튼 상태/로비 추천 루트/PNG 성능 경로를 함께 다듬은 화면 단위 안정성 및 기술 품질 패스입니다.
+현재 기준 버전은 1.0.53입니다.  
+이번 버전은 1.0.52 UI 안정화 패스를 기준으로, 나가기 버튼을 실제 창 닫기 시도 중심으로 다시 고치고, 모바일 글씨 가독성/로비 좌우 공간 배치/UI 전용 보상 버스트 에셋을 함께 다듬은 패스입니다.
 
+
+
+### 1.0.53 실제 나가기/모바일 가독성/로비 배치 패스
+
+- 목적:
+  - 사용자가 지적한 “나가기 버튼은 창이 닫혀야 한다” 피드백을 반영했습니다.
+  - blank-page 이동 방식은 종료 UX가 아니므로 제거했습니다.
+  - 모바일 화면에서 작은 글씨가 잘 안 보일 수 있어 공통 텍스트 배율과 버튼 라벨 최소 크기를 올렸습니다.
+  - 로비 건물은 좌우 끝 공간까지 쓰되, 중앙을 너무 다닥다닥 채우지 않도록 재배치했습니다.
+- 나가기 흐름:
+  - `src/game/systems/BackButtonSystem.ts`
+  - `CARDVILLE_EXIT_FLOW_TAG = exit-real-close-v153`
+  - `requestNativeCloseBridge()` 추가
+  - 지원 가능한 앱/WebView 환경에서는 `CardVilleNative.close`, `CardVilleNative.exitApp`, `Android.closeApp`, `Android.exitApp`, `webkit.messageHandlers.cardvilleClose`를 먼저 시도합니다.
+  - 이후 `window.close()`만 시도합니다.
+  - `history.back`, `location.href`, blank-page fallback은 제거했습니다.
+  - 닫기가 차단되면 `다시 나가기`, `첫 화면가기`, `계속하기` 복구 UI만 보여줍니다.
+- 모바일 글씨:
+  - `src/game/ui/TextStyles.ts`
+  - `CARDVILLE_MOBILE_TEXT_TAG = mobile-readable-text-v153`
+  - `readableSize()` / `mobileTextScale()` 추가
+  - 큰 안내 문구 설정 시 글자 배율이 더 커집니다.
+  - `GameButton` 기본 라벨 크기와 최소 축소 크기를 키웠습니다.
+- 로비 배치:
+  - `src/game/data/dioramaBuildings.ts`
+  - 도서관/상점/숲은 x=62/58 쪽 왼쪽 컬럼으로 이동했습니다.
+  - 연구소/학교/항구는 x=328/332 쪽 오른쪽 컬럼으로 이동했습니다.
+  - 광장/이벤트는 중앙 컬럼으로 유지했습니다.
+  - `village-edge-spacing-v153`, `mobile-readable-layout-v153`를 추가했습니다.
+- UI 에셋:
+  - 업로드 파일: `CardVille_UI_Only_1.0.48_PNG.zip`
+  - 대부분은 1.0.51에 이미 동일 적용되어 중복 복사하지 않았습니다.
+  - `vfx_reward_burst_premium.png`는 검은 RGB 배경을 alpha로 처리해 `public/assets/effects/effect_reward_burst_premium.png`와 WebP companion으로 갱신했습니다.
+  - `ui_reward_popup_premium.png`는 이미지에 영문 텍스트가 박혀 있어 보류했습니다.
+- 검증:
+  - `tools/check-mobile-exit-layout.mjs` 추가
+  - `check:mobile-exit-layout` 추가
+  - `tools/check-exit-flow.mjs`는 real-close/no blank-page 기준으로 갱신
+  - `tools/check-screen-ui-stability.mjs`는 모바일 텍스트/로비 배치 태그 기준으로 갱신
+- 패치 정책:
+  - 1.0.53 패치 ZIP도 self-contained 안정형 패치로 유지합니다.
+  - `src/`, `tools/`, `public/assets`, 버전 동기화 파일, README, AI_HANDOFF, docs를 포함합니다.
+- 신규 문서 파일은 생성하지 않았습니다.
 
 
 ### 1.0.52 화면 단위 안정성/기술 품질 패스
@@ -96,7 +139,7 @@ CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고,
   - `window.close()`는 대부분의 모바일 브라우저에서 차단되므로, 기존 `나가는 중...` 상태가 복구 안내 없이 화면을 막아 멈춘 것처럼 보일 수 있었습니다.
   - 새 마을 건물은 고해상도지만 로비 내 렌더 크기가 작아 체감상 이미지가 없는 것처럼 약하게 보일 수 있었습니다.
 - 수정:
-  - `BackButtonSystem`에 `CARDVILLE_EXIT_FLOW_TAG = exit-no-freeze-v150` 추가
+  - `BackButtonSystem`에 `CARDVILLE_EXIT_FLOW_TAG = exit-no-freeze-v150` 추가. 1.0.53에서 `exit-real-close-v153`로 교체됨
   - DOM 오버레이가 정상 생성되면 `BackConfirmScene` fallback을 남기지 않도록 `stopSceneFallback()` 추가
   - 브라우저가 닫기를 막으면 `showExitBlockedRecovery()` 복구 오버레이 표시
   - `BackConfirmScene.requestExit()`를 `BackButtonSystem.requestExit()`로 통합

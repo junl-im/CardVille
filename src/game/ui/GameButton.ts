@@ -71,8 +71,8 @@ export class GameButton extends Phaser.GameObjects.Container {
     if (this.skin) {
       this.skinImage = scene.add.image(0, 2, this.skin.normal).setDisplaySize(width + 16, height + 16);
     }
-    const baseLabelSize = height >= 64 ? 20 : height <= 46 ? 14 : 17;
-    this.label = scene.add.text(0, -1, compactText(text, Math.max(5, Math.floor(width / 24))), { ...darkText(fitTextSize(text, baseLabelSize, 11)), color: resolveButtonPalette(color).text, fontStyle: '900' }).setOrigin(0.5);
+    const baseLabelSize = height >= 64 ? 22 : height <= 46 ? 16 : 19;
+    this.label = scene.add.text(0, -1, compactText(text, Math.max(5, Math.floor(width / 24))), { ...darkText(fitTextSize(text, baseLabelSize, 14)), color: resolveButtonPalette(color).text, fontStyle: '900' }).setOrigin(0.5);
     this.hitZone = scene.add.zone(0, 0, hitW, hitH)
       .setOrigin(0.5)
       .setName(`hit:${text}`)
@@ -146,7 +146,7 @@ export class GameButton extends Phaser.GameObjects.Container {
   setLabel(text: string): this {
     const baseLabelSize = this.heightValue >= 64 ? 20 : this.heightValue <= 46 ? 14 : 17;
     this.label.setText(compactText(text, Math.max(5, Math.floor(this.widthValue / 24))));
-    this.label.setStyle({ ...darkText(fitTextSize(text, baseLabelSize, 11)), color: resolveButtonPalette(this.disabled ? 0x9aa4ba : this.colorValue).text, fontStyle: '900' });
+    this.label.setStyle({ ...darkText(fitTextSize(text, baseLabelSize, 14)), color: resolveButtonPalette(this.disabled ? 0x9aa4ba : this.colorValue).text, fontStyle: '900' });
     this.draw(false);
     return this;
   }

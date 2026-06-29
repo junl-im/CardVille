@@ -2,13 +2,30 @@ import Phaser from 'phaser';
 
 export const UI_FONT_FAMILY = "'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', Arial, sans-serif";
 const RESOLUTION = Math.min(typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1, 2);
+export const CARDVILLE_MOBILE_TEXT_TAG = 'mobile-readable-text-v153' as const;
+
+function mobileTextScale(): number {
+  if (typeof window === 'undefined') return 1.08;
+  try {
+    const raw = window.localStorage?.getItem('cardville.accessibility.v143');
+    const prefs = raw ? JSON.parse(raw) as { largeText?: boolean } : {};
+    return prefs.largeText ? 1.24 : 1.10;
+  } catch {
+    return 1.10;
+  }
+}
+
+function readableSize(size: number): number {
+  const minReadable = size <= 9 ? 10 : size <= 11 ? 12 : size <= 13 ? 14 : size;
+  return Math.round(minReadable * mobileTextScale());
+}
 
 type TextStyle = Phaser.Types.GameObjects.Text.TextStyle;
 
 function base(size: number, color: string, stroke = '#061127', strokeThickness = 4): TextStyle {
   return {
     fontFamily: UI_FONT_FAMILY,
-    fontSize: `${size}px`,
+    fontSize: `${readableSize(size)}px`,
     fontStyle: '900',
     color,
     stroke,
@@ -32,14 +49,14 @@ export function goldText(size = 20): TextStyle {
   return base(size, '#ffe8a6', '#061127', 5);
 }
 
-export function bodyText(size = 15): TextStyle {
+export function bodyText(size = 16): TextStyle {
   return {
     ...base(size, '#eaf6ff', '#07142c', 3),
     fontStyle: '800'
   };
 }
 
-export function mutedText(size = 13): TextStyle {
+export function mutedText(size = 14): TextStyle {
   return {
     ...base(size, '#cfe4ff', '#07142c', 3),
     fontStyle: '800'
@@ -49,7 +66,7 @@ export function mutedText(size = 13): TextStyle {
 export function darkText(size = 18): TextStyle {
   return {
     fontFamily: UI_FONT_FAMILY,
-    fontSize: `${size}px`,
+    fontSize: `${readableSize(size)}px`,
     fontStyle: '900',
     color: '#14233f',
     stroke: '#ffffff',
@@ -68,7 +85,7 @@ export function darkText(size = 18): TextStyle {
 export function cardText(size = 24): TextStyle {
   return {
     fontFamily: UI_FONT_FAMILY,
-    fontSize: `${size}px`,
+    fontSize: `${readableSize(size)}px`,
     fontStyle: '900',
     color: '#4a1b28',
     stroke: '#fffaf0',
@@ -85,7 +102,7 @@ export function cardText(size = 24): TextStyle {
   };
 }
 
-export function cardSmallText(size = 12): TextStyle {
+export function cardSmallText(size = 13): TextStyle {
   return {
     ...cardText(size),
     strokeThickness: 2

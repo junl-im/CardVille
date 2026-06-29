@@ -17,11 +17,13 @@ import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 import { AccessibilitySystem } from '../systems/AccessibilitySystem';
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
-const LOBBY_VERSION = '1.0.52';
+const LOBBY_VERSION = '1.0.53';
 const MISSION_TONE_COLORS = { gold: 0xffd86f, blue: 0x8fd3ff, purple: 0xd7a5ff, green: 0xa9f5b5, coral: 0xffb39a } as const;
 const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-visible-v149' as const;
 const VILLAGE_VISIBLE_BUILDING_SCALE_TAG = 'village-readable-building-scale-v150' as const;
 const SCREEN_UI_STABILITY_TAG = 'screen-ui-stability-pass-v152' as const;
+const MOBILE_READABLE_LAYOUT_TAG = 'mobile-readable-layout-v153' as const;
+const VILLAGE_EDGE_SPACE_TAG = 'village-edge-spacing-v153' as const;
 const HERO_HOME = { x: 195, y: 545 } as const;
 const CAT_HOME = { x: 145, y: 585 } as const;
 
@@ -118,7 +120,7 @@ export class MainLobbyScene extends Phaser.Scene {
     this.add.rectangle(142, 35, 213, 12, 0xffffff, 0.08).setDepth(911);
     this.add.text(38, 49, '카드마을 CardVille', titleText(20)).setOrigin(0, 0.5).setDepth(912);
     const totalOpenStages = WORD_STAGES.length + ENGLISH_STAGES.length + MATH_STAGES.length + MEMORY_STAGES.length;
-    this.add.text(39, 73, `Lv.${level} · 🪙 ${coins} · 카드 ${cards}장 · ${cleared}/${totalOpenStages}`, mutedText(11)).setOrigin(0, 0.5).setDepth(912);
+    this.add.text(39, 73, `Lv.${level} · 🪙 ${coins} · 카드 ${cards}장 · ${cleared}/${totalOpenStages}`, mutedText(12)).setOrigin(0, 0.5).setDepth(912);
 
     const album = this.add.container(319, 54).setDepth(920);
     if (this.textures.exists('uiNameplateGold')) album.add(this.add.image(0, 0, 'uiNameplateGold').setDisplaySize(92, 58));
@@ -144,12 +146,12 @@ export class MainLobbyScene extends Phaser.Scene {
     const copy = recommendedBuildingId === 'event'
       ? missionStatus.nextActionCopy
       : '추천 건물을 따라가면 학습, 상점, 미션 보상이 자연스럽게 이어져요.';
-    const ribbon = this.add.container(149, 112).setDepth(925).setName(SCREEN_UI_STABILITY_TAG);
-    ribbon.add(this.add.rectangle(0, 0, 258, 38, 0x07142c, 0.72).setStrokeStyle(1, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.42));
-    ribbon.add(this.add.rectangle(-93, 0, 58, 24, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.92).setStrokeStyle(1, 0xffffff, 0.34));
-    ribbon.add(this.add.text(-93, 0, '추천', darkText(8)).setOrigin(0.5));
-    ribbon.add(this.add.text(-56, -7, label, goldText(10)).setOrigin(0, 0.5));
-    ribbon.add(this.add.text(-56, 10, copy, applyWrap(mutedText(8), 174, 'left')).setOrigin(0, 0.5));
+    const ribbon = this.add.container(140, 115).setDepth(925).setName(`${SCREEN_UI_STABILITY_TAG}:${MOBILE_READABLE_LAYOUT_TAG}`);
+    ribbon.add(this.add.rectangle(0, 0, 244, 46, 0x07142c, 0.76).setStrokeStyle(1, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.48));
+    ribbon.add(this.add.rectangle(-85, 0, 58, 28, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.92).setStrokeStyle(1, 0xffffff, 0.38));
+    ribbon.add(this.add.text(-85, 0, '추천', darkText(10)).setOrigin(0.5));
+    ribbon.add(this.add.text(-48, -9, label, goldText(12)).setOrigin(0, 0.5));
+    ribbon.add(this.add.text(-48, 11, copy, applyWrap(mutedText(10), 166, 'left')).setOrigin(0, 0.5));
     if (allowAmbientMotion(this.quality) && missionStatus.shouldPrioritizeEvent) {
       this.tweens.add({ targets: ribbon, y: 108, alpha: 0.78, duration: scaledDuration(1100, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
@@ -262,8 +264,8 @@ export class MainLobbyScene extends Phaser.Scene {
       plate.strokeRoundedRect(-50, plateY, 100, 36, 15);
       container.add(plate);
     }
-    container.add(this.add.text(0, plateY + 10, building.title, goldText(13)).setOrigin(0.5));
-    container.add(this.add.text(0, plateY + 25, building.subtitle, mutedText(9)).setOrigin(0.5));
+    container.add(this.add.text(0, plateY + 9, building.title, goldText(14)).setOrigin(0.5));
+    container.add(this.add.text(0, plateY + 27, building.subtitle, mutedText(11)).setOrigin(0.5));
     this.drawBuildingStatusChip(container, building, recommended);
 
     if (!building.open) {
@@ -305,7 +307,7 @@ export class MainLobbyScene extends Phaser.Scene {
       ? this.add.image(0, -height * 0.08, building.iconKey).setDisplaySize(Math.min(48, width * 0.38), Math.min(48, height * 0.38))
       : this.add.text(0, -height * 0.07, '□', goldText(22)).setOrigin(0.5);
     fallback.add(icon);
-    fallback.add(this.add.text(0, height * 0.30, '에셋 확인', mutedText(8)).setOrigin(0.5));
+    fallback.add(this.add.text(0, height * 0.30, '에셋 확인', mutedText(11)).setOrigin(0.5));
     fallback.setName(`missing:${building.assetKey}`);
     console.warn('[CardVille] lobby building texture missing', building.assetKey, building.title);
     return fallback;
@@ -317,12 +319,12 @@ export class MainLobbyScene extends Phaser.Scene {
     const visualWidth = building.visualWidth ?? building.width;
     const visualHeight = building.visualHeight ?? building.height;
     const chipY = building.statusY ?? -visualHeight * 0.45;
-    const chipW = Math.max(recommended ? 54 : 48, label.length * 8 + 14);
+    const chipW = Math.max(recommended ? 62 : 54, label.length * 9 + 16);
     const color = missionStatus ? MISSION_TONE_COLORS[missionStatus.lobbyBadgeTone] : 0xffd86f;
     const active = building.open || recommended || Boolean(missionStatus?.rewardReadyCount);
     const chip = this.add.container(building.statusX ?? visualWidth * 0.18, chipY);
-    chip.add(this.add.rectangle(0, 0, chipW, 18, active ? color : 0x2d3854, active ? 0.92 : 0.82).setStrokeStyle(1, 0xffffff, 0.42));
-    chip.add(this.add.text(0, 0, label, active ? { fontFamily: 'system-ui, sans-serif', fontSize: '9px', color: '#301b0c', fontStyle: '900' } : mutedText(9)).setOrigin(0.5));
+    chip.add(this.add.rectangle(0, 0, chipW, 22, active ? color : 0x2d3854, active ? 0.92 : 0.82).setStrokeStyle(1, 0xffffff, 0.42));
+    chip.add(this.add.text(0, 0, label, active ? { fontFamily: 'system-ui, sans-serif', fontSize: '11px', color: '#301b0c', fontStyle: '900' } : mutedText(11)).setOrigin(0.5));
     chip.setAlpha(active ? 0.96 : 0.72);
     container.add(chip);
   }
@@ -368,7 +370,7 @@ export class MainLobbyScene extends Phaser.Scene {
     const button = this.add.container(352, 116).setDepth(930);
     if (this.textures.exists('uiSettingsButton')) button.add(this.add.image(0, 0, 'uiSettingsButton').setDisplaySize(50, 50));
     else button.add(this.add.circle(0, 0, 24, 0xffd86f, 0.90));
-    button.add(this.add.text(0, 1, '⚙', goldText(18)).setOrigin(0.5));
+    button.add(this.add.text(0, 1, '⚙', goldText(20)).setOrigin(0.5));
     button.setSize(54, 54).setInteractive({ useHandCursor: true });
     button.on('pointerup', () => {
       if (this.busy) return;
@@ -405,17 +407,17 @@ export class MainLobbyScene extends Phaser.Scene {
       '건물/오브젝트: 개별 PNG/WebP',
       `성능 모드: ${qualitySummary(this.quality)}`,
       `접근성: ${AccessibilitySystem.summary()}`,
-      `배치 플랜: ${LOBBY_LAYOUT_PLAN_VERSION} · ${PREMIUM_LOBBY_FIT_TAG} · ${VILLAGE_VISIBLE_BUILDING_SCALE_TAG} · ${SCREEN_UI_STABILITY_TAG}`
+      `배치 플랜: ${LOBBY_LAYOUT_PLAN_VERSION} · ${PREMIUM_LOBBY_FIT_TAG} · ${VILLAGE_VISIBLE_BUILDING_SCALE_TAG} · ${SCREEN_UI_STABILITY_TAG} · ${MOBILE_READABLE_LAYOUT_TAG} · ${VILLAGE_EDGE_SPACE_TAG}`
     ];
     lines.forEach((line, index) => {
-      panel.add(this.add.text(-126, -48 + index * 18, `• ${line}`, mutedText(10)).setOrigin(0, 0.5));
+      panel.add(this.add.text(-126, -48 + index * 20, `• ${line}`, mutedText(11)).setOrigin(0, 0.5));
     });
 
     const addToggle = (y: number, label: string, enabled: boolean, toggle: () => void) => {
       const row = this.add.container(0, y);
       row.add(this.add.rectangle(0, 0, 252, 30, enabled ? 0xfffbf1 : 0x26334f, enabled ? 0.92 : 0.66).setStrokeStyle(1, enabled ? 0xffd86f : 0x8fd3ff, enabled ? 0.64 : 0.32));
-      row.add(this.add.text(-112, 0, label, enabled ? darkText(10) : mutedText(10)).setOrigin(0, 0.5));
-      row.add(this.add.text(105, 0, enabled ? 'ON' : 'OFF', enabled ? darkText(10) : mutedText(10)).setOrigin(1, 0.5));
+      row.add(this.add.text(-112, 0, label, enabled ? darkText(12) : mutedText(12)).setOrigin(0, 0.5));
+      row.add(this.add.text(105, 0, enabled ? 'ON' : 'OFF', enabled ? darkText(12) : mutedText(12)).setOrigin(1, 0.5));
       const hit = this.add.zone(0, 0, 268, 38).setInteractive({ useHandCursor: true });
       hit.on('pointerup', () => {
         toggle();
@@ -430,7 +432,7 @@ export class MainLobbyScene extends Phaser.Scene {
     addToggle(54, '편안한 모션', prefs.reduceMotion, () => AccessibilitySystem.toggleReduceMotion());
     addToggle(86, '고대비 화면', prefs.highContrast, () => AccessibilitySystem.toggleHighContrast());
     addToggle(118, '큰 안내 문구', prefs.largeText, () => AccessibilitySystem.toggleLargeText());
-    panel.add(this.add.text(0, 138, LOBBY_SAFE_RULES.slice(0, 1).join(' · '), applyWrap(mutedText(9), 250)).setOrigin(0.5));
+    panel.add(this.add.text(0, 138, LOBBY_SAFE_RULES.slice(0, 1).join(' · '), applyWrap(mutedText(11), 250)).setOrigin(0.5));
     const close = this.add.container(0, 150);
     if (this.textures.exists('uiNameplateGold')) close.add(this.add.image(0, 0, 'uiNameplateGold').setDisplaySize(120, 46));
     else close.add(this.add.rectangle(0, 0, 118, 42, 0xffd86f, 0.92).setStrokeStyle(2, 0xffffff, 0.44));
@@ -580,23 +582,23 @@ export class MainLobbyScene extends Phaser.Scene {
   }
 
   private drawBottomHint(nickname: string): void {
-    if (this.textures.exists('uiPanelGlass')) this.add.image(195, 782, 'uiPanelGlass').setDisplaySize(342, 76).setAlpha(0.92).setDepth(910);
+    if (this.textures.exists('uiPanelGlass')) this.add.image(195, 780, 'uiPanelGlass').setDisplaySize(354, 82).setAlpha(0.92).setDepth(910);
     else {
       const g = this.add.graphics().setDepth(910);
       g.fillStyle(0x07142c, 0.68);
-      g.fillRoundedRect(24, 746, 342, 72, 26);
+      g.fillRoundedRect(18, 742, 354, 78, 26);
       g.lineStyle(1, 0xffffff, 0.18);
-      g.strokeRoundedRect(24, 746, 342, 72, 26);
+      g.strokeRoundedRect(18, 742, 354, 78, 26);
     }
     if (this.textures.exists('uiSpeechBubble')) this.add.image(83, 741, 'uiSpeechBubble').setDisplaySize(130, 55).setAlpha(0.88).setDepth(909);
     this.hintText = this.add.text(
       195,
       773,
       `${nickname} 모험가님, 건물이나 NPC를 터치해 보세요.`,
-      applyWrap(bodyText(13), 300)
+      applyWrap(bodyText(15), 314)
     ).setOrigin(0.5).setDepth(912);
     const assetTotal = Object.values(ASSET_COUNTS).reduce((sum, count) => sum + count, 0);
-    this.add.text(195, 803, `한 화면 디오라마 · 스크롤 없음 · 자산 ${assetTotal}개 매니페스트 관리`, mutedText(10)).setOrigin(0.5).setDepth(912);
+    this.add.text(195, 806, `한 화면 디오라마 · 좌우 공간 활용 · 자산 ${assetTotal}개`, mutedText(11)).setOrigin(0.5).setDepth(912);
   }
 
   private drawAmbientLife(): void {

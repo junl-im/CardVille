@@ -31,7 +31,7 @@ for (const token of ['VILLAGE_VISIBLE_BUILDING_SCALE_TAG', 'village-readable-bui
   if (!lobby.includes(token)) throw new Error(`MainLobbyScene missing village visual token: ${token}`);
 }
 const diorama = read('src/game/data/dioramaBuildings.ts');
-for (const token of ['visualWidth: 188', 'visualWidth: 164', 'visualWidth: 148', 'nameplateWidth']) {
+for (const token of ['visualWidth: 194', 'visualWidth: 156', 'visualWidth: 136', 'nameplateWidth']) {
   if (!diorama.includes(token)) throw new Error(`dioramaBuildings missing readable-size token: ${token}`);
 }
 const readme = read('README.md');
