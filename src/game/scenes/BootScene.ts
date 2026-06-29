@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { NavigationSystem } from '../systems/NavigationSystem';
 
 export class BootScene extends Phaser.Scene {
   constructor() { super('BootScene'); }
@@ -16,6 +17,6 @@ export class BootScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.scene.start('LoginScene');
+    NavigationSystem.safeStart(this, 'LoginScene');
   }
 }

@@ -37,7 +37,7 @@ must('src/game/systems/SaveSystem.ts', [
 ]);
 must('src/game/scenes/RewardScene.ts', [
   "this.source === 'shop'",
-  "this.scene.start('ShopScene')",
+  "NavigationSystem.safeStart(this, 'ShopScene')",
   '상점으로',
   '앨범 보기'
 ]);

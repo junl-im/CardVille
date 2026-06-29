@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { NavigationSystem } from '../systems/NavigationSystem';
 import { addCoverImage, applyResponsiveCamera, layout } from '../systems/LayoutSystem';
 import { GameButton } from '../ui/GameButton';
 import { DrawSystem } from '../systems/DrawSystem';
@@ -78,14 +79,14 @@ export class LoginScene extends Phaser.Scene {
     this.busy = true;
     AuthSystem.signInGuest();
     this.status.setText('오프닝 영상과 함께 게임을 준비합니다.');
-    this.time.delayedCall(80, () => this.scene.start('IntroLoadingScene', { nextScene: 'MainLobbyScene' }));
+    this.time.delayedCall(80, () => NavigationSystem.safeStart(this, 'IntroLoadingScene', { nextScene: 'MainLobbyScene' }));
   }
 
   private async google(): Promise<void> {
     if (this.busy) return;
     this.busy = true;
     this.status.setText('Google 로그인 연결 중...');
-    try { await AuthSystem.signInGoogle(); this.scene.start('IntroLoadingScene', { nextScene: 'MainLobbyScene' }); }
+    try { await AuthSystem.signInGoogle(); NavigationSystem.safeStart(this, 'IntroLoadingScene', { nextScene: 'MainLobbyScene' }); }
     catch (e) { console.warn(e); this.status.setText('Google 로그인이 취소되었거나 실패했어요. 게임 시작은 계속 가능합니다.'); this.busy = false; }
   }
 
@@ -97,7 +98,7 @@ export class LoginScene extends Phaser.Scene {
     if (password.length < 6) { this.status.setText('비밀번호는 6자 이상이어야 해요.'); return; }
     this.busy = true;
     this.status.setText(create ? '이메일 가입 중...' : '이메일 로그인 중...');
-    try { await AuthSystem.signInEmail(email, password, create); this.scene.start('IntroLoadingScene', { nextScene: 'MainLobbyScene' }); }
+    try { await AuthSystem.signInEmail(email, password, create); NavigationSystem.safeStart(this, 'IntroLoadingScene', { nextScene: 'MainLobbyScene' }); }
     catch (e) { console.warn(e); this.status.setText('이메일 처리 실패. 계정 정보를 확인해 주세요.'); this.busy = false; }
   }
 }

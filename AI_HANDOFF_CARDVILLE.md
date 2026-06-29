@@ -4,11 +4,45 @@
 CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고, 그다음 실제 코드를 확인하세요.
 
 
-## 현재 작업 기준: 1.0.51
+## 현재 작업 기준: 1.0.52
 
-현재 기준 버전은 1.0.51입니다.  
-이번 버전은 1.0.50 나가기/마을 비주얼 긴급 복구본을 기준으로, FullIndividual 프리미엄 에셋 중 런타임 가치가 높은 자산을 선별 적용한 UI/보상/상점/스테이지 비주얼 패스입니다.
+현재 기준 버전은 1.0.52입니다.  
+이번 버전은 1.0.51 FullIndividual 비주얼 패스를 기준으로, 장면 전환 불안정/버튼 상태/로비 추천 루트/PNG 성능 경로를 함께 다듬은 화면 단위 안정성 및 기술 품질 패스입니다.
 
+
+
+### 1.0.52 화면 단위 안정성/기술 품질 패스
+
+- 목적:
+  - 빠른 연속 터치, 장면 전환 중 입력, 모달 잔류, 버튼 비활성 상태, 로비 추천 동선, PNG 로딩 성능을 한 번에 점검했습니다.
+  - UIUX와 기술 안정성을 다음 에셋 패치 전 기준선으로 고정합니다.
+- 신규 시스템:
+  - `src/game/systems/NavigationSystem.ts`
+  - `CARDVILLE_NAVIGATION_GUARD_TAG = scene-navigation-guard-v152`
+  - `safeStart()` / `safeRestart()`로 주요 장면 이동을 공통 가드 처리합니다.
+  - `BackConfirmScene`이 남아 화면을 막는 상황을 전환 전에 정리합니다.
+- 버튼 안정화:
+  - `GameButton`에 `CARDVILLE_BUTTON_UX_AUDIT_TAG = screen-wide-premium-button-v152` 추가
+  - 버튼 액션 예외를 잡아 로그로 남깁니다.
+  - disabled 버튼은 회색 프리미엄 팔레트로 다시 그려져 깨진 버튼처럼 보이지 않습니다.
+- 로비 배치/추천 루트:
+  - `MainLobbyScene.drawRouteOverviewRibbon()` 추가
+  - 추천 건물과 이벤트 READY 상태를 상단 리본으로 표시합니다.
+  - `SCREEN_UI_STABILITY_TAG = screen-ui-stability-pass-v152` 추가
+  - `lobbyLayoutPlan.ts`는 1.0.52로 갱신했고, route ribbon/NavigationSystem/UI 안정성 체크를 포함합니다.
+- 성능/에셋:
+  - `public/assets`의 모든 PNG에 WebP companion을 보강했습니다.
+  - `IntroLoadingScene`은 브라우저가 WebP를 지원하면 `.png` 대신 `.webp` 경로를 우선 로드합니다.
+  - `CARDVILLE_WEBP_RUNTIME_TAG = webp-asset-runtime-v152` 추가
+- 검증:
+  - `tools/check-navigation-guard.mjs`
+  - `tools/check-webp-runtime.mjs`
+  - `tools/check-screen-ui-stability.mjs`
+  - `npm run verify`에 `check:navigation-guard`, `check:webp-runtime`, `check:screen-ui-stability` 포함
+- 패치 정책:
+  - 1.0.52 패치 ZIP도 self-contained 안정형 패치로 유지합니다.
+  - `src/`, `tools/`, `public/assets`, 버전 동기화 파일, README, AI_HANDOFF, docs를 포함합니다.
+- 신규 문서 파일은 생성하지 않았습니다.
 
 
 ### 1.0.51 FullIndividual 프리미엄 에셋 적용 패스

@@ -1,11 +1,11 @@
 {
-  "name": "CardVille 1.0.51 Exit and Village Visual Guard",
-  "version": "1.0.51",
-  "mode": "exit-no-freeze-v150-village-readable-buildings",
+  "name": "CardVille 1.0.52 UI Stability and WebP Runtime Guard",
+  "version": "1.0.52",
+  "mode": "scene-navigation-guard-v152-webp-runtime-screen-ui-stability",
   "svg": "disabled",
   "pwa": "disabled",
-  "notes": "Back/exit flows recover when browser close is blocked; premium village background and building assets are included self-contained with readable visual sizing.",
-  "label": "Exit no-freeze + readable premium village",
-  "description": "Fixes blocked exit/no-response cases and makes premium village building imagery more visible with self-contained assets and enlarged fit boxes.",
-  "assetVersion": "1.0.51"
+  "notes": "Scene starts are guarded, UI button states are safer/readable, lobby route ribbon clarifies building assignment, and PNG assets have WebP runtime companions.",
+  "label": "UI stability + WebP runtime + route ribbon",
+  "description": "Hardens duplicate scene navigation, stabilizes premium buttons and disabled states, adds route overview polish, and improves asset loading performance with WebP companions.",
+  "assetVersion": "1.0.52"
 }

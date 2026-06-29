@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { NavigationSystem } from '../systems/NavigationSystem';
 import { DrawSystem } from '../systems/DrawSystem';
 import { applyResponsiveCamera, layout } from '../systems/LayoutSystem';
 import { allowAmbientMotion, ambientCount, CardVilleQuality, getCardVilleQuality, isMotionEnabled, scaledDuration } from '../systems/QualitySystem';
@@ -51,7 +52,7 @@ export class EnglishSchoolScene extends Phaser.Scene {
     this.add.text(195, 148, this.lessonRewardLabel(), goldText(10)).setOrigin(0.5).setAlpha(0.9);
     this.drawClassBoard();
     this.drawQuestion();
-    new GameButton(this, 195, 768, '광장으로', 238, 54, 0xc9f4ff).onClick(() => this.scene.start('MainLobbyScene'));
+    new GameButton(this, 195, 768, '광장으로', 238, 54, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
     this.showEnglishCoach();
   }
 
@@ -168,7 +169,7 @@ export class EnglishSchoolScene extends Phaser.Scene {
     const difficultyBonus = this.stage.difficulty === '도전' ? 80 : this.stage.difficulty === '연습' ? 42 : 18;
     const stars = success ? (this.hearts >= 3 ? 3 : this.hearts >= 2 ? 2 : 1) : 1;
     const finalScore = Math.max(90, this.score + solved * 24 + difficultyBonus + this.stage.id * 15);
-    this.scene.start('RewardScene', { modeId: 'english', stage: this.stage.id, score: finalScore, bestCombo: this.bestCombo, stars, stepsLeft: this.hearts });
+    NavigationSystem.safeStart(this, 'RewardScene', { modeId: 'english', stage: this.stage.id, score: finalScore, bestCombo: this.bestCombo, stars, stepsLeft: this.hearts });
   }
 
   private lessonRewardLabel(): string {

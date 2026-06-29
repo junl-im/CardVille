@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { NavigationSystem } from '../systems/NavigationSystem';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
 import { DrawSystem } from '../systems/DrawSystem';
@@ -33,7 +34,7 @@ export class ModeSelectScene extends Phaser.Scene {
 
     GAME_MODES.forEach((mode, i) => this.drawModeCard(mode, 188 + i * 104, mode.id === focus?.id));
 
-    new GameButton(this, 195, 746, '광장으로', 248, 56, 0xc9f4ff).onClick(() => this.scene.start('MainLobbyScene'));
+    new GameButton(this, 195, 746, '광장으로', 248, 56, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
   }
 
   private drawHeader(focus?: GameMode): void {
@@ -106,22 +107,22 @@ export class ModeSelectScene extends Phaser.Scene {
 
   private startMode(mode: GameMode): void {
     if (mode.routeScene === 'MathLabScene') {
-      this.scene.start('StageSelectScene', { modeId: 'math', title: mode.title, recommendedStage: SaveSystem.nextPlayableModeStage('math', MATH_STAGES.length) });
+      NavigationSystem.safeStart(this, 'StageSelectScene', { modeId: 'math', title: mode.title, recommendedStage: SaveSystem.nextPlayableModeStage('math', MATH_STAGES.length) });
       return;
     }
     if (mode.routeScene === 'MemoryForestScene') {
-      this.scene.start('StageSelectScene', { modeId: 'memory', title: mode.title, recommendedStage: SaveSystem.nextPlayableModeStage('memory', MEMORY_STAGES.length) });
+      NavigationSystem.safeStart(this, 'StageSelectScene', { modeId: 'memory', title: mode.title, recommendedStage: SaveSystem.nextPlayableModeStage('memory', MEMORY_STAGES.length) });
       return;
     }
     if (mode.routeScene === 'EnglishSchoolScene') {
-      this.scene.start('StageSelectScene', { modeId: 'english', title: mode.title, recommendedStage: SaveSystem.nextPlayableModeStage('english', ENGLISH_STAGES.length) });
+      NavigationSystem.safeStart(this, 'StageSelectScene', { modeId: 'english', title: mode.title, recommendedStage: SaveSystem.nextPlayableModeStage('english', ENGLISH_STAGES.length) });
       return;
     }
     if (mode.routeScene === 'DailyMissionScene') {
-      this.scene.start('DailyMissionScene');
+      NavigationSystem.safeStart(this, 'DailyMissionScene');
       return;
     }
-    this.scene.start('StageSelectScene', { modeId: mode.id, title: mode.title });
+    NavigationSystem.safeStart(this, 'StageSelectScene', { modeId: mode.id, title: mode.title });
   }
 
   private showPlannedToast(mode: GameMode): void {

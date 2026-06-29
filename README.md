@@ -1,8 +1,42 @@
-# CardVille 1.0.51
+# CardVille 1.0.52
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
 
+
+## 1.0.52 업데이트 내역
+
+- **불안정/겹침/배치/기술부채/UIUX 안정화 패스**를 진행했습니다.
+- 주요 장면 이동을 `NavigationSystem.safeStart` / `NavigationSystem.safeRestart`로 통합했습니다.
+  - 빠른 연속 터치로 중복 장면 전환이 발생하는 것을 막습니다.
+  - `BackConfirmScene` 같은 모달성 씬이 남아 화면을 막는 상황을 전환 전에 정리합니다.
+  - 이동 중 짧은 입력 차단막을 표시해 “멈춘 것처럼 보이는” 전환을 줄입니다.
+- `GameButton` 안정성과 디자인을 보강했습니다.
+  - 버튼 액션 예외를 잡아 콘솔에 `[CardVille] button action failed`로 남깁니다.
+  - 비활성 버튼도 흐릿하게 무너지는 대신 회색 프리미엄 팔레트로 다시 그려집니다.
+  - `screen-wide-premium-button-v152` 감사 태그를 추가했습니다.
+- 로비 UI/배치 안정성을 보강했습니다.
+  - `MainLobbyScene.drawRouteOverviewRibbon()` 추가
+  - 상단에 오늘 추천 건물/미션 READY 상태를 보여주는 작은 루트 리본을 추가했습니다.
+  - `screen-ui-stability-pass-v152` 태그를 추가했습니다.
+  - `lobbyLayoutPlan.ts`에 장면 전환, route ribbon, UI 안정성 감사 항목을 추가했습니다.
+- 성능/에셋 런타임을 개선했습니다.
+  - `public/assets`의 모든 PNG에 WebP companion을 보강했습니다.
+  - WebP 지원 브라우저에서는 `IntroLoadingScene`이 PNG 대신 WebP 경로를 우선 로드합니다.
+  - 캐시 버스터는 기존처럼 `CARDVILLE_ASSET_VERSION`을 유지합니다.
+  - `webp-asset-runtime-v152` 태그를 추가했습니다.
+- 검증 추가:
+  - `tools/check-navigation-guard.mjs`
+  - `tools/check-webp-runtime.mjs`
+  - `tools/check-screen-ui-stability.mjs`
+  - `npm run check:navigation-guard`
+  - `npm run check:webp-runtime`
+  - `npm run check:screen-ui-stability`
+- `npm run verify`에 위 검증 3개를 포함했습니다.
+- 기존 FullIndividual 에셋, 마을 건물 가독성 확대, 나가기 복구, PremiumAAA 선별 적용, WebP companion 정책은 유지합니다.
+- 신규 문서 파일은 만들지 않았습니다.
+- 삭제 파일은 없습니다.
+- `node_modules`, `dist`, `package-lock.json`은 통파일 ZIP에서 제외합니다.
 
 
 ## 1.0.51 업데이트 내역

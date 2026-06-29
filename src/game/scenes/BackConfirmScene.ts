@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { NavigationSystem } from '../systems/NavigationSystem';
 import { addFullBleedShade, applyResponsiveCamera } from '../systems/LayoutSystem';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
@@ -56,7 +57,7 @@ export class BackConfirmScene extends Phaser.Scene {
     for (const key of GAME_SCENES) {
       if (this.scene.isActive(key) || this.scene.isSleeping(key)) this.scene.stop(key);
     }
-    this.scene.start('LoginScene');
+    NavigationSystem.safeStart(this, 'LoginScene');
   }
 
   requestExit(): void {

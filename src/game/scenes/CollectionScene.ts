@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { NavigationSystem } from '../systems/NavigationSystem';
 import { applyResponsiveCamera } from '../systems/LayoutSystem';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
@@ -39,11 +40,11 @@ export class CollectionScene extends Phaser.Scene {
       this.drawAlbumCard(x, y, entry.card.id, entry.card.icon, entry.card.rarity, entry.count);
     });
 
-    const prev = new GameButton(this, 94, 688, '이전', 116, 52, 0xc9f4ff).onClick(() => this.scene.restart({ page: this.page - 1 }));
-    const next = new GameButton(this, 296, 688, '다음', 116, 52, 0xffd86f).onClick(() => this.scene.restart({ page: this.page + 1 }));
+    const prev = new GameButton(this, 94, 688, '이전', 116, 52, 0xc9f4ff).onClick(() => NavigationSystem.safeRestart(this, { page: this.page - 1 }));
+    const next = new GameButton(this, 296, 688, '다음', 116, 52, 0xffd86f).onClick(() => NavigationSystem.safeRestart(this, { page: this.page + 1 }));
     prev.setDisabled(this.page <= 0);
     next.setDisabled(this.page >= maxPage);
-    new GameButton(this, 195, 758, '광장으로', 248, 56, 0xc9f4ff).onClick(() => this.scene.start('MainLobbyScene'));
+    new GameButton(this, 195, 758, '광장으로', 248, 56, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
   }
 
 

@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { NavigationSystem } from '../systems/NavigationSystem';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
 import { DrawSystem } from '../systems/DrawSystem';
@@ -84,11 +85,11 @@ export class StageSelectScene extends Phaser.Scene {
       if (hasTouchDebug()) this.add.rectangle(195, y, 332, 90, 0x00ff66, 0.09).setStrokeStyle(1, 0x00ff66, 0.7);
     });
 
-    const prev = new GameButton(this, 94, 690, '이전', 116, 52, 0xc9f4ff).onClick(() => this.scene.restart({ modeId: this.modeId, title: this.title, page: this.page - 1 }));
-    const next = new GameButton(this, 296, 690, '다음', 116, 52, 0xffd86f).onClick(() => this.scene.restart({ modeId: this.modeId, title: this.title, page: this.page + 1 }));
+    const prev = new GameButton(this, 94, 690, '이전', 116, 52, 0xc9f4ff).onClick(() => NavigationSystem.safeRestart(this, { modeId: this.modeId, title: this.title, page: this.page - 1 }));
+    const next = new GameButton(this, 296, 690, '다음', 116, 52, 0xffd86f).onClick(() => NavigationSystem.safeRestart(this, { modeId: this.modeId, title: this.title, page: this.page + 1 }));
     prev.setDisabled(this.page <= 0);
     next.setDisabled(this.page >= maxPage);
-    new GameButton(this, 195, 758, '게임 선택으로', 248, 56, 0xc9f4ff).onClick(() => this.scene.start('ModeSelectScene', { focusModeId: this.modeId }));
+    new GameButton(this, 195, 758, '게임 선택으로', 248, 56, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'ModeSelectScene', { focusModeId: this.modeId }));
     this.showStageCoach();
   }
 
@@ -177,7 +178,7 @@ export class StageSelectScene extends Phaser.Scene {
   }
 
   private startStage(stage: StageCardEntry): void {
-    this.scene.start(stage.routeScene, { modeId: this.modeId, stage: stage.id });
+    NavigationSystem.safeStart(this, stage.routeScene, { modeId: this.modeId, stage: stage.id });
   }
 
   private showLockedHint(stageId: number): void {

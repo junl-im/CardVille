@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { NavigationSystem } from '../systems/NavigationSystem';
 import { applyResponsiveCamera, layout } from '../systems/LayoutSystem';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
@@ -45,7 +46,7 @@ export class RewardScene extends Phaser.Scene {
     DrawSystem.background(this, '카드팩 보상');
     this.drawRewardShowcase();
     this.drawPackClosed();
-    this.lobbyButton = new GameButton(this, 195, 736, '광장으로', 238, 52, 0xc9f4ff).onClick(() => this.scene.start('MainLobbyScene'));
+    this.lobbyButton = new GameButton(this, 195, 736, '광장으로', 238, 52, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
   }
 
   private drawRewardShowcase(): void {
@@ -197,10 +198,10 @@ export class RewardScene extends Phaser.Scene {
     ).setOrigin(0.5);
     this.add.text(195, 612, '획득 카드는 앨범에서 희귀도 프레임과 함께 다시 볼 수 있어요.', applyWrap(mutedText(11), 306)).setOrigin(0.5);
     if (this.source === 'shop') {
-      new GameButton(this, 122, 668, '상점으로', 116, 50, 0xffd86f).onClick(() => this.scene.start('ShopScene'));
-      new GameButton(this, 268, 668, '앨범 보기', 116, 50, 0xf0c7ff).onClick(() => this.scene.start('CollectionScene'));
+      new GameButton(this, 122, 668, '상점으로', 116, 50, 0xffd86f).onClick(() => NavigationSystem.safeStart(this, 'ShopScene'));
+      new GameButton(this, 268, 668, '앨범 보기', 116, 50, 0xf0c7ff).onClick(() => NavigationSystem.safeStart(this, 'CollectionScene'));
     } else {
-      new GameButton(this, 195, 668, '카드 앨범 보기', 238, 50, 0xf0c7ff).onClick(() => this.scene.start('CollectionScene'));
+      new GameButton(this, 195, 668, '카드 앨범 보기', 238, 50, 0xf0c7ff).onClick(() => NavigationSystem.safeStart(this, 'CollectionScene'));
     }
     this.lobbyButton?.setPosition(195, 742).setLabel('광장으로 돌아가기');
     this.spawnSparkles(meta.color);

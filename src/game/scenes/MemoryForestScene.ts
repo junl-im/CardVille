@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { NavigationSystem } from '../systems/NavigationSystem';
 import { DrawSystem } from '../systems/DrawSystem';
 import { applyResponsiveCamera, layout } from '../systems/LayoutSystem';
 import { allowAmbientMotion, ambientCount, CardVilleQuality, getCardVilleQuality, isMotionEnabled, scaledDuration } from '../systems/QualitySystem';
@@ -55,7 +56,7 @@ export class MemoryForestScene extends Phaser.Scene {
     this.statusText = this.add.text(195, 184, '', bodyText(14)).setOrigin(0.5);
     this.drawBoard();
     this.revealPreview();
-    new GameButton(this, 195, 770, '광장으로', 238, 54, 0xc9f4ff).onClick(() => this.scene.start('MainLobbyScene'));
+    new GameButton(this, 195, 770, '광장으로', 238, 54, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
   }
 
   private drawForestDecor(): void {
@@ -182,7 +183,7 @@ export class MemoryForestScene extends Phaser.Scene {
     const efficiency = Math.max(0, targetMoves + 4 - this.moves);
     const stageBonus = this.stage.id * 35 + Math.max(0, this.stage.pairs.length - 8) * 12;
     const stars = this.moves <= targetMoves ? 3 : this.moves <= targetMoves + 4 ? 2 : 1;
-    this.scene.start('RewardScene', { modeId: 'memory', stage: this.stage.id, score: this.score + efficiency * 20 + stageBonus, bestCombo: Math.max(1, efficiency), stars, stepsLeft: efficiency });
+    NavigationSystem.safeStart(this, 'RewardScene', { modeId: 'memory', stage: this.stage.id, score: this.score + efficiency * 20 + stageBonus, bestCombo: Math.max(1, efficiency), stars, stepsLeft: efficiency });
   }
 
   private refreshStatus(message?: string): void {

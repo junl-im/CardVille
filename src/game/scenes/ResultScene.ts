@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { NavigationSystem } from '../systems/NavigationSystem';
 import { applyResponsiveCamera } from '../systems/LayoutSystem';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
@@ -46,11 +47,11 @@ export class ResultScene extends Phaser.Scene {
 
     const reward = new GameButton(this, 195, 510, this.failed ? '다시 하기' : '보상 받기', 276, 64, 0xffd86f);
     reward.onClick(() => {
-      if (this.failed) this.scene.start('PlayScene', { modeId: this.modeId, stage: this.stage });
-      else this.scene.start('RewardScene', { modeId: this.modeId, stage: this.stage, score: this.score, bestCombo: this.bestCombo, stars: record.stars, stepsLeft: this.stepsLeft });
+      if (this.failed) NavigationSystem.safeStart(this, 'PlayScene', { modeId: this.modeId, stage: this.stage });
+      else NavigationSystem.safeStart(this, 'RewardScene', { modeId: this.modeId, stage: this.stage, score: this.score, bestCombo: this.bestCombo, stars: record.stars, stepsLeft: this.stepsLeft });
     });
 
     const back = new GameButton(this, 195, 598, '스테이지 선택', 276, 56, 0x8fd3ff);
-    back.onClick(() => this.scene.start('StageSelectScene', { modeId: this.modeId }));
+    back.onClick(() => NavigationSystem.safeStart(this, 'StageSelectScene', { modeId: this.modeId }));
   }
 }

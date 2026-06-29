@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { NavigationSystem } from '../systems/NavigationSystem';
 import { DrawSystem } from '../systems/DrawSystem';
 import { DailyMissionEntry, DailyMissionId, DailyMissionSystem } from '../systems/DailyMissionSystem';
 import { SaveSystem } from '../systems/SaveSystem';
@@ -44,9 +45,9 @@ export class DailyMissionScene extends Phaser.Scene {
     board.missions.forEach((mission, index) => this.drawMissionRow(mission, 344 + index * 54));
     this.drawCompletionBonus(board.dailyCompletionReady, board.dailyCompletionClaimed, board.dailyCompletionRewardText);
 
-    new GameButton(this, 108, 704, '게임 선택', 132, 50, 0xc9f4ff).onClick(() => this.scene.start('ModeSelectScene'));
-    new GameButton(this, 282, 704, '상점', 132, 50, 0xffd86f).onClick(() => this.scene.start('ShopScene'));
-    new GameButton(this, 195, 766, '광장으로', 236, 52, 0xc9f4ff).onClick(() => this.scene.start('MainLobbyScene'));
+    new GameButton(this, 108, 704, '게임 선택', 132, 50, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'ModeSelectScene'));
+    new GameButton(this, 282, 704, '상점', 132, 50, 0xffd86f).onClick(() => NavigationSystem.safeStart(this, 'ShopScene'));
+    new GameButton(this, 195, 766, '광장으로', 236, 52, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
     if (message) this.showToast(message);
     this.showMissionCoach(board.readyCount > 0 || board.attendanceReady);
   }
@@ -141,7 +142,7 @@ export class DailyMissionScene extends Phaser.Scene {
       tone,
       primaryLabel: '계속',
       secondaryLabel: '상점 보기',
-      onSecondary: () => this.scene.start('ShopScene')
+      onSecondary: () => NavigationSystem.safeStart(this, 'ShopScene')
     });
   }
 

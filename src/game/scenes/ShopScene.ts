@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { NavigationSystem } from '../systems/NavigationSystem';
 import { applyResponsiveCamera } from '../systems/LayoutSystem';
 import { DrawSystem } from '../systems/DrawSystem';
 import { SaveSystem } from '../systems/SaveSystem';
@@ -105,9 +106,9 @@ export class ShopScene extends Phaser.Scene {
 
     SHOP_OFFERS.forEach((offer, index) => this.drawOfferCard(offer, 258 + index * 112, profile, daily, offer.id === recommendedOfferId));
 
-    new GameButton(this, 112, 670, '앨범 보기', 142, 50, 0xf0c7ff).onClick(() => this.scene.start('CollectionScene'));
-    new GameButton(this, 278, 670, '게임관', 126, 50, 0xc9f4ff).onClick(() => this.scene.start('ModeSelectScene'));
-    new GameButton(this, 195, 746, '광장으로', 248, 56, 0xc9f4ff).onClick(() => this.scene.start('MainLobbyScene'));
+    new GameButton(this, 112, 670, '앨범 보기', 142, 50, 0xf0c7ff).onClick(() => NavigationSystem.safeStart(this, 'CollectionScene'));
+    new GameButton(this, 278, 670, '게임관', 126, 50, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'ModeSelectScene'));
+    new GameButton(this, 195, 746, '광장으로', 248, 56, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
     this.showShopCoach(daily.canClaim);
   }
 
@@ -261,7 +262,7 @@ export class ShopScene extends Phaser.Scene {
     SaveSystem.recordShopOffer(offer.id);
     this.showPurchaseTransition(offer);
     this.time.delayedCall(260, () => {
-      this.scene.start('RewardScene', {
+      NavigationSystem.safeStart(this, 'RewardScene', {
         modeId: 'daily',
         source: 'shop',
         packLabel: offer.title,

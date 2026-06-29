@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { NavigationSystem } from '../systems/NavigationSystem';
 import { DrawSystem } from '../systems/DrawSystem';
 import { SaveSystem } from '../systems/SaveSystem';
 import { GameButton } from '../ui/GameButton';
@@ -206,7 +207,7 @@ export class PlayScene extends Phaser.Scene {
     this.drawMiniSlot(x, 448, '섞기', 0xf0c7ff);
     this.shuffleButton = new GameButton(this, x, 509, `섞기${this.shufflesLeft}`, 56, 48, 0xf0c7ff).onClick(() => this.useShuffle());
 
-    new GameButton(this, x, 614, '나감', 56, 48, 0xc9f4ff).onClick(() => this.scene.start('StageSelectScene', { modeId: this.modeId, title: '말 카드' }));
+    new GameButton(this, x, 614, '나감', 56, 48, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'StageSelectScene', { modeId: this.modeId, title: '말 카드' }));
   }
 
   private drawMiniSlot(x: number, y: number, label: string, color: number): void {
@@ -674,7 +675,7 @@ export class PlayScene extends Phaser.Scene {
 
   private finish(success: boolean): void {
     this.inputLocked = true;
-    this.scene.start('ResultScene', {
+    NavigationSystem.safeStart(this, 'ResultScene', {
       modeId: this.modeId,
       stage: this.stage,
       moves: this.moves,

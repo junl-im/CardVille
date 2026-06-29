@@ -1,6 +1,9 @@
 import Phaser from 'phaser';
+import { NavigationSystem } from '../systems/NavigationSystem';
 import { addCoverImage, applyResponsiveCamera, layout } from '../systems/LayoutSystem';
 import { ASSET_MANIFEST, CARDVILLE_ASSET_VERSION } from '../data/assetManifest';
+
+export const CARDVILLE_WEBP_RUNTIME_TAG = 'webp-asset-runtime-v152' as const;
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
 export class IntroLoadingScene extends Phaser.Scene {
@@ -11,6 +14,7 @@ export class IntroLoadingScene extends Phaser.Scene {
   private progressText?: Phaser.GameObjects.Text;
   private nextScene = 'MainLobbyScene';
   private queuedKeys = new Set<string>();
+  private preferWebp = false;
 
   constructor() { super('IntroLoadingScene'); }
 
@@ -20,6 +24,7 @@ export class IntroLoadingScene extends Phaser.Scene {
     this.minIntroDone = false;
     this.finished = false;
     this.queuedKeys.clear();
+    this.preferWebp = this.detectWebpSupport();
   }
 
   create(): void {
@@ -128,7 +133,26 @@ export class IntroLoadingScene extends Phaser.Scene {
   private queueImage(key: string, url: string): void {
     if (this.textures.exists(key) || this.queuedKeys.has(key)) return;
     this.queuedKeys.add(key);
-    this.load.image(key, this.resolveAssetUrl(url));
+    this.load.image(key, this.resolveAssetUrl(this.preferredAssetPath(url)));
+  }
+
+
+  private detectWebpSupport(): boolean {
+    if (typeof document === 'undefined') return false;
+    try {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1;
+      canvas.height = 1;
+      return canvas.toDataURL('image/webp').startsWith('data:image/webp');
+    } catch {
+      return false;
+    }
+  }
+
+  private preferredAssetPath(url: string): string {
+    if (!this.preferWebp || !url.endsWith('.png')) return url;
+    if (!url.startsWith('assets/')) return url;
+    return url.replace(/\.png$/, '.webp');
   }
 
   private resolveAssetUrl(url: string): string {
@@ -214,6 +238,6 @@ export class IntroLoadingScene extends Phaser.Scene {
       this.videoEl.remove();
       this.videoEl = undefined;
     }
-    this.scene.start(this.nextScene);
+    NavigationSystem.safeStart(this, this.nextScene);
   }
 }

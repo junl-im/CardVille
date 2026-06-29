@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { NavigationSystem } from '../systems/NavigationSystem';
 import { DrawSystem } from '../systems/DrawSystem';
 import { applyResponsiveCamera, layout } from '../systems/LayoutSystem';
 import { allowAmbientMotion, ambientCount, CardVilleQuality, getCardVilleQuality, isMotionEnabled, scaledDuration } from '../systems/QualitySystem';
@@ -49,7 +50,7 @@ export class MathLabScene extends Phaser.Scene {
     this.add.text(195, 150, this.difficultyRewardLabel(), goldText(10)).setOrigin(0.5).setAlpha(0.9);
     this.drawConsole();
     this.drawProblem();
-    new GameButton(this, 195, 768, '광장으로', 238, 54, 0xc9f4ff).onClick(() => this.scene.start('MainLobbyScene'));
+    new GameButton(this, 195, 768, '광장으로', 238, 54, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
   }
 
   private drawLabDecor(): void {
@@ -154,7 +155,7 @@ export class MathLabScene extends Phaser.Scene {
     const difficultyBonus = this.stage.difficulty === '도전' ? 80 : this.stage.difficulty === '집중' ? 40 : 0;
     const stars = success ? (this.hearts >= 3 ? 3 : this.hearts >= 2 ? 2 : 1) : 1;
     const finalScore = Math.max(80, this.score + solved * 25 + difficultyBonus + this.stage.id * 12);
-    this.scene.start('RewardScene', { modeId: 'math', stage: this.stage.id, score: finalScore, bestCombo: this.bestCombo, stars, stepsLeft: this.hearts });
+    NavigationSystem.safeStart(this, 'RewardScene', { modeId: 'math', stage: this.stage.id, score: finalScore, bestCombo: this.bestCombo, stars, stepsLeft: this.hearts });
   }
 
   private difficultyRewardLabel(): string {

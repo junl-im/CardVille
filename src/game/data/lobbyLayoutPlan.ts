@@ -1,4 +1,4 @@
-export const LOBBY_LAYOUT_PLAN_VERSION = '1.0.51' as const;
+export const LOBBY_LAYOUT_PLAN_VERSION = '1.0.52' as const;
 
 export type LobbySafeZone = {
   id: string;
@@ -24,7 +24,9 @@ export const LOBBY_LAYOUT_GUARDS = [
   'hero and black cat remain visually centered',
   'open/planned/locked building assignment must be visible',
   'no SVG and no emoji-only production asset dependency',
-  'premium 1254 PNG buildings must be aspect-fit into visual boxes without forced stretch'
+  'premium 1254 PNG buildings must be aspect-fit into visual boxes without forced stretch',
+  'scene navigation must pass through NavigationSystem.safeStart or safeRestart',
+  'route ribbon must not overlap the top HUD, settings button, or building touch zones'
 ] as const;
 
 export const LOBBY_DESIGN_CHECKS = [
@@ -36,7 +38,9 @@ export const LOBBY_DESIGN_CHECKS = [
   'premium buildings use visualWidth/visualHeight and fitImageToBox to prevent squashed art',
   'new merchant and town cat NPCs must remain large enough to read but outside bottom HUD',
   '1.0.51 village buildings render larger with readable premium stage shadows and no empty texture feel',
-  'village-readable-building-scale-v150'
+  'village-readable-building-scale-v150',
+  'screen-ui-stability-pass-v152',
+  'scene-navigation-guard-v152'
 ] as const;
 
 
@@ -57,5 +61,7 @@ export function rectsOverlap(a: { x: number; y: number; width: number; height: n
 export const LOBBY_VISIBLE_ASSET_ROUTE_AUDIT = [
   '1.0.51 keeps premium lobby assets self-contained in patch ZIPs',
   'IntroLoadingScene loads public assets with BASE_URL and CARDVILLE_ASSET_VERSION cache busting',
-  'GameButton defaults to premium vector CTA styling instead of old baked button skins'
+  'GameButton defaults to premium vector CTA styling instead of old baked button skins',
+  'GameButton disabled state remains styled and readable instead of looking broken',
+  'major scene transitions are guarded against duplicate taps and modal leftovers'
 ] as const;

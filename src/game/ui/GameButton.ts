@@ -2,12 +2,13 @@ import Phaser from 'phaser';
 import { darkText } from './TextStyles';
 import { compactText, fitTextSize } from '../systems/LayoutSystem';
 
-export type ButtonAction = () => void;
+export type ButtonAction = () => unknown | Promise<unknown>;
 
 export type GameButtonOptions = {
   skin?: boolean;
   shine?: boolean;
   debounceMs?: number;
+  lockOnClick?: boolean;
 };
 
 function chooseButtonSkin(scene: Phaser.Scene, width: number): { normal: string; press: string } | null {
@@ -20,6 +21,7 @@ function chooseButtonSkin(scene: Phaser.Scene, width: number): { normal: string;
 
 
 export const CARDVILLE_PREMIUM_BUTTON_STYLE_TAG = 'premium-vector-button-v148' as const;
+export const CARDVILLE_BUTTON_UX_AUDIT_TAG = 'screen-wide-premium-button-v152' as const;
 
 type ButtonPalette = { top: number; bottom: number; stroke: number; glow: number; text: string };
 
@@ -49,6 +51,7 @@ export class GameButton extends Phaser.GameObjects.Container {
   private lastActivatedAt = -9999;
   private debounceMs: number;
   private shineEnabled: boolean;
+  private lockOnClick: boolean;
 
   constructor(scene: Phaser.Scene, x: number, y: number, text: string, width = 280, height = 58, color = 0x8fd3ff, options: GameButtonOptions = {}) {
     super(scene, x, y);
@@ -58,6 +61,7 @@ export class GameButton extends Phaser.GameObjects.Container {
     this.colorValue = color;
     this.debounceMs = options.debounceMs ?? 360;
     this.shineEnabled = options.shine !== false;
+    this.lockOnClick = options.lockOnClick === true;
 
     const hitW = Math.max(width + 6, 48);
     const hitH = Math.max(height + 6, 48);
@@ -95,7 +99,19 @@ export class GameButton extends Phaser.GameObjects.Container {
       this.lastActivatedAt = this.scene.time.now;
       this.emit('pointerup', pointer);
       this.emit('click', pointer);
-      this.action?.();
+      if (this.lockOnClick) this.hitZone.disableInteractive();
+      try {
+        const result = this.action?.();
+        if (result && typeof (result as Promise<unknown>).catch === 'function') {
+          void (result as Promise<unknown>).catch((error) => {
+            console.error('[CardVille] button action failed', { label: this.label.text, error });
+            if (!this.disabled) this.hitZone.setInteractive({ useHandCursor: true });
+          });
+        }
+      } catch (error) {
+        console.error('[CardVille] button action failed', { label: this.label.text, error });
+        if (!this.disabled) this.hitZone.setInteractive({ useHandCursor: true });
+      }
     });
 
     this.hitZone.on('pointerout', () => {
@@ -120,16 +136,18 @@ export class GameButton extends Phaser.GameObjects.Container {
 
   setDisabled(value: boolean): this {
     this.disabled = value;
-    this.alpha = value ? 0.52 : 1;
+    this.alpha = value ? 0.82 : 1;
     this.hitZone.disableInteractive();
     if (!value) this.hitZone.setInteractive({ useHandCursor: true });
+    this.draw(false);
     return this;
   }
 
   setLabel(text: string): this {
     const baseLabelSize = this.heightValue >= 64 ? 20 : this.heightValue <= 46 ? 14 : 17;
     this.label.setText(compactText(text, Math.max(5, Math.floor(this.widthValue / 24))));
-    this.label.setStyle({ ...darkText(fitTextSize(text, baseLabelSize, 11)), color: resolveButtonPalette(this.colorValue).text, fontStyle: '900' });
+    this.label.setStyle({ ...darkText(fitTextSize(text, baseLabelSize, 11)), color: resolveButtonPalette(this.disabled ? 0x9aa4ba : this.colorValue).text, fontStyle: '900' });
+    this.draw(false);
     return this;
   }
 
@@ -141,7 +159,7 @@ export class GameButton extends Phaser.GameObjects.Container {
   private draw(pressed: boolean): void {
     const width = this.widthValue;
     const height = this.heightValue;
-    const color = this.colorValue;
+    const color = this.disabled ? 0x9aa4ba : this.colorValue;
     this.bg.clear();
     this.bg.fillStyle(0x000000, pressed ? 0.10 : 0.22);
     this.bg.fillRoundedRect(-width / 2 + 4, -height / 2 + 8, width, height, 20);
@@ -162,7 +180,7 @@ export class GameButton extends Phaser.GameObjects.Container {
     const radius = Math.min(22, Math.max(15, height * 0.36));
     this.bg.fillStyle(palette.glow, pressed ? 0.12 : 0.20);
     this.bg.fillRoundedRect(-width / 2 - 3, -height / 2 + yOffset - 2, width + 6, height + 6, radius + 3);
-    this.bg.fillGradientStyle(palette.top, palette.top, palette.bottom, palette.bottom, 1, 1, 1, 1);
+    this.bg.fillGradientStyle(palette.top, palette.top, palette.bottom, palette.bottom, this.disabled ? 0.58 : 1, this.disabled ? 0.58 : 1, this.disabled ? 0.66 : 1, this.disabled ? 0.66 : 1);
     this.bg.fillRoundedRect(-width / 2, -height / 2 + yOffset, width, height, radius);
     this.bg.fillStyle(0x5f3608, pressed ? 0.10 : 0.18);
     this.bg.fillRoundedRect(-width / 2 + 8, height / 2 - 13 + yOffset, width - 16, 8, 7);
@@ -171,7 +189,7 @@ export class GameButton extends Phaser.GameObjects.Container {
     this.bg.lineStyle(1, 0x07152f, pressed ? 0.18 : 0.28);
     this.bg.strokeRoundedRect(-width / 2 + 4, -height / 2 + 4 + yOffset, width - 8, height - 8, Math.max(10, radius - 5));
     if (this.shineEnabled) {
-      this.bg.fillStyle(0xffffff, pressed ? 0.07 : 0.16);
+      this.bg.fillStyle(0xffffff, this.disabled ? 0.06 : pressed ? 0.07 : 0.16);
       this.bg.fillRoundedRect(-width / 2 + 18, -height / 2 + 8 + yOffset, width - 36, Math.max(6, height * 0.13), 8);
     }
   }

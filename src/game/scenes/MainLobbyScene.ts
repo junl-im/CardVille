@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { NavigationSystem } from '../systems/NavigationSystem';
 import { addCoverImage, applyResponsiveCamera, hasTouchDebug, layout } from '../systems/LayoutSystem';
 import { DrawSystem } from '../systems/DrawSystem';
 import { SaveSystem } from '../systems/SaveSystem';
@@ -16,10 +17,11 @@ import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 import { AccessibilitySystem } from '../systems/AccessibilitySystem';
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
-const LOBBY_VERSION = '1.0.51';
+const LOBBY_VERSION = '1.0.52';
 const MISSION_TONE_COLORS = { gold: 0xffd86f, blue: 0x8fd3ff, purple: 0xd7a5ff, green: 0xa9f5b5, coral: 0xffb39a } as const;
 const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-visible-v149' as const;
 const VILLAGE_VISIBLE_BUILDING_SCALE_TAG = 'village-readable-building-scale-v150' as const;
+const SCREEN_UI_STABILITY_TAG = 'screen-ui-stability-pass-v152' as const;
 const HERO_HOME = { x: 195, y: 545 } as const;
 const CAT_HOME = { x: 145, y: 585 } as const;
 
@@ -53,6 +55,7 @@ export class MainLobbyScene extends Phaser.Scene {
     this.drawTopBrandHud(profile.coins, profile.level, cleared, cards);
     this.drawLobbySettingsButton();
     const recommendedBuildingId = this.getRecommendedBuildingId();
+    this.drawRouteOverviewRibbon(recommendedBuildingId);
     this.drawBuildings(recommendedBuildingId);
     this.drawDioramaNPCs();
     this.drawHeroParty();
@@ -130,7 +133,26 @@ export class MainLobbyScene extends Phaser.Scene {
     if (this.textures.exists('assetAlbum')) album.add(this.add.image(-20, 0, 'assetAlbum').setDisplaySize(28, 28));
     album.add(this.add.text(10, 1, '앨범', { fontFamily: 'system-ui, sans-serif', fontSize: '14px', color: '#2a160c', fontStyle: '900' }).setOrigin(0.5));
     album.setSize(90, 58).setInteractive({ useHandCursor: true });
-    album.on('pointerup', () => this.scene.start('CollectionScene'));
+    album.on('pointerup', () => NavigationSystem.safeStart(this, 'CollectionScene'));
+  }
+
+
+  private drawRouteOverviewRibbon(recommendedBuildingId: string): void {
+    const missionStatus = DailyMissionSystem.getLobbyStatus();
+    const recommended = DIORAMA_BUILDINGS.find((building) => building.id === recommendedBuildingId);
+    const label = recommended ? `${recommended.title} · ${missionStatus.shouldPrioritizeEvent ? missionStatus.lobbyBadgeLabel : 'NEXT'}` : '추천 루트 준비';
+    const copy = recommendedBuildingId === 'event'
+      ? missionStatus.nextActionCopy
+      : '추천 건물을 따라가면 학습, 상점, 미션 보상이 자연스럽게 이어져요.';
+    const ribbon = this.add.container(149, 112).setDepth(925).setName(SCREEN_UI_STABILITY_TAG);
+    ribbon.add(this.add.rectangle(0, 0, 258, 38, 0x07142c, 0.72).setStrokeStyle(1, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.42));
+    ribbon.add(this.add.rectangle(-93, 0, 58, 24, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.92).setStrokeStyle(1, 0xffffff, 0.34));
+    ribbon.add(this.add.text(-93, 0, '추천', darkText(8)).setOrigin(0.5));
+    ribbon.add(this.add.text(-56, -7, label, goldText(10)).setOrigin(0, 0.5));
+    ribbon.add(this.add.text(-56, 10, copy, applyWrap(mutedText(8), 174, 'left')).setOrigin(0, 0.5));
+    if (allowAmbientMotion(this.quality) && missionStatus.shouldPrioritizeEvent) {
+      this.tweens.add({ targets: ribbon, y: 108, alpha: 0.78, duration: scaledDuration(1100, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    }
   }
 
   private getRecommendedBuildingId(): string {
@@ -383,7 +405,7 @@ export class MainLobbyScene extends Phaser.Scene {
       '건물/오브젝트: 개별 PNG/WebP',
       `성능 모드: ${qualitySummary(this.quality)}`,
       `접근성: ${AccessibilitySystem.summary()}`,
-      `배치 플랜: ${LOBBY_LAYOUT_PLAN_VERSION} · ${PREMIUM_LOBBY_FIT_TAG} · ${VILLAGE_VISIBLE_BUILDING_SCALE_TAG}`
+      `배치 플랜: ${LOBBY_LAYOUT_PLAN_VERSION} · ${PREMIUM_LOBBY_FIT_TAG} · ${VILLAGE_VISIBLE_BUILDING_SCALE_TAG} · ${SCREEN_UI_STABILITY_TAG}`
     ];
     lines.forEach((line, index) => {
       panel.add(this.add.text(-126, -48 + index * 18, `• ${line}`, mutedText(10)).setOrigin(0, 0.5));
@@ -742,14 +764,14 @@ export class MainLobbyScene extends Phaser.Scene {
 
   private goToRoute(route: DioramaRoute): void {
     if (route.scene === 'MathLabScene') {
-      this.scene.start('StageSelectScene', { modeId: 'math', title: '연산 연구소', recommendedStage: SaveSystem.nextPlayableModeStage('math', MATH_STAGES.length) });
+      NavigationSystem.safeStart(this, 'StageSelectScene', { modeId: 'math', title: '연산 연구소', recommendedStage: SaveSystem.nextPlayableModeStage('math', MATH_STAGES.length) });
       return;
     }
     if (route.scene === 'MemoryForestScene') {
-      this.scene.start('StageSelectScene', { modeId: 'memory', title: '기억의 숲', recommendedStage: SaveSystem.nextPlayableModeStage('memory', MEMORY_STAGES.length) });
+      NavigationSystem.safeStart(this, 'StageSelectScene', { modeId: 'memory', title: '기억의 숲', recommendedStage: SaveSystem.nextPlayableModeStage('memory', MEMORY_STAGES.length) });
       return;
     }
-    this.scene.start(route.scene, 'data' in route ? route.data : undefined);
+    NavigationSystem.safeStart(this, route.scene, 'data' in route ? route.data : undefined);
   }
 
   private showLockedMessage(title: string): void {
