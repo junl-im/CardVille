@@ -7,6 +7,7 @@ import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
 import { applyWrap, bodyText, darkText, goldText, mutedText, titleText } from '../ui/TextStyles';
 import { CoachMarkSystem } from '../systems/CoachMarkSystem';
+import { RewardPopupSystem, RewardPopupTone } from '../systems/RewardPopupSystem';
 
 const ACCENT_COLORS: Record<DailyMissionEntry['accent'], number> = {
   gold: 0xffd86f,
@@ -36,6 +37,7 @@ export class DailyMissionScene extends Phaser.Scene {
 
     this.add.text(195, 84, '이벤트 광장', goldText(24)).setOrigin(0.5);
     this.add.text(195, 115, '출석, 수업 클리어, 카드팩 개봉을 주간 목표까지 연결해 보상 루프를 안정화합니다.', applyWrap(mutedText(11), 318)).setOrigin(0.5);
+    this.drawNextAction(board.nextActionTitle, board.nextActionCopy);
     this.drawProgressMeter(board.completionRatio, board.readyCount, board.claimedCount);
     this.drawStreakWeekly(board.streakDays, board.bestStreakDays, board.weeklyProgress, board.weeklyTarget, board.weeklyReady, board.weeklyClaimed, board.weeklyCompletionRatio);
     this.drawAttendance(board.attendanceReady, board.attendanceClaimed, board.attendanceRewardCoins);
@@ -48,13 +50,19 @@ export class DailyMissionScene extends Phaser.Scene {
     this.showMissionCoach(board.readyCount > 0 || board.attendanceReady);
   }
 
+  private drawNextAction(title: string, copy: string): void {
+    this.add.rectangle(195, 144, 316, 34, 0xfffbf1, 0.92).setStrokeStyle(1, 0xffd86f, 0.52);
+    this.add.text(62, 137, title, darkText(11)).setOrigin(0, 0.5);
+    this.add.text(62, 151, copy, applyWrap(bodyText(8), 266, 'left')).setOrigin(0, 0.5);
+  }
+
   private drawProgressMeter(ratio: number, readyCount: number, claimedCount: number): void {
-    this.add.rectangle(195, 154, 316, 46, 0x07142c, 0.58).setStrokeStyle(1, 0xffffff, 0.18);
-    this.add.text(62, 143, '오늘 진행도', mutedText(10)).setOrigin(0, 0.5);
-    this.add.text(328, 143, `받을 보상 ${readyCount}개`, goldText(10)).setOrigin(1, 0.5);
-    this.add.rectangle(195, 165, 250, 10, 0x26334f, 0.78);
-    this.add.rectangle(70, 165, Math.max(10, 250 * Phaser.Math.Clamp(ratio, 0, 1)), 10, 0xffd86f, 0.96).setOrigin(0, 0.5);
-    this.add.text(195, 183, `미션 보상 수령 ${claimedCount}/5 · 자정 UTC에 새로고침`, mutedText(9)).setOrigin(0.5);
+    this.add.rectangle(195, 180, 316, 42, 0x07142c, 0.58).setStrokeStyle(1, 0xffffff, 0.18);
+    this.add.text(62, 170, '오늘 진행도', mutedText(10)).setOrigin(0, 0.5);
+    this.add.text(328, 170, `받을 보상 ${readyCount}개`, goldText(10)).setOrigin(1, 0.5);
+    this.add.rectangle(195, 190, 250, 10, 0x26334f, 0.78);
+    this.add.rectangle(70, 190, Math.max(10, 250 * Phaser.Math.Clamp(ratio, 0, 1)), 10, 0xffd86f, 0.96).setOrigin(0, 0.5);
+    this.add.text(195, 207, `미션 보상 수령 ${claimedCount}/5 · 자정 UTC에 새로고침`, mutedText(9)).setOrigin(0.5);
   }
 
   private drawStreakWeekly(streakDays: number, bestStreakDays: number, weeklyProgress: number, weeklyTarget: number, weeklyReady: boolean, weeklyClaimed: boolean, weeklyRatio: number): void {
@@ -94,17 +102,32 @@ export class DailyMissionScene extends Phaser.Scene {
 
   private claimAttendance(): void {
     const result = DailyMissionSystem.claimAttendanceReward();
-    this.drawBoard(result.rewardText);
+    this.drawBoard();
+    this.showRewardPopup('출석 보상 수령', result.rewardText, 'gold');
   }
 
   private claimMission(id: DailyMissionId): void {
     const result = DailyMissionSystem.claimMissionReward(id);
-    this.drawBoard(result.rewardText);
+    const mission = DailyMissionSystem.getBoard().missions.find((entry) => entry.id === id);
+    this.drawBoard();
+    this.showRewardPopup(mission ? `${mission.title} 완료` : '미션 보상 수령', result.rewardText, mission?.accent ?? 'blue');
   }
 
   private claimWeekly(): void {
     const result = DailyMissionSystem.claimWeeklyReward();
-    this.drawBoard(result.rewardText);
+    this.drawBoard();
+    this.showRewardPopup('주간 미션 완성', result.rewardText, 'purple');
+  }
+
+  private showRewardPopup(title: string, message: string, tone: RewardPopupTone): void {
+    RewardPopupSystem.show(this, {
+      title,
+      message,
+      tone,
+      primaryLabel: '계속',
+      secondaryLabel: '상점 보기',
+      onSecondary: () => this.scene.start('ShopScene')
+    });
   }
 
   private showToast(message: string): void {

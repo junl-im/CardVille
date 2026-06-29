@@ -11,10 +11,11 @@ import { LOBBY_LAYOUT_GUARDS, LOBBY_LAYOUT_PLAN_VERSION } from '../data/lobbyLay
 import { MATH_STAGES } from '../data/mathStages';
 import { MEMORY_STAGES } from '../data/memoryStages';
 import { ENGLISH_STAGES } from '../data/englishStages';
-import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
+import { applyWrap, bodyText, darkText, goldText, mutedText, titleText } from '../ui/TextStyles';
 import { CoachMarkSystem } from '../systems/CoachMarkSystem';
+import { AccessibilitySystem } from '../systems/AccessibilitySystem';
 
-const LOBBY_VERSION = '1.0.42';
+const LOBBY_VERSION = '1.0.43';
 const HERO_HOME = { x: 195, y: 545 } as const;
 const CAT_HOME = { x: 145, y: 585 } as const;
 
@@ -322,27 +323,46 @@ export class MainLobbyScene extends Phaser.Scene {
     }
     panel.add(this.add.text(0, -106, '카드마을 설정', titleText(22)).setOrigin(0.5));
     panel.add(this.add.text(0, -70, '현재 로비 안전 규칙', goldText(15)).setOrigin(0.5));
+    const prefs = AccessibilitySystem.getPrefs();
     const lines = [
-      '카메라: 고정',
-      '스크롤: 없음',
+      '카메라: 고정 · 스크롤 없음',
       '건물/오브젝트: 개별 PNG/WebP',
-      'SVG: 사용 안 함',
-      'GitHub Actions: npm run verify',
       `성능 모드: ${qualitySummary(this.quality)}`,
+      `접근성: ${AccessibilitySystem.summary()}`,
       `배치 플랜: ${LOBBY_LAYOUT_PLAN_VERSION}`
     ];
     lines.forEach((line, index) => {
-      panel.add(this.add.text(-126, -44 + index * 20, `• ${line}`, mutedText(12)).setOrigin(0, 0.5));
+      panel.add(this.add.text(-126, -48 + index * 18, `• ${line}`, mutedText(10)).setOrigin(0, 0.5));
     });
-    panel.add(this.add.text(0, 100, LOBBY_SAFE_RULES.slice(0, 2).join(' · '), applyWrap(mutedText(10), 250)).setOrigin(0.5));
-    panel.add(this.add.text(0, 116, LOBBY_LAYOUT_GUARDS.slice(0, 2).join(' · '), applyWrap(mutedText(9), 250)).setOrigin(0.5));
-    const close = this.add.container(0, 140);
+
+    const addToggle = (y: number, label: string, enabled: boolean, toggle: () => void) => {
+      const row = this.add.container(0, y);
+      row.add(this.add.rectangle(0, 0, 252, 30, enabled ? 0xfffbf1 : 0x26334f, enabled ? 0.92 : 0.66).setStrokeStyle(1, enabled ? 0xffd86f : 0x8fd3ff, enabled ? 0.64 : 0.32));
+      row.add(this.add.text(-112, 0, label, enabled ? darkText(10) : mutedText(10)).setOrigin(0, 0.5));
+      row.add(this.add.text(105, 0, enabled ? 'ON' : 'OFF', enabled ? darkText(10) : mutedText(10)).setOrigin(1, 0.5));
+      const hit = this.add.zone(0, 0, 268, 38).setInteractive({ useHandCursor: true });
+      hit.on('pointerup', () => {
+        toggle();
+        this.quality = getCardVilleQuality();
+        this.activeSettingsPanel?.destroy();
+        this.activeSettingsPanel = undefined;
+        this.toggleLobbySettingsPanel();
+      });
+      row.add(hit);
+      panel.add(row);
+    };
+    addToggle(54, '편안한 모션', prefs.reduceMotion, () => AccessibilitySystem.toggleReduceMotion());
+    addToggle(86, '고대비 화면', prefs.highContrast, () => AccessibilitySystem.toggleHighContrast());
+    addToggle(118, '큰 안내 문구', prefs.largeText, () => AccessibilitySystem.toggleLargeText());
+    panel.add(this.add.text(0, 138, LOBBY_SAFE_RULES.slice(0, 1).join(' · '), applyWrap(mutedText(9), 250)).setOrigin(0.5));
+    const close = this.add.container(0, 150);
     if (this.textures.exists('uiNameplateGold')) close.add(this.add.image(0, 0, 'uiNameplateGold').setDisplaySize(120, 46));
     else close.add(this.add.rectangle(0, 0, 118, 42, 0xffd86f, 0.92).setStrokeStyle(2, 0xffffff, 0.44));
     close.add(this.add.text(0, 0, '닫기', { fontFamily: 'system-ui, sans-serif', fontSize: '15px', color: '#2a160c', fontStyle: '900' }).setOrigin(0.5));
     close.setSize(120, 46).setInteractive({ useHandCursor: true });
     close.on('pointerup', () => this.toggleLobbySettingsPanel());
     panel.add(close);
+    if (this.quality.highContrast) panel.add(this.add.rectangle(0, 0, 322, 338, 0xffffff, 0.035).setStrokeStyle(1, 0xffffff, 0.22));
     panel.setScale(0.88).setAlpha(0);
     this.tweens.add({ targets: panel, scale: 1, alpha: 1, duration: 180, ease: 'Back.easeOut' });
     this.activeSettingsPanel = panel;

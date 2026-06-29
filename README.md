@@ -1,7 +1,46 @@
-# CardVille 1.0.42
+# CardVille 1.0.43
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
+
+## 1.0.43 업데이트 내역
+
+- **무에셋 미션 보상 팝업/접근성 UX 패스**를 진행했습니다.
+- 새 이미지 에셋은 아직 준비 전이므로 기존 에셋과 벡터 UI만 사용했습니다.
+- `src/game/systems/RewardPopupSystem.ts`를 신규 추가했습니다.
+  - 출석 보상, 일일 미션 보상, 주간 미션 보상 수령 직후 중앙 보상 팝업을 표시합니다.
+  - `reward-popup:v143` 이름으로 관리되며 모션/고대비 설정을 따라갑니다.
+  - 팝업에는 `계속`, `상점 보기` 동선을 제공해 보상 수령 후 다음 행동이 끊기지 않도록 했습니다.
+- `src/game/systems/DailyMissionSystem.ts`를 보강했습니다.
+  - `nextActionForBoard()` 추가
+  - `nextActionTitle`, `nextActionCopy`를 보드에 노출
+  - 이벤트 보드 상단에서 지금 가장 좋은 다음 행동을 바로 안내합니다.
+  - `recordModeClear()`에 남아 있던 중복 `return`을 제거했습니다.
+- `src/game/scenes/DailyMissionScene.ts`를 개선했습니다.
+  - 오늘 진행도 위에 다음 행동 카드 추가
+  - 기존 토스트 중심 보상을 팝업 중심 보상 확인 흐름으로 개선
+  - 보상 수령 직후 주간 게이지와 상점 이동이 자연스럽게 이어지도록 조정
+- `src/game/systems/AccessibilitySystem.ts`를 신규 추가했습니다.
+  - 저장 키: `cardville.accessibility.v143`
+  - `편안한 모션`, `고대비 화면`, `큰 안내 문구` 설정을 localStorage에 저장합니다.
+  - localStorage 차단 환경에서도 기본값으로 안전하게 동작합니다.
+- `src/game/systems/QualitySystem.ts`를 접근성 설정과 연결했습니다.
+  - 시스템 `prefers-reduced-motion`, URL `?reduceMotion`, 저장된 `편안한 모션` 설정을 함께 반영합니다.
+  - 고대비/큰 안내 상태를 성능 요약과 코치 말풍선에 반영합니다.
+- 로비 설정 패널을 개선했습니다.
+  - `편안한 모션`
+  - `고대비 화면`
+  - `큰 안내 문구`
+  - 세 가지 토글을 로비 설정에서 바로 조정할 수 있습니다.
+- `tools/check-reward-popup.mjs`와 `npm run check:reward-popup`을 추가했습니다.
+- `tools/check-accessibility.mjs`와 `npm run check:accessibility`를 추가했습니다.
+- `npm run verify`에 `check:reward-popup`, `check:accessibility`를 포함했습니다.
+- 1.0.39에서 잡은 패치 표면 완전성 규칙을 유지합니다.
+- 신규 이미지 에셋은 추가하지 않았습니다.
+- 신규 문서 파일은 만들지 않고, 변경 내역은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 누적했습니다.
+- 삭제 파일은 없습니다.
+- `package.json`, `public/build.json`, `health.html`, `reset.html`, `index.html`, 앱 내부 버전 표기를 1.0.43으로 동기화했습니다.
+- `npm run verify` 전체 통과 기준으로 확정했습니다.
 
 ## 1.0.42 업데이트 내역
 

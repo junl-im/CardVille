@@ -34,6 +34,8 @@ export type DailyMissionBoard = {
   weeklyReady: boolean;
   weeklyClaimed: boolean;
   weeklyCompletionRatio: number;
+  nextActionTitle: string;
+  nextActionCopy: string;
   missions: DailyMissionEntry[];
   readyCount: number;
   claimedCount: number;
@@ -221,6 +223,17 @@ function addWeeklyProgress(state: DailyMissionState, amount = 1): void {
   state.weeklyProgress = clampInt(state.weeklyProgress + Math.max(0, amount), 0, WEEKLY_TARGET, state.weeklyProgress);
 }
 
+function nextActionForBoard(missions: DailyMissionEntry[], attendanceReady: boolean, weeklyReady: boolean, weeklyClaimed: boolean): { title: string; copy: string } {
+  if (weeklyReady) return { title: '주간 보상 준비 완료', copy: '주간 수령 버튼으로 큰 보상을 받고 다음 루프를 준비하세요.' };
+  if (attendanceReady) return { title: '출석 보상부터 받기', copy: '출석 보상을 받으면 연속 출석과 주간 게이지가 함께 오릅니다.' };
+  const ready = missions.find((mission) => mission.ready);
+  if (ready) return { title: `${ready.title} 보상 수령`, copy: '완료된 미션 보상을 받으면 주간 목표도 같이 채워집니다.' };
+  const next = missions.find((mission) => !mission.claimed);
+  if (next) return { title: next.title, copy: `${next.body} · 진행도 ${next.progress}/${next.target}` };
+  if (!weeklyClaimed) return { title: '주간 게이지 마무리', copy: '내일 출석이나 미션 보상을 더 받아 주간 목표를 완성하세요.' };
+  return { title: '오늘 루프 완료', copy: '오늘 받을 보상은 모두 정리됐어요. 내일 새 미션을 이어가면 됩니다.' };
+}
+
 export class DailyMissionSystem {
   static getBoard(now = Date.now()): DailyMissionBoard {
     const state = loadState(now);
@@ -233,6 +246,7 @@ export class DailyMissionSystem {
     const claimedCount = missions.filter((mission) => mission.claimed).length;
     const progressSum = missions.reduce((sum, mission) => sum + Math.min(mission.progress, mission.target), 0);
     const targetSum = missions.reduce((sum, mission) => sum + mission.target, 0);
+    const nextAction = nextActionForBoard(missions, !state.attendanceClaimed, state.weeklyProgress >= WEEKLY_TARGET && !state.weeklyClaimed, state.weeklyClaimed);
     return {
       token: state.token,
       nextResetAt: nextUtcMidnight(now),
@@ -247,6 +261,8 @@ export class DailyMissionSystem {
       weeklyReady: state.weeklyProgress >= WEEKLY_TARGET && !state.weeklyClaimed,
       weeklyClaimed: state.weeklyClaimed,
       weeklyCompletionRatio: WEEKLY_TARGET > 0 ? state.weeklyProgress / WEEKLY_TARGET : 0,
+      nextActionTitle: nextAction.title,
+      nextActionCopy: nextAction.copy,
       missions,
       readyCount,
       claimedCount,
