@@ -167,7 +167,12 @@ export class RewardScene extends Phaser.Scene {
       { ...applyWrap(bodyText(13), 318), lineSpacing: 6 }
     ).setOrigin(0.5);
     this.add.text(195, 612, '획득 카드는 앨범에서 희귀도 프레임과 함께 다시 볼 수 있어요.', applyWrap(mutedText(11), 306)).setOrigin(0.5);
-    new GameButton(this, 195, 668, '카드 앨범 보기', 238, 50, 0xf0c7ff).onClick(() => this.scene.start('CollectionScene'));
+    if (this.source === 'shop') {
+      new GameButton(this, 122, 668, '상점으로', 116, 50, 0xffd86f).onClick(() => this.scene.start('ShopScene'));
+      new GameButton(this, 268, 668, '앨범 보기', 116, 50, 0xf0c7ff).onClick(() => this.scene.start('CollectionScene'));
+    } else {
+      new GameButton(this, 195, 668, '카드 앨범 보기', 238, 50, 0xf0c7ff).onClick(() => this.scene.start('CollectionScene'));
+    }
     this.lobbyButton?.setPosition(195, 742).setLabel('광장으로 돌아가기');
     this.spawnSparkles(meta.color);
   }

@@ -18,6 +18,7 @@ type ResumeState = {
   bestCombo: number;
   hintsLeft: number;
   shufflesLeft: number;
+  bonusMeter: number;
 };
 
 export class PlayScene extends Phaser.Scene {
@@ -50,7 +51,9 @@ export class PlayScene extends Phaser.Scene {
   private scoreText!: Phaser.GameObjects.Text;
   private comboText!: Phaser.GameObjects.Text;
   private meterText!: Phaser.GameObjects.Text;
+  private comboCoachText!: Phaser.GameObjects.Text;
   private noteText!: Phaser.GameObjects.Text;
+  private bonusPipRects: Phaser.GameObjects.Rectangle[] = [];
   private hintButton?: GameButton;
   private shuffleButton?: GameButton;
   private resumeState?: ResumeState;
@@ -80,6 +83,7 @@ export class PlayScene extends Phaser.Scene {
       this.bestCombo = this.resumeState.bestCombo;
       this.hintsLeft = this.resumeState.hintsLeft;
       this.shufflesLeft = this.resumeState.shufflesLeft;
+      this.bonusMeter = this.resumeState.bonusMeter ?? 0;
     } else {
       this.columns = this.cloneColumns(this.deck.columns);
       this.goalIndex = 0;
@@ -103,7 +107,8 @@ export class PlayScene extends Phaser.Scene {
     this.drawGoalArea();
     this.drawSidePanel();
     this.drawPremiumBottomRail();
-    this.noteText = this.add.text(195, 812, '맨 위 카드만 선택됩니다. 목표 계열을 보고 카드 스택을 정리하세요.', applyWrap(mutedText(12), Math.min(420, layout(this).visibleWidth - 28))).setOrigin(0.5);
+    this.comboCoachText = this.add.text(195, 788, '콤보 코치 · 연속 정답으로 보너스 게이지를 채우세요.', applyWrap(goldText(10), Math.min(410, layout(this).visibleWidth - 34))).setOrigin(0.5);
+    this.noteText = this.add.text(195, 816, '맨 위 카드만 선택됩니다. 목표 계열을 보고 카드 스택을 정리하세요.', applyWrap(mutedText(11), Math.min(420, layout(this).visibleWidth - 28))).setOrigin(0.5);
     this.redrawBoard();
     this.refreshHud();
   }
@@ -112,14 +117,20 @@ export class PlayScene extends Phaser.Scene {
   private drawPremiumBottomRail(): void {
     const l = layout(this);
     const g = this.add.graphics();
-    g.fillStyle(0x07142c, 0.58);
-    g.fillRoundedRect(l.visibleX + 18, 786, l.visibleWidth - 36, 38, 18);
-    g.lineStyle(1, 0xffffff, 0.12);
-    g.strokeRoundedRect(l.visibleX + 18, 786, l.visibleWidth - 36, 38, 18);
-    g.fillStyle(0x8fd3ff, 0.12);
-    g.fillRoundedRect(l.visibleX + 34, 796, 74, 8, 4);
-    g.fillStyle(0xffd86f, 0.12);
-    g.fillRoundedRect(l.visibleX + l.visibleWidth - 108, 796, 74, 8, 4);
+    g.fillStyle(0x07142c, 0.66);
+    g.fillRoundedRect(l.visibleX + 18, 768, l.visibleWidth - 36, 64, 22);
+    g.lineStyle(1, 0xffffff, 0.14);
+    g.strokeRoundedRect(l.visibleX + 18, 768, l.visibleWidth - 36, 64, 22);
+    g.fillStyle(0x8fd3ff, 0.10);
+    g.fillRoundedRect(l.visibleX + 34, 778, 74, 8, 4);
+    g.fillStyle(0xffd86f, 0.10);
+    g.fillRoundedRect(l.visibleX + l.visibleWidth - 108, 778, 74, 8, 4);
+    this.bonusPipRects = [];
+    const startX = 129;
+    for (let i = 0; i < 4; i += 1) {
+      const pip = this.add.rectangle(startX + i * 44, 801, 30, 8, 0x26334f, 0.58).setStrokeStyle(1, 0xffffff, 0.15);
+      this.bonusPipRects.push(pip);
+    }
   }
 
   private cloneColumns(columns: WordCard[][]): WordCard[][] {
@@ -446,6 +457,7 @@ export class PlayScene extends Phaser.Scene {
       this.inputLocked = false;
       this.refreshHud();
       this.redrawBoard();
+      if (!this.findTopMatch()) this.pulseAssistButton(this.shuffleButton);
       if (this.stepsLeft <= 0) this.finish(false);
     });
   }
@@ -473,7 +485,10 @@ export class PlayScene extends Phaser.Scene {
     this.redrawBoard();
     this.refreshHud();
     this.inputLocked = false;
-    if (!this.findTopMatch()) this.noteText.setText('현재 맨 위 정답이 없을 수 있어요. 셔플이나 힌트를 써보세요.');
+    if (!this.findTopMatch()) {
+      this.noteText.setText('현재 맨 위 정답이 없을 수 있어요. 셔플이나 복구 버튼을 써보세요.');
+      this.pulseAssistButton(this.shuffleButton);
+    }
   }
 
   private useHint(): void {
@@ -486,6 +501,7 @@ export class PlayScene extends Phaser.Scene {
     if (!match) {
       this.noteText.setText('현재 맨 위 카드에는 정답이 없어요. 셔플을 사용해보세요.');
       this.flyText(214, 392, '셔플 추천', 0x8fd3ff);
+      this.pulseAssistButton(this.shuffleButton);
       return;
     }
     this.noteText.setText(`${match.card.label} 카드가 목표 계열이에요.`);
@@ -590,14 +606,52 @@ export class PlayScene extends Phaser.Scene {
 
   private refreshHud(): void {
     const goal = this.currentGoal();
+    const hasCards = this.hasCardsLeft();
+    const noTopMatch = hasCards && !this.findTopMatch();
     this.stepText?.setText(`${this.stepsLeft}`);
     this.scoreText?.setText(`${this.score}점`);
     this.comboText?.setText(this.combo > 0 ? `콤보 ${this.combo}` : '콤보 0');
     this.meterText?.setText(`보너스 ${this.bonusMeter}/4`);
     this.progressText?.setText(`${this.goalProgress}/${goal.needed}`);
     this.goalTitleText?.setText(`목표 ${Math.min(this.goalIndex + 1, this.deck.goals.length)}/${this.deck.goals.length}`);
-    this.hintButton?.setLabel(`힌트${this.hintsLeft}`).setDisabled(this.hintsLeft <= 0);
-    this.shuffleButton?.setLabel(`섞기${this.shufflesLeft}`).setDisabled(this.shufflesLeft <= 0);
+    this.hintButton?.setLabel(noTopMatch ? '힌트?' : `힌트${this.hintsLeft}`).setDisabled(this.hintsLeft <= 0 || noTopMatch);
+    this.shuffleButton?.setLabel(noTopMatch ? `복구${this.shufflesLeft}` : `섞기${this.shufflesLeft}`).setDisabled(this.shufflesLeft <= 0 || this.stepsLeft <= 0);
+    this.updateBonusPips();
+    this.updateComboCoach(noTopMatch);
+  }
+
+  private hasCardsLeft(): boolean {
+    return this.columns.some((column) => column.length > 0);
+  }
+
+  private updateBonusPips(): void {
+    this.bonusPipRects.forEach((pip, index) => {
+      const active = index < this.bonusMeter;
+      pip.setFillStyle(active ? 0xffd86f : 0x26334f, active ? 0.88 : 0.58);
+      pip.setStrokeStyle(1, active ? 0xfff3c2 : 0xffffff, active ? 0.62 : 0.15);
+    });
+  }
+
+  private updateComboCoach(noTopMatch: boolean): void {
+    if (!this.comboCoachText) return;
+    if (noTopMatch && this.shufflesLeft > 0) {
+      this.comboCoachText.setText('복구 필요 · 셔플로 새 TOP 카드를 열어주세요.');
+      return;
+    }
+    if (this.bonusMeter >= 4) {
+      this.comboCoachText.setText('보너스 장전 · 다음 정답에 추가 점수가 붙어요.');
+      return;
+    }
+    if (this.combo >= 3) {
+      this.comboCoachText.setText(`콤보 ${this.combo} · 연속 정답 흐름을 유지하세요.`);
+      return;
+    }
+    this.comboCoachText.setText('콤보 코치 · 힌트는 정답 TOP 카드, 셔플은 스텝 1을 사용합니다.');
+  }
+
+  private pulseAssistButton(button?: GameButton): void {
+    if (!button || !isMotionEnabled(this.quality)) return;
+    this.tweens.add({ targets: button, scale: 1.08, duration: scaledDuration(120, this.quality), yoyo: true, repeat: 2, ease: 'Sine.easeInOut' });
   }
 
   private finish(success: boolean): void {

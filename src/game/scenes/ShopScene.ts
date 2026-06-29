@@ -7,11 +7,15 @@ import { panel } from '../ui/Panel';
 import { applyWrap, bodyText, darkText, goldText, mutedText, titleText } from '../ui/TextStyles';
 import { allowAmbientMotion, CardVilleQuality, getCardVilleQuality, scaledDuration } from '../systems/QualitySystem';
 
+type ShopOfferId = 'daily_free' | 'coin_pack' | 'gem_pack';
+
 type ShopOffer = {
-  id: 'daily_free' | 'coin_pack' | 'gem_pack';
+  id: ShopOfferId;
   title: string;
   subtitle: string;
   detail: string;
+  valueText: string;
+  ribbon: string;
   icon: string;
   cost: number;
   currency: 'free' | 'coins' | 'gems';
@@ -21,12 +25,17 @@ type ShopOffer = {
   color: number;
 };
 
+type ShopProfile = { coins: number; gems: number };
+type ShopDaily = { canClaim: boolean; nextResetAt: number };
+
 const SHOP_OFFERS: readonly ShopOffer[] = [
   {
     id: 'daily_free',
     title: '일일 무료팩',
     subtitle: '하루 한 번 카드팩 보상',
     detail: '무료 · 초보 수집 안정화',
+    valueText: '오늘 첫 방문 추천',
+    ribbon: 'DAILY',
     icon: '🎁',
     cost: 0,
     currency: 'free',
@@ -40,6 +49,8 @@ const SHOP_OFFERS: readonly ShopOffer[] = [
     title: '상점 실버팩',
     subtitle: '코인으로 여는 기본 카드팩',
     detail: '희귀 이상 기대치 소폭 상승',
+    valueText: '꾸준한 수집용',
+    ribbon: 'VALUE',
     icon: '🪙',
     cost: 120,
     currency: 'coins',
@@ -53,6 +64,8 @@ const SHOP_OFFERS: readonly ShopOffer[] = [
     title: '왕관 프리미엄팩',
     subtitle: '보석으로 여는 고급 카드팩',
     detail: '영웅/전설 기대치 강화',
+    valueText: '희귀도 집중용',
+    ribbon: 'PREMIUM',
     icon: '👑',
     cost: 3,
     currency: 'gems',
@@ -75,16 +88,19 @@ export class ShopScene extends Phaser.Scene {
     // 품질 모드에 따라 상점 카드 하이라이트 애니메이션을 줄입니다.
     const profile = SaveSystem.loadProfile();
     const daily = SaveSystem.getDailyShopStatus();
+    const recommendedOfferId = this.recommendedOfferId(profile, daily);
+    const lastOffer = SaveSystem.getLastShopOffer();
 
     DrawSystem.background(this, '카드팩 상점');
     DrawSystem.topHud(this, profile.coins, profile.level);
     panel(this, 195, 420, 340, 572, 34);
 
-    this.add.text(195, 102, '상인의 카드팩 가게', goldText(23)).setOrigin(0.5);
-    this.add.text(195, 132, '무료팩, 코인팩, 보석팩을 한 화면에서 고르고 앨범으로 바로 이동합니다.', applyWrap(mutedText(11), 318)).setOrigin(0.5);
+    this.add.text(195, 96, '상인의 카드팩 가게', goldText(23)).setOrigin(0.5);
+    this.add.text(195, 126, '무료팩, 코인팩, 보석팩을 한 화면에서 고르고 앨범으로 바로 이동합니다.', applyWrap(mutedText(11), 318)).setOrigin(0.5);
     this.drawCurrencyStrip(profile.coins, profile.gems, daily.canClaim ? '수령 가능' : this.nextDailyCopy(daily.nextResetAt));
+    this.drawDailyStatusMeter(daily, lastOffer);
 
-    SHOP_OFFERS.forEach((offer, index) => this.drawOfferCard(offer, 250 + index * 118, profile, daily));
+    SHOP_OFFERS.forEach((offer, index) => this.drawOfferCard(offer, 258 + index * 112, profile, daily, offer.id === recommendedOfferId));
 
     new GameButton(this, 112, 670, '앨범 보기', 142, 50, 0xf0c7ff).onClick(() => this.scene.start('CollectionScene'));
     new GameButton(this, 278, 670, '게임관', 126, 50, 0xc9f4ff).onClick(() => this.scene.start('ModeSelectScene'));
@@ -92,46 +108,70 @@ export class ShopScene extends Phaser.Scene {
   }
 
   private drawCurrencyStrip(coins: number, gems: number, dailyText: string): void {
-    this.add.rectangle(195, 174, 318, 42, 0x07142c, 0.58).setStrokeStyle(1, 0xffffff, 0.2);
-    this.add.text(60, 174, `🪙 ${coins}`, goldText(12)).setOrigin(0, 0.5);
-    this.add.text(156, 174, `💎 ${gems}`, goldText(12)).setOrigin(0, 0.5);
-    this.add.text(324, 174, `무료팩 ${dailyText}`, mutedText(10)).setOrigin(1, 0.5);
+    this.add.rectangle(195, 166, 318, 42, 0x07142c, 0.58).setStrokeStyle(1, 0xffffff, 0.2);
+    this.add.text(60, 166, `🪙 ${coins}`, goldText(12)).setOrigin(0, 0.5);
+    this.add.text(156, 166, `💎 ${gems}`, goldText(12)).setOrigin(0, 0.5);
+    this.add.text(324, 166, `무료팩 ${dailyText}`, mutedText(10)).setOrigin(1, 0.5);
   }
 
-  private drawOfferCard(offer: ShopOffer, y: number, profile: { coins: number; gems: number }, daily: { canClaim: boolean }): void {
+  private drawDailyStatusMeter(daily: ShopDaily, lastOffer: string): void {
+    const remain = Math.max(0, daily.nextResetAt - Date.now());
+    const readyRatio = daily.canClaim ? 1 : Phaser.Math.Clamp(1 - remain / 86_400_000, 0, 1);
+    this.add.rectangle(195, 209, 318, 36, 0xffffff, 0.075).setStrokeStyle(1, daily.canClaim ? 0xffd86f : 0x8fd3ff, daily.canClaim ? 0.48 : 0.28);
+    this.add.rectangle(154, 209, 178, 8, 0x26334f, 0.74).setOrigin(0, 0.5);
+    this.add.rectangle(154, 209, Math.max(8, 178 * readyRatio), 8, daily.canClaim ? 0xffd86f : 0x8fd3ff, 0.92).setOrigin(0, 0.5);
+    this.add.text(58, 209, daily.canClaim ? '무료팩 READY' : '무료팩 충전', goldText(10)).setOrigin(0, 0.5);
+    this.add.text(324, 209, lastOffer !== 'none' ? `최근 ${this.shortOfferName(lastOffer)}` : '첫 구매 전', mutedText(9)).setOrigin(1, 0.5);
+  }
+
+  private drawOfferCard(offer: ShopOffer, y: number, profile: ShopProfile, daily: ShopDaily, recommended: boolean): void {
     const canBuy = this.canBuy(offer, profile, daily);
-    const bg = this.add.rectangle(195, y, 316, 98, 0xfffbf1, canBuy ? 0.94 : 0.62).setStrokeStyle(3, offer.color, canBuy ? 0.94 : 0.36);
-    this.add.rectangle(77, y, 64, 72, offer.color, canBuy ? 0.22 : 0.12).setStrokeStyle(1, 0xffffff, 0.34);
+    const alpha = canBuy ? 0.95 : 0.62;
+    const bg = this.add.rectangle(195, y, 316, 94, 0xfffbf1, alpha).setStrokeStyle(recommended ? 4 : 2, recommended ? 0xfff0b3 : offer.color, canBuy ? 0.94 : 0.36);
+    if (recommended) this.add.rectangle(195, y, 324, 102, offer.color, 0.10).setStrokeStyle(2, offer.color, 0.55);
+    this.add.rectangle(77, y, 64, 68, offer.color, canBuy ? 0.22 : 0.12).setStrokeStyle(1, 0xffffff, 0.34);
     this.add.text(77, y - 4, offer.icon, { fontSize: '30px' }).setOrigin(0.5).setAlpha(canBuy ? 1 : 0.55);
-    this.add.text(116, y - 27, offer.title, darkText(16)).setOrigin(0, 0.5).setAlpha(canBuy ? 1 : 0.6);
-    this.add.text(116, y - 3, offer.subtitle, applyWrap(bodyText(10), 150, 'left')).setOrigin(0, 0.5).setAlpha(canBuy ? 0.9 : 0.56);
-    this.add.text(116, y + 25, offer.detail, applyWrap(mutedText(9), 150, 'left')).setOrigin(0, 0.5).setAlpha(canBuy ? 0.88 : 0.54);
-    this.drawOfferBadge(272, y - 29, offer);
+    this.add.text(116, y - 27, offer.title, darkText(15)).setOrigin(0, 0.5).setAlpha(canBuy ? 1 : 0.6);
+    this.add.text(116, y - 4, offer.subtitle, applyWrap(bodyText(10), 150, 'left')).setOrigin(0, 0.5).setAlpha(canBuy ? 0.9 : 0.56);
+    this.add.text(116, y + 20, offer.detail, applyWrap(mutedText(9), 150, 'left')).setOrigin(0, 0.5).setAlpha(canBuy ? 0.88 : 0.54);
+    this.add.text(116, y + 37, offer.valueText, applyWrap(mutedText(8), 150, 'left')).setOrigin(0, 0.5).setAlpha(canBuy ? 0.82 : 0.48);
+    this.drawOfferBadge(270, y - 31, offer, recommended);
+
+    if (recommended) {
+      this.add.rectangle(270, y - 4, 64, 18, 0xffd86f, 0.94).setStrokeStyle(1, 0xffffff, 0.42);
+      this.add.text(270, y - 4, '추천', darkText(8)).setOrigin(0.5);
+    }
 
     const buttonLabel = this.offerButtonLabel(offer, canBuy, daily);
-    const button = new GameButton(this, 282, y + 22, buttonLabel, 86, 38, canBuy ? offer.color : 0x9aa4ba)
+    const button = new GameButton(this, 282, y + 27, buttonLabel, 86, 38, canBuy ? offer.color : 0x9aa4ba)
       .onClick(() => this.buyOffer(offer));
     button.setDisabled(!canBuy);
-    if (allowAmbientMotion(this.quality) && canBuy) {
-      this.tweens.add({ targets: bg, alpha: 0.82, duration: scaledDuration(1150, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    if (allowAmbientMotion(this.quality) && canBuy && recommended) {
+      this.tweens.add({ targets: bg, alpha: 0.78, duration: scaledDuration(1020, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
   }
 
-  private drawOfferBadge(x: number, y: number, offer: ShopOffer): void {
-    const label = offer.currency === 'free' ? 'DAILY' : offer.currency === 'coins' ? 'COIN' : 'GEM';
-    this.add.rectangle(x, y, 58, 20, offer.color, 0.88).setStrokeStyle(1, 0xffffff, 0.38);
+  private drawOfferBadge(x: number, y: number, offer: ShopOffer, recommended: boolean): void {
+    const label = recommended ? 'BEST' : offer.ribbon;
+    this.add.rectangle(x, y, 62, 20, offer.color, 0.88).setStrokeStyle(1, 0xffffff, 0.38);
     this.add.text(x, y, label, darkText(8)).setOrigin(0.5);
   }
 
-  private canBuy(offer: ShopOffer, profile: { coins: number; gems: number }, daily: { canClaim: boolean }): boolean {
+  private recommendedOfferId(profile: ShopProfile, daily: ShopDaily): ShopOfferId {
+    if (daily.canClaim) return 'daily_free';
+    if (profile.gems >= 3) return 'gem_pack';
+    return 'coin_pack';
+  }
+
+  private canBuy(offer: ShopOffer, profile: ShopProfile, daily: ShopDaily): boolean {
     if (offer.currency === 'free') return daily.canClaim;
     if (offer.currency === 'coins') return profile.coins >= offer.cost;
     return profile.gems >= offer.cost;
   }
 
-  private offerButtonLabel(offer: ShopOffer, canBuy: boolean, daily: { canClaim: boolean }): string {
-    if (offer.currency === 'free') return daily.canClaim ? '무료' : '완료';
-    if (!canBuy) return '부족';
+  private offerButtonLabel(offer: ShopOffer, canBuy: boolean, daily: ShopDaily): string {
+    if (offer.currency === 'free') return daily.canClaim ? '받기' : '완료';
+    if (!canBuy) return offer.currency === 'coins' ? '코인부족' : '보석부족';
     return offer.currency === 'coins' ? `${offer.cost}코인` : `${offer.cost}보석`;
   }
 
@@ -161,22 +201,44 @@ export class ShopScene extends Phaser.Scene {
   }
 
   private openRewardPack(offer: ShopOffer): void {
-    this.scene.start('RewardScene', {
-      modeId: 'daily',
-      source: 'shop',
-      packLabel: offer.title,
-      stage: offer.id === 'gem_pack' ? 3 : offer.id === 'coin_pack' ? 2 : 1,
-      score: offer.score,
-      bestCombo: offer.combo,
-      stars: offer.stars,
-      stepsLeft: offer.stars * 4
+    SaveSystem.recordShopOffer(offer.id);
+    this.showPurchaseTransition(offer);
+    this.time.delayedCall(260, () => {
+      this.scene.start('RewardScene', {
+        modeId: 'daily',
+        source: 'shop',
+        packLabel: offer.title,
+        stage: offer.id === 'gem_pack' ? 3 : offer.id === 'coin_pack' ? 2 : 1,
+        score: offer.score,
+        bestCombo: offer.combo,
+        stars: offer.stars,
+        stepsLeft: offer.stars * 4
+      });
     });
+  }
+
+  private showPurchaseTransition(offer: ShopOffer): void {
+    this.input.enabled = false;
+    const overlay = this.add.container(195, 420).setDepth(2000);
+    overlay.add(this.add.rectangle(0, 0, 326, 176, 0x07142c, 0.94).setStrokeStyle(2, offer.color, 0.68));
+    overlay.add(this.add.circle(0, -52, 42, offer.color, 0.22).setStrokeStyle(2, offer.color, 0.58));
+    overlay.add(this.add.text(0, -54, offer.icon, { fontSize: '38px' }).setOrigin(0.5));
+    overlay.add(this.add.text(0, 4, `${offer.title} 준비 중`, titleText(18)).setOrigin(0.5));
+    overlay.add(this.add.text(0, 36, '카드팩 보상 화면으로 이동합니다.', applyWrap(mutedText(11), 270)).setOrigin(0.5));
+    overlay.setScale(0.9).setAlpha(0);
+    this.tweens.add({ targets: overlay, scale: 1, alpha: 1, duration: 140, ease: 'Back.easeOut' });
   }
 
   private nextDailyCopy(nextResetAt: number): string {
     const ms = Math.max(0, nextResetAt - Date.now());
-    const hours = Math.max(1, Math.ceil(ms / 3_600_000));
-    return `${hours}시간 후`;
+    const hours = Math.floor(ms / 3_600_000);
+    const minutes = Math.max(1, Math.ceil((ms % 3_600_000) / 60_000));
+    return hours > 0 ? `${hours}시간 ${minutes}분 후` : `${minutes}분 후`;
+  }
+
+  private shortOfferName(offerId: string): string {
+    const found = SHOP_OFFERS.find((offer) => offer.id === offerId);
+    return found ? found.title.replace('상점 ', '').replace('왕관 ', '') : '카드팩';
   }
 
   private showShopToast(title: string, copy: string): void {

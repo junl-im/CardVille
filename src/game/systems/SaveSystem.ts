@@ -32,6 +32,7 @@ const PROFILE_KEY = 'cardville.profile.v105';
 const COLLECTION_KEY = 'cardville.collection.v105';
 const PROGRESS_KEY = 'cardville.progress.v131';
 const DAILY_SHOP_PACK_KEY = 'cardville.shop.dailyPack.v134';
+const SHOP_LAST_OFFER_KEY = 'cardville.shop.lastOffer.v136';
 const LEGACY_PROGRESS_KEYS = ['cardville.progress.v111', 'cardville.progress.v110'];
 const PROVIDERS = new Set(['guest', 'google', 'email']);
 const PROGRESS_MODES = new Set(['word', 'math', 'memory', 'daily', 'english']);
@@ -161,6 +162,14 @@ export class SaveSystem {
     return this.getDailyShopStatus(now);
   }
 
+  static recordShopOffer(offerId: string): void {
+    safeSet(SHOP_LAST_OFFER_KEY, safeId(offerId, 'unknown_offer'));
+  }
+
+  static getLastShopOffer(): string {
+    return safeId(safeGet(SHOP_LAST_OFFER_KEY), 'none');
+  }
+
   static addReward(xp: number, coins: number, gems = 0): PlayerProfile {
     const profile = this.loadProfile();
     profile.xp = clampInt(profile.xp + Math.max(0, Math.round(xp)), 0, 99_999_999, profile.xp);
@@ -268,6 +277,7 @@ export class SaveSystem {
     safeRemove(COLLECTION_KEY);
     safeRemove(PROGRESS_KEY);
     safeRemove(DAILY_SHOP_PACK_KEY);
+    safeRemove(SHOP_LAST_OFFER_KEY);
     for (const key of LEGACY_PROGRESS_KEYS) safeRemove(key);
   }
 }

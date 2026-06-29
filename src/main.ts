@@ -75,4 +75,4 @@ window.addEventListener('unhandledrejection', (event) => {
 preventBrowserGestures();
 const game = new Phaser.Game(config);
 BackButtonSystem.install(game);
-console.info('[CardVille] Phaser instance created 1.0.35 start-ui and word-play premium polish / shop economy hub / cardpack store UX / daily pack guard / reward source balancing / content engine / quality audit engine / polish audit engine', game.isBooted);
+console.info('[CardVille] Phaser instance created 1.0.36 shop offer cooldown UX / word combo recovery coach / backconfirm scene cleanup / start-ui polish / shop economy hub / content engine / quality audit engine / polish audit engine', game.isBooted);

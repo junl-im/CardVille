@@ -1,6 +1,42 @@
-# CardVille 1.0.35
+# CardVille 1.0.36
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
+
+## 1.0.36 업데이트 내역
+
+- **상점 오퍼/콤보 복구 UX 안정화 패스**를 진행했습니다.
+- `ShopScene` 상점 허브를 더 실제 상점처럼 다듬었습니다.
+  - 무료팩 준비 상태를 `무료팩 READY`/충전 게이지로 표시합니다.
+  - 추천 오퍼를 `추천`/`BEST` 리본으로 강조합니다.
+  - 최근 구매한 카드팩을 상단 상태 줄에 표시합니다.
+  - 구매 직후 바로 화면이 바뀌지 않고 `showPurchaseTransition` 준비 오버레이를 거쳐 `RewardScene`으로 이동합니다.
+- `SaveSystem`에 상점 최근 오퍼 기록을 추가했습니다.
+  - 저장 키: `cardville.shop.lastOffer.v136`
+  - 메서드: `recordShopOffer`, `getLastShopOffer`
+  - `SaveSystem.clear()`에서 최근 오퍼 기록도 함께 정리합니다.
+- `RewardScene` 상점 구매팩 결과 UX를 개선했습니다.
+  - 상점에서 연 카드팩은 결과 화면에서 `상점으로` 버튼과 `앨범 보기` 버튼을 나란히 제공합니다.
+  - 플레이 보상팩은 기존처럼 큰 `카드 앨범 보기` 버튼을 유지합니다.
+- 도서관 `PlayScene`에 콤보 코치/복구 UX를 추가했습니다.
+  - 하단 레일을 확장해 콤보 안내와 보너스 게이지 4칸 피프를 표시합니다.
+  - 현재 TOP 카드 중 정답이 없으면 `복구` 라벨로 셔플 버튼을 강조합니다.
+  - 힌트가 의미 없는 상태에서는 힌트 버튼을 잠그고 셔플 복구를 안내합니다.
+  - 향후 이어하기 확장을 대비해 `ResumeState`에 `bonusMeter`를 포함했습니다.
+- `BackConfirmScene`의 종료 대상 장면 목록을 최신 장면 구성과 맞췄습니다.
+  - `MathLabScene`
+  - `MemoryForestScene`
+  - `ShopScene`
+- `tools/check-ux-safety.mjs`와 `npm run check:ux-safety`를 추가했습니다.
+  - 상점 오퍼 추천/무료팩 쿨다운/구매 전환
+  - 상점 결과 화면 복귀 버튼
+  - 도서관 콤보/복구 토큰
+  - 뒤로가기 확인 씬 정리 대상 최신화
+  - README/AI_HANDOFF 기록 동기화를 검증합니다.
+- `npm run verify`에 `check:ux-safety`를 포함했습니다.
+- 기존 시작 화면 무광 CTA, 상점 허브, 카드팩 보상, 앨범, 로비 배치, 진행 저장, 프리미엄 PNG/WebP, SVG 금지 정책은 유지했습니다.
+- `npm run verify` 전체 통과를 확인했습니다.
+- 새 버전별 문서 파일은 만들지 않고, 변경 내역은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 누적했습니다.
+- `package.json`, `public/build.json`, `health.html`, `reset.html`, 앱 내부 버전 표기를 1.0.36으로 동기화했습니다.
 
 ## 1.0.35 업데이트 내역
 
