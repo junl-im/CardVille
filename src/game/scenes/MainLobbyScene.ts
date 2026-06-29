@@ -12,7 +12,7 @@ import { MATH_STAGES } from '../data/mathStages';
 import { MEMORY_STAGES } from '../data/memoryStages';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
-const LOBBY_VERSION = '1.0.31';
+const LOBBY_VERSION = '1.0.32';
 const HERO_HOME = { x: 195, y: 545 } as const;
 const CAT_HOME = { x: 145, y: 585 } as const;
 
@@ -161,9 +161,11 @@ export class MainLobbyScene extends Phaser.Scene {
     container.add(baseShadow);
 
     const image = this.textures.exists(building.assetKey)
-      ? this.add.image(0, 0, building.assetKey).setDisplaySize(building.width, building.height)
+      ? this.add.image(0, 0, building.assetKey).setDisplaySize(building.width, building.height).setTint(0xfff1d0)
       : this.add.rectangle(0, 0, building.width, building.height, building.open ? 0xffd86f : 0x66708a, 0.86).setStrokeStyle(3, 0xffffff, 0.7);
     container.add(image);
+    const depthGlaze = this.add.rectangle(0, -building.height * 0.05, building.width * 0.82, building.height * 0.54, 0xffffff, building.open ? 0.035 : 0.018);
+    container.add(depthGlaze);
 
     if (this.textures.exists(building.iconKey)) {
       container.add(this.add.image(-building.width * 0.32, -building.height * 0.34, building.iconKey).setDisplaySize(26, 26).setAlpha(0.95));
@@ -421,17 +423,20 @@ export class MainLobbyScene extends Phaser.Scene {
   private drawHeroParty(): void {
     this.cat = this.add.container(CAT_HOME.x, CAT_HOME.y).setDepth(CAT_HOME.y + 2);
     if (this.textures.exists('catIdle')) {
-      this.catImage = this.add.image(0, 0, 'catIdle').setDisplaySize(54, 57);
+      this.catImage = this.add.image(0, 0, 'catIdle').setDisplaySize(58, 68).setTint(0xfff4e3);
       this.cat.add(this.catImage);
     } else if (this.textures.exists('dioramaCat')) this.cat.add(this.add.image(0, 0, 'dioramaCat').setDisplaySize(54, 57));
     else this.cat.add(this.add.text(0, 0, '🐈‍⬛', { fontSize: '44px' }).setOrigin(0.5));
 
     this.hero = this.add.container(HERO_HOME.x, HERO_HOME.y).setDepth(HERO_HOME.y + 4);
     if (this.textures.exists('heroIdle')) {
-      this.heroImage = this.add.image(0, 0, 'heroIdle').setDisplaySize(74, 115);
+      this.heroImage = this.add.image(0, 0, 'heroIdle').setDisplaySize(82, 132).setTint(0xfff4e3);
       this.hero.add(this.heroImage);
     } else if (this.textures.exists('dioramaHero')) this.hero.add(this.add.image(0, 0, 'dioramaHero').setDisplaySize(74, 115));
     else this.hero.add(this.add.text(0, 0, '🧒', { fontSize: '60px' }).setOrigin(0.5));
+
+    const heroGlow = this.add.ellipse(0, 42, 86, 28, 0xffd86f, 0.16);
+    this.hero.addAt(heroGlow, 0);
 
     if (!this.quality.reduceMotion) {
       this.tweens.add({ targets: this.hero, y: HERO_HOME.y - 3, duration: 1050, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });

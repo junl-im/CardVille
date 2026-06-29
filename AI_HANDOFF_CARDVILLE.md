@@ -386,11 +386,57 @@ ZIP 파일
 - 새 스테이지를 추가하면 해당 모드의 `nextPlayableModeStage`가 자연스럽게 이어지도록 최대 스테이지 수를 참조하세요.
 - 새 검증은 GitHub Actions의 `npm run verify`에 들어가므로, 로컬에서 먼저 확인하세요.
 
-## 12. 현재 버전 상태
+## 12. 1.0.32 시작화면 간격/코드 무결성/원화 교체 슬롯 패스
 
-현재 기준 버전은 1.0.31입니다.
+1.0.32는 사용자가 지적한 “시작화면 버튼 간격, 글씨 겹침, 코드 꼬임, 예전 코드 중복, 마을 에셋 품질” 문제를 정리한 패스입니다. 핵심은 새 원화를 임시 생성물로 대체하려고 하지 않고, 준비 중인 고퀄리티 에셋을 같은 파일명으로 안전하게 덮어쓸 수 있도록 런타임 슬롯과 검증 체인을 고정한 것입니다.
 
-1.0.31은 로비 터치존 겹침을 정리하고 `cardville.progress.v131` 기반으로 모드별 진행 저장을 확장한 로비 배치/진행 저장 패스입니다. 1.0.30은 프레임형/크롭형 건물 표현을 실제 투명 PNG/WebP 마을 건물 컷아웃으로 교체한 마을 건물 에셋 패스였습니다. 1.0.29는 연구소 연산 미니게임과 기억의 숲 짝찾기 미니게임을 실제 플레이 가능한 1차 콘텐츠로 연결한 콘텐츠 엔진 패스였습니다. 1.0.28은 기준 이미지 톤에 맞춘 프리미엄 에셋 패스와 `check:premium-assets` 검증을 추가한 업데이트였습니다.
+### 시작화면 버튼 간격/글씨 겹침
+
+- `src/game/data/loginLayoutPlan.ts`를 추가했습니다.
+  - `LOGIN_LAYOUT_PLAN_VERSION = '1.0.32'`
+  - `LOGIN_CONTROL_RECTS`
+  - `LOGIN_PANEL`
+  - `LOGIN_LAYOUT_GUARDS`
+- `LoginScene.ts`는 더 이상 버튼 Y 좌표를 촘촘하게 하드코딩하지 않고 `LOGIN_CONTROL_RECTS` 기준으로 배치합니다.
+- `GameButton.ts`에 `setWordWrapWidth`, `setMaxLines`, `setLineSpacing`을 적용해 버튼 내부 글씨가 겹치거나 밖으로 튀는 위험을 줄였습니다.
+- `tools/check-login-layout.mjs`가 로그인 버튼/상태 문구의 안전 영역과 겹침 여부를 검증합니다.
+
+### 코드 무결성
+
+- `tools/check-code-integrity.mjs`를 추가했습니다.
+- 검증 항목:
+  - 주요 버전 상수 동기화
+  - 중복 scene import / 중복 scene registry 방지
+  - asset manifest key/path 중복 방지
+  - diorama building id 중복 방지
+  - mode id 중복 방지
+  - `queuedKeys` 기반 중복 자산 로드 가드 유지
+- GitHub Actions의 `npm run verify`에 `check:login-layout`, `check:code-integrity`를 추가했습니다.
+
+### 원화 교체 슬롯
+
+- 현재 로비 이미지와 캐릭터는 최종 상용 원화가 아닙니다. 사용자가 준비 중인 고퀄리티 이미지가 들어오면 아래 파일명을 그대로 덮어쓰는 방식으로 반영합니다.
+  - `public/assets/characters/hero_idle.png`
+  - `public/assets/characters/cat_idle.png`
+  - `public/assets/diorama/diorama_bg.png`
+  - `public/assets/diorama/building_*.png`
+  - 필요한 경우 같은 이름의 `.webp` 동반 파일
+- 코드 경로는 이미 `assetManifest.ts`와 `IntroLoadingScene`의 `queuedKeys`로 관리되므로, 파일명만 지키면 기존 코드와 꼬이지 않습니다.
+- 임시 에셋을 “프리미엄 완성본”으로 착각하지 말 것. 최종 원화가 들어오기 전에는 품질 개선보다 경로/검증/배치 안정성이 우선입니다.
+
+### 다음 AI 주의사항
+
+- 새 이미지가 들어오면 파일명을 바꾸지 말고 기존 파일 위에 덮어쓰세요.
+- 이미지 교체 후 `npm run verify`를 반드시 실행하세요.
+- 시작화면 버튼을 추가하거나 문구를 길게 바꾸면 `LOGIN_CONTROL_RECTS`와 `check-login-layout`도 같이 수정하세요.
+- 코드 무결성 검증이 실패하면 중복 scene, asset key, mode id부터 확인하세요.
+
+
+## 13. 현재 버전 상태
+
+현재 기준 버전은 1.0.32입니다.
+
+1.0.32는 시작화면 버튼 간격/글씨 겹침을 정리하고 코드 무결성 검증을 추가한 패스입니다. 1.0.31은 로비 터치존 겹침을 정리하고 `cardville.progress.v131` 기반으로 모드별 진행 저장을 확장한 로비 배치/진행 저장 패스입니다. 1.0.30은 프레임형/크롭형 건물 표현을 실제 투명 PNG/WebP 마을 건물 컷아웃으로 교체한 마을 건물 에셋 패스였습니다. 1.0.29는 연구소 연산 미니게임과 기억의 숲 짝찾기 미니게임을 실제 플레이 가능한 1차 콘텐츠로 연결한 콘텐츠 엔진 패스였습니다. 1.0.28은 기준 이미지 톤에 맞춘 프리미엄 에셋 패스와 `check:premium-assets` 검증을 추가한 업데이트였습니다.
 
 - GitHub Actions 자동 검증 흐름 유지
 - `check:assets` 유지
@@ -398,8 +444,10 @@ ZIP 파일
 - `check:premium-assets` 유지
 - `check:content-engine` 유지
 - `check:building-assets` 유지
-- `check:lobby-layout` 추가
-- `check:progression` 추가
+- `check:lobby-layout` 유지
+- `check:progression` 유지
+- `check:login-layout` 추가
+- `check:code-integrity` 추가
 - `assetManifest.ts` 유지
 - `lobbyEntities.ts` 추가
 - `modeCatalog.ts` 추가
@@ -408,11 +456,11 @@ ZIP 파일
 - 연구소/기억의 숲 실제 1차 미니게임 연결
 - `MathLabScene` 추가
 - `MemoryForestScene` 추가
-- 앱 동작용 버전 상수 1.0.31 동기화
+- 앱 동작용 버전 상수 1.0.32 동기화
 
 1.0.24는 전달 규칙과 인수인계 정책 정리 업데이트였습니다. 1.0.23의 핵심은 한 화면 디오라마 로비입니다.
 
-## 13. 절대 유지해야 할 정책
+## 14. 절대 유지해야 할 정책
 
 - 소년과 검은 고양이 브랜드 고정
 - SVG 사용 금지
@@ -426,7 +474,7 @@ ZIP 파일
 - Firebase는 시작 시 강제 로딩하지 말 것
 - 로컬 게스트 시작은 빠르게 유지
 
-## 14. 다음 업데이트 후보
+## 15. 다음 업데이트 후보
 
 우선순위가 높은 다음 작업입니다.
 
@@ -438,7 +486,7 @@ ZIP 파일
 6. 계절 장식 시스템을 개별 오브젝트 에셋으로 추가
 7. 실제 빌드 후 모바일 카카오 브라우저 터치/뒤로가기 테스트
 
-## 15. 다음 AI가 바로 해야 할 일
+## 16. 다음 AI가 바로 해야 할 일
 
 새 요청을 받으면 아래 순서로 진행하세요.
 
@@ -451,12 +499,13 @@ ZIP 파일
 7. 결과 보고는 업데이트 내역 → 기타 확인 사항 → 다음 업데이트 예정 → ZIP 파일 순서로 작성합니다.
 8. ZIP은 통파일과 패치파일 두 개를 제공합니다.
 
-## 16. 패치파일 만들 때 주의
+## 17. 패치파일 만들 때 주의
 
 패치파일은 직전 버전에서 바뀐 파일만 담습니다.  
 다만 ZIP 덮어쓰기만으로는 삭제가 자동 적용되지 않으므로, 파일 삭제가 필요한 업데이트에서는 최종 보고에 삭제 대상도 함께 알려야 합니다.
 
 1.0.24 통파일에서는 과거 버전별 문서 폴더를 정리했습니다.  
+1.0.32 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.
 1.0.31 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.
 1.0.30 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.
 1.0.29 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.

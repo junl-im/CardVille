@@ -39,7 +39,12 @@ export class GameButton extends Phaser.GameObjects.Container {
     if (this.skin) {
       this.skinImage = scene.add.image(0, 2, this.skin.normal).setDisplaySize(width + 16, height + 16);
     }
-    this.label = scene.add.text(0, -1, text, darkText(height >= 64 ? 20 : height <= 46 ? 14 : 17)).setOrigin(0.5);
+    const labelSize = height >= 58 ? 18 : height <= 46 ? 14 : 16;
+    this.label = scene.add.text(0, -1, text, darkText(labelSize)).setOrigin(0.5);
+    this.label.setAlign('center');
+    this.label.setWordWrapWidth(Math.max(80, width - 34), true);
+    this.label.setLineSpacing(-3);
+    this.label.setMaxLines(height <= 46 ? 1 : 2);
     this.hitZone = scene.add.zone(0, 0, hitW, hitH)
       .setOrigin(0.5)
       .setName(`hit:${text}`)
@@ -99,6 +104,10 @@ export class GameButton extends Phaser.GameObjects.Container {
   setLabel(text: string): this {
     this.label.setText(text);
     return this;
+  }
+
+  getBoundsForAudit(): { width: number; height: number } {
+    return { width: this.widthValue, height: this.heightValue };
   }
 
   private resetVisual(): void {

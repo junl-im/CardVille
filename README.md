@@ -1,6 +1,34 @@
-# CardVille 1.0.31
+# CardVille 1.0.32
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
+
+## 1.0.32 업데이트 내역
+
+- **시작화면 버튼 간격/글씨 겹침 수정 패스**를 진행했습니다.
+- 로그인 패널의 버튼 배치를 다시 잡았습니다.
+  - `게임 시작`
+  - `Google 로그인`
+  - `이메일`
+  - `가입`
+- 버튼 사이 간격을 넓히고, 상태 문구가 버튼과 겹치지 않도록 `LOGIN_CONTROL_RECTS` 기반으로 분리했습니다.
+- `GameButton`에 글자 줄바꿈/최대 줄 수/버튼 내부 텍스트 폭 제한을 넣어 긴 문구가 버튼 밖으로 튀거나 겹치지 않게 했습니다.
+- 새 시작화면 배치 데이터 파일을 추가했습니다.
+  - `src/game/data/loginLayoutPlan.ts`
+- 새 검증을 추가했습니다.
+  - `tools/check-login-layout.mjs`
+  - `npm run check:login-layout`
+  - `npm run verify`에 포함
+- 코드 꼬임/중복 방지용 무결성 검증을 추가했습니다.
+  - `tools/check-code-integrity.mjs`
+  - `npm run check:code-integrity`
+  - scene registry 중복
+  - asset manifest key/path 중복
+  - mode/building id 중복
+  - 주요 버전 상수 동기화
+- 마을 로비는 현재 임시 에셋 기반이라 최종 상용 원화 품질이 아닙니다. 이번 패치에서는 가짜로 이미지를 꾸며서 해결한 척하지 않고, 사용자가 준비 중인 고퀄리티 PNG/WebP를 같은 파일명으로 덮어쓰기만 하면 바로 반영되도록 교체 슬롯과 코드 무결성을 고정했습니다.
+- 로비 건물에는 약한 톤 보정/그림자 보정만 추가해, 새 원화가 들어오기 전까지 너무 따로 떠 보이는 느낌을 줄였습니다.
+- `package.json`, `public/build.json`, `health.html`, `reset.html`, 앱 내부 버전 표기를 1.0.32로 동기화했습니다.
+- 새 버전별 문서 파일은 만들지 않고, 변경 내역은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 누적했습니다.
 
 ## 1.0.31 업데이트 내역
 
