@@ -6,6 +6,7 @@ import { EnglishCard, EnglishStage, getEnglishStage } from '../data/englishStage
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
 import { applyWrap, bodyText, cardText, darkText, goldText, mutedText, titleText } from '../ui/TextStyles';
+import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 
 export class EnglishSchoolScene extends Phaser.Scene {
   private stageId = 1;
@@ -51,6 +52,21 @@ export class EnglishSchoolScene extends Phaser.Scene {
     this.drawClassBoard();
     this.drawQuestion();
     new GameButton(this, 195, 768, '광장으로', 238, 54, 0xc9f4ff).onClick(() => this.scene.start('MainLobbyScene'));
+    this.showEnglishCoach();
+  }
+
+  private showEnglishCoach(): void {
+    CoachMarkSystem.showOnce(this, {
+      id: 'english_meaning_choice_v140',
+      title: '영어 학교 수업 팁',
+      body: '가운데 영어 단어와 예문을 보고 아래 뜻 카드 4장 중 하나를 고르세요. 연속 정답은 콤보와 영어 카드팩 보상 기대치를 올립니다.',
+      x: 195,
+      y: 650,
+      width: 324,
+      tone: 'blue',
+      anchorX: 195,
+      anchorY: 348
+    });
   }
 
   private drawSchoolDecor(): void {

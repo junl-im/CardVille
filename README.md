@@ -1,7 +1,37 @@
-# CardVille 1.0.39
+# CardVille 1.0.40
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
+
+
+## 1.0.40 업데이트 내역
+
+- **무에셋 고양이 코치/첫 플레이 UX 패스**를 진행했습니다.
+- 새 이미지 에셋은 아직 준비 전이므로 기존 `catHint` 에셋과 벡터 말풍선만 사용했습니다.
+- `src/game/systems/CoachMarkSystem.ts`를 신규 추가했습니다.
+  - 저장 키: `cardville.coach.seen.v140`
+  - `showOnce`, `markSeen`, `reset` 제공
+  - 한 번 확인한 안내는 다시 과도하게 뜨지 않도록 localStorage에 기록합니다.
+  - localStorage가 막힌 브라우저에서도 게임 진행이 끊기지 않도록 안전 처리했습니다.
+- 첫 플레이 안내 말풍선을 연결했습니다.
+  - 로비: `고양이 길잡이`로 NEXT 건물/NPC 터치 안내
+  - 스테이지 선택: 잠금/추천/NEXT/보상 미리보기 안내
+  - 도서관 플레이: TOP 카드, 힌트, 복구 버튼 사용법 안내
+  - 영어 학교: 영어 단어/예문/뜻 카드 선택 흐름 안내
+  - 상점: 무료팩 READY, 추천 오퍼, 코인 환급 루프 방지 안내
+- `tools/check-coach.mjs`와 `npm run check:coach`를 추가했습니다.
+  - `CoachMarkSystem` 존재
+  - 주요 장면 연결
+  - 저장 키
+  - README/AI_HANDOFF 기록 동기화
+  - 버전 동기화를 검증합니다.
+- `npm run verify`에 `check:coach`를 포함했습니다.
+- 1.0.39에서 잡은 패치 표면 완전성 규칙을 유지합니다.
+- 신규 이미지 에셋은 추가하지 않았습니다.
+- 신규 문서 파일은 만들지 않고, 변경 내역은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 누적했습니다.
+- 삭제 파일은 없습니다.
+- `package.json`, `public/build.json`, `health.html`, `reset.html`, `index.html`, 앱 내부 버전 표기를 1.0.40으로 동기화했습니다.
+- `npm run verify` 전체 통과 기준으로 확정했습니다.
 
 ## 1.0.39 업데이트 내역
 

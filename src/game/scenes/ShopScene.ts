@@ -6,6 +6,7 @@ import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
 import { applyWrap, bodyText, darkText, goldText, mutedText, titleText } from '../ui/TextStyles';
 import { allowAmbientMotion, CardVilleQuality, getCardVilleQuality, scaledDuration } from '../systems/QualitySystem';
+import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 
 type ShopOfferId = 'daily_free' | 'coin_pack' | 'gem_pack';
 
@@ -105,6 +106,21 @@ export class ShopScene extends Phaser.Scene {
     new GameButton(this, 112, 670, '앨범 보기', 142, 50, 0xf0c7ff).onClick(() => this.scene.start('CollectionScene'));
     new GameButton(this, 278, 670, '게임관', 126, 50, 0xc9f4ff).onClick(() => this.scene.start('ModeSelectScene'));
     new GameButton(this, 195, 746, '광장으로', 248, 56, 0xc9f4ff).onClick(() => this.scene.start('MainLobbyScene'));
+    this.showShopCoach(daily.canClaim);
+  }
+
+  private showShopCoach(canClaimDaily: boolean): void {
+    CoachMarkSystem.showOnce(this, {
+      id: 'shop_offer_coach_v140',
+      title: '상점 이용 팁',
+      body: canClaimDaily ? '무료팩 READY가 보이면 먼저 받아두세요. 추천 오퍼는 현재 재화와 무료팩 상태를 보고 자동으로 강조됩니다.' : '무료팩은 하루 한 번 충전돼요. 코인팩/보석팩은 카드와 XP 중심 보상이라 코인 환급 루프 없이 수집을 늘립니다.',
+      x: 195,
+      y: 626,
+      width: 326,
+      tone: canClaimDaily ? 'gold' : 'purple',
+      anchorX: 270,
+      anchorY: 227
+    });
   }
 
   private drawCurrencyStrip(coins: number, gems: number, dailyText: string): void {

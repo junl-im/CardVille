@@ -12,8 +12,9 @@ import { MATH_STAGES } from '../data/mathStages';
 import { MEMORY_STAGES } from '../data/memoryStages';
 import { ENGLISH_STAGES } from '../data/englishStages';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
+import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 
-const LOBBY_VERSION = '1.0.39';
+const LOBBY_VERSION = '1.0.40';
 const HERO_HOME = { x: 195, y: 545 } as const;
 const CAT_HOME = { x: 145, y: 585 } as const;
 
@@ -52,6 +53,22 @@ export class MainLobbyScene extends Phaser.Scene {
     this.drawHeroParty();
     this.drawBottomHint(profile.nickname);
     this.add.text(344, 28, LOBBY_VERSION, mutedText(11)).setOrigin(0.5).setAlpha(0.9);
+    this.showLobbyCoach(recommendedBuildingId);
+  }
+
+  private showLobbyCoach(recommendedBuildingId: string): void {
+    const target = DIORAMA_BUILDINGS.find((building) => building.id === recommendedBuildingId);
+    CoachMarkSystem.showOnce(this, {
+      id: 'lobby_recommended_route_v140',
+      title: '고양이 길잡이',
+      body: 'NEXT가 붙은 건물부터 들어가면 도서관, 학교, 연구소, 기억의 숲을 자연스럽게 이어갈 수 있어요. NPC도 터치하면 힌트를 줍니다.',
+      x: 195,
+      y: 694,
+      width: 326,
+      tone: 'gold',
+      anchorX: target?.x,
+      anchorY: target?.y
+    });
   }
 
   private drawDioramaBackground(): void {

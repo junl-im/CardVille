@@ -10,6 +10,7 @@ import { ENGLISH_STAGES } from '../data/englishStages';
 import { applyWrap, bodyText, darkText, goldText, mutedText, titleText } from '../ui/TextStyles';
 import { applyResponsiveCamera, hasTouchDebug } from '../systems/LayoutSystem';
 import { getModeById } from '../data/modeCatalog';
+import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 
 const PAGE_SIZE = 4;
 
@@ -83,6 +84,22 @@ export class StageSelectScene extends Phaser.Scene {
     prev.setDisabled(this.page <= 0);
     next.setDisabled(this.page >= maxPage);
     new GameButton(this, 195, 758, '게임 선택으로', 248, 56, 0xc9f4ff).onClick(() => this.scene.start('ModeSelectScene', { focusModeId: this.modeId }));
+    this.showStageCoach();
+  }
+
+  private showStageCoach(): void {
+    const tone = this.modeId === 'memory' ? 'green' : this.modeId === 'math' ? 'purple' : this.modeId === 'english' ? 'blue' : 'gold';
+    CoachMarkSystem.showOnce(this, {
+      id: `stage_select_${this.modeId}_v140`,
+      title: '스테이지 선택 팁',
+      body: 'NEXT 카드는 다음 추천 단계예요. 잠긴 단계는 바로 앞 단계를 클리어하면 열리고, 보상 미리보기로 오늘 플레이 목표를 고를 수 있어요.',
+      x: 195,
+      y: 632,
+      width: 326,
+      tone,
+      anchorX: 286,
+      anchorY: 238
+    });
   }
 
   private drawHeader(totalStages: number, maxPage: number): void {

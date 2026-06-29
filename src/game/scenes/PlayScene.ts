@@ -6,6 +6,7 @@ import { applyWrap, bodyText, cardSmallText, cardText, goldText, mutedText, titl
 import { CATEGORY_COLOR, CATEGORY_LABELS, getStageDeck, GoalCard, StageDeck, WordCard } from '../data/wordStages';
 import { applyResponsiveCamera, compactText, distributeColumns, fitTextSize, hasTouchDebug, layout, playArea } from '../systems/LayoutSystem';
 import { ambientCount, CardVilleQuality, getCardVilleQuality, isMotionEnabled, scaledDuration } from '../systems/QualitySystem';
+import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 
 type ResumeState = {
   columns: WordCard[][];
@@ -111,6 +112,22 @@ export class PlayScene extends Phaser.Scene {
     this.noteText = this.add.text(195, 816, '맨 위 카드만 선택됩니다. 목표 계열을 보고 카드 스택을 정리하세요.', applyWrap(mutedText(11), Math.min(420, layout(this).visibleWidth - 28))).setOrigin(0.5);
     this.redrawBoard();
     this.refreshHud();
+    this.showWordCoach();
+  }
+
+
+  private showWordCoach(): void {
+    CoachMarkSystem.showOnce(this, {
+      id: 'word_top_card_coach_v140',
+      title: '도서관 카드 정리법',
+      body: '각 열의 맨 위 카드만 터치돼요. 목표 계열과 맞는 TOP 카드가 없으면 복구 버튼으로 스택을 섞고, 힌트는 정답 TOP 카드가 있을 때만 켜집니다.',
+      x: 232,
+      y: 682,
+      width: 304,
+      tone: 'gold',
+      anchorX: 88,
+      anchorY: 405
+    });
   }
 
 

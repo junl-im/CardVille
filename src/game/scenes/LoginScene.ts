@@ -5,7 +5,7 @@ import { DrawSystem } from '../systems/DrawSystem';
 import { AuthSystem } from '../systems/AuthSystem';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
-const LOGIN_VERSION = '1.0.39';
+const LOGIN_VERSION = '1.0.40';
 const LOGIN_PANEL_Y = 546;
 const LOGIN_PANEL_H = 254;
 const LOGIN_TITLE_Y = LOGIN_PANEL_Y + 28;
@@ -46,7 +46,7 @@ export class LoginScene extends Phaser.Scene {
 
     // One compact plate behind all login controls. The previous thin highlight
     // strip could look like an unwanted line above each start/login button, so
-    // 1.0.39 uses a soft matte plate and line-free CTA buttons instead.
+    // 1.0.40 uses a soft matte plate and line-free CTA buttons instead.
     shade.fillStyle(0x07142c, 0.66);
     shade.fillRoundedRect(28, LOGIN_PANEL_Y, 334, LOGIN_PANEL_H, 32);
     shade.lineStyle(1, 0xffffff, 0.12);
