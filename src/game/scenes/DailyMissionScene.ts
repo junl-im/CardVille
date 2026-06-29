@@ -38,10 +38,11 @@ export class DailyMissionScene extends Phaser.Scene {
     this.add.text(195, 84, '이벤트 광장', goldText(24)).setOrigin(0.5);
     this.add.text(195, 115, '출석, 수업 클리어, 카드팩 개봉을 주간 목표까지 연결해 보상 루프를 안정화합니다.', applyWrap(mutedText(11), 318)).setOrigin(0.5);
     this.drawNextAction(board.nextActionTitle, board.nextActionCopy);
-    this.drawProgressMeter(board.completionRatio, board.readyCount, board.claimedCount);
+    this.drawProgressMeter(board.completionRatio, board.rewardReadyCount, board.claimedCount);
     this.drawStreakWeekly(board.streakDays, board.bestStreakDays, board.weeklyProgress, board.weeklyTarget, board.weeklyReady, board.weeklyClaimed, board.weeklyCompletionRatio);
     this.drawAttendance(board.attendanceReady, board.attendanceClaimed, board.attendanceRewardCoins);
-    board.missions.forEach((mission, index) => this.drawMissionRow(mission, 344 + index * 58));
+    board.missions.forEach((mission, index) => this.drawMissionRow(mission, 344 + index * 54));
+    this.drawCompletionBonus(board.dailyCompletionReady, board.dailyCompletionClaimed, board.dailyCompletionRewardText);
 
     new GameButton(this, 108, 704, '게임 선택', 132, 50, 0xc9f4ff).onClick(() => this.scene.start('ModeSelectScene'));
     new GameButton(this, 282, 704, '상점', 132, 50, 0xffd86f).onClick(() => this.scene.start('ShopScene'));
@@ -59,10 +60,10 @@ export class DailyMissionScene extends Phaser.Scene {
   private drawProgressMeter(ratio: number, readyCount: number, claimedCount: number): void {
     this.add.rectangle(195, 180, 316, 42, 0x07142c, 0.58).setStrokeStyle(1, 0xffffff, 0.18);
     this.add.text(62, 170, '오늘 진행도', mutedText(10)).setOrigin(0, 0.5);
-    this.add.text(328, 170, `받을 보상 ${readyCount}개`, goldText(10)).setOrigin(1, 0.5);
+    this.add.text(328, 170, `대기 보상 ${readyCount}개`, goldText(10)).setOrigin(1, 0.5);
     this.add.rectangle(195, 190, 250, 10, 0x26334f, 0.78);
     this.add.rectangle(70, 190, Math.max(10, 250 * Phaser.Math.Clamp(ratio, 0, 1)), 10, 0xffd86f, 0.96).setOrigin(0, 0.5);
-    this.add.text(195, 207, `미션 보상 수령 ${claimedCount}/5 · 자정 UTC에 새로고침`, mutedText(9)).setOrigin(0.5);
+    this.add.text(195, 207, `미션 보상 수령 ${claimedCount}/5 · 완주 보상 별도 · 자정 UTC 리셋`, mutedText(8)).setOrigin(0.5);
   }
 
   private drawStreakWeekly(streakDays: number, bestStreakDays: number, weeklyProgress: number, weeklyTarget: number, weeklyReady: boolean, weeklyClaimed: boolean, weeklyRatio: number): void {
@@ -100,6 +101,14 @@ export class DailyMissionScene extends Phaser.Scene {
     button.setDisabled(!mission.ready);
   }
 
+  private drawCompletionBonus(ready: boolean, claimed: boolean, rewardText: string): void {
+    this.add.rectangle(195, 620, 316, 46, ready ? 0xfffbf1 : 0x07142c, ready ? 0.94 : 0.52).setStrokeStyle(ready ? 2 : 1, ready ? 0xffd86f : 0xffffff, ready ? 0.76 : 0.16);
+    this.add.text(62, 608, ready ? '오늘 완주 보상 READY' : claimed ? '오늘 완주 보상 완료' : '오늘 완주 보상', ready ? darkText(12) : goldText(12)).setOrigin(0, 0.5);
+    this.add.text(62, 626, claimed ? '내일 새 미션으로 다시 받을 수 있어요.' : `일일 미션 보상 5개를 모두 받으면 ${rewardText}`, ready ? bodyText(8) : mutedText(8)).setOrigin(0, 0.5);
+    const button = new GameButton(this, 288, 620, claimed ? '완료' : ready ? '완주' : '대기', 78, 34, ready ? 0xffd86f : 0x9aa4ba).onClick(() => this.claimCompletion());
+    button.setDisabled(!ready);
+  }
+
   private claimAttendance(): void {
     const result = DailyMissionSystem.claimAttendanceReward();
     this.drawBoard();
@@ -117,6 +126,12 @@ export class DailyMissionScene extends Phaser.Scene {
     const result = DailyMissionSystem.claimWeeklyReward();
     this.drawBoard();
     this.showRewardPopup('주간 미션 완성', result.rewardText, 'purple');
+  }
+
+  private claimCompletion(): void {
+    const result = DailyMissionSystem.claimDailyCompletionReward();
+    this.drawBoard();
+    this.showRewardPopup('오늘 완주 보상', result.rewardText, 'gold');
   }
 
   private showRewardPopup(title: string, message: string, tone: RewardPopupTone): void {
@@ -143,9 +158,9 @@ export class DailyMissionScene extends Phaser.Scene {
 
   private showMissionCoach(hasReadyReward: boolean): void {
     CoachMarkSystem.showOnce(this, {
-      id: 'daily_mission_board_v142',
+      id: 'daily_mission_board_v144',
       title: '오늘의 미션 팁',
-      body: hasReadyReward ? 'READY 보상은 바로 수령해도 좋아요. 출석과 미션 수령이 주간 보상 게이지까지 함께 채워집니다.' : '각 모드에서 한 번씩 클리어하고 카드팩을 열면 오늘 목표와 주간 목표가 같이 쌓여요. 에셋이 오기 전에도 이벤트 건물이 실제 루프 보드로 작동합니다.',
+      body: hasReadyReward ? 'READY 보상은 바로 수령해도 좋아요. 출석, 미션, 완주, 주간 보상이 한 화면에서 이어집니다.' : '각 모드에서 한 번씩 클리어하고 카드팩을 열면 오늘 목표, 완주 보상, 주간 목표가 같이 쌓여요. 에셋이 오기 전에도 이벤트 건물이 실제 루프 보드로 작동합니다.',
       x: 195,
       y: 620,
       width: 326,

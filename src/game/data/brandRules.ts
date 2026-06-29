@@ -2,13 +2,14 @@ export const CARDVILLE_BRAND = {
   projectNameKo: '카드마을',
   projectNameEn: 'CardVille',
   slogan: '카드를 모아 꿈의 마을을 완성하세요.',
-  version: '1.0.43',
+  version: '1.0.45',
   fixedCharacterReference: 'assets/brand/cardville_fixed_character_reference.png',
   identity: ['소년', '검은 고양이', '카드', '따뜻한 판타지 마을'],
   hero: {
     temporaryName: '루카',
-    ageFeeling: '12~14세',
-    traits: ['밝음', '용감함', '모험심', '항상 웃음'],
+    ageFeeling: 'around 8 years old, premium fantasy traveler, natural stylized proportions',
+    traits: ['밝음', '용감함', '모험심', '고급스러운 판타지 주인공', '초딩 느낌 금지'],
+    proportionRule: 'head-to-body ratio around 1:4.5, expressive but not oversized eyes',
     lockedOutfit: ['파란 망토', '갈색 부츠', '흰 셔츠', '갈색 바지']
   },
   mascot: {
@@ -16,8 +17,12 @@ export const CARDVILLE_BRAND = {
     roles: ['힌트', '튜토리얼', '이벤트', '이모션']
   },
   style: {
-    mood: ['Pixar 감성', 'Disney 판타지', '2.5D', 'Premium'],
-    colors: ['warm gold', 'purple', 'blue', 'brown'],
+    mood: ['Premium Fantasy Village', 'Stylized Realism', 'Warm Sunset Lighting', 'Cinematic', 'Soft Bloom', 'AAA Casual Game', 'High-end UI'],
+    quality: ['Premium mobile game', 'AAA mobile game', 'Pixar-quality rendering', 'Disney-inspired cinematic lighting', 'Console-quality assets', 'Mobile Game of the Year quality'],
+    colors: ['warm gold', 'purple', 'blue', 'brown', 'cream', 'emerald accent'],
+    lightDirection: 'upper-left warm sunset key light',
+    characterRatio: '1:4.5',
+    commonNegativeLock: ['NOT a children\'s game', 'NOT educational style', 'NOT preschool', 'NOT kindergarten', 'NOT cheap mobile game', 'NOT flat design', 'NOT vector illustration', 'NOT SVG', 'NOT childish', 'NOT toy-like'],
     allowedGraphicFormats: ['png', 'webp', 'sprite atlas', 'mp4'],
     bannedGraphicFormats: ['svg']
   },

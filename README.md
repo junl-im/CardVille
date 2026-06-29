@@ -1,7 +1,60 @@
-# CardVille 1.0.43
+# CardVille 1.0.45
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
+
+
+## 1.0.45 업데이트 내역
+
+- **아트 바이블/프롬프트 락 + 완주 미션 라우트 병합 패스**를 진행했습니다.
+- 사용자가 패치한 `1.0.44_ArtDirectionBible_PromptLock` 통파일을 기준으로 삼고, 직전 1.0.43에서 이어진 내 1.0.44 `PerfectDayMissionRouteUX` 변경분을 충돌 없이 병합했습니다.
+- 보존한 사용자 변경분:
+  - `docs/CARDVILLE_ART_DIRECTION_BIBLE.md`
+  - `docs/CARDVILLE_ASSET_PROMPT_PACK.md`
+  - `src/game/data/artDirection.ts`
+  - `src/game/data/brandRules.ts`의 프리미엄 AAA/스타일 락 방향
+  - `tools/check-art-direction.mjs`
+  - `npm run check:art-direction`
+- 다시 적용한 미션 라우트 변경분:
+  - 내부 스키마 표식 `v144-perfect-day-lobby-route` 유지
+  - `DailyMissionSystem`의 `dailyCompletionReady`, `dailyCompletionClaimed`, `rewardReadyCount`, `lobbyBadgeLabel`, `shouldPrioritizeEvent`
+  - `claimDailyCompletionReward()` 오늘 완주 보상
+  - `getLobbyStatus()` 로비 READY 라우팅 상태 API
+  - 이벤트 건물 상태칩 `READY n`, `MISSION`, `DONE`
+  - `ModeSelectScene` 오늘의 미션 카드에 실제 대기 보상 수와 다음 행동 표시
+- `tools/check-mission-route.mjs`와 `npm run check:mission-route`를 추가/유지했습니다.
+- `npm run verify`는 이제 `check:art-direction`과 `check:mission-route`를 모두 포함합니다.
+- `1.0.44_ArtDirectionBible_PromptLock` 통파일 자체 검증 결과 `npm run verify` 통과를 확인했습니다.
+- 이번 병합본도 `npm run verify` 전체 통과 기준으로 확정했습니다.
+- 신규 이미지 에셋은 아직 추가하지 않았습니다.
+- 사용자 제공 문서 2개는 의도된 아트 바이블/프롬프트 락 문서로 판단해 보존했습니다.
+- 이번 패치에서 새 문서 파일은 추가하지 않았습니다.
+- 삭제 파일은 없습니다.
+- `node_modules`, `dist`, `package-lock.json`은 통파일 ZIP에서 제외합니다.
+
+## 1.0.44 업데이트 내역
+
+- **아트 디렉션 바이블/프롬프트 락 패스**를 진행했습니다.
+- 대규모 이미지 에셋 생성 전에 CardVille만의 프리미엄 AAA 모바일 게임 스타일을 먼저 고정했습니다.
+- `docs/CARDVILLE_ART_DIRECTION_BIBLE.md`를 신규 추가했습니다.
+  - Premium Fantasy Village, Stylized Realism, Warm Sunset Lighting, Cinematic, Soft Bloom, AAA Casual Game을 핵심 스타일로 고정했습니다.
+  - `NOT children's illustration`, `NOT educational`, `NOT preschool`, `NOT flat design`, `NOT vector`, `NOT SVG`, `NOT cheap mobile game` 금지 방향을 명확히 박았습니다.
+  - 20가지 색상 팔레트, 좌상단 광원, 나무/금속/유리/천/가죽/석재/마법 재질 규칙을 정의했습니다.
+  - 캐릭터 비율은 머리:몸 약 1:4.5, 자연스러운 stylized proportions 기준으로 고정했습니다.
+- `docs/CARDVILLE_ASSET_PROMPT_PACK.md`를 신규 추가했습니다.
+  - 캐릭터, 검은 고양이, 건물, UI, 카드 프레임용 공통 프롬프트 템플릿을 정리했습니다.
+  - PNG master + WebP companion + assetManifest 등록 + no SVG 납품 규칙을 명시했습니다.
+- `src/game/data/artDirection.ts`를 신규 추가했습니다.
+  - 코드에서 재사용 가능한 스타일 키워드, 금지 키워드, 공통 프롬프트 꼬리문, 20색 팔레트, 광원/캐릭터/재질/포맷 정책을 상수화했습니다.
+- `src/game/data/brandRules.ts`를 새 방향에 맞춰 보강했습니다.
+  - 기존 귀여운 느낌보다 Premium, Elegant, Stylish, High-end 방향을 우선합니다.
+  - 주인공은 around 8 years old 느낌이지만 초딩/유치한 비율이 아닌 고급스러운 판타지 여행자 기준입니다.
+- `tools/check-art-direction.mjs`와 `npm run check:art-direction`을 추가했습니다.
+  - SVG 파일 존재 여부를 직접 검사합니다.
+  - 아트 바이블, 프롬프트 팩, `artDirection.ts`, `brandRules.ts`, README, AI_HANDOFF가 같은 기준을 공유하는지 검증합니다.
+- `npm run verify`에 `check:art-direction`을 포함했습니다.
+- 신규 이미지 에셋은 아직 추가하지 않았습니다. 이번 버전은 **이미지 양산 전 스타일 고정 패스**입니다.
+- `package.json`, `public/build.json`, `health.html`, `reset.html`, `index.html`, 앱 내부 버전 표기를 1.0.44으로 동기화했습니다.
 
 ## 1.0.43 업데이트 내역
 

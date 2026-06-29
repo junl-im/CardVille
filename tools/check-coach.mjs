@@ -26,7 +26,7 @@ must('src/game/systems/CoachMarkSystem.ts', [
   'catHint',
   '알겠어요'
 ]);
-must('src/game/scenes/MainLobbyScene.ts', ['CoachMarkSystem', 'showLobbyCoach', 'lobby_recommended_route_v140', '고양이 길잡이']);
+must('src/game/scenes/MainLobbyScene.ts', ['CoachMarkSystem', 'showLobbyCoach', 'lobby_recommended_route_v144', '고양이 길잡이']);
 must('src/game/scenes/StageSelectScene.ts', ['CoachMarkSystem', 'showStageCoach', 'stage_select_', '스테이지 선택 팁']);
 must('src/game/scenes/PlayScene.ts', ['CoachMarkSystem', 'showWordCoach', 'word_top_card_coach_v140', '도서관 카드 정리법']);
 must('src/game/scenes/EnglishSchoolScene.ts', ['CoachMarkSystem', 'showEnglishCoach', 'english_meaning_choice_v140', '영어 학교 수업 팁']);

@@ -34,6 +34,13 @@ export type DailyMissionBoard = {
   weeklyReady: boolean;
   weeklyClaimed: boolean;
   weeklyCompletionRatio: number;
+  dailyCompletionReady: boolean;
+  dailyCompletionClaimed: boolean;
+  dailyCompletionRewardText: string;
+  rewardReadyCount: number;
+  lobbyBadgeLabel: string;
+  lobbyBadgeTone: 'gold' | 'blue' | 'purple' | 'green' | 'coral';
+  shouldPrioritizeEvent: boolean;
   nextActionTitle: string;
   nextActionCopy: string;
   missions: DailyMissionEntry[];
@@ -51,13 +58,15 @@ type DailyMissionState = {
   weeklyToken: string;
   weeklyProgress: number;
   weeklyClaimed: boolean;
+  dailyCompletionClaimed: boolean;
   progress: Partial<Record<DailyMissionId, number>>;
   claimed: Partial<Record<DailyMissionId, boolean>>;
 };
 
 const DAILY_MISSION_KEY = 'cardville.dailyMission.v141';
-const DAILY_MISSION_STREAK_VERSION = 'v142-streak-weekly';
+const DAILY_MISSION_STREAK_VERSION = 'v144-perfect-day-lobby-route';
 const WEEKLY_TARGET = 7;
+const DAILY_COMPLETION_REWARD = { xp: 60, coins: 120, gems: 1 } as const;
 const DAY_MS = 86_400_000;
 
 export const DAILY_MISSIONS: readonly DailyMissionDefinition[] = [
@@ -159,6 +168,7 @@ function blankState(token: string, weeklyToken: string): DailyMissionState {
     weeklyToken,
     weeklyProgress: 0,
     weeklyClaimed: false,
+    dailyCompletionClaimed: false,
     progress: {},
     claimed: {}
   };
@@ -194,6 +204,7 @@ function normalizeState(raw: Record<string, unknown>, token: string, weeklyToken
     weeklyToken,
     weeklyProgress: sameWeek ? clampInt(raw.weeklyProgress, 0, WEEKLY_TARGET, 0) : 0,
     weeklyClaimed: sameWeek && raw.weeklyClaimed === true,
+    dailyCompletionClaimed: sameDay && raw.dailyCompletionClaimed === true,
     progress,
     claimed
   };
@@ -223,8 +234,9 @@ function addWeeklyProgress(state: DailyMissionState, amount = 1): void {
   state.weeklyProgress = clampInt(state.weeklyProgress + Math.max(0, amount), 0, WEEKLY_TARGET, state.weeklyProgress);
 }
 
-function nextActionForBoard(missions: DailyMissionEntry[], attendanceReady: boolean, weeklyReady: boolean, weeklyClaimed: boolean): { title: string; copy: string } {
+function nextActionForBoard(missions: DailyMissionEntry[], attendanceReady: boolean, weeklyReady: boolean, weeklyClaimed: boolean, dailyCompletionReady: boolean): { title: string; copy: string } {
   if (weeklyReady) return { title: '주간 보상 준비 완료', copy: '주간 수령 버튼으로 큰 보상을 받고 다음 루프를 준비하세요.' };
+  if (dailyCompletionReady) return { title: '오늘 완주 보상 준비', copy: '일일 미션을 모두 수령했어요. 완주 보상까지 받아 루프를 마무리하세요.' };
   if (attendanceReady) return { title: '출석 보상부터 받기', copy: '출석 보상을 받으면 연속 출석과 주간 게이지가 함께 오릅니다.' };
   const ready = missions.find((mission) => mission.ready);
   if (ready) return { title: `${ready.title} 보상 수령`, copy: '완료된 미션 보상을 받으면 주간 목표도 같이 채워집니다.' };
@@ -232,6 +244,10 @@ function nextActionForBoard(missions: DailyMissionEntry[], attendanceReady: bool
   if (next) return { title: next.title, copy: `${next.body} · 진행도 ${next.progress}/${next.target}` };
   if (!weeklyClaimed) return { title: '주간 게이지 마무리', copy: '내일 출석이나 미션 보상을 더 받아 주간 목표를 완성하세요.' };
   return { title: '오늘 루프 완료', copy: '오늘 받을 보상은 모두 정리됐어요. 내일 새 미션을 이어가면 됩니다.' };
+}
+
+function dailyCompletionRewardText(): string {
+  return `+${DAILY_COMPLETION_REWARD.xp}XP/+${DAILY_COMPLETION_REWARD.coins}코인/+${DAILY_COMPLETION_REWARD.gems}보석`;
 }
 
 export class DailyMissionSystem {
@@ -246,21 +262,33 @@ export class DailyMissionSystem {
     const claimedCount = missions.filter((mission) => mission.claimed).length;
     const progressSum = missions.reduce((sum, mission) => sum + Math.min(mission.progress, mission.target), 0);
     const targetSum = missions.reduce((sum, mission) => sum + mission.target, 0);
-    const nextAction = nextActionForBoard(missions, !state.attendanceClaimed, state.weeklyProgress >= WEEKLY_TARGET && !state.weeklyClaimed, state.weeklyClaimed);
+    const weeklyReady = state.weeklyProgress >= WEEKLY_TARGET && !state.weeklyClaimed;
+    const allMissionsClaimed = missions.every((mission) => mission.claimed);
+    const dailyCompletionReady = allMissionsClaimed && !state.dailyCompletionClaimed;
+    const attendanceReady = !state.attendanceClaimed;
+    const rewardReadyCount = readyCount + (attendanceReady ? 1 : 0) + (weeklyReady ? 1 : 0) + (dailyCompletionReady ? 1 : 0);
+    const nextAction = nextActionForBoard(missions, attendanceReady, weeklyReady, state.weeklyClaimed, dailyCompletionReady);
     return {
       token: state.token,
       nextResetAt: nextUtcMidnight(now),
       attendanceClaimed: state.attendanceClaimed,
-      attendanceReady: !state.attendanceClaimed,
+      attendanceReady,
       streakDays: state.streakDays,
       bestStreakDays: state.bestStreakDays,
       attendanceRewardCoins: currentAttendanceCoins(state.streakDays),
       weeklyToken: state.weeklyToken,
       weeklyProgress: state.weeklyProgress,
       weeklyTarget: WEEKLY_TARGET,
-      weeklyReady: state.weeklyProgress >= WEEKLY_TARGET && !state.weeklyClaimed,
+      weeklyReady,
       weeklyClaimed: state.weeklyClaimed,
       weeklyCompletionRatio: WEEKLY_TARGET > 0 ? state.weeklyProgress / WEEKLY_TARGET : 0,
+      dailyCompletionReady,
+      dailyCompletionClaimed: state.dailyCompletionClaimed,
+      dailyCompletionRewardText: dailyCompletionRewardText(),
+      rewardReadyCount,
+      lobbyBadgeLabel: rewardReadyCount > 0 ? `READY ${rewardReadyCount}` : allMissionsClaimed ? 'DONE' : 'MISSION',
+      lobbyBadgeTone: weeklyReady ? 'purple' : dailyCompletionReady ? 'gold' : attendanceReady ? 'blue' : readyCount > 0 ? 'coral' : 'green',
+      shouldPrioritizeEvent: rewardReadyCount > 0,
       nextActionTitle: nextAction.title,
       nextActionCopy: nextAction.copy,
       missions,
@@ -320,6 +348,29 @@ export class DailyMissionSystem {
     saveState(state);
     const profile = SaveSystem.addReward(80, 180, 2);
     return { ok: true, board: this.getBoard(), rewardText: `주간 미션 완성 +80XP/+180코인/+2보석 · 현재 Lv.${profile.level}` };
+  }
+
+  static claimDailyCompletionReward(): { ok: boolean; board: DailyMissionBoard; rewardText: string } {
+    const state = loadState();
+    const allClaimed = DAILY_MISSIONS.every((mission) => state.claimed[mission.id] === true);
+    if (state.dailyCompletionClaimed) return { ok: false, board: this.getBoard(), rewardText: '오늘 완주 보상은 이미 받았어요.' };
+    if (!allClaimed) return { ok: false, board: this.getBoard(), rewardText: '일일 미션 보상을 모두 받은 뒤 완주 보상을 받을 수 있어요.' };
+    state.dailyCompletionClaimed = true;
+    saveState(state);
+    const profile = SaveSystem.addReward(DAILY_COMPLETION_REWARD.xp, DAILY_COMPLETION_REWARD.coins, DAILY_COMPLETION_REWARD.gems);
+    return { ok: true, board: this.getBoard(), rewardText: `오늘 완주 보상 ${dailyCompletionRewardText()} · 현재 Lv.${profile.level}` };
+  }
+
+  static getLobbyStatus(): Pick<DailyMissionBoard, 'rewardReadyCount' | 'lobbyBadgeLabel' | 'lobbyBadgeTone' | 'shouldPrioritizeEvent' | 'nextActionTitle' | 'nextActionCopy'> {
+    const board = this.getBoard();
+    return {
+      rewardReadyCount: board.rewardReadyCount,
+      lobbyBadgeLabel: board.lobbyBadgeLabel,
+      lobbyBadgeTone: board.lobbyBadgeTone,
+      shouldPrioritizeEvent: board.shouldPrioritizeEvent,
+      nextActionTitle: board.nextActionTitle,
+      nextActionCopy: board.nextActionCopy
+    };
   }
 
   private static incrementMission(missionId: DailyMissionId, amount: number): DailyMissionBoard {

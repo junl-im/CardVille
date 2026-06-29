@@ -22,7 +22,7 @@ must('src/game/systems/DailyMissionSystem.ts', [
   'DAILY_MISSION_KEY',
   'cardville.dailyMission.v141',
   'DAILY_MISSION_STREAK_VERSION',
-  'v142-streak-weekly',
+  'v144-perfect-day-lobby-route',
   'DAILY_MISSIONS',
   'clear_word',
   'clear_english',
@@ -31,6 +31,8 @@ must('src/game/systems/DailyMissionSystem.ts', [
   'open_pack',
   'claimAttendanceReward',
   'claimMissionReward',
+  'claimDailyCompletionReward',
+  'rewardReadyCount',
   'recordModeClear',
   'recordPackOpen'
 ]);
@@ -39,10 +41,12 @@ must('src/game/scenes/DailyMissionScene.ts', [
   'DailyMissionScene',
   '오늘의 미션',
   '출석 보상 READY',
-  'daily_mission_board_v142',
+  'daily_mission_board_v144',
   'drawStreakWeekly',
+  'drawCompletionBonus',
   'claimAttendance',
-  'claimMission'
+  'claimMission',
+  'claimCompletion'
 ]);
 
 must('src/game/data/dioramaBuildings.ts', [
@@ -57,7 +61,7 @@ must('src/game/data/modeCatalog.ts', [
 
 must('src/main.ts', [
   'DailyMissionScene',
-  '1.0.42 streak weekly mission loop'
+  '1.0.45 art bible mission route merge'
 ]);
 
 must('src/game/scenes/RewardScene.ts', [
@@ -73,14 +77,14 @@ if (scripts['check:daily-mission'] !== 'node tools/check-daily-mission.mjs') thr
 if (!scripts.verify?.includes('check:daily-mission')) throw new Error('verify must include check:daily-mission');
 
 const readme = read('README.md');
-for (const token of [`# CardVille ${pkg.version}`, `## ${pkg.version} 업데이트 내역`, 'DailyMissionSystem', 'check:daily-mission']) {
+for (const token of [`# CardVille ${pkg.version}`, `## ${pkg.version} 업데이트 내역`, 'DailyMissionSystem', '오늘 완주 보상', 'check:daily-mission']) {
   if (!readme.includes(token)) throw new Error(`README missing daily mission token: ${token}`);
 }
 const handoff = read('AI_HANDOFF_CARDVILLE.md');
-for (const token of [`현재 기준 버전은 ${pkg.version}`, 'DailyMissionSystem', 'cardville.dailyMission.v141', 'check:daily-mission']) {
+for (const token of [`현재 기준 버전은 ${pkg.version}`, 'DailyMissionSystem', 'cardville.dailyMission.v141', 'v144-perfect-day-lobby-route', 'check:daily-mission']) {
   if (!handoff.includes(token)) throw new Error(`AI handoff missing daily mission token: ${token}`);
 }
 const build = JSON.parse(read('public/build.json'));
 if (build.version !== pkg.version) throw new Error(`build.json version ${build.version} != package ${pkg.version}`);
 
-console.log(`Daily mission check passed. Version ${pkg.version}, attendance board, mission progress, and reward hooks verified.`);
+console.log(`Daily mission check passed. Version ${pkg.version}, attendance board, perfect-day reward, mission progress, and reward hooks verified.`);

@@ -10,6 +10,7 @@ import { MEMORY_STAGES } from '../data/memoryStages';
 import { WORD_STAGES } from '../data/wordStages';
 import { ENGLISH_STAGES } from '../data/englishStages';
 import { SaveSystem } from '../systems/SaveSystem';
+import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
 export const MODES = GAME_MODES;
 
@@ -87,7 +88,10 @@ export class ModeSelectScene extends Phaser.Scene {
       const cleared = ENGLISH_STAGES.filter((stage) => SaveSystem.getModeStageRecord('english', stage.id)?.cleared).length;
       return { badge: `${cleared}/${ENGLISH_STAGES.length}`, copy: `다음 ${next}교시 · 뜻 카드 연결` };
     }
-    if (mode.id === 'daily') return { badge: 'DAILY', copy: '출석 · 미션 · 카드팩 보상' };
+    if (mode.id === 'daily') {
+      const status = DailyMissionSystem.getLobbyStatus();
+      return { badge: status.lobbyBadgeLabel, copy: `${status.nextActionTitle} · 대기 보상 ${status.rewardReadyCount}개` };
+    }
     return { badge: 'PLAN', copy: mode.nextWork };
   }
 

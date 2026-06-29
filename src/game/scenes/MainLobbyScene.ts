@@ -14,8 +14,10 @@ import { ENGLISH_STAGES } from '../data/englishStages';
 import { applyWrap, bodyText, darkText, goldText, mutedText, titleText } from '../ui/TextStyles';
 import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 import { AccessibilitySystem } from '../systems/AccessibilitySystem';
+import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
-const LOBBY_VERSION = '1.0.43';
+const LOBBY_VERSION = '1.0.45';
+const MISSION_TONE_COLORS = { gold: 0xffd86f, blue: 0x8fd3ff, purple: 0xd7a5ff, green: 0xa9f5b5, coral: 0xffb39a } as const;
 const HERO_HOME = { x: 195, y: 545 } as const;
 const CAT_HOME = { x: 145, y: 585 } as const;
 
@@ -59,10 +61,11 @@ export class MainLobbyScene extends Phaser.Scene {
 
   private showLobbyCoach(recommendedBuildingId: string): void {
     const target = DIORAMA_BUILDINGS.find((building) => building.id === recommendedBuildingId);
+    const missionStatus = DailyMissionSystem.getLobbyStatus();
     CoachMarkSystem.showOnce(this, {
-      id: 'lobby_recommended_route_v140',
+      id: 'lobby_recommended_route_v144',
       title: '고양이 길잡이',
-      body: 'NEXT가 붙은 건물부터 들어가면 도서관, 학교, 연구소, 기억의 숲을 자연스럽게 이어갈 수 있어요. NPC도 터치하면 힌트를 줍니다.',
+      body: recommendedBuildingId === 'event' && missionStatus.rewardReadyCount > 0 ? `이벤트 광장에 ${missionStatus.lobbyBadgeLabel} 보상이 있어요. ${missionStatus.nextActionCopy}` : 'NEXT가 붙은 건물부터 들어가면 도서관, 학교, 연구소, 기억의 숲을 자연스럽게 이어갈 수 있어요. 보상이 준비되면 이벤트 광장이 먼저 안내됩니다.',
       x: 195,
       y: 694,
       width: 326,
@@ -129,6 +132,8 @@ export class MainLobbyScene extends Phaser.Scene {
   }
 
   private getRecommendedBuildingId(): string {
+    const missionStatus = DailyMissionSystem.getLobbyStatus();
+    if (missionStatus.shouldPrioritizeEvent) return 'event';
     const nextWord = SaveSystem.nextPlayableStage(WORD_STAGES.length);
     const nextEnglish = SaveSystem.nextPlayableModeStage('english', ENGLISH_STAGES.length);
     const nextMath = SaveSystem.nextPlayableModeStage('math', MATH_STAGES.length);
@@ -240,13 +245,16 @@ export class MainLobbyScene extends Phaser.Scene {
 
 
   private drawBuildingStatusChip(container: Phaser.GameObjects.Container, building: DioramaBuilding, recommended: boolean): void {
-    const label = recommended ? 'NEXT' : building.open ? 'OPEN' : 'LOCK';
+    const missionStatus = building.id === 'event' ? DailyMissionSystem.getLobbyStatus() : null;
+    const label = missionStatus ? missionStatus.lobbyBadgeLabel : recommended ? 'NEXT' : building.open ? 'OPEN' : 'LOCK';
     const chipY = -building.height * 0.46;
-    const chipW = recommended ? 54 : 48;
+    const chipW = Math.max(recommended ? 54 : 48, label.length * 8 + 14);
+    const color = missionStatus ? MISSION_TONE_COLORS[missionStatus.lobbyBadgeTone] : 0xffd86f;
+    const active = building.open || recommended || Boolean(missionStatus?.rewardReadyCount);
     const chip = this.add.container(building.width * 0.18, chipY);
-    chip.add(this.add.rectangle(0, 0, chipW, 18, building.open || recommended ? 0xffd86f : 0x2d3854, building.open || recommended ? 0.92 : 0.82).setStrokeStyle(1, 0xffffff, 0.42));
-    chip.add(this.add.text(0, 0, label, building.open || recommended ? { fontFamily: 'system-ui, sans-serif', fontSize: '9px', color: '#301b0c', fontStyle: '900' } : mutedText(9)).setOrigin(0.5));
-    chip.setAlpha(building.open || recommended ? 0.96 : 0.72);
+    chip.add(this.add.rectangle(0, 0, chipW, 18, active ? color : 0x2d3854, active ? 0.92 : 0.82).setStrokeStyle(1, 0xffffff, 0.42));
+    chip.add(this.add.text(0, 0, label, active ? { fontFamily: 'system-ui, sans-serif', fontSize: '9px', color: '#301b0c', fontStyle: '900' } : mutedText(9)).setOrigin(0.5));
+    chip.setAlpha(active ? 0.96 : 0.72);
     container.add(chip);
   }
 

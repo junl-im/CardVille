@@ -39,10 +39,10 @@ must('src/game/scenes/DailyMissionScene.ts', [
   '주간 보상',
   'claimWeekly',
   '주간 수령',
-  'daily_mission_board_v142'
+  'daily_mission_board_v144'
 ]);
 
-must('src/main.ts', ['1.0.42 streak weekly mission loop']);
+must('src/main.ts', ['1.0.45 art bible mission route merge', '1.0.42 streak weekly mission loop']);
 must('public/health.html', ['streak weekly mission loop', `version ${pkg.version}`]);
 must('public/reset.html', [`CardVille ${pkg.version} Reset`]);
 
@@ -51,11 +51,11 @@ if (scripts['check:weekly-mission'] !== 'node tools/check-weekly-mission.mjs') t
 if (!scripts.verify?.includes('check:weekly-mission')) throw new Error('verify must include check:weekly-mission');
 
 const readme = read('README.md');
-for (const token of ['연속 출석', '주간 미션', 'check:weekly-mission', 'v142-streak-weekly']) {
+for (const token of ['연속 출석', '주간 미션', 'check:weekly-mission', 'v144-perfect-day-lobby-route']) {
   if (!readme.includes(token)) throw new Error(`README missing weekly mission token: ${token}`);
 }
 const handoff = read('AI_HANDOFF_CARDVILLE.md');
-for (const token of ['연속 출석', '주간 미션', 'check:weekly-mission', 'v142-streak-weekly']) {
+for (const token of ['연속 출석', '주간 미션', 'check:weekly-mission', 'v144-perfect-day-lobby-route']) {
   if (!handoff.includes(token)) throw new Error(`AI handoff missing weekly mission token: ${token}`);
 }
 
