@@ -13,6 +13,7 @@ const GAME_SCENES = [
   'PlayScene',
   'MathLabScene',
   'MemoryForestScene',
+  'EnglishSchoolScene',
   'ResultScene',
   'RewardScene',
   'CollectionScene',

@@ -11,6 +11,7 @@ import { StageSelectScene } from './game/scenes/StageSelectScene';
 import { PlayScene } from './game/scenes/PlayScene';
 import { MathLabScene } from './game/scenes/MathLabScene';
 import { MemoryForestScene } from './game/scenes/MemoryForestScene';
+import { EnglishSchoolScene } from './game/scenes/EnglishSchoolScene';
 import { ResultScene } from './game/scenes/ResultScene';
 import { RewardScene } from './game/scenes/RewardScene';
 import { CollectionScene } from './game/scenes/CollectionScene';
@@ -52,6 +53,7 @@ const config: Phaser.Types.Core.GameConfig = {
     PlayScene,
     MathLabScene,
     MemoryForestScene,
+    EnglishSchoolScene,
     ResultScene,
     RewardScene,
     CollectionScene,
@@ -75,4 +77,4 @@ window.addEventListener('unhandledrejection', (event) => {
 preventBrowserGestures();
 const game = new Phaser.Game(config);
 BackButtonSystem.install(game);
-console.info('[CardVille] Phaser instance created 1.0.37 content scale reward UX / 1.0.36 shop offer cooldown UX / word combo recovery coach / backconfirm scene cleanup / start-ui polish / shop economy hub / content engine / quality audit engine / polish audit engine', game.isBooted);
+console.info('[CardVille] Phaser instance created 1.0.39 ci build guard / 1.0.38 english school first class / 1.0.37 content scale reward UX / 1.0.36 shop offer cooldown UX / word combo recovery coach / backconfirm scene cleanup / start-ui polish / shop economy hub / content engine / quality audit engine / polish audit engine', game.isBooted);

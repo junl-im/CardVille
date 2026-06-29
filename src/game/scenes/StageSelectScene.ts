@@ -6,6 +6,7 @@ import { ProgressModeId, SaveSystem } from '../systems/SaveSystem';
 import { WORD_STAGES } from '../data/wordStages';
 import { MATH_STAGES } from '../data/mathStages';
 import { MEMORY_STAGES } from '../data/memoryStages';
+import { ENGLISH_STAGES } from '../data/englishStages';
 import { applyWrap, bodyText, darkText, goldText, mutedText, titleText } from '../ui/TextStyles';
 import { applyResponsiveCamera, hasTouchDebug } from '../systems/LayoutSystem';
 import { getModeById } from '../data/modeCatalog';
@@ -19,7 +20,7 @@ type StageCardEntry = {
   difficulty: string;
   metric: string;
   rewardPreview: string;
-  routeScene: 'PlayScene' | 'MathLabScene' | 'MemoryForestScene';
+  routeScene: 'PlayScene' | 'MathLabScene' | 'MemoryForestScene' | 'EnglishSchoolScene';
 };
 
 function modeTitle(modeId: ProgressModeId, fallback: string): string {
@@ -47,7 +48,7 @@ export class StageSelectScene extends Phaser.Scene {
     const start = this.page * PAGE_SIZE;
     const stages = entries.slice(start, start + PAGE_SIZE);
 
-    DrawSystem.background(this, this.title, this.modeId === 'memory' ? 'forest' : undefined);
+    DrawSystem.background(this, this.title, this.modeId === 'memory' ? 'forest' : 'village');
     this.drawHeader(entries.length, maxPage);
     this.drawProgressStrip(entries);
 
@@ -90,7 +91,9 @@ export class StageSelectScene extends Phaser.Scene {
       ? '카드 계열을 읽고 정리하는 도서관 수업'
       : this.modeId === 'math'
         ? '문제팩을 골라 연산 콤보를 쌓는 연구소 훈련'
-        : '프리뷰 시간을 보고 같은 그림을 찾는 숲속 기억 훈련';
+        : this.modeId === 'english'
+          ? '영단어와 뜻 카드를 연결하는 학교 첫 수업'
+          : '프리뷰 시간을 보고 같은 그림을 찾는 숲속 기억 훈련';
     this.add.text(195, 84, `${mode?.fallbackIcon ?? '🎴'} ${this.title}`, goldText(23)).setOrigin(0.5);
     this.add.text(195, 116, subtitle, applyWrap(mutedText(12), 320)).setOrigin(0.5);
     this.add.text(195, 144, `${this.page + 1}/${maxPage + 1} 구역 · 전체 ${totalStages}단계 · 클리어하면 다음 단계가 열려요`, applyWrap(mutedText(10), 320)).setOrigin(0.5);
@@ -127,6 +130,17 @@ export class StageSelectScene extends Phaser.Scene {
         metric: `${stage.pairs.length}쌍`,
         rewardPreview: `기억 보상 +${stage.id}`,
         routeScene: 'MemoryForestScene'
+      }));
+    }
+    if (this.modeId === 'english') {
+      return ENGLISH_STAGES.map((stage) => ({
+        id: stage.id,
+        title: stage.title,
+        note: stage.subtitle,
+        difficulty: stage.difficulty,
+        metric: `${stage.cards.length}단어`,
+        rewardPreview: `영어 보상 +${stage.id}`,
+        routeScene: 'EnglishSchoolScene'
       }));
     }
     return WORD_STAGES.map((stage) => ({

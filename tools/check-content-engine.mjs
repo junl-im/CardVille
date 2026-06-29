@@ -25,7 +25,8 @@ must('src/game/data/mathStages.ts', ['MATH_STAGES', 'MathProblem', '7 + 5', '3 �
 must('src/game/data/memoryStages.ts', ['MEMORY_STAGES', 'MemoryPair', 'previewSeconds']);
 must('src/game/data/modeCatalog.ts', ["routeScene: 'MathLabScene'", "routeScene: 'MemoryForestScene'", "id: 'math'", "id: 'memory'", "status: 'open'"]);
 must('src/game/data/dioramaBuildings.ts', ["scene: 'MathLabScene'", "scene: 'MemoryForestScene'", "subtitle: '연산 연구소'"]);
-must('src/game/scenes/ModeSelectScene.ts', ['startMode(mode', "mode.routeScene === 'MathLabScene'", "mode.routeScene === 'MemoryForestScene'"]);
+must('src/game/scenes/ModeSelectScene.ts', ['startMode(mode', "mode.routeScene === 'MathLabScene'", "mode.routeScene === 'MemoryForestScene'", "this.scene.start('StageSelectScene'"]);
+must('src/game/scenes/StageSelectScene.ts', ['MATH_STAGES', 'MEMORY_STAGES', "this.scene.start(stage.routeScene", 'drawProgressStrip']);
 must('src/game/systems/BackButtonSystem.ts', ['MathLabScene', 'MemoryForestScene']);
 
 const modeCatalog = read('src/game/data/modeCatalog.ts');

@@ -31,7 +31,8 @@ if (!/\^\(word\|math\|memory\|daily\|english\)/.test(save)) throw new Error('Pro
 must('src/game/scenes/RewardScene.ts', ['ProgressModeId', 'saveModeStageResult', 'rewardTitle()', "modeId === 'math'", "modeId === 'memory'"]);
 must('src/game/scenes/MathLabScene.ts', ["modeId: 'math'", 'stepsLeft: this.hearts', 'this.stage.id']);
 must('src/game/scenes/MemoryForestScene.ts', ["modeId: 'memory'", 'stepsLeft: efficiency', 'const compact = deck.length > 16']);
-must('src/game/scenes/ModeSelectScene.ts', ['nextPlayableModeStage', 'MATH_STAGES.length', 'MEMORY_STAGES.length', "mode.routeScene === 'RewardScene'"]);
+must('src/game/scenes/ModeSelectScene.ts', ['nextPlayableModeStage', 'MATH_STAGES.length', 'MEMORY_STAGES.length', "mode.routeScene === 'RewardScene'", 'modeProgressSummary']);
+must('src/game/scenes/StageSelectScene.ts', ['getModeStageRecord', 'isModeStageUnlocked', 'nextPlayableModeStage', "routeScene: 'MathLabScene'", "routeScene: 'MemoryForestScene'"]);
 must('src/game/data/modeCatalog.ts', ["id: 'daily'", "status: 'open'", "routeScene: 'RewardScene'"]);
 
 const math = read('src/game/data/mathStages.ts');

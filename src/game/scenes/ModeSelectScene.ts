@@ -7,6 +7,8 @@ import { applyResponsiveCamera, hasTouchDebug } from '../systems/LayoutSystem';
 import { GAME_MODES, GameMode, GameModeId, getModeById } from '../data/modeCatalog';
 import { MATH_STAGES } from '../data/mathStages';
 import { MEMORY_STAGES } from '../data/memoryStages';
+import { WORD_STAGES } from '../data/wordStages';
+import { ENGLISH_STAGES } from '../data/englishStages';
 import { SaveSystem } from '../systems/SaveSystem';
 
 export const MODES = GAME_MODES;
@@ -39,7 +41,7 @@ export class ModeSelectScene extends Phaser.Scene {
       ? `${focus.note} · ${focus.status === 'open' ? '바로 입장 가능' : '다음 작업: ' + focus.nextWork}`
       : '건물별 콘텐츠를 한 곳에서 확인하고, 열린 모드부터 안정적으로 확장합니다.';
     this.add.text(195, 118, copy, applyWrap(mutedText(12), 322)).setOrigin(0.5);
-    this.add.text(195, 146, '열린 모드: 도서관 · 연구소 · 기억의 숲 · 이벤트 카드팩', mutedText(10)).setOrigin(0.5);
+    this.add.text(195, 146, '열린 모드: 도서관 · 학교 · 연구소 · 기억의 숲 · 이벤트 카드팩', mutedText(10)).setOrigin(0.5);
   }
 
   private drawModeCard(mode: GameMode, y: number, focused: boolean): void {
@@ -53,8 +55,9 @@ export class ModeSelectScene extends Phaser.Scene {
     else this.add.text(68, y, mode.fallbackIcon, { fontSize: '34px' }).setOrigin(0.5).setAlpha(open ? 1 : 0.58);
     this.add.text(114, y - 17, mode.title, bodyText(20)).setOrigin(0, 0.5).setAlpha(open ? 1 : 0.62);
     this.add.text(114, y + 15, mode.note, applyWrap(mutedText(10), 212, 'left')).setOrigin(0, 0.5).setAlpha(open ? 1 : 0.62);
-    const record = SaveSystem.getModeStageRecord(mode.id, 1);
-    this.add.text(305, y + 29, open ? (record?.cleared ? `${record.stars}★` : 'OPEN') : '준비중', open ? goldText(10) : mutedText(10)).setOrigin(0.5);
+    const summary = this.modeProgressSummary(mode);
+    this.add.text(305, y + 25, open ? summary.badge : '준비중', open ? goldText(10) : mutedText(10)).setOrigin(0.5);
+    this.add.text(114, y + 34, open ? summary.copy : mode.nextWork, applyWrap(mutedText(9), 170, 'left')).setOrigin(0, 0.5).setAlpha(open ? 0.88 : 0.52);
 
     const zone = this.add.zone(195, y, 334, 86).setInteractive({ useHandCursor: true });
     zone.on('pointerup', () => {
@@ -64,13 +67,41 @@ export class ModeSelectScene extends Phaser.Scene {
     if (hasTouchDebug()) this.add.rectangle(195, y, 334, 86, 0x00ff66, 0.09).setStrokeStyle(1, 0x00ff66, 0.7);
   }
 
+  private modeProgressSummary(mode: GameMode): { badge: string; copy: string } {
+    if (mode.id === 'math') {
+      const next = SaveSystem.nextPlayableModeStage('math', MATH_STAGES.length);
+      const cleared = MATH_STAGES.filter((stage) => SaveSystem.getModeStageRecord('math', stage.id)?.cleared).length;
+      return { badge: `${cleared}/${MATH_STAGES.length}`, copy: `다음 ${next}단계 · 문제팩 선택` };
+    }
+    if (mode.id === 'memory') {
+      const next = SaveSystem.nextPlayableModeStage('memory', MEMORY_STAGES.length);
+      const cleared = MEMORY_STAGES.filter((stage) => SaveSystem.getModeStageRecord('memory', stage.id)?.cleared).length;
+      return { badge: `${cleared}/${MEMORY_STAGES.length}`, copy: `다음 ${next}단계 · 숲 카드 선택` };
+    }
+    if (mode.id === 'word') {
+      const next = SaveSystem.nextPlayableStage(WORD_STAGES.length);
+      return { badge: `${next}단계`, copy: '도서관 스테이지 선택' };
+    }
+    if (mode.id === 'english') {
+      const next = SaveSystem.nextPlayableModeStage('english', ENGLISH_STAGES.length);
+      const cleared = ENGLISH_STAGES.filter((stage) => SaveSystem.getModeStageRecord('english', stage.id)?.cleared).length;
+      return { badge: `${cleared}/${ENGLISH_STAGES.length}`, copy: `다음 ${next}교시 · 뜻 카드 연결` };
+    }
+    if (mode.id === 'daily') return { badge: 'PACK', copy: '오늘 보상 카드팩 열기' };
+    return { badge: 'PLAN', copy: mode.nextWork };
+  }
+
   private startMode(mode: GameMode): void {
     if (mode.routeScene === 'MathLabScene') {
-      this.scene.start('MathLabScene', { stage: SaveSystem.nextPlayableModeStage('math', MATH_STAGES.length) });
+      this.scene.start('StageSelectScene', { modeId: 'math', title: mode.title, recommendedStage: SaveSystem.nextPlayableModeStage('math', MATH_STAGES.length) });
       return;
     }
     if (mode.routeScene === 'MemoryForestScene') {
-      this.scene.start('MemoryForestScene', { stage: SaveSystem.nextPlayableModeStage('memory', MEMORY_STAGES.length) });
+      this.scene.start('StageSelectScene', { modeId: 'memory', title: mode.title, recommendedStage: SaveSystem.nextPlayableModeStage('memory', MEMORY_STAGES.length) });
+      return;
+    }
+    if (mode.routeScene === 'EnglishSchoolScene') {
+      this.scene.start('StageSelectScene', { modeId: 'english', title: mode.title, recommendedStage: SaveSystem.nextPlayableModeStage('english', ENGLISH_STAGES.length) });
       return;
     }
     if (mode.routeScene === 'RewardScene') {

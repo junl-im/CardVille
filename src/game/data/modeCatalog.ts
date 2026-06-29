@@ -1,7 +1,7 @@
 export type GameModeId = 'word' | 'math' | 'memory' | 'english' | 'daily';
 
 export type GameModeStatus = 'open' | 'planned';
-export type GameModeRoute = 'StageSelectScene' | 'MathLabScene' | 'MemoryForestScene' | 'RewardScene';
+export type GameModeRoute = 'StageSelectScene' | 'MathLabScene' | 'MemoryForestScene' | 'EnglishSchoolScene' | 'RewardScene';
 
 export type GameMode = {
   id: GameModeId;
@@ -55,9 +55,10 @@ export const GAME_MODES: readonly GameMode[] = [
     buildingId: 'school',
     iconKey: 'iconCvSchool',
     fallbackIcon: '🎓',
-    note: '영단어와 그림 카드를 연결하는 학교 수업 모드',
-    status: 'planned',
-    nextWork: '기본 영단어 데이터와 발음 힌트 구조'
+    note: '영단어와 뜻 카드를 연결하는 학교 1차 수업 모드',
+    status: 'open',
+    nextWork: '발음 힌트, 그림 카드, 문장 듣기 확장',
+    routeScene: 'EnglishSchoolScene'
   },
   {
     id: 'daily',

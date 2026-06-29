@@ -10,9 +10,10 @@ import { DIORAMA_BUILDINGS, DioramaBuilding, DioramaRoute } from '../data/dioram
 import { LOBBY_LAYOUT_GUARDS, LOBBY_LAYOUT_PLAN_VERSION } from '../data/lobbyLayoutPlan';
 import { MATH_STAGES } from '../data/mathStages';
 import { MEMORY_STAGES } from '../data/memoryStages';
+import { ENGLISH_STAGES } from '../data/englishStages';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
-const LOBBY_VERSION = '1.0.37';
+const LOBBY_VERSION = '1.0.39';
 const HERO_HOME = { x: 195, y: 545 } as const;
 const CAT_HOME = { x: 145, y: 585 } as const;
 
@@ -90,7 +91,8 @@ export class MainLobbyScene extends Phaser.Scene {
     }
     this.add.rectangle(142, 35, 213, 12, 0xffffff, 0.08).setDepth(911);
     this.add.text(38, 49, '카드마을 CardVille', titleText(20)).setOrigin(0, 0.5).setDepth(912);
-    this.add.text(39, 73, `Lv.${level} · 🪙 ${coins} · 카드 ${cards}장 · ${cleared}/${WORD_STAGES.length}`, mutedText(11)).setOrigin(0, 0.5).setDepth(912);
+    const totalOpenStages = WORD_STAGES.length + ENGLISH_STAGES.length + MATH_STAGES.length + MEMORY_STAGES.length;
+    this.add.text(39, 73, `Lv.${level} · 🪙 ${coins} · 카드 ${cards}장 · ${cleared}/${totalOpenStages}`, mutedText(11)).setOrigin(0, 0.5).setDepth(912);
 
     const album = this.add.container(319, 54).setDepth(920);
     if (this.textures.exists('uiNameplateGold')) album.add(this.add.image(0, 0, 'uiNameplateGold').setDisplaySize(92, 58));
@@ -110,9 +112,11 @@ export class MainLobbyScene extends Phaser.Scene {
 
   private getRecommendedBuildingId(): string {
     const nextWord = SaveSystem.nextPlayableStage(WORD_STAGES.length);
+    const nextEnglish = SaveSystem.nextPlayableModeStage('english', ENGLISH_STAGES.length);
     const nextMath = SaveSystem.nextPlayableModeStage('math', MATH_STAGES.length);
     const nextMemory = SaveSystem.nextPlayableModeStage('memory', MEMORY_STAGES.length);
     if (!SaveSystem.getStageRecord(nextWord)?.cleared) return 'library';
+    if (!SaveSystem.getModeStageRecord('english', nextEnglish)?.cleared) return 'school';
     if (!SaveSystem.getModeStageRecord('math', nextMath)?.cleared) return 'laboratory';
     if (!SaveSystem.getModeStageRecord('memory', nextMemory)?.cleared) return 'forest';
     return 'event';
@@ -239,7 +243,7 @@ export class MainLobbyScene extends Phaser.Scene {
         this.addNpcIdleGesture(npc, npcImage);
       }
 
-      if (npc.key === 'npcMerchant' || npc.key === 'npcWizard' || npc.key === 'npcLibrarian') {
+      if (npc.key === 'npcMerchant' || npc.key === 'npcWizard' || npc.key === 'npcLibrarian' || npc.key === 'npcTeacher') {
         const marker = this.textures.exists('uiQuestMarker')
           ? this.add.image(npc.x + 17, npc.y - npc.height * 0.55, 'uiQuestMarker').setDisplaySize(18, 18)
           : this.add.text(npc.x + 17, npc.y - npc.height * 0.55, '!', goldText(14)).setOrigin(0.5);

@@ -61,6 +61,7 @@ export class RewardScene extends Phaser.Scene {
     if (this.modeId === 'math') return '연산 카드팩 도착!';
     if (this.modeId === 'memory') return '숲속 카드팩 도착!';
     if (this.modeId === 'word') return '말 카드팩 도착!';
+    if (this.modeId === 'english') return '영어 카드팩 도착!';
     return '오늘의 카드팩 도착!';
   }
 
@@ -69,6 +70,7 @@ export class RewardScene extends Phaser.Scene {
     if (this.modeId === 'math') return `점수 ${this.score} · 콤보 ${this.bestCombo} · ${this.stage}단계 실험 보상`;
     if (this.modeId === 'memory') return `점수 ${this.score} · 기억력 ${this.bestCombo} · ${this.stage}단계 숲 보상`;
     if (this.modeId === 'word') return `점수 ${this.score} · 콤보 ${this.bestCombo} · ${this.stage}단계 도서관 보상`;
+    if (this.modeId === 'english') return `점수 ${this.score} · 콤보 ${this.bestCombo} · ${this.stage}교시 영어 학교 보상`;
     return `별 ${this.stars}개 · 오늘의 보너스 카드팩`;
   }
 
@@ -181,11 +183,11 @@ export class RewardScene extends Phaser.Scene {
   private progressionRewardBonus(): { xp: number; coins: number; label: string } {
     if (this.source === 'shop') return { xp: 0, coins: 0, label: '' };
     const stageTierBonus = Math.max(0, this.stage - 1);
-    const modeBonus = this.modeId === 'math' ? 12 : this.modeId === 'memory' ? 14 : this.modeId === 'word' ? 10 : 6;
+    const modeBonus = this.modeId === 'math' ? 12 : this.modeId === 'memory' ? 14 : this.modeId === 'english' ? 11 : this.modeId === 'word' ? 10 : 6;
     const starBonus = this.stars * 6;
     const xp = stageTierBonus * modeBonus + starBonus;
     const coins = stageTierBonus * 18 + this.stars * 8;
-    const modeLabel = this.modeId === 'math' ? '연구소 난이도 보너스' : this.modeId === 'memory' ? '숲 기억력 보너스' : this.modeId === 'word' ? '도서관 숙련 보너스' : '일일 보너스';
+    const modeLabel = this.modeId === 'math' ? '연구소 난이도 보너스' : this.modeId === 'memory' ? '숲 기억력 보너스' : this.modeId === 'english' ? '영어 학교 수업 보너스' : this.modeId === 'word' ? '도서관 숙련 보너스' : '일일 보너스';
     return { xp, coins, label: `${modeLabel} +${xp}XP/+${coins}코인` };
   }
 

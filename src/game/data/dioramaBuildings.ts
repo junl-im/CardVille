@@ -1,6 +1,6 @@
 import type { GameModeId } from './modeCatalog';
 export type DioramaRoute =
-  | { scene: 'StageSelectScene'; data: { modeId: 'word'; title: string } }
+  | { scene: 'StageSelectScene'; data: { modeId: 'word' | 'math' | 'memory' | 'english'; title: string } }
   | { scene: 'MathLabScene'; data?: { stage?: number } }
   | { scene: 'MemoryForestScene'; data?: { stage?: number } }
   | { scene: 'ModeSelectScene'; data?: { focusModeId?: GameModeId; title?: string } }
@@ -125,7 +125,7 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
   {
     id: 'school',
     title: '학교',
-    subtitle: '영어 예정',
+    subtitle: '영어 학교',
     assetKey: 'dioramaSchool',
     iconKey: 'iconCvSchool',
     npcKey: 'npcTeacher',
@@ -138,7 +138,8 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     touchWidth: 98,
     touchHeight: 90,
     touchOffsetY: 8,
-    open: false
+    open: true,
+    route: { scene: 'StageSelectScene', data: { modeId: 'english', title: '영어 학교' } }
   },
   {
     id: 'forest',

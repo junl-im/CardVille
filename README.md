@@ -1,6 +1,66 @@
-# CardVille 1.0.37
+# CardVille 1.0.39
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
+
+
+## 1.0.39 업데이트 내역
+
+- **CI 빌드 가드/ModeSelect 패치 표면 완전성 패스**를 진행했습니다.
+- GitHub Actions 로그에서 확인된 직접 실패 원인은 `tools/check-polish.mjs`가 `src/game/scenes/ModeSelectScene.ts`의 `modeProgressSummary` 토큰을 요구했지만, 배포 저장소의 해당 파일이 최신 패치 표면에 포함되지 않아 오래된 파일 상태로 남은 것입니다.
+- 전체 통파일에는 `ModeSelectScene.ts`가 정상 포함되어 있었지만, 패치 ZIP이 직전 기준 변경 파일만 담으면서 검증 스크립트가 감시하는 장면 파일 일부가 누락될 수 있는 절차상 위험이 있었습니다.
+- 이번 패치 ZIP은 빌드 실패 복구를 위해 `src/`, `tools/`, `package.json`, `index.html`, `public/build.json`, `public/health.html`, `public/reset.html`, `README.md`, `AI_HANDOFF_CARDVILLE.md`를 함께 담는 안정형 패치로 구성했습니다.
+- `ModeSelectScene.ts`의 모드 진행 요약 표면을 다시 명시적으로 보존했습니다.
+  - `modeProgressSummary`
+  - `문제팩 선택`
+  - `숲 카드 선택`
+  - `뜻 카드 연결`
+- `tools/check-ci-coherence.mjs`를 추가했습니다.
+  - 패키지/빌드/헬스/리셋/HTML/로비 버전 동기화 검증
+  - `ModeSelectScene.ts` 최신화 검증
+  - `check-polish` 감시 표면 유지 검증
+  - README/AI_HANDOFF 기록 동기화 검증
+- `npm run verify`에 `check:ci-coherence`를 포함했습니다.
+- `tools/check-english-school.mjs`의 1.0.38 하드코딩 검증 일부를 현재 `package.json` 버전 기준 검증으로 정리했습니다.
+- 앞으로 패치 ZIP을 만들 때는 단순 변경 파일만이 아니라 **검증 스크립트가 요구하는 파일과 라우팅 핵심 파일을 같이 담는 패치 표면 완전성 규칙**을 적용합니다.
+- 신규 문서 파일은 만들지 않고, 변경 내역은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 누적했습니다.
+- 삭제 파일은 없습니다.
+- `package.json`, `public/build.json`, `health.html`, `reset.html`, `index.html`, 앱 내부 버전 표기를 1.0.39로 동기화했습니다.
+- `npm run verify` 전체 통과 기준으로 확정했습니다.
+
+## 1.0.38 업데이트 내역
+
+- **영어 학교 1차 수업/무에셋 콘텐츠 확장 패스**를 진행했습니다.
+- 새 이미지 에셋은 아직 받지 않았으므로 기존 에셋과 벡터 UI만 사용했습니다.
+- `src/game/data/englishStages.ts`를 신규 추가했습니다.
+  - 4교시, 24개 영어 카드 데이터 구성
+  - 1교시: `인사 카드 수업`
+  - 2교시: `마을 물건 카드`
+  - 3교시: `행동 카드 수업`
+  - 4교시: `짧은 문장 수업`
+- `EnglishSchoolScene`을 신규 추가했습니다.
+  - 영어 단어를 보고 한국어 뜻 카드를 고르는 1차 수업 모드
+  - 콤보, 생명, 진행 바, 힌트, 예문, 결과 피드백 포함
+  - 모션/파티클은 `QualitySystem` 기준으로 제한
+- 학교 건물을 실제 오픈 콘텐츠로 전환했습니다.
+  - `DIORAMA_BUILDINGS`의 `school`을 `open: true`로 변경
+  - 학교 건물 터치 시 `StageSelectScene`의 `english` 모드로 이동
+- `ModeSelectScene`과 `StageSelectScene`에 영어 학교 진행 요약/스테이지 목록/보상 프리뷰를 추가했습니다.
+- `RewardScene`에 영어 학교 보상 문구와 `영어 학교 수업 보너스`를 추가했습니다.
+- `MainLobbyScene` 추천 동선에 영어 학교를 포함했습니다.
+  - 도서관 다음 미완료 추천 건물로 학교가 노출됩니다.
+  - 상단 HUD 진행 수를 도서관/영어/연구소/숲 전체 열린 스테이지 기준으로 정리했습니다.
+- `BackConfirmScene` 종료 정리 대상에 `EnglishSchoolScene`을 추가했습니다.
+- `tools/check-english-school.mjs`와 `npm run check:english-school`을 추가했습니다.
+  - 영어 스테이지/카드 수
+  - 학교 건물 오픈 라우팅
+  - 스테이지 선택/모드 선택/보상 연동
+  - README/AI_HANDOFF 기록 동기화
+  - 버전 동기화를 검증합니다.
+- `npm run verify`에 `check:english-school`을 포함했습니다.
+- 기존 디자인 에셋 요청서는 유지하되, 에셋 수령 전까지는 무에셋 패치로 진행합니다.
+- 새 버전별 문서 파일은 만들지 않고, 변경 내역은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 누적했습니다.
+- `package.json`, `public/build.json`, `health.html`, `reset.html`, `index.html`, 앱 내부 버전 표기를 1.0.38로 동기화했습니다.
+- `npm run verify` 전체 통과 기준으로 확정했습니다.
 
 
 ## 1.0.37 업데이트 내역
@@ -137,7 +197,7 @@
     - 크기 권장: 768×512 투명 PNG
     - 용도: 결과 화면, 콤보 코치, 실패 복구
 
-제작 우선순위는 **상점 주인 NPC → 고양이 힌트 이모션 → 연구소 콘솔 → 기억의 숲 보드 → 카드팩 오픈 이펙트** 순서가 가장 효율적입니다. 이 5개가 들어오면 현재 1.0.37 코드에 큰 구조 변경 없이 매니페스트 추가와 장면별 조건부 표시로 바로 흡수하기 좋습니다.
+제작 우선순위는 **상점 주인 NPC → 고양이 힌트 이모션 → 연구소 콘솔 → 기억의 숲 보드 → 카드팩 오픈 이펙트** 순서가 가장 효율적입니다. 이 5개가 들어오면 현재 1.0.38 코드에 큰 구조 변경 없이 매니페스트 추가와 장면별 조건부 표시로 바로 흡수하기 좋습니다.
 
 ## 1.0.36 업데이트 내역
 

@@ -61,12 +61,12 @@ must('src/game/scenes/ModeSelectScene.ts', [
   '뜻 카드 연결'
 ]);
 must('src/game/scenes/MainLobbyScene.ts', [
-  "const LOBBY_VERSION = '1.0.38'",
+  `const LOBBY_VERSION = '${pkg.version}'`,
   'ENGLISH_STAGES',
   "return 'school'"
 ]);
 must('src/game/scenes/RewardScene.ts', ['영어 카드팩 도착', '영어 학교 수업 보너스']);
-must('src/main.ts', ['EnglishSchoolScene', '1.0.38 english school first class']);
+must('src/main.ts', ['EnglishSchoolScene', 'english school first class']);
 must('src/game/scenes/BackConfirmScene.ts', ['EnglishSchoolScene']);
 
 const readme = read('README.md');
@@ -74,7 +74,7 @@ for (const token of [`# CardVille ${pkg.version}`, `## ${pkg.version} 업데이�
   if (!readme.includes(token)) throw new Error(`README missing english-school token: ${token}`);
 }
 const handoff = read('AI_HANDOFF_CARDVILLE.md');
-for (const token of [`현재 기준 버전은 ${pkg.version}`, '1.0.38', '영어 학교 1차 수업', 'check:english-school']) {
+for (const token of [`현재 기준 버전은 ${pkg.version}`, '영어 학교 1차 수업', 'check:english-school']) {
   if (!handoff.includes(token)) throw new Error(`AI handoff missing english-school token: ${token}`);
 }
 const build = JSON.parse(read('public/build.json'));
