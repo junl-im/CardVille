@@ -1,9 +1,9 @@
 import Phaser from 'phaser';
-import { addFullBleedRect, layout } from './LayoutSystem';
-import { mutedText } from '../ui/TextStyles';
+import { addFullBleedRect } from './LayoutSystem';
 
 export const CARDVILLE_NAVIGATION_GUARD_TAG = 'scene-navigation-guard-v152' as const;
 export const CARDVILLE_NAVIGATION_HARDENING_TAG = 'scene-navigation-no-freeze-v154' as const;
+export const CARDVILLE_SILENT_TRANSITION_TAG = 'silent-scene-transition-v164' as const;
 
 type SceneData = object | undefined;
 
@@ -50,7 +50,6 @@ export class NavigationSystem {
     NavigationSystem.cleanupModalScenes(scene);
 
     let shield: Phaser.GameObjects.GameObject | undefined;
-    let note: Phaser.GameObjects.Text | undefined;
     let started = false;
 
     const restoreInput = () => {
@@ -61,7 +60,6 @@ export class NavigationSystem {
       if (started) return;
       started = true;
       try { shield?.destroy(); } catch { /* ignore */ }
-      try { note?.destroy(); } catch { /* ignore */ }
       restoreInput();
       try {
         scene.scene.start(key, data);
@@ -73,9 +71,7 @@ export class NavigationSystem {
 
     try {
       if (scene.input) scene.input.enabled = false;
-      const l = layout(scene);
-      shield = addFullBleedRect(scene, 0x020814, 0.10).setDepth(4900).setName('scene-transition-shield-v154');
-      note = scene.add.text(l.cx, Math.min(806, l.visibleY + l.visibleHeight - 34), '이동 중...', mutedText(12)).setOrigin(0.5).setDepth(4901).setAlpha(0.74);
+      shield = addFullBleedRect(scene, 0x020814, 0.10).setDepth(4900).setName(`scene-transition-shield-v154:${CARDVILLE_SILENT_TRANSITION_TAG}`);
 
       // Phaser delayedCall can be skipped if a source scene is shut down during a tight mobile lifecycle edge.
       // Pair it with a native timer so navigation cannot leave input disabled and look frozen.

@@ -1,12 +1,12 @@
 {
-  "name": "TouchScaleNoticeFix",
-  "version": "1.0.63",
-  "mode": "silent-intro-video-loop-v163-npc-relative-scale-lock-v163-button-seamless-touch-v163-notice-text-fit-v163-responsive-surface-spread-v163",
+  "name": "FlowFitUIPolish",
+  "version": "1.0.64",
+  "mode": "flow-fit-ui-v164-silent-scene-transition-v164-scale-tween-dedupe-v164-button-lineless-surface-v164-mobile-copy-fit-v164",
   "svg": "disabled",
   "pwa": "disabled",
-  "notes": "Silent video-only loading, relative scale protection for fitted NPC/effects, seam-soft common buttons/panels, and fitted notice/toast text boxes.",
-  "label": "Touch scale and notice UI polish",
-  "description": "Fixes absolute scale tween enlargement, removes loading copy, loops intro video until assets complete, softens button seams, and fits alert text inside panels.",
-  "assetVersion": "1.0.63",
-  "previousRepairName": "ResponsiveMobileViewportRepair"
+  "notes": "Adds silent scene transitions, softer line-free UI surfaces, safer mobile text scaling, scale tween dedupe, and intro video lifecycle cleanup.",
+  "label": "Flow-fit UI polish and transition stability",
+  "description": "Keeps loading and transitions text-free, reduces visible button/panel lines, clamps copy to mobile boxes, and prevents stacked scale tweens from leaving enlarged objects.",
+  "assetVersion": "1.0.64",
+  "previousRepairName": "TouchScaleNoticeFix"
 }

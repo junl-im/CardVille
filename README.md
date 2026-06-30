@@ -1,18 +1,30 @@
 
-## 1.0.63 - TouchScaleNoticeFix
+## 1.0.64 - FlowFitUIPolish
 
-- NPC에 스치거나 터치했을 때 화면을 덮을 정도로 커지던 원인을 수정했습니다. 원인은 `setDisplaySize()`로 맞춘 이미지에 절대 `scale: 1.08` 계열 tween을 걸어 원본 PNG 기준으로 확대될 수 있던 문제였습니다. 이제 NPC/리플/문 아이콘/스파클/떠오르는 아이콘은 기준 scaleX/scaleY를 저장하고 상대 배율로만 움직입니다.
-- 게임 시작 후 IntroLoadingScene은 로딩 문구 없이 무음 오프닝 영상만 유지합니다. 에셋 로딩이 길면 영상이 loop로 계속 나오고, 로딩이 끝나면 즉시 영상 DOM을 제거하고 다음 씬으로 이동합니다.
-- 모든 공통 버튼의 과한 안쪽 선/하단 줄/광택선을 줄여 seam-free 버튼 규칙을 적용했습니다.
-- 알림/토스트/보상 팝업 텍스트가 패널보다 커져 밀려나는 문제를 줄이기 위해 notice 전용 글자 크기와 고정 박스 래핑을 추가했습니다.
-- 검증 추가: `tools/check-interaction-polish-v163.mjs` / `npm run check:interaction-polish`.
+- **전역 UI 흐름/텍스트/전환 안정화 패스**를 진행했습니다.
+- 씬 이동 시 `이동 중...` 문구를 제거하고, 짧은 무문구 차폐만 남겨 로딩/전환 구간이 조용하게 이어지도록 정리했습니다.
+- 오프닝 영상 DOM은 로딩 완료 또는 씬 종료 시 반드시 제거되도록 `intro-video-lifecycle-cleanup-v164`를 추가했습니다.
+- NPC/건물 hover/touch scale tween이 여러 번 겹쳐 커진 상태로 남지 않도록 `scale-tween-dedupe-v164`를 추가했습니다.
+- 공통 버튼/패널/화면 프레임의 흰 줄, 이중선, 과한 광택 알파를 더 낮춰 `button-lineless-surface-v164`, `panel-lineless-surface-v164`, `screen-frame-lineless-v164`를 적용했습니다.
+- 모바일 큰 글씨가 알림/표면보다 커져 밀리는 문제를 줄이기 위해 `mobile-copy-fit-v164`로 기본/알림 텍스트 배율을 소폭 낮추고 버튼 라벨은 고정 박스 안에서 맞추도록 했습니다.
+- 검증 추가: `tools/check-flow-fit-v164.mjs` / `npm run check:flow-fit`.
+- SVG 없음, OPEN/LOCK 없음, 로딩중 문구 없음, fallback 카드 숨김, self-contained 패치 payload 정책은 유지합니다.
+- 최종 ZIP 명명 규칙: `CardVille_v1.0.64_FlowFitUIPolish_Full.zip`, `CardVille_v1.0.64_FlowFitUIPolish_Patch.zip`.
 
-# CardVille 1.0.63
+# CardVille 1.0.64
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
 
 
+## 1.0.64 업데이트 내역
+
+- `silent-scene-transition-v164`: 씬 전환 중 화면에 문구를 띄우지 않고 짧은 투명 차폐만 사용합니다.
+- `scale-tween-dedupe-v164`: NPC/건물 hover scale tween이 중첩되어 커진 상태로 남는 위험을 줄였습니다.
+- `button-lineless-surface-v164`, `panel-lineless-surface-v164`, `screen-frame-lineless-v164`: 버튼/패널/화면 프레임의 줄처럼 보이는 stroke와 광택을 더 약하게 조정했습니다.
+- `mobile-copy-fit-v164`: 모바일 큰 글씨가 알림, 토스트, 버튼, 표면 박스 밖으로 밀리는 현상을 줄이도록 텍스트 배율과 고정 폭 처리를 조정했습니다.
+- `intro-video-lifecycle-cleanup-v164`: 인트로 영상은 에셋 준비가 끝날 때까지 반복 재생되고, 완료/씬 종료 시 DOM에서 정리됩니다.
+- 새 docs 문서는 만들지 않았고, 기록은 README.md와 AI_HANDOFF_CARDVILLE.md에만 누적했습니다.
 
 ## 1.0.63 업데이트 내역
 

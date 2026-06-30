@@ -5,6 +5,7 @@ import { addCoverImage, layout } from './LayoutSystem';
 export type CardVilleSceneBackdropVariant = 'village' | 'forest' | 'library' | 'lab' | 'shop' | 'palace';
 
 export const CARDVILLE_SCENE_BACKDROP_TAG = 'scene-premium-backdrop-v155' as const;
+export const CARDVILLE_FRAME_LINE_SOFTEN_TAG = 'screen-frame-lineless-v164' as const;
 const CARDVILLE_LEGACY_LAYOUT_TOKEN = '2.5D plaza';
 
 const BACKDROP_BY_VARIANT: Record<CardVilleSceneBackdropVariant, { key: string; sourceW: number; sourceH: number; tint: number; overlay: number }> = {
@@ -34,7 +35,7 @@ export class DrawSystem {
     }
 
     const g = scene.add.graphics();
-    g.setName(`premium-scene-frame:${CARDVILLE_SCENE_BACKDROP_TAG}`);
+    g.setName(`premium-scene-frame:${CARDVILLE_SCENE_BACKDROP_TAG}:${CARDVILLE_FRAME_LINE_SOFTEN_TAG}`);
     g.fillStyle(0xffe4a3, 0.07);
     g.fillCircle(328, 102, 118);
     g.fillStyle(0xffffff, 0.05);
@@ -43,9 +44,9 @@ export class DrawSystem {
     g.fillCircle(214, 420, 266);
     g.fillGradientStyle(0x071126, 0x071126, 0x071126, 0x071126, 0, 0, 0.18, 0.72);
     g.fillRect(l.visibleX, 548, l.visibleWidth, 296 + l.extraY);
-    g.lineStyle(1, 0xffffff, 0.12);
+    g.lineStyle(1, 0xffffff, 0.055);
     g.strokeRoundedRect(l.visibleX + 14, 88, l.visibleWidth - 28, 666, 32);
-    g.lineStyle(1, 0xffd86f, 0.16);
+    g.lineStyle(1, 0xffd86f, 0.075);
     g.strokeRoundedRect(l.visibleX + 22, 96, l.visibleWidth - 44, 648, 28);
 
     for (let i = 0; i < 8; i += 1) {
@@ -65,9 +66,9 @@ export class DrawSystem {
       const titleY = l.top;
       plate.fillStyle(0x061127, 0.88);
       plate.fillRoundedRect(titleX, titleY, titleW, 58, 24);
-      plate.lineStyle(2, 0xffffff, 0.34);
+      plate.lineStyle(1, 0xffffff, 0.13);
       plate.strokeRoundedRect(titleX, titleY, titleW, 58, 24);
-      plate.lineStyle(1, 0xffd86f, 0.32);
+      plate.lineStyle(1, 0xffd86f, 0.12);
       plate.strokeRoundedRect(titleX + 8, titleY + 7, titleW - 16, 44, 18);
       plate.fillStyle(0xffffff, 0.13);
       plate.fillRoundedRect(titleX + 28, titleY + 12, titleW - 56, 12, 8);
@@ -83,7 +84,7 @@ export class DrawSystem {
     const g = scene.add.graphics();
     g.fillStyle(0x07142c, 0.82);
     g.fillRoundedRect(left, y - 22, 134, 44, 19);
-    g.lineStyle(2, 0xffffff, 0.28);
+    g.lineStyle(1, 0xffffff, 0.12);
     g.strokeRoundedRect(left, y - 22, 134, 44, 19);
     if (scene.textures.exists('assetCoin')) {
       scene.add.image(left + 26, y, 'assetCoin').setDisplaySize(34, 34);
@@ -95,14 +96,14 @@ export class DrawSystem {
 
     g.fillStyle(0x07142c, 0.76);
     g.fillRoundedRect(left + 142, y - 22, 100, 44, 19);
-    g.lineStyle(2, 0xffffff, 0.22);
+    g.lineStyle(1, 0xffffff, 0.10);
     g.strokeRoundedRect(left + 142, y - 22, 100, 44, 19);
     if (scene.textures.exists('assetStar')) scene.add.image(left + 164, y, 'assetStar').setDisplaySize(28, 28);
     scene.add.text(left + 204, y, `Lv.${level}`, goldText(17)).setOrigin(0.5);
 
     g.fillStyle(0x07142c, 0.76);
     g.fillRoundedRect(right - 48, y - 22, 48, 44, 19);
-    g.lineStyle(2, 0xffffff, 0.22);
+    g.lineStyle(1, 0xffffff, 0.10);
     g.strokeRoundedRect(right - 48, y - 22, 48, 44, 19);
     if (scene.textures.exists('assetSettings')) {
       scene.add.image(right - 24, y, 'assetSettings').setDisplaySize(32, 32);

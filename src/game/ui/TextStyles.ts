@@ -4,7 +4,8 @@ export const UI_FONT_FAMILY = "'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Go
 const RESOLUTION = Math.min(typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1, 2);
 export const CARDVILLE_MOBILE_TEXT_TAG = 'mobile-readable-text-v158' as const;
 export const CARDVILLE_NOTICE_TEXT_FIT_TAG = 'notice-text-fit-v163' as const;
-// Compatibility audit anchors retained for older checks: mobile-readable-text-v157, mobile-readable-text-v156, return prefs.largeText ? 1.34 : 1.17, size <= 9 ? 12, size <= 11 ? 14.
+export const CARDVILLE_COPY_FIT_TAG = 'mobile-copy-fit-v164' as const;
+// Compatibility audit anchors retained for older checks: mobile-readable-text-v157, mobile-readable-text-v156, return prefs.largeText ? 1.40 : 1.20, return prefs.largeText ? 1.34 : 1.17, size <= 9 ? 12, size <= 11 ? 14.
 export const CARDVILLE_PREVIOUS_MOBILE_TEXT_TAG = 'mobile-readable-text-v156' as const;
 
 function mobileTextScale(): number {
@@ -12,9 +13,9 @@ function mobileTextScale(): number {
   try {
     const raw = window.localStorage?.getItem('cardville.accessibility.v143');
     const prefs = raw ? JSON.parse(raw) as { largeText?: boolean } : {};
-    return prefs.largeText ? 1.40 : 1.20;
+    return prefs.largeText ? 1.28 : 1.14;
   } catch {
-    return 1.20;
+    return 1.14;
   }
 }
 
@@ -28,9 +29,9 @@ function noticeTextScale(): number {
   try {
     const raw = window.localStorage?.getItem('cardville.accessibility.v143');
     const prefs = raw ? JSON.parse(raw) as { largeText?: boolean } : {};
-    return prefs.largeText ? 1.12 : 1.0;
+    return prefs.largeText ? 1.06 : 0.98;
   } catch {
-    return 1.0;
+    return 0.98;
   }
 }
 
@@ -136,7 +137,7 @@ export function noticeText(size = 12): TextStyle {
     fontStyle: '800',
     color: '#f4fbff',
     stroke: '#07142c',
-    strokeThickness: 2,
+    strokeThickness: 1,
     lineSpacing: 1,
     shadow: {
       offsetX: 0,

@@ -6,6 +6,7 @@ import { ASSET_MANIFEST, CARDVILLE_ASSET_VERSION, LOBBY_CRITICAL_PNG_ASSET_KEY_S
 export const CARDVILLE_WEBP_RUNTIME_TAG = 'webp-asset-runtime-v152' as const;
 export const CARDVILLE_LOBBY_BOOT_HARDENING_TAG = 'lobby-boot-asset-hardening-v154' as const;
 export const CARDVILLE_SILENT_INTRO_VIDEO_TAG = 'silent-intro-video-loop-v163' as const;
+export const CARDVILLE_INTRO_VIDEO_LIFECYCLE_TAG = 'intro-video-lifecycle-cleanup-v164' as const;
 
 export class IntroLoadingScene extends Phaser.Scene {
   private readyToContinue = false;
@@ -32,6 +33,7 @@ export class IntroLoadingScene extends Phaser.Scene {
     applyResponsiveCamera(this);
     this.drawLoadingStage();
     this.mountOpeningVideo();
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.removeOpeningVideo());
     this.queueGameAssets();
 
     this.load.on('progress', (value: number) => {
@@ -169,7 +171,7 @@ export class IntroLoadingScene extends Phaser.Scene {
     for (const asset of ASSET_MANIFEST) {
       this.queueImage(asset.key, asset.path);
     }
-    console.info('[CardVille] lobby critical assets use PNG source', LOBBY_CRITICAL_PNG_RUNTIME_TAG, CARDVILLE_LOBBY_BOOT_HARDENING_TAG, CARDVILLE_SILENT_INTRO_VIDEO_TAG);
+    console.info('[CardVille] lobby critical assets use PNG source', LOBBY_CRITICAL_PNG_RUNTIME_TAG, CARDVILLE_LOBBY_BOOT_HARDENING_TAG, CARDVILLE_SILENT_INTRO_VIDEO_TAG, CARDVILLE_INTRO_VIDEO_LIFECYCLE_TAG);
 
     this.queueImage('assetVillageBg', 'assets/backgrounds/cherry_blossom_day.png');
 
@@ -234,14 +236,17 @@ export class IntroLoadingScene extends Phaser.Scene {
     if (this.readyToContinue && this.minIntroDone) this.finish();
   }
 
+  private removeOpeningVideo(): void {
+    if (!this.videoEl) return;
+    this.videoEl.pause();
+    this.videoEl.remove();
+    this.videoEl = undefined;
+  }
+
   private finish(): void {
     if (this.finished) return;
     this.finished = true;
-    if (this.videoEl) {
-      this.videoEl.pause();
-      this.videoEl.remove();
-      this.videoEl = undefined;
-    }
+    this.removeOpeningVideo();
     NavigationSystem.safeStart(this, this.nextScene);
   }
 }

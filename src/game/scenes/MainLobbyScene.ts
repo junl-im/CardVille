@@ -17,7 +17,7 @@ import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 import { AccessibilitySystem } from '../systems/AccessibilitySystem';
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
-const LOBBY_VERSION = '1.0.63';
+const LOBBY_VERSION = '1.0.64';
 const MISSION_TONE_COLORS = { gold: 0xffd86f, blue: 0x8fd3ff, purple: 0xd7a5ff, green: 0xa9f5b5, coral: 0xffb39a } as const;
 const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-visible-v149' as const;
 const VILLAGE_VISIBLE_BUILDING_SCALE_TAG = 'village-readable-building-scale-v150' as const;
@@ -36,6 +36,7 @@ const LOBBY_INPUT_RESET_TAG = 'lobby-input-reset-v160' as const;
 const RESPONSIVE_MOBILE_VIEWPORT_TAG = 'responsive-mobile-viewport-v163' as const;
 const NPC_RELATIVE_SCALE_LOCK_TAG = 'npc-relative-scale-lock-v163' as const;
 const SILENT_INTRO_VIDEO_LOOP_TAG = 'silent-intro-video-loop-v163' as const;
+const SCALE_TWEEN_DEDUPE_TAG = 'scale-tween-dedupe-v164' as const;
 const HERO_HOME = { x: 195, y: 566 } as const;
 const CAT_HOME = { x: 146, y: 612 } as const;
 
@@ -88,7 +89,8 @@ export class MainLobbyScene extends Phaser.Scene {
     this.drawBottomHint(profile.nickname);
     // Runtime HUD shows only player-facing village UI, never build/debug notes.
     console.info('[CardVille] premium lobby art placement', LOBBY_ART_PLACEMENT_TAG, LOBBY_UI_NON_OVERLAP_TAG, LOBBY_USER_ASSET_VISIBLE_TAG, USER_LOBBY_ASSET_ASSIGNMENT_TAG, LOBBY_USER_ASSET_NPC_TAG);
-    console.info('[CardVille] lobby ready', { version: LOBBY_VERSION, tag: LOBBY_TOUCH_RECOVERY_TAG, input: LOBBY_INPUT_RESET_TAG, spread: LOBBY_FULLSCREEN_SPREAD_TAG, npcScale: NPC_RELATIVE_SCALE_LOCK_TAG, intro: SILENT_INTRO_VIDEO_LOOP_TAG });
+    console.info('[CardVille] lobby ready', { version: LOBBY_VERSION, tag: LOBBY_TOUCH_RECOVERY_TAG, input: LOBBY_INPUT_RESET_TAG, spread: LOBBY_FULLSCREEN_SPREAD_TAG, npcScale: NPC_RELATIVE_SCALE_LOCK_TAG, scaleTween: SCALE_TWEEN_DEDUPE_TAG, intro: SILENT_INTRO_VIDEO_LOOP_TAG });
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.cleanupLobbyRuntime());
     this.showLobbyCoach(recommendedBuildingId);
   }
 
@@ -113,22 +115,52 @@ export class MainLobbyScene extends Phaser.Scene {
     };
   }
 
+  private stopScaleTween(target: Phaser.GameObjects.GameObject): void {
+    const active = target.getData('cvScaleTween') as Phaser.Tweens.Tween | undefined;
+    if (active && active.isPlaying()) active.stop();
+    target.setData('cvScaleTween', undefined);
+  }
+
   private tweenRelativeScale(target: Phaser.GameObjects.GameObject & Phaser.GameObjects.Components.Transform, multiplier: number, duration = 120, yoyo = false): void {
+    this.stopScaleTween(target);
     const base = this.baseScaleOf(target);
-    this.tweens.add({
+    const tween = this.tweens.add({
       targets: target,
       scaleX: base.x * multiplier,
       scaleY: base.y * multiplier,
       duration,
       yoyo,
       ease: 'Quad.easeOut',
-      onComplete: () => { if (yoyo) target.setScale(base.x, base.y); }
+      onComplete: () => {
+        if (yoyo) target.setScale(base.x, base.y);
+        target.setData('cvScaleTween', undefined);
+      }
     });
+    target.setData('cvScaleTween', tween);
   }
 
   private restoreRelativeScale(target: Phaser.GameObjects.GameObject & Phaser.GameObjects.Components.Transform, duration = 110): void {
+    this.stopScaleTween(target);
     const base = this.baseScaleOf(target);
-    this.tweens.add({ targets: target, scaleX: base.x, scaleY: base.y, duration, ease: 'Quad.easeOut' });
+    const tween = this.tweens.add({
+      targets: target,
+      scaleX: base.x,
+      scaleY: base.y,
+      duration,
+      ease: 'Quad.easeOut',
+      onComplete: () => target.setData('cvScaleTween', undefined)
+    });
+    target.setData('cvScaleTween', tween);
+  }
+
+  private cleanupLobbyRuntime(): void {
+    this.busy = false;
+    this.walkTimer?.remove(false);
+    this.walkTimer = undefined;
+    this.activeSpeech?.destroy();
+    this.activeSettingsPanel?.destroy();
+    this.activeSpeech = undefined;
+    this.activeSettingsPanel = undefined;
   }
 
   private buildingPoint(building: Pick<DioramaBuilding, 'x' | 'y'>): { x: number; y: number } {
@@ -348,7 +380,7 @@ export class MainLobbyScene extends Phaser.Scene {
   private drawBuilding(building: DioramaBuilding, recommended: boolean): void {
     const point = this.buildingPoint(building);
     const scale = this.vs(0.95, 1.12);
-    const container = this.add.container(point.x, point.y).setDepth(point.y).setName(`building:${building.id}:${LOBBY_BOOT_ASSET_HARDENING_TAG}:${LOBBY_ART_PLACEMENT_TAG}:${RESPONSIVE_MOBILE_VIEWPORT_TAG}`);
+    const container = this.rememberBaseScale(this.add.container(point.x, point.y).setDepth(point.y).setName(`building:${building.id}:${LOBBY_BOOT_ASSET_HARDENING_TAG}:${LOBBY_ART_PLACEMENT_TAG}:${RESPONSIVE_MOBILE_VIEWPORT_TAG}:${SCALE_TWEEN_DEDUPE_TAG}`));
     const width = building.width * scale;
     const height = building.height * scale;
     const visualWidth = (building.visualWidth ?? building.width) * scale;
@@ -424,8 +456,8 @@ export class MainLobbyScene extends Phaser.Scene {
       this.spawnTouchRipple(point.x, point.y + 10 * scale);
       this.enterBuilding(building, container);
     });
-    zone.on('pointerover', () => { if (!this.busy) this.tweens.add({ targets: container, scale: 1.035, duration: 120 }); });
-    zone.on('pointerout', () => { if (!this.busy) this.tweens.add({ targets: container, scale: 1, duration: 120 }); });
+    zone.on('pointerover', () => { if (!this.busy) this.tweenRelativeScale(container, 1.025, 120); });
+    zone.on('pointerout', () => { if (!this.busy) this.restoreRelativeScale(container, 120); });
 
     if (hasTouchDebug()) {
       this.add.rectangle(point.x, point.y + (building.touchOffsetY ?? 0) * scale, zoneWidth, zoneHeight, 0x00ff66, 0.12)
@@ -834,7 +866,7 @@ export class MainLobbyScene extends Phaser.Scene {
     this.activeSpeech = undefined;
     this.activeSettingsPanel?.destroy();
     this.activeSettingsPanel = undefined;
-    this.hintText?.setText(`${building.title}(으)로 이동 중... 톡톡톡!`);
+    this.hintText?.setText(`${building.title}로 갑니다 · 톡톡톡!`);
     const target = this.buildingTarget(building);
     const scale = this.vs(0.94, 1.10);
     this.tweens.killTweensOf(this.hero);

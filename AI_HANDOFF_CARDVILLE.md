@@ -1,11 +1,9 @@
 
-## 1.0.63 - TouchScaleNoticeFix
+## 1.0.64 - FlowFitUIPolish
 
-- NPC에 스치거나 터치했을 때 화면을 덮을 정도로 커지던 원인을 수정했습니다. 원인은 `setDisplaySize()`로 맞춘 이미지에 절대 `scale: 1.08` 계열 tween을 걸어 원본 PNG 기준으로 확대될 수 있던 문제였습니다. 이제 NPC/리플/문 아이콘/스파클/떠오르는 아이콘은 기준 scaleX/scaleY를 저장하고 상대 배율로만 움직입니다.
-- 게임 시작 후 IntroLoadingScene은 로딩 문구 없이 무음 오프닝 영상만 유지합니다. 에셋 로딩이 길면 영상이 loop로 계속 나오고, 로딩이 끝나면 즉시 영상 DOM을 제거하고 다음 씬으로 이동합니다.
-- 모든 공통 버튼의 과한 안쪽 선/하단 줄/광택선을 줄여 seam-free 버튼 규칙을 적용했습니다.
-- 알림/토스트/보상 팝업 텍스트가 패널보다 커져 밀려나는 문제를 줄이기 위해 notice 전용 글자 크기와 고정 박스 래핑을 추가했습니다.
-- 검증 추가: `tools/check-interaction-polish-v163.mjs` / `npm run check:interaction-polish`.
+- 목적: 사용자가 계속 요청한 전 구간 불안정/겹침/배치/버튼 줄/알림 텍스트 밀림/로딩 문구 노출 위험을 한 단계 더 줄이는 UI 흐름 안정화 패스입니다.
+- 현재 기준 버전은 1.0.64입니다.
+- 이번 버전은 1.0.63 TouchScaleNotice를 기준으로, 말 없는 전환, 인트로 영상 lifecycle cleanup, scale tween 중복 방지, 버튼/패널 줄 완화, 모바일 텍스트 박스 맞춤을 추가했습니다.
 
 # CardVille AI Handoff
 
@@ -13,13 +11,23 @@
 CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고, 그다음 실제 코드를 확인하세요.
 
 
-## 현재 작업 기준: 1.0.63
+## 현재 작업 기준: 1.0.64
 
-현재 기준 버전은 1.0.63입니다.  
-이번 버전은 1.0.62 SurfacePayload를 기준으로, NPC/효과 이미지의 절대 scale tween 확대 버그를 막고, 시작 로딩 구간을 문구 없는 오프닝 영상으로 유지하며, 버튼 줄/알림 텍스트 넘침을 공통 UI 규칙으로 줄인 패스입니다. `silent-intro-video-loop-v163`, `npc-relative-scale-lock-v163`, `button-seamless-touch-v163`, `notice-text-fit-v163`, `responsive-surface-spread-v163`가 핵심 기준입니다.
+현재 기준 버전은 1.0.64입니다.  
+핵심 태그는 `flow-fit-ui-v164`, `silent-scene-transition-v164`, `scale-tween-dedupe-v164`, `button-lineless-surface-v164`, `panel-lineless-surface-v164`, `screen-frame-lineless-v164`, `mobile-copy-fit-v164`, `intro-video-lifecycle-cleanup-v164`입니다.
 
+### 1.0.64 전역 UI 흐름/텍스트/전환 안정화 패스
 
-
+- 씬 전환 중 `이동 중...` 문구를 제거했습니다. 앞으로 로딩/전환 구간은 가능한 한 말 없이 영상/짧은 차폐로 처리합니다.
+- `IntroLoadingScene`의 video DOM은 완료 또는 씬 종료 때 반드시 제거됩니다. 로딩이 길면 영상은 loop로 계속 재생되고, 끝나면 끊고 다음 씬으로 이동합니다.
+- NPC와 건물 hover/touch 확대는 기존 기준 scaleX/scaleY를 저장한 뒤 상대 배율로만 움직이며, 새 scale tween을 시작하기 전에 이전 scale tween을 멈춥니다. 이 규칙을 깨면 다시 화면 덮는 확대 버그가 생길 수 있습니다.
+- 공통 `GameButton`, `Panel`, `ScreenUISystem`, `DrawSystem`의 stroke/shine 알파를 낮춰 버튼/패널에 줄처럼 보이는 장식을 줄였습니다.
+- `TextStyles`의 모바일 텍스트 배율을 소폭 낮추고 버튼 라벨에는 fixedWidth/fixedHeight를 넣어 알림/표면/버튼보다 글자가 커져 밀려나는 위험을 줄였습니다.
+- 추가 검증: `tools/check-flow-fit-v164.mjs`, `npm run check:flow-fit`.
+- 유지 규칙: SVG 없음, OPEN/LOCK 없음, 로딩중 문구 없음, fallback 카드 숨김, public/assets 포함 self-contained 패치 유지, 새 docs 문서 생성 금지.
+- 산출물 이름:
+  - `CardVille_v1.0.64_FlowFitUIPolish_Full.zip`
+  - `CardVille_v1.0.64_FlowFitUIPolish_Patch.zip`
 
 ### 1.0.63 실제 모바일 반응형 viewport / 터치 확대/알림 텍스트/무음 인트로 영상 패스
 

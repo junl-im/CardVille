@@ -25,6 +25,7 @@ export const CARDVILLE_PREMIUM_BUTTON_STYLE_TAG = 'premium-vector-button-v148' a
 export const CARDVILLE_BUTTON_UX_AUDIT_TAG = 'screen-wide-premium-button-v158' as const;
 export const CARDVILLE_TOUCH_TARGET_TAG = 'mobile-touch-target-v158' as const;
 export const CARDVILLE_BUTTON_SEAM_FIX_TAG = 'button-seamless-touch-v163' as const;
+export const CARDVILLE_BUTTON_LINELESS_TAG = 'button-lineless-surface-v164' as const;
 
 type ButtonPalette = { top: number; bottom: number; stroke: number; glow: number; text: string };
 
@@ -79,7 +80,7 @@ export class GameButton extends Phaser.GameObjects.Container {
       this.skinImage = scene.add.image(0, 2, this.skin.normal).setDisplaySize(width + 16, height + 16);
     }
     const baseLabelSize = height >= 64 ? 22 : height <= 46 ? 17 : 20;
-    this.label = scene.add.text(0, -1, compactText(text, Math.max(5, Math.floor(width / 24))), { ...darkText(fitTextSize(text, baseLabelSize, 14)), color: resolveButtonPalette(color).text, fontStyle: '900' }).setOrigin(0.5);
+    this.label = scene.add.text(0, -1, compactText(text, Math.max(5, Math.floor(width / 24))), { ...darkText(fitTextSize(text, baseLabelSize, 13)), color: resolveButtonPalette(color).text, fontStyle: '900', align: 'center', fixedWidth: Math.max(48, width - 24), fixedHeight: Math.max(24, height - 8) }).setOrigin(0.5);
     this.hitZone = scene.add.zone(0, 0, hitW, hitH)
       .setOrigin(0.5)
       .setName(`hit:${text}`)
@@ -153,7 +154,7 @@ export class GameButton extends Phaser.GameObjects.Container {
   setLabel(text: string): this {
     const baseLabelSize = this.heightValue >= 64 ? 22 : this.heightValue <= 46 ? 17 : 20;
     this.label.setText(compactText(text, Math.max(5, Math.floor(this.widthValue / 24))));
-    this.label.setStyle({ ...darkText(fitTextSize(text, baseLabelSize, 14)), color: resolveButtonPalette(this.disabled ? 0x9aa4ba : this.colorValue).text, fontStyle: '900' });
+    this.label.setStyle({ ...darkText(fitTextSize(text, baseLabelSize, 13)), color: resolveButtonPalette(this.disabled ? 0x9aa4ba : this.colorValue).text, fontStyle: '900', align: 'center', fixedWidth: Math.max(48, this.widthValue - 24), fixedHeight: Math.max(24, this.heightValue - 8) });
     this.draw(false);
     return this;
   }
@@ -176,7 +177,7 @@ export class GameButton extends Phaser.GameObjects.Container {
       this.skinImage.setDisplaySize(width + 16, height + 16);
       this.skinImage.setAlpha(pressed ? 0.96 : 1);
       if (this.shineEnabled) {
-        this.bg.lineStyle(1, 0xffffff, pressed ? 0.04 : 0.07);
+        this.bg.lineStyle(1, 0xffffff, pressed ? 0.02 : 0.035);
         this.bg.strokeRoundedRect(-width / 2 + 5, -height / 2 + 5, width - 10, height - 10, 18);
       }
       return;
@@ -189,10 +190,10 @@ export class GameButton extends Phaser.GameObjects.Container {
     this.bg.fillRoundedRect(-width / 2 - 3, -height / 2 + yOffset - 2, width + 6, height + 6, radius + 3);
     this.bg.fillGradientStyle(palette.top, palette.top, palette.bottom, palette.bottom, this.disabled ? 0.58 : 1, this.disabled ? 0.58 : 1, this.disabled ? 0.66 : 1, this.disabled ? 0.66 : 1);
     this.bg.fillRoundedRect(-width / 2, -height / 2 + yOffset, width, height, radius);
-    this.bg.lineStyle(2, palette.stroke, pressed ? 0.36 : 0.50);
+    this.bg.lineStyle(1, palette.stroke, pressed ? 0.12 : 0.18);
     this.bg.strokeRoundedRect(-width / 2, -height / 2 + yOffset, width, height, radius);
     if (this.shineEnabled) {
-      this.bg.fillStyle(0xffffff, this.disabled ? 0.04 : pressed ? 0.04 : 0.07);
+      this.bg.fillStyle(0xffffff, this.disabled ? 0.02 : pressed ? 0.02 : 0.035);
       this.bg.fillRoundedRect(-width / 2 + 22, -height / 2 + 9 + yOffset, width - 44, Math.max(4, height * 0.08), 8);
     }
   }
