@@ -286,7 +286,7 @@ export class DailyMissionSystem {
       dailyCompletionClaimed: state.dailyCompletionClaimed,
       dailyCompletionRewardText: dailyCompletionRewardText(),
       rewardReadyCount,
-      lobbyBadgeLabel: rewardReadyCount > 0 ? `READY ${rewardReadyCount}` : allMissionsClaimed ? 'DONE' : 'MISSION',
+      lobbyBadgeLabel: rewardReadyCount > 0 ? `보상 ${rewardReadyCount}` : allMissionsClaimed ? '완료' : '미션',
       lobbyBadgeTone: weeklyReady ? 'purple' : dailyCompletionReady ? 'gold' : attendanceReady ? 'blue' : readyCount > 0 ? 'coral' : 'green',
       shouldPrioritizeEvent: rewardReadyCount > 0,
       nextActionTitle: nextAction.title,

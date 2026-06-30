@@ -31,7 +31,7 @@ const walk = (dir) => {
 };
 
 const pkg = JSON.parse(read('package.json'));
-assert(pkg.version === '1.0.66', `expected package version 1.0.66, got ${pkg.version}`);
+assert(pkg.version === '1.0.67', `expected package version 1.0.67, got ${pkg.version}`);
 assert(pkg.scripts.verify.includes('check:corner-sweep-v166'), 'verify must include check:corner-sweep-v166');
 assert(pkg.scripts['check:corner-sweep-v166'] === 'node tools/check-corner-sweep-v166.mjs', 'check script mismatch');
 
@@ -67,9 +67,9 @@ assert(!exists('package-lock.json'), 'package-lock.json must not be present in t
 const svgFiles = walk(root).filter((file) => file.toLowerCase().endsWith('.svg'));
 assert(svgFiles.length === 0, `SVG files are not allowed: ${svgFiles.map((file) => path.relative(root, file)).slice(0, 8).join(', ')}`);
 
-include('README.md', ['# CardVille 1.0.66', '## 1.0.66 업데이트 내역', 'corner-sweep-v166', 'safe-area-copy-clamp-v166']);
-include('AI_HANDOFF_CARDVILLE.md', ['현재 기준 버전은 1.0.66', 'CornerSweepStability', 'input-watchdog-v166', '새 docs 문서 생성 금지']);
-include('public/build.json', ['"version": "1.0.66"', 'CornerSweepStability']);
-include('public/health.html', ['version 1.0.66', 'CornerSweepStability']);
+include('README.md', ['# CardVille 1.0.67', '## 1.0.67 업데이트 내역', 'corner-sweep-v166', 'safe-area-copy-clamp-v166']);
+include('AI_HANDOFF_CARDVILLE.md', ['현재 기준 버전은 1.0.67', 'IntroExitCopyFit', 'input-watchdog-v166', '새 docs 문서 생성 금지']);
+include('public/build.json', ['"version": "1.0.67"', 'IntroExitCopyFit']);
+include('public/health.html', ['version 1.0.67', 'IntroExitCopyFit']);
 
 console.log('[check-corner-sweep-v166] OK');

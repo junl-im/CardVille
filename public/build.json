@@ -1,12 +1,12 @@
 {
-  "name": "CornerSweepStability",
-  "version": "1.0.66",
-  "mode": "corner-sweep-v166-holistic-ui-audit-v166-safe-area-copy-clamp-v166-input-watchdog-v166",
+  "name": "IntroExitCopyFit",
+  "version": "1.0.67",
+  "mode": "intro-video-restore-v167-kakao-inapp-close-v167-lobby-copy-collision-fix-v167-micro-text-fit-v167-popup-copy-fit-v167-plaza-tap-route-v167",
   "svg": "disabled",
   "pwa": "disabled",
-  "notes": "Adds holistic screen sweep checks, safe-area bounds for UI surfaces, copy overflow guards, quieter lines, and input watchdog recovery.",
-  "label": "Corner sweep UI and input stability audit",
-  "description": "Keeps all loading/transition text silent while tightening every major screen for safe-area, copy fit, line-free surfaces, and stuck-input prevention.",
-  "assetVersion": "1.0.66",
-  "previousRepairName": "FlowListInputPolish"
+  "notes": "Restores the silent intro video layer, removes player-facing loading/status copy during start, improves Kakao in-app exit attempts, tightens lobby/settings/building-label copy fit, and enables plaza tap routing.",
+  "label": "Silent intro, exit bridge, lobby copy fit and plaza tap route",
+  "description": "Keeps loading/transition surfaces wordless while improving text fit, settings copy, building labels, popup copy boxes, and mobile in-app browser exit behavior.",
+  "assetVersion": "1.0.67",
+  "previousRepairName": "CornerSweepStability"
 }

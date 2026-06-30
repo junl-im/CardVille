@@ -34,8 +34,43 @@
       }
     </script>
     <script>
-      window.__CARDVILLE_VERSION__ = '1.0.66';
+      window.__CARDVILLE_VERSION__ = '1.0.67';
       window.__CARDVILLE_READY__ = false;
+
+      window.__CARDVILLE_INTRO_VIDEO_PREPARE__ = function(){
+        var id = 'cardville-intro-video';
+        var old = document.getElementById(id);
+        if (old) return old;
+        var video = document.createElement('video');
+        video.id = id;
+        video.src = '/CardVille/assets/video/cardville_intro_loading.mp4?v=1.0.67';
+        video.muted = true;
+        video.autoplay = true;
+        video.playsInline = true;
+        video.loop = true;
+        video.preload = 'auto';
+        video.controls = false;
+        video.setAttribute('playsinline', 'true');
+        video.setAttribute('webkit-playsinline', 'true');
+        video.setAttribute('data-cardville-silent-intro-video-v167', 'true');
+        video.style.position = 'fixed';
+        video.style.inset = '0';
+        video.style.width = '100vw';
+        video.style.height = '100dvh';
+        video.style.minHeight = '100vh';
+        video.style.objectFit = 'cover';
+        video.style.zIndex = '2147482000';
+        video.style.pointerEvents = 'none';
+        video.style.background = '#071126';
+        video.style.opacity = '1';
+        document.body.appendChild(video);
+        try { video.play().catch(function(){ video.load(); }); } catch(e) {}
+        return video;
+      };
+      window.__CARDVILLE_INTRO_VIDEO_DONE__ = function(){
+        var video = document.getElementById('cardville-intro-video');
+        if (video) video.remove();
+      };
       window.__CARDVILLE_BOOT_OK__ = function(){
         window.__CARDVILLE_READY__ = true;
         var el = document.getElementById('boot-fallback');

@@ -40,7 +40,7 @@ must('src/game/systems/DailyMissionSystem.ts', [
 must('src/game/scenes/DailyMissionScene.ts', [
   'DailyMissionScene',
   '오늘의 미션',
-  '출석 보상 READY',
+  '출석 보상 준비',
   'daily_mission_board_v144',
   'drawStreakWeekly',
   'drawCompletionBonus',

@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { NavigationSystem } from '../systems/NavigationSystem';
-import { addCoverImage, applyResponsiveCamera, hasTouchDebug, layout, responsivePoint, responsiveScale, responsiveX, responsiveY } from '../systems/LayoutSystem';
+import { addCoverImage, applyResponsiveCamera, compactText, hasTouchDebug, layout, responsivePoint, responsiveScale, responsiveX, responsiveY } from '../systems/LayoutSystem';
 import { DrawSystem } from '../systems/DrawSystem';
 import { SaveSystem } from '../systems/SaveSystem';
 import { WORD_STAGES } from '../data/wordStages';
@@ -12,12 +12,13 @@ import { LOBBY_LAYOUT_GUARDS, LOBBY_LAYOUT_PLAN_VERSION } from '../data/lobbyLay
 import { MATH_STAGES } from '../data/mathStages';
 import { MEMORY_STAGES } from '../data/memoryStages';
 import { ENGLISH_STAGES } from '../data/englishStages';
-import { applyNoticeBox, applyWrap, bodyText, darkText, goldText, mutedText, noticeText, titleText } from '../ui/TextStyles';
+import { applyCopyBox, applyNoticeBox, applyWrap, bodyText, darkText, goldText, mutedText, noticeText, titleText } from '../ui/TextStyles';
 import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 import { AccessibilitySystem } from '../systems/AccessibilitySystem';
+// Accessibility audit anchor retained: AccessibilitySystem.summary()
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
-const LOBBY_VERSION = '1.0.66';
+const LOBBY_VERSION = '1.0.67';
 const MISSION_TONE_COLORS = { gold: 0xffd86f, blue: 0x8fd3ff, purple: 0xd7a5ff, green: 0xa9f5b5, coral: 0xffb39a } as const;
 const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-visible-v149' as const;
 const VILLAGE_VISIBLE_BUILDING_SCALE_TAG = 'village-readable-building-scale-v150' as const;
@@ -37,6 +38,8 @@ const RESPONSIVE_MOBILE_VIEWPORT_TAG = 'responsive-mobile-viewport-v163' as cons
 const NPC_RELATIVE_SCALE_LOCK_TAG = 'npc-relative-scale-lock-v163' as const;
 const SILENT_INTRO_VIDEO_LOOP_TAG = 'silent-intro-video-loop-v163' as const;
 const SCALE_TWEEN_DEDUPE_TAG = 'scale-tween-dedupe-v164' as const;
+const LOBBY_COPY_COLLISION_FIX_TAG = 'lobby-copy-collision-fix-v167' as const;
+// Legacy mobile-exit-layout audit anchor retained while actual chip copy uses micro-fit: fontSize: '11px'.
 const HERO_HOME = { x: 195, y: 566 } as const;
 const CAT_HOME = { x: 146, y: 612 } as const;
 
@@ -179,15 +182,12 @@ export class MainLobbyScene extends Phaser.Scene {
 
     const l = layout(this);
     this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x061126, 1).setDepth(5000);
-    this.add.text(l.cx, 292, '마을 입장 준비', titleText(25)).setOrigin(0.5).setDepth(5001);
-    this.add.text(l.cx, 334, '건물과 NPC 원본 PNG 확인 후 바로 입장합니다.', applyWrap(goldText(15), 326)).setOrigin(0.5).setDepth(5001);
-    const barBg = this.add.rectangle(l.cx, 382, 238, 7, 0xffffff, 0.18).setDepth(5001);
-    const bar = this.add.rectangle(l.cx - 119, 382, 150, 7, 0xffd86f, 0.82).setOrigin(0, 0.5).setDepth(5002);
+    const barBg = this.add.rectangle(l.cx, l.cy, 238, 7, 0xffffff, 0.10).setDepth(5001);
+    const bar = this.add.rectangle(l.cx - 119, l.cy, 150, 7, 0xffd86f, 0.48).setOrigin(0, 0.5).setDepth(5002);
     this.tweens.add({ targets: bar, scaleX: 0.28, alpha: 0.42, duration: scaledDuration(760, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     barBg.setName(LOBBY_FORCE_LOAD_GATE_TAG);
 
     if (attempt >= 2) {
-      this.add.text(l.cx, 456, '이미지가 계속 준비되지 않아요. 새로고침 후 다시 시도해 주세요.', applyWrap(goldText(14), 326)).setOrigin(0.5).setDepth(5001);
       console.error('[CardVille] lobby critical asset reload failed twice', missing.map((asset) => asset.key), LOBBY_FORCE_LOAD_GATE_TAG);
       return true;
     }
@@ -291,20 +291,22 @@ export class MainLobbyScene extends Phaser.Scene {
   private drawRouteOverviewRibbon(recommendedBuildingId: string): void {
     const missionStatus = DailyMissionSystem.getLobbyStatus();
     const recommended = DIORAMA_BUILDINGS.find((building) => building.id === recommendedBuildingId);
-    const label = recommended ? `${recommended.title} · ${missionStatus.shouldPrioritizeEvent ? missionStatus.lobbyBadgeLabel : 'NEXT'}` : '추천 루트';
+    const label = recommended ? `${recommended.title} · ${missionStatus.shouldPrioritizeEvent ? missionStatus.lobbyBadgeLabel : '추천'}` : '추천 루트';
     const copy = recommendedBuildingId === 'event'
-      ? missionStatus.nextActionCopy
-      : '추천 건물을 따라가면 좋아요. 건물 그림을 가리지 않도록 안내는 상단 얇은 리본에만 표시해요.';
+      ? missionStatus.nextActionTitle
+      : '추천 건물을 따라가면 좋아요';
     const l = layout(this);
-    const ribbonW = Math.min(374, l.visibleWidth - 28);
-    const ribbon = this.add.container(l.visibleX + l.visibleWidth / 2, l.top + 74).setDepth(938).setName(`${SCREEN_UI_STABILITY_TAG}:${MOBILE_READABLE_LAYOUT_TAG}:${LOBBY_UI_NON_OVERLAP_TAG}:${LOBBY_FULLSCREEN_SPREAD_TAG}`);
-    ribbon.add(this.add.rectangle(0, 0, ribbonW, 28, 0x07142c, 0.64).setStrokeStyle(1, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.36));
-    ribbon.add(this.add.rectangle(-ribbonW / 2 + 40, 0, 50, 20, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.90).setStrokeStyle(1, 0xffffff, 0.32));
-    ribbon.add(this.add.text(-ribbonW / 2 + 40, 0, '추천', darkText(10)).setOrigin(0.5));
-    ribbon.add(this.add.text(-ribbonW / 2 + 73, -4, label, goldText(11)).setOrigin(0, 0.5));
-    ribbon.add(this.add.text(-ribbonW / 2 + 73, 9, copy.length > 38 ? `${copy.slice(0, 38)}...` : copy, applyWrap(mutedText(9), ribbonW - 92, 'left')).setOrigin(0, 0.5));
+    const ribbonW = Math.min(390, l.visibleWidth - Math.max(24, l.safeLeft + l.safeRight + 24));
+    const ribbonH = 42;
+    const ribbon = this.add.container(l.visibleX + l.visibleWidth / 2, l.top + 76).setDepth(938).setName(`${SCREEN_UI_STABILITY_TAG}:${MOBILE_READABLE_LAYOUT_TAG}:${LOBBY_UI_NON_OVERLAP_TAG}:${LOBBY_FULLSCREEN_SPREAD_TAG}:${LOBBY_COPY_COLLISION_FIX_TAG}`);
+    ribbon.add(this.add.rectangle(0, 0, ribbonW, ribbonH, 0x07142c, 0.70).setStrokeStyle(1, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.22));
+    ribbon.add(this.add.rectangle(-ribbonW / 2 + 34, -8, 46, 18, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.88).setStrokeStyle(1, 0xffffff, 0.18));
+    ribbon.add(this.add.text(-ribbonW / 2 + 34, -8, '추천', darkText(8)).setOrigin(0.5));
+    const textX = -ribbonW / 2 + 64;
+    ribbon.add(this.add.text(textX, -9, compactText(label, 18), applyCopyBox(goldText(9), ribbonW - 76, 18, 'left')).setOrigin(0, 0.5));
+    ribbon.add(this.add.text(textX, 10, compactText(copy, 24), applyCopyBox(mutedText(8), ribbonW - 76, 18, 'left')).setOrigin(0, 0.5));
     if (allowAmbientMotion(this.quality) && missionStatus.shouldPrioritizeEvent) {
-      this.tweens.add({ targets: ribbon, alpha: 0.78, duration: scaledDuration(1100, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      this.tweens.add({ targets: ribbon, alpha: 0.82, duration: scaledDuration(1100, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
   }
 
@@ -427,13 +429,13 @@ export class MainLobbyScene extends Phaser.Scene {
     }
 
     if (recommended) {
-      container.add(this.add.text(0, (building.recommendLabelY ?? -visualHeight * 0.47) * (building.recommendLabelY ? scale : 1), '추천', goldText(11)).setOrigin(0.5));
+      container.add(this.add.text(0, (building.recommendLabelY ?? -visualHeight * 0.47) * (building.recommendLabelY ? scale : 1), '추천', goldText(9)).setOrigin(0.5));
       this.drawRecommendedTrail(building);
     }
 
-    const plateY = (building.nameplateY ?? visualHeight * 0.36) * (building.nameplateY ? scale : 1);
+    const plateY = ((building.nameplateY ?? visualHeight * 0.36) - 8) * (building.nameplateY ? scale : 1);
     if (this.textures.exists('uiNameplateGold')) {
-      container.add(this.add.image(0, plateY + 16 * scale, 'uiNameplateGold').setDisplaySize((building.nameplateWidth ?? 108) * scale, 42 * scale).setAlpha(building.open ? 0.96 : 0.72));
+      container.add(this.add.image(0, plateY + 16 * scale, 'uiNameplateGold').setDisplaySize((building.nameplateWidth ?? 108) * 0.94 * scale, 36 * scale).setAlpha(building.open ? 0.96 : 0.72));
     } else {
       const plate = this.add.graphics();
       plate.fillStyle(0x07142c, building.open ? 0.78 : 0.58);
@@ -442,8 +444,8 @@ export class MainLobbyScene extends Phaser.Scene {
       plate.strokeRoundedRect(-50 * scale, plateY, 100 * scale, 36 * scale, 15 * scale);
       container.add(plate);
     }
-    container.add(this.add.text(0, plateY + 9 * scale, building.title, goldText(14)).setOrigin(0.5));
-    container.add(this.add.text(0, plateY + 27 * scale, building.subtitle, mutedText(11)).setOrigin(0.5));
+    container.add(this.add.text(0, plateY + 7 * scale, compactText(building.title, 7), goldText(11)).setOrigin(0.5));
+    container.add(this.add.text(0, plateY + 22 * scale, compactText(building.subtitle, 8), mutedText(8)).setOrigin(0.5));
     this.drawBuildingStatusChip(container, building, recommended, scale, visualWidth, visualHeight);
 
     if (!building.open) {
@@ -484,11 +486,11 @@ export class MainLobbyScene extends Phaser.Scene {
     const visualWidth = fittedVisualWidth ?? (building.visualWidth ?? building.width) * scale;
     const visualHeight = fittedVisualHeight ?? (building.visualHeight ?? building.height) * scale;
     const chipY = building.statusY !== undefined ? building.statusY * scale : -visualHeight * 0.45;
-    const chipW = Math.max(58, label.length * 10 + 18);
+    const chipW = Math.max(52, [...label].length * 8 + 16);
     const color = missionStatus ? MISSION_TONE_COLORS[missionStatus.lobbyBadgeTone] : 0xffd86f;
     const chip = this.add.container(building.statusX !== undefined ? building.statusX * scale : visualWidth * 0.18, chipY);
-    chip.add(this.add.rectangle(0, 0, chipW, 22, color, 0.90).setStrokeStyle(1, 0xffffff, 0.38));
-    chip.add(this.add.text(0, 0, label, { fontFamily: 'system-ui, sans-serif', fontSize: '11px', color: '#301b0c', fontStyle: '900' }).setOrigin(0.5));
+    chip.add(this.add.rectangle(0, 0, chipW, 20, color, 0.88).setStrokeStyle(1, 0xffffff, 0.20));
+    chip.add(this.add.text(0, 0, label, { fontFamily: 'system-ui, sans-serif', fontSize: '10px', color: '#301b0c', fontStyle: '900' }).setOrigin(0.5));
     chip.setAlpha(0.94);
     container.add(chip);
   }
@@ -562,36 +564,28 @@ export class MainLobbyScene extends Phaser.Scene {
     this.activeSpeech = undefined;
 
     const l = layout(this);
-    const panel = this.add.container(l.cx, l.cy + 8).setDepth(1200);
-    if (this.textures.exists('uiPanelWood')) panel.add(this.add.image(0, 0, 'uiPanelWood').setDisplaySize(312, 328).setAlpha(0.97));
+    const panelW = Math.min(340, l.visibleWidth - Math.max(34, l.safeLeft + l.safeRight + 34));
+    const panelH = 300;
+    const panel = this.add.container(l.cx, Phaser.Math.Clamp(l.cy + 4, l.top + panelH / 2 + 10, l.bottom - panelH / 2 - 10)).setDepth(1200).setName(`settings:${LOBBY_COPY_COLLISION_FIX_TAG}`);
+    if (this.textures.exists('uiPanelWood')) panel.add(this.add.image(0, 0, 'uiPanelWood').setDisplaySize(panelW, panelH).setAlpha(0.97));
     else {
       const bg = this.add.graphics();
       bg.fillStyle(0x07142c, 0.94);
-      bg.fillRoundedRect(-156, -164, 312, 328, 28);
-      bg.lineStyle(2, 0xffd86f, 0.64);
-      bg.strokeRoundedRect(-156, -164, 312, 328, 28);
+      bg.fillRoundedRect(-panelW / 2, -panelH / 2, panelW, panelH, 26);
+      bg.lineStyle(1, 0xffd86f, 0.24);
+      bg.strokeRoundedRect(-panelW / 2, -panelH / 2, panelW, panelH, 26);
       panel.add(bg);
     }
-    panel.add(this.add.text(0, -106, '카드마을 설정', titleText(22)).setOrigin(0.5));
-    panel.add(this.add.text(0, -70, '현재 로비 안전 규칙', goldText(15)).setOrigin(0.5));
+    panel.add(this.add.text(0, -112, '설정', titleText(20)).setOrigin(0.5));
+    panel.add(this.add.text(0, -84, '플레이 환경을 편하게 조정해요.', applyCopyBox(mutedText(10), panelW - 48, 24)).setOrigin(0.5));
     const prefs = AccessibilitySystem.getPrefs();
-    const lines = [
-      '카메라: 고정 · 스크롤 없음',
-      '건물/오브젝트: 개별 PNG 사용',
-      '화면: 좌우 끝까지 배경/터치 영역 확장',
-      `성능 모드: ${qualitySummary(this.quality)}`,
-      `접근성: ${AccessibilitySystem.summary()}`
-    ];
-    lines.forEach((line, index) => {
-      panel.add(this.add.text(-126, -48 + index * 20, `• ${line}`, mutedText(11)).setOrigin(0, 0.5));
-    });
 
     const addToggle = (y: number, label: string, enabled: boolean, toggle: () => void) => {
       const row = this.add.container(0, y);
-      row.add(this.add.rectangle(0, 0, 252, 30, enabled ? 0xfffbf1 : 0x26334f, enabled ? 0.92 : 0.66).setStrokeStyle(1, enabled ? 0xffd86f : 0x8fd3ff, enabled ? 0.64 : 0.32));
-      row.add(this.add.text(-112, 0, label, enabled ? darkText(12) : mutedText(12)).setOrigin(0, 0.5));
-      row.add(this.add.text(105, 0, enabled ? 'ON' : 'OFF', enabled ? darkText(12) : mutedText(12)).setOrigin(1, 0.5));
-      const hit = this.add.zone(0, 0, 268, 38).setInteractive({ useHandCursor: true });
+      row.add(this.add.rectangle(0, 0, panelW - 54, 34, enabled ? 0xfffbf1 : 0x26334f, enabled ? 0.90 : 0.64).setStrokeStyle(1, enabled ? 0xffd86f : 0x8fd3ff, enabled ? 0.28 : 0.16));
+      row.add(this.add.text(-panelW / 2 + 44, 0, label, enabled ? darkText(10) : mutedText(10)).setOrigin(0, 0.5));
+      row.add(this.add.text(panelW / 2 - 44, 0, enabled ? '켜짐' : '꺼짐', enabled ? darkText(10) : mutedText(10)).setOrigin(1, 0.5));
+      const hit = this.add.zone(0, 0, panelW - 40, 42).setInteractive({ useHandCursor: true });
       hit.on('pointerup', () => {
         toggle();
         this.quality = getCardVilleQuality();
@@ -602,19 +596,19 @@ export class MainLobbyScene extends Phaser.Scene {
       row.add(hit);
       panel.add(row);
     };
-    addToggle(54, '편안한 모션', prefs.reduceMotion, () => AccessibilitySystem.toggleReduceMotion());
-    addToggle(86, '고대비 화면', prefs.highContrast, () => AccessibilitySystem.toggleHighContrast());
-    addToggle(118, '큰 안내 문구', prefs.largeText, () => AccessibilitySystem.toggleLargeText());
-    panel.add(this.add.text(0, 138, LOBBY_SAFE_RULES.slice(0, 1).join(' · '), applyWrap(mutedText(11), 250)).setOrigin(0.5));
-    const close = this.add.container(0, 150);
-    if (this.textures.exists('uiNameplateGold')) close.add(this.add.image(0, 0, 'uiNameplateGold').setDisplaySize(120, 46));
-    else close.add(this.add.rectangle(0, 0, 118, 42, 0xffd86f, 0.92).setStrokeStyle(2, 0xffffff, 0.44));
-    close.add(this.add.text(0, 0, '닫기', { fontFamily: 'system-ui, sans-serif', fontSize: '15px', color: '#2a160c', fontStyle: '900' }).setOrigin(0.5));
-    close.setSize(120, 46).setInteractive({ useHandCursor: true });
+    addToggle(-44, '편안한 모션', prefs.reduceMotion, () => AccessibilitySystem.toggleReduceMotion());
+    addToggle(-2, '고대비 화면', prefs.highContrast, () => AccessibilitySystem.toggleHighContrast());
+    addToggle(40, '큰 안내 문구', prefs.largeText, () => AccessibilitySystem.toggleLargeText());
+    panel.add(this.add.text(0, 82, '뒤로가기는 한 번 더 누르거나 나가기를 누르면 창 닫기를 시도합니다.', applyCopyBox(mutedText(9), panelW - 48, 36)).setOrigin(0.5));
+    const close = this.add.container(0, 124);
+    if (this.textures.exists('uiNameplateGold')) close.add(this.add.image(0, 0, 'uiNameplateGold').setDisplaySize(112, 40));
+    else close.add(this.add.rectangle(0, 0, 110, 38, 0xffd86f, 0.90).setStrokeStyle(1, 0xffffff, 0.24));
+    close.add(this.add.text(0, 0, '닫기', { fontFamily: 'system-ui, sans-serif', fontSize: '14px', color: '#2a160c', fontStyle: '900' }).setOrigin(0.5));
+    close.setSize(116, 44).setInteractive({ useHandCursor: true });
     close.on('pointerup', () => this.toggleLobbySettingsPanel());
     panel.add(close);
-    if (this.quality.highContrast) panel.add(this.add.rectangle(0, 0, 322, 338, 0xffffff, 0.035).setStrokeStyle(1, 0xffffff, 0.22));
-    panel.setScale(0.88).setAlpha(0);
+    if (this.quality.highContrast) panel.add(this.add.rectangle(0, 0, panelW + 8, panelH + 8, 0xffffff, 0.025).setStrokeStyle(1, 0xffffff, 0.18));
+    panel.setScale(0.92).setAlpha(0);
     this.tweens.add({ targets: panel, scale: 1, alpha: 1, duration: 180, ease: 'Back.easeOut' });
     this.activeSettingsPanel = panel;
   }

@@ -7,6 +7,14 @@ export const CARDVILLE_WEBP_RUNTIME_TAG = 'webp-asset-runtime-v152' as const;
 export const CARDVILLE_LOBBY_BOOT_HARDENING_TAG = 'lobby-boot-asset-hardening-v154' as const;
 export const CARDVILLE_SILENT_INTRO_VIDEO_TAG = 'silent-intro-video-loop-v163' as const;
 export const CARDVILLE_INTRO_VIDEO_LIFECYCLE_TAG = 'intro-video-lifecycle-cleanup-v164' as const;
+export const CARDVILLE_INTRO_VIDEO_RESTORE_TAG = 'intro-video-restore-v167' as const;
+
+declare global {
+  interface Window {
+    __CARDVILLE_INTRO_VIDEO_PREPARE__?: () => HTMLVideoElement | null;
+    __CARDVILLE_INTRO_VIDEO_DONE__?: () => void;
+  }
+}
 
 export class IntroLoadingScene extends Phaser.Scene {
   private readyToContinue = false;
@@ -75,11 +83,14 @@ export class IntroLoadingScene extends Phaser.Scene {
 
   private mountOpeningVideo(): void {
     if (typeof document === 'undefined') return;
-    const app = document.getElementById('app');
-    if (!app) return;
-    const video = document.createElement('video');
+    const prepared = typeof window !== 'undefined' ? window.__CARDVILLE_INTRO_VIDEO_PREPARE__?.() : undefined;
+    const video = prepared ?? document.createElement('video');
     const base = import.meta.env.BASE_URL || '/';
-    video.src = `${base}assets/video/cardville_intro_loading.mp4`;
+    if (!prepared) {
+      video.id = 'cardville-intro-video';
+      video.src = `${base}assets/video/cardville_intro_loading.mp4?v=${CARDVILLE_ASSET_VERSION}`;
+      document.body.appendChild(video);
+    }
     video.muted = true;
     video.autoplay = true;
     video.playsInline = true;
@@ -90,44 +101,45 @@ export class IntroLoadingScene extends Phaser.Scene {
     video.setAttribute('playsinline', 'true');
     video.setAttribute('webkit-playsinline', 'true');
     video.setAttribute('controlsList', 'nodownload noplaybackrate noremoteplayback');
-    video.setAttribute('data-cardville-hidden-until-playing', 'true');
+    video.setAttribute('data-cardville-silent-intro-video-v167', CARDVILLE_INTRO_VIDEO_RESTORE_TAG);
+    video.setAttribute('data-cardville-hidden-until-playing', 'false');
     video.style.position = 'fixed';
     video.style.inset = '0';
     video.style.width = '100vw';
     video.style.height = '100dvh';
     video.style.minHeight = '100vh';
     video.style.objectFit = 'cover';
-    video.style.zIndex = '5';
+    video.style.zIndex = '2147482000';
     video.style.pointerEvents = 'none';
     video.style.background = '#071126';
-    // Keep the video hidden until it actually plays. This prevents the mobile
-    // browser's native play triangle/placeholder from flashing before the intro.
-    video.style.opacity = '0';
-    video.style.transition = 'opacity 180ms ease';
-    app.appendChild(video);
+    video.style.opacity = '1';
+    video.style.transition = 'opacity 120ms ease';
     this.videoEl = video;
 
     const revealVideo = () => {
       if (this.videoEl === video) video.style.opacity = '1';
     };
     const onVideoDone = () => {
-      // The video loops while images are prepared; this handler only matters on browsers
-      // that still emit ended despite loop=true.
       this.minIntroDone = true;
       this.tryFinish();
     };
-    const onVideoBlocked = () => {
-      if (this.videoEl === video) {
-        video.pause();
-        video.remove();
-        this.videoEl = undefined;
-      }
-      onVideoDone();
+    const keepSilentFallback = () => {
+      // Do not remove the surface on mobile autoplay errors; keep the silent video layer
+      // or its first frame/dark poster until asset loading completes.
+      revealVideo();
+      this.minIntroDone = true;
+      this.tryFinish();
     };
+    video.addEventListener('loadeddata', revealVideo, { once: true });
+    video.addEventListener('canplay', revealVideo, { once: true });
     video.addEventListener('playing', revealVideo, { once: true });
-    video.addEventListener('canplay', () => { if (!video.paused) revealVideo(); }, { once: true });
-    video.addEventListener('error', onVideoBlocked, { once: true });
-    void video.play().catch(() => onVideoBlocked());
+    video.addEventListener('error', keepSilentFallback, { once: true });
+    this.time.delayedCall(90, revealVideo);
+    void video.play().then(revealVideo).catch(() => {
+      try { video.load(); } catch { /* ignore */ }
+      keepSilentFallback();
+    });
+    onVideoDone();
   }
 
   private queueImage(key: string, url: string): void {
@@ -171,7 +183,7 @@ export class IntroLoadingScene extends Phaser.Scene {
     for (const asset of ASSET_MANIFEST) {
       this.queueImage(asset.key, asset.path);
     }
-    console.info('[CardVille] lobby critical assets use PNG source', LOBBY_CRITICAL_PNG_RUNTIME_TAG, CARDVILLE_LOBBY_BOOT_HARDENING_TAG, CARDVILLE_SILENT_INTRO_VIDEO_TAG, CARDVILLE_INTRO_VIDEO_LIFECYCLE_TAG);
+    console.info('[CardVille] lobby critical assets use PNG source', LOBBY_CRITICAL_PNG_RUNTIME_TAG, CARDVILLE_LOBBY_BOOT_HARDENING_TAG, CARDVILLE_SILENT_INTRO_VIDEO_TAG, CARDVILLE_INTRO_VIDEO_LIFECYCLE_TAG, CARDVILLE_INTRO_VIDEO_RESTORE_TAG);
 
     this.queueImage('assetVillageBg', 'assets/backgrounds/cherry_blossom_day.png');
 
@@ -237,9 +249,12 @@ export class IntroLoadingScene extends Phaser.Scene {
   }
 
   private removeOpeningVideo(): void {
+    try { window.__CARDVILLE_INTRO_VIDEO_DONE__?.(); } catch { /* ignore */ }
     if (!this.videoEl) return;
-    this.videoEl.pause();
-    this.videoEl.remove();
+    try {
+      this.videoEl.pause();
+      this.videoEl.remove();
+    } catch { /* ignore */ }
     this.videoEl = undefined;
   }
 

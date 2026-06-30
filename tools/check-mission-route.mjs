@@ -32,7 +32,7 @@ must('src/game/systems/DailyMissionSystem.ts', [
 
 must('src/game/scenes/DailyMissionScene.ts', [
   'drawCompletionBonus',
-  '오늘 완주 보상 READY',
+  '오늘 완주 보상 준비',
   'claimCompletion',
   'daily_mission_board_v144'
 ]);

@@ -8,7 +8,7 @@ const include = (file, token) => assert(read(file).includes(token), `${file} mis
 const exclude = (file, token) => assert(!read(file).includes(token), `${file} must not include ${token}`);
 
 const pkg = JSON.parse(read('package.json'));
-assert(pkg.version === '1.0.66', `expected package version 1.0.66, got ${pkg.version}`);
+assert(pkg.version === '1.0.67', `expected package version 1.0.67, got ${pkg.version}`);
 
 include('package.json', 'check:flow-fit');
 include('package.json', 'tools/check-flow-fit-v164.mjs');
@@ -38,8 +38,8 @@ include('src/game/ui/Panel.ts', 'panel-lineless-surface-v164');
 include('src/game/systems/ScreenUISystem.ts', 'flow-fit-ui-v164');
 include('src/game/systems/DrawSystem.ts', 'screen-frame-lineless-v164');
 include('src/game/ui/TextStyles.ts', 'mobile-copy-fit-v164');
-include('src/game/ui/TextStyles.ts', 'prefs.largeText ? 1.28 : 1.14');
-include('src/game/ui/TextStyles.ts', 'prefs.largeText ? 1.06 : 0.98');
+include('src/game/ui/TextStyles.ts', 'prefs.largeText ? 1.18 : 1.06');
+include('src/game/ui/TextStyles.ts', 'prefs.largeText ? 1.00 : 0.92');
 
 for (const file of ['src', 'index.html', 'public/health.html']) {
   const full = path.join(root, file);
@@ -57,11 +57,11 @@ for (const file of ['src', 'index.html', 'public/health.html']) {
   }
 }
 
-include('README.md', '## 1.0.66 업데이트 내역');
-include('README.md', 'CardVille_v1.0.66_CornerSweepStability_Full.zip');
-include('AI_HANDOFF_CARDVILLE.md', '현재 기준 버전은 1.0.66');
+include('README.md', '## 1.0.67 업데이트 내역');
+include('README.md', 'CardVille_v1.0.67_IntroExitCopyFit_Full.zip');
+include('AI_HANDOFF_CARDVILLE.md', '현재 기준 버전은 1.0.67');
 include('AI_HANDOFF_CARDVILLE.md', '1.0.65 전역 UI 흐름/텍스트/전환 안정화 패스');
-include('public/build.json', 'FlowListInputPolish');
-include('index.html', "window.__CARDVILLE_VERSION__ = '1.0.66'");
+include('public/build.json', 'IntroExitCopyFit');
+include('index.html', "window.__CARDVILLE_VERSION__ = '1.0.67'");
 
-console.log('check:flow-fit v1.0.66 passed: silent transitions, text fit, line-soft surfaces, and scale tween dedupe verified.');
+console.log('check:flow-fit v1.0.67 passed: silent transitions, text fit, line-soft surfaces, and scale tween dedupe verified.');

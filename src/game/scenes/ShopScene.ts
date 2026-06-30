@@ -138,7 +138,7 @@ export class ShopScene extends Phaser.Scene {
     CoachMarkSystem.showOnce(this, {
       id: 'shop_offer_coach_v140',
       title: '상점 이용 팁',
-      body: canClaimDaily ? '무료팩 READY가 보이면 먼저 받아두세요. 추천 오퍼는 현재 재화와 무료팩 상태를 보고 자동으로 강조됩니다.' : '무료팩은 하루 한 번 충전돼요. 코인팩/보석팩은 카드와 XP 중심 보상이라 코인 환급 루프 없이 수집을 늘립니다.',
+      body: canClaimDaily ? '무료팩 준비가 보이면 먼저 받아두세요. 추천 오퍼는 현재 재화와 무료팩 상태를 보고 자동으로 강조됩니다.' : '무료팩은 하루 한 번 충전돼요. 코인팩/보석팩은 카드와 XP 중심 보상이라 코인 환급 루프 없이 수집을 늘립니다.',
       x: 195,
       y: 626,
       width: 326,
@@ -165,7 +165,7 @@ export class ShopScene extends Phaser.Scene {
     this.add.rectangle(195, 209, 318, 36, 0xffffff, 0.075).setStrokeStyle(1, daily.canClaim ? 0xffd86f : 0x8fd3ff, daily.canClaim ? 0.48 : 0.28);
     this.add.rectangle(154, 209, 178, 8, 0x26334f, 0.74).setOrigin(0, 0.5);
     this.add.rectangle(154, 209, Math.max(8, 178 * readyRatio), 8, daily.canClaim ? 0xffd86f : 0x8fd3ff, 0.92).setOrigin(0, 0.5);
-    this.add.text(58, 209, daily.canClaim ? '무료팩 READY' : '무료팩 충전', goldText(10)).setOrigin(0, 0.5);
+    this.add.text(58, 209, daily.canClaim ? '무료팩 준비' : '무료팩 충전', goldText(10)).setOrigin(0, 0.5);
     this.add.text(324, 209, lastOffer !== 'none' ? `최근 ${this.shortOfferName(lastOffer)}` : '첫 구매 전', mutedText(9)).setOrigin(1, 0.5);
   }
 

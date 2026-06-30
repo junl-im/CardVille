@@ -89,7 +89,7 @@ export class DailyMissionScene extends Phaser.Scene {
 
   private drawAttendance(attendanceReady: boolean, attendanceClaimed: boolean, attendanceRewardCoins: number): void {
     this.add.rectangle(195, 292, 316, 58, attendanceReady ? 0xfffbf1 : 0x26334f, attendanceReady ? 0.94 : 0.64).setStrokeStyle(2, attendanceReady ? 0xffd86f : 0x8fd3ff, attendanceReady ? 0.50 : 0.18);
-    this.add.text(62, 277, attendanceReady ? '출석 보상 READY' : '출석 완료', attendanceReady ? darkText(14) : goldText(14)).setOrigin(0, 0.5);
+    this.add.text(62, 277, attendanceReady ? '출석 보상 준비' : '출석 완료', attendanceReady ? darkText(14) : goldText(14)).setOrigin(0, 0.5);
     this.add.text(62, 300, attendanceClaimed ? '내일 연속 출석을 이어가요.' : `+20XP/+${attendanceRewardCoins}코인 · 연속 출석 보너스`, attendanceReady ? bodyText(10) : mutedText(10)).setOrigin(0, 0.5);
     const button = new GameButton(this, 286, 292, attendanceReady ? '받기' : '완료', 82, 36, attendanceReady ? 0xffd86f : 0x9aa4ba)
       .onClick(() => this.claimAttendance());
@@ -112,7 +112,7 @@ export class DailyMissionScene extends Phaser.Scene {
 
   private drawCompletionBonus(ready: boolean, claimed: boolean, rewardText: string): void {
     this.add.rectangle(195, 604, 316, 46, ready ? 0xfffbf1 : 0x07142c, ready ? 0.94 : 0.52).setStrokeStyle(ready ? 2 : 1, ready ? 0xffd86f : 0xffffff, ready ? 0.76 : 0.16);
-    this.add.text(62, 592, ready ? '오늘 완주 보상 READY' : claimed ? '오늘 완주 보상 완료' : '오늘 완주 보상', ready ? darkText(12) : goldText(12)).setOrigin(0, 0.5);
+    this.add.text(62, 592, ready ? '오늘 완주 보상 준비' : claimed ? '오늘 완주 보상 완료' : '오늘 완주 보상', ready ? darkText(12) : goldText(12)).setOrigin(0, 0.5);
     this.add.text(62, 610, claimed ? '내일 새 미션으로 다시 받을 수 있어요.' : `일일 미션 보상 5개를 모두 받으면 ${rewardText}`, ready ? bodyText(8) : mutedText(8)).setOrigin(0, 0.5);
     const button = new GameButton(this, 288, 604, claimed ? '완료' : ready ? '완주' : '대기', 78, 34, ready ? 0xffd86f : 0x9aa4ba).onClick(() => this.claimCompletion());
     button.setDisabled(!ready);
@@ -170,7 +170,7 @@ export class DailyMissionScene extends Phaser.Scene {
     CoachMarkSystem.showOnce(this, {
       id: 'daily_mission_board_v144',
       title: '오늘의 미션 팁',
-      body: hasReadyReward ? 'READY 보상은 바로 수령해도 좋아요. 출석, 미션, 완주, 주간 보상이 한 화면에서 이어집니다.' : '각 모드에서 한 번씩 클리어하고 카드팩을 열면 오늘 목표, 완주 보상, 주간 목표가 같이 쌓여요. 에셋이 오기 전에도 이벤트 건물이 실제 루프 보드로 작동합니다.',
+      body: hasReadyReward ? '준비된 보상은 바로 수령해도 좋아요. 출석, 미션, 완주, 주간 보상이 한 화면에서 이어집니다.' : '각 모드에서 한 번씩 클리어하고 카드팩을 열면 오늘 목표, 완주 보상, 주간 목표가 같이 쌓여요. 에셋이 오기 전에도 이벤트 건물이 실제 루프 보드로 작동합니다.',
       x: 195,
       y: 620,
       width: 326,

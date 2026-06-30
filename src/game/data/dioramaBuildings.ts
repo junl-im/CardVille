@@ -46,6 +46,7 @@ export const USER_LOBBY_ASSET_ASSIGNMENT_TAG = 'user-lobby-asset-assignment-v156
 export const LOBBY_SPACING_REPAIR_TAG = 'lobby-wide-village-spacing-v159' as const;
 export const LOBBY_EDGE_TO_EDGE_SPREAD_TAG = 'lobby-edge-to-edge-spread-v160' as const;
 export const LOBBY_RESPONSIVE_PHONE_LAYOUT_TAG = 'responsive-mobile-viewport-v162' as const;
+export const LOBBY_PLAZA_TAP_ROUTE_TAG = 'plaza-tap-route-v167' as const;
 
 export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
   {
@@ -62,7 +63,7 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     visualWidth: 176,
     visualHeight: 176,
     imageY: -10,
-    nameplateY: 62,
+    nameplateY: 56,
     nameplateWidth: 132,
     statusY: -86,
     recommendLabelY: -102,
@@ -87,7 +88,7 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     visualWidth: 150,
     visualHeight: 150,
     imageY: -10,
-    nameplateY: 49,
+    nameplateY: 43,
     nameplateWidth: 112,
     statusX: 31,
     statusY: -74,
@@ -113,15 +114,16 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     visualWidth: 112,
     visualHeight: 112,
     imageY: -10,
-    nameplateY: 42,
+    nameplateY: 36,
     nameplateWidth: 104,
     statusY: -70,
     targetX: 195,
     targetY: 492,
-    touchWidth: 90,
-    touchHeight: 78,
+    touchWidth: 98,
+    touchHeight: 86,
     touchOffsetY: 2,
-    open: false
+    open: true,
+    route: { scene: 'ModeSelectScene', data: { title: '광장 선택' } }
   },
   {
     id: 'laboratory',
@@ -137,7 +139,7 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     visualWidth: 150,
     visualHeight: 150,
     imageY: -10,
-    nameplateY: 49,
+    nameplateY: 43,
     nameplateWidth: 112,
     statusX: -31,
     statusY: -74,
@@ -163,7 +165,7 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     visualWidth: 142,
     visualHeight: 142,
     imageY: -10,
-    nameplateY: 46,
+    nameplateY: 40,
     nameplateWidth: 112,
     statusX: 31,
     statusY: -70,
@@ -189,7 +191,7 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     visualWidth: 142,
     visualHeight: 142,
     imageY: -10,
-    nameplateY: 46,
+    nameplateY: 40,
     nameplateWidth: 112,
     statusX: -31,
     statusY: -70,
@@ -215,7 +217,7 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     visualWidth: 124,
     visualHeight: 124,
     imageY: -10,
-    nameplateY: 31,
+    nameplateY: 25,
     nameplateWidth: 106,
     statusX: 28,
     statusY: -62,
@@ -241,7 +243,7 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     visualWidth: 124,
     visualHeight: 124,
     imageY: -10,
-    nameplateY: 31,
+    nameplateY: 25,
     nameplateWidth: 108,
     statusX: 0,
     statusY: -62,
@@ -266,7 +268,7 @@ export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
     visualWidth: 124,
     visualHeight: 124,
     imageY: -10,
-    nameplateY: 31,
+    nameplateY: 25,
     nameplateWidth: 106,
     statusX: -28,
     statusY: -62,

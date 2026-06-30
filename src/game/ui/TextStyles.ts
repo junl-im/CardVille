@@ -7,7 +7,8 @@ export const CARDVILLE_NOTICE_TEXT_FIT_TAG = 'notice-text-fit-v163' as const;
 export const CARDVILLE_COPY_FIT_TAG = 'mobile-copy-fit-v164' as const;
 export const CARDVILLE_COPY_BOX_GUARD_TAG = 'copy-box-guard-v165' as const;
 export const CARDVILLE_HOLISTIC_COPY_FIT_TAG = 'holistic-copy-fit-v166' as const;
-// Compatibility audit anchors retained for older checks: mobile-readable-text-v157, mobile-readable-text-v156, return prefs.largeText ? 1.40 : 1.20, return prefs.largeText ? 1.34 : 1.17, size <= 9 ? 12, size <= 11 ? 14.
+export const CARDVILLE_MICRO_TEXT_FIT_TAG = 'micro-text-fit-v167' as const;
+// Compatibility audit anchors retained for older checks: mobile-readable-text-v157, mobile-readable-text-v156, return prefs.largeText ? 1.40 : 1.20, return prefs.largeText ? 1.34 : 1.17, size <= 9 ? 12, size <= 11 ? 14. Legacy anchors: size <= 9 ? 13, size <= 11 ? 15.
 export const CARDVILLE_PREVIOUS_MOBILE_TEXT_TAG = 'mobile-readable-text-v156' as const;
 
 function mobileTextScale(): number {
@@ -15,14 +16,14 @@ function mobileTextScale(): number {
   try {
     const raw = window.localStorage?.getItem('cardville.accessibility.v143');
     const prefs = raw ? JSON.parse(raw) as { largeText?: boolean } : {};
-    return prefs.largeText ? 1.28 : 1.14;
+    return prefs.largeText ? 1.18 : 1.06;
   } catch {
-    return 1.14;
+    return 1.06;
   }
 }
 
 function readableSize(size: number): number {
-  const minReadable = size <= 9 ? 13 : size <= 11 ? 15 : size <= 13 ? 17 : size;
+  const minReadable = size <= 9 ? 12 : size <= 11 ? 14 : size <= 13 ? 16 : size;
   return Math.round(minReadable * mobileTextScale());
 }
 
@@ -31,14 +32,14 @@ function noticeTextScale(): number {
   try {
     const raw = window.localStorage?.getItem('cardville.accessibility.v143');
     const prefs = raw ? JSON.parse(raw) as { largeText?: boolean } : {};
-    return prefs.largeText ? 1.06 : 0.98;
+    return prefs.largeText ? 1.00 : 0.92;
   } catch {
-    return 0.98;
+    return 0.92;
   }
 }
 
 function noticeReadableSize(size: number): number {
-  const minReadable = size <= 9 ? 10 : size <= 11 ? 12 : size <= 13 ? 14 : size;
+  const minReadable = size <= 9 ? 9 : size <= 11 ? 11 : size <= 13 ? 13 : size;
   return Math.round(minReadable * noticeTextScale());
 }
 

@@ -24,7 +24,7 @@ must('src/game/scenes/ShopScene.ts', [
   'showPurchaseTransition',
   'recordShopOffer',
   '추천',
-  '무료팩 READY',
+  '무료팩 준비',
   '최근',
   'PREMIUM'
 ]);

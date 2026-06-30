@@ -1,3 +1,16 @@
+## 1.0.67 - IntroExitCopyFit
+
+- **인트로 영상 복구/뒤로가기 종료/마을 텍스트 겹침/설정·팝업 글자 맞춤 패스**를 진행했습니다.
+- `intro-video-restore-v167`: 게임 시작 직후 오프닝 영상을 body 최상단 레이어로 먼저 띄우고, autoplay가 늦거나 실패해도 영상을 지우지 않고 무문구 표면을 유지합니다.
+- `lobby-copy-collision-fix-v167`: 상단 추천 리본, 건물 이름표, 설정 패널 문구가 란 밖으로 나가거나 건물끼리 겹치는 위험을 줄였습니다.
+- `micro-text-fit-v167`, `popup-copy-fit-v167`: 전역 글씨 배율을 아주 미세하게 낮추고, 보상/시작 팝업의 글자 박스를 키웠습니다.
+- `kakao-inapp-close-v167`: 뒤로가기 1회는 나가기 팝업, 팝업 상태에서 다시 뒤로가기 또는 나가기 버튼은 창 닫기와 카카오 인앱 닫기 경로를 함께 시도합니다.
+- `plaza-tap-route-v167`: 중앙 광장도 터치 시 모드 선택 화면으로 이동하도록 연결했습니다.
+- `READY 1` 로비 표기는 `보상 1`처럼 한국어 상태칩으로 바꿨고, 설정 화면의 개발/에셋 규칙성 문구는 플레이 옵션 중심으로 줄였습니다.
+- 검증 추가: `tools/check-intro-exit-copy-v167.mjs` / `npm run check:intro-exit-copy-v167`.
+- SVG 없음, OPEN/LOCK 없음, 로딩중/이동중 문구 없음, fallback 카드 숨김, self-contained 패치 payload 정책은 유지합니다.
+- 최종 ZIP 명명 규칙: `CardVille_v1.0.67_IntroExitCopyFit_Full.zip`, `CardVille_v1.0.67_IntroExitCopyFit_Patch.zip`.
+
 
 ## 1.0.66 - CornerSweepStability
 
@@ -37,13 +50,13 @@
 - SVG 없음, OPEN/LOCK 없음, 로딩중 문구 없음, fallback 카드 숨김, self-contained 패치 payload 정책은 유지합니다.
 - 최종 ZIP 명명 규칙: `CardVille_v1.0.64_FlowFitUIPolish_Full.zip`, `CardVille_v1.0.64_FlowFitUIPolish_Patch.zip`.
 
-# CardVille 1.0.66
+# CardVille 1.0.67
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
 
 
-## 1.0.66 업데이트 내역
+## 1.0.67 업데이트 내역
 
 - `corner-sweep-v166`: 주요 화면을 구석구석 다시 훑는 자동 검증을 추가했습니다.
 - `safe-area-copy-clamp-v166`: 알림/보상/상점/미션/결과 화면의 긴 문구 폭을 실제 폰 safe-area 기준으로 제한합니다.

@@ -1,7 +1,24 @@
+## 1.0.67 - IntroExitCopyFit
+
+- 현재 기준 버전은 1.0.67입니다.
+- 목적: 사용자가 지적한 시작 영상 미노출, 로딩 문구, 추천 리본/설정/팝업 텍스트 넘침, 건물 이름표 겹침, 카카오톡 인앱 뒤로가기 종료, `READY 1` 표기, 중앙 광장 터치 미동작 문제를 한 번에 정리한 패스입니다.
+- 핵심 태그: `intro-video-restore-v167`, `kakao-inapp-close-v167`, `lobby-copy-collision-fix-v167`, `micro-text-fit-v167`, `popup-copy-fit-v167`, `plaza-tap-route-v167`.
+- 코드 반영:
+  - `index.html`, `LoginScene.ts`, `IntroLoadingScene.ts`: 게임 시작 직후 body 최상단 video 레이어를 먼저 띄우고, 에셋 준비가 끝날 때까지 문구 없이 유지합니다. autoplay 실패 시에도 영상을 즉시 제거하지 않습니다.
+  - `MainLobbyScene.ts`, `dioramaBuildings.ts`: 추천 리본 2줄 고정 박스, 이름표 소폭 축소/상향, 광장 터치 라우트, 설정 패널 플레이 옵션 중심 재정리.
+  - `DailyMissionSystem.ts`: 로비 상태칩 `READY n`/`MISSION`/`DONE`을 한국어 `보상 n`/`미션`/`완료`로 변경.
+  - `BackButtonSystem.ts`, `BackConfirmScene.ts`: 뒤로가기 1회 팝업, 팝업 상태에서 다시 뒤로가기/나가기 시 창닫기 + 카카오 인앱 닫기 scheme을 함께 시도.
+  - `TextStyles.ts`, `RewardPopupSystem.ts`: 전역 글씨를 아주 미세하게 낮추고 팝업 글자 박스를 키움.
+- 추가 검증: `tools/check-intro-exit-copy-v167.mjs`, `npm run check:intro-exit-copy-v167`.
+- 유지 규칙: SVG 없음, OPEN/LOCK 없음, 로딩중/이동중 문구 없음, fallback 카드 숨김, public/assets 포함 self-contained 패치 유지, 새 docs 문서 생성 금지.
+- 산출물 이름:
+  - `CardVille_v1.0.67_IntroExitCopyFit_Full.zip`
+  - `CardVille_v1.0.67_IntroExitCopyFit_Patch.zip`
+
 ## 1.0.66 - CornerSweepStability
 
 - 목적: 사용자가 요청한 “모든 구석구석 꼼꼼하게 체크”를 기준으로, 전 화면 safe-area/텍스트/입력/버튼 선/패널 겹침 위험을 다시 훑은 패스입니다.
-- 현재 기준 버전은 1.0.66입니다.
+- 현재 기준 버전은 1.0.67입니다.
 - 핵심 태그: `corner-sweep-v166`, `holistic-ui-audit-v166`, `safe-area-copy-clamp-v166`, `input-watchdog-v166`, `button-corner-sweep-v166`, `line-free-surface-v166`.
 - 코드 반영:
   - `LayoutSystem.ts`: safe-area clamp와 input watchdog을 추가했습니다. 씬 진입 후 입력이 꺼진 채 남으면 80/260/420ms 복구 타이머가 다시 켭니다.
@@ -46,7 +63,7 @@
 CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고, 그다음 실제 코드를 확인하세요.
 
 
-## 현재 작업 기준: 1.0.66
+## 현재 작업 기준: 1.0.67
 
 현재 기준 버전은 1.0.66입니다.  
 핵심 태그는 `corner-sweep-v166`, `holistic-ui-audit-v166`, `safe-area-copy-clamp-v166`, `input-watchdog-v166`, `button-corner-sweep-v166`, `line-free-surface-v166`입니다.

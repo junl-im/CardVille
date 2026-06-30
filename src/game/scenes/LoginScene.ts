@@ -6,7 +6,7 @@ import { DrawSystem } from '../systems/DrawSystem';
 import { AuthSystem } from '../systems/AuthSystem';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
-const LOGIN_VERSION = '1.0.53';
+const LOGIN_VERSION = ''; // hidden in 1.0.67: no developer-facing version text on the first screen
 const LOGIN_PANEL_Y = 546;
 const LOGIN_PANEL_H = 254;
 const LOGIN_TITLE_Y = LOGIN_PANEL_Y + 28;
@@ -26,7 +26,7 @@ export class LoginScene extends Phaser.Scene {
     applyResponsiveCamera(this);
     this.drawFullscreenHero();
     this.drawStartControls();
-    this.add.text(342, 28, LOGIN_VERSION, mutedText(11)).setOrigin(0.5).setAlpha(0.86);
+    // 1.0.67: no developer/version label on the player-facing start screen.
     window.__CARDVILLE_BOOT_OK__?.();
   }
 
@@ -78,15 +78,16 @@ export class LoginScene extends Phaser.Scene {
     if (this.busy) return;
     this.busy = true;
     AuthSystem.signInGuest();
-    this.status.setText('오프닝 영상과 함께 게임을 준비합니다.');
-    this.time.delayedCall(80, () => NavigationSystem.safeStart(this, 'IntroLoadingScene', { nextScene: 'MainLobbyScene' }));
+    window.__CARDVILLE_INTRO_VIDEO_PREPARE__?.();
+    this.status.setText('');
+    this.time.delayedCall(20, () => NavigationSystem.safeStart(this, 'IntroLoadingScene', { nextScene: 'MainLobbyScene' }));
   }
 
   private async google(): Promise<void> {
     if (this.busy) return;
     this.busy = true;
-    this.status.setText('Google 로그인 연결 중...');
-    try { await AuthSystem.signInGoogle(); NavigationSystem.safeStart(this, 'IntroLoadingScene', { nextScene: 'MainLobbyScene' }); }
+    this.status.setText('Google 연결 중...');
+    try { await AuthSystem.signInGoogle(); window.__CARDVILLE_INTRO_VIDEO_PREPARE__?.(); NavigationSystem.safeStart(this, 'IntroLoadingScene', { nextScene: 'MainLobbyScene' }); }
     catch (e) { console.warn(e); this.status.setText('Google 로그인이 취소되었거나 실패했어요. 게임 시작은 계속 가능합니다.'); this.busy = false; }
   }
 
@@ -97,8 +98,8 @@ export class LoginScene extends Phaser.Scene {
     const password = window.prompt('비밀번호 6자 이상을 입력하세요') ?? '';
     if (password.length < 6) { this.status.setText('비밀번호는 6자 이상이어야 해요.'); return; }
     this.busy = true;
-    this.status.setText(create ? '이메일 가입 중...' : '이메일 로그인 중...');
-    try { await AuthSystem.signInEmail(email, password, create); NavigationSystem.safeStart(this, 'IntroLoadingScene', { nextScene: 'MainLobbyScene' }); }
+    this.status.setText(create ? '이메일 가입 처리' : '이메일 로그인 처리');
+    try { await AuthSystem.signInEmail(email, password, create); window.__CARDVILLE_INTRO_VIDEO_PREPARE__?.(); NavigationSystem.safeStart(this, 'IntroLoadingScene', { nextScene: 'MainLobbyScene' }); }
     catch (e) { console.warn(e); this.status.setText('이메일 처리 실패. 계정 정보를 확인해 주세요.'); this.busy = false; }
   }
 }
