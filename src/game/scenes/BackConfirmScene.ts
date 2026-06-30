@@ -34,19 +34,19 @@ export class BackConfirmScene extends Phaser.Scene {
     this.cameras.main.setBackgroundColor('rgba(0,0,0,0)');
     addFullBleedShade(this, 0x020814, 0.66).setInteractive();
     panel(this, 195, 420, 340, 286, 34);
-    this.add.text(195, 312, '게임을 나갈까요?', titleText(24)).setOrigin(0.5);
+    this.add.text(195, 312, '게임을 나갈까요?', titleText(22)).setOrigin(0.5);
     this.add.text(
       195,
       357,
-      '뒤로가기를 한 번 더 누르거나 나가기를 누르면 창 닫기를 시도합니다. 막히면 게임으로 복구됩니다.',
-      { ...applyWrap(bodyText(12), 286), lineSpacing: 7 }
+      '뒤로가기 한 번 더 또는 나가기 버튼으로 창 닫기를 시도합니다. 막히면 게임으로 복구됩니다.',
+      { ...applyWrap(bodyText(11), 286), lineSpacing: 7 }
     ).setOrigin(0.5);
 
     new GameButton(this, 195, 430, '나가기', 282, 62, 0xff9ab1).onClick(() => this.requestExit());
     new GameButton(this, 195, 500, '첫 화면가기', 282, 58, 0xffd86f).onClick(() => this.goFirstScreen());
     new GameButton(this, 195, 568, '계속하기', 282, 54, 0x9fe7ff).onClick(() => this.closePopup());
 
-    this.add.text(195, 630, '빈 페이지 이동 없이 창 닫기만 시도합니다.', mutedText(14)).setOrigin(0.5);
+    this.add.text(195, 630, '카카오톡 인앱 브라우저도 함께 대응합니다.', mutedText(12)).setOrigin(0.5);
     this.add.text(195, 278, 'CardVille', goldText(17)).setOrigin(0.5);
   }
 
@@ -64,7 +64,7 @@ export class BackConfirmScene extends Phaser.Scene {
   requestExit(): void {
     if (this.exiting) return;
     this.exiting = true;
-    this.add.text(195, 686, '창 닫기를 다시 시도합니다.', mutedText(14)).setOrigin(0.5);
+    this.add.text(195, 686, '창 닫기를 다시 시도합니다.', mutedText(12)).setOrigin(0.5);
     BackButtonSystem.requestExit();
     this.time.delayedCall(80, () => {
       if (this.scene.isActive()) this.scene.stop();

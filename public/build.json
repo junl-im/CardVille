@@ -1,12 +1,12 @@
 {
-  "name": "IntroExitCopyFit",
-  "version": "1.0.67",
-  "mode": "intro-video-restore-v167-kakao-inapp-close-v167-lobby-copy-collision-fix-v167-micro-text-fit-v167-popup-copy-fit-v167-plaza-tap-route-v167",
+  "name": "IntroVideoMinFit",
+  "version": "1.0.68",
+  "mode": "intro-video-restore-v167-intro-min-3s-video-v168-video-only-loading-v168-copy-fit-guard-v168-kakao-exit-double-back-v168",
   "svg": "disabled",
   "pwa": "disabled",
-  "notes": "Restores the silent intro video layer, removes player-facing loading/status copy during start, improves Kakao in-app exit attempts, tightens lobby/settings/building-label copy fit, and enables plaza tap routing.",
-  "label": "Silent intro, exit bridge, lobby copy fit and plaza tap route",
-  "description": "Keeps loading/transition surfaces wordless while improving text fit, settings copy, building labels, popup copy boxes, and mobile in-app browser exit behavior.",
-  "assetVersion": "1.0.67",
-  "previousRepairName": "CornerSweepStability"
+  "notes": "Guarantees the opening video remains visible for at least 3 seconds and longer if assets still load; removes startup loading bars/copy; tightens lobby/settings/popup text fit and keeps exit UX guarded.",
+  "label": "Minimum intro video, wordless loading, copy fit, and exit guard",
+  "description": "Game start uses only the intro video as the loading surface. The video is shown for at least 3 seconds and loops until all required assets are ready.",
+  "assetVersion": "1.0.68",
+  "previousRepairName": "IntroExitCopyFit"
 }

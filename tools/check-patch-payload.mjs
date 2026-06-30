@@ -7,7 +7,7 @@ const assert = (cond, msg) => { if (!cond) throw new Error(msg); };
 const exists = (file) => fs.existsSync(path.join(root, file));
 const pkg = JSON.parse(read('package.json'));
 
-assert(pkg.version === '1.0.67', `expected package version 1.0.67, got ${pkg.version}`);
+assert(pkg.version === '1.0.68', `expected package version 1.0.68, got ${pkg.version}`);
 
 const requiredSelfContainedFiles = [
   'src/main.ts',
@@ -62,7 +62,7 @@ assert(readme.includes('notice-text-fit-v163'), 'README missing notice text fit 
 const handoff = read('AI_HANDOFF_CARDVILLE.md');
 assert(handoff.includes(`현재 기준 버전은 ${pkg.version}`), `handoff missing current ${pkg.version} version`);
 assert(handoff.includes('패치 ZIP이 통파일과 비슷한 용량인 이유'), 'handoff must preserve patch-size reason');
-assert(handoff.includes('CardVille_v1.0.67_IntroExitCopyFit_Full.zip'), 'handoff missing final full ZIP name');
+assert(handoff.includes('CardVille_v1.0.68_IntroVideoMinFit_Full.zip'), 'handoff missing final full ZIP name');
 
 const layout = read('src/game/systems/LayoutSystem.ts');
 for (const token of ['responsive-surface-spread-v163', 'responsiveSurfaceWidth', 'responsiveSurfaceBox', 'viewportCenterX']) {

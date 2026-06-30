@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { applyWrap, bodyText, darkText, goldText, mutedText } from '../ui/TextStyles';
+import { applyTightCopyBox, applyWrap, bodyText, darkText, goldText, mutedText } from '../ui/TextStyles';
 import { layout } from './LayoutSystem';
 import { getCardVilleQuality, isMotionEnabled, scaledDuration } from './QualitySystem';
 
@@ -75,11 +75,11 @@ export class CoachMarkSystem {
     const width = Phaser.Math.Clamp(options.width ?? 304, 252, Math.min(336, l.visibleWidth - 34));
     const x = Phaser.Math.Clamp(options.x ?? l.visibleX + l.visibleWidth / 2, l.visibleX + width / 2 + 12, l.visibleX + l.visibleWidth - width / 2 - 12);
     const y = Phaser.Math.Clamp(options.y ?? 646, l.visibleY + 122, l.visibleY + l.visibleHeight - 118);
-    const height = 126;
+    const height = 138;
     const quality = getCardVilleQuality();
     const color = TONE_COLOR[options.tone ?? 'gold'];
-    const titleSize = quality.largeText ? 16 : 14;
-    const bodySize = quality.largeText ? 13 : 11;
+    const titleSize = quality.largeText ? 15 : 13;
+    const bodySize = quality.largeText ? 12 : 10;
     const container = scene.add.container(x, y).setDepth(2600).setName(`coach:${options.id}`);
     const shadow = scene.add.rectangle(5, 8, width, height, 0x000000, 0.22).setOrigin(0.5);
     const bg = scene.add.rectangle(0, 0, width, height, 0x07142c, 0.96).setOrigin(0.5).setStrokeStyle(2, color, 0.72);
@@ -90,10 +90,10 @@ export class CoachMarkSystem {
       ? scene.add.image(-width / 2 + 34, -height / 2 + 34, fallbackCatKey).setDisplaySize(42, 42)
       : scene.add.text(-width / 2 + 34, -height / 2 + 34, '🐾', { fontSize: '28px' }).setOrigin(0.5);
     const title = scene.add.text(-width / 2 + 66, -height / 2 + 24, options.title, goldText(titleSize)).setOrigin(0, 0.5);
-    const body = scene.add.text(-width / 2 + 24, -14, options.body, applyWrap(bodyText(bodySize), width - 48, 'left')).setOrigin(0, 0.5);
-    const closeBg = scene.add.rectangle(width / 2 - 52, height / 2 - 24, 78, 28, color, 0.94).setOrigin(0.5).setStrokeStyle(1, 0xffffff, 0.46);
-    const closeLabel = scene.add.text(width / 2 - 52, height / 2 - 24, options.actionLabel ?? '알겠어요', darkText(9)).setOrigin(0.5);
-    const closeHit = scene.add.zone(width / 2 - 52, height / 2 - 24, 88, 40).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    const body = scene.add.text(-width / 2 + 24, -10, options.body, applyTightCopyBox(bodyText(bodySize), width - 48, 72, 'left')).setOrigin(0, 0.5).setName('coach-copy-fit-v168');
+    const closeBg = scene.add.rectangle(width / 2 - 52, height / 2 - 26, 78, 28, color, 0.94).setOrigin(0.5).setStrokeStyle(1, 0xffffff, 0.46);
+    const closeLabel = scene.add.text(width / 2 - 52, height / 2 - 26, options.actionLabel ?? '알겠어요', darkText(9)).setOrigin(0.5);
+    const closeHit = scene.add.zone(width / 2 - 52, height / 2 - 26, 88, 40).setOrigin(0.5).setInteractive({ useHandCursor: true });
     container.add([shadow, bg, glow, icon, title, body, closeBg, closeLabel, closeHit]);
 
     if (typeof options.anchorX === 'number' && typeof options.anchorY === 'number') {

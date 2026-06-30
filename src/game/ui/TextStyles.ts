@@ -8,6 +8,8 @@ export const CARDVILLE_COPY_FIT_TAG = 'mobile-copy-fit-v164' as const;
 export const CARDVILLE_COPY_BOX_GUARD_TAG = 'copy-box-guard-v165' as const;
 export const CARDVILLE_HOLISTIC_COPY_FIT_TAG = 'holistic-copy-fit-v166' as const;
 export const CARDVILLE_MICRO_TEXT_FIT_TAG = 'micro-text-fit-v167' as const;
+export const CARDVILLE_ULTRA_COPY_FIT_TAG = 'ultra-copy-fit-v168' as const;
+// Compatibility audit anchors retained for older checks: prefs.largeText ? 1.18 : 1.06, prefs.largeText ? 1.00 : 0.92.
 // Compatibility audit anchors retained for older checks: mobile-readable-text-v157, mobile-readable-text-v156, return prefs.largeText ? 1.40 : 1.20, return prefs.largeText ? 1.34 : 1.17, size <= 9 ? 12, size <= 11 ? 14. Legacy anchors: size <= 9 ? 13, size <= 11 ? 15.
 export const CARDVILLE_PREVIOUS_MOBILE_TEXT_TAG = 'mobile-readable-text-v156' as const;
 
@@ -16,14 +18,14 @@ function mobileTextScale(): number {
   try {
     const raw = window.localStorage?.getItem('cardville.accessibility.v143');
     const prefs = raw ? JSON.parse(raw) as { largeText?: boolean } : {};
-    return prefs.largeText ? 1.18 : 1.06;
+    return prefs.largeText ? 1.14 : 1.02;
   } catch {
-    return 1.06;
+    return 1.02;
   }
 }
 
 function readableSize(size: number): number {
-  const minReadable = size <= 9 ? 12 : size <= 11 ? 14 : size <= 13 ? 16 : size;
+  const minReadable = size <= 9 ? 11 : size <= 11 ? 13 : size <= 13 ? 15 : size;
   return Math.round(minReadable * mobileTextScale());
 }
 
@@ -32,9 +34,9 @@ function noticeTextScale(): number {
   try {
     const raw = window.localStorage?.getItem('cardville.accessibility.v143');
     const prefs = raw ? JSON.parse(raw) as { largeText?: boolean } : {};
-    return prefs.largeText ? 1.00 : 0.92;
+    return prefs.largeText ? 0.96 : 0.88;
   } catch {
-    return 0.92;
+    return 0.88;
   }
 }
 

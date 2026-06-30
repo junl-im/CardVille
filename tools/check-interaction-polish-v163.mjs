@@ -12,7 +12,7 @@ const exclude = (p, token) => {
   if (s.includes(token)) throw new Error(`${p} must not contain ${token}`);
 };
 
-include('package.json', '1.0.67');
+include('package.json', '1.0.68');
 include('src/game/scenes/MainLobbyScene.ts', 'npc-relative-scale-lock-v163');
 include('src/game/scenes/MainLobbyScene.ts', 'rememberBaseScale');
 include('src/game/scenes/MainLobbyScene.ts', 'tweenRelativeScale');
@@ -34,4 +34,4 @@ exclude('src/game/scenes/MainLobbyScene.ts', 'targets: glow, scale: 2.1');
 exclude('src/game/scenes/IntroLoadingScene.ts', '오프닝 영상 뒤 바로 카드마을로 입장합니다');
 exclude('src/game/scenes/IntroLoadingScene.ts', 'this.add.text(l.cx');
 exclude('src/game/scenes/IntroLoadingScene.ts', 'delayedCall(4200');
-console.log('Interaction polish v1.0.67 check passed: relative NPC scaling, silent video loading, seam-soft buttons, and fitted notices verified.');
+console.log('Interaction polish v1.0.68 check passed: relative NPC scaling, silent video loading, seam-soft buttons, and fitted notices verified.');

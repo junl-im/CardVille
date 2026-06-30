@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { GameButton } from '../ui/GameButton';
-import { applyNoticeBox, applyWrap, bodyText, darkText, goldText, mutedText, noticeText, titleText } from '../ui/TextStyles';
+import { applyNoticeBox, applyTightCopyBox, applyWrap, bodyText, darkText, goldText, mutedText, noticeText, titleText } from '../ui/TextStyles';
 import { addFullBleedRect, layout, responsiveSurfaceWidth } from './LayoutSystem';
 import { getCardVilleQuality, isMotionEnabled, scaledDuration } from './QualitySystem';
 
@@ -34,28 +34,28 @@ export class RewardPopupSystem {
     const popupX = l.visibleX + l.visibleWidth / 2;
     const popupY = Math.min(l.bottom - 186, Math.max(l.top + 322, 430));
     const overlay = addFullBleedRect(scene, 0x020814, quality.highContrast ? 0.72 : 0.56).setDepth(3400).setInteractive();
-    const popup = scene.add.container(popupX, popupY).setDepth(3401).setName('reward-popup:v143:copy-box-guard-v165:popup-copy-fit-v167');
-    const shadow = scene.add.rectangle(6, 10, popupW, 284, 0x000000, 0.26).setOrigin(0.5);
-    const bg = scene.add.rectangle(0, 0, popupW, 284, quality.highContrast ? 0xfffbf1 : 0x07142c, quality.highContrast ? 0.98 : 0.97)
+    const popup = scene.add.container(popupX, popupY).setDepth(3401).setName('reward-popup:v143:copy-box-guard-v165:popup-copy-fit-v167:popup-copy-room-v168');
+    const shadow = scene.add.rectangle(6, 10, popupW, 304, 0x000000, 0.26).setOrigin(0.5);
+    const bg = scene.add.rectangle(0, 0, popupW, 304, quality.highContrast ? 0xfffbf1 : 0x07142c, quality.highContrast ? 0.98 : 0.97)
       .setOrigin(0.5)
       .setStrokeStyle(3, color, 0.86);
-    const topGlow = scene.add.rectangle(0, -126, popupW - 44, 12, color, quality.highContrast ? 0.24 : 0.16).setOrigin(0.5);
+    const topGlow = scene.add.rectangle(0, -136, popupW - 44, 12, color, quality.highContrast ? 0.24 : 0.16).setOrigin(0.5);
     const resultRibbon = scene.textures.exists('uiResultRibbon')
-      ? scene.add.image(0, -114, 'uiResultRibbon').setDisplaySize(226, 70).setAlpha(0.82)
+      ? scene.add.image(0, -124, 'uiResultRibbon').setDisplaySize(226, 70).setAlpha(0.82)
       : null;
     const resultStars = scene.textures.exists('uiResultStars')
       ? scene.add.image(0, -6, 'uiResultStars').setDisplaySize(276, 142).setAlpha(quality.highContrast ? 0.10 : 0.18)
       : null;
     const resultCrown = scene.textures.exists('uiResultCrown') && options.tone !== 'green'
-      ? scene.add.image(116, -94, 'uiResultCrown').setDisplaySize(54, 30).setAlpha(0.78)
+      ? scene.add.image(116, -104, 'uiResultCrown').setDisplaySize(54, 30).setAlpha(0.78)
       : null;
     const rewardBurst = scene.textures.exists('effectRewardBurstPremium')
-      ? scene.add.image(84, -62, 'effectRewardBurstPremium').setDisplaySize(132, 132).setAlpha(quality.highContrast ? 0.14 : 0.24)
+      ? scene.add.image(84, -68, 'effectRewardBurstPremium').setDisplaySize(132, 132).setAlpha(quality.highContrast ? 0.14 : 0.24)
       : null;
     const catKey = options.tone === 'green' ? 'catHintHappy' : options.tone === 'blue' ? 'catHintThink' : options.tone === 'coral' ? 'catHintSleepy' : 'catHintSurprise';
     const iconKey = scene.textures.exists(catKey) ? catKey : 'catHint';
     const icon = scene.textures.exists(iconKey)
-      ? scene.add.image(-112, -88, iconKey).setDisplaySize(52, 52)
+      ? scene.add.image(-112, -98, iconKey).setDisplaySize(52, 52)
       : scene.add.text(-112, -88, '🐾', { fontSize: '34px' }).setOrigin(0.5);
     const chestKey = options.tone === 'purple' && scene.textures.exists('chestEpicPremium')
       ? 'chestEpicPremium'
@@ -69,9 +69,9 @@ export class RewardPopupSystem {
       : null;
     const titleStyle = quality.highContrast ? darkText(20) : titleText(20);
     const messageStyle = quality.highContrast ? { ...darkText(12), fontStyle: '800' } : bodyText(12);
-    const title = scene.add.text(-popupW / 2 + 84, -90, options.title, titleStyle).setOrigin(0, 0.5);
-    const body = scene.add.text(0, -8, options.message, { ...applyNoticeBox(noticeText(11), popupW - 40, 92, 'center'), lineSpacing: 2 }).setOrigin(0.5);
-    const caption = scene.add.text(0, 72, '보상은 프로필과 주간 미션 게이지에 안전하게 저장됩니다.', applyNoticeBox(quality.highContrast ? darkText(9) : mutedText(9), popupW - 42, 24)).setOrigin(0.5);
+    const title = scene.add.text(-popupW / 2 + 84, -100, options.title, titleStyle).setOrigin(0, 0.5);
+    const body = scene.add.text(0, -12, options.message, { ...applyNoticeBox(noticeText(10), popupW - 42, 112, 'center'), lineSpacing: 1 }).setOrigin(0.5).setName('popup-copy-room-v168');
+    const caption = scene.add.text(0, 84, '보상은 프로필과 주간 미션 게이지에 안전하게 저장됩니다.', applyNoticeBox(quality.highContrast ? darkText(9) : mutedText(9), popupW - 42, 24)).setOrigin(0.5);
     popup.add([shadow, bg]);
     if (resultStars) popup.add(resultStars);
     if (resultRibbon) popup.add(resultRibbon);
@@ -96,16 +96,16 @@ export class RewardPopupSystem {
       });
     };
 
-    const primary = new GameButton(scene, 0, 130, options.primaryLabel ?? '확인', 142, 42, color, { skin: false, shine: false, debounceMs: 520 })
+    const primary = new GameButton(scene, 0, 142, options.primaryLabel ?? '확인', 142, 42, color, { skin: false, shine: false, debounceMs: 520 })
       .onClick(() => closePopup(options.onPrimary));
     popup.add(primary);
     if (options.secondaryLabel) {
-      primary.setPosition(-82, 130);
-      const secondary = new GameButton(scene, 82, 130, options.secondaryLabel, 128, 42, 0xc9f4ff, { skin: false, shine: false, debounceMs: 520 })
+      primary.setPosition(-82, 142);
+      const secondary = new GameButton(scene, 82, 142, options.secondaryLabel, 128, 42, 0xc9f4ff, { skin: false, shine: false, debounceMs: 520 })
         .onClick(() => closePopup(options.onSecondary));
       popup.add(secondary);
     } else {
-      primary.setPosition(0, 130);
+      primary.setPosition(0, 142);
     }
 
     popup.setAlpha(0).setScale(0.92);

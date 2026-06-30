@@ -8,9 +8,9 @@ const mustInclude = (file, token) => assert(read(file).includes(token), `${file}
 const mustNotInclude = (file, token) => assert(!read(file).includes(token), `${file} must not include token: ${token}`);
 
 const pkg = JSON.parse(read('package.json'));
-assert(pkg.version === '1.0.67', `package version expected 1.0.67, got ${pkg.version}`);
+assert(pkg.version === '1.0.68', `package version expected 1.0.68, got ${pkg.version}`);
 
-mustInclude('src/game/data/assetManifest.ts', "CARDVILLE_ASSET_VERSION = '1.0.67'");
+mustInclude('src/game/data/assetManifest.ts', "CARDVILLE_ASSET_VERSION = '1.0.68'");
 mustInclude('src/game/data/assetManifest.ts', 'LOBBY_FORCE_LOAD_GATE_TAG');
 
 mustInclude('src/game/scenes/IntroLoadingScene.ts', 'lobby force-load gate active');
@@ -57,9 +57,9 @@ mustInclude('README.md', '1.0.65 업데이트 내역');
 mustInclude('README.md', '1.0.60 업데이트 내역');
 mustInclude('README.md', 'lobby-force-load-gate-v159');
 mustInclude('README.md', 'lobby-no-bottom-patch-text-v159');
-mustInclude('AI_HANDOFF_CARDVILLE.md', '현재 기준 버전은 1.0.67');
+mustInclude('AI_HANDOFF_CARDVILLE.md', '현재 기준 버전은 1.0.68');
 mustInclude('AI_HANDOFF_CARDVILLE.md', '1.0.59 로비 이미지 강제 로딩/스크린샷 기반 배치 핫픽스');
-mustInclude('public/build.json', 'IntroExitCopyFit');
-mustInclude('index.html', "window.__CARDVILLE_VERSION__ = '1.0.67'");
+mustInclude('public/build.json', 'IntroVideoMinFit');
+mustInclude('index.html', "window.__CARDVILLE_VERSION__ = '1.0.68'");
 
 console.log('check:lobby-screenshot-repair passed');

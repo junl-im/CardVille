@@ -20,6 +20,7 @@ const GAME_SCENES = [
 
 export const CARDVILLE_EXIT_FLOW_TAG = 'exit-real-close-v153' as const;
 export const CARDVILLE_KAKAO_EXIT_BRIDGE_TAG = 'kakao-inapp-close-v167' as const;
+export const CARDVILLE_DOUBLE_BACK_EXIT_TAG = 'double-back-exit-v168' as const;
 // Legacy exit-flow audit anchor retained: '창 닫기가 브라우저에서 막혔어요'.
 
 export class BackButtonSystem {
@@ -67,7 +68,7 @@ export class BackButtonSystem {
     if (BackButtonSystem.exitRequested) return;
     const now = Date.now();
     if (BackButtonSystem.overlay) {
-      BackButtonSystem.requestExit();
+      BackButtonSystem.requestExit(); // double-back-exit-v168
       return;
     }
     if (now - BackButtonSystem.lastBackAt < 120) return;
@@ -120,13 +121,13 @@ export class BackButtonSystem {
       boxSizing: 'border-box'
     });
 
-    const box = this.makeOverlayBox('게임을 나갈까요?', '뒤로가기를 한 번 더 누르거나 나가기를 누르면 창 닫기를 시도합니다. 카카오톡 인앱 브라우저에서는 전용 닫기 경로도 함께 시도합니다.');
+    const box = this.makeOverlayBox('게임을 나갈까요?', '뒤로가기 한 번 더 또는 나가기 버튼으로 창 닫기를 시도합니다.');
     box.appendChild(this.makeOverlayButton('나가기', '#ff9ab1', () => this.requestExit()));
     box.appendChild(this.makeOverlayButton('첫 화면가기', '#ffd86f', () => this.goFirstScreen()));
     box.appendChild(this.makeOverlayButton('계속하기', '#9fe7ff', () => this.closeOverlay()));
 
     const note = document.createElement('div');
-    note.textContent = '브라우저가 닫기를 막으면 게임 화면으로 바로 복구됩니다.';
+    note.textContent = '카카오톡 인앱 브라우저도 함께 대응합니다.';
     Object.assign(note.style, { marginTop: '12px', fontSize: '13px', lineHeight: '1.35', color: 'rgba(230,244,255,.78)', fontWeight: '900' });
     box.appendChild(note);
 
@@ -145,8 +146,8 @@ export class BackButtonSystem {
   private static makeOverlayBox(titleText: string, descText: string): HTMLDivElement {
     const box = document.createElement('div');
     Object.assign(box.style, {
-      width: 'min(344px, 90vw)',
-      padding: '22px 18px 18px',
+      width: 'min(356px, 92vw)',
+      padding: '20px 18px 16px',
       borderRadius: '30px',
       background: 'linear-gradient(180deg, rgba(26, 49, 92, 0.98), rgba(9, 18, 40, 0.98))',
       border: '1px solid rgba(255,255,255,.30)',
@@ -157,12 +158,12 @@ export class BackButtonSystem {
 
     const title = document.createElement('div');
     title.textContent = titleText;
-    Object.assign(title.style, { fontSize: '24px', fontWeight: '1000', letterSpacing: '-.06em', textShadow: '0 3px 10px rgba(0,0,0,.5)' });
+    Object.assign(title.style, { fontSize: '22px', fontWeight: '1000', letterSpacing: '-.06em', textShadow: '0 3px 10px rgba(0,0,0,.5)' });
     box.appendChild(title);
 
     const desc = document.createElement('div');
     desc.textContent = descText;
-    Object.assign(desc.style, { margin: '12px auto 16px', maxWidth: '292px', fontSize: '14px', lineHeight: '1.48', color: 'rgba(230,244,255,.92)', fontWeight: '800' });
+    Object.assign(desc.style, { margin: '12px auto 16px', maxWidth: '304px', fontSize: '13px', lineHeight: '1.48', color: 'rgba(230,244,255,.92)', fontWeight: '800' });
     box.appendChild(desc);
     return box;
   }
@@ -179,7 +180,7 @@ export class BackButtonSystem {
       border: '2px solid rgba(255,255,255,.78)',
       background: `linear-gradient(180deg, #fff8d8 0%, ${color} 72%, #d8842f 100%)`,
       color: '#3f210f',
-      fontSize: '17px',
+      fontSize: '16px',
       fontWeight: '1000',
       letterSpacing: '-.05em',
       boxShadow: '0 8px 0 rgba(63,31,9,.34), 0 16px 30px rgba(0,0,0,.24)',
@@ -314,7 +315,7 @@ export class BackButtonSystem {
       position: 'fixed', inset: '0', zIndex: '2147483647', display: 'grid', placeItems: 'center', background: 'rgba(2, 8, 20, 0.80)', color: '#fff',
       fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", touchAction: 'none', pointerEvents: 'auto', padding: '20px', boxSizing: 'border-box'
     });
-    const box = this.makeOverlayBox('브라우저가 닫기를 막았어요', '다시 나가기를 누르면 창 닫기와 카카오 인앱 닫기를 한 번 더 시도합니다. 게임은 다른 페이지로 넘어가지 않습니다.');
+    const box = this.makeOverlayBox('창 닫기가 막혔어요', '다시 나가기를 누르면 창 닫기와 카카오 인앱 닫기를 한 번 더 시도합니다.');
     box.appendChild(this.makeOverlayButton('다시 나가기', '#ff9ab1', () => this.requestExit()));
     box.appendChild(this.makeOverlayButton('첫 화면가기', '#ffd86f', () => this.goFirstScreen()));
     box.appendChild(this.makeOverlayButton('계속하기', '#9fe7ff', () => this.closeOverlay()));

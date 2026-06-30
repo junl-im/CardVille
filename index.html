@@ -34,17 +34,27 @@
       }
     </script>
     <script>
-      window.__CARDVILLE_VERSION__ = '1.0.67';
+      window.__CARDVILLE_VERSION__ = '1.0.68';
       window.__CARDVILLE_READY__ = false;
+      window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = 0;
 
       window.__CARDVILLE_INTRO_VIDEO_PREPARE__ = function(){
         var id = 'cardville-intro-video';
+        var src = new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.68', document.baseURI).href;
+        window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = Date.now();
         var old = document.getElementById(id);
-        if (old) return old;
+        if (old) {
+          if (old.getAttribute('src') !== src) old.setAttribute('src', src);
+          old.style.display = 'block';
+          old.style.opacity = '1';
+          try { old.play && old.play().catch(function(){ old.load && old.load(); }); } catch(e) {}
+          return old;
+        }
         var video = document.createElement('video');
         video.id = id;
-        video.src = '/CardVille/assets/video/cardville_intro_loading.mp4?v=1.0.67';
+        video.src = src;
         video.muted = true;
+        video.defaultMuted = true;
         video.autoplay = true;
         video.playsInline = true;
         video.loop = true;
@@ -52,7 +62,10 @@
         video.controls = false;
         video.setAttribute('playsinline', 'true');
         video.setAttribute('webkit-playsinline', 'true');
+        video.setAttribute('controlsList', 'nodownload noplaybackrate noremoteplayback');
         video.setAttribute('data-cardville-silent-intro-video-v167', 'true');
+        video.setAttribute('data-cardville-min-intro-ms-v168', '3000');
+        video.setAttribute('data-cardville-video-only-loading-v168', 'true');
         video.style.position = 'fixed';
         video.style.inset = '0';
         video.style.width = '100vw';
@@ -63,20 +76,23 @@
         video.style.pointerEvents = 'none';
         video.style.background = '#071126';
         video.style.opacity = '1';
+        video.style.display = 'block';
         document.body.appendChild(video);
-        try { video.play().catch(function(){ video.load(); }); } catch(e) {}
+        try { video.load(); } catch(e) {}
+        try { video.play().catch(function(){ try { video.load(); } catch(e) {} }); } catch(e) {}
         return video;
       };
       window.__CARDVILLE_INTRO_VIDEO_DONE__ = function(){
         var video = document.getElementById('cardville-intro-video');
         if (video) video.remove();
+        window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = 0;
       };
       window.__CARDVILLE_BOOT_OK__ = function(){
         window.__CARDVILLE_READY__ = true;
         var el = document.getElementById('boot-fallback');
         if (el) el.remove();
       };
-      // 1.0.63: no generic loading copy on boot; responsive surfaces use wider phone space. The opening video stays visible until Phaser is ready.
+      // 1.0.68: no generic loading copy on boot; no loading bar/copy on start. The opening video is forced visible for at least 3 seconds, then remains until assets are ready.
     </script>
     <script type="module" src="/src/main.ts"></script>
   </body>

@@ -1,24 +1,24 @@
-## 1.0.67 - IntroExitCopyFit
+## 1.0.68 - IntroVideoMinFit
 
-- 현재 기준 버전은 1.0.67입니다.
-- 목적: 사용자가 지적한 시작 영상 미노출, 로딩 문구, 추천 리본/설정/팝업 텍스트 넘침, 건물 이름표 겹침, 카카오톡 인앱 뒤로가기 종료, `READY 1` 표기, 중앙 광장 터치 미동작 문제를 한 번에 정리한 패스입니다.
-- 핵심 태그: `intro-video-restore-v167`, `kakao-inapp-close-v167`, `lobby-copy-collision-fix-v167`, `micro-text-fit-v167`, `popup-copy-fit-v167`, `plaza-tap-route-v167`.
+- 현재 기준 버전은 1.0.68입니다.
+- 목적: 사용자가 지적한 “게임 시작 시 영상이 안 나오고 로딩 멘트만 보임” 문제를 최우선으로 해결하고, 추천 리본/설정/팝업/건물 이름표/뒤로가기/광장 터치까지 한 번에 보강한 패스입니다.
+- 핵심 태그: `intro-min-3s-video-v168`, `video-only-loading-v168`, `lobby-recommend-copy-fit-v168`, `settings-copy-safe-v168`, `building-nameplate-lift-v168`, `popup-copy-room-v168`, `coach-copy-fit-v168`, `ultra-copy-fit-v168`, `double-back-exit-v168`, `plaza-touch-route-expand-v168`.
 - 코드 반영:
-  - `index.html`, `LoginScene.ts`, `IntroLoadingScene.ts`: 게임 시작 직후 body 최상단 video 레이어를 먼저 띄우고, 에셋 준비가 끝날 때까지 문구 없이 유지합니다. autoplay 실패 시에도 영상을 즉시 제거하지 않습니다.
-  - `MainLobbyScene.ts`, `dioramaBuildings.ts`: 추천 리본 2줄 고정 박스, 이름표 소폭 축소/상향, 광장 터치 라우트, 설정 패널 플레이 옵션 중심 재정리.
-  - `DailyMissionSystem.ts`: 로비 상태칩 `READY n`/`MISSION`/`DONE`을 한국어 `보상 n`/`미션`/`완료`로 변경.
-  - `BackButtonSystem.ts`, `BackConfirmScene.ts`: 뒤로가기 1회 팝업, 팝업 상태에서 다시 뒤로가기/나가기 시 창닫기 + 카카오 인앱 닫기 scheme을 함께 시도.
-  - `TextStyles.ts`, `RewardPopupSystem.ts`: 전역 글씨를 아주 미세하게 낮추고 팝업 글자 박스를 키움.
-- 추가 검증: `tools/check-intro-exit-copy-v167.mjs`, `npm run check:intro-exit-copy-v167`.
+  - `index.html`: 영상 경로를 `/CardVille/...` 고정이 아니라 `new URL('./assets/video/cardville_intro_loading.mp4', document.baseURI)` 기준으로 바꿔 로컬/배포 경로 차이에 덜 흔들리게 했습니다. 클릭 즉시 video를 body 최상단에 만들고 시작 시각을 저장합니다.
+  - `IntroLoadingScene.ts`: `MIN_INTRO_VIDEO_MS = 3000`을 추가했습니다. 에셋이 빨리 끝나도 3초 전에는 다음 씬으로 넘어가지 않고, 에셋이 더 늦으면 영상이 계속 loop됩니다. 로딩바/로딩 문구는 그리지 않습니다.
+  - `MainLobbyScene.ts`: 추천 리본 폭/높이/글자 박스를 보강하고, 건물 이름표를 미세 축소·상향했습니다. 설정 패널은 플레이 옵션 중심으로 줄이고 문장 박스를 좁혔습니다. 광장 터치 범위는 더 넓혔습니다.
+  - `TextStyles.ts`, `CoachMarkSystem.ts`, `RewardPopupSystem.ts`: 전역 글씨와 팝업 글자 박스를 미세 조정해 화면 밖으로 넘어가는 위험을 줄였습니다.
+  - `BackButtonSystem.ts`, `BackConfirmScene.ts`: 뒤로가기 확인 문구를 짧게 줄이고, 확인창 상태에서 뒤로가기 한 번 더/나가기 버튼이 창 닫기를 시도하도록 유지했습니다.
+- 추가 검증: `tools/check-intro-video-min-v168.mjs`, `npm run check:intro-video-min-v168`.
 - 유지 규칙: SVG 없음, OPEN/LOCK 없음, 로딩중/이동중 문구 없음, fallback 카드 숨김, public/assets 포함 self-contained 패치 유지, 새 docs 문서 생성 금지.
 - 산출물 이름:
-  - `CardVille_v1.0.67_IntroExitCopyFit_Full.zip`
-  - `CardVille_v1.0.67_IntroExitCopyFit_Patch.zip`
+  - `CardVille_v1.0.68_IntroVideoMinFit_Full.zip`
+  - `CardVille_v1.0.68_IntroVideoMinFit_Patch.zip`
 
 ## 1.0.66 - CornerSweepStability
 
 - 목적: 사용자가 요청한 “모든 구석구석 꼼꼼하게 체크”를 기준으로, 전 화면 safe-area/텍스트/입력/버튼 선/패널 겹침 위험을 다시 훑은 패스입니다.
-- 현재 기준 버전은 1.0.67입니다.
+- 현재 기준 버전은 1.0.68입니다.
 - 핵심 태그: `corner-sweep-v166`, `holistic-ui-audit-v166`, `safe-area-copy-clamp-v166`, `input-watchdog-v166`, `button-corner-sweep-v166`, `line-free-surface-v166`.
 - 코드 반영:
   - `LayoutSystem.ts`: safe-area clamp와 input watchdog을 추가했습니다. 씬 진입 후 입력이 꺼진 채 남으면 80/260/420ms 복구 타이머가 다시 켭니다.
@@ -37,7 +37,7 @@
 ## 1.0.65 - FlowListInputPolish
 
 - 목적: 사용자가 계속 요청한 전 구간 불안정/겹침/배치/버튼 줄/알림 텍스트 밀림/입력 먹통 위험을 더 줄이는 카드 리스트/입력 복구 중심 패스입니다.
-- 현재 기준 버전은 1.0.66입니다.
+- 현재 기준 버전은 1.0.68입니다.
 - 이번 버전은 1.0.64 FlowFitUIPolish를 기준으로, 모드 선택/스테이지 선택/상점/미션의 카드 리스트와 하단 버튼을 실제 모바일 화면 폭/safe-area에 맞게 정렬하고, 씬 재시작/전환 후 입력 복구 안전장치를 추가했습니다.
 - 핵심 태그: `list-card-fit-v165`, `action-bar-fit-v165`, `copy-box-guard-v165`, `scene-input-recovery-v165`, `restart-input-recovery-v165`, `button-input-recovery-v165`, `button-copy-guard-v165`.
 - 추가 검증: `tools/check-flow-ui-v165.mjs`, `npm run check:flow-ui-v165`.
@@ -63,7 +63,7 @@
 CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고, 그다음 실제 코드를 확인하세요.
 
 
-## 현재 작업 기준: 1.0.67
+## 현재 작업 기준: 1.0.68
 
 현재 기준 버전은 1.0.66입니다.  
 핵심 태그는 `corner-sweep-v166`, `holistic-ui-audit-v166`, `safe-area-copy-clamp-v166`, `input-watchdog-v166`, `button-corner-sweep-v166`, `line-free-surface-v166`입니다.

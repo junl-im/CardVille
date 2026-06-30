@@ -1,16 +1,17 @@
-## 1.0.67 - IntroExitCopyFit
+## 1.0.68 - IntroVideoMinFit
 
-- **인트로 영상 복구/뒤로가기 종료/마을 텍스트 겹침/설정·팝업 글자 맞춤 패스**를 진행했습니다.
-- `intro-video-restore-v167`: 게임 시작 직후 오프닝 영상을 body 최상단 레이어로 먼저 띄우고, autoplay가 늦거나 실패해도 영상을 지우지 않고 무문구 표면을 유지합니다.
-- `lobby-copy-collision-fix-v167`: 상단 추천 리본, 건물 이름표, 설정 패널 문구가 란 밖으로 나가거나 건물끼리 겹치는 위험을 줄였습니다.
-- `micro-text-fit-v167`, `popup-copy-fit-v167`: 전역 글씨 배율을 아주 미세하게 낮추고, 보상/시작 팝업의 글자 박스를 키웠습니다.
-- `kakao-inapp-close-v167`: 뒤로가기 1회는 나가기 팝업, 팝업 상태에서 다시 뒤로가기 또는 나가기 버튼은 창 닫기와 카카오 인앱 닫기 경로를 함께 시도합니다.
-- `plaza-tap-route-v167`: 중앙 광장도 터치 시 모드 선택 화면으로 이동하도록 연결했습니다.
-- `READY 1` 로비 표기는 `보상 1`처럼 한국어 상태칩으로 바꿨고, 설정 화면의 개발/에셋 규칙성 문구는 플레이 옵션 중심으로 줄였습니다.
-- 검증 추가: `tools/check-intro-exit-copy-v167.mjs` / `npm run check:intro-exit-copy-v167`.
-- SVG 없음, OPEN/LOCK 없음, 로딩중/이동중 문구 없음, fallback 카드 숨김, self-contained 패치 payload 정책은 유지합니다.
-- 최종 ZIP 명명 규칙: `CardVille_v1.0.67_IntroExitCopyFit_Full.zip`, `CardVille_v1.0.67_IntroExitCopyFit_Patch.zip`.
-
+- **인트로 영상 최소 3초 보장/무문구 영상 로딩/전역 글자 맞춤 보강 패스**를 진행했습니다.
+- `intro-min-3s-video-v168`: 게임 시작을 누르면 오프닝 영상이 최소 3초는 반드시 유지됩니다. 에셋 로딩이 3초보다 길면 영상은 계속 반복 재생되고, 준비가 끝난 뒤에만 다음 씬으로 넘어갑니다.
+- `video-only-loading-v168`: 시작 로딩 구간의 로딩바/로딩 문구를 제거하고, 영상 레이어만 최상단에 유지합니다.
+- `lobby-recommend-copy-fit-v168`: 마을 상단 추천 리본 글자가 란 밖으로 밀리거나 겹치는 위험을 줄였습니다.
+- `settings-copy-safe-v168`: 설정 패널은 개발/버전/에셋 정보 없이 플레이 옵션 중심으로 유지하고, 문장 폭을 더 좁게 맞췄습니다.
+- `building-nameplate-lift-v168`: 건물 명칭을 아주 미세하게 줄이고 이름표를 살짝 올려 다른 건물과 겹치는 위험을 줄였습니다.
+- `popup-copy-room-v168`, `coach-copy-fit-v168`, `ultra-copy-fit-v168`: 시작/보상/안내 팝업과 전역 글자 크기를 미세 조정해 화면 밖으로 넘어가는 문제를 줄였습니다.
+- `double-back-exit-v168`: 뒤로가기 1회는 나가기 확인, 확인창 상태에서 뒤로가기 한 번 더 또는 나가기 버튼은 창 닫기와 카카오 인앱 닫기를 함께 시도합니다.
+- `plaza-touch-route-expand-v168`: 중앙 광장 터치 범위를 더 넓혀 일반 광장도 이동 진입점처럼 작동합니다.
+- 검증 추가: `tools/check-intro-video-min-v168.mjs` / `npm run check:intro-video-min-v168`.
+- SVG 없음, OPEN/LOCK 없음, 로딩중/이동중 문구 없음, fallback 카드 숨김, public/assets 포함 self-contained 패치 정책은 유지합니다.
+- 최종 ZIP 명명 규칙: `CardVille_v1.0.68_IntroVideoMinFit_Full.zip`, `CardVille_v1.0.68_IntroVideoMinFit_Patch.zip`.
 
 ## 1.0.66 - CornerSweepStability
 
@@ -50,13 +51,20 @@
 - SVG 없음, OPEN/LOCK 없음, 로딩중 문구 없음, fallback 카드 숨김, self-contained 패치 payload 정책은 유지합니다.
 - 최종 ZIP 명명 규칙: `CardVille_v1.0.64_FlowFitUIPolish_Full.zip`, `CardVille_v1.0.64_FlowFitUIPolish_Patch.zip`.
 
-# CardVille 1.0.67
+# CardVille 1.0.68
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
 
 
-## 1.0.67 업데이트 내역
+## 1.0.68 업데이트 내역
+
+- `intro-min-3s-video-v168`: 시작 영상은 최소 3초 보장, 에셋이 더 늦으면 영상이 계속 반복됩니다.
+- `video-only-loading-v168`: 시작 로딩바/로딩 문구를 제거하고 오프닝 영상만 표시합니다.
+- `lobby-recommend-copy-fit-v168`, `settings-copy-safe-v168`, `building-nameplate-lift-v168`: 추천 리본/설정창/건물 이름표의 글자 넘침과 겹침을 더 줄였습니다.
+- `popup-copy-room-v168`, `coach-copy-fit-v168`, `ultra-copy-fit-v168`: 팝업과 전역 글씨를 아주 미세하게 줄이고 박스 여유를 늘렸습니다.
+- `double-back-exit-v168`, `plaza-touch-route-expand-v168`: 뒤로가기 2회 종료 시도와 광장 터치 이동을 보강했습니다.
+- `tools/check-intro-video-min-v168.mjs`를 추가하고 `npm run verify` 앞단에 포함했습니다.
 
 - `corner-sweep-v166`: 주요 화면을 구석구석 다시 훑는 자동 검증을 추가했습니다.
 - `safe-area-copy-clamp-v166`: 알림/보상/상점/미션/결과 화면의 긴 문구 폭을 실제 폰 safe-area 기준으로 제한합니다.

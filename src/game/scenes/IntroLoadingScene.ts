@@ -8,11 +8,15 @@ export const CARDVILLE_LOBBY_BOOT_HARDENING_TAG = 'lobby-boot-asset-hardening-v1
 export const CARDVILLE_SILENT_INTRO_VIDEO_TAG = 'silent-intro-video-loop-v163' as const;
 export const CARDVILLE_INTRO_VIDEO_LIFECYCLE_TAG = 'intro-video-lifecycle-cleanup-v164' as const;
 export const CARDVILLE_INTRO_VIDEO_RESTORE_TAG = 'intro-video-restore-v167' as const;
+export const CARDVILLE_INTRO_MIN_VIDEO_TAG = 'intro-min-3s-video-v168' as const;
+export const CARDVILLE_VIDEO_ONLY_LOADING_TAG = 'video-only-loading-v168' as const;
+const MIN_INTRO_VIDEO_MS = 3000;
 
 declare global {
   interface Window {
     __CARDVILLE_INTRO_VIDEO_PREPARE__?: () => HTMLVideoElement | null;
     __CARDVILLE_INTRO_VIDEO_DONE__?: () => void;
+    __CARDVILLE_INTRO_VIDEO_STARTED_AT__?: number;
   }
 }
 
@@ -21,6 +25,7 @@ export class IntroLoadingScene extends Phaser.Scene {
   private minIntroDone = false;
   private finished = false;
   private videoEl?: HTMLVideoElement;
+  private minIntroTimer?: Phaser.Time.TimerEvent;
   private progressBar?: Phaser.GameObjects.Rectangle;
   private nextScene = 'MainLobbyScene';
   private queuedKeys = new Set<string>();
@@ -33,6 +38,8 @@ export class IntroLoadingScene extends Phaser.Scene {
     this.readyToContinue = false;
     this.minIntroDone = false;
     this.finished = false;
+    this.minIntroTimer?.remove(false);
+    this.minIntroTimer = undefined;
     this.queuedKeys.clear();
     this.preferWebp = this.detectWebpSupport();
   }
@@ -41,6 +48,7 @@ export class IntroLoadingScene extends Phaser.Scene {
     applyResponsiveCamera(this);
     this.drawLoadingStage();
     this.mountOpeningVideo();
+    this.armMinimumIntroHold();
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.removeOpeningVideo());
     this.queueGameAssets();
 
@@ -56,9 +64,8 @@ export class IntroLoadingScene extends Phaser.Scene {
       this.tryFinish();
     });
 
-    this.minIntroDone = true;
-    // 1.0.63: silent intro video controls the loading surface. It loops while assets load,
-    // then is removed immediately when the loader completes. No loading copy is drawn.
+    // 1.0.68: the opening video is the only startup loading surface. It is shown
+    // for at least MIN_INTRO_VIDEO_MS and loops longer if asset loading needs more time.
 
     if (this.load.totalToLoad > 0) this.load.start();
     else {
@@ -76,9 +83,25 @@ export class IntroLoadingScene extends Phaser.Scene {
     this.progressBar = undefined;
   }
 
-  private updateProgressBar(value: number): void {
-    const width = Phaser.Math.Clamp(value, 0, 1) * 258;
-    this.progressBar?.setDisplaySize(Math.max(1, width), 6);
+  private updateProgressBar(_value: number): void {
+    // 1.0.68: no startup loading bar. The intro video is the full loading surface.
+    this.progressBar = undefined;
+  }
+
+  private armMinimumIntroHold(): void {
+    const started = typeof window !== 'undefined' && typeof window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ === 'number'
+      ? window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__
+      : Date.now();
+    if (typeof window !== 'undefined') window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = started;
+    const elapsed = Date.now() - started;
+    const remaining = Math.max(0, MIN_INTRO_VIDEO_MS - elapsed);
+    this.minIntroDone = false;
+    this.minIntroTimer?.remove(false);
+    this.minIntroTimer = this.time.delayedCall(remaining, () => {
+      this.minIntroDone = true;
+      if (this.videoEl) this.tryReplayVideo(this.videoEl);
+      this.tryFinish();
+    });
   }
 
   private mountOpeningVideo(): void {
@@ -86,11 +109,16 @@ export class IntroLoadingScene extends Phaser.Scene {
     const prepared = typeof window !== 'undefined' ? window.__CARDVILLE_INTRO_VIDEO_PREPARE__?.() : undefined;
     const video = prepared ?? document.createElement('video');
     const base = import.meta.env.BASE_URL || '/';
+    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+    const expectedSrc = `${normalizedBase}assets/video/cardville_intro_loading.mp4?v=${CARDVILLE_ASSET_VERSION}`;
     if (!prepared) {
       video.id = 'cardville-intro-video';
-      video.src = `${base}assets/video/cardville_intro_loading.mp4?v=${CARDVILLE_ASSET_VERSION}`;
+      video.src = expectedSrc;
       document.body.appendChild(video);
+    } else if (!(video.getAttribute('src') ?? video.currentSrc ?? '').includes(`cardville_intro_loading.mp4?v=${CARDVILLE_ASSET_VERSION}`)) {
+      video.src = expectedSrc;
     }
+    if (typeof window !== 'undefined' && typeof window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ !== 'number') window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = Date.now();
     video.muted = true;
     video.autoplay = true;
     video.playsInline = true;
@@ -102,6 +130,8 @@ export class IntroLoadingScene extends Phaser.Scene {
     video.setAttribute('webkit-playsinline', 'true');
     video.setAttribute('controlsList', 'nodownload noplaybackrate noremoteplayback');
     video.setAttribute('data-cardville-silent-intro-video-v167', CARDVILLE_INTRO_VIDEO_RESTORE_TAG);
+    video.setAttribute('data-cardville-min-intro-ms-v168', String(MIN_INTRO_VIDEO_MS));
+    video.setAttribute('data-cardville-video-only-loading-v168', CARDVILLE_VIDEO_ONLY_LOADING_TAG);
     video.setAttribute('data-cardville-hidden-until-playing', 'false');
     video.style.position = 'fixed';
     video.style.inset = '0';
@@ -119,27 +149,29 @@ export class IntroLoadingScene extends Phaser.Scene {
     const revealVideo = () => {
       if (this.videoEl === video) video.style.opacity = '1';
     };
-    const onVideoDone = () => {
-      this.minIntroDone = true;
-      this.tryFinish();
-    };
     const keepSilentFallback = () => {
       // Do not remove the surface on mobile autoplay errors; keep the silent video layer
       // or its first frame/dark poster until asset loading completes.
       revealVideo();
-      this.minIntroDone = true;
-      this.tryFinish();
+      this.tryReplayVideo(video);
     };
     video.addEventListener('loadeddata', revealVideo, { once: true });
     video.addEventListener('canplay', revealVideo, { once: true });
     video.addEventListener('playing', revealVideo, { once: true });
     video.addEventListener('error', keepSilentFallback, { once: true });
     this.time.delayedCall(90, revealVideo);
+    this.tryReplayVideo(video);
     void video.play().then(revealVideo).catch(() => {
       try { video.load(); } catch { /* ignore */ }
       keepSilentFallback();
     });
-    onVideoDone();
+  }
+
+  private tryReplayVideo(video: HTMLVideoElement): void {
+    try {
+      video.muted = true;
+      video.play().catch(() => { /* keep the visible video surface even if playback waits for the browser */ });
+    } catch { /* ignore */ }
   }
 
   private queueImage(key: string, url: string): void {
@@ -261,6 +293,8 @@ export class IntroLoadingScene extends Phaser.Scene {
   private finish(): void {
     if (this.finished) return;
     this.finished = true;
+    this.minIntroTimer?.remove(false);
+    this.minIntroTimer = undefined;
     this.removeOpeningVideo();
     NavigationSystem.safeStart(this, this.nextScene);
   }

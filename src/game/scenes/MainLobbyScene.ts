@@ -12,13 +12,13 @@ import { LOBBY_LAYOUT_GUARDS, LOBBY_LAYOUT_PLAN_VERSION } from '../data/lobbyLay
 import { MATH_STAGES } from '../data/mathStages';
 import { MEMORY_STAGES } from '../data/memoryStages';
 import { ENGLISH_STAGES } from '../data/englishStages';
-import { applyCopyBox, applyNoticeBox, applyWrap, bodyText, darkText, goldText, mutedText, noticeText, titleText } from '../ui/TextStyles';
+import { applyCopyBox, applyNoticeBox, applyTightCopyBox, applyWrap, bodyText, darkText, goldText, mutedText, noticeText, titleText } from '../ui/TextStyles';
 import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 import { AccessibilitySystem } from '../systems/AccessibilitySystem';
 // Accessibility audit anchor retained: AccessibilitySystem.summary()
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
-const LOBBY_VERSION = '1.0.67';
+const LOBBY_VERSION = '1.0.68';
 const MISSION_TONE_COLORS = { gold: 0xffd86f, blue: 0x8fd3ff, purple: 0xd7a5ff, green: 0xa9f5b5, coral: 0xffb39a } as const;
 const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-visible-v149' as const;
 const VILLAGE_VISIBLE_BUILDING_SCALE_TAG = 'village-readable-building-scale-v150' as const;
@@ -39,6 +39,10 @@ const NPC_RELATIVE_SCALE_LOCK_TAG = 'npc-relative-scale-lock-v163' as const;
 const SILENT_INTRO_VIDEO_LOOP_TAG = 'silent-intro-video-loop-v163' as const;
 const SCALE_TWEEN_DEDUPE_TAG = 'scale-tween-dedupe-v164' as const;
 const LOBBY_COPY_COLLISION_FIX_TAG = 'lobby-copy-collision-fix-v167' as const;
+const LOBBY_RECOMMEND_COPY_FIT_TAG = 'lobby-recommend-copy-fit-v168' as const;
+const LOBBY_NAMEPLATE_LIFT_TAG = 'building-nameplate-lift-v168' as const;
+const SETTINGS_COPY_SAFE_TAG = 'settings-copy-safe-v168' as const;
+const PLAZA_TAP_ROUTE_EXPAND_TAG = 'plaza-touch-route-expand-v168' as const;
 // Legacy mobile-exit-layout audit anchor retained while actual chip copy uses micro-fit: fontSize: '11px'.
 const HERO_HOME = { x: 195, y: 566 } as const;
 const CAT_HOME = { x: 146, y: 612 } as const;
@@ -296,15 +300,16 @@ export class MainLobbyScene extends Phaser.Scene {
       ? missionStatus.nextActionTitle
       : '추천 건물을 따라가면 좋아요';
     const l = layout(this);
-    const ribbonW = Math.min(390, l.visibleWidth - Math.max(24, l.safeLeft + l.safeRight + 24));
-    const ribbonH = 42;
-    const ribbon = this.add.container(l.visibleX + l.visibleWidth / 2, l.top + 76).setDepth(938).setName(`${SCREEN_UI_STABILITY_TAG}:${MOBILE_READABLE_LAYOUT_TAG}:${LOBBY_UI_NON_OVERLAP_TAG}:${LOBBY_FULLSCREEN_SPREAD_TAG}:${LOBBY_COPY_COLLISION_FIX_TAG}`);
+    const ribbonW = Math.min(430, l.visibleWidth - Math.max(20, l.safeLeft + l.safeRight + 20));
+    const ribbonH = 50;
+    const ribbon = this.add.container(l.visibleX + l.visibleWidth / 2, l.top + 82).setDepth(938).setName(`${SCREEN_UI_STABILITY_TAG}:${MOBILE_READABLE_LAYOUT_TAG}:${LOBBY_UI_NON_OVERLAP_TAG}:${LOBBY_FULLSCREEN_SPREAD_TAG}:${LOBBY_COPY_COLLISION_FIX_TAG}:${LOBBY_RECOMMEND_COPY_FIT_TAG}`);
     ribbon.add(this.add.rectangle(0, 0, ribbonW, ribbonH, 0x07142c, 0.70).setStrokeStyle(1, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.22));
-    ribbon.add(this.add.rectangle(-ribbonW / 2 + 34, -8, 46, 18, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.88).setStrokeStyle(1, 0xffffff, 0.18));
-    ribbon.add(this.add.text(-ribbonW / 2 + 34, -8, '추천', darkText(8)).setOrigin(0.5));
-    const textX = -ribbonW / 2 + 64;
-    ribbon.add(this.add.text(textX, -9, compactText(label, 18), applyCopyBox(goldText(9), ribbonW - 76, 18, 'left')).setOrigin(0, 0.5));
-    ribbon.add(this.add.text(textX, 10, compactText(copy, 24), applyCopyBox(mutedText(8), ribbonW - 76, 18, 'left')).setOrigin(0, 0.5));
+    ribbon.add(this.add.rectangle(-ribbonW / 2 + 32, -10, 42, 17, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.88).setStrokeStyle(1, 0xffffff, 0.14));
+    ribbon.add(this.add.text(-ribbonW / 2 + 32, -10, '추천', darkText(7)).setOrigin(0.5));
+    const textX = -ribbonW / 2 + 58;
+    const textW = ribbonW - 70;
+    ribbon.add(this.add.text(textX, -11, compactText(label, 16), applyTightCopyBox(goldText(8), textW, 20, 'left')).setOrigin(0, 0.5));
+    ribbon.add(this.add.text(textX, 12, compactText(copy, 20), applyTightCopyBox(mutedText(7), textW, 22, 'left')).setOrigin(0, 0.5));
     if (allowAmbientMotion(this.quality) && missionStatus.shouldPrioritizeEvent) {
       this.tweens.add({ targets: ribbon, alpha: 0.82, duration: scaledDuration(1100, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
@@ -433,9 +438,9 @@ export class MainLobbyScene extends Phaser.Scene {
       this.drawRecommendedTrail(building);
     }
 
-    const plateY = ((building.nameplateY ?? visualHeight * 0.36) - 8) * (building.nameplateY ? scale : 1);
+    const plateY = ((building.nameplateY ?? visualHeight * 0.36) - 13) * (building.nameplateY ? scale : 1);
     if (this.textures.exists('uiNameplateGold')) {
-      container.add(this.add.image(0, plateY + 16 * scale, 'uiNameplateGold').setDisplaySize((building.nameplateWidth ?? 108) * 0.94 * scale, 36 * scale).setAlpha(building.open ? 0.96 : 0.72));
+      container.add(this.add.image(0, plateY + 16 * scale, 'uiNameplateGold').setDisplaySize((building.nameplateWidth ?? 108) * 0.90 * scale, 34 * scale).setAlpha(building.open ? 0.96 : 0.72));
     } else {
       const plate = this.add.graphics();
       plate.fillStyle(0x07142c, building.open ? 0.78 : 0.58);
@@ -444,8 +449,8 @@ export class MainLobbyScene extends Phaser.Scene {
       plate.strokeRoundedRect(-50 * scale, plateY, 100 * scale, 36 * scale, 15 * scale);
       container.add(plate);
     }
-    container.add(this.add.text(0, plateY + 7 * scale, compactText(building.title, 7), goldText(11)).setOrigin(0.5));
-    container.add(this.add.text(0, plateY + 22 * scale, compactText(building.subtitle, 8), mutedText(8)).setOrigin(0.5));
+    container.add(this.add.text(0, plateY + 6 * scale, compactText(building.title, 6), goldText(10)).setOrigin(0.5).setName(LOBBY_NAMEPLATE_LIFT_TAG));
+    container.add(this.add.text(0, plateY + 20 * scale, compactText(building.subtitle, 7), mutedText(7)).setOrigin(0.5));
     this.drawBuildingStatusChip(container, building, recommended, scale, visualWidth, visualHeight);
 
     if (!building.open) {
@@ -453,9 +458,10 @@ export class MainLobbyScene extends Phaser.Scene {
       container.setAlpha(0.76);
     }
 
-    const zoneWidth = Math.max(building.touchWidth * scale, visualWidth * 0.66);
-    const zoneHeight = Math.max(building.touchHeight * scale, visualHeight * 0.58);
+    const zoneWidth = Math.max(building.touchWidth * scale, visualWidth * (building.id === 'plaza' ? 0.92 : 0.66));
+    const zoneHeight = Math.max(building.touchHeight * scale, visualHeight * (building.id === 'plaza' ? 0.82 : 0.58));
     const zone = this.add.zone(point.x, point.y + (building.touchOffsetY ?? 0) * scale, zoneWidth, zoneHeight).setInteractive({ useHandCursor: building.open });
+    zone.setName(building.id === 'plaza' ? PLAZA_TAP_ROUTE_EXPAND_TAG : `building-touch:${building.id}`);
     zone.setDepth(point.y + 5);
     zone.on('pointerup', () => {
       this.spawnTouchRipple(point.x, point.y + 10 * scale);
@@ -565,8 +571,8 @@ export class MainLobbyScene extends Phaser.Scene {
 
     const l = layout(this);
     const panelW = Math.min(340, l.visibleWidth - Math.max(34, l.safeLeft + l.safeRight + 34));
-    const panelH = 300;
-    const panel = this.add.container(l.cx, Phaser.Math.Clamp(l.cy + 4, l.top + panelH / 2 + 10, l.bottom - panelH / 2 - 10)).setDepth(1200).setName(`settings:${LOBBY_COPY_COLLISION_FIX_TAG}`);
+    const panelH = 316;
+    const panel = this.add.container(l.cx, Phaser.Math.Clamp(l.cy + 4, l.top + panelH / 2 + 10, l.bottom - panelH / 2 - 10)).setDepth(1200).setName(`settings:${LOBBY_COPY_COLLISION_FIX_TAG}:${SETTINGS_COPY_SAFE_TAG}`);
     if (this.textures.exists('uiPanelWood')) panel.add(this.add.image(0, 0, 'uiPanelWood').setDisplaySize(panelW, panelH).setAlpha(0.97));
     else {
       const bg = this.add.graphics();
@@ -576,8 +582,8 @@ export class MainLobbyScene extends Phaser.Scene {
       bg.strokeRoundedRect(-panelW / 2, -panelH / 2, panelW, panelH, 26);
       panel.add(bg);
     }
-    panel.add(this.add.text(0, -112, '설정', titleText(20)).setOrigin(0.5));
-    panel.add(this.add.text(0, -84, '플레이 환경을 편하게 조정해요.', applyCopyBox(mutedText(10), panelW - 48, 24)).setOrigin(0.5));
+    panel.add(this.add.text(0, -120, '설정', titleText(19)).setOrigin(0.5));
+    panel.add(this.add.text(0, -94, '화면과 조작을 편하게 조정해요.', applyTightCopyBox(mutedText(8), panelW - 52, 24)).setOrigin(0.5));
     const prefs = AccessibilitySystem.getPrefs();
 
     const addToggle = (y: number, label: string, enabled: boolean, toggle: () => void) => {
@@ -596,14 +602,14 @@ export class MainLobbyScene extends Phaser.Scene {
       row.add(hit);
       panel.add(row);
     };
-    addToggle(-44, '편안한 모션', prefs.reduceMotion, () => AccessibilitySystem.toggleReduceMotion());
-    addToggle(-2, '고대비 화면', prefs.highContrast, () => AccessibilitySystem.toggleHighContrast());
-    addToggle(40, '큰 안내 문구', prefs.largeText, () => AccessibilitySystem.toggleLargeText());
-    panel.add(this.add.text(0, 82, '뒤로가기는 한 번 더 누르거나 나가기를 누르면 창 닫기를 시도합니다.', applyCopyBox(mutedText(9), panelW - 48, 36)).setOrigin(0.5));
-    const close = this.add.container(0, 124);
+    addToggle(-50, '편안한 모션', prefs.reduceMotion, () => AccessibilitySystem.toggleReduceMotion());
+    addToggle(-8, '고대비 화면', prefs.highContrast, () => AccessibilitySystem.toggleHighContrast());
+    addToggle(34, '큰 안내 문구', prefs.largeText, () => AccessibilitySystem.toggleLargeText());
+    panel.add(this.add.text(0, 78, '뒤로가기 한 번: 나가기 확인 · 한 번 더: 창 닫기 시도', applyTightCopyBox(mutedText(8), panelW - 56, 38)).setOrigin(0.5));
+    const close = this.add.container(0, 126);
     if (this.textures.exists('uiNameplateGold')) close.add(this.add.image(0, 0, 'uiNameplateGold').setDisplaySize(112, 40));
     else close.add(this.add.rectangle(0, 0, 110, 38, 0xffd86f, 0.90).setStrokeStyle(1, 0xffffff, 0.24));
-    close.add(this.add.text(0, 0, '닫기', { fontFamily: 'system-ui, sans-serif', fontSize: '14px', color: '#2a160c', fontStyle: '900' }).setOrigin(0.5));
+    close.add(this.add.text(0, 0, '닫기', { fontFamily: 'system-ui, sans-serif', fontSize: '13px', color: '#2a160c', fontStyle: '900' }).setOrigin(0.5));
     close.setSize(116, 44).setInteractive({ useHandCursor: true });
     close.on('pointerup', () => this.toggleLobbySettingsPanel());
     panel.add(close);

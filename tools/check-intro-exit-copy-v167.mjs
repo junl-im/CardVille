@@ -31,15 +31,15 @@ const walk = (dir) => {
 };
 
 const pkg = JSON.parse(read('package.json'));
-assert(pkg.version === '1.0.67', `expected package version 1.0.67, got ${pkg.version}`);
+assert(pkg.version === '1.0.68', `expected package version 1.0.68, got ${pkg.version}`);
 assert(pkg.scripts.verify.includes('check:intro-exit-copy-v167'), 'verify must include check:intro-exit-copy-v167');
 assert(pkg.scripts['check:intro-exit-copy-v167'] === 'node tools/check-intro-exit-copy-v167.mjs', 'check script mismatch');
 
 include('index.html', [
-  "window.__CARDVILLE_VERSION__ = '1.0.67'",
+  "window.__CARDVILLE_VERSION__ = '1.0.68'",
   '__CARDVILLE_INTRO_VIDEO_PREPARE__',
   '__CARDVILLE_INTRO_VIDEO_DONE__',
-  'cardville_intro_loading.mp4?v=1.0.67',
+  'cardville_intro_loading.mp4?v=1.0.68',
   'data-cardville-silent-intro-video-v167',
   'zIndex = \'2147482000\''
 ]);
@@ -63,10 +63,10 @@ exclude('src/game/scenes/IntroLoadingScene.ts', ['onVideoBlocked', 'video.remove
 
 include('src/game/scenes/MainLobbyScene.ts', [
   'lobby-copy-collision-fix-v167',
-  'applyCopyBox(goldText(9)',
+  'applyTightCopyBox(goldText(8)',
   'compactText(building.title',
   'settings:${LOBBY_COPY_COLLISION_FIX_TAG}',
-  '플레이 환경을 편하게 조정해요.'
+  '화면과 조작을 편하게 조정해요.'
 ]);
 exclude('src/game/scenes/MainLobbyScene.ts', [
   '마을 입장 준비',
@@ -91,14 +91,14 @@ include('src/game/systems/BackButtonSystem.ts', [
   'if (BackButtonSystem.overlay) {',
   'BackButtonSystem.requestExit();'
 ]);
-include('src/game/scenes/BackConfirmScene.ts', ['뒤로가기를 한 번 더 누르거나 나가기를 누르면 창 닫기를 시도합니다.']);
+include('src/game/scenes/BackConfirmScene.ts', ['뒤로가기 한 번 더 또는 나가기 버튼으로 창 닫기를 시도합니다.']);
 
-include('src/game/ui/TextStyles.ts', ['micro-text-fit-v167', 'prefs.largeText ? 1.18 : 1.06', 'prefs.largeText ? 1.00 : 0.92']);
-include('src/game/systems/RewardPopupSystem.ts', ['popup-copy-fit-v167', 'popupW, 284', 'noticeText(11)', '92']);
-include('public/build.json', ['"version": "1.0.67"', 'IntroExitCopyFit', 'intro-video-restore-v167']);
-include('public/health.html', ['version 1.0.67', 'IntroExitCopyFit']);
-include('README.md', ['# CardVille 1.0.67', '## 1.0.67 업데이트 내역', 'intro-video-restore-v167', 'kakao-inapp-close-v167']);
-include('AI_HANDOFF_CARDVILLE.md', ['현재 기준 버전은 1.0.67', 'IntroExitCopyFit', '새 docs 문서 생성 금지']);
+include('src/game/ui/TextStyles.ts', ['micro-text-fit-v167', 'prefs.largeText ? 1.14 : 1.02', 'prefs.largeText ? 0.96 : 0.88']);
+include('src/game/systems/RewardPopupSystem.ts', ['popup-copy-fit-v167', 'popupW, 304', 'noticeText(10)', '112']);
+include('public/build.json', ['"version": "1.0.68"', 'IntroVideoMinFit', 'intro-video-restore-v167']);
+include('public/health.html', ['version 1.0.68', 'IntroVideoMinFit']);
+include('README.md', ['# CardVille 1.0.68', '## 1.0.68 업데이트 내역', 'intro-min-3s-video-v168', 'double-back-exit-v168']);
+include('AI_HANDOFF_CARDVILLE.md', ['현재 기준 버전은 1.0.68', 'IntroVideoMinFit', 'MIN_INTRO_VIDEO_MS = 3000', '새 docs 문서 생성 금지']);
 
 for (const file of walk('src').filter((name) => /\.(ts|tsx|js|mjs)$/.test(name))) {
   const text = read(file);

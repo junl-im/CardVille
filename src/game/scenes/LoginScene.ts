@@ -6,7 +6,7 @@ import { DrawSystem } from '../systems/DrawSystem';
 import { AuthSystem } from '../systems/AuthSystem';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
-const LOGIN_VERSION = ''; // hidden in 1.0.67: no developer-facing version text on the first screen
+const LOGIN_VERSION = ''; // hidden in 1.0.68: no developer-facing version text on the first screen
 const LOGIN_PANEL_Y = 546;
 const LOGIN_PANEL_H = 254;
 const LOGIN_TITLE_Y = LOGIN_PANEL_Y + 28;
@@ -26,7 +26,7 @@ export class LoginScene extends Phaser.Scene {
     applyResponsiveCamera(this);
     this.drawFullscreenHero();
     this.drawStartControls();
-    // 1.0.67: no developer/version label on the player-facing start screen.
+    // 1.0.68: no developer/version label on the player-facing start screen.
     window.__CARDVILLE_BOOT_OK__?.();
   }
 
