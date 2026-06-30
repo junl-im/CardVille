@@ -7,7 +7,7 @@ const assert = (cond, msg) => { if (!cond) throw new Error(msg); };
 const exists = (file) => fs.existsSync(path.join(root, file));
 const pkg = JSON.parse(read('package.json'));
 
-assert(pkg.version === '1.0.64', `expected package version 1.0.64, got ${pkg.version}`);
+assert(pkg.version === '1.0.65', `expected package version 1.0.65, got ${pkg.version}`);
 
 const requiredSelfContainedFiles = [
   'src/main.ts',
@@ -54,15 +54,15 @@ assert(assetFiles >= 150, `public/assets looks incomplete: only ${assetFiles} fi
 assert(assetBytes > 100 * 1024 * 1024, `self-contained assets unexpectedly small: ${assetBytes} bytes`);
 
 const readme = read('README.md');
-assert(readme.includes('## 1.0.64 업데이트 내역'), 'README missing 1.0.64 update section');
+assert(readme.includes('## 1.0.65 업데이트 내역'), 'README missing 1.0.65 update section');
 assert(readme.includes('패치 ZIP 용량이 큰 이유'), 'README must explain large patch ZIP reason');
 assert(readme.includes('self-contained-patch-payload-audit-v162'), 'README missing payload audit tag');
 assert(readme.includes('notice-text-fit-v163'), 'README missing notice text fit tag');
 
 const handoff = read('AI_HANDOFF_CARDVILLE.md');
-assert(handoff.includes('현재 기준 버전은 1.0.64'), 'handoff missing current 1.0.64 version');
+assert(handoff.includes('현재 기준 버전은 1.0.65'), 'handoff missing current 1.0.65 version');
 assert(handoff.includes('패치 ZIP이 통파일과 비슷한 용량인 이유'), 'handoff must preserve patch-size reason');
-assert(handoff.includes('CardVille_v1.0.64_FlowFitUIPolish_Full.zip'), 'handoff missing final full ZIP name');
+assert(handoff.includes('CardVille_v1.0.65_FlowListInputPolish_Full.zip'), 'handoff missing final full ZIP name');
 
 const layout = read('src/game/systems/LayoutSystem.ts');
 for (const token of ['responsive-surface-spread-v163', 'responsiveSurfaceWidth', 'responsiveSurfaceBox', 'viewportCenterX']) {

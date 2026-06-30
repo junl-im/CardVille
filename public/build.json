@@ -1,12 +1,12 @@
 {
-  "name": "FlowFitUIPolish",
-  "version": "1.0.64",
+  "name": "FlowListInputPolish",
+  "version": "1.0.65",
   "mode": "flow-fit-ui-v164-silent-scene-transition-v164-scale-tween-dedupe-v164-button-lineless-surface-v164-mobile-copy-fit-v164",
   "svg": "disabled",
   "pwa": "disabled",
   "notes": "Adds silent scene transitions, softer line-free UI surfaces, safer mobile text scaling, scale tween dedupe, and intro video lifecycle cleanup.",
   "label": "Flow-fit UI polish and transition stability",
   "description": "Keeps loading and transitions text-free, reduces visible button/panel lines, clamps copy to mobile boxes, and prevents stacked scale tweens from leaving enlarged objects.",
-  "assetVersion": "1.0.64",
+  "assetVersion": "1.0.65",
   "previousRepairName": "TouchScaleNoticeFix"
 }

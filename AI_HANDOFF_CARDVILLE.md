@@ -1,4 +1,21 @@
 
+## 1.0.65 - FlowListInputPolish
+
+- 목적: 사용자가 계속 요청한 전 구간 불안정/겹침/배치/버튼 줄/알림 텍스트 밀림/입력 먹통 위험을 더 줄이는 카드 리스트/입력 복구 중심 패스입니다.
+- 현재 기준 버전은 1.0.65입니다.
+- 이번 버전은 1.0.64 FlowFitUIPolish를 기준으로, 모드 선택/스테이지 선택/상점/미션의 카드 리스트와 하단 버튼을 실제 모바일 화면 폭/safe-area에 맞게 정렬하고, 씬 재시작/전환 후 입력 복구 안전장치를 추가했습니다.
+- 핵심 태그: `list-card-fit-v165`, `action-bar-fit-v165`, `copy-box-guard-v165`, `scene-input-recovery-v165`, `restart-input-recovery-v165`, `button-input-recovery-v165`, `button-copy-guard-v165`.
+- 추가 검증: `tools/check-flow-ui-v165.mjs`, `npm run check:flow-ui-v165`.
+- 유지 규칙: SVG 없음, OPEN/LOCK 없음, 로딩중 문구 없음, fallback 카드 숨김, public/assets 포함 self-contained 패치 유지, 새 docs 문서 생성 금지.
+- 산출물 이름:
+  - `CardVille_v1.0.65_FlowListInputPolish_Full.zip`
+  - `CardVille_v1.0.65_FlowListInputPolish_Patch.zip`
+
+### 1.0.65 전역 UI 흐름/텍스트/전환 안정화 패스
+
+- 1.0.65는 1.0.64의 무문구 전환/버튼 줄 완화/텍스트 맞춤 정책을 유지하면서 카드 리스트 폭, 액션 버튼 위치, 입력 복구 안전장치를 더 강화한 후속 패스입니다.
+
+
 ## 1.0.64 - FlowFitUIPolish
 
 - 목적: 사용자가 계속 요청한 전 구간 불안정/겹침/배치/버튼 줄/알림 텍스트 밀림/로딩 문구 노출 위험을 한 단계 더 줄이는 UI 흐름 안정화 패스입니다.
@@ -11,10 +28,10 @@
 CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고, 그다음 실제 코드를 확인하세요.
 
 
-## 현재 작업 기준: 1.0.64
+## 현재 작업 기준: 1.0.65
 
-현재 기준 버전은 1.0.64입니다.  
-핵심 태그는 `flow-fit-ui-v164`, `silent-scene-transition-v164`, `scale-tween-dedupe-v164`, `button-lineless-surface-v164`, `panel-lineless-surface-v164`, `screen-frame-lineless-v164`, `mobile-copy-fit-v164`, `intro-video-lifecycle-cleanup-v164`입니다.
+현재 기준 버전은 1.0.65입니다.  
+핵심 태그는 `list-card-fit-v165`, `action-bar-fit-v165`, `copy-box-guard-v165`, `scene-input-recovery-v165`, `restart-input-recovery-v165`, `button-input-recovery-v165`, `button-copy-guard-v165`입니다.
 
 ### 1.0.64 전역 UI 흐름/텍스트/전환 안정화 패스
 

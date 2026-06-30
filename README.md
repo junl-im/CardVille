@@ -1,4 +1,16 @@
 
+## 1.0.65 - FlowListInputPolish
+
+- **카드 리스트/액션 버튼/입력 복구/긴 문구 맞춤 안정화 패스**를 진행했습니다.
+- 특정 스크린샷이 아니라 실제 모바일 `visualViewport + safe-area + Phaser gameSize` 기준을 계속 유지하면서, 모드 선택/스테이지 선택/상점/미션 화면의 카드 리스트와 하단 버튼을 더 넓은 폰에서도 중앙 빈 공간에 갇히지 않게 재배치했습니다.
+- `list-card-fit-v165`, `action-bar-fit-v165`: 카드 리스트 폭, 카드 간격, 하단 버튼 좌표를 공통 계산으로 정리했습니다.
+- `scene-input-recovery-v165`, `restart-input-recovery-v165`, `button-input-recovery-v165`: 씬 진입/재시작/버튼 예외 상황에서 입력이 꺼진 채 남지 않도록 복구 장치를 추가했습니다.
+- `copy-box-guard-v165`, `button-copy-guard-v165`: 알림/보상 팝업/버튼 라벨이 박스보다 커져 밀려나는 위험을 줄였습니다.
+- 버튼/패널의 줄처럼 보이는 stroke 알파를 한 단계 더 낮췄습니다.
+- 검증 추가: `tools/check-flow-ui-v165.mjs` / `npm run check:flow-ui-v165`.
+- SVG 없음, OPEN/LOCK 없음, 로딩중 문구 없음, fallback 카드 숨김, self-contained 패치 payload 정책은 유지합니다.
+- 최종 ZIP 명명 규칙: `CardVille_v1.0.65_FlowListInputPolish_Full.zip`, `CardVille_v1.0.65_FlowListInputPolish_Patch.zip`.
+
 ## 1.0.64 - FlowFitUIPolish
 
 - **전역 UI 흐름/텍스트/전환 안정화 패스**를 진행했습니다.
@@ -11,11 +23,19 @@
 - SVG 없음, OPEN/LOCK 없음, 로딩중 문구 없음, fallback 카드 숨김, self-contained 패치 payload 정책은 유지합니다.
 - 최종 ZIP 명명 규칙: `CardVille_v1.0.64_FlowFitUIPolish_Full.zip`, `CardVille_v1.0.64_FlowFitUIPolish_Patch.zip`.
 
-# CardVille 1.0.64
+# CardVille 1.0.65
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
 
+
+## 1.0.65 업데이트 내역
+
+- `list-card-fit-v165`: 모드 선택/스테이지 선택 카드 리스트가 실제 폰 폭과 safe-area를 더 활용합니다.
+- `action-bar-fit-v165`: 하단 액션 버튼이 노치/홈바와 겹치지 않도록 실제 하단 기준으로 재배치됩니다.
+- `scene-input-recovery-v165`, `restart-input-recovery-v165`: 씬 진입/재시작 중 입력이 꺼진 채 남는 위험을 줄입니다.
+- `copy-box-guard-v165`, `button-copy-guard-v165`: 알림/보상/버튼 문구가 박스 밖으로 밀리는 위험을 줄입니다.
+- `tools/check-flow-ui-v165.mjs`를 추가하고 `npm run verify` 앞단에 포함했습니다.
 
 ## 1.0.64 업데이트 내역
 

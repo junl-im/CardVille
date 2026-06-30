@@ -4,6 +4,8 @@ export const GAME_WIDTH = 390;
 export const GAME_HEIGHT = 844;
 export const RESPONSIVE_MOBILE_LAYOUT_TAG = 'responsive-mobile-viewport-v163' as const;
 export const RESPONSIVE_SURFACE_SPREAD_TAG = 'responsive-surface-spread-v163' as const;
+export const DYNAMIC_PHONE_FRAME_TAG = 'dynamic-phone-frame-v165' as const;
+export const SCENE_INPUT_RECOVERY_TAG = 'scene-input-recovery-v165' as const;
 
 export type SafeAreaInsets = {
   top: number;
@@ -185,6 +187,14 @@ export function distributeColumns(left: number, width: number, count: number): n
 }
 
 export function applyResponsiveCamera(scene: Phaser.Scene): void {
+  try {
+    if (scene.input) scene.input.enabled = true;
+  } catch {
+    // Input may not be ready during very early scene construction.
+  }
+  scene.events.once(Phaser.Scenes.Events.CREATE, () => {
+    try { if (scene.input) scene.input.enabled = true; } catch { /* ignore */ }
+  });
   const apply = () => {
     cachedInsets = null;
     const bounds = visibleBounds(scene);

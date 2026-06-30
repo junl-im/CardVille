@@ -1,4 +1,4 @@
-export const CARDVILLE_ART_DIRECTION_VERSION = '1.0.64' as const;
+export const CARDVILLE_ART_DIRECTION_VERSION = '1.0.65' as const;
 
 export const CARDVILLE_CORE_STYLE_KEYWORDS = [
   'Premium mobile game',

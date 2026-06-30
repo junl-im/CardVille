@@ -4,6 +4,7 @@ import { addFullBleedRect } from './LayoutSystem';
 export const CARDVILLE_NAVIGATION_GUARD_TAG = 'scene-navigation-guard-v152' as const;
 export const CARDVILLE_NAVIGATION_HARDENING_TAG = 'scene-navigation-no-freeze-v154' as const;
 export const CARDVILLE_SILENT_TRANSITION_TAG = 'silent-scene-transition-v164' as const;
+export const CARDVILLE_RESTART_INPUT_RECOVERY_TAG = 'restart-input-recovery-v165' as const;
 
 type SceneData = object | undefined;
 
@@ -92,10 +93,17 @@ export class NavigationSystem {
     state.lockedUntil = t + 360;
     state.lastTarget = `${target}:restart`;
     try {
+      if (scene.input) scene.input.enabled = true;
       scene.scene.restart(data);
+      if (typeof window !== 'undefined') {
+        window.setTimeout(() => {
+          try { if (scene.input) scene.input.enabled = true; } catch { /* ignore */ }
+        }, 160);
+      }
       return true;
     } catch (error) {
-      console.error('[CardVille] safeRestart failed', { target, reason, error, tag: CARDVILLE_NAVIGATION_HARDENING_TAG });
+      console.error('[CardVille] safeRestart failed', { target, reason, error, tag: CARDVILLE_NAVIGATION_HARDENING_TAG, recovery: CARDVILLE_RESTART_INPUT_RECOVERY_TAG });
+      try { if (scene.input) scene.input.enabled = true; } catch { /* ignore */ }
       return false;
     }
   }

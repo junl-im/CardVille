@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { NavigationSystem } from '../systems/NavigationSystem';
-import { applyResponsiveCamera } from '../systems/LayoutSystem';
+import { applyResponsiveCamera, layout } from '../systems/LayoutSystem';
 import { DrawSystem } from '../systems/DrawSystem';
 import { SaveSystem } from '../systems/SaveSystem';
 import { GameButton } from '../ui/GameButton';
@@ -8,6 +8,7 @@ import { panel } from '../ui/Panel';
 import { applyNoticeBox, applyWrap, bodyText, darkText, goldText, mutedText, noticeText, titleText } from '../ui/TextStyles';
 import { allowAmbientMotion, CardVilleQuality, getCardVilleQuality, scaledDuration } from '../systems/QualitySystem';
 import { CoachMarkSystem } from '../systems/CoachMarkSystem';
+import { actionButtonCenters, safeToastPosition } from '../systems/ScreenUISystem';
 
 type ShopOfferId = 'daily_free' | 'coin_pack' | 'gem_pack';
 
@@ -106,9 +107,12 @@ export class ShopScene extends Phaser.Scene {
 
     SHOP_OFFERS.forEach((offer, index) => this.drawOfferCard(offer, 258 + index * 112, profile, daily, offer.id === recommendedOfferId));
 
-    new GameButton(this, 112, 670, '앨범 보기', 142, 50, 0xf0c7ff).onClick(() => NavigationSystem.safeStart(this, 'CollectionScene'));
-    new GameButton(this, 278, 670, '게임관', 126, 50, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'ModeSelectScene'));
-    new GameButton(this, 195, 746, '광장으로', 248, 56, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
+    const l = layout(this);
+    const actionY = l.bottom - 140;
+    const [albumX, modeX] = actionButtonCenters(this, 2, 136, 34);
+    new GameButton(this, albumX, actionY, '앨범 보기', 136, 50, 0xf0c7ff).onClick(() => NavigationSystem.safeStart(this, 'CollectionScene'));
+    new GameButton(this, modeX, actionY, '게임관', 136, 50, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'ModeSelectScene'));
+    new GameButton(this, l.visibleX + l.visibleWidth / 2, l.bottom - 70, '광장으로', 248, 56, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
     this.showShopCoach(daily.canClaim);
   }
 
@@ -300,13 +304,14 @@ export class ShopScene extends Phaser.Scene {
   }
 
   private showShopToast(title: string, copy: string): void {
-    const toast = this.add.container(195, 622).setDepth(1000);
-    if (this.textures.exists('uiToast')) toast.add(this.add.image(0, 0, 'uiToast').setDisplaySize(310, 70).setAlpha(0.94));
-    else toast.add(this.add.rectangle(0, 0, 318, 76, 0x07142c, 0.94).setStrokeStyle(1, 0xffd86f, 0.28));
-    toast.add(this.add.text(0, -16, title, applyNoticeBox(noticeText(13), 278, 26)).setOrigin(0.5));
-    toast.add(this.add.text(0, 17, copy, applyNoticeBox(noticeText(10), 272, 34)).setOrigin(0.5));
+    const pos = safeToastPosition(this, 222);
+    const toast = this.add.container(pos.x, pos.y).setDepth(1000);
+    if (this.textures.exists('uiToast')) toast.add(this.add.image(0, 0, 'uiToast').setDisplaySize(pos.width, 70).setAlpha(0.94));
+    else toast.add(this.add.rectangle(0, 0, pos.width, 76, 0x07142c, 0.94).setStrokeStyle(1, 0xffd86f, 0.18));
+    toast.add(this.add.text(0, -16, title, applyNoticeBox(noticeText(13), pos.width - 34, 26)).setOrigin(0.5));
+    toast.add(this.add.text(0, 17, copy, applyNoticeBox(noticeText(10), pos.width - 40, 34)).setOrigin(0.5));
     toast.setScale(0.9).setAlpha(0);
     this.tweens.add({ targets: toast, scale: 1, alpha: 1, duration: 130, ease: 'Back.easeOut' });
-    this.time.delayedCall(1500, () => this.tweens.add({ targets: toast, y: 600, alpha: 0, duration: 220, onComplete: () => toast.destroy() }));
+    this.time.delayedCall(1500, () => this.tweens.add({ targets: toast, y: pos.y - 22, alpha: 0, duration: 220, onComplete: () => toast.destroy() }));
   }
 }

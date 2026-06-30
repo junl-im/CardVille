@@ -4,7 +4,7 @@ import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
 import { DrawSystem } from '../systems/DrawSystem';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
-import { applyResponsiveCamera, hasTouchDebug } from '../systems/LayoutSystem';
+import { applyResponsiveCamera, hasTouchDebug, layout } from '../systems/LayoutSystem';
 import { GAME_MODES, GameMode, GameModeId, getModeById } from '../data/modeCatalog';
 import { MATH_STAGES } from '../data/mathStages';
 import { MEMORY_STAGES } from '../data/memoryStages';
@@ -12,6 +12,7 @@ import { WORD_STAGES } from '../data/wordStages';
 import { ENGLISH_STAGES } from '../data/englishStages';
 import { SaveSystem } from '../systems/SaveSystem';
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
+import { mobileCardLane, safeToastPosition, stackedListMetrics, CARDVILLE_LIST_CARD_FIT_TAG } from '../systems/ScreenUISystem';
 
 export const MODES = GAME_MODES;
 
@@ -32,43 +33,50 @@ export class ModeSelectScene extends Phaser.Scene {
     DrawSystem.background(this, this.title);
     this.drawHeader(focus);
 
-    GAME_MODES.forEach((mode, i) => this.drawModeCard(mode, 188 + i * 104, mode.id === focus?.id));
+    const list = stackedListMetrics(this, GAME_MODES.length, { top: 178, bottom: layout(this).bottom - 118, itemHeight: 86, preferredWidth: 344 });
+    GAME_MODES.forEach((mode, i) => this.drawModeCard(mode, list.yFor(i), mode.id === focus?.id));
 
-    new GameButton(this, 195, 746, '광장으로', 248, 56, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
+    const l = layout(this);
+    new GameButton(this, l.visibleX + l.visibleWidth / 2, l.bottom - 72, '광장으로', 248, 56, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
   }
 
   private drawHeader(focus?: GameMode): void {
-    this.add.text(195, 84, focus ? focus.title : '카드마을 게임관', goldText(22)).setOrigin(0.5);
+    const lane = mobileCardLane(this, 344);
+    this.add.text(lane.centerX, 84, focus ? focus.title : '카드마을 게임관', goldText(22)).setOrigin(0.5);
     const copy = focus
       ? `${focus.note} · ${focus.status === 'open' ? '바로 입장 가능' : '다음 작업: ' + focus.nextWork}`
       : '건물별 콘텐츠를 한 곳에서 확인하고, 열린 모드부터 안정적으로 확장합니다.';
-    this.add.text(195, 118, copy, applyWrap(mutedText(12), 322)).setOrigin(0.5);
-    this.add.text(195, 146, '열린 모드: 도서관 · 학교 · 연구소 · 기억의 숲 · 오늘의 미션', mutedText(10)).setOrigin(0.5);
+    this.add.text(lane.centerX, 118, copy, applyWrap(mutedText(12), Math.min(344, lane.width - 18))).setOrigin(0.5);
+    this.add.text(lane.centerX, 146, '열린 모드: 도서관 · 학교 · 연구소 · 기억의 숲 · 오늘의 미션', mutedText(10)).setOrigin(0.5);
   }
 
   private drawModeCard(mode: GameMode, y: number, focused: boolean): void {
-    panel(this, 195, y, 334, 86, 24);
+    const lane = mobileCardLane(this, 344);
+    panel(this, lane.centerX, y, lane.width - 8, 86, 24);
     if (focused) {
-      this.add.rectangle(195, y, 342, 94, 0xffd86f, 0.10).setStrokeStyle(2, 0xffd86f, 0.64);
-      this.add.text(304, y - 28, '추천', goldText(10)).setOrigin(0.5);
+      this.add.rectangle(lane.centerX, y, lane.width, 94, 0xffd86f, 0.09).setStrokeStyle(1, 0xffd86f, 0.42);
+      this.add.text(lane.right - 36, y - 28, '추천', goldText(10)).setOrigin(0.5);
     }
     const open = mode.status === 'open';
+    const iconX = lane.left + 52;
+    const textX = lane.left + 98;
+    const badgeX = lane.right - 38;
     const illustrationKey = this.modeIllustrationKey(mode.id);
-    if (illustrationKey && this.textures.exists(illustrationKey)) this.add.image(70, y + 2, illustrationKey).setDisplaySize(72, 52).setAlpha(open ? 0.30 : 0.14).setName('mode-illustration-v151');
-    if (this.textures.exists(mode.iconKey)) this.add.image(68, y, mode.iconKey).setDisplaySize(44, 44).setAlpha(open ? 1 : 0.58);
-    else this.add.text(68, y, mode.fallbackIcon, { fontSize: '34px' }).setOrigin(0.5).setAlpha(open ? 1 : 0.58);
-    this.add.text(114, y - 17, mode.title, bodyText(20)).setOrigin(0, 0.5).setAlpha(open ? 1 : 0.62);
-    this.add.text(114, y + 15, mode.note, applyWrap(mutedText(10), 212, 'left')).setOrigin(0, 0.5).setAlpha(open ? 1 : 0.62);
+    if (illustrationKey && this.textures.exists(illustrationKey)) this.add.image(iconX + 2, y + 2, illustrationKey).setDisplaySize(72, 52).setAlpha(open ? 0.30 : 0.14).setName(`mode-illustration-v151:${CARDVILLE_LIST_CARD_FIT_TAG}`);
+    if (this.textures.exists(mode.iconKey)) this.add.image(iconX, y, mode.iconKey).setDisplaySize(44, 44).setAlpha(open ? 1 : 0.58);
+    else this.add.text(iconX, y, mode.fallbackIcon, { fontSize: '34px' }).setOrigin(0.5).setAlpha(open ? 1 : 0.58);
+    this.add.text(textX, y - 17, mode.title, bodyText(20)).setOrigin(0, 0.5).setAlpha(open ? 1 : 0.62);
+    this.add.text(textX, y + 15, mode.note, applyWrap(mutedText(10), Math.max(176, lane.width - 136), 'left')).setOrigin(0, 0.5).setAlpha(open ? 1 : 0.62);
     const summary = this.modeProgressSummary(mode);
-    this.add.text(305, y + 25, open ? summary.badge : '준비중', open ? goldText(10) : mutedText(10)).setOrigin(0.5);
-    this.add.text(114, y + 34, open ? summary.copy : mode.nextWork, applyWrap(mutedText(9), 170, 'left')).setOrigin(0, 0.5).setAlpha(open ? 0.88 : 0.52);
+    this.add.text(badgeX, y + 25, open ? summary.badge : '준비중', open ? goldText(10) : mutedText(10)).setOrigin(0.5);
+    this.add.text(textX, y + 34, open ? summary.copy : mode.nextWork, applyWrap(mutedText(9), Math.max(150, lane.width - 174), 'left')).setOrigin(0, 0.5).setAlpha(open ? 0.88 : 0.52);
 
-    const zone = this.add.zone(195, y, 334, 86).setInteractive({ useHandCursor: true });
+    const zone = this.add.zone(lane.centerX, y, lane.width - 8, 86).setInteractive({ useHandCursor: true });
     zone.on('pointerup', () => {
       if (open) this.startMode(mode);
       else this.showPlannedToast(mode);
     });
-    if (hasTouchDebug()) this.add.rectangle(195, y, 334, 86, 0x00ff66, 0.09).setStrokeStyle(1, 0x00ff66, 0.7);
+    if (hasTouchDebug()) this.add.rectangle(lane.centerX, y, lane.width - 8, 86, 0x00ff66, 0.09).setStrokeStyle(1, 0x00ff66, 0.7);
   }
 
   private modeIllustrationKey(modeId: GameModeId): string {
@@ -126,13 +134,14 @@ export class ModeSelectScene extends Phaser.Scene {
   }
 
   private showPlannedToast(mode: GameMode): void {
-    const toast = this.add.container(195, 642).setDepth(1000);
-    if (this.textures.exists('uiToast')) toast.add(this.add.image(0, 0, 'uiToast').setDisplaySize(300, 70).setAlpha(0.94));
-    else toast.add(this.add.rectangle(0, 0, 300, 70, 0x07142c, 0.94).setStrokeStyle(2, 0xffd86f, 0.52));
+    const pos = safeToastPosition(this, 202);
+    const toast = this.add.container(pos.x, pos.y).setDepth(1000);
+    if (this.textures.exists('uiToast')) toast.add(this.add.image(0, 0, 'uiToast').setDisplaySize(pos.width, 70).setAlpha(0.94));
+    else toast.add(this.add.rectangle(0, 0, pos.width, 70, 0x07142c, 0.94).setStrokeStyle(1, 0xffd86f, 0.20));
     toast.add(this.add.text(0, -13, `${mode.title} 준비중`, titleText(16)).setOrigin(0.5));
-    toast.add(this.add.text(0, 15, mode.nextWork, applyWrap(mutedText(11), 250)).setOrigin(0.5));
+    toast.add(this.add.text(0, 15, mode.nextWork, applyWrap(mutedText(11), pos.width - 52)).setOrigin(0.5));
     toast.setScale(0.9).setAlpha(0);
     this.tweens.add({ targets: toast, scale: 1, alpha: 1, duration: 120, ease: 'Back.easeOut' });
-    this.time.delayedCall(1800, () => this.tweens.add({ targets: toast, y: 620, alpha: 0, duration: 220, onComplete: () => toast.destroy() }));
+    this.time.delayedCall(1800, () => this.tweens.add({ targets: toast, y: pos.y - 22, alpha: 0, duration: 220, onComplete: () => toast.destroy() }));
   }
 }

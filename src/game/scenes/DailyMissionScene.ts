@@ -3,8 +3,8 @@ import { NavigationSystem } from '../systems/NavigationSystem';
 import { DrawSystem } from '../systems/DrawSystem';
 import { DailyMissionEntry, DailyMissionId, DailyMissionSystem } from '../systems/DailyMissionSystem';
 import { SaveSystem } from '../systems/SaveSystem';
-import { applyResponsiveCamera } from '../systems/LayoutSystem';
-import { assertNoVerticalOverlap, CARDVILLE_SCREEN_UI_REDESIGN_TAG } from '../systems/ScreenUISystem';
+import { applyResponsiveCamera, layout } from '../systems/LayoutSystem';
+import { actionButtonCenters, assertNoVerticalOverlap, CARDVILLE_SCREEN_UI_REDESIGN_TAG, safeToastPosition } from '../systems/ScreenUISystem';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
 import { applyNoticeBox, applyWrap, bodyText, darkText, goldText, mutedText, noticeText, titleText } from '../ui/TextStyles';
@@ -47,9 +47,12 @@ export class DailyMissionScene extends Phaser.Scene {
     board.missions.forEach((mission, index) => this.drawMissionRow(mission, 336 + index * 52));
     this.drawCompletionBonus(board.dailyCompletionReady, board.dailyCompletionClaimed, board.dailyCompletionRewardText);
 
-    new GameButton(this, 108, 706, '게임 선택', 132, 50, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'ModeSelectScene'));
-    new GameButton(this, 282, 706, '상점', 132, 50, 0xffd86f).onClick(() => NavigationSystem.safeStart(this, 'ShopScene'));
-    new GameButton(this, 195, 772, '광장으로', 236, 52, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
+    const l = layout(this);
+    const actionY = l.bottom - 138;
+    const [modeX, shopX] = actionButtonCenters(this, 2, 132, 34);
+    new GameButton(this, modeX, actionY, '게임 선택', 132, 50, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'ModeSelectScene'));
+    new GameButton(this, shopX, actionY, '상점', 132, 50, 0xffd86f).onClick(() => NavigationSystem.safeStart(this, 'ShopScene'));
+    new GameButton(this, l.visibleX + l.visibleWidth / 2, l.bottom - 70, '광장으로', 236, 52, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
     this.add.text(18, 836, CARDVILLE_SCREEN_UI_REDESIGN_TAG, mutedText(6)).setAlpha(0.01);
     assertNoVerticalOverlap(this, 'DailyMissionScene', [['top', 68, 126], ['progress', 136, 318], ['missions', 310, 604], ['bonus', 604, 656], ['actions', 676, 804]]);
     if (message) this.showToast(message);
@@ -152,13 +155,14 @@ export class DailyMissionScene extends Phaser.Scene {
 
   private showToast(message: string): void {
     this.toast?.destroy();
-    const toast = this.add.container(195, 640).setDepth(2000);
-    toast.add(this.add.rectangle(0, 0, 318, 62, 0x07142c, 0.94).setStrokeStyle(1, 0xffd86f, 0.28));
-    toast.add(this.add.text(0, 0, message, applyNoticeBox(noticeText(11), 286, 44)).setOrigin(0.5));
+    const pos = safeToastPosition(this, 204);
+    const toast = this.add.container(pos.x, pos.y).setDepth(2000);
+    toast.add(this.add.rectangle(0, 0, pos.width, 62, 0x07142c, 0.94).setStrokeStyle(1, 0xffd86f, 0.18));
+    toast.add(this.add.text(0, 0, message, applyNoticeBox(noticeText(11), pos.width - 32, 44)).setOrigin(0.5));
     toast.setAlpha(0).setScale(0.96);
     this.toast = toast;
     this.tweens.add({ targets: toast, alpha: 1, scale: 1, duration: 120, ease: 'Back.easeOut' });
-    this.time.delayedCall(1400, () => this.tweens.add({ targets: toast, alpha: 0, y: 624, duration: 220, onComplete: () => toast.destroy() }));
+    this.time.delayedCall(1400, () => this.tweens.add({ targets: toast, alpha: 0, y: pos.y - 16, duration: 220, onComplete: () => toast.destroy() }));
   }
 
   private showMissionCoach(hasReadyReward: boolean): void {

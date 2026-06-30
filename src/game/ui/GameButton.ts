@@ -26,6 +26,8 @@ export const CARDVILLE_BUTTON_UX_AUDIT_TAG = 'screen-wide-premium-button-v158' a
 export const CARDVILLE_TOUCH_TARGET_TAG = 'mobile-touch-target-v158' as const;
 export const CARDVILLE_BUTTON_SEAM_FIX_TAG = 'button-seamless-touch-v163' as const;
 export const CARDVILLE_BUTTON_LINELESS_TAG = 'button-lineless-surface-v164' as const;
+export const CARDVILLE_BUTTON_COPY_GUARD_TAG = 'button-copy-guard-v165' as const;
+export const CARDVILLE_BUTTON_INPUT_RECOVERY_TAG = 'button-input-recovery-v165' as const;
 
 type ButtonPalette = { top: number; bottom: number; stroke: number; glow: number; text: string };
 
@@ -92,8 +94,9 @@ export class GameButton extends Phaser.GameObjects.Container {
 
     this.hitZone.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
       if (this.disabled) return;
+      this.scene.tweens.killTweensOf(this);
       this.pressedInside = true;
-      this.setScale(0.982);
+      this.setScale(0.988);
       this.draw(true);
       this.emit('buttondown', pointer);
     });
@@ -144,6 +147,8 @@ export class GameButton extends Phaser.GameObjects.Container {
 
   setDisabled(value: boolean): this {
     this.disabled = value;
+    this.pressedInside = false;
+    this.resetVisual();
     this.alpha = value ? 0.82 : 1;
     this.hitZone.disableInteractive();
     if (!value) this.hitZone.setInteractive({ useHandCursor: true });
@@ -160,6 +165,7 @@ export class GameButton extends Phaser.GameObjects.Container {
   }
 
   private resetVisual(): void {
+    this.scene.tweens.killTweensOf(this);
     this.setScale(1);
     this.draw(false);
   }
@@ -177,7 +183,7 @@ export class GameButton extends Phaser.GameObjects.Container {
       this.skinImage.setDisplaySize(width + 16, height + 16);
       this.skinImage.setAlpha(pressed ? 0.96 : 1);
       if (this.shineEnabled) {
-        this.bg.lineStyle(1, 0xffffff, pressed ? 0.02 : 0.035);
+        this.bg.lineStyle(1, 0xffffff, pressed ? 0.012 : 0.018);
         this.bg.strokeRoundedRect(-width / 2 + 5, -height / 2 + 5, width - 10, height - 10, 18);
       }
       return;
@@ -190,10 +196,10 @@ export class GameButton extends Phaser.GameObjects.Container {
     this.bg.fillRoundedRect(-width / 2 - 3, -height / 2 + yOffset - 2, width + 6, height + 6, radius + 3);
     this.bg.fillGradientStyle(palette.top, palette.top, palette.bottom, palette.bottom, this.disabled ? 0.58 : 1, this.disabled ? 0.58 : 1, this.disabled ? 0.66 : 1, this.disabled ? 0.66 : 1);
     this.bg.fillRoundedRect(-width / 2, -height / 2 + yOffset, width, height, radius);
-    this.bg.lineStyle(1, palette.stroke, pressed ? 0.12 : 0.18);
+    this.bg.lineStyle(1, palette.stroke, pressed ? 0.055 : 0.075);
     this.bg.strokeRoundedRect(-width / 2, -height / 2 + yOffset, width, height, radius);
     if (this.shineEnabled) {
-      this.bg.fillStyle(0xffffff, this.disabled ? 0.02 : pressed ? 0.02 : 0.035);
+      this.bg.fillStyle(0xffffff, this.disabled ? 0.01 : pressed ? 0.012 : 0.018);
       this.bg.fillRoundedRect(-width / 2 + 22, -height / 2 + 9 + yOffset, width - 44, Math.max(4, height * 0.08), 8);
     }
   }

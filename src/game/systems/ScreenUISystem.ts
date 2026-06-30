@@ -80,3 +80,57 @@ export function assertNoVerticalOverlap(scene: Phaser.Scene, label: string, rang
     }
   }
 }
+export const CARDVILLE_LIST_CARD_FIT_TAG = 'list-card-fit-v165' as const;
+export const CARDVILLE_ACTION_BAR_FIT_TAG = 'action-bar-fit-v165' as const;
+export const CARDVILLE_COPY_BOX_GUARD_TAG = 'copy-box-guard-v165' as const;
+
+export type MobileCardLane = {
+  centerX: number;
+  left: number;
+  right: number;
+  width: number;
+};
+
+export type StackedListMetrics = MobileCardLane & {
+  top: number;
+  bottom: number;
+  itemHeight: number;
+  gap: number;
+  yFor: (index: number) => number;
+};
+
+export function mobileCardLane(scene: Phaser.Scene, preferredWidth = 334, margin = 18, maxExtra = 166): MobileCardLane {
+  const l = layout(scene);
+  const width = Math.min(responsiveSurfaceWidth(scene, preferredWidth, margin, maxExtra), l.visibleWidth - Math.max(24, l.safeLeft + l.safeRight + margin * 2));
+  const centerX = l.visibleX + l.visibleWidth / 2;
+  return { centerX, width, left: centerX - width / 2, right: centerX + width / 2 };
+}
+
+export function stackedListMetrics(scene: Phaser.Scene, count: number, options: { top?: number; bottom?: number; itemHeight?: number; minGap?: number; preferredWidth?: number } = {}): StackedListMetrics {
+  const l = layout(scene);
+  const lane = mobileCardLane(scene, options.preferredWidth ?? 334);
+  const top = Math.max(options.top ?? 190, l.top + 130);
+  const bottom = Math.min(options.bottom ?? l.bottom - 126, l.bottom - 104);
+  const itemHeight = options.itemHeight ?? 88;
+  const usable = Math.max(itemHeight * Math.max(1, count), bottom - top);
+  const rawGap = count > 1 ? (usable - itemHeight * count) / (count - 1) : 0;
+  const gap = Math.max(options.minGap ?? 10, Math.min(28, rawGap));
+  const total = itemHeight * count + gap * Math.max(0, count - 1);
+  const start = top + Math.max(0, (bottom - top - total) / 2) + itemHeight / 2;
+  return { ...lane, top, bottom, itemHeight, gap, yFor: (index: number) => start + index * (itemHeight + gap) };
+}
+
+export function actionButtonCenters(scene: Phaser.Scene, count: number, buttonWidth: number, gap = 18): number[] {
+  const lane = mobileCardLane(scene, 338, 18, 192);
+  const availableGap = count > 1 ? Math.max(10, Math.min(gap, (lane.width - buttonWidth * count) / (count - 1))) : 0;
+  const total = buttonWidth * count + availableGap * Math.max(0, count - 1);
+  const start = lane.centerX - total / 2 + buttonWidth / 2;
+  return Array.from({ length: count }, (_, index) => start + index * (buttonWidth + availableGap));
+}
+
+export function safeToastPosition(scene: Phaser.Scene, offsetFromBottom = 204): { x: number; y: number; width: number } {
+  const l = layout(scene);
+  const lane = mobileCardLane(scene, 322, 20, 152);
+  return { x: lane.centerX, y: Math.min(l.bottom - 92, l.visibleY + l.visibleHeight - offsetFromBottom), width: lane.width };
+}
+

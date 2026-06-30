@@ -5,6 +5,7 @@ const RESOLUTION = Math.min(typeof window !== 'undefined' ? window.devicePixelRa
 export const CARDVILLE_MOBILE_TEXT_TAG = 'mobile-readable-text-v158' as const;
 export const CARDVILLE_NOTICE_TEXT_FIT_TAG = 'notice-text-fit-v163' as const;
 export const CARDVILLE_COPY_FIT_TAG = 'mobile-copy-fit-v164' as const;
+export const CARDVILLE_COPY_BOX_GUARD_TAG = 'copy-box-guard-v165' as const;
 // Compatibility audit anchors retained for older checks: mobile-readable-text-v157, mobile-readable-text-v156, return prefs.largeText ? 1.40 : 1.20, return prefs.largeText ? 1.34 : 1.17, size <= 9 ? 12, size <= 11 ? 14.
 export const CARDVILLE_PREVIOUS_MOBILE_TEXT_TAG = 'mobile-readable-text-v156' as const;
 
@@ -166,5 +167,30 @@ export function applyNoticeBox(style: TextStyle, width: number, height: number, 
     fixedWidth: width,
     fixedHeight: height,
     maxLines: Math.max(1, Math.floor(height / Math.max(12, Number.parseInt(String(style.fontSize ?? '12'), 10) + 3)))
+  };
+}
+
+
+export function applyCopyBox(style: TextStyle, width: number, height: number, align: 'left' | 'center' | 'right' = 'center'): TextStyle {
+  const parsedSize = Number.parseInt(String(style.fontSize ?? '14'), 10);
+  const lineHeight = Math.max(14, parsedSize + 5);
+  return {
+    ...style,
+    align,
+    wordWrap: { width, useAdvancedWrap: true },
+    fixedWidth: width,
+    fixedHeight: height,
+    maxLines: Math.max(1, Math.floor(height / lineHeight)),
+    lineSpacing: Math.min(Number(style.lineSpacing ?? 2), 3)
+  };
+}
+
+export function fitOneLine(style: TextStyle, width: number, align: 'left' | 'center' | 'right' = 'center'): TextStyle {
+  return {
+    ...style,
+    align,
+    fixedWidth: width,
+    fixedHeight: Math.max(18, Number.parseInt(String(style.fontSize ?? '14'), 10) + 8),
+    maxLines: 1
   };
 }
