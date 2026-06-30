@@ -1,8 +1,21 @@
-# CardVille 1.0.61
+# CardVille 1.0.62
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
 
+
+
+## 1.0.62 업데이트 내역
+
+- **반응형 표면 확장 + 패치 용량 감사 패스**를 진행했습니다.
+- 패치 ZIP 용량이 큰 이유를 코드/문서/검증에 명확히 기록했습니다. 현재 패치 ZIP은 단순 소스 diff가 아니라, 덮어쓰기만 해도 안정 실행되는 self-contained 패치라 `public/assets` 전체를 포함합니다. 그래서 통파일과 용량이 비슷한 것은 현재 패키징 규칙상 정상입니다.
+- `self-contained-patch-payload-audit-v162` 검증을 추가해 패치에 반드시 포함되어야 하는 건물/NPC/배경/소스/문서가 빠지지 않는지 확인합니다.
+- `responsive-surface-spread-v162` 공통 UI 확장을 추가했습니다. 중앙 패널, 읽기 패널, 주요 버튼이 실제 폰 viewport의 남는 좌우 폭을 자동으로 더 사용합니다.
+- 로비뿐 아니라 모드 선택, 스테이지 선택, 보상, 상점, 미션, 학습/게임 화면에서 사용하는 공통 `panel()`, `drawReadablePanel()`, `GameButton` 표면이 넓은 폰에서 덜 답답하게 보이도록 개선했습니다.
+- `mobileSceneFrame()`의 safe-area 기준을 보강해 노치/홈바가 있는 기기에서 제목/하단 버튼 기준선을 더 안전하게 잡습니다.
+- SVG 없음, OPEN/LOCK 없음, 로딩중 문구 없음, fallback 카드 숨김, 오프닝 영상 유지, 실제 건물/NPC PNG 로드 게이트는 계속 유지합니다.
+- 신규 문서 파일은 만들지 않았습니다. 기록은 `README.md`, `AI_HANDOFF_CARDVILLE.md`에만 남겼습니다.
+- 최종 ZIP 명명 규칙: `CardVille_v1.0.62_SurfacePayload_Full.zip`, `CardVille_v1.0.62_SurfacePayload_Patch.zip`.
 
 
 ## 1.0.61 업데이트 내역

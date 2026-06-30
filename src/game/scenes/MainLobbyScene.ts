@@ -17,7 +17,7 @@ import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 import { AccessibilitySystem } from '../systems/AccessibilitySystem';
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
-const LOBBY_VERSION = '1.0.61';
+const LOBBY_VERSION = '1.0.62';
 const MISSION_TONE_COLORS = { gold: 0xffd86f, blue: 0x8fd3ff, purple: 0xd7a5ff, green: 0xa9f5b5, coral: 0xffb39a } as const;
 const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-visible-v149' as const;
 const VILLAGE_VISIBLE_BUILDING_SCALE_TAG = 'village-readable-building-scale-v150' as const;
@@ -33,7 +33,7 @@ const LOBBY_SCREENSHOT_REPAIR_TAG = 'lobby-screenshot-repair-v159' as const;
 const LOBBY_NO_PATCH_TEXT_TAG = 'lobby-no-bottom-patch-text-v159' as const;
 const LOBBY_FULLSCREEN_SPREAD_TAG = 'lobby-fullscreen-spread-v160' as const;
 const LOBBY_INPUT_RESET_TAG = 'lobby-input-reset-v160' as const;
-const RESPONSIVE_MOBILE_VIEWPORT_TAG = 'responsive-mobile-viewport-v161' as const;
+const RESPONSIVE_MOBILE_VIEWPORT_TAG = 'responsive-mobile-viewport-v162' as const;
 const HERO_HOME = { x: 195, y: 566 } as const;
 const CAT_HOME = { x: 146, y: 612 } as const;
 

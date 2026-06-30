@@ -8,9 +8,12 @@ const include = (file, token) => assert(read(file).includes(token), `${file} mis
 const exclude = (file, token) => assert(!read(file).includes(token), `${file} must not include token: ${token}`);
 
 const pkg = JSON.parse(read('package.json'));
-assert(pkg.version === '1.0.61', `expected package version 1.0.61, got ${pkg.version}`);
+assert(pkg.version === '1.0.62', `expected package version 1.0.62, got ${pkg.version}`);
 
 include('src/game/systems/LayoutSystem.ts', 'RESPONSIVE_MOBILE_LAYOUT_TAG');
+include('src/game/systems/LayoutSystem.ts', 'RESPONSIVE_SURFACE_SPREAD_TAG');
+include('src/game/systems/LayoutSystem.ts', 'responsiveSurfaceWidth');
+include('src/game/systems/LayoutSystem.ts', 'responsiveSurfaceBox');
 include('src/game/systems/LayoutSystem.ts', 'visualViewport');
 include('src/game/systems/LayoutSystem.ts', 'safe-area-inset-top');
 include('src/game/systems/LayoutSystem.ts', 'safe-area-inset-bottom');
@@ -36,17 +39,18 @@ include('src/game/scenes/MainLobbyScene.ts', 'target.y');
 include('src/game/systems/DrawSystem.ts', 'l.safeLeft');
 include('src/game/systems/DrawSystem.ts', 'l.safeRight');
 include('src/game/systems/DrawSystem.ts', 'titleW = Math.min(430');
-include('src/main.ts', '1.0.61 responsive mobile viewport');
-include('index.html', "window.__CARDVILLE_VERSION__ = '1.0.61'");
+include('src/main.ts', '1.0.62 responsive surface/payload audit');
+include('index.html', "window.__CARDVILLE_VERSION__ = '1.0.62'");
 include('index.html', 'no generic loading copy on boot');
 exclude('index.html', '시작 화면 준비가 지연돼요');
 include('public/build.json', 'ResponsiveMobileViewportRepair');
-include('public/build.json', '1.0.61');
-include('README.md', '## 1.0.61 업데이트 내역');
-include('README.md', 'responsive-mobile-viewport-v161');
-include('AI_HANDOFF_CARDVILLE.md', '현재 기준 버전은 1.0.61');
+include('public/build.json', '1.0.62');
+include('README.md', '## 1.0.62 업데이트 내역');
+include('README.md', 'responsive-surface-spread-v162');
+include('AI_HANDOFF_CARDVILLE.md', '현재 기준 버전은 1.0.62');
 include('AI_HANDOFF_CARDVILLE.md', '스크린샷만 기준');
-include('AI_HANDOFF_CARDVILLE.md', 'CardVille_v1.0.61_ResponsiveMobile_Full.zip');
+include('AI_HANDOFF_CARDVILLE.md', '패치 ZIP이 통파일과 비슷한 용량인 이유');
+include('AI_HANDOFF_CARDVILLE.md', 'CardVille_v1.0.62_SurfacePayload_Full.zip');
 
 const svgFiles = [];
 const walk = (dir) => {

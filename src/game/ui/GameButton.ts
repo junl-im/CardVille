@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { darkText } from './TextStyles';
-import { compactText, fitTextSize } from '../systems/LayoutSystem';
+import { GAME_WIDTH, compactText, fitTextSize, responsiveSurfaceWidth, RESPONSIVE_SURFACE_SPREAD_TAG } from '../systems/LayoutSystem';
 
 export type ButtonAction = () => unknown | Promise<unknown>;
 
@@ -58,6 +58,10 @@ export class GameButton extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene, x: number, y: number, text: string, width = 280, height = 58, color = 0x8fd3ff, options: GameButtonOptions = {}) {
     super(scene, x, y);
     scene.add.existing(this);
+    if (Math.abs(x - GAME_WIDTH / 2) <= 1 && width >= 220) {
+      width = responsiveSurfaceWidth(scene, width, 32, 104);
+      this.setName(RESPONSIVE_SURFACE_SPREAD_TAG);
+    }
     this.widthValue = width;
     this.heightValue = height;
     this.colorValue = color;

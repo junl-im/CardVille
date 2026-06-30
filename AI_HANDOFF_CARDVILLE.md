@@ -4,12 +4,53 @@
 CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고, 그다음 실제 코드를 확인하세요.
 
 
-## 현재 작업 기준: 1.0.61
+## 현재 작업 기준: 1.0.62
 
-현재 기준 버전은 1.0.61입니다.  
-이번 버전은 1.0.59 LobbyImageGateVillageRepair를 기준으로, 오프닝 영상 유지, 로비 복귀 후 입력 먹통, 건물 위 OPEN/LOCK 텍스트, fallback 카드 노출 위험, 좌우 여백 낭비를 함께 보정한 폴리시/안정화 패스입니다. `intro-video-holds-until-assets-v160`, `lobby-input-reset-v160`, `lobby-fullscreen-spread-v160`, `lobby-edge-to-edge-spread-v160`, `lobby-edge-npc-spread-v160`가 핵심 기준입니다.
+현재 기준 버전은 1.0.62입니다.  
+이번 버전은 1.0.61 ResponsiveMobile을 기준으로, 패치 ZIP 용량이 커지는 이유를 self-contained 패치 정책으로 명확히 기록하고, 모든 화면의 중앙 패널/읽기 패널/주요 버튼이 실제 폰 viewport의 남는 좌우 폭을 더 쓰도록 공통 UI 표면을 확장한 패스입니다. `responsive-surface-spread-v162`, `self-contained-patch-payload-audit-v162`, `responsive-mobile-viewport-v162`가 핵심 기준입니다.
 
 
+
+
+### 1.0.62 실제 모바일 반응형 viewport / 패치 표면 완전성 / 용량 감사 패스
+
+- 작업명: `ResponsiveSurfacePayloadAudit`
+- 핵심 이유:
+  - 사용자가 “패치 파일 용량이 점점 커지는 게 맞는지” 질문했다.
+  - 현재 패치 ZIP은 작은 diff 패치가 아니라, 끊김/덮어쓰기/누락에 강한 self-contained 안정형 패치다.
+  - 따라서 `public/assets` 전체를 포함하며, 통파일과 패치 ZIP 용량이 비슷한 것은 현재 규칙상 정상이다.
+- 패치 ZIP이 통파일과 비슷한 용량인 이유:
+  - 건물/NPC/배경 PNG가 누락되면 다시 fallback 마을처럼 보일 수 있다.
+  - 그래서 패치 ZIP에도 `public/assets/diorama/*.png`, `public/assets/characters/*.png`, `public/assets/backgrounds/*.png` 등 런타임 필수 에셋을 포함한다.
+  - `node_modules`, `dist`, `package-lock.json`은 여전히 제외한다.
+  - 향후 사용자가 명확히 원하면 별도의 초소형 delta 패치 정책을 만들 수 있지만, 현재 기본 산출물은 안전한 self-contained 패치다.
+- 코드 반영:
+  - `src/game/systems/LayoutSystem.ts`
+    - `responsive-mobile-viewport-v162`
+    - `responsive-surface-spread-v162`
+    - `viewportCenterX`, `viewportCenterY`, `responsiveSurfaceWidth`, `responsiveSurfaceBox` 추가
+  - `src/game/ui/Panel.ts`
+    - 중앙 패널이 실제 넓은 폰에서 자동으로 더 넓어짐
+  - `src/game/ui/GameButton.ts`
+    - 중앙 주요 버튼이 실제 넓은 폰에서 자동으로 더 넓어짐
+  - `src/game/systems/ScreenUISystem.ts`
+    - `CARDVILLE_RESPONSIVE_SURFACE_TAG`
+    - `mobileSceneFrame()` safe-area 기준 보강
+    - `drawReadablePanel()`도 실제 폰 폭에 맞춰 확장
+  - `tools/check-patch-payload.mjs`
+    - self-contained 패치 표면 검증 추가
+    - 필수 건물/NPC 에셋 존재, SVG 없음, `node_modules/dist/package-lock.json` 없음, README/AI_HANDOFF 기록 존재 확인
+- 유지해야 할 기준:
+  - SVG 없음
+  - 정상 로비에 fallback 카드/이미지 재시도/OPEN/LOCK/로딩중/패치 정보 문구 노출 금지
+  - 로비 건물/NPC PNG는 계속 실제 파일과 런타임 키가 연결되어야 함
+  - 새 docs 문서 추가 금지. 기록은 README.md와 AI_HANDOFF_CARDVILLE.md만 사용
+- 검증:
+  - `npm run check:patch-payload` 추가
+  - `npm run verify` 앞단에 포함
+- ZIP 명명 규칙:
+  - `CardVille_v1.0.62_SurfacePayload_Full.zip`
+  - `CardVille_v1.0.62_SurfacePayload_Patch.zip`
 
 
 ### 1.0.61 실제 모바일 반응형 viewport / safe-area 패스

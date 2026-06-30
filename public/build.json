@@ -1,11 +1,12 @@
 {
-  "name": "ResponsiveMobileViewportRepair",
-  "version": "1.0.61",
-  "mode": "responsive-mobile-viewport-v161-safe-area-phone-layout-v161-not-screenshot-fixed-layout-v161",
+  "name": "ResponsiveSurfacePayloadAudit",
+  "version": "1.0.62",
+  "mode": "responsive-surface-spread-v162-self-contained-patch-payload-audit-v162-safe-area-phone-layout-v162",
   "svg": "disabled",
   "pwa": "disabled",
-  "notes": "Maps lobby buildings, NPCs, props, HUD and bottom hint through real viewport width/height and safe-area insets instead of a single screenshot baseline.",
-  "label": "Responsive phone viewport layout",
-  "description": "Real mobile viewport/safe-area adaptive village layout, explicit versioned ZIP naming, no generic boot loading copy.",
-  "assetVersion": "1.0.61"
+  "notes": "Adds shared responsive surface spreading for center panels/readable panels/buttons across screens and documents why patch ZIP stays large when public/assets is included for safe overwrite patches.",
+  "label": "Responsive screen surfaces and patch payload audit",
+  "description": "Phone viewport/safe-area adaptive UI surfaces, self-contained patch size audit, explicit versioned ZIP naming.",
+  "assetVersion": "1.0.62",
+  "previousRepairName": "ResponsiveMobileViewportRepair"
 }

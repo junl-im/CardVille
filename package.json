@@ -1,15 +1,15 @@
 {
   "name": "cardville",
-  "version": "1.0.61",
+  "version": "1.0.62",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.61 adds real mobile viewport and safe-area responsive layout so lobby/fullscreen UI uses each phone size instead of a fixed screenshot baseline.",
+  "description": "CardVille 1.0.62 adds responsive surface spreading for panels/buttons and a self-contained patch payload audit so ZIP size growth is intentional and documented.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "check:deploy": "node tools/check-deploy.mjs",
-    "verify": "npm run build && npm run check:responsive-mobile-layout && npm run check:real-village-lobby && npm run check:lobby-screenshot-repair && npm run check:screen-playfield && npm run check:card-game-ui && npm run check:lobby-asset-placement && npm run check:lobby-art-ui && npm run check:lobby-boot-assets && npm run check:mobile-exit-layout && npm run check:screen-ui-stability && npm run check:webp-runtime && npm run check:navigation-guard && npm run check:full-individual-assets && npm run check:village-visuals && npm run check:exit-flow && npm run check:art-direction && npm run check:applied-assets && npm run check:premium-asset-select && npm run check:premium-buttons && npm run check:asset-runtime && npm run check:deploy && npm run check:brand && npm run check:assets && npm run check:premium-assets && npm run check:building-assets && npm run check:lobby-layout && npm run check:lobby-premium-fit && npm run check:content-engine && npm run check:progression && npm run check:shop-economy && npm run check:polish && npm run check:ci-coherence && npm run check:coach && npm run check:daily-mission && npm run check:weekly-mission && npm run check:reward-popup && npm run check:accessibility && npm run check:mission-route && npm run check:ui && npm run check:ux-safety && npm run check:content-scale && npm run check:english-school && npm run check:layout && npm run check:association && npm run check:security",
+    "verify": "npm run build && npm run check:patch-payload && npm run check:responsive-mobile-layout && npm run check:real-village-lobby && npm run check:lobby-screenshot-repair && npm run check:screen-playfield && npm run check:card-game-ui && npm run check:lobby-asset-placement && npm run check:lobby-art-ui && npm run check:lobby-boot-assets && npm run check:mobile-exit-layout && npm run check:screen-ui-stability && npm run check:webp-runtime && npm run check:navigation-guard && npm run check:full-individual-assets && npm run check:village-visuals && npm run check:exit-flow && npm run check:art-direction && npm run check:applied-assets && npm run check:premium-asset-select && npm run check:premium-buttons && npm run check:asset-runtime && npm run check:deploy && npm run check:brand && npm run check:assets && npm run check:premium-assets && npm run check:building-assets && npm run check:lobby-layout && npm run check:lobby-premium-fit && npm run check:content-engine && npm run check:progression && npm run check:shop-economy && npm run check:polish && npm run check:ci-coherence && npm run check:coach && npm run check:daily-mission && npm run check:weekly-mission && npm run check:reward-popup && npm run check:accessibility && npm run check:mission-route && npm run check:ui && npm run check:ux-safety && npm run check:content-scale && npm run check:english-school && npm run check:layout && npm run check:association && npm run check:security",
     "check:brand": "node tools/check-brand.mjs",
     "check:ui": "node tools/check-ui.mjs",
     "check:layout": "node tools/check-layout.mjs",
@@ -53,7 +53,8 @@
     "check:screen-playfield": "node tools/check-screen-playfield-v158.mjs",
     "check:lobby-screenshot-repair": "node tools/check-lobby-screenshot-repair.mjs",
     "check:real-village-lobby": "node tools/check-real-village-lobby.mjs",
-    "check:responsive-mobile-layout": "node tools/check-responsive-mobile-layout.mjs"
+    "check:responsive-mobile-layout": "node tools/check-responsive-mobile-layout.mjs",
+    "check:patch-payload": "node tools/check-patch-payload.mjs"
   },
   "dependencies": {
     "phaser": "3.90.0"

@@ -1,7 +1,13 @@
 import Phaser from 'phaser';
+import { responsiveSurfaceBox, RESPONSIVE_SURFACE_SPREAD_TAG } from '../systems/LayoutSystem';
 
 export function panel(scene: Phaser.Scene, x: number, y: number, w: number, h: number, radius = 28): Phaser.GameObjects.Graphics {
-  const g = scene.add.graphics();
+  const box = responsiveSurfaceBox(scene, x, y, w, h);
+  x = box.x;
+  y = box.y;
+  w = box.width;
+  h = box.height;
+  const g = scene.add.graphics().setName(RESPONSIVE_SURFACE_SPREAD_TAG);
 
   g.fillStyle(0x000000, 0.30);
   g.fillRoundedRect(x - w / 2 + 5, y - h / 2 + 9, w, h, radius);

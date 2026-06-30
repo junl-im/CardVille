@@ -2,7 +2,8 @@ import Phaser from 'phaser';
 
 export const GAME_WIDTH = 390;
 export const GAME_HEIGHT = 844;
-export const RESPONSIVE_MOBILE_LAYOUT_TAG = 'responsive-mobile-viewport-v161' as const;
+export const RESPONSIVE_MOBILE_LAYOUT_TAG = 'responsive-mobile-viewport-v162' as const;
+export const RESPONSIVE_SURFACE_SPREAD_TAG = 'responsive-surface-spread-v162' as const;
 
 export type SafeAreaInsets = {
   top: number;
@@ -33,6 +34,13 @@ export type SafeLayout = {
   safeLeft: number;
   safeRight: number;
   responsiveScale: number;
+};
+
+export type ResponsiveSurfaceBox = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 };
 
 let cachedInsets: SafeAreaInsets | null = null;
@@ -111,6 +119,34 @@ export function responsiveScale(scene: Phaser.Scene | undefined, min = 0.96, max
 
 export function responsivePoint(scene: Phaser.Scene | undefined, baseX: number, baseY: number): { x: number; y: number } {
   return { x: responsiveX(scene, baseX), y: responsiveY(scene, baseY) };
+}
+
+export function viewportCenterX(scene?: Phaser.Scene): number {
+  const b = visibleBounds(scene);
+  return b.visibleX + b.visibleWidth / 2;
+}
+
+export function viewportCenterY(scene?: Phaser.Scene): number {
+  const b = visibleBounds(scene);
+  return b.visibleY + b.visibleHeight / 2;
+}
+
+export function responsiveSurfaceWidth(scene: Phaser.Scene | undefined, baseWidth: number, margin = 18, maxExtra = 178): number {
+  const b = visibleBounds(scene);
+  const insets = safeAreaInsets();
+  const available = Math.max(baseWidth, b.visibleWidth - Math.max(margin * 2, insets.left + insets.right + margin * 2));
+  const extra = Math.min(maxExtra, b.extraX * 1.72);
+  return clamp(baseWidth + extra, baseWidth, available);
+}
+
+export function responsiveSurfaceBox(scene: Phaser.Scene | undefined, x: number, y: number, width: number, height: number, margin = 18): ResponsiveSurfaceBox {
+  const centerX = Math.abs(x - GAME_WIDTH / 2) <= 1 ? viewportCenterX(scene) : x;
+  return {
+    x: centerX,
+    y,
+    width: responsiveSurfaceWidth(scene, width, margin),
+    height
+  };
 }
 
 export type PlayArea = {
