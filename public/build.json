@@ -1,12 +1,12 @@
 {
-  "name": "FlowListInputPolish",
-  "version": "1.0.65",
-  "mode": "flow-fit-ui-v164-silent-scene-transition-v164-scale-tween-dedupe-v164-button-lineless-surface-v164-mobile-copy-fit-v164",
+  "name": "CornerSweepStability",
+  "version": "1.0.66",
+  "mode": "corner-sweep-v166-holistic-ui-audit-v166-safe-area-copy-clamp-v166-input-watchdog-v166",
   "svg": "disabled",
   "pwa": "disabled",
-  "notes": "Adds silent scene transitions, softer line-free UI surfaces, safer mobile text scaling, scale tween dedupe, and intro video lifecycle cleanup.",
-  "label": "Flow-fit UI polish and transition stability",
-  "description": "Keeps loading and transitions text-free, reduces visible button/panel lines, clamps copy to mobile boxes, and prevents stacked scale tweens from leaving enlarged objects.",
-  "assetVersion": "1.0.65",
-  "previousRepairName": "TouchScaleNoticeFix"
+  "notes": "Adds holistic screen sweep checks, safe-area bounds for UI surfaces, copy overflow guards, quieter lines, and input watchdog recovery.",
+  "label": "Corner sweep UI and input stability audit",
+  "description": "Keeps all loading/transition text silent while tightening every major screen for safe-area, copy fit, line-free surfaces, and stuck-input prevention.",
+  "assetVersion": "1.0.66",
+  "previousRepairName": "FlowListInputPolish"
 }

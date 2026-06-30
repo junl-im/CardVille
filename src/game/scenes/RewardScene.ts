@@ -8,7 +8,8 @@ import { ProgressModeId, SaveSystem } from '../systems/SaveSystem';
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 import { RARITY_META, RewardCard, pickRewardCard } from '../data/rewardCards';
 import { allowAmbientMotion, ambientCount, CardVilleQuality, getCardVilleQuality, isMotionEnabled, scaledDuration } from '../systems/QualitySystem';
-import { applyWrap, bodyText, cardSmallText, cardText, goldText, mutedText, titleText } from '../ui/TextStyles';
+import { applyCopyBox, applyWrap, bodyText, cardSmallText, cardText, goldText, mutedText, titleText } from '../ui/TextStyles';
+import { actionButtonCenters, safeActionY, safeCopyWidth } from '../systems/ScreenUISystem';
 
 export class RewardScene extends Phaser.Scene {
   private score = 0;
@@ -46,14 +47,15 @@ export class RewardScene extends Phaser.Scene {
     DrawSystem.background(this, '카드팩 보상');
     this.drawRewardShowcase();
     this.drawPackClosed();
-    this.lobbyButton = new GameButton(this, 195, 736, '광장으로', 238, 52, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
+    const l = layout(this);
+    this.lobbyButton = new GameButton(this, l.visibleX + l.visibleWidth / 2, safeActionY(this, 108), '광장으로', 238, 52, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
   }
 
   private drawRewardShowcase(): void {
     panel(this, 195, 408, 342, 548, 34);
     this.add.rectangle(195, 124, 304, 48, 0xffffff, 0.08).setStrokeStyle(1, 0xffd86f, 0.32);
     this.add.text(195, 116, this.rewardTitle(), titleText(28)).setOrigin(0.5);
-    this.add.text(195, 146, this.packFlavor(), applyWrap(mutedText(11), 292)).setOrigin(0.5);
+    this.add.text(195, 146, this.packFlavor(), applyWrap(mutedText(11), safeCopyWidth(this, 306))).setOrigin(0.5);
     this.drawPackQualityBar();
     this.add.text(195, 214, '카드팩을 터치해서 열어보세요.', applyWrap(goldText(15), 300)).setOrigin(0.5);
   }
@@ -194,16 +196,18 @@ export class RewardScene extends Phaser.Scene {
       195,
       526,
       `${this.rewardLine(xp, coins, gems)}${progressionBonus.label ? `\n${progressionBonus.label}` : ''}\n별 ${record.stars}개 · 최고 콤보 ${record.bestCombo} · 플레이 ${record.plays}회\n현재 Lv.${profile.level} · 🪙 ${profile.coins} · 보유 ${count}장`,
-      { ...applyWrap(bodyText(13), 318), lineSpacing: 6 }
+      { ...applyCopyBox(bodyText(12), safeCopyWidth(this, 324), 92), lineSpacing: 4 }
     ).setOrigin(0.5);
-    this.add.text(195, 612, '획득 카드는 앨범에서 희귀도 프레임과 함께 다시 볼 수 있어요.', applyWrap(mutedText(11), 306)).setOrigin(0.5);
+    this.add.text(195, 612, '획득 카드는 앨범에서 희귀도 프레임과 함께 다시 볼 수 있어요.', applyWrap(mutedText(11), safeCopyWidth(this, 318))).setOrigin(0.5);
     if (this.source === 'shop') {
-      new GameButton(this, 122, 668, '상점으로', 116, 50, 0xffd86f).onClick(() => NavigationSystem.safeStart(this, 'ShopScene'));
-      new GameButton(this, 268, 668, '앨범 보기', 116, 50, 0xf0c7ff).onClick(() => NavigationSystem.safeStart(this, 'CollectionScene'));
+      const [shopX, albumX] = actionButtonCenters(this, 2, 116, 36);
+      new GameButton(this, shopX, safeActionY(this, 176, 25), '상점으로', 116, 50, 0xffd86f).onClick(() => NavigationSystem.safeStart(this, 'ShopScene'));
+      new GameButton(this, albumX, safeActionY(this, 176, 25), '앨범 보기', 116, 50, 0xf0c7ff).onClick(() => NavigationSystem.safeStart(this, 'CollectionScene'));
     } else {
-      new GameButton(this, 195, 668, '카드 앨범 보기', 238, 50, 0xf0c7ff).onClick(() => NavigationSystem.safeStart(this, 'CollectionScene'));
+      const l = layout(this);
+      new GameButton(this, l.visibleX + l.visibleWidth / 2, safeActionY(this, 176, 25), '카드 앨범 보기', 238, 50, 0xf0c7ff).onClick(() => NavigationSystem.safeStart(this, 'CollectionScene'));
     }
-    this.lobbyButton?.setPosition(195, 742).setLabel('광장으로 돌아가기');
+    { const l = layout(this); this.lobbyButton?.setPosition(l.visibleX + l.visibleWidth / 2, safeActionY(this, 100)).setLabel('광장으로'); }
     this.spawnSparkles(meta.color);
   }
 

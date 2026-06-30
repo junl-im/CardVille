@@ -8,7 +8,7 @@ const include = (file, token) => assert(read(file).includes(token), `${file} mis
 const exclude = (file, token) => assert(!read(file).includes(token), `${file} must not include token: ${token}`);
 
 const pkg = JSON.parse(read('package.json'));
-assert(pkg.version === '1.0.65', `expected package version 1.0.65, got ${pkg.version}`);
+assert(pkg.version === '1.0.66', `expected package version 1.0.66, got ${pkg.version}`);
 
 include('src/game/systems/LayoutSystem.ts', 'RESPONSIVE_MOBILE_LAYOUT_TAG');
 include('src/game/systems/LayoutSystem.ts', 'RESPONSIVE_SURFACE_SPREAD_TAG');
@@ -39,18 +39,18 @@ include('src/game/scenes/MainLobbyScene.ts', 'target.y');
 include('src/game/systems/DrawSystem.ts', 'l.safeLeft');
 include('src/game/systems/DrawSystem.ts', 'l.safeRight');
 include('src/game/systems/DrawSystem.ts', 'titleW = Math.min(430');
-include('src/main.ts', '1.0.65 flow fit UI and silent transition');
-include('index.html', "window.__CARDVILLE_VERSION__ = '1.0.65'");
+include('src/main.ts', '1.0.66 flow fit UI and silent transition');
+include('index.html', "window.__CARDVILLE_VERSION__ = '1.0.66'");
 include('index.html', 'no generic loading copy on boot');
 exclude('index.html', '시작 화면 준비가 지연돼요');
 include('public/build.json', 'FlowListInputPolish');
-include('public/build.json', '1.0.65');
-include('README.md', '## 1.0.65 업데이트 내역');
+include('public/build.json', '1.0.66');
+include('README.md', '## 1.0.66 업데이트 내역');
 include('README.md', 'responsive-surface-spread-v163');
-include('AI_HANDOFF_CARDVILLE.md', '현재 기준 버전은 1.0.65');
+include('AI_HANDOFF_CARDVILLE.md', '현재 기준 버전은 1.0.66');
 include('AI_HANDOFF_CARDVILLE.md', '스크린샷만 기준');
 include('AI_HANDOFF_CARDVILLE.md', '패치 ZIP이 통파일과 비슷한 용량인 이유');
-include('AI_HANDOFF_CARDVILLE.md', 'CardVille_v1.0.65_FlowListInputPolish_Full.zip');
+include('AI_HANDOFF_CARDVILLE.md', 'CardVille_v1.0.66_CornerSweepStability_Full.zip');
 
 const svgFiles = [];
 const walk = (dir) => {

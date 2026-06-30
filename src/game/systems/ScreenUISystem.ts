@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { GAME_WIDTH, layout, responsiveSurfaceBox, responsiveSurfaceWidth, RESPONSIVE_SURFACE_SPREAD_TAG } from './LayoutSystem';
+import { GAME_WIDTH, clampToSafeY, layout, responsiveSurfaceBox, responsiveSurfaceWidth, RESPONSIVE_SURFACE_SPREAD_TAG } from './LayoutSystem';
 
 export const CARDVILLE_SCREEN_UI_REDESIGN_TAG = 'screen-ui-redesign-v158' as const;
 export const CARDVILLE_TOUCH_TARGET_TAG = 'mobile-touch-target-v158' as const;
@@ -7,6 +7,8 @@ export const CARDVILLE_PLAYFIELD_SAFEZONE_TAG = 'playfield-safezone-v158' as con
 export const CARDVILLE_RESPONSIVE_SURFACE_TAG = 'responsive-surface-spread-v162' as const;
 export const CARDVILLE_NOTICE_FIT_TAG = 'notice-text-fit-v163' as const;
 export const CARDVILLE_FLOW_FIT_TAG = 'flow-fit-ui-v164' as const;
+export const CARDVILLE_CORNER_SWEEP_UI_TAG = 'holistic-ui-audit-v166' as const;
+export const CARDVILLE_SAFE_COPY_CLAMP_TAG = 'safe-area-copy-clamp-v166' as const;
 
 export type MobileSceneFrame = {
   centerX: number;
@@ -36,9 +38,9 @@ export function mobileSceneFrame(scene: Phaser.Scene): MobileSceneFrame {
     subtitleY: Math.max(110, l.top + 86),
     statusY: Math.max(156, l.top + 132),
     contentTop: Math.max(176, l.top + 152),
-    contentBottom: Math.min(l.bottom - 118, 704 + l.extraY),
-    actionY: l.bottom - 74,
-    bottomNoteY: l.bottom - 22
+    contentBottom: clampToSafeY(scene, Math.min(l.bottom - 124, 704 + l.extraY), 0, 96),
+    actionY: clampToSafeY(scene, l.bottom - 74, 28, 14),
+    bottomNoteY: clampToSafeY(scene, l.bottom - 22, 12, 8)
   };
 }
 
@@ -47,9 +49,9 @@ export function drawMobileActionDock(scene: Phaser.Scene, y = 744, height = 112)
   const g = scene.add.graphics().setName(CARDVILLE_SCREEN_UI_REDESIGN_TAG);
   g.fillStyle(0x061127, 0.82);
   g.fillRoundedRect(l.visibleX + 12, y - height / 2, l.visibleWidth - 24, height, 24);
-  g.lineStyle(1, 0xffffff, 0.045);
+  g.lineStyle(1, 0xffffff, 0.026);
   g.strokeRoundedRect(l.visibleX + 12, y - height / 2, l.visibleWidth - 24, height, 24);
-  g.fillStyle(0xffffff, 0.015);
+  g.fillStyle(0xffffff, 0.008);
   g.fillRoundedRect(l.visibleX + 26, y - height / 2 + 10, l.visibleWidth - 52, 8, 8);
   return g;
 }
@@ -60,10 +62,10 @@ export function drawReadablePanel(scene: Phaser.Scene, x: number, y: number, wid
   y = box.y;
   width = box.width;
   height = box.height;
-  const g = scene.add.graphics().setName(`${CARDVILLE_PLAYFIELD_SAFEZONE_TAG}:${RESPONSIVE_SURFACE_SPREAD_TAG}:${CARDVILLE_RESPONSIVE_SURFACE_TAG}:${CARDVILLE_FLOW_FIT_TAG}`);
+  const g = scene.add.graphics().setName(`${CARDVILLE_PLAYFIELD_SAFEZONE_TAG}:${RESPONSIVE_SURFACE_SPREAD_TAG}:${CARDVILLE_RESPONSIVE_SURFACE_TAG}:${CARDVILLE_FLOW_FIT_TAG}:${CARDVILLE_CORNER_SWEEP_UI_TAG}`);
   g.fillStyle(color, alpha);
   g.fillRoundedRect(x - width / 2, y - height / 2, width, height, 28);
-  g.lineStyle(1, 0xffffff, 0.055);
+  g.lineStyle(1, 0xffffff, 0.032);
   g.strokeRoundedRect(x - width / 2, y - height / 2, width, height, 28);
   return g;
 }
@@ -134,3 +136,14 @@ export function safeToastPosition(scene: Phaser.Scene, offsetFromBottom = 204): 
   return { x: lane.centerX, y: Math.min(l.bottom - 92, l.visibleY + l.visibleHeight - offsetFromBottom), width: lane.width };
 }
 
+
+
+export function safeCopyWidth(scene: Phaser.Scene, requested = 320, margin = 26): number {
+  const l = layout(scene);
+  return Math.max(120, Math.min(requested, l.visibleWidth - Math.max(margin * 2, l.safeLeft + l.safeRight + margin * 2)));
+}
+
+export function safeActionY(scene: Phaser.Scene, offset = 70, halfHeight = 28): number {
+  const l = layout(scene);
+  return clampToSafeY(scene, l.bottom - offset, halfHeight, 12);
+}

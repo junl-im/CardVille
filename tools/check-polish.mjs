@@ -31,7 +31,7 @@ mustContain('src/game/systems/LayoutSystem.ts', ['b.visibleX + b.visibleWidth / 
 mustContain('src/game/ui/GameButton.ts', ['fitTextSize', 'compactText', 'lastActivatedAt', 'GameButtonOptions', 'shineEnabled', 'debounceMs']);
 mustContain('src/game/scenes/StageSelectScene.ts', ['stageEntries', 'drawProgressStrip', 'MathLabScene', 'MemoryForestScene', 'showLockedHint']);
 mustContain('src/game/scenes/RewardScene.ts', ['drawPackQualityBar', 'lobbyButton', 'ambientCount', '카드 앨범 보기']);
-mustContain('src/game/scenes/CollectionScene.ts', ['drawAlbumStats', '총 ${totalCopies}장', 'LOCKED']);
+mustContain('src/game/scenes/CollectionScene.ts', ['drawAlbumStats', '총 ${totalCopies}장', '미획득']);
 mustContain('src/game/scenes/MathLabScene.ts', ['getCardVilleQuality', 'allowAmbientMotion', 'isMotionEnabled']);
 mustContain('src/game/scenes/MemoryForestScene.ts', ['getCardVilleQuality', 'ambientCount', 'scaledDuration']);
 mustContain('src/game/scenes/LoginScene.ts', ['LOGIN_CTA_BUTTON_STYLE', 'skin: false', 'shine: false', 'LOGIN_PANEL_H']);

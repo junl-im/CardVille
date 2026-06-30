@@ -4,7 +4,7 @@ import { DrawSystem } from '../systems/DrawSystem';
 import { DailyMissionEntry, DailyMissionId, DailyMissionSystem } from '../systems/DailyMissionSystem';
 import { SaveSystem } from '../systems/SaveSystem';
 import { applyResponsiveCamera, layout } from '../systems/LayoutSystem';
-import { actionButtonCenters, assertNoVerticalOverlap, CARDVILLE_SCREEN_UI_REDESIGN_TAG, safeToastPosition } from '../systems/ScreenUISystem';
+import { actionButtonCenters, assertNoVerticalOverlap, CARDVILLE_SCREEN_UI_REDESIGN_TAG, mobileCardLane, safeActionY, safeCopyWidth, safeToastPosition } from '../systems/ScreenUISystem';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
 import { applyNoticeBox, applyWrap, bodyText, darkText, goldText, mutedText, noticeText, titleText } from '../ui/TextStyles';
@@ -38,8 +38,9 @@ export class DailyMissionScene extends Phaser.Scene {
     DrawSystem.topHud(this, profile.coins, profile.level);
     panel(this, 195, 414, 348, 588, 34);
 
-    this.add.text(195, 78, '이벤트 광장', goldText(24)).setOrigin(0.5);
-    this.add.text(195, 108, '출석, 수업 클리어, 카드팩 개봉을 주간 목표까지 연결해 보상 루프를 안정화합니다.', applyWrap(mutedText(11), 318)).setOrigin(0.5);
+    const lane = mobileCardLane(this, 344, 18, 196);
+    this.add.text(lane.centerX, 78, '이벤트 광장', goldText(24)).setOrigin(0.5);
+    this.add.text(lane.centerX, 108, '출석, 수업 클리어, 카드팩 개봉을 주간 목표까지 연결해 보상 루프를 안정화합니다.', applyWrap(mutedText(11), safeCopyWidth(this, 330))).setOrigin(0.5);
     this.drawNextAction(board.nextActionTitle, board.nextActionCopy);
     this.drawProgressMeter(board.completionRatio, board.rewardReadyCount, board.claimedCount);
     this.drawStreakWeekly(board.streakDays, board.bestStreakDays, board.weeklyProgress, board.weeklyTarget, board.weeklyReady, board.weeklyClaimed, board.weeklyCompletionRatio);
@@ -48,11 +49,11 @@ export class DailyMissionScene extends Phaser.Scene {
     this.drawCompletionBonus(board.dailyCompletionReady, board.dailyCompletionClaimed, board.dailyCompletionRewardText);
 
     const l = layout(this);
-    const actionY = l.bottom - 138;
+    const actionY = safeActionY(this, 138, 25);
     const [modeX, shopX] = actionButtonCenters(this, 2, 132, 34);
     new GameButton(this, modeX, actionY, '게임 선택', 132, 50, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'ModeSelectScene'));
     new GameButton(this, shopX, actionY, '상점', 132, 50, 0xffd86f).onClick(() => NavigationSystem.safeStart(this, 'ShopScene'));
-    new GameButton(this, l.visibleX + l.visibleWidth / 2, l.bottom - 70, '광장으로', 236, 52, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
+    new GameButton(this, l.visibleX + l.visibleWidth / 2, safeActionY(this, 70), '광장으로', 236, 52, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
     this.add.text(18, 836, CARDVILLE_SCREEN_UI_REDESIGN_TAG, mutedText(6)).setAlpha(0.01);
     assertNoVerticalOverlap(this, 'DailyMissionScene', [['top', 68, 126], ['progress', 136, 318], ['missions', 310, 604], ['bonus', 604, 656], ['actions', 676, 804]]);
     if (message) this.showToast(message);
@@ -60,13 +61,13 @@ export class DailyMissionScene extends Phaser.Scene {
   }
 
   private drawNextAction(title: string, copy: string): void {
-    this.add.rectangle(195, 144, 316, 34, 0xfffbf1, 0.92).setStrokeStyle(1, 0xffd86f, 0.52);
+    this.add.rectangle(195, 144, 316, 34, 0xfffbf1, 0.92).setStrokeStyle(1, 0xffd86f, 0.26);
     this.add.text(62, 137, title, darkText(11)).setOrigin(0, 0.5);
     this.add.text(62, 151, copy, applyWrap(bodyText(8), 266, 'left')).setOrigin(0, 0.5);
   }
 
   private drawProgressMeter(ratio: number, readyCount: number, claimedCount: number): void {
-    this.add.rectangle(195, 180, 316, 42, 0x07142c, 0.58).setStrokeStyle(1, 0xffffff, 0.18);
+    this.add.rectangle(195, 180, 316, 42, 0x07142c, 0.58).setStrokeStyle(1, 0xffffff, 0.07);
     this.add.text(62, 170, '오늘 진행도', mutedText(10)).setOrigin(0, 0.5);
     this.add.text(328, 170, `대기 보상 ${readyCount}개`, goldText(10)).setOrigin(1, 0.5);
     this.add.rectangle(195, 190, 250, 10, 0x26334f, 0.78);
@@ -75,7 +76,7 @@ export class DailyMissionScene extends Phaser.Scene {
   }
 
   private drawStreakWeekly(streakDays: number, bestStreakDays: number, weeklyProgress: number, weeklyTarget: number, weeklyReady: boolean, weeklyClaimed: boolean, weeklyRatio: number): void {
-    this.add.rectangle(195, 220, 316, 64, weeklyReady ? 0xfffbf1 : 0x07142c, weeklyReady ? 0.94 : 0.58).setStrokeStyle(2, weeklyReady ? 0xffd86f : 0x8fd3ff, weeklyReady ? 0.78 : 0.32);
+    this.add.rectangle(195, 220, 316, 64, weeklyReady ? 0xfffbf1 : 0x07142c, weeklyReady ? 0.94 : 0.58).setStrokeStyle(2, weeklyReady ? 0xffd86f : 0x8fd3ff, weeklyReady ? 0.52 : 0.18);
     this.add.text(62, 203, `연속 출석 ${streakDays}일`, weeklyReady ? darkText(13) : goldText(13)).setOrigin(0, 0.5);
     this.add.text(328, 203, `최고 ${bestStreakDays}일`, weeklyReady ? bodyText(9) : mutedText(9)).setOrigin(1, 0.5);
     this.add.rectangle(195, 226, 214, 9, 0x26334f, 0.74);
@@ -87,7 +88,7 @@ export class DailyMissionScene extends Phaser.Scene {
   }
 
   private drawAttendance(attendanceReady: boolean, attendanceClaimed: boolean, attendanceRewardCoins: number): void {
-    this.add.rectangle(195, 292, 316, 58, attendanceReady ? 0xfffbf1 : 0x26334f, attendanceReady ? 0.94 : 0.64).setStrokeStyle(2, attendanceReady ? 0xffd86f : 0x8fd3ff, attendanceReady ? 0.74 : 0.36);
+    this.add.rectangle(195, 292, 316, 58, attendanceReady ? 0xfffbf1 : 0x26334f, attendanceReady ? 0.94 : 0.64).setStrokeStyle(2, attendanceReady ? 0xffd86f : 0x8fd3ff, attendanceReady ? 0.50 : 0.18);
     this.add.text(62, 277, attendanceReady ? '출석 보상 READY' : '출석 완료', attendanceReady ? darkText(14) : goldText(14)).setOrigin(0, 0.5);
     this.add.text(62, 300, attendanceClaimed ? '내일 연속 출석을 이어가요.' : `+20XP/+${attendanceRewardCoins}코인 · 연속 출석 보너스`, attendanceReady ? bodyText(10) : mutedText(10)).setOrigin(0, 0.5);
     const button = new GameButton(this, 286, 292, attendanceReady ? '받기' : '완료', 82, 36, attendanceReady ? 0xffd86f : 0x9aa4ba)

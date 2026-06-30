@@ -1,11 +1,12 @@
 import Phaser from 'phaser';
 import { NavigationSystem } from '../systems/NavigationSystem';
-import { applyResponsiveCamera } from '../systems/LayoutSystem';
+import { applyResponsiveCamera, layout } from '../systems/LayoutSystem';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
 import { DrawSystem } from '../systems/DrawSystem';
 import { SaveSystem } from '../systems/SaveSystem';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
+import { safeActionY, safeCopyWidth } from '../systems/ScreenUISystem';
 
 export class ResultScene extends Phaser.Scene {
   private moves = 0;
@@ -42,16 +43,17 @@ export class ResultScene extends Phaser.Scene {
       195,
       414,
       this.failed ? '맨 위 카드 중 목표 계열을 먼저 찾아보세요. 힌트와 셔플을 아끼지 않아도 됩니다.' : '말 카드 스택을 정리했어요. 보상 카드팩에서 새 카드를 얻을 수 있습니다.',
-      applyWrap(mutedText(14), 292)
+      applyWrap(mutedText(14), safeCopyWidth(this, 306))
     ).setOrigin(0.5);
 
-    const reward = new GameButton(this, 195, 510, this.failed ? '다시 하기' : '보상 받기', 276, 64, 0xffd86f);
+    const l = layout(this);
+    const reward = new GameButton(this, l.visibleX + l.visibleWidth / 2, safeActionY(this, 334, 32), this.failed ? '다시 하기' : '보상 받기', 276, 64, 0xffd86f);
     reward.onClick(() => {
       if (this.failed) NavigationSystem.safeStart(this, 'PlayScene', { modeId: this.modeId, stage: this.stage });
       else NavigationSystem.safeStart(this, 'RewardScene', { modeId: this.modeId, stage: this.stage, score: this.score, bestCombo: this.bestCombo, stars: record.stars, stepsLeft: this.stepsLeft });
     });
 
-    const back = new GameButton(this, 195, 598, '스테이지 선택', 276, 56, 0x8fd3ff);
+    const back = new GameButton(this, l.visibleX + l.visibleWidth / 2, safeActionY(this, 246, 28), '스테이지 선택', 276, 56, 0x8fd3ff);
     back.onClick(() => NavigationSystem.safeStart(this, 'StageSelectScene', { modeId: this.modeId }));
   }
 }

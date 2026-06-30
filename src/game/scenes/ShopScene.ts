@@ -8,7 +8,7 @@ import { panel } from '../ui/Panel';
 import { applyNoticeBox, applyWrap, bodyText, darkText, goldText, mutedText, noticeText, titleText } from '../ui/TextStyles';
 import { allowAmbientMotion, CardVilleQuality, getCardVilleQuality, scaledDuration } from '../systems/QualitySystem';
 import { CoachMarkSystem } from '../systems/CoachMarkSystem';
-import { actionButtonCenters, safeToastPosition } from '../systems/ScreenUISystem';
+import { actionButtonCenters, mobileCardLane, safeActionY, safeCopyWidth, safeToastPosition, CARDVILLE_SAFE_COPY_CLAMP_TAG } from '../systems/ScreenUISystem';
 
 type ShopOfferId = 'daily_free' | 'coin_pack' | 'gem_pack';
 
@@ -100,19 +100,21 @@ export class ShopScene extends Phaser.Scene {
     panel(this, 195, 420, 340, 572, 34);
     this.drawPremiumShopAccents();
 
-    this.add.text(195, 96, '상인의 카드팩 가게', goldText(23)).setOrigin(0.5);
-    this.add.text(195, 126, '무료팩, 코인팩, 보석팩을 한 화면에서 고르고 앨범으로 바로 이동합니다.', applyWrap(mutedText(11), 286)).setOrigin(0.5);
+    const lane = mobileCardLane(this, 344, 18, 196);
+    this.add.text(lane.centerX, 96, '상인의 카드팩 가게', goldText(23)).setOrigin(0.5);
+    this.add.text(lane.centerX, 126, '무료팩, 코인팩, 보석팩을 한 화면에서 고르고 앨범으로 바로 이동합니다.', applyWrap(mutedText(11), safeCopyWidth(this, 326))).setOrigin(0.5);
     this.drawCurrencyStrip(profile.coins, profile.gems, daily.canClaim ? '수령 가능' : this.nextDailyCopy(daily.nextResetAt));
     this.drawDailyStatusMeter(daily, lastOffer);
 
     SHOP_OFFERS.forEach((offer, index) => this.drawOfferCard(offer, 258 + index * 112, profile, daily, offer.id === recommendedOfferId));
 
     const l = layout(this);
-    const actionY = l.bottom - 140;
+    const actionY = safeActionY(this, 140, 26);
     const [albumX, modeX] = actionButtonCenters(this, 2, 136, 34);
     new GameButton(this, albumX, actionY, '앨범 보기', 136, 50, 0xf0c7ff).onClick(() => NavigationSystem.safeStart(this, 'CollectionScene'));
     new GameButton(this, modeX, actionY, '게임관', 136, 50, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'ModeSelectScene'));
-    new GameButton(this, l.visibleX + l.visibleWidth / 2, l.bottom - 70, '광장으로', 248, 56, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
+    new GameButton(this, l.visibleX + l.visibleWidth / 2, safeActionY(this, 70), '광장으로', 248, 56, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
+    this.add.text(lane.left, l.bottom - 14, CARDVILLE_SAFE_COPY_CLAMP_TAG, mutedText(6)).setAlpha(0.01);
     this.showShopCoach(daily.canClaim);
   }
 
@@ -281,12 +283,13 @@ export class ShopScene extends Phaser.Scene {
 
   private showPurchaseTransition(offer: ShopOffer): void {
     this.input.enabled = false;
-    const overlay = this.add.container(195, 420).setDepth(2000);
+    const l = layout(this);
+    const overlay = this.add.container(l.visibleX + l.visibleWidth / 2, 420).setDepth(2000);
     overlay.add(this.add.rectangle(0, 0, 326, 176, 0x07142c, 0.94).setStrokeStyle(2, offer.color, 0.68));
     overlay.add(this.add.circle(0, -52, 42, offer.color, 0.22).setStrokeStyle(2, offer.color, 0.58));
     overlay.add(this.add.text(0, -54, offer.icon, { fontSize: '38px' }).setOrigin(0.5));
-    overlay.add(this.add.text(0, 4, `${offer.title} 준비 중`, titleText(18)).setOrigin(0.5));
-    overlay.add(this.add.text(0, 36, '카드팩 보상 화면으로 이동합니다.', applyWrap(mutedText(11), 270)).setOrigin(0.5));
+    overlay.add(this.add.text(0, 4, `${offer.title} 열기`, titleText(18)).setOrigin(0.5));
+    overlay.add(this.add.text(0, 36, '카드팩 보상 화면으로 이어집니다.', applyWrap(mutedText(11), 270)).setOrigin(0.5));
     overlay.setScale(0.9).setAlpha(0);
     this.tweens.add({ targets: overlay, scale: 1, alpha: 1, duration: 140, ease: 'Back.easeOut' });
   }

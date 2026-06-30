@@ -28,6 +28,7 @@ export const CARDVILLE_BUTTON_SEAM_FIX_TAG = 'button-seamless-touch-v163' as con
 export const CARDVILLE_BUTTON_LINELESS_TAG = 'button-lineless-surface-v164' as const;
 export const CARDVILLE_BUTTON_COPY_GUARD_TAG = 'button-copy-guard-v165' as const;
 export const CARDVILLE_BUTTON_INPUT_RECOVERY_TAG = 'button-input-recovery-v165' as const;
+export const CARDVILLE_BUTTON_CORNER_SWEEP_TAG = 'button-corner-sweep-v166' as const;
 
 type ButtonPalette = { top: number; bottom: number; stroke: number; glow: number; text: string };
 
@@ -62,6 +63,7 @@ export class GameButton extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene, x: number, y: number, text: string, width = 280, height = 58, color = 0x8fd3ff, options: GameButtonOptions = {}) {
     super(scene, x, y);
     scene.add.existing(this);
+    this.setName(`${CARDVILLE_BUTTON_CORNER_SWEEP_TAG}:${CARDVILLE_BUTTON_COPY_GUARD_TAG}`);
     if (Math.abs(x - GAME_WIDTH / 2) <= 1 && width >= 220) {
       width = responsiveSurfaceWidth(scene, width, 32, 104);
       this.setName(RESPONSIVE_SURFACE_SPREAD_TAG);
@@ -183,7 +185,7 @@ export class GameButton extends Phaser.GameObjects.Container {
       this.skinImage.setDisplaySize(width + 16, height + 16);
       this.skinImage.setAlpha(pressed ? 0.96 : 1);
       if (this.shineEnabled) {
-        this.bg.lineStyle(1, 0xffffff, pressed ? 0.012 : 0.018);
+        this.bg.lineStyle(1, 0xffffff, pressed ? 0.006 : 0.010);
         this.bg.strokeRoundedRect(-width / 2 + 5, -height / 2 + 5, width - 10, height - 10, 18);
       }
       return;
@@ -196,10 +198,10 @@ export class GameButton extends Phaser.GameObjects.Container {
     this.bg.fillRoundedRect(-width / 2 - 3, -height / 2 + yOffset - 2, width + 6, height + 6, radius + 3);
     this.bg.fillGradientStyle(palette.top, palette.top, palette.bottom, palette.bottom, this.disabled ? 0.58 : 1, this.disabled ? 0.58 : 1, this.disabled ? 0.66 : 1, this.disabled ? 0.66 : 1);
     this.bg.fillRoundedRect(-width / 2, -height / 2 + yOffset, width, height, radius);
-    this.bg.lineStyle(1, palette.stroke, pressed ? 0.055 : 0.075);
+    this.bg.lineStyle(1, palette.stroke, pressed ? 0.026 : 0.038);
     this.bg.strokeRoundedRect(-width / 2, -height / 2 + yOffset, width, height, radius);
     if (this.shineEnabled) {
-      this.bg.fillStyle(0xffffff, this.disabled ? 0.01 : pressed ? 0.012 : 0.018);
+      this.bg.fillStyle(0xffffff, this.disabled ? 0.004 : pressed ? 0.006 : 0.010);
       this.bg.fillRoundedRect(-width / 2 + 22, -height / 2 + 9 + yOffset, width - 44, Math.max(4, height * 0.08), 8);
     }
   }

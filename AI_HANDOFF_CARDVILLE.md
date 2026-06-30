@@ -1,8 +1,26 @@
+## 1.0.66 - CornerSweepStability
+
+- 목적: 사용자가 요청한 “모든 구석구석 꼼꼼하게 체크”를 기준으로, 전 화면 safe-area/텍스트/입력/버튼 선/패널 겹침 위험을 다시 훑은 패스입니다.
+- 현재 기준 버전은 1.0.66입니다.
+- 핵심 태그: `corner-sweep-v166`, `holistic-ui-audit-v166`, `safe-area-copy-clamp-v166`, `input-watchdog-v166`, `button-corner-sweep-v166`, `line-free-surface-v166`.
+- 코드 반영:
+  - `LayoutSystem.ts`: safe-area clamp와 input watchdog을 추가했습니다. 씬 진입 후 입력이 꺼진 채 남으면 80/260/420ms 복구 타이머가 다시 켭니다.
+  - `ScreenUISystem.ts`: safe copy width, safe action Y, corner sweep 태그를 추가했습니다.
+  - `TextStyles.ts`: `applyTightCopyBox`와 holistic copy fit 태그를 추가했습니다.
+  - `GameButton.ts`, `Panel.ts`, `DrawSystem.ts`: 줄처럼 보이는 stroke/shine 알파를 더 낮췄습니다.
+  - `CollectionScene.ts`: 실제 폰 폭 기준 앨범 그리드, 하단 버튼, 한국어 `미획득` 표기로 정리했습니다.
+  - `ShopScene.ts`, `DailyMissionScene.ts`, `RewardScene.ts`, `ResultScene.ts`: 하단 버튼/긴 문구/전환 오버레이를 safe-area 기준으로 보강했습니다.
+- 추가 검증: `tools/check-corner-sweep-v166.mjs`, `npm run check:corner-sweep-v166`.
+- 유지 규칙: SVG 없음, OPEN/LOCK 없음, 로딩중/이동중 문구 없음, fallback 카드 숨김, public/assets 포함 self-contained 패치 유지, 새 docs 문서 생성 금지.
+- 산출물 이름:
+  - `CardVille_v1.0.66_CornerSweepStability_Full.zip`
+  - `CardVille_v1.0.66_CornerSweepStability_Patch.zip`
+
 
 ## 1.0.65 - FlowListInputPolish
 
 - 목적: 사용자가 계속 요청한 전 구간 불안정/겹침/배치/버튼 줄/알림 텍스트 밀림/입력 먹통 위험을 더 줄이는 카드 리스트/입력 복구 중심 패스입니다.
-- 현재 기준 버전은 1.0.65입니다.
+- 현재 기준 버전은 1.0.66입니다.
 - 이번 버전은 1.0.64 FlowFitUIPolish를 기준으로, 모드 선택/스테이지 선택/상점/미션의 카드 리스트와 하단 버튼을 실제 모바일 화면 폭/safe-area에 맞게 정렬하고, 씬 재시작/전환 후 입력 복구 안전장치를 추가했습니다.
 - 핵심 태그: `list-card-fit-v165`, `action-bar-fit-v165`, `copy-box-guard-v165`, `scene-input-recovery-v165`, `restart-input-recovery-v165`, `button-input-recovery-v165`, `button-copy-guard-v165`.
 - 추가 검증: `tools/check-flow-ui-v165.mjs`, `npm run check:flow-ui-v165`.
@@ -28,10 +46,10 @@
 CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고, 그다음 실제 코드를 확인하세요.
 
 
-## 현재 작업 기준: 1.0.65
+## 현재 작업 기준: 1.0.66
 
-현재 기준 버전은 1.0.65입니다.  
-핵심 태그는 `list-card-fit-v165`, `action-bar-fit-v165`, `copy-box-guard-v165`, `scene-input-recovery-v165`, `restart-input-recovery-v165`, `button-input-recovery-v165`, `button-copy-guard-v165`입니다.
+현재 기준 버전은 1.0.66입니다.  
+핵심 태그는 `corner-sweep-v166`, `holistic-ui-audit-v166`, `safe-area-copy-clamp-v166`, `input-watchdog-v166`, `button-corner-sweep-v166`, `line-free-surface-v166`입니다.
 
 ### 1.0.64 전역 UI 흐름/텍스트/전환 안정화 패스
 

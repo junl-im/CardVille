@@ -1,4 +1,18 @@
 
+## 1.0.66 - CornerSweepStability
+
+- **구석구석 전역 점검/안전 영역/텍스트/입력 안정화 패스**를 진행했습니다.
+- 특정 한 화면만 고치지 않고, 로비 이후 주요 화면의 좌우 폭, safe-area, 하단 버튼, 알림/보상 문구, 버튼/패널 선, 입력 복구 위험을 다시 훑었습니다.
+- `corner-sweep-v166`, `holistic-ui-audit-v166`: 전 화면 UI 구석 점검 태그와 자동 검증을 추가했습니다.
+- `safe-area-copy-clamp-v166`: 긴 한국어 문장/알림/보상 설명이 박스 밖으로 밀리는 위험을 줄이도록 safe-area 기준 폭 계산과 copy box를 보강했습니다.
+- `input-watchdog-v166`: 씬 create/resize/전환 이후 입력이 꺼진 채 남는 상황을 추가로 복구합니다.
+- `button-corner-sweep-v166`, `line-free-surface-v166`: 버튼/패널/프레임의 줄처럼 보이는 stroke/shine 알파를 더 낮췄습니다.
+- 앨범 화면은 실제 폰 폭에 맞춰 카드 그리드를 다시 배치하고, 영어 `LOCKED` 표기를 한국어 `미획득`으로 바꿨습니다.
+- 상점/미션/보상/결과 화면의 하단 액션 버튼과 긴 문구 폭을 safe-area 기준으로 재정렬했습니다.
+- 검증 추가: `tools/check-corner-sweep-v166.mjs` / `npm run check:corner-sweep-v166`.
+- SVG 없음, OPEN/LOCK 없음, 로딩중/이동중 문구 없음, fallback 카드 숨김, self-contained 패치 payload 정책은 유지합니다.
+- 최종 ZIP 명명 규칙: `CardVille_v1.0.66_CornerSweepStability_Full.zip`, `CardVille_v1.0.66_CornerSweepStability_Patch.zip`.
+
 ## 1.0.65 - FlowListInputPolish
 
 - **카드 리스트/액션 버튼/입력 복구/긴 문구 맞춤 안정화 패스**를 진행했습니다.
@@ -23,11 +37,20 @@
 - SVG 없음, OPEN/LOCK 없음, 로딩중 문구 없음, fallback 카드 숨김, self-contained 패치 payload 정책은 유지합니다.
 - 최종 ZIP 명명 규칙: `CardVille_v1.0.64_FlowFitUIPolish_Full.zip`, `CardVille_v1.0.64_FlowFitUIPolish_Patch.zip`.
 
-# CardVille 1.0.65
+# CardVille 1.0.66
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
 
+
+## 1.0.66 업데이트 내역
+
+- `corner-sweep-v166`: 주요 화면을 구석구석 다시 훑는 자동 검증을 추가했습니다.
+- `safe-area-copy-clamp-v166`: 알림/보상/상점/미션/결과 화면의 긴 문구 폭을 실제 폰 safe-area 기준으로 제한합니다.
+- `input-watchdog-v166`: 씬 진입/전환 후 입력이 꺼진 채 남는 상황을 추가로 복구합니다.
+- `button-corner-sweep-v166`, `line-free-surface-v166`: 버튼/패널/프레임의 줄처럼 보이는 선과 광택을 더 줄였습니다.
+- 앨범 그리드, 상점 전환 오버레이, 보상/결과 하단 액션 버튼 배치를 실제 화면 폭 기준으로 정리했습니다.
+- `tools/check-corner-sweep-v166.mjs`를 추가하고 `npm run verify` 앞단에 포함했습니다.
 
 ## 1.0.65 업데이트 내역
 

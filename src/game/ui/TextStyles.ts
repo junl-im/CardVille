@@ -6,6 +6,7 @@ export const CARDVILLE_MOBILE_TEXT_TAG = 'mobile-readable-text-v158' as const;
 export const CARDVILLE_NOTICE_TEXT_FIT_TAG = 'notice-text-fit-v163' as const;
 export const CARDVILLE_COPY_FIT_TAG = 'mobile-copy-fit-v164' as const;
 export const CARDVILLE_COPY_BOX_GUARD_TAG = 'copy-box-guard-v165' as const;
+export const CARDVILLE_HOLISTIC_COPY_FIT_TAG = 'holistic-copy-fit-v166' as const;
 // Compatibility audit anchors retained for older checks: mobile-readable-text-v157, mobile-readable-text-v156, return prefs.largeText ? 1.40 : 1.20, return prefs.largeText ? 1.34 : 1.17, size <= 9 ? 12, size <= 11 ? 14.
 export const CARDVILLE_PREVIOUS_MOBILE_TEXT_TAG = 'mobile-readable-text-v156' as const;
 
@@ -92,7 +93,7 @@ export function darkText(size = 18): TextStyle {
     fontStyle: '900',
     color: '#14233f',
     stroke: '#ffffff',
-    strokeThickness: 2,
+    strokeThickness: 1,
     shadow: {
       offsetX: 0,
       offsetY: 1,
@@ -111,7 +112,7 @@ export function cardText(size = 24): TextStyle {
     fontStyle: '900',
     color: '#4a1b28',
     stroke: '#fffaf0',
-    strokeThickness: 3,
+    strokeThickness: 2,
     align: 'center',
     shadow: {
       offsetX: 0,
@@ -181,7 +182,8 @@ export function applyCopyBox(style: TextStyle, width: number, height: number, al
     fixedWidth: width,
     fixedHeight: height,
     maxLines: Math.max(1, Math.floor(height / lineHeight)),
-    lineSpacing: Math.min(Number(style.lineSpacing ?? 2), 3)
+    lineSpacing: Math.min(Number(style.lineSpacing ?? 2), 3),
+    padding: { left: 2, right: 2, top: 1, bottom: 1 }
   };
 }
 
@@ -192,5 +194,21 @@ export function fitOneLine(style: TextStyle, width: number, align: 'left' | 'cen
     fixedWidth: width,
     fixedHeight: Math.max(18, Number.parseInt(String(style.fontSize ?? '14'), 10) + 8),
     maxLines: 1
+  };
+}
+
+
+export function applyTightCopyBox(style: TextStyle, width: number, height: number, align: 'left' | 'center' | 'right' = 'center'): TextStyle {
+  const parsedSize = Number.parseInt(String(style.fontSize ?? '12'), 10);
+  const lineHeight = Math.max(12, parsedSize + 3);
+  return {
+    ...style,
+    align,
+    wordWrap: { width, useAdvancedWrap: true },
+    fixedWidth: width,
+    fixedHeight: height,
+    maxLines: Math.max(1, Math.floor(height / lineHeight)),
+    lineSpacing: 1,
+    padding: { left: 2, right: 2, top: 1, bottom: 1 }
   };
 }

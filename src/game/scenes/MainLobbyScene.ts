@@ -17,7 +17,7 @@ import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 import { AccessibilitySystem } from '../systems/AccessibilitySystem';
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
-const LOBBY_VERSION = '1.0.65';
+const LOBBY_VERSION = '1.0.66';
 const MISSION_TONE_COLORS = { gold: 0xffd86f, blue: 0x8fd3ff, purple: 0xd7a5ff, green: 0xa9f5b5, coral: 0xffb39a } as const;
 const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-visible-v149' as const;
 const VILLAGE_VISIBLE_BUILDING_SCALE_TAG = 'village-readable-building-scale-v150' as const;
@@ -388,9 +388,12 @@ export class MainLobbyScene extends Phaser.Scene {
     const imageY = (building.imageY ?? 0) * scale;
 
     if ((building.open || recommended) && this.textures.exists('uiBuildingGlow')) {
-      const glow = this.add.image(0, 8 * scale, 'uiBuildingGlow').setDisplaySize(width * (recommended ? 1.72 : 1.55), height * (recommended ? 1.72 : 1.55)).setAlpha(recommended ? 0.46 : 0.35);
+      const glow = this.rememberBaseScale(this.add.image(0, 8 * scale, 'uiBuildingGlow').setDisplaySize(width * (recommended ? 1.72 : 1.55), height * (recommended ? 1.72 : 1.55)).setAlpha(recommended ? 0.46 : 0.35));
       container.add(glow);
-      if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: glow, alpha: 0.12, scale: 1.08, duration: scaledDuration(1100 + (building.x % 3) * 150, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      if (allowAmbientMotion(this.quality)) {
+        const baseGlow = this.baseScaleOf(glow);
+        this.tweens.add({ targets: glow, alpha: 0.12, scaleX: baseGlow.x * 1.08, scaleY: baseGlow.y * 1.08, duration: scaledDuration(1100 + (building.x % 3) * 150, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      }
     }
 
     const shadowY = (building.shadowY ?? visualHeight * 0.39) * (building.shadowY ? scale : 1);

@@ -18,12 +18,13 @@ const excludesAll = (file, tokens) => {
   for (const token of tokens) assert(!text.includes(token), `${file} must not include ${token}`);
 };
 
-includesAll('package.json', ['"version": "1.0.65"', 'check:flow-ui-v165']);
+const pkg = JSON.parse(read('package.json'));
+includesAll('package.json', [`"version": "${pkg.version}"`, 'check:flow-ui-v165']);
 includesAll('src/game/systems/ScreenUISystem.ts', ['list-card-fit-v165', 'action-bar-fit-v165', 'copy-box-guard-v165', 'stackedListMetrics', 'actionButtonCenters', 'safeToastPosition']);
 includesAll('src/game/systems/LayoutSystem.ts', ['dynamic-phone-frame-v165', 'scene-input-recovery-v165', 'if (scene.input) scene.input.enabled = true']);
 includesAll('src/game/systems/NavigationSystem.ts', ['restart-input-recovery-v165', 'if (scene.input) scene.input.enabled = true']);
 includesAll('src/game/ui/TextStyles.ts', ['copy-box-guard-v165', 'applyCopyBox', 'fitOneLine']);
-includesAll('src/game/ui/GameButton.ts', ['button-copy-guard-v165', 'button-input-recovery-v165', 'pressed ? 0.055 : 0.075', 'this.scene.tweens.killTweensOf(this)']);
+includesAll('src/game/ui/GameButton.ts', ['button-copy-guard-v165', 'button-input-recovery-v165', 'button-corner-sweep-v166', 'pressed ? 0.026 : 0.038', 'this.scene.tweens.killTweensOf(this)']);
 includesAll('src/game/scenes/StageSelectScene.ts', ['stackedListMetrics', 'actionButtonCenters', 'safeToastPosition', 'CARDVILLE_LIST_CARD_FIT_TAG']);
 includesAll('src/game/scenes/ModeSelectScene.ts', ['stackedListMetrics', 'safeToastPosition', 'CARDVILLE_LIST_CARD_FIT_TAG']);
 includesAll('src/game/scenes/DailyMissionScene.ts', ['actionButtonCenters', 'safeToastPosition']);

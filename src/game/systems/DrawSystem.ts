@@ -6,6 +6,7 @@ export type CardVilleSceneBackdropVariant = 'village' | 'forest' | 'library' | '
 
 export const CARDVILLE_SCENE_BACKDROP_TAG = 'scene-premium-backdrop-v155' as const;
 export const CARDVILLE_FRAME_LINE_SOFTEN_TAG = 'screen-frame-lineless-v164' as const;
+export const CARDVILLE_FRAME_CORNER_SWEEP_TAG = 'screen-frame-corner-sweep-v166' as const;
 const CARDVILLE_LEGACY_LAYOUT_TOKEN = '2.5D plaza';
 
 const BACKDROP_BY_VARIANT: Record<CardVilleSceneBackdropVariant, { key: string; sourceW: number; sourceH: number; tint: number; overlay: number }> = {
@@ -35,7 +36,7 @@ export class DrawSystem {
     }
 
     const g = scene.add.graphics();
-    g.setName(`premium-scene-frame:${CARDVILLE_SCENE_BACKDROP_TAG}:${CARDVILLE_FRAME_LINE_SOFTEN_TAG}`);
+    g.setName(`premium-scene-frame:${CARDVILLE_SCENE_BACKDROP_TAG}:${CARDVILLE_FRAME_LINE_SOFTEN_TAG}:${CARDVILLE_FRAME_CORNER_SWEEP_TAG}`);
     g.fillStyle(0xffe4a3, 0.07);
     g.fillCircle(328, 102, 118);
     g.fillStyle(0xffffff, 0.05);
@@ -44,9 +45,9 @@ export class DrawSystem {
     g.fillCircle(214, 420, 266);
     g.fillGradientStyle(0x071126, 0x071126, 0x071126, 0x071126, 0, 0, 0.18, 0.72);
     g.fillRect(l.visibleX, 548, l.visibleWidth, 296 + l.extraY);
-    g.lineStyle(1, 0xffffff, 0.055);
+    g.lineStyle(1, 0xffffff, 0.030);
     g.strokeRoundedRect(l.visibleX + 14, 88, l.visibleWidth - 28, 666, 32);
-    g.lineStyle(1, 0xffd86f, 0.075);
+    g.lineStyle(1, 0xffd86f, 0.040);
     g.strokeRoundedRect(l.visibleX + 22, 96, l.visibleWidth - 44, 648, 28);
 
     for (let i = 0; i < 8; i += 1) {
@@ -66,11 +67,11 @@ export class DrawSystem {
       const titleY = l.top;
       plate.fillStyle(0x061127, 0.88);
       plate.fillRoundedRect(titleX, titleY, titleW, 58, 24);
-      plate.lineStyle(1, 0xffffff, 0.13);
+      plate.lineStyle(1, 0xffffff, 0.055);
       plate.strokeRoundedRect(titleX, titleY, titleW, 58, 24);
-      plate.lineStyle(1, 0xffd86f, 0.12);
+      plate.lineStyle(1, 0xffd86f, 0.055);
       plate.strokeRoundedRect(titleX + 8, titleY + 7, titleW - 16, 44, 18);
-      plate.fillStyle(0xffffff, 0.13);
+      plate.fillStyle(0xffffff, 0.035);
       plate.fillRoundedRect(titleX + 28, titleY + 12, titleW - 56, 12, 8);
       scene.add.text(l.cx, titleY + 30, title, titleText(24)).setOrigin(0.5);
     }

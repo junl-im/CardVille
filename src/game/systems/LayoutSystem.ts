@@ -6,6 +6,8 @@ export const RESPONSIVE_MOBILE_LAYOUT_TAG = 'responsive-mobile-viewport-v163' as
 export const RESPONSIVE_SURFACE_SPREAD_TAG = 'responsive-surface-spread-v163' as const;
 export const DYNAMIC_PHONE_FRAME_TAG = 'dynamic-phone-frame-v165' as const;
 export const SCENE_INPUT_RECOVERY_TAG = 'scene-input-recovery-v165' as const;
+export const CARDVILLE_CORNER_SWEEP_TAG = 'corner-sweep-v166' as const;
+export const CARDVILLE_INPUT_WATCHDOG_TAG = 'input-watchdog-v166' as const;
 
 export type SafeAreaInsets = {
   top: number;
@@ -123,6 +125,46 @@ export function responsivePoint(scene: Phaser.Scene | undefined, baseX: number, 
   return { x: responsiveX(scene, baseX), y: responsiveY(scene, baseY) };
 }
 
+export function clampToSafeX(scene: Phaser.Scene | undefined, x: number, halfWidth = 0, margin = 12): number {
+  const b = visibleBounds(scene);
+  const insets = safeAreaInsets();
+  const left = b.visibleX + Math.max(margin, insets.left + margin) + halfWidth;
+  const right = b.visibleX + b.visibleWidth - Math.max(margin, insets.right + margin) - halfWidth;
+  return clamp(x, left, Math.max(left, right));
+}
+
+export function clampToSafeY(scene: Phaser.Scene | undefined, y: number, halfHeight = 0, margin = 12): number {
+  const b = visibleBounds(scene);
+  const insets = safeAreaInsets();
+  const top = b.visibleY + Math.max(margin, insets.top + margin) + halfHeight;
+  const bottom = b.visibleY + b.visibleHeight - Math.max(margin, insets.bottom + margin) - halfHeight;
+  return clamp(y, top, Math.max(top, bottom));
+}
+
+export function safeCenter(scene: Phaser.Scene | undefined, width = 0, height = 0, margin = 12): { x: number; y: number } {
+  const b = visibleBounds(scene);
+  return {
+    x: clampToSafeX(scene, b.visibleX + b.visibleWidth / 2, width / 2, margin),
+    y: clampToSafeY(scene, b.visibleY + b.visibleHeight / 2, height / 2, margin)
+  };
+}
+
+export function ensureInputWatchdog(scene: Phaser.Scene, tag = CARDVILLE_INPUT_WATCHDOG_TAG): void {
+  const restore = () => {
+    try {
+      if (scene.input) scene.input.enabled = true;
+    } catch {
+      // Scene can be mid-destroy during route changes.
+    }
+  };
+  restore();
+  scene.time.delayedCall(80, restore);
+  scene.time.delayedCall(260, restore);
+  if (typeof window !== 'undefined') window.setTimeout(restore, 420);
+  scene.events.once(Phaser.Scenes.Events.SHUTDOWN, restore);
+  scene.events.emit('cardville-input-watchdog', tag);
+}
+
 export function viewportCenterX(scene?: Phaser.Scene): number {
   const b = visibleBounds(scene);
   return b.visibleX + b.visibleWidth / 2;
@@ -195,6 +237,7 @@ export function applyResponsiveCamera(scene: Phaser.Scene): void {
   scene.events.once(Phaser.Scenes.Events.CREATE, () => {
     try { if (scene.input) scene.input.enabled = true; } catch { /* ignore */ }
   });
+  ensureInputWatchdog(scene);
   const apply = () => {
     cachedInsets = null;
     const bounds = visibleBounds(scene);
