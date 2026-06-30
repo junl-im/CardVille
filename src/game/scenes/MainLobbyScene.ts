@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { NavigationSystem } from '../systems/NavigationSystem';
-import { addCoverImage, applyResponsiveCamera, hasTouchDebug, layout } from '../systems/LayoutSystem';
+import { addCoverImage, applyResponsiveCamera, hasTouchDebug, layout, responsivePoint, responsiveScale, responsiveX, responsiveY } from '../systems/LayoutSystem';
 import { DrawSystem } from '../systems/DrawSystem';
 import { SaveSystem } from '../systems/SaveSystem';
 import { WORD_STAGES } from '../data/wordStages';
@@ -17,7 +17,7 @@ import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 import { AccessibilitySystem } from '../systems/AccessibilitySystem';
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
-const LOBBY_VERSION = '1.0.60';
+const LOBBY_VERSION = '1.0.61';
 const MISSION_TONE_COLORS = { gold: 0xffd86f, blue: 0x8fd3ff, purple: 0xd7a5ff, green: 0xa9f5b5, coral: 0xffb39a } as const;
 const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-visible-v149' as const;
 const VILLAGE_VISIBLE_BUILDING_SCALE_TAG = 'village-readable-building-scale-v150' as const;
@@ -33,6 +33,7 @@ const LOBBY_SCREENSHOT_REPAIR_TAG = 'lobby-screenshot-repair-v159' as const;
 const LOBBY_NO_PATCH_TEXT_TAG = 'lobby-no-bottom-patch-text-v159' as const;
 const LOBBY_FULLSCREEN_SPREAD_TAG = 'lobby-fullscreen-spread-v160' as const;
 const LOBBY_INPUT_RESET_TAG = 'lobby-input-reset-v160' as const;
+const RESPONSIVE_MOBILE_VIEWPORT_TAG = 'responsive-mobile-viewport-v161' as const;
 const HERO_HOME = { x: 195, y: 566 } as const;
 const CAT_HOME = { x: 146, y: 612 } as const;
 
@@ -89,6 +90,22 @@ export class MainLobbyScene extends Phaser.Scene {
     this.showLobbyCoach(recommendedBuildingId);
   }
 
+  private vx(baseX: number): number { return responsiveX(this, baseX); }
+
+  private vy(baseY: number): number { return responsiveY(this, baseY); }
+
+  private vs(min = 0.96, max = 1.12): number { return responsiveScale(this, min, max); }
+
+  private point(baseX: number, baseY: number): { x: number; y: number } { return responsivePoint(this, baseX, baseY); }
+
+  private buildingPoint(building: Pick<DioramaBuilding, 'x' | 'y'>): { x: number; y: number } {
+    return this.point(building.x, building.y);
+  }
+
+  private buildingTarget(building: DioramaBuilding): { x: number; y: number } {
+    return this.point(building.targetX, building.targetY);
+  }
+
   private ensureLobbyCriticalAssets(attempt: number): boolean {
     const lobbyKeys = new Set<string>([...LOBBY_CRITICAL_PNG_ASSET_KEYS, 'npcMerchant', 'npcWizard', 'npcLibrarian', 'npcForestSagePremium']);
     const requiredAssets = ASSET_MANIFEST.filter((asset) => lobbyKeys.has(asset.key));
@@ -135,12 +152,12 @@ export class MainLobbyScene extends Phaser.Scene {
       id: 'lobby_recommended_route_v144',
       title: '고양이 길잡이',
       body: recommendedBuildingId === 'event' && missionStatus.rewardReadyCount > 0 ? `이벤트 광장에 ${missionStatus.lobbyBadgeLabel} 보상이 있어요. ${missionStatus.nextActionCopy}` : 'NEXT가 붙은 건물부터 들어가면 도서관, 학교, 연구소, 기억의 숲을 자연스럽게 이어갈 수 있어요. 보상이 준비되면 이벤트 광장이 먼저 안내됩니다.',
-      x: 195,
-      y: 724,
+      x: layout(this).cx,
+      y: layout(this).bottom - 96,
       width: 326,
       tone: 'gold',
-      anchorX: target?.x,
-      anchorY: target?.y
+      anchorX: target ? this.buildingPoint(target).x : undefined,
+      anchorY: target ? this.buildingPoint(target).y : undefined
     });
   }
 
@@ -155,14 +172,14 @@ export class MainLobbyScene extends Phaser.Scene {
       DrawSystem.background(this, '카드마을 광장');
     }
     this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x061126, 0.035).setDepth(1);
-    this.add.rectangle(l.visibleX + l.visibleWidth / 2, 824, l.visibleWidth, 48 + l.extraY, 0x020814, 0.16).setDepth(2);
+    this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.bottom + 18, l.visibleWidth, 52 + l.safeBottom, 0x020814, 0.16).setDepth(2);
   }
 
   private drawAtmosphericPolish(): void {
     const l = layout(this);
-    const top = this.add.rectangle(l.visibleX + l.visibleWidth / 2, 54, l.visibleWidth, 108, 0xffffff, 0.04).setDepth(6);
-    const bottom = this.add.rectangle(l.visibleX + l.visibleWidth / 2, 804, l.visibleWidth, 110, 0x020814, 0.12).setDepth(6);
-    const focus = this.add.ellipse(195, 538, 282, 352, 0xffd86f, 0.055).setDepth(7);
+    const top = this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.top + 32, l.visibleWidth, 108 + l.safeTop, 0xffffff, 0.04).setDepth(6);
+    const bottom = this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.bottom - 20, l.visibleWidth, 118 + l.safeBottom, 0x020814, 0.12).setDepth(6);
+    const focus = this.add.ellipse(l.cx, this.vy(538), 282 * this.vs(), 352 * this.vs(), 0xffd86f, 0.055).setDepth(7);
     if (allowAmbientMotion(this.quality)) {
       this.tweens.add({ targets: focus, scale: 1.05, alpha: 0.025, duration: scaledDuration(1800, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
       this.tweens.add({ targets: top, alpha: 0.058, duration: scaledDuration(2200, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
@@ -176,21 +193,21 @@ export class MainLobbyScene extends Phaser.Scene {
     const right = l.visibleX + l.visibleWidth - 14;
     const panelW = 230;
     const panelX = left + panelW / 2;
-    const panelY = 38;
+    const panelY = l.top + 16;
     if (this.textures.exists('uiPanelGlass')) {
       this.add.image(panelX, panelY, 'uiPanelGlass').setDisplaySize(panelW, 52).setAlpha(0.88).setDepth(940).setName(LOBBY_UI_NON_OVERLAP_TAG);
     } else {
       const g = this.add.graphics().setDepth(940).setName(LOBBY_UI_NON_OVERLAP_TAG);
       g.fillStyle(0x07142c, 0.68);
-      g.fillRoundedRect(left, 18, panelW, 52, 22);
+      g.fillRoundedRect(left, panelY - 20, panelW, 52, 22);
       g.lineStyle(1, 0xffffff, 0.18);
-      g.strokeRoundedRect(left, 18, panelW, 52, 22);
+      g.strokeRoundedRect(left, panelY - 20, panelW, 52, 22);
     }
-    this.add.text(left + 7, 31, 'CardVille', titleText(18)).setOrigin(0, 0.5).setDepth(942);
+    this.add.text(left + 7, panelY - 7, 'CardVille', titleText(18)).setOrigin(0, 0.5).setDepth(942);
     const totalOpenStages = WORD_STAGES.length + ENGLISH_STAGES.length + MATH_STAGES.length + MEMORY_STAGES.length;
-    this.add.text(left + 7, 54, `Lv.${level} · 🪙 ${coins} · 카드 ${cards} · ${cleared}/${totalOpenStages}`, mutedText(11)).setOrigin(0, 0.5).setDepth(942);
+    this.add.text(left + 7, panelY + 16, `Lv.${level} · 🪙 ${coins} · 카드 ${cards} · ${cleared}/${totalOpenStages}`, mutedText(11)).setOrigin(0, 0.5).setDepth(942);
 
-    const album = this.add.container(right - 88, 38).setDepth(945).setName(`album:${LOBBY_UI_NON_OVERLAP_TAG}:${LOBBY_FULLSCREEN_SPREAD_TAG}`);
+    const album = this.add.container(right - 88, panelY).setDepth(945).setName(`album:${LOBBY_UI_NON_OVERLAP_TAG}:${LOBBY_FULLSCREEN_SPREAD_TAG}`);
     if (this.textures.exists('uiNameplateGold')) album.add(this.add.image(0, 0, 'uiNameplateGold').setDisplaySize(72, 44));
     else {
       const bg = this.add.graphics();
@@ -215,7 +232,7 @@ export class MainLobbyScene extends Phaser.Scene {
       : '추천 건물을 따라가면 좋아요. 건물 그림을 가리지 않도록 안내는 상단 얇은 리본에만 표시해요.';
     const l = layout(this);
     const ribbonW = Math.min(374, l.visibleWidth - 28);
-    const ribbon = this.add.container(l.visibleX + l.visibleWidth / 2, 96).setDepth(938).setName(`${SCREEN_UI_STABILITY_TAG}:${MOBILE_READABLE_LAYOUT_TAG}:${LOBBY_UI_NON_OVERLAP_TAG}:${LOBBY_FULLSCREEN_SPREAD_TAG}`);
+    const ribbon = this.add.container(l.visibleX + l.visibleWidth / 2, l.top + 74).setDepth(938).setName(`${SCREEN_UI_STABILITY_TAG}:${MOBILE_READABLE_LAYOUT_TAG}:${LOBBY_UI_NON_OVERLAP_TAG}:${LOBBY_FULLSCREEN_SPREAD_TAG}`);
     ribbon.add(this.add.rectangle(0, 0, ribbonW, 28, 0x07142c, 0.64).setStrokeStyle(1, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.36));
     ribbon.add(this.add.rectangle(-ribbonW / 2 + 40, 0, 50, 20, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.90).setStrokeStyle(1, 0xffffff, 0.32));
     ribbon.add(this.add.text(-ribbonW / 2 + 40, 0, '추천', darkText(10)).setOrigin(0.5));
@@ -243,12 +260,14 @@ export class MainLobbyScene extends Phaser.Scene {
   private drawRecommendedTrail(building: DioramaBuilding): void {
     if (this.quality.tier === 'lite') return;
     const dots = 4;
+    const hero = this.point(HERO_HOME.x, HERO_HOME.y + 34);
+    const target = this.point(building.targetX, building.targetY + 30);
     for (let i = 1; i <= dots; i += 1) {
       const t = i / (dots + 1);
-      const x = Phaser.Math.Linear(HERO_HOME.x, building.targetX, t);
-      const y = Phaser.Math.Linear(HERO_HOME.y + 34, building.targetY + 30, t);
+      const x = Phaser.Math.Linear(hero.x, target.x, t);
+      const y = Phaser.Math.Linear(hero.y, target.y, t);
       const dot = this.textures.exists('propCardTrail')
-        ? this.add.image(x, y, 'propCardTrail').setDisplaySize(24, 20)
+        ? this.add.image(x, y, 'propCardTrail').setDisplaySize(24 * this.vs(), 20 * this.vs())
         : this.add.circle(x, y, 4, 0xffd86f, 0.42);
       dot.setDepth(735).setAlpha(0.32);
       if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: dot, alpha: 0.08, y: y - 8, duration: scaledDuration(900 + i * 140, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
@@ -256,14 +275,17 @@ export class MainLobbyScene extends Phaser.Scene {
   }
 
   private drawDioramaProps(): void {
+    const scale = this.vs(0.94, 1.12);
     for (const prop of LOBBY_PROPS) {
       if (!this.textures.exists(prop.key)) continue;
-      const image = this.add.image(prop.x, prop.y, prop.key)
-        .setDisplaySize(prop.width, prop.height)
+      const x = this.vx(prop.x);
+      const y = this.vy(prop.y);
+      const image = this.add.image(x, y, prop.key)
+        .setDisplaySize(prop.width * scale, prop.height * scale)
         .setAlpha(prop.alpha ?? 1)
-        .setDepth(prop.depth ?? prop.y);
+        .setDepth(prop.depth ? this.vy(prop.depth) : y);
       if (prop.bob && allowAmbientMotion(this.quality)) {
-        this.tweens.add({ targets: image, y: prop.y - prop.bob, duration: scaledDuration(1200 + Math.floor(prop.x) * 3, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+        this.tweens.add({ targets: image, y: y - prop.bob * scale, duration: scaledDuration(1200 + Math.floor(prop.x) * 3, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
       }
     }
   }
@@ -291,26 +313,32 @@ export class MainLobbyScene extends Phaser.Scene {
   }
 
   private drawBuilding(building: DioramaBuilding, recommended: boolean): void {
-    const container = this.add.container(building.x, building.y).setDepth(building.y).setName(`building:${building.id}:${LOBBY_BOOT_ASSET_HARDENING_TAG}:${LOBBY_ART_PLACEMENT_TAG}`);
+    const point = this.buildingPoint(building);
+    const scale = this.vs(0.95, 1.12);
+    const container = this.add.container(point.x, point.y).setDepth(point.y).setName(`building:${building.id}:${LOBBY_BOOT_ASSET_HARDENING_TAG}:${LOBBY_ART_PLACEMENT_TAG}:${RESPONSIVE_MOBILE_VIEWPORT_TAG}`);
+    const width = building.width * scale;
+    const height = building.height * scale;
+    const visualWidth = (building.visualWidth ?? building.width) * scale;
+    const visualHeight = (building.visualHeight ?? building.height) * scale;
+    const imageY = (building.imageY ?? 0) * scale;
+
     if ((building.open || recommended) && this.textures.exists('uiBuildingGlow')) {
-      const glow = this.add.image(0, 8, 'uiBuildingGlow').setDisplaySize(building.width * (recommended ? 1.72 : 1.55), building.height * (recommended ? 1.72 : 1.55)).setAlpha(recommended ? 0.46 : 0.35);
+      const glow = this.add.image(0, 8 * scale, 'uiBuildingGlow').setDisplaySize(width * (recommended ? 1.72 : 1.55), height * (recommended ? 1.72 : 1.55)).setAlpha(recommended ? 0.46 : 0.35);
       container.add(glow);
       if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: glow, alpha: 0.12, scale: 1.08, duration: scaledDuration(1100 + (building.x % 3) * 150, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
 
-    const visualWidth = building.visualWidth ?? building.width;
-    const visualHeight = building.visualHeight ?? building.height;
-    const baseShadow = this.add.ellipse(0, building.shadowY ?? visualHeight * 0.39, visualWidth * 0.86, Math.max(18, visualHeight * 0.17), 0x05030a, building.open ? 0.28 : 0.19);
+    const shadowY = (building.shadowY ?? visualHeight * 0.39) * (building.shadowY ? scale : 1);
+    const baseShadow = this.add.ellipse(0, shadowY, visualWidth * 0.86, Math.max(18, visualHeight * 0.17), 0x05030a, building.open ? 0.28 : 0.19);
     container.add(baseShadow);
-    const contactGlow = this.add.ellipse(0, (building.shadowY ?? visualHeight * 0.39) - 4, visualWidth * 0.72, Math.max(12, visualHeight * 0.10), building.open ? 0xffd86f : 0x8fd3ff, building.open ? 0.08 : 0.04);
+    const contactGlow = this.add.ellipse(0, shadowY - 4 * scale, visualWidth * 0.72, Math.max(12, visualHeight * 0.10), building.open ? 0xffd86f : 0x8fd3ff, building.open ? 0.08 : 0.04);
     container.add(contactGlow);
     const premiumStage = this.add.ellipse(0, visualHeight * 0.38, visualWidth * 0.98, Math.max(24, visualHeight * 0.19), 0xfff0c2, building.open ? 0.12 : 0.06);
     premiumStage.setStrokeStyle(1, building.open ? 0xffd86f : 0xffffff, building.open ? 0.22 : 0.10);
     container.add(premiumStage);
 
-    const imageY = building.imageY ?? 0;
     const image = this.textures.exists(building.assetKey)
-      ? this.fitImageToBox(this.add.image(0, imageY, building.assetKey).setName(`visible:${building.assetKey}:${LOBBY_BOOT_ASSET_HARDENING_TAG}:${LOBBY_ART_PLACEMENT_TAG}:${LOBBY_USER_ASSET_VISIBLE_TAG}`).setAlpha(1), visualWidth, visualHeight)
+      ? this.fitImageToBox(this.add.image(0, imageY, building.assetKey).setName(`visible:${building.assetKey}:${LOBBY_BOOT_ASSET_HARDENING_TAG}:${LOBBY_ART_PLACEMENT_TAG}:${LOBBY_USER_ASSET_VISIBLE_TAG}:${RESPONSIVE_MOBILE_VIEWPORT_TAG}`).setAlpha(1), visualWidth, visualHeight)
       : this.drawMissingBuildingFallback(building, visualWidth, visualHeight);
     container.add(image);
     if (['dioramaCastle', 'dioramaLibrary', 'dioramaLab', 'dioramaForest'].includes(building.assetKey)) {
@@ -327,53 +355,51 @@ export class MainLobbyScene extends Phaser.Scene {
     }
 
     if (this.textures.exists(building.iconKey)) {
-      container.add(this.add.image(building.iconX ?? -visualWidth * 0.31, building.iconY ?? -visualHeight * 0.31, building.iconKey).setDisplaySize(25, 25).setAlpha(0.95));
+      container.add(this.add.image((building.iconX ?? -visualWidth * 0.31) * (building.iconX ? scale : 1), (building.iconY ?? -visualHeight * 0.31) * (building.iconY ? scale : 1), building.iconKey).setDisplaySize(25 * scale, 25 * scale).setAlpha(0.95));
     }
 
     if (recommended) {
-      container.add(this.add.text(0, building.recommendLabelY ?? -visualHeight * 0.47, '추천', goldText(11)).setOrigin(0.5));
+      container.add(this.add.text(0, (building.recommendLabelY ?? -visualHeight * 0.47) * (building.recommendLabelY ? scale : 1), '추천', goldText(11)).setOrigin(0.5));
       this.drawRecommendedTrail(building);
     }
 
-    const plateY = building.nameplateY ?? visualHeight * 0.36;
+    const plateY = (building.nameplateY ?? visualHeight * 0.36) * (building.nameplateY ? scale : 1);
     if (this.textures.exists('uiNameplateGold')) {
-      container.add(this.add.image(0, plateY + 16, 'uiNameplateGold').setDisplaySize(building.nameplateWidth ?? 108, 42).setAlpha(building.open ? 0.96 : 0.72));
+      container.add(this.add.image(0, plateY + 16 * scale, 'uiNameplateGold').setDisplaySize((building.nameplateWidth ?? 108) * scale, 42 * scale).setAlpha(building.open ? 0.96 : 0.72));
     } else {
       const plate = this.add.graphics();
       plate.fillStyle(0x07142c, building.open ? 0.78 : 0.58);
-      plate.fillRoundedRect(-50, plateY, 100, 36, 15);
+      plate.fillRoundedRect(-50 * scale, plateY, 100 * scale, 36 * scale, 15 * scale);
       plate.lineStyle(1, building.open ? 0xffd86f : 0xffffff, building.open ? 0.56 : 0.22);
-      plate.strokeRoundedRect(-50, plateY, 100, 36, 15);
+      plate.strokeRoundedRect(-50 * scale, plateY, 100 * scale, 36 * scale, 15 * scale);
       container.add(plate);
     }
-    container.add(this.add.text(0, plateY + 9, building.title, goldText(14)).setOrigin(0.5));
-    container.add(this.add.text(0, plateY + 27, building.subtitle, mutedText(11)).setOrigin(0.5));
-    this.drawBuildingStatusChip(container, building, recommended);
+    container.add(this.add.text(0, plateY + 9 * scale, building.title, goldText(14)).setOrigin(0.5));
+    container.add(this.add.text(0, plateY + 27 * scale, building.subtitle, mutedText(11)).setOrigin(0.5));
+    this.drawBuildingStatusChip(container, building, recommended, scale, visualWidth, visualHeight);
 
     if (!building.open) {
-      if (this.textures.exists('uiLockBadge')) container.add(this.add.image(building.lockX ?? 37, building.lockY ?? -visualHeight * 0.30, 'uiLockBadge').setDisplaySize(31, 31));
-      else container.add(this.add.text(building.lockX ?? 35, building.lockY ?? -visualHeight * 0.30, '준비중', goldText(9)).setOrigin(0.5));
+      if (this.textures.exists('uiLockBadge')) container.add(this.add.image((building.lockX ?? 37) * scale, (building.lockY ?? -visualHeight * 0.30) * (building.lockY ? scale : 1), 'uiLockBadge').setDisplaySize(31 * scale, 31 * scale));
       container.setAlpha(0.76);
     }
 
-    const zoneWidth = Math.max(building.touchWidth, visualWidth * 0.66);
-    const zoneHeight = Math.max(building.touchHeight, visualHeight * 0.58);
-    const zone = this.add.zone(building.x, building.y + (building.touchOffsetY ?? 0), zoneWidth, zoneHeight).setInteractive({ useHandCursor: building.open });
-    zone.setDepth(building.y + 5);
+    const zoneWidth = Math.max(building.touchWidth * scale, visualWidth * 0.66);
+    const zoneHeight = Math.max(building.touchHeight * scale, visualHeight * 0.58);
+    const zone = this.add.zone(point.x, point.y + (building.touchOffsetY ?? 0) * scale, zoneWidth, zoneHeight).setInteractive({ useHandCursor: building.open });
+    zone.setDepth(point.y + 5);
     zone.on('pointerup', () => {
-      this.spawnTouchRipple(building.x, building.y + 10);
+      this.spawnTouchRipple(point.x, point.y + 10 * scale);
       this.enterBuilding(building, container);
     });
     zone.on('pointerover', () => { if (!this.busy) this.tweens.add({ targets: container, scale: 1.035, duration: 120 }); });
     zone.on('pointerout', () => { if (!this.busy) this.tweens.add({ targets: container, scale: 1, duration: 120 }); });
 
     if (hasTouchDebug()) {
-      this.add.rectangle(building.x, building.y + (building.touchOffsetY ?? 0), zoneWidth, zoneHeight, 0x00ff66, 0.12)
+      this.add.rectangle(point.x, point.y + (building.touchOffsetY ?? 0) * scale, zoneWidth, zoneHeight, 0x00ff66, 0.12)
         .setStrokeStyle(1, 0x00ff66, 0.8)
         .setDepth(900);
     }
   }
-
 
   private drawMissingBuildingFallback(building: DioramaBuilding, _width: number, _height: number): Phaser.GameObjects.Container {
     const fallback = this.add.container(0, 0).setAlpha(0);
@@ -382,17 +408,17 @@ export class MainLobbyScene extends Phaser.Scene {
     return fallback;
   }
 
-  private drawBuildingStatusChip(container: Phaser.GameObjects.Container, building: DioramaBuilding, recommended: boolean): void {
+  private drawBuildingStatusChip(container: Phaser.GameObjects.Container, building: DioramaBuilding, recommended: boolean, scale = 1, fittedVisualWidth?: number, fittedVisualHeight?: number): void {
     const missionStatus = building.id === 'event' ? DailyMissionSystem.getLobbyStatus() : null;
     const hasMissionBadge = Boolean(missionStatus?.rewardReadyCount);
     if (!recommended && !hasMissionBadge) return;
     const label = hasMissionBadge && missionStatus ? missionStatus.lobbyBadgeLabel : '추천';
-    const visualWidth = building.visualWidth ?? building.width;
-    const visualHeight = building.visualHeight ?? building.height;
-    const chipY = building.statusY ?? -visualHeight * 0.45;
+    const visualWidth = fittedVisualWidth ?? (building.visualWidth ?? building.width) * scale;
+    const visualHeight = fittedVisualHeight ?? (building.visualHeight ?? building.height) * scale;
+    const chipY = building.statusY !== undefined ? building.statusY * scale : -visualHeight * 0.45;
     const chipW = Math.max(58, label.length * 10 + 18);
     const color = missionStatus ? MISSION_TONE_COLORS[missionStatus.lobbyBadgeTone] : 0xffd86f;
-    const chip = this.add.container(building.statusX ?? visualWidth * 0.18, chipY);
+    const chip = this.add.container(building.statusX !== undefined ? building.statusX * scale : visualWidth * 0.18, chipY);
     chip.add(this.add.rectangle(0, 0, chipW, 22, color, 0.90).setStrokeStyle(1, 0xffffff, 0.38));
     chip.add(this.add.text(0, 0, label, { fontFamily: 'system-ui, sans-serif', fontSize: '11px', color: '#301b0c', fontStyle: '900' }).setOrigin(0.5));
     chip.setAlpha(0.94);
@@ -400,36 +426,41 @@ export class MainLobbyScene extends Phaser.Scene {
   }
 
   private drawDioramaNPCs(): void {
+    const scale = this.vs(0.94, 1.12);
     for (const npc of LOBBY_NPCS) {
       if (!this.textures.exists(npc.key)) continue;
-      const npcImage = this.fitImageToBox(this.add.image(npc.x, npc.y, npc.key).setName(`visible-npc:${npc.key}:${LOBBY_USER_ASSET_NPC_TAG}`), npc.width, npc.height)
-        .setDepth(npc.y + 3);
+      const x = this.vx(npc.x);
+      const y = this.vy(npc.y);
+      const width = npc.width * scale;
+      const height = npc.height * scale;
+      const npcImage = this.fitImageToBox(this.add.image(x, y, npc.key).setName(`visible-npc:${npc.key}:${LOBBY_USER_ASSET_NPC_TAG}:${RESPONSIVE_MOBILE_VIEWPORT_TAG}`), width, height)
+        .setDepth(y + 3);
       if (allowAmbientMotion(this.quality)) {
-        this.tweens.add({ targets: npcImage, y: npc.y - 2, duration: scaledDuration(900, this.quality), delay: npc.delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-        this.addNpcIdleGesture(npc, npcImage);
+        this.tweens.add({ targets: npcImage, y: y - 2 * scale, duration: scaledDuration(900, this.quality), delay: npc.delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+        this.addNpcIdleGesture(npc, npcImage, x, y);
       }
 
       if (npc.key === 'npcMerchant' || npc.key === 'npcWizard' || npc.key === 'npcLibrarian' || npc.key === 'npcTeacher' || npc.key === 'npcForestSagePremium') {
         const marker = this.textures.exists('uiQuestMarker')
-          ? this.add.image(npc.x + 17, npc.y - npc.height * 0.55, 'uiQuestMarker').setDisplaySize(18, 18)
-          : this.add.text(npc.x + 17, npc.y - npc.height * 0.55, '!', goldText(14)).setOrigin(0.5);
-        marker.setDepth(npc.y + 5);
-        if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: marker, y: marker.y - 4, alpha: 0.62, duration: scaledDuration(760, this.quality), delay: npc.delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+          ? this.add.image(x + 17 * scale, y - height * 0.55, 'uiQuestMarker').setDisplaySize(18 * scale, 18 * scale)
+          : this.add.text(x + 17 * scale, y - height * 0.55, '!', goldText(14)).setOrigin(0.5);
+        marker.setDepth(y + 5);
+        if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: marker, y: marker.y - 4 * scale, alpha: 0.62, duration: scaledDuration(760, this.quality), delay: npc.delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
       }
 
-      const zone = this.add.zone(npc.x, npc.y, npc.width + 34, npc.height + 42).setInteractive({ useHandCursor: true });
-      zone.setDepth(npc.y + 8);
+      const zone = this.add.zone(x, y, width + 34 * scale, height + 42 * scale).setInteractive({ useHandCursor: true });
+      zone.setDepth(y + 8);
       zone.on('pointerup', () => {
         if (this.busy) return;
-        this.spawnTouchRipple(npc.x, npc.y);
-        this.showNpcDialogue(npc);
-        this.playNpcGesture(npc, npcImage);
+        this.spawnTouchRipple(x, y);
+        this.showNpcDialogue(npc, x, y);
+        this.playNpcGesture(npc, npcImage, x, y);
       });
       zone.on('pointerover', () => { if (!this.busy) this.tweens.add({ targets: npcImage, scale: 1.08, duration: 120 }); });
       zone.on('pointerout', () => { if (!this.busy) this.tweens.add({ targets: npcImage, scale: 1, duration: 120 }); });
 
       if (hasTouchDebug()) {
-        this.add.rectangle(npc.x, npc.y, npc.width + 34, npc.height + 42, 0xffd86f, 0.10)
+        this.add.rectangle(x, y, width + 34 * scale, height + 42 * scale, 0xffd86f, 0.10)
           .setStrokeStyle(1, 0xffd86f, 0.75)
           .setDepth(901);
       }
@@ -438,15 +469,16 @@ export class MainLobbyScene extends Phaser.Scene {
 
   private drawLobbySettingsButton(): void {
     const l = layout(this);
-    const buttonX = l.visibleX + l.visibleWidth - 39;
-    const button = this.add.container(buttonX, 38).setDepth(946).setName(`${LOBBY_UI_NON_OVERLAP_TAG}:${LOBBY_FULLSCREEN_SPREAD_TAG}`);
+    const buttonX = l.visibleX + l.visibleWidth - Math.max(39, l.safeRight + 39);
+    const buttonY = l.top + 16;
+    const button = this.add.container(buttonX, buttonY).setDepth(946).setName(`${LOBBY_UI_NON_OVERLAP_TAG}:${LOBBY_FULLSCREEN_SPREAD_TAG}`);
     if (this.textures.exists('uiSettingsButton')) button.add(this.add.image(0, 0, 'uiSettingsButton').setDisplaySize(46, 46));
     else button.add(this.add.circle(0, 0, 22, 0xffd86f, 0.90));
     button.add(this.add.text(0, 1, '⚙', goldText(20)).setOrigin(0.5));
     button.setSize(50, 50).setInteractive({ useHandCursor: true });
     button.on('pointerup', () => {
       if (this.busy) return;
-      this.spawnTouchRipple(buttonX, 38);
+      this.spawnTouchRipple(buttonX, buttonY);
       this.toggleLobbySettingsPanel();
     });
     if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: button, angle: 4, duration: scaledDuration(2200, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
@@ -461,7 +493,8 @@ export class MainLobbyScene extends Phaser.Scene {
     this.activeSpeech?.destroy();
     this.activeSpeech = undefined;
 
-    const panel = this.add.container(195, 430).setDepth(1200);
+    const l = layout(this);
+    const panel = this.add.container(l.cx, l.cy + 8).setDepth(1200);
     if (this.textures.exists('uiPanelWood')) panel.add(this.add.image(0, 0, 'uiPanelWood').setDisplaySize(312, 328).setAlpha(0.97));
     else {
       const bg = this.add.graphics();
@@ -518,14 +551,14 @@ export class MainLobbyScene extends Phaser.Scene {
     this.activeSettingsPanel = panel;
   }
 
-  private addNpcIdleGesture(npc: LobbyNpc, npcImage: Phaser.GameObjects.Image): void {
+  private addNpcIdleGesture(npc: LobbyNpc, npcImage: Phaser.GameObjects.Image, x = npc.x, y = npc.y): void {
     if (!allowAmbientMotion(this.quality)) return;
     if (npc.animation === 'wave') {
       this.tweens.add({ targets: npcImage, angle: 4, duration: 840, delay: npc.delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
       return;
     }
     if (npc.animation === 'sparkle') {
-      this.time.addEvent({ delay: scaledDuration(1700, this.quality), startAt: npc.delay, loop: true, callback: () => this.spawnNpcSparkle(npc.x + 10, npc.y - 20, 2) });
+      this.time.addEvent({ delay: scaledDuration(1700, this.quality), startAt: npc.delay, loop: true, callback: () => this.spawnNpcSparkle(x + 10, y - 20, 2) });
       return;
     }
     if (npc.animation === 'cat') {
@@ -533,11 +566,11 @@ export class MainLobbyScene extends Phaser.Scene {
       return;
     }
     if (npc.animation === 'book') {
-      this.time.addEvent({ delay: 2100, startAt: npc.delay, loop: true, callback: () => this.spawnFloatingCue('iconCvLibrary', npc.x + 12, npc.y - 24) });
+      this.time.addEvent({ delay: 2100, startAt: npc.delay, loop: true, callback: () => this.spawnFloatingCue('iconCvLibrary', x + 12, y - 24) });
     }
   }
 
-  private showNpcDialogue(npc: LobbyNpc): void {
+  private showNpcDialogue(npc: LobbyNpc, x = npc.x, y = npc.y): void {
     this.activeSpeech?.destroy();
     this.activeSettingsPanel?.destroy();
     this.activeSettingsPanel = undefined;
@@ -545,8 +578,8 @@ export class MainLobbyScene extends Phaser.Scene {
     const nextIndex = (this.npcLineIndexes.get(npc.key) ?? 0) % npc.lines.length;
     this.npcLineIndexes.set(npc.key, nextIndex + 1);
     const line = npc.lines[nextIndex];
-    const bubbleX = Phaser.Math.Clamp(npc.x + (npc.x < 195 ? 78 : -78), 112, 278);
-    const bubbleY = Phaser.Math.Clamp(npc.y - 74, 112, 690);
+    const bubbleX = Phaser.Math.Clamp(x + (x < 195 ? 78 : -78), layout(this).visibleX + 112, layout(this).visibleX + layout(this).visibleWidth - 112);
+    const bubbleY = Phaser.Math.Clamp(y - 74, layout(this).top + 74, layout(this).bottom - 126);
     const bubble = this.add.container(bubbleX, bubbleY).setDepth(1150);
     if (this.textures.exists('uiSpeechBubble')) bubble.add(this.add.image(0, 0, 'uiSpeechBubble').setDisplaySize(226, 84).setAlpha(0.96));
     else {
@@ -570,40 +603,40 @@ export class MainLobbyScene extends Phaser.Scene {
     this.hintText?.setText(`${npc.label}: ${line}`);
   }
 
-  private playNpcGesture(npc: LobbyNpc, npcImage: Phaser.GameObjects.Image): void {
+  private playNpcGesture(npc: LobbyNpc, npcImage: Phaser.GameObjects.Image, x = npc.x, y = npc.y): void {
     this.tweens.add({ targets: npcImage, scale: 1.14, duration: 90, yoyo: true, ease: 'Quad.easeOut' });
     if (npc.animation === 'sparkle') {
-      this.spawnNpcSparkle(npc.x, npc.y - 18, 7);
+      this.spawnNpcSparkle(x, y - 18, 7);
       return;
     }
     if (npc.animation === 'book') {
-      this.spawnFloatingCue('iconCvLibrary', npc.x + 16, npc.y - 26);
-      this.spawnFloatingCue('assetWord', npc.x - 14, npc.y - 18);
+      this.spawnFloatingCue('iconCvLibrary', x + 16, y - 26);
+      this.spawnFloatingCue('assetWord', x - 14, y - 18);
       return;
     }
     if (!allowAmbientMotion(this.quality)) return;
     if (npc.animation === 'wave') {
       this.tweens.add({ targets: npcImage, angle: 11, duration: 85, yoyo: true, repeat: 3, ease: 'Sine.easeInOut' });
-      this.spawnFloatingCue('assetGift', npc.x + 15, npc.y - 24);
+      this.spawnFloatingCue('assetGift', x + 15, y - 24);
       return;
     }
     if (npc.animation === 'teach') {
-      this.spawnFloatingCue('iconCvSchool', npc.x + 13, npc.y - 24);
+      this.spawnFloatingCue('iconCvSchool', x + 13, y - 24);
       return;
     }
     if (npc.animation === 'cook') {
-      this.spawnFloatingCue('iconCvEvent', npc.x + 12, npc.y - 22);
+      this.spawnFloatingCue('iconCvEvent', x + 12, y - 22);
       return;
     }
     if (npc.animation === 'cat') {
-      this.spawnFloatingCue('catHint', npc.x + 12, npc.y - 20);
+      this.spawnFloatingCue('catHint', x + 12, y - 20);
       return;
     }
     if (npc.animation === 'salute') {
-      this.spawnFloatingCue('iconCvCastle', npc.x + 12, npc.y - 24);
+      this.spawnFloatingCue('iconCvCastle', x + 12, y - 24);
       return;
     }
-    this.spawnNpcSparkle(npc.x, npc.y - 20, 3);
+    this.spawnNpcSparkle(x, y - 20, 3);
   }
 
   private spawnFloatingCue(key: string, x: number, y: number): void {
@@ -626,48 +659,54 @@ export class MainLobbyScene extends Phaser.Scene {
   }
 
   private drawHeroParty(): void {
-    this.cat = this.add.container(CAT_HOME.x, CAT_HOME.y).setDepth(CAT_HOME.y + 2);
+    const scale = this.vs(0.94, 1.10);
+    const catHome = this.point(CAT_HOME.x, CAT_HOME.y);
+    const heroHome = this.point(HERO_HOME.x, HERO_HOME.y);
+    this.cat = this.add.container(catHome.x, catHome.y).setDepth(catHome.y + 2).setName(`${RESPONSIVE_MOBILE_VIEWPORT_TAG}:cat-home`);
     if (this.textures.exists('blackCatMascotPremium')) {
-      this.catImage = this.fitImageToBox(this.add.image(0, 0, 'blackCatMascotPremium'), 58, 64);
+      this.catImage = this.fitImageToBox(this.add.image(0, 0, 'blackCatMascotPremium'), 58 * scale, 64 * scale);
       this.cat.add(this.catImage);
     } else if (this.textures.exists('catIdle')) {
-      this.catImage = this.fitImageToBox(this.add.image(0, 0, 'catIdle'), 54, 57);
+      this.catImage = this.fitImageToBox(this.add.image(0, 0, 'catIdle'), 54 * scale, 57 * scale);
       this.cat.add(this.catImage);
-    } else if (this.textures.exists('dioramaCat')) this.cat.add(this.fitImageToBox(this.add.image(0, 0, 'dioramaCat'), 54, 57));
-    else this.cat.add(this.add.text(0, 0, '🐈‍⬛', { fontSize: '44px' }).setOrigin(0.5));
+    } else if (this.textures.exists('dioramaCat')) this.cat.add(this.fitImageToBox(this.add.image(0, 0, 'dioramaCat'), 54 * scale, 57 * scale));
+    else this.cat.add(this.add.text(0, 0, '🐈‍⬛', { fontSize: `${Math.round(44 * scale)}px` }).setOrigin(0.5));
 
-    this.hero = this.add.container(HERO_HOME.x, HERO_HOME.y).setDepth(HERO_HOME.y + 4);
+    this.hero = this.add.container(heroHome.x, heroHome.y).setDepth(heroHome.y + 4).setName(`${RESPONSIVE_MOBILE_VIEWPORT_TAG}:hero-home`);
     if (this.textures.exists('heroTravelerPremium')) {
-      this.heroImage = this.fitImageToBox(this.add.image(0, 0, 'heroTravelerPremium'), 78, 108);
+      this.heroImage = this.fitImageToBox(this.add.image(0, 0, 'heroTravelerPremium'), 78 * scale, 108 * scale);
       this.hero.add(this.heroImage);
     } else if (this.textures.exists('heroIdle')) {
-      this.heroImage = this.fitImageToBox(this.add.image(0, 0, 'heroIdle'), 74, 115);
+      this.heroImage = this.fitImageToBox(this.add.image(0, 0, 'heroIdle'), 74 * scale, 115 * scale);
       this.hero.add(this.heroImage);
-    } else if (this.textures.exists('dioramaHero')) this.hero.add(this.fitImageToBox(this.add.image(0, 0, 'dioramaHero'), 74, 115));
-    else this.hero.add(this.add.text(0, 0, '🧒', { fontSize: '60px' }).setOrigin(0.5));
+    } else if (this.textures.exists('dioramaHero')) this.hero.add(this.fitImageToBox(this.add.image(0, 0, 'dioramaHero'), 74 * scale, 115 * scale));
+    else this.hero.add(this.add.text(0, 0, '🧒', { fontSize: `${Math.round(60 * scale)}px` }).setOrigin(0.5));
 
     if (allowAmbientMotion(this.quality)) {
-      this.tweens.add({ targets: this.hero, y: HERO_HOME.y - 3, duration: scaledDuration(1050, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-      this.tweens.add({ targets: this.cat, y: CAT_HOME.y - 2, duration: scaledDuration(820, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      this.tweens.add({ targets: this.hero, y: heroHome.y - 3 * scale, duration: scaledDuration(1050, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      this.tweens.add({ targets: this.cat, y: catHome.y - 2 * scale, duration: scaledDuration(820, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
       this.tweens.add({ targets: this.cat, angle: 2, duration: scaledDuration(520, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
   }
 
   private drawBottomHint(nickname: string): void {
-    if (this.textures.exists('uiPanelGlass')) this.add.image(195, 826, 'uiPanelGlass').setDisplaySize(344, 34).setAlpha(0.88).setDepth(940).setName(LOBBY_UI_NON_OVERLAP_TAG);
+    const l = layout(this);
+    const y = l.bottom + 6;
+    const panelW = Math.min(430, l.visibleWidth - Math.max(28, l.safeLeft + l.safeRight + 28));
+    if (this.textures.exists('uiPanelGlass')) this.add.image(l.cx, y, 'uiPanelGlass').setDisplaySize(panelW, 34).setAlpha(0.88).setDepth(940).setName(`${LOBBY_UI_NON_OVERLAP_TAG}:${RESPONSIVE_MOBILE_VIEWPORT_TAG}`);
     else {
-      const g = this.add.graphics().setDepth(940).setName(LOBBY_UI_NON_OVERLAP_TAG);
+      const g = this.add.graphics().setDepth(940).setName(`${LOBBY_UI_NON_OVERLAP_TAG}:${RESPONSIVE_MOBILE_VIEWPORT_TAG}`);
       g.fillStyle(0x07142c, 0.66);
-      g.fillRoundedRect(23, 808, 344, 34, 16);
+      g.fillRoundedRect(l.cx - panelW / 2, y - 18, panelW, 34, 16);
       g.lineStyle(1, 0xffffff, 0.16);
-      g.strokeRoundedRect(23, 808, 344, 34, 16);
+      g.strokeRoundedRect(l.cx - panelW / 2, y - 18, panelW, 34, 16);
     }
     this.hintText = this.add.text(
-      195,
-      826,
+      l.cx,
+      y,
       `${nickname} 모험가님, 건물 그림을 눌러 이동하세요.`,
-      applyWrap(bodyText(14), 318)
-    ).setOrigin(0.5).setDepth(942).setName(LOBBY_NO_PATCH_TEXT_TAG);
+      applyWrap(bodyText(14), panelW - 26)
+    ).setOrigin(0.5).setDepth(942).setName(`${LOBBY_NO_PATCH_TEXT_TAG}:${RESPONSIVE_MOBILE_VIEWPORT_TAG}`);
   }
 
   private drawAmbientLife(): void {
@@ -683,49 +722,64 @@ export class MainLobbyScene extends Phaser.Scene {
     for (let i = 0; i < birds; i += 1) this.addBird(70 + i * 108, 112 + i * 50, i * 760);
     for (let i = 0; i < fireflies; i += 1) this.addFirefly(34 + i * 39, 602 + (i % 3) * 46, i * 140);
     for (let i = 0; i < sparkleDots; i += 1) {
-      const x = Phaser.Math.Between(20, 370);
-      const y = Phaser.Math.Between(260, 735);
+      const x = this.vx(Phaser.Math.Between(20, 370));
+      const y = this.vy(Phaser.Math.Between(260, 735));
       const dot = this.add.circle(x, y, Phaser.Math.FloatBetween(1.2, 2.4), 0xffdf7a, Phaser.Math.FloatBetween(0.20, 0.54)).setDepth(800);
       if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: dot, y: y - Phaser.Math.Between(8, 26), alpha: 0.05, duration: scaledDuration(Phaser.Math.Between(1200, 2600), this.quality), delay: i * 70, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
   }
 
   private addMovingCloud(x: number, y: number, width: number, alpha: number, duration: number): void {
+    const px = this.vx(x);
+    const py = this.vy(y);
+    const scale = this.vs(0.94, 1.12);
     const cloud = this.textures.exists('dioramaCloud')
-      ? this.add.image(x, y, 'dioramaCloud').setDisplaySize(width, width * 0.42).setAlpha(alpha)
-      : this.add.ellipse(x, y, width, width * 0.34, 0xffffff, alpha);
+      ? this.add.image(px, py, 'dioramaCloud').setDisplaySize(width * scale, width * 0.42 * scale).setAlpha(alpha)
+      : this.add.ellipse(px, py, width * scale, width * 0.34 * scale, 0xffffff, alpha);
     cloud.setDepth(5);
-    if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: cloud, x: x + 85, duration: scaledDuration(duration, this.quality), repeat: -1, yoyo: true, ease: 'Sine.easeInOut' });
+    if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: cloud, x: px + 85 * scale, duration: scaledDuration(duration, this.quality), repeat: -1, yoyo: true, ease: 'Sine.easeInOut' });
   }
 
   private addFloatingCard(x: number, y: number, delay: number): void {
+    const px = this.vx(x);
+    const py = this.vy(y);
+    const scale = this.vs(0.94, 1.12);
     const card = this.textures.exists('dioramaFloatingCard')
-      ? this.add.image(x, y, 'dioramaFloatingCard').setDisplaySize(26, 35)
-      : this.add.rectangle(x, y, 22, 30, 0x7a4ed5, 0.8).setStrokeStyle(1, 0xffe08d, 0.8);
+      ? this.add.image(px, py, 'dioramaFloatingCard').setDisplaySize(26 * scale, 35 * scale)
+      : this.add.rectangle(px, py, 22 * scale, 30 * scale, 0x7a4ed5, 0.8).setStrokeStyle(1, 0xffe08d, 0.8);
     card.setAlpha(0.62).setDepth(20).setAngle(Phaser.Math.Between(-10, 10));
-    if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: card, y: y - 20, angle: card.angle + 12, alpha: 0.22, duration: scaledDuration(2500, this.quality), delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: card, y: py - 20 * scale, angle: card.angle + 12, alpha: 0.22, duration: scaledDuration(2500, this.quality), delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
   }
 
   private addButterfly(x: number, y: number, delay: number): void {
+    const px = this.vx(x);
+    const py = this.vy(y);
+    const scale = this.vs(0.94, 1.12);
     const butterfly = this.textures.exists('dioramaButterfly')
-      ? this.add.image(x, y, 'dioramaButterfly').setDisplaySize(30, 22)
-      : this.add.text(x, y, '✦', goldText(16)).setOrigin(0.5);
+      ? this.add.image(px, py, 'dioramaButterfly').setDisplaySize(30 * scale, 22 * scale)
+      : this.add.text(px, py, '✦', goldText(16)).setOrigin(0.5);
     butterfly.setAlpha(0.78).setDepth(650);
-    if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: butterfly, x: x + Phaser.Math.Between(-24, 28), y: y - Phaser.Math.Between(16, 34), scale: 0.82, duration: scaledDuration(1500, this.quality), delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: butterfly, x: px + Phaser.Math.Between(-24, 28) * scale, y: py - Phaser.Math.Between(16, 34) * scale, scale: 0.82, duration: scaledDuration(1500, this.quality), delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
   }
 
   private addBird(x: number, y: number, delay: number): void {
     if (!this.textures.exists('propBird')) return;
-    const bird = this.add.image(x, y, 'propBird').setDisplaySize(28, 22).setAlpha(0.62).setDepth(50);
-    if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: bird, x: x + 80, y: y - 16, alpha: 0.18, duration: scaledDuration(4200, this.quality), delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    const scale = this.vs(0.94, 1.12);
+    const px = this.vx(x);
+    const py = this.vy(y);
+    const bird = this.add.image(px, py, 'propBird').setDisplaySize(28 * scale, 22 * scale).setAlpha(0.62).setDepth(50);
+    if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: bird, x: px + 80 * scale, y: py - 16 * scale, alpha: 0.18, duration: scaledDuration(4200, this.quality), delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
   }
 
   private addFirefly(x: number, y: number, delay: number): void {
+    const px = this.vx(x);
+    const py = this.vy(y);
+    const scale = this.vs(0.94, 1.12);
     const firefly = this.textures.exists('propFirefly')
-      ? this.add.image(x, y, 'propFirefly').setDisplaySize(14, 14)
-      : this.add.circle(x, y, 4, 0xffdf7a, 0.7);
+      ? this.add.image(px, py, 'propFirefly').setDisplaySize(14 * scale, 14 * scale)
+      : this.add.circle(px, py, 4 * scale, 0xffdf7a, 0.7);
     firefly.setDepth(760).setAlpha(0.58);
-    if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: firefly, x: x + Phaser.Math.Between(-18, 22), y: y - Phaser.Math.Between(12, 30), alpha: 0.18, scale: 0.72, duration: scaledDuration(1800, this.quality), delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: firefly, x: px + Phaser.Math.Between(-18, 22) * scale, y: py - Phaser.Math.Between(12, 30) * scale, alpha: 0.18, scale: 0.72, duration: scaledDuration(1800, this.quality), delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
   }
 
   private enterBuilding(building: DioramaBuilding, buildingContainer: Phaser.GameObjects.Container): void {
@@ -742,22 +796,24 @@ export class MainLobbyScene extends Phaser.Scene {
     this.activeSettingsPanel?.destroy();
     this.activeSettingsPanel = undefined;
     this.hintText?.setText(`${building.title}(으)로 이동 중... 톡톡톡!`);
+    const target = this.buildingTarget(building);
+    const scale = this.vs(0.94, 1.10);
     this.tweens.killTweensOf(this.hero);
     this.tweens.killTweensOf(this.cat);
-    this.spawnFootsteps(this.hero.x, this.hero.y, building.targetX, building.targetY);
+    this.spawnFootsteps(this.hero.x, this.hero.y, target.x, target.y);
     this.startWalkAnimation();
     this.tweens.add({
       targets: this.hero,
-      x: building.targetX,
-      y: building.targetY,
+      x: target.x,
+      y: target.y,
       scale: 0.92,
       duration: 560,
       ease: 'Sine.easeInOut'
     });
     this.tweens.add({
       targets: this.cat,
-      x: building.targetX - 33,
-      y: building.targetY + 18,
+      x: target.x - 33 * scale,
+      y: target.y + 18 * scale,
       scale: 0.90,
       duration: 520,
       delay: 70,
@@ -824,9 +880,11 @@ export class MainLobbyScene extends Phaser.Scene {
 
   private openBuildingDoor(building: DioramaBuilding, buildingContainer: Phaser.GameObjects.Container, route: DioramaRoute): void {
     this.stopWalkAnimation();
+    const point = this.buildingPoint(building);
+    const scale = this.vs(0.94, 1.12);
     const glow = this.textures.exists('uiDoorLight')
-      ? this.add.image(building.x, building.y + 18, 'uiDoorLight').setDisplaySize(92, 118).setDepth(900).setAlpha(0.62)
-      : this.add.circle(building.x, building.y + 22, 46, 0xffe28c, 0.28).setDepth(900);
+      ? this.add.image(point.x, point.y + 18 * scale, 'uiDoorLight').setDisplaySize(92 * scale, 118 * scale).setDepth(900).setAlpha(0.62)
+      : this.add.circle(point.x, point.y + 22 * scale, 46 * scale, 0xffe28c, 0.28).setDepth(900);
     this.tweens.add({ targets: glow, scale: 2.1, alpha: 0, duration: 420, ease: 'Cubic.easeOut', onComplete: () => glow.destroy() });
     this.cameras.main.flash(220, 255, 232, 166, false);
     this.time.delayedCall(360, () => this.goToRoute(route));
@@ -847,8 +905,10 @@ export class MainLobbyScene extends Phaser.Scene {
 
   private showLockedMessage(title: string): void {
     this.hintText?.setText(`${title}은(는) 아직 열리지 않았어요.`);
-    const toastBg = this.textures.exists('uiToast') ? this.add.image(195, 716, 'uiToast').setDisplaySize(166, 56).setDepth(999).setAlpha(0.90) : undefined;
-    const toast = this.add.text(195, 716, '준비중', goldText(18)).setOrigin(0.5).setDepth(1000);
-    this.tweens.add({ targets: [toast, toastBg].filter(Boolean), y: 692, alpha: 0, duration: 900, ease: 'Sine.easeOut', onComplete: () => { toast.destroy(); toastBg?.destroy(); } });
+    const l = layout(this);
+    const toastY = l.bottom - 104;
+    const toastBg = this.textures.exists('uiToast') ? this.add.image(l.cx, toastY, 'uiToast').setDisplaySize(166, 56).setDepth(999).setAlpha(0.90) : undefined;
+    const toast = this.add.text(l.cx, toastY, '준비중', goldText(18)).setOrigin(0.5).setDepth(1000);
+    this.tweens.add({ targets: [toast, toastBg].filter(Boolean), y: toastY - 24, alpha: 0, duration: 900, ease: 'Sine.easeOut', onComplete: () => { toast.destroy(); toastBg?.destroy(); } });
   }
 }

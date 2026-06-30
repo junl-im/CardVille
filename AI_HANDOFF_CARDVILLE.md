@@ -4,12 +4,30 @@
 CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고, 그다음 실제 코드를 확인하세요.
 
 
-## 현재 작업 기준: 1.0.60
+## 현재 작업 기준: 1.0.61
 
-현재 기준 버전은 1.0.60입니다.  
+현재 기준 버전은 1.0.61입니다.  
 이번 버전은 1.0.59 LobbyImageGateVillageRepair를 기준으로, 오프닝 영상 유지, 로비 복귀 후 입력 먹통, 건물 위 OPEN/LOCK 텍스트, fallback 카드 노출 위험, 좌우 여백 낭비를 함께 보정한 폴리시/안정화 패스입니다. `intro-video-holds-until-assets-v160`, `lobby-input-reset-v160`, `lobby-fullscreen-spread-v160`, `lobby-edge-to-edge-spread-v160`, `lobby-edge-npc-spread-v160`가 핵심 기준입니다.
 
 
+
+
+### 1.0.61 실제 모바일 반응형 viewport / safe-area 패스
+
+- 작업명: `ResponsiveMobileViewportRepair`
+- 핵심 이유: 사용자가 지적한 대로 390×844 스크린샷만 기준으로 잡으면 실제 휴대폰마다 다른 폭, 높이, 노치/홈바 safe-area, 브라우저 동적 주소창 차이에 대응하지 못한다.
+- 수정 방향:
+  - `LayoutSystem.ts`에 `responsive-mobile-viewport-v161` 추가.
+  - `visualViewport`, Phaser `scale.gameSize`, CSS `env(safe-area-inset-*)`를 함께 반영한다.
+  - `responsiveX`, `responsiveY`, `responsiveScale`, `responsivePoint`를 통해 로비 오브젝트를 실제 보이는 viewport에 매핑한다.
+  - 로비 건물/NPC/장식/주인공/고양이/상단 HUD/하단 힌트가 고정 스크린샷 좌표가 아니라 현재 폰 화면 좌표를 사용한다.
+  - 오프닝/부트 지연 시 일반 로딩 문구를 노출하지 않는다. 영상/배경이 유지되게 한다.
+- 검증 추가:
+  - `tools/check-responsive-mobile-layout.mjs`
+  - `npm run verify` 앞단에 `check:responsive-mobile-layout` 포함.
+- ZIP 명명 규칙:
+  - 앞으로 최종 ZIP 파일명에는 반드시 `v버전`을 명시한다.
+  - 이번 산출물: `CardVille_v1.0.61_ResponsiveMobile_Full.zip`, `CardVille_v1.0.61_ResponsiveMobile_Patch.zip`
 
 ### 1.0.60 오프닝 유지/로비 입력 복구/전체폭 마을 폴리시 패스
 

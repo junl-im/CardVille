@@ -1,8 +1,17 @@
-# CardVille 1.0.60
+# CardVille 1.0.61
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
 
+
+
+## 1.0.61 업데이트 내역
+
+- ZIP 파일명/빌드 기록에서 버전을 명확히 드러내는 규칙으로 전환했습니다.
+- 스크린샷 한 장의 390×844 기준이 아니라 실제 모바일 `visualViewport`, Phaser `gameSize`, safe-area inset을 함께 읽는 `responsive-mobile-viewport-v161` 레이아웃을 추가했습니다.
+- 로비 건물, NPC, 장식, 주인공/고양이, 상단 HUD, 설정/앨범 버튼, 하단 힌트가 각 폰 화면의 좌우/상하 여분 공간을 실제로 쓰도록 좌표를 변환합니다.
+- 오프닝/부트 지연 시 일반적인 로딩 문구를 띄우지 않고, 오프닝 영상/배경이 계속 유지되는 방향으로 정리했습니다.
+- `tools/check-responsive-mobile-layout.mjs`를 추가해 safe-area, visualViewport, 반응형 좌표 매핑, SVG 금지, 버전 기록을 검증합니다.
 
 ## 1.0.60 업데이트 내역
 

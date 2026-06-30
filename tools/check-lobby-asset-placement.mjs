@@ -90,7 +90,8 @@ for (const token of [
   'USER_LOBBY_ASSET_ASSIGNMENT_TAG',
   'LOBBY_USER_ASSET_NPC_TAG',
   'LOBBY_FULLSCREEN_SPREAD_TAG',
-  'this.add.image(195, 826',
+  'layout(this).bottom',
+  'RESPONSIVE_MOBILE_VIEWPORT_TAG',
   'visible-npc:',
   'visible:${building.assetKey}'
 ]) {

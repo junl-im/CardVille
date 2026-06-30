@@ -45,6 +45,7 @@ export type DioramaBuilding = {
 export const USER_LOBBY_ASSET_ASSIGNMENT_TAG = 'user-lobby-asset-assignment-v156' as const;
 export const LOBBY_SPACING_REPAIR_TAG = 'lobby-wide-village-spacing-v159' as const;
 export const LOBBY_EDGE_TO_EDGE_SPREAD_TAG = 'lobby-edge-to-edge-spread-v160' as const;
+export const LOBBY_RESPONSIVE_PHONE_LAYOUT_TAG = 'responsive-mobile-viewport-v161' as const;
 
 export const DIORAMA_BUILDINGS: DioramaBuilding[] = [
   {

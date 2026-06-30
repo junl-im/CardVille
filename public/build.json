@@ -1,11 +1,11 @@
 {
-  "name": "FullscreenVillageInputRepair",
-  "version": "1.0.60",
-  "mode": "intro-video-hold-v160-lobby-input-reset-v160-lobby-fullscreen-spread-v160-no-open-chip-v160",
+  "name": "ResponsiveMobileViewportRepair",
+  "version": "1.0.61",
+  "mode": "responsive-mobile-viewport-v161-safe-area-phone-layout-v161-not-screenshot-fixed-layout-v161",
   "svg": "disabled",
   "pwa": "disabled",
-  "notes": "Keeps intro video visible until assets complete, removes lobby OPEN/fallback labels, resets lobby input after scene returns, and uses wider edge-to-edge village spacing.",
-  "label": "Fullscreen village polish + input repair",
-  "description": "Opening video asset gate, no open/fallback lobby labels, input reset on return, wider village screen usage.",
-  "assetVersion": "1.0.60"
+  "notes": "Maps lobby buildings, NPCs, props, HUD and bottom hint through real viewport width/height and safe-area insets instead of a single screenshot baseline.",
+  "label": "Responsive phone viewport layout",
+  "description": "Real mobile viewport/safe-area adaptive village layout, explicit versioned ZIP naming, no generic boot loading copy.",
+  "assetVersion": "1.0.61"
 }

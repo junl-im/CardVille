@@ -63,7 +63,7 @@ for (const token of [
   'assertCriticalLobbyTextures',
   'this.input.enabled = true',
   'visible:${building.assetKey}',
-  'imageY = building.imageY ?? 0',
+  'const imageY = (building.imageY ?? 0) * scale;',
   'zoneWidth = Math.max'
 ]) {
   if (!lobby.includes(token)) throw new Error(`MainLobbyScene missing visible-building token: ${token}`);

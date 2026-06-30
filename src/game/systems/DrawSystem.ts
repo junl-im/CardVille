@@ -60,47 +60,54 @@ export class DrawSystem {
 
     if (title) {
       const plate = scene.add.graphics();
+      const titleW = Math.min(430, l.visibleWidth - Math.max(52, l.safeLeft + l.safeRight + 52));
+      const titleX = l.cx - titleW / 2;
+      const titleY = l.top;
       plate.fillStyle(0x061127, 0.88);
-      plate.fillRoundedRect(26, 18, 338, 58, 24);
+      plate.fillRoundedRect(titleX, titleY, titleW, 58, 24);
       plate.lineStyle(2, 0xffffff, 0.34);
-      plate.strokeRoundedRect(26, 18, 338, 58, 24);
+      plate.strokeRoundedRect(titleX, titleY, titleW, 58, 24);
       plate.lineStyle(1, 0xffd86f, 0.32);
-      plate.strokeRoundedRect(34, 25, 322, 44, 18);
+      plate.strokeRoundedRect(titleX + 8, titleY + 7, titleW - 16, 44, 18);
       plate.fillStyle(0xffffff, 0.13);
-      plate.fillRoundedRect(54, 30, 282, 12, 8);
-      scene.add.text(195, 48, title, titleText(24)).setOrigin(0.5);
+      plate.fillRoundedRect(titleX + 28, titleY + 12, titleW - 56, 12, 8);
+      scene.add.text(l.cx, titleY + 30, title, titleText(24)).setOrigin(0.5);
     }
   }
 
   static topHud(scene: Phaser.Scene, coins: number, level: number): void {
+    const l = layout(scene);
+    const y = l.top + 86;
+    const left = l.visibleX + Math.max(14, l.safeLeft + 14);
+    const right = l.visibleX + l.visibleWidth - Math.max(14, l.safeRight + 14);
     const g = scene.add.graphics();
     g.fillStyle(0x07142c, 0.82);
-    g.fillRoundedRect(14, 82, 134, 44, 19);
+    g.fillRoundedRect(left, y - 22, 134, 44, 19);
     g.lineStyle(2, 0xffffff, 0.28);
-    g.strokeRoundedRect(14, 82, 134, 44, 19);
+    g.strokeRoundedRect(left, y - 22, 134, 44, 19);
     if (scene.textures.exists('assetCoin')) {
-      scene.add.image(40, 104, 'assetCoin').setDisplaySize(34, 34);
+      scene.add.image(left + 26, y, 'assetCoin').setDisplaySize(34, 34);
     } else {
-      scene.add.circle(41, 104, 18, 0xffd34f, 1).setStrokeStyle(3, 0xfff0a2, 1);
-      scene.add.text(41, 104, 'C', goldText(14)).setOrigin(0.5);
+      scene.add.circle(left + 27, y, 18, 0xffd34f, 1).setStrokeStyle(3, 0xfff0a2, 1);
+      scene.add.text(left + 27, y, 'C', goldText(14)).setOrigin(0.5);
     }
-    scene.add.text(64, 104, `${coins}`, goldText(20)).setOrigin(0, 0.5);
+    scene.add.text(left + 50, y, `${coins}`, goldText(20)).setOrigin(0, 0.5);
 
     g.fillStyle(0x07142c, 0.76);
-    g.fillRoundedRect(156, 82, 100, 44, 19);
+    g.fillRoundedRect(left + 142, y - 22, 100, 44, 19);
     g.lineStyle(2, 0xffffff, 0.22);
-    g.strokeRoundedRect(156, 82, 100, 44, 19);
-    if (scene.textures.exists('assetStar')) scene.add.image(178, 104, 'assetStar').setDisplaySize(28, 28);
-    scene.add.text(218, 104, `Lv.${level}`, goldText(17)).setOrigin(0.5);
+    g.strokeRoundedRect(left + 142, y - 22, 100, 44, 19);
+    if (scene.textures.exists('assetStar')) scene.add.image(left + 164, y, 'assetStar').setDisplaySize(28, 28);
+    scene.add.text(left + 204, y, `Lv.${level}`, goldText(17)).setOrigin(0.5);
 
     g.fillStyle(0x07142c, 0.76);
-    g.fillRoundedRect(314, 82, 48, 44, 19);
+    g.fillRoundedRect(right - 48, y - 22, 48, 44, 19);
     g.lineStyle(2, 0xffffff, 0.22);
-    g.strokeRoundedRect(314, 82, 48, 44, 19);
+    g.strokeRoundedRect(right - 48, y - 22, 48, 44, 19);
     if (scene.textures.exists('assetSettings')) {
-      scene.add.image(338, 104, 'assetSettings').setDisplaySize(32, 32);
+      scene.add.image(right - 24, y, 'assetSettings').setDisplaySize(32, 32);
     } else {
-      scene.add.text(338, 104, '⚙', { fontSize: '27px' }).setOrigin(0.5);
+      scene.add.text(right - 24, y, '⚙', { fontSize: '27px' }).setOrigin(0.5);
     }
   }
 

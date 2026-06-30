@@ -71,10 +71,11 @@ export class IntroLoadingScene extends Phaser.Scene {
 
     this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x020814, 0.14);
     this.add.rectangle(l.visibleX + l.visibleWidth / 2, 724, l.visibleWidth, 210 + l.extraY, 0x020814, 0.22);
-    this.add.text(195, 72, 'CardVille', titleText(31)).setOrigin(0.5);
-    this.add.text(195, 112, '오프닝 영상 뒤 바로 카드마을로 입장합니다', goldText(16)).setOrigin(0.5);
-    this.add.rectangle(195, 790, 258, 6, 0xffffff, 0.18).setOrigin(0.5);
-    this.progressBar = this.add.rectangle(66, 790, 1, 6, 0xffd86f, 0.92).setOrigin(0, 0.5);
+    this.add.text(l.cx, l.top + 54, 'CardVille', titleText(31)).setOrigin(0.5);
+    this.add.text(l.cx, l.top + 94, '오프닝 영상 뒤 바로 카드마을로 입장합니다', goldText(16)).setOrigin(0.5);
+    const barY = l.bottom - 24;
+    this.add.rectangle(l.cx, barY, 258, 6, 0xffffff, 0.18).setOrigin(0.5);
+    this.progressBar = this.add.rectangle(l.cx - 129, barY, 1, 6, 0xffd86f, 0.92).setOrigin(0, 0.5);
   }
 
   private updateProgressBar(value: number): void {

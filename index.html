@@ -34,18 +34,14 @@
       }
     </script>
     <script>
-      window.__CARDVILLE_VERSION__ = '1.0.60';
+      window.__CARDVILLE_VERSION__ = '1.0.61';
       window.__CARDVILLE_READY__ = false;
       window.__CARDVILLE_BOOT_OK__ = function(){
         window.__CARDVILLE_READY__ = true;
         var el = document.getElementById('boot-fallback');
         if (el) el.remove();
       };
-      setTimeout(function(){
-        if (window.__CARDVILLE_READY__) return;
-        var note = document.getElementById('boot-note');
-        if (note) note.textContent = '시작 화면 준비가 지연돼요. 새로고침 후에도 반복되면 배포 상태를 확인해 주세요.';
-      }, 6500);
+      // 1.0.61: no generic loading copy on boot. The opening video stays visible until Phaser is ready.
     </script>
     <script type="module" src="/src/main.ts"></script>
   </body>

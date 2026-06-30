@@ -42,13 +42,13 @@ const lobby = mustContain('src/game/scenes/MainLobbyScene.ts', [
   'PREMIUM_LOBBY_FIT_TAG',
   'fitImageToBox',
   'image.texture.get()',
-  'visualWidth = building.visualWidth',
-  'visualHeight = building.visualHeight',
+  'const visualWidth = (building.visualWidth ?? building.width) * scale;',
+  'const visualHeight = (building.visualHeight ?? building.height) * scale;',
   'uiDoorLight',
   'contactGlow',
   'premiumStage',
   'VILLAGE_VISIBLE_BUILDING_SCALE_TAG',
-  'this.fitImageToBox(this.add.image(npc.x, npc.y, npc.key).setName'
+  'this.fitImageToBox(this.add.image(x, y, npc.key).setName'
 ]);
 mustContain('src/game/data/lobbyLayoutPlan.ts', [
   `LOBBY_LAYOUT_PLAN_VERSION = '${pkg.version}'`,
