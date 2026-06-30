@@ -1,4 +1,4 @@
-export const CARDVILLE_ASSET_VERSION = '1.0.55' as const;
+export const CARDVILLE_ASSET_VERSION = '1.0.56' as const;
 
 export const LOBBY_CRITICAL_PNG_ASSET_KEYS = [
   'dioramaBg',
@@ -21,6 +21,20 @@ export type LobbyCriticalPngAssetKey = typeof LOBBY_CRITICAL_PNG_ASSET_KEYS[numb
 
 export const LOBBY_CRITICAL_PNG_ASSET_KEY_SET = new Set<string>(LOBBY_CRITICAL_PNG_ASSET_KEYS);
 export const LOBBY_CRITICAL_PNG_RUNTIME_TAG = 'lobby-critical-png-runtime-v154' as const;
+
+
+export const USER_LOBBY_ASSET_ASSIGNMENTS = [
+  { source: 'building_royal_castle_hall.png', runtimeKey: 'dioramaCastle', output: 'assets/diorama/building_castle.png' },
+  { source: 'building_library_premium.png', runtimeKey: 'dioramaLibrary', output: 'assets/diorama/building_library.png' },
+  { source: 'building_alchemy_astronomy_lab.png', runtimeKey: 'dioramaLab', output: 'assets/diorama/building_lab.png' },
+  { source: 'building_memory_forest_gate.png', runtimeKey: 'dioramaForest', output: 'assets/diorama/building_forest.png' },
+  { source: 'npc_shopkeeper_premium.png', runtimeKey: 'npcMerchant', output: 'assets/characters/npc_merchant.png' },
+  { source: 'npc_alchemist_inventor.png', runtimeKey: 'npcWizard', output: 'assets/characters/npc_wizard.png' },
+  { source: 'npc_magic_scholar.png', runtimeKey: 'npcLibrarian', output: 'assets/characters/npc_librarian.png' },
+  { source: 'npc_forest_sage.png', runtimeKey: 'npcForestSagePremium', output: 'assets/characters/npc_forest_sage.png' }
+] as const;
+
+export const USER_LOBBY_ASSET_ASSIGNMENT_MANIFEST_TAG = 'user-lobby-asset-assignment-v156' as const;
 
 export type CardVilleAssetCategory = 'background' | 'diorama' | 'building' | 'hero' | 'mascot' | 'npc' | 'prop' | 'ui' | 'icon' | 'card' | 'pack' | 'effect' | 'particle' | 'badge';
 

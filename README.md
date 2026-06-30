@@ -1,7 +1,47 @@
-# CardVille 1.0.55
+# CardVille 1.0.56
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
+
+
+## 1.0.56 업데이트 내역
+
+- **로비 HUD/UI 비겹침 + 사용자 제공 에셋 가시성 핫픽스**를 진행했습니다.
+- 마을 화면에서 상단 HUD, 추천 리본, 설정 버튼, 하단 힌트가 건물 그림/NPC를 덮는 문제를 우선 수정했습니다.
+- HUD/UI 비겹침 안전 구역을 새로 잡았습니다.
+  - 상단 브랜드 HUD: y=44, height=56
+  - 앨범/설정 버튼: 상단 전용 레인
+  - 추천 루트 리본: y=108, height=36
+  - 하단 힌트: y=817, height=50
+  - `lobby-ui-nonoverlap-v156`
+- 업로드 에셋을 실제 런타임 키에 다시 명시적으로 배정했습니다.
+  - `building_royal_castle_hall.png` → `dioramaCastle` → `building_castle.png`
+  - `building_library_premium.png` → `dioramaLibrary` → `building_library.png`
+  - `building_alchemy_astronomy_lab.png` → `dioramaLab` → `building_lab.png`
+  - `building_memory_forest_gate.png` → `dioramaForest` → `building_forest.png`
+  - `npc_shopkeeper_premium.png` → `npcMerchant` → `npc_merchant.png`
+  - `npc_alchemist_inventor.png` → `npcWizard` → `npc_wizard.png`
+  - `npc_magic_scholar.png` → `npcLibrarian` → `npc_librarian.png`
+  - `npc_forest_sage.png` → `npcForestSagePremium` → `npc_forest_sage.png`
+  - `user-lobby-asset-assignment-v156`, `user-lobby-npc-visible-v156`
+- 마을 배치를 다시 넓혔습니다.
+  - 도서관/상점/숲은 x=66 왼쪽 컬럼으로 이동
+  - 연구소/학교/항구는 x=324/332 오른쪽 컬럼으로 이동
+  - 성은 y=258로 내려 상단 HUD와 겹치지 않게 조정
+  - 숲/이벤트/항구 이름표가 하단 힌트와 겹치지 않도록 하단 UI를 더 아래로 압축
+- 건물/NPC가 화면에서 더 잘 보이도록 키웠습니다.
+  - 도서관/연구소 `visualWidth: 184`
+  - 숲/항구 `visualWidth: 158`
+  - 상점 주인/연금술사/마법 사서/숲지기 NPC를 더 크게 표시
+- 모바일 글씨 가독성 기준을 `mobile-readable-text-v156`으로 갱신했습니다.
+- 검증 추가/갱신:
+  - `tools/check-lobby-asset-placement.mjs`
+  - `npm run check:lobby-asset-placement`
+  - `check:lobby-art-ui`, `check:lobby-premium-fit`, `check:lobby-boot-assets`, `check:mobile-exit-layout`, `check:screen-ui-stability`를 1.0.56 기준으로 갱신했습니다.
+- `npm run verify`에 `check:lobby-asset-placement`를 포함했습니다.
+- 신규 문서 파일은 만들지 않았습니다.
+- 삭제 파일은 없습니다.
+- `node_modules`, `dist`, `package-lock.json`은 통파일 ZIP에서 제외합니다.
 
 
 ## 1.0.55 업데이트 내역

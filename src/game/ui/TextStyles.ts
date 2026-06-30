@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 
 export const UI_FONT_FAMILY = "'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', Arial, sans-serif";
 const RESOLUTION = Math.min(typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1, 2);
-export const CARDVILLE_MOBILE_TEXT_TAG = 'mobile-readable-text-v155' as const;
+export const CARDVILLE_MOBILE_TEXT_TAG = 'mobile-readable-text-v156' as const;
 
 function mobileTextScale(): number {
   if (typeof window === 'undefined') return 1.08;

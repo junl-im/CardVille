@@ -4,11 +4,48 @@
 CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고, 그다음 실제 코드를 확인하세요.
 
 
-## 현재 작업 기준: 1.0.55
+## 현재 작업 기준: 1.0.56
 
-현재 기준 버전은 1.0.55입니다.  
-이번 버전은 1.0.54 LobbyBootAssetHardening을 기준으로, 새 로비/NPC/건물/배경 에셋을 선별 적용하고 각 게임 화면 배경/UIUX를 모바일 기준으로 다시 다듬은 패스입니다. `lobby-art-placement-v155`, `scene-premium-backdrop-v155`, `mobile-readable-text-v155`, `lobby-critical-png-runtime-v154`가 핵심 기준입니다.
+현재 기준 버전은 1.0.56입니다.  
+이번 버전은 1.0.55 LobbyArtUIUXPolish를 기준으로, 마을 HUD/UI 겹침과 사용자 제공 건물/NPC 에셋 미적용처럼 보이는 문제를 핫픽스한 패스입니다. `lobby-ui-nonoverlap-v156`, `user-lobby-asset-assignment-v156`, `user-lobby-npc-visible-v156`, `mobile-readable-text-v156`가 핵심 기준입니다.
 
+
+
+### 1.0.56 로비 HUD/에셋 가시성 핫픽스
+
+- 목적:
+  - 마을 진입 후 HUD와 다른 UI가 건물/NPC를 덮는 체감 문제를 수정했습니다.
+  - 사용자가 제공한 건물/NPC 에셋이 실제 로비에서 적용되지 않은 것처럼 보이지 않도록 런타임 키, 배치, 크기, 검증을 다시 묶었습니다.
+- 코드 반영:
+  - `src/game/data/assetManifest.ts`
+    - `CARDVILLE_ASSET_VERSION = 1.0.56`
+    - `USER_LOBBY_ASSET_ASSIGNMENTS` 추가
+    - `user-lobby-asset-assignment-v156` 추가
+  - `src/game/data/dioramaBuildings.ts`
+    - `USER_LOBBY_ASSET_ASSIGNMENT_TAG = user-lobby-asset-assignment-v156`
+    - 도서관/상점/숲 왼쪽 컬럼 x=66, 연구소/학교/항구 오른쪽 컬럼 x=324/332
+    - 성 y=258로 내려 상단 HUD와 겹치지 않게 조정
+    - 도서관/연구소 `visualWidth: 184`, 숲/항구 `visualWidth: 158`
+  - `src/game/data/lobbyEntities.ts`
+    - `LOBBY_USER_ASSET_NPC_TAG = user-lobby-npc-visible-v156`
+    - `npcMerchant`, `npcWizard`, `npcLibrarian`, `npcForestSagePremium` 크기/위치 확대
+  - `src/game/scenes/MainLobbyScene.ts`
+    - `LOBBY_VERSION = 1.0.56`
+    - `lobby-ui-nonoverlap-v156` 추가
+    - `lobby-user-assets-visible-v156` 추가
+    - 상단 HUD, 앨범, 설정 버튼, 추천 리본, 하단 힌트를 서로 다른 안전 레인에 배치
+    - 건물/NPC GameObject 이름에 실제 visible/user-asset 감사 태그를 붙임
+  - `src/game/ui/TextStyles.ts`
+    - `mobile-readable-text-v156`
+- 검증:
+  - `tools/check-lobby-asset-placement.mjs` 추가
+  - `check:lobby-asset-placement` 추가
+  - `npm run verify`에 포함
+  - 기존 로비/모바일/화면 안정성 검증도 1.0.56 좌표와 태그 기준으로 갱신
+- 패치 정책:
+  - 1.0.56 패치 ZIP도 self-contained 안정형 패치로 유지합니다.
+  - `src/`, `tools/`, `public/assets`, 버전 동기화 파일, README, AI_HANDOFF, docs를 포함합니다.
+- 신규 문서 파일은 생성하지 않았습니다.
 
 
 ### 1.0.55 로비/NPC/건물/배경 에셋 UIUX 패스

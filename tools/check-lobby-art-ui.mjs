@@ -59,7 +59,7 @@ for (const token of [
   'bgGrandPalacePremium',
   'npcForestSagePremium'
 ]) {
-  if (!manifest.includes(token)) throw new Error(`assetManifest missing 1.0.55 art token: ${token}`);
+  if (!manifest.includes(token)) throw new Error(`assetManifest missing 1.0.56 art token: ${token}`);
 }
 const draw = read('src/game/systems/DrawSystem.ts');
 for (const token of ['scene-premium-backdrop-v155', "'library'", "'lab'", "'shop'", "'palace'", 'BACKDROP_BY_VARIANT']) {
@@ -78,20 +78,20 @@ for (const token of ['lobby-art-placement-v155', 'premium lobby art placement', 
   if (!lobby.includes(token)) throw new Error(`MainLobbyScene missing art placement token: ${token}`);
 }
 const diorama = read('src/game/data/dioramaBuildings.ts');
-for (const token of ['x: 74', 'x: 316', 'visualWidth: 172', 'visualWidth: 146', 'npcForestSagePremium']) {
-  if (!diorama.includes(token)) throw new Error(`dioramaBuildings missing 1.0.55 spacing/art token: ${token}`);
+for (const token of ['x: 66', 'x: 324', 'visualWidth: 184', 'visualWidth: 158', 'npcForestSagePremium', 'user-lobby-asset-assignment-v156']) {
+  if (!diorama.includes(token)) throw new Error(`dioramaBuildings missing 1.0.56 spacing/art token: ${token}`);
 }
 const text = read('src/game/ui/TextStyles.ts');
-for (const token of ['mobile-readable-text-v155', 'return prefs.largeText ? 1.34 : 1.17', 'size <= 9 ? 12']) {
-  if (!text.includes(token)) throw new Error(`TextStyles missing 1.0.55 readable text token: ${token}`);
+for (const token of ['mobile-readable-text-v156', 'return prefs.largeText ? 1.34 : 1.17', 'size <= 9 ? 12']) {
+  if (!text.includes(token)) throw new Error(`TextStyles missing 1.0.56 readable text token: ${token}`);
 }
 const readme = read('README.md');
 const handoff = read('AI_HANDOFF_CARDVILLE.md');
-for (const token of [`# CardVille ${pkg.version}`, `## ${pkg.version} 업데이트 내역`, '로비/NPC/건물/배경 에셋', 'scene-premium-backdrop-v155', 'check:lobby-art-ui']) {
-  if (!readme.includes(token)) throw new Error(`README missing 1.0.55 art UI note: ${token}`);
+for (const token of [`# CardVille ${pkg.version}`, `## ${pkg.version} 업데이트 내역`, '로비/NPC/건물/배경 에셋', 'scene-premium-backdrop-v155', 'HUD/UI 비겹침', 'check:lobby-art-ui']) {
+  if (!readme.includes(token)) throw new Error(`README missing 1.0.56 art UI note: ${token}`);
 }
-for (const token of [`현재 기준 버전은 ${pkg.version}`, '1.0.55 로비/NPC/건물/배경 에셋 UIUX 패스', 'lobby-art-placement-v155', 'mobile-readable-text-v155']) {
-  if (!handoff.includes(token)) throw new Error(`AI handoff missing 1.0.55 art UI note: ${token}`);
+for (const token of [`현재 기준 버전은 ${pkg.version}`, '1.0.56 로비 HUD/에셋 가시성 핫픽스', 'lobby-art-placement-v155', 'mobile-readable-text-v156']) {
+  if (!handoff.includes(token)) throw new Error(`AI handoff missing 1.0.56 art UI note: ${token}`);
 }
 if (pkg.scripts?.['check:lobby-art-ui'] !== 'node tools/check-lobby-art-ui.mjs') throw new Error('check:lobby-art-ui script mismatch');
 if (!pkg.scripts?.verify?.includes('check:lobby-art-ui')) throw new Error('verify must include check:lobby-art-ui');

@@ -48,19 +48,19 @@ const lobby = mustContain('src/game/scenes/MainLobbyScene.ts', [
   'contactGlow',
   'premiumStage',
   'VILLAGE_VISIBLE_BUILDING_SCALE_TAG',
-  'this.fitImageToBox(this.add.image(npc.x, npc.y, npc.key), npc.width, npc.height)'
+  'this.fitImageToBox(this.add.image(npc.x, npc.y, npc.key).setName'
 ]);
 mustContain('src/game/data/lobbyLayoutPlan.ts', [
   `LOBBY_LAYOUT_PLAN_VERSION = '${pkg.version}'`,
   'LOBBY_PREMIUM_VISUAL_FIT_AUDIT',
   'fitImageToBox instead of setDisplaySize(width,height) stretch',
-  'bottom row nameplates stay above y=746',
-  'npc_merchant and npc_forest_sage use aspect-fit readable sizes', 'village-readable-building-scale-v150'
+  '1.0.56 bottom row nameplates stay above y=764',
+  'npc_merchant and npc_forest_sage use aspect-fit readable sizes', 'village-readable-building-scale-v150', 'lobby-ui-nonoverlap-v156'
 ]);
 mustContain('src/game/data/lobbyEntities.ts', [
-  "npcMerchant', x: 108, y: 578, width: 46, height: 58",
-  "npcForestSagePremium', x: 45, y: 724, width: 48, height: 60",
-  "propFountain', x: 195, y: 408"
+  "npcMerchant', x: 108, y: 604, width: 58, height: 76",
+  "npcForestSagePremium', x: 72, y: 724, width: 52, height: 72",
+  "propFountain', x: 195, y: 430"
 ]);
 
 const blocks = [...diorama.matchAll(/\{\n\s+id: '([^']+)'[\s\S]*?\n\s+\}/g)].filter((match) => match[0].includes('assetKey:'));
@@ -82,10 +82,10 @@ for (const [id, block] of blocks.map((match) => [match[1], match[0]])) {
   if (visualWidth !== undefined && (visualWidth < 108 || visualWidth > 236)) throw new Error(`Unexpected visualWidth for ${id}: ${visualWidth}`);
   const touchOffsetY = getNum(block, 'touchOffsetY') ?? 0;
   const zoneY = y + touchOffsetY;
-  if (x - touchWidth / 2 < 8 || x + touchWidth / 2 > 382 || zoneY - touchHeight / 2 < 92 || zoneY + touchHeight / 2 > 746) {
+  if (x - touchWidth / 2 < 8 || x + touchWidth / 2 > 382 || zoneY - touchHeight / 2 < 92 || zoneY + touchHeight / 2 > 766) {
     throw new Error(`Premium touch zone outside safe playfield: ${id}`);
   }
-  if (nameplateY !== undefined && y + nameplateY + 42 > 746) throw new Error(`Nameplate would collide with bottom HUD: ${id}`);
+  if (nameplateY !== undefined && y + nameplateY + 42 > 766) throw new Error(`Nameplate would collide with bottom HUD: ${id}`);
 }
 
 for (const token of [`# CardVille ${pkg.version}`, `## ${pkg.version} 업데이트 내역`, '프리미엄 로비 에셋 배치 보정', 'check:lobby-premium-fit']) {

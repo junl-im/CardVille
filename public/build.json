@@ -1,11 +1,11 @@
 {
-  "name": "CardVille 1.0.55 Lobby NPC Buildings Backgrounds Visual UX",
-  "version": "1.0.55",
-  "mode": "lobby-art-placement-v155-scene-premium-backdrop-v155-mobile-readable-text-v155",
+  "name": "CardVille 1.0.56 Lobby Asset Visibility HUD NonOverlap",
+  "version": "1.0.56",
+  "mode": "lobby-ui-nonoverlap-v156-user-lobby-asset-assignment-v156-user-lobby-npc-visible-v156",
   "svg": "disabled",
   "pwa": "disabled",
-  "notes": "Selected lobby/NPC/building/background assets are alpha-cleaned, registered, and applied to lobby/game scenes with mobile readable text and non-overlapping edge-spaced village layout.",
-  "label": "Premium lobby art + scene UI backdrops",
-  "description": "Applies selected 1.0.50 lobby asset batch, replaces key buildings/NPCs, adds scene-specific backdrops, and verifies mobile layout/UI placement.",
-  "assetVersion": "1.0.55"
+  "notes": "Fixes lobby HUD/UI overlap, locks uploaded building and NPC assets to visible runtime keys, enlarges building/NPC placement, and keeps critical lobby PNG loading stable.",
+  "label": "Visible user lobby assets + HUD non-overlap",
+  "description": "Moves top HUD/ribbon/settings/bottom hint into safe lanes, makes uploaded castle/library/lab/forest and shopkeeper/alchemist/scholar/forest-sage NPC assets visibly assigned, and verifies lobby composition.",
+  "assetVersion": "1.0.56"
 }

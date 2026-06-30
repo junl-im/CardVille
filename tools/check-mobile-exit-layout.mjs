@@ -18,11 +18,11 @@ for (const forbidden of ['about:blank', '빈 페이지로 이동', 'history.back
   if (exitMethods.includes(forbidden) || blockedRecovery.includes(forbidden)) throw new Error(`Forbidden exit fallback remains in exit flow: ${forbidden}`);
 }
 const text = read('src/game/ui/TextStyles.ts');
-for (const token of ['mobile-readable-text-v155', 'return prefs.largeText ? 1.34 : 1.17', 'size <= 9 ? 12', 'size <= 11 ? 14']) {
+for (const token of ['mobile-readable-text-v156', 'return prefs.largeText ? 1.34 : 1.17', 'size <= 9 ? 12', 'size <= 11 ? 14']) {
   if (!text.includes(token)) throw new Error(`Mobile text sizing missing token: ${token}`);
 }
 const diorama = read('src/game/data/dioramaBuildings.ts');
-for (const token of ['x: 74', 'x: 316', 'visualWidth: 172', 'visualWidth: 146', 'statusX: -28', 'statusX: 28', 'npcForestSagePremium']) {
+for (const token of ['x: 66', 'x: 324', 'visualWidth: 184', 'visualWidth: 158', 'statusX: -31', 'statusX: 31', 'npcForestSagePremium']) {
   if (!diorama.includes(token)) throw new Error(`Village edge spacing missing token: ${token}`);
 }
 const blocks = [...diorama.matchAll(/\{\n\s+id: '([^']+)'[\s\S]*?\n\s+\}/g)].filter((match) => match[0].includes('assetKey:'));
@@ -50,7 +50,7 @@ for (let i = 0; i < rects.length; i += 1) {
   }
 }
 const lobby = read('src/game/scenes/MainLobbyScene.ts');
-for (const token of ['mobile-readable-layout-v153', 'village-edge-spacing-v153', 'bodyText(15)', 'mutedText(11)', 'fontSize: \'11px\'']) {
+for (const token of ['mobile-readable-layout-v153', 'village-edge-spacing-v153', 'bodyText(14)', 'mutedText(10)', 'fontSize: \'11px\'']) {
   if (!lobby.includes(token)) throw new Error(`Lobby mobile UI missing token: ${token}`);
 }
 const readme = read('README.md');
@@ -58,7 +58,7 @@ const handoff = read('AI_HANDOFF_CARDVILLE.md');
 for (const token of [`# CardVille ${pkg.version}`, `## ${pkg.version} 업데이트 내역`, '모바일 글씨 가독성', '좌우 끝 공간']) {
   if (!readme.includes(token)) throw new Error(`README missing mobile layout note: ${token}`);
 }
-for (const token of [`현재 기준 버전은 ${pkg.version}`, 'mobile-readable-text-v155', 'village-edge-spacing-v153']) {
+for (const token of [`현재 기준 버전은 ${pkg.version}`, 'mobile-readable-text-v156', 'village-edge-spacing-v153']) {
   if (!handoff.includes(token)) throw new Error(`AI handoff missing mobile layout note: ${token}`);
 }
 if (pkg.scripts?.['check:mobile-exit-layout'] !== 'node tools/check-mobile-exit-layout.mjs') throw new Error('check:mobile-exit-layout script mismatch');

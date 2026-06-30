@@ -1,4 +1,4 @@
-export const LOBBY_LAYOUT_PLAN_VERSION = '1.0.55' as const;
+export const LOBBY_LAYOUT_PLAN_VERSION = '1.0.56' as const;
 
 export type LobbySafeZone = {
   id: string;
@@ -11,11 +11,13 @@ export type LobbySafeZone = {
 };
 
 export const LOBBY_SAFE_ZONES: readonly LobbySafeZone[] = [
-  { id: 'topHud', label: '상단 브랜드 HUD', x: 195, y: 54, width: 354, height: 86, rule: '건물 터치존과 겹치지 않음' },
-  { id: 'settings', label: '설정 버튼', x: 352, y: 116, width: 58, height: 58, rule: '오른손 엄지 터치 영역 유지' },
-  { id: 'heroHome', label: '주인공/고양이 홈', x: 178, y: 566, width: 112, height: 152, rule: '중앙 주인공이 건물 이름표에 묻히지 않음' },
-  { id: 'edgeColumns', label: '좌우 끝 건물 컬럼', x: 195, y: 508, width: 374, height: 462, rule: '좌우 끝 공간까지 쓰되 터치존은 겹치지 않음' },
-  { id: 'bottomHint', label: '하단 힌트 패널', x: 195, y: 782, width: 350, height: 88, rule: '하단 세이프 영역과 겹치지 않음' }
+  { id: 'topHud', label: '상단 브랜드 HUD', x: 129, y: 44, width: 224, height: 56, rule: '성/추천 리본/설정 버튼과 겹치지 않음' },
+  { id: 'album', label: '앨범 버튼', x: 305, y: 44, width: 78, height: 50, rule: '상단 HUD 오른쪽 독립 버튼' },
+  { id: 'settings', label: '설정 버튼', x: 359, y: 44, width: 50, height: 50, rule: '오른쪽 상단 고정, 추천 리본과 분리' },
+  { id: 'routeRibbon', label: '추천 루트 리본', x: 195, y: 108, width: 330, height: 36, rule: '건물 그림 위를 덮지 않는 상단 얇은 안내' },
+  { id: 'buildingField', label: '건물/NPC 필드', x: 195, y: 492, width: 374, height: 658, rule: '좌우 끝 공간까지 쓰되 HUD와 하단 힌트 미겹침' },
+  { id: 'heroHome', label: '주인공/고양이 홈', x: 178, y: 588, width: 112, height: 136, rule: '중앙 주인공이 건물 이름표와 하단 HUD에 묻히지 않음' },
+  { id: 'bottomHint', label: '하단 힌트 패널', x: 195, y: 817, width: 344, height: 50, rule: '하단 세이프 영역 전용, 건물 이름표와 분리' }
 ] as const;
 
 export const LOBBY_LAYOUT_GUARDS = [
@@ -33,7 +35,10 @@ export const LOBBY_LAYOUT_GUARDS = [
   'critical lobby background and building textures use stable PNG master loading',
   'scene navigation includes native timer fallback so input locks cannot linger',
   'selected 1.0.55 lobby/NPC/building/background assets must be paired with layout and backdrop checks',
-  'scene-premium-backdrop-v155 must be used by gameplay scenes with content-specific backgrounds'
+  'scene-premium-backdrop-v155 must be used by gameplay scenes with content-specific backgrounds',
+  '1.0.56 separates top HUD, route ribbon, settings, building field, and bottom hint into non-overlap safe zones',
+  'user-lobby-asset-assignment-v156 locks uploaded castle/library/lab/forest building art to runtime building keys',
+  'user-lobby-npc-visible-v156 makes uploaded shopkeeper/alchemist/scholar/forest-sage NPCs visible and larger'
 ] as const;
 
 export const LOBBY_DESIGN_CHECKS = [
@@ -57,18 +62,22 @@ export const LOBBY_DESIGN_CHECKS = [
   'mobile-readable-text-v154',
   'mobile-readable-text-v155',
   'scene-premium-backdrop-v155',
-  'lobby-art-placement-v155'
+  'lobby-art-placement-v155',
+  'lobby-ui-nonoverlap-v156',
+  'lobby-user-assets-visible-v156',
+  'user-lobby-asset-assignment-v156',
+  'user-lobby-npc-visible-v156'
 ] as const;
-
 
 export const LOBBY_PREMIUM_VISUAL_FIT_AUDIT = [
   'building_castle/library/lab/shop/school/forest/event/harbor/plaza are square 1254 PNG cutouts after 1.0.46',
   '1.0.51 renders those square assets with fitImageToBox instead of setDisplaySize(width,height) stretch',
-  'bottom row nameplates stay above y=746 bottom hint safe zone',
+  '1.0.56 bottom row nameplates stay above y=764 and bottom hint starts at y=792',
   'event READY badge is offset inward so READY n does not collide with forest/harbor chips',
   'npc_merchant and npc_forest_sage use aspect-fit readable sizes after premium asset import',
   '1.0.55 selected castle/library/lab/forest buildings use new 1254 RGBA cutouts',
-  '1.0.55 scene backdrops use library/lab/forest/shop/palace variants for screen-specific readability'
+  '1.0.55 scene backdrops use library/lab/forest/shop/palace variants for screen-specific readability',
+  '1.0.56 selected user assets are larger, unobscured, and kept out of top/bottom UI layers'
 ] as const;
 
 export const MIN_TOUCH_SIZE = 44;
@@ -87,5 +96,6 @@ export const LOBBY_VISIBLE_ASSET_ROUTE_AUDIT = [
   'button and panel text use mobile-readable minimum sizing',
   '1.0.55 uses PNG source for critical lobby assets instead of runtime WebP substitution',
   '1.0.55 lobby transition uses scene-navigation-no-freeze-v154 native timer fallback',
-  '1.0.55 art placement uses lobby-art-placement-v155 and scene-premium-backdrop-v155'
+  '1.0.55 art placement uses lobby-art-placement-v155 and scene-premium-backdrop-v155',
+  '1.0.56 keeps lobby HUD/UI in safe lanes so building art and NPCs stay visible'
 ] as const;

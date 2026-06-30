@@ -9,7 +9,7 @@ function read(rel) {
   return fs.readFileSync(full, 'utf8');
 }
 const layout = read('src/game/data/lobbyLayoutPlan.ts');
-for (const token of [pkg.version, 'screen-ui-stability-pass-v152', 'scene-navigation-guard-v152', 'scene-navigation-no-freeze-v154', 'route ribbon must not overlap', 'mobile-readable-layout-v153', 'village-edge-spacing-v153', 'lobby-building-visible-png-v154', 'lobby-art-placement-v155']) {
+for (const token of [pkg.version, 'screen-ui-stability-pass-v152', 'scene-navigation-guard-v152', 'scene-navigation-no-freeze-v154', 'route ribbon must not overlap', 'mobile-readable-layout-v153', 'village-edge-spacing-v153', 'lobby-building-visible-png-v154', 'lobby-art-placement-v155', 'lobby-ui-nonoverlap-v156']) {
   if (!layout.includes(token)) throw new Error(`lobbyLayoutPlan missing UI stability token: ${token}`);
 }
 const lobby = read('src/game/scenes/MainLobbyScene.ts');
@@ -21,11 +21,11 @@ for (const token of ['this.disabled ? 0x9aa4ba', 'this.draw(false)', 'resolveBut
   if (!button.includes(token)) throw new Error(`GameButton missing disabled/readable token: ${token}`);
 }
 const text = read('src/game/ui/TextStyles.ts');
-for (const token of ['CARDVILLE_MOBILE_TEXT_TAG', 'mobile-readable-text-v155', 'readableSize', 'mobileTextScale', 'minReadable']) {
+for (const token of ['CARDVILLE_MOBILE_TEXT_TAG', 'mobile-readable-text-v156', 'readableSize', 'mobileTextScale', 'minReadable']) {
   if (!text.includes(token)) throw new Error(`TextStyles missing mobile readable token: ${token}`);
 }
 const handoff = read('AI_HANDOFF_CARDVILLE.md');
-for (const token of [`현재 기준 버전은 ${pkg.version}`, '화면 단위 안정성', 'screen-ui-stability-pass-v152', 'mobile-readable-layout-v153']) {
+for (const token of [`현재 기준 버전은 ${pkg.version}`, '화면 단위 안정성', 'screen-ui-stability-pass-v152', 'mobile-readable-layout-v153', 'lobby-ui-nonoverlap-v156']) {
   if (!handoff.includes(token)) throw new Error(`AI handoff missing UI stability note: ${token}`);
 }
 console.log(`Screen UI stability check passed. Version ${pkg.version}, route ribbon, mobile text, button disabled styling, and layout audit tags are present.`);

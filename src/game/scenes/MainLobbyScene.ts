@@ -5,9 +5,9 @@ import { DrawSystem } from '../systems/DrawSystem';
 import { SaveSystem } from '../systems/SaveSystem';
 import { WORD_STAGES } from '../data/wordStages';
 import { ASSET_COUNTS } from '../data/assetManifest';
-import { LOBBY_NPCS, LOBBY_PROPS, LOBBY_SAFE_RULES, LobbyNpc } from '../data/lobbyEntities';
+import { LOBBY_NPCS, LOBBY_PROPS, LOBBY_SAFE_RULES, LOBBY_USER_ASSET_NPC_TAG, LobbyNpc } from '../data/lobbyEntities';
 import { allowAmbientMotion, ambientCount, CardVilleQuality, getCardVilleQuality, isMotionEnabled, qualitySummary, scaledCount, scaledDuration } from '../systems/QualitySystem';
-import { DIORAMA_BUILDINGS, DioramaBuilding, DioramaRoute } from '../data/dioramaBuildings';
+import { DIORAMA_BUILDINGS, DioramaBuilding, DioramaRoute, USER_LOBBY_ASSET_ASSIGNMENT_TAG } from '../data/dioramaBuildings';
 import { LOBBY_LAYOUT_GUARDS, LOBBY_LAYOUT_PLAN_VERSION } from '../data/lobbyLayoutPlan';
 import { MATH_STAGES } from '../data/mathStages';
 import { MEMORY_STAGES } from '../data/memoryStages';
@@ -17,7 +17,7 @@ import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 import { AccessibilitySystem } from '../systems/AccessibilitySystem';
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
-const LOBBY_VERSION = '1.0.55';
+const LOBBY_VERSION = '1.0.56';
 const MISSION_TONE_COLORS = { gold: 0xffd86f, blue: 0x8fd3ff, purple: 0xd7a5ff, green: 0xa9f5b5, coral: 0xffb39a } as const;
 const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-visible-v149' as const;
 const VILLAGE_VISIBLE_BUILDING_SCALE_TAG = 'village-readable-building-scale-v150' as const;
@@ -27,8 +27,10 @@ const VILLAGE_EDGE_SPACE_TAG = 'village-edge-spacing-v153' as const;
 const LOBBY_BOOT_ASSET_HARDENING_TAG = 'lobby-building-visible-png-v154' as const;
 const LOBBY_TOUCH_RECOVERY_TAG = 'lobby-input-recovery-v154' as const;
 const LOBBY_ART_PLACEMENT_TAG = 'lobby-art-placement-v155' as const;
-const HERO_HOME = { x: 195, y: 545 } as const;
-const CAT_HOME = { x: 145, y: 585 } as const;
+const LOBBY_UI_NON_OVERLAP_TAG = 'lobby-ui-nonoverlap-v156' as const;
+const LOBBY_USER_ASSET_VISIBLE_TAG = 'lobby-user-assets-visible-v156' as const;
+const HERO_HOME = { x: 195, y: 566 } as const;
+const CAT_HOME = { x: 146, y: 612 } as const;
 
 export class MainLobbyScene extends Phaser.Scene {
   private hero?: Phaser.GameObjects.Container;
@@ -68,8 +70,8 @@ export class MainLobbyScene extends Phaser.Scene {
     this.drawHeroParty();
     this.drawBottomHint(profile.nickname);
     this.add.text(344, 28, LOBBY_VERSION, mutedText(11)).setOrigin(0.5).setAlpha(0.9);
-    console.info('[CardVille] premium lobby art placement', LOBBY_ART_PLACEMENT_TAG);
-    console.info('[CardVille] lobby ready', { version: LOBBY_VERSION, tag: LOBBY_TOUCH_RECOVERY_TAG });
+    console.info('[CardVille] premium lobby art placement', LOBBY_ART_PLACEMENT_TAG, LOBBY_UI_NON_OVERLAP_TAG, LOBBY_USER_ASSET_VISIBLE_TAG, USER_LOBBY_ASSET_ASSIGNMENT_TAG, LOBBY_USER_ASSET_NPC_TAG);
+    console.info('[CardVille] lobby ready', { version: LOBBY_VERSION, tag: LOBBY_TOUCH_RECOVERY_TAG, ui: LOBBY_UI_NON_OVERLAP_TAG });
     this.showLobbyCoach(recommendedBuildingId);
   }
 
@@ -81,7 +83,7 @@ export class MainLobbyScene extends Phaser.Scene {
       title: '고양이 길잡이',
       body: recommendedBuildingId === 'event' && missionStatus.rewardReadyCount > 0 ? `이벤트 광장에 ${missionStatus.lobbyBadgeLabel} 보상이 있어요. ${missionStatus.nextActionCopy}` : 'NEXT가 붙은 건물부터 들어가면 도서관, 학교, 연구소, 기억의 숲을 자연스럽게 이어갈 수 있어요. 보상이 준비되면 이벤트 광장이 먼저 안내됩니다.',
       x: 195,
-      y: 694,
+      y: 724,
       width: 326,
       tone: 'gold',
       anchorX: target?.x,
@@ -100,7 +102,7 @@ export class MainLobbyScene extends Phaser.Scene {
       DrawSystem.background(this, '카드마을 광장');
     }
     this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x061126, 0.035).setDepth(1);
-    this.add.rectangle(l.visibleX + l.visibleWidth / 2, 798, l.visibleWidth, 96 + l.extraY, 0x020814, 0.18).setDepth(2);
+    this.add.rectangle(l.visibleX + l.visibleWidth / 2, 824, l.visibleWidth, 48 + l.extraY, 0x020814, 0.22).setDepth(2);
     this.add.rectangle(l.visibleX + 8, l.visibleY + l.visibleHeight / 2, 16, l.visibleHeight, 0x020814, 0.10).setDepth(3);
     this.add.rectangle(l.visibleX + l.visibleWidth - 8, l.visibleY + l.visibleHeight / 2, 16, l.visibleHeight, 0x020814, 0.10).setDepth(3);
   }
@@ -117,52 +119,52 @@ export class MainLobbyScene extends Phaser.Scene {
   }
 
   private drawTopBrandHud(coins: number, level: number, cleared: number, cards: number): void {
+    const panelX = 129;
+    const panelY = 44;
     if (this.textures.exists('uiPanelGlass')) {
-      this.add.image(143, 55, 'uiPanelGlass').setDisplaySize(252, 74).setAlpha(0.93).setDepth(910);
+      this.add.image(panelX, panelY, 'uiPanelGlass').setDisplaySize(224, 56).setAlpha(0.88).setDepth(940).setName(LOBBY_UI_NON_OVERLAP_TAG);
     } else {
-      const g = this.add.graphics().setDepth(910);
-      g.fillStyle(0x07142c, 0.70);
-      g.fillRoundedRect(18, 18, 250, 70, 25);
-      g.lineStyle(1, 0xffffff, 0.20);
-      g.strokeRoundedRect(18, 18, 250, 70, 25);
+      const g = this.add.graphics().setDepth(940).setName(LOBBY_UI_NON_OVERLAP_TAG);
+      g.fillStyle(0x07142c, 0.68);
+      g.fillRoundedRect(18, 18, 224, 56, 22);
+      g.lineStyle(1, 0xffffff, 0.18);
+      g.strokeRoundedRect(18, 18, 224, 56, 22);
     }
-    this.add.rectangle(142, 35, 213, 12, 0xffffff, 0.08).setDepth(911);
-    this.add.text(38, 49, '카드마을 CardVille', titleText(20)).setOrigin(0, 0.5).setDepth(912);
+    this.add.text(34, 36, 'CardVille', titleText(18)).setOrigin(0, 0.5).setDepth(942);
     const totalOpenStages = WORD_STAGES.length + ENGLISH_STAGES.length + MATH_STAGES.length + MEMORY_STAGES.length;
-    this.add.text(39, 73, `Lv.${level} · 🪙 ${coins} · 카드 ${cards}장 · ${cleared}/${totalOpenStages}`, mutedText(12)).setOrigin(0, 0.5).setDepth(912);
+    this.add.text(34, 58, `Lv.${level} · 🪙 ${coins} · 카드 ${cards} · ${cleared}/${totalOpenStages}`, mutedText(11)).setOrigin(0, 0.5).setDepth(942);
 
-    const album = this.add.container(319, 54).setDepth(920);
-    if (this.textures.exists('uiNameplateGold')) album.add(this.add.image(0, 0, 'uiNameplateGold').setDisplaySize(92, 58));
+    const album = this.add.container(305, 44).setDepth(945).setName(`album:${LOBBY_UI_NON_OVERLAP_TAG}`);
+    if (this.textures.exists('uiNameplateGold')) album.add(this.add.image(0, 0, 'uiNameplateGold').setDisplaySize(76, 48));
     else {
       const bg = this.add.graphics();
       bg.fillStyle(0xffd86f, 0.90);
-      bg.fillRoundedRect(-42, -27, 84, 54, 20);
-      bg.lineStyle(2, 0xffffff, 0.54);
-      bg.strokeRoundedRect(-42, -27, 84, 54, 20);
+      bg.fillRoundedRect(-36, -23, 72, 46, 18);
+      bg.lineStyle(2, 0xffffff, 0.46);
+      bg.strokeRoundedRect(-36, -23, 72, 46, 18);
       album.add(bg);
     }
-    if (this.textures.exists('assetAlbum')) album.add(this.add.image(-20, 0, 'assetAlbum').setDisplaySize(28, 28));
-    album.add(this.add.text(10, 1, '앨범', { fontFamily: 'system-ui, sans-serif', fontSize: '14px', color: '#2a160c', fontStyle: '900' }).setOrigin(0.5));
-    album.setSize(90, 58).setInteractive({ useHandCursor: true });
+    if (this.textures.exists('assetAlbum')) album.add(this.add.image(-17, 0, 'assetAlbum').setDisplaySize(24, 24));
+    album.add(this.add.text(9, 1, '앨범', { fontFamily: 'system-ui, sans-serif', fontSize: '13px', color: '#2a160c', fontStyle: '900' }).setOrigin(0.5));
+    album.setSize(78, 50).setInteractive({ useHandCursor: true });
     album.on('pointerup', () => NavigationSystem.safeStart(this, 'CollectionScene'));
   }
-
 
   private drawRouteOverviewRibbon(recommendedBuildingId: string): void {
     const missionStatus = DailyMissionSystem.getLobbyStatus();
     const recommended = DIORAMA_BUILDINGS.find((building) => building.id === recommendedBuildingId);
-    const label = recommended ? `${recommended.title} · ${missionStatus.shouldPrioritizeEvent ? missionStatus.lobbyBadgeLabel : 'NEXT'}` : '추천 루트 준비';
+    const label = recommended ? `${recommended.title} · ${missionStatus.shouldPrioritizeEvent ? missionStatus.lobbyBadgeLabel : 'NEXT'}` : '추천 루트';
     const copy = recommendedBuildingId === 'event'
       ? missionStatus.nextActionCopy
-      : '추천 건물을 따라가면 학습, 상점, 미션 보상이 자연스럽게 이어져요.';
-    const ribbon = this.add.container(140, 116).setDepth(925).setName(`${SCREEN_UI_STABILITY_TAG}:${MOBILE_READABLE_LAYOUT_TAG}:${LOBBY_BOOT_ASSET_HARDENING_TAG}`);
-    ribbon.add(this.add.rectangle(0, 0, 244, 46, 0x07142c, 0.76).setStrokeStyle(1, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.48));
-    ribbon.add(this.add.rectangle(-85, 0, 58, 28, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.92).setStrokeStyle(1, 0xffffff, 0.38));
-    ribbon.add(this.add.text(-85, 0, '추천', darkText(10)).setOrigin(0.5));
-    ribbon.add(this.add.text(-48, -9, label, goldText(12)).setOrigin(0, 0.5));
-    ribbon.add(this.add.text(-48, 11, copy, applyWrap(mutedText(11), 166, 'left')).setOrigin(0, 0.5));
+      : '추천 건물을 따라가면 좋아요. 건물 그림을 가리지 않도록 안내는 상단 얇은 리본에만 표시해요.';
+    const ribbon = this.add.container(195, 108).setDepth(938).setName(`${SCREEN_UI_STABILITY_TAG}:${MOBILE_READABLE_LAYOUT_TAG}:${LOBBY_UI_NON_OVERLAP_TAG}`);
+    ribbon.add(this.add.rectangle(0, 0, 330, 36, 0x07142c, 0.70).setStrokeStyle(1, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.42));
+    ribbon.add(this.add.rectangle(-124, 0, 50, 24, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.90).setStrokeStyle(1, 0xffffff, 0.32));
+    ribbon.add(this.add.text(-124, 0, '추천', darkText(10)).setOrigin(0.5));
+    ribbon.add(this.add.text(-91, -7, label, goldText(11)).setOrigin(0, 0.5));
+    ribbon.add(this.add.text(-91, 9, copy, applyWrap(mutedText(10), 246, 'left')).setOrigin(0, 0.5));
     if (allowAmbientMotion(this.quality) && missionStatus.shouldPrioritizeEvent) {
-      this.tweens.add({ targets: ribbon, y: 108, alpha: 0.78, duration: scaledDuration(1100, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      this.tweens.add({ targets: ribbon, alpha: 0.78, duration: scaledDuration(1100, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
   }
 
@@ -251,9 +253,12 @@ export class MainLobbyScene extends Phaser.Scene {
 
     const imageY = building.imageY ?? 0;
     const image = this.textures.exists(building.assetKey)
-      ? this.fitImageToBox(this.add.image(0, imageY, building.assetKey).setName(`visible:${building.assetKey}:${LOBBY_BOOT_ASSET_HARDENING_TAG}:${LOBBY_ART_PLACEMENT_TAG}`).setAlpha(1), visualWidth, visualHeight)
+      ? this.fitImageToBox(this.add.image(0, imageY, building.assetKey).setName(`visible:${building.assetKey}:${LOBBY_BOOT_ASSET_HARDENING_TAG}:${LOBBY_ART_PLACEMENT_TAG}:${LOBBY_USER_ASSET_VISIBLE_TAG}`).setAlpha(1), visualWidth, visualHeight)
       : this.drawMissingBuildingFallback(building, visualWidth, visualHeight);
     container.add(image);
+    if (['dioramaCastle', 'dioramaLibrary', 'dioramaLab', 'dioramaForest'].includes(building.assetKey)) {
+      image.setName(`${image.name}:${USER_LOBBY_ASSET_ASSIGNMENT_TAG}`);
+    }
     if (this.textures.exists(building.assetKey)) {
       const rim = this.add.ellipse(0, imageY + visualHeight * 0.34, visualWidth * 0.86, Math.max(22, visualHeight * 0.14), 0xfff0c2, building.open ? 0.11 : 0.07);
       rim.setStrokeStyle(1, 0xffffff, 0.16);
@@ -357,7 +362,7 @@ export class MainLobbyScene extends Phaser.Scene {
   private drawDioramaNPCs(): void {
     for (const npc of LOBBY_NPCS) {
       if (!this.textures.exists(npc.key)) continue;
-      const npcImage = this.fitImageToBox(this.add.image(npc.x, npc.y, npc.key), npc.width, npc.height)
+      const npcImage = this.fitImageToBox(this.add.image(npc.x, npc.y, npc.key).setName(`visible-npc:${npc.key}:${LOBBY_USER_ASSET_NPC_TAG}`), npc.width, npc.height)
         .setDepth(npc.y + 3);
       if (allowAmbientMotion(this.quality)) {
         this.tweens.add({ targets: npcImage, y: npc.y - 2, duration: scaledDuration(900, this.quality), delay: npc.delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
@@ -392,14 +397,14 @@ export class MainLobbyScene extends Phaser.Scene {
   }
 
   private drawLobbySettingsButton(): void {
-    const button = this.add.container(352, 116).setDepth(930);
-    if (this.textures.exists('uiSettingsButton')) button.add(this.add.image(0, 0, 'uiSettingsButton').setDisplaySize(50, 50));
-    else button.add(this.add.circle(0, 0, 24, 0xffd86f, 0.90));
+    const button = this.add.container(359, 44).setDepth(946).setName(LOBBY_UI_NON_OVERLAP_TAG);
+    if (this.textures.exists('uiSettingsButton')) button.add(this.add.image(0, 0, 'uiSettingsButton').setDisplaySize(46, 46));
+    else button.add(this.add.circle(0, 0, 22, 0xffd86f, 0.90));
     button.add(this.add.text(0, 1, '⚙', goldText(20)).setOrigin(0.5));
-    button.setSize(54, 54).setInteractive({ useHandCursor: true });
+    button.setSize(50, 50).setInteractive({ useHandCursor: true });
     button.on('pointerup', () => {
       if (this.busy) return;
-      this.spawnTouchRipple(352, 116);
+      this.spawnTouchRipple(359, 44);
       this.toggleLobbySettingsPanel();
     });
     if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: button, angle: 4, duration: scaledDuration(2200, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
@@ -581,7 +586,7 @@ export class MainLobbyScene extends Phaser.Scene {
   private drawHeroParty(): void {
     this.cat = this.add.container(CAT_HOME.x, CAT_HOME.y).setDepth(CAT_HOME.y + 2);
     if (this.textures.exists('blackCatMascotPremium')) {
-      this.catImage = this.fitImageToBox(this.add.image(0, 0, 'blackCatMascotPremium'), 64, 70);
+      this.catImage = this.fitImageToBox(this.add.image(0, 0, 'blackCatMascotPremium'), 58, 64);
       this.cat.add(this.catImage);
     } else if (this.textures.exists('catIdle')) {
       this.catImage = this.fitImageToBox(this.add.image(0, 0, 'catIdle'), 54, 57);
@@ -591,7 +596,7 @@ export class MainLobbyScene extends Phaser.Scene {
 
     this.hero = this.add.container(HERO_HOME.x, HERO_HOME.y).setDepth(HERO_HOME.y + 4);
     if (this.textures.exists('heroTravelerPremium')) {
-      this.heroImage = this.fitImageToBox(this.add.image(0, 0, 'heroTravelerPremium'), 84, 116);
+      this.heroImage = this.fitImageToBox(this.add.image(0, 0, 'heroTravelerPremium'), 78, 108);
       this.hero.add(this.heroImage);
     } else if (this.textures.exists('heroIdle')) {
       this.heroImage = this.fitImageToBox(this.add.image(0, 0, 'heroIdle'), 74, 115);
@@ -607,23 +612,22 @@ export class MainLobbyScene extends Phaser.Scene {
   }
 
   private drawBottomHint(nickname: string): void {
-    if (this.textures.exists('uiPanelGlass')) this.add.image(195, 780, 'uiPanelGlass').setDisplaySize(354, 82).setAlpha(0.92).setDepth(910);
+    if (this.textures.exists('uiPanelGlass')) this.add.image(195, 817, 'uiPanelGlass').setDisplaySize(344, 50).setAlpha(0.88).setDepth(940).setName(LOBBY_UI_NON_OVERLAP_TAG);
     else {
-      const g = this.add.graphics().setDepth(910);
-      g.fillStyle(0x07142c, 0.68);
-      g.fillRoundedRect(18, 742, 354, 78, 26);
-      g.lineStyle(1, 0xffffff, 0.18);
-      g.strokeRoundedRect(18, 742, 354, 78, 26);
+      const g = this.add.graphics().setDepth(940).setName(LOBBY_UI_NON_OVERLAP_TAG);
+      g.fillStyle(0x07142c, 0.66);
+      g.fillRoundedRect(23, 792, 344, 50, 20);
+      g.lineStyle(1, 0xffffff, 0.16);
+      g.strokeRoundedRect(23, 792, 344, 50, 20);
     }
-    if (this.textures.exists('uiSpeechBubble')) this.add.image(83, 741, 'uiSpeechBubble').setDisplaySize(130, 55).setAlpha(0.88).setDepth(909);
     this.hintText = this.add.text(
       195,
-      773,
-      `${nickname} 모험가님, 건물이나 NPC를 터치해 보세요.`,
-      applyWrap(bodyText(15), 314)
-    ).setOrigin(0.5).setDepth(912);
+      807,
+      `${nickname} 모험가님, 큰 건물 그림을 눌러 바로 이동하세요.`,
+      applyWrap(bodyText(14), 318)
+    ).setOrigin(0.5).setDepth(942);
     const assetTotal = Object.values(ASSET_COUNTS).reduce((sum, count) => sum + count, 0);
-    this.add.text(195, 806, `한 화면 디오라마 · 좌우 공간 활용 · 자산 ${assetTotal}개`, mutedText(11)).setOrigin(0.5).setDepth(912);
+    this.add.text(195, 829, `건물/NPC 에셋 적용 · HUD 비겹침 · 자산 ${assetTotal}개`, mutedText(10)).setOrigin(0.5).setDepth(942);
   }
 
   private drawAmbientLife(): void {
