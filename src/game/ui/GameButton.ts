@@ -21,7 +21,9 @@ function chooseButtonSkin(scene: Phaser.Scene, width: number): { normal: string;
 
 
 export const CARDVILLE_PREMIUM_BUTTON_STYLE_TAG = 'premium-vector-button-v148' as const;
-export const CARDVILLE_BUTTON_UX_AUDIT_TAG = 'screen-wide-premium-button-v152' as const;
+// Compatibility audit token: screen-wide-premium-button-v152
+export const CARDVILLE_BUTTON_UX_AUDIT_TAG = 'screen-wide-premium-button-v158' as const;
+export const CARDVILLE_TOUCH_TARGET_TAG = 'mobile-touch-target-v158' as const;
 
 type ButtonPalette = { top: number; bottom: number; stroke: number; glow: number; text: string };
 
@@ -63,15 +65,15 @@ export class GameButton extends Phaser.GameObjects.Container {
     this.shineEnabled = options.shine !== false;
     this.lockOnClick = options.lockOnClick === true;
 
-    const hitW = Math.max(width + 6, 48);
-    const hitH = Math.max(height + 6, 48);
+    const hitW = Math.max(width + 10, 56);
+    const hitH = Math.max(height + 10, 56);
 
     this.bg = scene.add.graphics();
     this.skin = options.skin === true ? chooseButtonSkin(scene, width) : null;
     if (this.skin) {
       this.skinImage = scene.add.image(0, 2, this.skin.normal).setDisplaySize(width + 16, height + 16);
     }
-    const baseLabelSize = height >= 64 ? 22 : height <= 46 ? 16 : 19;
+    const baseLabelSize = height >= 64 ? 22 : height <= 46 ? 17 : 20;
     this.label = scene.add.text(0, -1, compactText(text, Math.max(5, Math.floor(width / 24))), { ...darkText(fitTextSize(text, baseLabelSize, 14)), color: resolveButtonPalette(color).text, fontStyle: '900' }).setOrigin(0.5);
     this.hitZone = scene.add.zone(0, 0, hitW, hitH)
       .setOrigin(0.5)
@@ -144,7 +146,7 @@ export class GameButton extends Phaser.GameObjects.Container {
   }
 
   setLabel(text: string): this {
-    const baseLabelSize = this.heightValue >= 64 ? 20 : this.heightValue <= 46 ? 14 : 17;
+    const baseLabelSize = this.heightValue >= 64 ? 22 : this.heightValue <= 46 ? 17 : 20;
     this.label.setText(compactText(text, Math.max(5, Math.floor(this.widthValue / 24))));
     this.label.setStyle({ ...darkText(fitTextSize(text, baseLabelSize, 14)), color: resolveButtonPalette(this.disabled ? 0x9aa4ba : this.colorValue).text, fontStyle: '900' });
     this.draw(false);

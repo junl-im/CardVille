@@ -6,7 +6,8 @@ import { allowAmbientMotion, ambientCount, CardVilleQuality, getCardVilleQuality
 import { getMathStage, MathProblem, MathStage } from '../data/mathStages';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
-import { shuffleCopy, CARDVILLE_CARD_GAME_PERFORMANCE_TAG } from '../systems/CardGameSystem';
+import { calculateComboScore, CARDVILLE_CARD_ENGINE_UPGRADE_TAG, shuffleCopy, CARDVILLE_CARD_GAME_PERFORMANCE_TAG } from '../systems/CardGameSystem';
+import { assertNoVerticalOverlap, CARDVILLE_SCREEN_UI_REDESIGN_TAG, drawReadablePanel } from '../systems/ScreenUISystem';
 import { applyWrap, bodyText, cardText, darkText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
 export class MathLabScene extends Phaser.Scene {
@@ -35,7 +36,7 @@ export class MathLabScene extends Phaser.Scene {
 
   create(): void {
     applyResponsiveCamera(this);
-    this.add.text(12, 836, CARDVILLE_CARD_GAME_PERFORMANCE_TAG, mutedText(6)).setAlpha(0.01);
+    this.add.text(12, 836, `${CARDVILLE_CARD_GAME_PERFORMANCE_TAG} · ${CARDVILLE_CARD_ENGINE_UPGRADE_TAG} · ${CARDVILLE_SCREEN_UI_REDESIGN_TAG}`, mutedText(6)).setAlpha(0.01);
     this.quality = getCardVilleQuality();
     this.stage = getMathStage(this.stageId);
     this.index = 0;
@@ -47,12 +48,12 @@ export class MathLabScene extends Phaser.Scene {
 
     DrawSystem.background(this, '연산 연구소', 'lab');
     this.drawLabDecor();
-    this.add.text(195, 96, this.stage.title, goldText(24)).setOrigin(0.5);
-    this.add.text(195, 124, `${this.stage.subtitle} · ${this.stage.difficulty} · ${this.stage.id}단계`, applyWrap(mutedText(12), 310)).setOrigin(0.5);
-    this.add.text(195, 150, this.difficultyRewardLabel(), goldText(10)).setOrigin(0.5).setAlpha(0.9);
+    this.add.text(195, 88, this.stage.title, goldText(24)).setOrigin(0.5);
+    this.add.text(195, 118, `${this.stage.subtitle} · ${this.stage.difficulty} · ${this.stage.id}단계`, applyWrap(mutedText(12), 310)).setOrigin(0.5);
+    this.add.text(195, 146, this.difficultyRewardLabel(), goldText(10)).setOrigin(0.5).setAlpha(0.9);
     this.drawConsole();
     this.drawProblem();
-    new GameButton(this, 195, 768, '광장으로', 238, 54, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
+    new GameButton(this, 195, 788, '광장으로', 250, 56, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
   }
 
   private drawLabDecor(): void {
@@ -74,19 +75,20 @@ export class MathLabScene extends Phaser.Scene {
   }
 
   private drawConsole(): void {
-    panel(this, 195, 426, 342, 526, 34);
+    panel(this, 195, 420, 348, 500, 34);
+    drawReadablePanel(this, 195, 600, 348, 218, 0x061127, 0.54);
     if (this.textures.exists('uiMathConsole')) {
       this.add.image(195, 356, 'uiMathConsole').setDisplaySize(318, 212).setAlpha(0.88);
     }
-    this.add.rectangle(195, 216, 276, 48, 0xffffff, 0.10).setStrokeStyle(1, 0xffe08a, 0.45);
-    this.statusText = this.add.text(195, 210, '', goldText(13)).setOrigin(0.5);
-    this.challengeText = this.add.text(195, 232, '', mutedText(9)).setOrigin(0.5);
-    this.add.rectangle(195, 252, 276, 10, 0x07142c, 0.62).setStrokeStyle(1, 0xffffff, 0.16);
-    this.progressFill = this.add.rectangle(57, 252, 0, 8, 0xffd86f, 0.9).setOrigin(0, 0.5);
-    this.promptText = this.add.text(195, 292, '', applyWrap(bodyText(15), 294)).setOrigin(0.5);
-    this.add.rectangle(195, 352, 252, 86, 0x080b1f, 0.82).setStrokeStyle(3, 0xffd86f, 0.56);
-    this.equationText = this.add.text(195, 352, '', titleText(38)).setOrigin(0.5);
-    this.hintText = this.add.text(195, 447, '', applyWrap(mutedText(12), 288)).setOrigin(0.5);
+    this.add.rectangle(195, 202, 276, 48, 0xffffff, 0.10).setStrokeStyle(1, 0xffe08a, 0.45);
+    this.statusText = this.add.text(195, 196, '', goldText(13)).setOrigin(0.5);
+    this.challengeText = this.add.text(195, 220, '', mutedText(9)).setOrigin(0.5);
+    this.add.rectangle(195, 240, 276, 10, 0x07142c, 0.62).setStrokeStyle(1, 0xffffff, 0.16);
+    this.progressFill = this.add.rectangle(57, 240, 0, 8, 0xffd86f, 0.9).setOrigin(0, 0.5);
+    this.promptText = this.add.text(195, 278, '', applyWrap(bodyText(15), 294)).setOrigin(0.5);
+    this.add.rectangle(195, 338, 252, 86, 0x080b1f, 0.82).setStrokeStyle(3, 0xffd86f, 0.56);
+    this.equationText = this.add.text(195, 338, '', titleText(38)).setOrigin(0.5);
+    this.hintText = this.add.text(195, 444, '', applyWrap(mutedText(12), 288)).setOrigin(0.5);
   }
 
   private drawProblem(): void {
@@ -104,7 +106,7 @@ export class MathLabScene extends Phaser.Scene {
     const choices = this.shuffle(problem.choices);
     choices.forEach((answer, slot) => {
       const x = slot % 2 === 0 ? 112 : 278;
-      const y = 546 + Math.floor(slot / 2) * 96;
+      const y = 548 + Math.floor(slot / 2) * 102;
       this.drawAnswerCard(problem, answer, x, y);
     });
   }
@@ -112,11 +114,11 @@ export class MathLabScene extends Phaser.Scene {
   private drawAnswerCard(problem: MathProblem, answer: number, x: number, y: number): void {
     const group = this.add.container(x, y);
     this.answerLayer?.add(group);
-    if (this.textures.exists('uiPanelGold')) group.add(this.add.image(0, 0, 'uiPanelGold').setDisplaySize(150, 88));
-    else group.add(this.add.rectangle(0, 0, 150, 88, 0xffd86f, 0.94).setStrokeStyle(3, 0xffffff, 0.72));
-    group.add(this.add.text(0, -3, `${answer}`, darkText(30)).setOrigin(0.5));
-    group.add(this.add.text(0, 34, '숫자 카드', cardText(10)).setOrigin(0.5).setAlpha(0.7));
-    group.setSize(156, 94).setInteractive({ useHandCursor: true });
+    if (this.textures.exists('uiPanelGold')) group.add(this.add.image(0, 0, 'uiPanelGold').setDisplaySize(164, 96));
+    else group.add(this.add.rectangle(0, 0, 164, 96, 0xffd86f, 0.94).setStrokeStyle(3, 0xffffff, 0.72));
+    group.add(this.add.text(0, -4, `${answer}`, darkText(32)).setOrigin(0.5));
+    group.add(this.add.text(0, 37, '숫자 카드', cardText(10)).setOrigin(0.5).setAlpha(0.7));
+    group.setSize(170, 104).setInteractive({ useHandCursor: true });
     group.on('pointerover', () => { if (!this.locked) this.tweens.add({ targets: group, scale: 1.04, duration: 110 }); });
     group.on('pointerout', () => { if (!this.locked) this.tweens.add({ targets: group, scale: 1, duration: 110 }); });
     group.on('pointerup', () => this.chooseAnswer(group, problem, answer));
@@ -129,7 +131,7 @@ export class MathLabScene extends Phaser.Scene {
     if (correct) {
       this.combo += 1;
       this.bestCombo = Math.max(this.bestCombo, this.combo);
-      this.score += 120 + this.combo * 15;
+      this.score += calculateComboScore(118, this.combo, this.stage.id * 3);
       this.flash(0xffe08a, 0.14);
       if (isMotionEnabled(this.quality)) this.tweens.add({ targets: group, scale: 1.18, duration: 110, yoyo: true, ease: 'Back.easeOut' });
       this.spawnResultText(group.x, group.y - 56, '정답!', 0xffe08a);
@@ -153,6 +155,7 @@ export class MathLabScene extends Phaser.Scene {
   }
 
   private finish(success: boolean): void {
+    assertNoVerticalOverlap(this, 'MathLabScene', [['header', 78, 154], ['console', 188, 468], ['answers', 496, 704], ['actions', 754, 822]]);
     const solved = success ? this.stage.problems.length : this.index;
     const difficultyBonus = this.stage.difficulty === '도전' ? 80 : this.stage.difficulty === '집중' ? 40 : 0;
     const stars = success ? (this.hearts >= 3 ? 3 : this.hearts >= 2 ? 2 : 1) : 1;

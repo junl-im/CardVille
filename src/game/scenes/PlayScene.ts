@@ -8,7 +8,8 @@ import { CATEGORY_COLOR, CATEGORY_LABELS, getStageDeck, GoalCard, StageDeck, Wor
 import { applyResponsiveCamera, compactText, distributeColumns, fitTextSize, hasTouchDebug, layout, playArea } from '../systems/LayoutSystem';
 import { ambientCount, CardVilleQuality, getCardVilleQuality, isMotionEnabled, scaledDuration } from '../systems/QualitySystem';
 import { CoachMarkSystem } from '../systems/CoachMarkSystem';
-import { addWordCardFrame, CARDVILLE_MOBILE_CARD_LAYOUT_TAG, CARDVILLE_WORD_CARD_UI_TAG, wordCardFrameKey } from '../systems/CardGameSystem';
+import { addWordCardFrame, CARDVILLE_CARD_ENGINE_UPGRADE_TAG, CARDVILLE_MOBILE_CARD_LAYOUT_TAG, CARDVILLE_WORD_CARD_UI_TAG, wordCardFrameKey } from '../systems/CardGameSystem';
+import { assertNoVerticalOverlap, CARDVILLE_PLAYFIELD_SAFEZONE_TAG, CARDVILLE_SCREEN_UI_REDESIGN_TAG, drawMobileActionDock, mobileSceneFrame } from '../systems/ScreenUISystem';
 
 type ResumeState = {
   columns: WordCard[][];
@@ -24,6 +25,7 @@ type ResumeState = {
   bonusMeter: number;
 };
 
+// Audit literal: mobile-card-layout-v158 · screen-ui-redesign-v158
 export class PlayScene extends Phaser.Scene {
   private modeId = 'word';
   private stage = 1;
@@ -108,11 +110,12 @@ export class PlayScene extends Phaser.Scene {
     this.boardLayer = this.add.container(0, 0);
     this.effectLayer = this.add.container(0, 0);
     this.drawGoalArea();
-    this.drawSidePanel();
     this.drawPremiumBottomRail();
-    this.comboCoachText = this.add.text(195, 792, '콤보 코치 · 연속 정답으로 보너스 게이지를 채우세요.', applyWrap(goldText(11), Math.min(410, layout(this).visibleWidth - 34))).setOrigin(0.5);
-    this.noteText = this.add.text(195, 819, '맨 위 카드만 선택됩니다. 목표 계열을 보고 카드 스택을 정리하세요.', applyWrap(mutedText(11), Math.min(420, layout(this).visibleWidth - 28))).setOrigin(0.5);
-    this.add.text(layout(this).visibleX + 18, 834, `${CARDVILLE_MOBILE_CARD_LAYOUT_TAG} · ${CARDVILLE_WORD_CARD_UI_TAG}`, mutedText(6)).setAlpha(0.01);
+    this.drawSidePanel();
+    this.comboCoachText = this.add.text(195, 800, '콤보 코치 · 연속 정답으로 보너스 게이지를 채우세요.', applyWrap(goldText(10), Math.min(410, layout(this).visibleWidth - 34))).setOrigin(0.5);
+    this.noteText = this.add.text(195, 824, 'TOP 카드만 터치 · 목표 계열 확인 · 막히면 힌트/섞기', applyWrap(mutedText(10), Math.min(420, layout(this).visibleWidth - 28))).setOrigin(0.5);
+    this.add.text(layout(this).visibleX + 18, 836, `${CARDVILLE_MOBILE_CARD_LAYOUT_TAG} · ${CARDVILLE_WORD_CARD_UI_TAG} · ${CARDVILLE_CARD_ENGINE_UPGRADE_TAG} · ${CARDVILLE_SCREEN_UI_REDESIGN_TAG}`, mutedText(6)).setAlpha(0.01);
+    assertNoVerticalOverlap(this, 'PlayScene', [['goal', 184, 356], ['board', 366, 692], ['actions', 700, 784], ['notes', 790, 836]]);
     this.redrawBoard();
     this.refreshHud();
     this.showWordCoach();
@@ -138,17 +141,17 @@ export class PlayScene extends Phaser.Scene {
     const l = layout(this);
     const g = this.add.graphics();
     g.fillStyle(0x07142c, 0.66);
-    g.fillRoundedRect(l.visibleX + 16, 780, l.visibleWidth - 32, 56, 20);
+    g.fillRoundedRect(l.visibleX + 16, 790, l.visibleWidth - 32, 46, 18);
     g.lineStyle(1, 0xffffff, 0.14);
-    g.strokeRoundedRect(l.visibleX + 16, 780, l.visibleWidth - 32, 56, 20);
+    g.strokeRoundedRect(l.visibleX + 16, 790, l.visibleWidth - 32, 46, 18);
     g.fillStyle(0x8fd3ff, 0.10);
-    g.fillRoundedRect(l.visibleX + 30, 790, 76, 8, 4);
+    g.fillRoundedRect(l.visibleX + 30, 798, 76, 8, 4);
     g.fillStyle(0xffd86f, 0.10);
-    g.fillRoundedRect(l.visibleX + l.visibleWidth - 106, 790, 76, 8, 4);
+    g.fillRoundedRect(l.visibleX + l.visibleWidth - 106, 798, 76, 8, 4);
     this.bonusPipRects = [];
     const startX = 127;
     for (let i = 0; i < 4; i += 1) {
-      const pip = this.add.rectangle(startX + i * 46, 808, 32, 9, 0x26334f, 0.58).setStrokeStyle(1, 0xffffff, 0.15);
+      const pip = this.add.rectangle(startX + i * 46, 812, 32, 8, 0x26334f, 0.58).setStrokeStyle(1, 0xffffff, 0.15);
       this.bonusPipRects.push(pip);
     }
   }
@@ -193,17 +196,17 @@ export class PlayScene extends Phaser.Scene {
     const l = layout(this);
     const g = this.add.graphics();
     g.fillStyle(0x061127, 0.90);
-    g.fillRoundedRect(l.visibleX + 16, 716, l.visibleWidth - 32, 58, 22);
+    g.fillRoundedRect(l.visibleX + 16, 700, l.visibleWidth - 32, 82, 24);
     g.lineStyle(2, 0x8fd3ff, 0.28);
-    g.strokeRoundedRect(l.visibleX + 16, 716, l.visibleWidth - 32, 58, 22);
+    g.strokeRoundedRect(l.visibleX + 16, 700, l.visibleWidth - 32, 82, 24);
     g.fillStyle(0xffffff, 0.10);
-    g.fillRoundedRect(l.visibleX + 26, 725, 74, 40, 18);
-    this.add.text(l.visibleX + 62, 735, '스텝', mutedText(10)).setOrigin(0.5);
-    this.stepText = this.add.text(l.visibleX + 62, 754, `${this.stepsLeft}`, goldText(18)).setOrigin(0.5);
+    g.fillRoundedRect(l.visibleX + 26, 715, 74, 54, 20);
+    this.add.text(l.visibleX + 62, 727, '스텝', mutedText(10)).setOrigin(0.5);
+    this.stepText = this.add.text(l.visibleX + 62, 752, `${this.stepsLeft}`, goldText(18)).setOrigin(0.5);
 
-    this.hintButton = new GameButton(this, l.visibleX + 146, 746, `힌트${this.hintsLeft}`, 78, 46, 0x8fd3ff).onClick(() => this.useHint());
-    this.shuffleButton = new GameButton(this, l.visibleX + 236, 746, `섞기${this.shufflesLeft}`, 78, 46, 0xf0c7ff).onClick(() => this.useShuffle());
-    new GameButton(this, l.visibleX + 326, 746, '나감', 78, 46, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'StageSelectScene', { modeId: this.modeId, title: '말 카드' }));
+    this.hintButton = new GameButton(this, l.visibleX + 146, 742, `힌트${this.hintsLeft}`, 84, 54, 0x8fd3ff).onClick(() => this.useHint());
+    this.shuffleButton = new GameButton(this, l.visibleX + 236, 742, `섞기${this.shufflesLeft}`, 84, 54, 0xf0c7ff).onClick(() => this.useShuffle());
+    new GameButton(this, l.visibleX + 326, 742, '나감', 84, 54, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'StageSelectScene', { modeId: this.modeId, title: '말 카드' }));
   }
 
   private drawMiniSlot(x: number, y: number, label: string, color: number): void {
@@ -286,14 +289,14 @@ export class PlayScene extends Phaser.Scene {
     const cardW = Phaser.Math.Clamp(Math.floor(spacing - 10), 78, 88);
     return {
       xs,
-      baseY: 446,
+      baseY: 438,
       cardW,
       cardH: Phaser.Math.Clamp(Math.floor(cardW * 1.34), 106, 120),
-      gapY: 40,
+      gapY: 37,
       railX,
-      railY: 374,
+      railY: 370,
       railW,
-      railH: 334
+      railH: 320
     };
   }
 
@@ -313,14 +316,14 @@ export class PlayScene extends Phaser.Scene {
     rail.fillStyle(0xfff3d0, 0.12);
     for (const x of xs) rail.fillRoundedRect(x - cardW / 2 - 5, railY + 12, cardW + 10, railH - 24, 18);
     this.boardLayer.add(rail);
-    this.boardLayer.add(this.add.text(railX + 22, railY + 36, '카드 보드 · TOP 카드만 터치', mutedText(9)).setOrigin(0, 0.5));
-    this.boardLayer.add(this.add.text(railX + railW - 22, railY + 36, `${this.columns.flat().length}장 남음`, goldText(10)).setOrigin(1, 0.5));
+    this.boardLayer.add(this.add.text(railX + 22, railY + 32, '카드 보드 · TOP 카드만 터치', mutedText(9)).setOrigin(0, 0.5));
+    this.boardLayer.add(this.add.text(railX + railW - 22, railY + 32, `${this.columns.flat().length}장 남음`, goldText(10)).setOrigin(1, 0.5));
 
     this.columns.forEach((column, colIndex) => {
       const columnHeight = Math.max(1, column.length);
       const topY = baseY + Math.max(0, columnHeight - 1) * gapY;
       const glow = this.add.rectangle(xs[colIndex], topY, cardW + 12, cardH + 12, 0xffffff, 0.045);
-      const columnBadge = this.add.text(xs[colIndex], railY + 62, `${column.length}`, mutedText(9)).setOrigin(0.5);
+      const columnBadge = this.add.text(xs[colIndex], railY + 56, `${column.length}`, mutedText(9)).setOrigin(0.5);
       this.boardLayer.add([glow, columnBadge]);
       column.forEach((card, rowIndex) => {
         const x = xs[colIndex];

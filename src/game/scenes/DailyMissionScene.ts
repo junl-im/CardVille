@@ -4,6 +4,7 @@ import { DrawSystem } from '../systems/DrawSystem';
 import { DailyMissionEntry, DailyMissionId, DailyMissionSystem } from '../systems/DailyMissionSystem';
 import { SaveSystem } from '../systems/SaveSystem';
 import { applyResponsiveCamera } from '../systems/LayoutSystem';
+import { assertNoVerticalOverlap, CARDVILLE_SCREEN_UI_REDESIGN_TAG } from '../systems/ScreenUISystem';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
 import { applyWrap, bodyText, darkText, goldText, mutedText, titleText } from '../ui/TextStyles';
@@ -18,6 +19,7 @@ const ACCENT_COLORS: Record<DailyMissionEntry['accent'], number> = {
   coral: 0xffb39a
 };
 
+// Audit literal: screen-ui-redesign-v158
 export class DailyMissionScene extends Phaser.Scene {
   private toast?: Phaser.GameObjects.Container;
 
@@ -34,20 +36,22 @@ export class DailyMissionScene extends Phaser.Scene {
     const board = DailyMissionSystem.getBoard();
     DrawSystem.background(this, '오늘의 미션');
     DrawSystem.topHud(this, profile.coins, profile.level);
-    panel(this, 195, 420, 344, 604, 34);
+    panel(this, 195, 414, 348, 588, 34);
 
-    this.add.text(195, 84, '이벤트 광장', goldText(24)).setOrigin(0.5);
-    this.add.text(195, 115, '출석, 수업 클리어, 카드팩 개봉을 주간 목표까지 연결해 보상 루프를 안정화합니다.', applyWrap(mutedText(11), 318)).setOrigin(0.5);
+    this.add.text(195, 78, '이벤트 광장', goldText(24)).setOrigin(0.5);
+    this.add.text(195, 108, '출석, 수업 클리어, 카드팩 개봉을 주간 목표까지 연결해 보상 루프를 안정화합니다.', applyWrap(mutedText(11), 318)).setOrigin(0.5);
     this.drawNextAction(board.nextActionTitle, board.nextActionCopy);
     this.drawProgressMeter(board.completionRatio, board.rewardReadyCount, board.claimedCount);
     this.drawStreakWeekly(board.streakDays, board.bestStreakDays, board.weeklyProgress, board.weeklyTarget, board.weeklyReady, board.weeklyClaimed, board.weeklyCompletionRatio);
     this.drawAttendance(board.attendanceReady, board.attendanceClaimed, board.attendanceRewardCoins);
-    board.missions.forEach((mission, index) => this.drawMissionRow(mission, 344 + index * 54));
+    board.missions.forEach((mission, index) => this.drawMissionRow(mission, 336 + index * 52));
     this.drawCompletionBonus(board.dailyCompletionReady, board.dailyCompletionClaimed, board.dailyCompletionRewardText);
 
-    new GameButton(this, 108, 704, '게임 선택', 132, 50, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'ModeSelectScene'));
-    new GameButton(this, 282, 704, '상점', 132, 50, 0xffd86f).onClick(() => NavigationSystem.safeStart(this, 'ShopScene'));
-    new GameButton(this, 195, 766, '광장으로', 236, 52, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
+    new GameButton(this, 108, 706, '게임 선택', 132, 50, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'ModeSelectScene'));
+    new GameButton(this, 282, 706, '상점', 132, 50, 0xffd86f).onClick(() => NavigationSystem.safeStart(this, 'ShopScene'));
+    new GameButton(this, 195, 772, '광장으로', 236, 52, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
+    this.add.text(18, 836, CARDVILLE_SCREEN_UI_REDESIGN_TAG, mutedText(6)).setAlpha(0.01);
+    assertNoVerticalOverlap(this, 'DailyMissionScene', [['top', 68, 126], ['progress', 136, 318], ['missions', 310, 604], ['bonus', 604, 656], ['actions', 676, 804]]);
     if (message) this.showToast(message);
     this.showMissionCoach(board.readyCount > 0 || board.attendanceReady);
   }
@@ -103,10 +107,10 @@ export class DailyMissionScene extends Phaser.Scene {
   }
 
   private drawCompletionBonus(ready: boolean, claimed: boolean, rewardText: string): void {
-    this.add.rectangle(195, 620, 316, 46, ready ? 0xfffbf1 : 0x07142c, ready ? 0.94 : 0.52).setStrokeStyle(ready ? 2 : 1, ready ? 0xffd86f : 0xffffff, ready ? 0.76 : 0.16);
-    this.add.text(62, 608, ready ? '오늘 완주 보상 READY' : claimed ? '오늘 완주 보상 완료' : '오늘 완주 보상', ready ? darkText(12) : goldText(12)).setOrigin(0, 0.5);
-    this.add.text(62, 626, claimed ? '내일 새 미션으로 다시 받을 수 있어요.' : `일일 미션 보상 5개를 모두 받으면 ${rewardText}`, ready ? bodyText(8) : mutedText(8)).setOrigin(0, 0.5);
-    const button = new GameButton(this, 288, 620, claimed ? '완료' : ready ? '완주' : '대기', 78, 34, ready ? 0xffd86f : 0x9aa4ba).onClick(() => this.claimCompletion());
+    this.add.rectangle(195, 604, 316, 46, ready ? 0xfffbf1 : 0x07142c, ready ? 0.94 : 0.52).setStrokeStyle(ready ? 2 : 1, ready ? 0xffd86f : 0xffffff, ready ? 0.76 : 0.16);
+    this.add.text(62, 592, ready ? '오늘 완주 보상 READY' : claimed ? '오늘 완주 보상 완료' : '오늘 완주 보상', ready ? darkText(12) : goldText(12)).setOrigin(0, 0.5);
+    this.add.text(62, 610, claimed ? '내일 새 미션으로 다시 받을 수 있어요.' : `일일 미션 보상 5개를 모두 받으면 ${rewardText}`, ready ? bodyText(8) : mutedText(8)).setOrigin(0, 0.5);
+    const button = new GameButton(this, 288, 604, claimed ? '완료' : ready ? '완주' : '대기', 78, 34, ready ? 0xffd86f : 0x9aa4ba).onClick(() => this.claimCompletion());
     button.setDisabled(!ready);
   }
 

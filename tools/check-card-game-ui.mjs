@@ -45,17 +45,17 @@ for (const token of [
 }
 
 const cardSystem = read('src/game/systems/CardGameSystem.ts');
-for (const token of ['word-card-ui-frame-v157', 'card-game-performance-v157', 'mobile-card-layout-v157', 'shuffleCopy', 'wordCardFrameKey', 'addWordCardFrame']) {
+for (const token of ['word-card-ui-frame-v157', 'card-game-performance-v158', 'mobile-card-layout-v158', 'card-engine-upgrade-v158', 'shuffleCopy', 'wordCardFrameKey', 'addWordCardFrame', 'calculateComboScore']) {
   if (!cardSystem.includes(token)) throw new Error(`CardGameSystem missing token: ${token}`);
 }
 
 const play = read('src/game/scenes/PlayScene.ts');
-for (const token of ['addWordCardFrame', 'wordCardFrameKey', 'CARDVILLE_MOBILE_CARD_LAYOUT_TAG', 'railX = l.visibleX + 14', 'baseY: 446', 'drawPremiumBottomRail', 'l.visibleX + 326']) {
+for (const token of ['addWordCardFrame', 'wordCardFrameKey', 'CARDVILLE_MOBILE_CARD_LAYOUT_TAG', 'railX = l.visibleX + 14', 'baseY: 438', 'drawPremiumBottomRail', 'l.visibleX + 326', 'assertNoVerticalOverlap']) {
   if (!play.includes(token)) throw new Error(`PlayScene missing mobile word-card layout token: ${token}`);
 }
 
 const text = read('src/game/ui/TextStyles.ts');
-for (const token of ['mobile-readable-text-v157', 'return prefs.largeText ? 1.38 : 1.20', 'size <= 9 ? 13', 'size <= 11 ? 15']) {
+for (const token of ['mobile-readable-text-v158', 'return prefs.largeText ? 1.40 : 1.20', 'size <= 9 ? 13', 'size <= 11 ? 15']) {
   if (!text.includes(token)) throw new Error(`TextStyles missing v157 mobile readability token: ${token}`);
 }
 
@@ -68,21 +68,21 @@ for (const file of ['src/game/scenes/MemoryForestScene.ts', 'src/game/scenes/Mat
 const math = read('src/game/scenes/MathLabScene.ts');
 const english = read('src/game/scenes/EnglishSchoolScene.ts');
 for (const [name, content] of [['MathLabScene', math], ['EnglishSchoolScene', english]]) {
-  for (const token of ['panel(this, 195, 426, 342, 526, 34)', 'setSize(156, 94)', 'Math.floor(slot / 2) * 96']) {
+  for (const token of ['panel(this, 195, 420, 348, 500, 34)', 'setSize(170, 104)', 'Math.floor(slot / 2) * 102', 'drawReadablePanel']) {
     if (!content.includes(token)) throw new Error(`${name} missing enlarged mobile answer layout token: ${token}`);
   }
 }
 
 const readme = read('README.md');
-for (const token of [`# CardVille ${pkg.version}`, `## ${pkg.version} 업데이트 내역`, 'word-card-ui-frame-v157', 'card-game-performance-v157', 'check:card-game-ui']) {
+for (const token of [`# CardVille ${pkg.version}`, `## ${pkg.version} 업데이트 내역`, 'word-card-ui-frame-v157', 'card-game-performance-v158', 'check:card-game-ui']) {
   if (!readme.includes(token)) throw new Error(`README missing 1.0.57 card-game UI token: ${token}`);
 }
 const handoff = read('AI_HANDOFF_CARDVILLE.md');
-for (const token of [`현재 기준 버전은 ${pkg.version}`, '1.0.57 카드 UI/성능 점검', 'word-card-ui-frame-v157', 'card-game-performance-v157']) {
+for (const token of [`현재 기준 버전은 ${pkg.version}`, '1.0.58 플레이필드/UI/엔진 점검', 'word-card-ui-frame-v157', 'card-game-performance-v158']) {
   if (!handoff.includes(token)) throw new Error(`AI handoff missing 1.0.57 token: ${token}`);
 }
 
 if (pkg.scripts?.['check:card-game-ui'] !== 'node tools/check-card-game-ui.mjs') throw new Error('check:card-game-ui script missing');
 if (!pkg.scripts?.verify?.includes('check:card-game-ui')) throw new Error('verify must include check:card-game-ui');
 
-console.log(`Card game UI check passed. Version ${pkg.version}, processed word-card frames, mobile card layout, Fisher-Yates shuffle, and v157 readability tokens verified.`);
+console.log(`Card game UI check passed. Version ${pkg.version}, processed word-card frames, v158 mobile playfield layout, Fisher-Yates shuffle, and engine scoring guards verified.`);

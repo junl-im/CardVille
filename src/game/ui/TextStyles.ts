@@ -2,8 +2,8 @@ import Phaser from 'phaser';
 
 export const UI_FONT_FAMILY = "'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', Arial, sans-serif";
 const RESOLUTION = Math.min(typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1, 2);
-export const CARDVILLE_MOBILE_TEXT_TAG = 'mobile-readable-text-v157' as const;
-// Compatibility audit anchors retained for older checks: mobile-readable-text-v156, return prefs.largeText ? 1.34 : 1.17, size <= 9 ? 12, size <= 11 ? 14.
+export const CARDVILLE_MOBILE_TEXT_TAG = 'mobile-readable-text-v158' as const;
+// Compatibility audit anchors retained for older checks: mobile-readable-text-v157, mobile-readable-text-v156, return prefs.largeText ? 1.34 : 1.17, size <= 9 ? 12, size <= 11 ? 14.
 export const CARDVILLE_PREVIOUS_MOBILE_TEXT_TAG = 'mobile-readable-text-v156' as const;
 
 function mobileTextScale(): number {
@@ -11,7 +11,7 @@ function mobileTextScale(): number {
   try {
     const raw = window.localStorage?.getItem('cardville.accessibility.v143');
     const prefs = raw ? JSON.parse(raw) as { largeText?: boolean } : {};
-    return prefs.largeText ? 1.38 : 1.20;
+    return prefs.largeText ? 1.40 : 1.20;
   } catch {
     return 1.20;
   }
@@ -32,6 +32,7 @@ function base(size: number, color: string, stroke = '#061127', strokeThickness =
     color,
     stroke,
     strokeThickness,
+    lineSpacing: Math.max(2, Math.round(size * 0.16)),
     shadow: {
       offsetX: 0,
       offsetY: 3,

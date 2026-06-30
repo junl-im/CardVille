@@ -1,11 +1,11 @@
 {
-  "name": "CardVille 1.0.57 Word Card UI Mobile Layout",
-  "version": "1.0.57",
+  "name": "ScreenPlayfieldEnginePolish",
+  "version": "1.0.58",
   "mode": "word-card-ui-frame-v157-mobile-card-layout-v157-card-game-performance-v157",
   "svg": "disabled",
   "pwa": "disabled",
   "notes": "Applies selected word card UI assets, cleans baked checker backgrounds to alpha PNG, adapts mobile card and answer layouts for larger text, and replaces sort-random shuffles with Fisher-Yates shuffleCopy.",
   "label": "Premium word card UI + mobile card readability",
-  "description": "Selected CardVille_WordCard_UI assets are processed into RGBA PNG/WebP, word gameplay uses the new frames/back art, action controls move into a safe bottom rail, Math/English answer cards are enlarged, and card-game shuffle/performance checks are added.",
+  "description": "Mobile playfield spacing, touch targets, card UI layout and card-game engine guards.",
   "assetVersion": "1.0.57"
 }

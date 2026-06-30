@@ -6,7 +6,8 @@ import { allowAmbientMotion, ambientCount, CardVilleQuality, getCardVilleQuality
 import { getMemoryStage, MemoryPair, MemoryStage } from '../data/memoryStages';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
-import { shuffleCopy, CARDVILLE_CARD_GAME_PERFORMANCE_TAG } from '../systems/CardGameSystem';
+import { CARDVILLE_CARD_ENGINE_UPGRADE_TAG, shuffleCopy, CARDVILLE_CARD_GAME_PERFORMANCE_TAG } from '../systems/CardGameSystem';
+import { assertNoVerticalOverlap, CARDVILLE_SCREEN_UI_REDESIGN_TAG } from '../systems/ScreenUISystem';
 import { applyWrap, bodyText, cardSmallText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
 type MemoryCard = {
@@ -40,7 +41,7 @@ export class MemoryForestScene extends Phaser.Scene {
 
   create(): void {
     applyResponsiveCamera(this);
-    this.add.text(12, 836, CARDVILLE_CARD_GAME_PERFORMANCE_TAG, mutedText(6)).setAlpha(0.01);
+    this.add.text(12, 836, `${CARDVILLE_CARD_GAME_PERFORMANCE_TAG} · ${CARDVILLE_CARD_ENGINE_UPGRADE_TAG} · ${CARDVILLE_SCREEN_UI_REDESIGN_TAG}`, mutedText(6)).setAlpha(0.01);
     this.quality = getCardVilleQuality();
     this.stage = getMemoryStage(this.stageId);
     this.cards = [];
@@ -52,13 +53,13 @@ export class MemoryForestScene extends Phaser.Scene {
 
     DrawSystem.background(this, '기억의 숲', 'forest');
     this.drawForestDecor();
-    this.add.text(195, 94, this.stage.title, goldText(25)).setOrigin(0.5);
-    this.add.text(195, 124, `${this.stage.subtitle} · ${this.stage.id}단계`, applyWrap(mutedText(12), 310)).setOrigin(0.5);
-    panel(this, 195, 428, 342, 518, 34);
-    this.statusText = this.add.text(195, 184, '', bodyText(14)).setOrigin(0.5);
+    this.add.text(195, 88, this.stage.title, goldText(25)).setOrigin(0.5);
+    this.add.text(195, 118, `${this.stage.subtitle} · ${this.stage.id}단계`, applyWrap(mutedText(12), 310)).setOrigin(0.5);
+    panel(this, 195, 420, 348, 500, 34);
+    this.statusText = this.add.text(195, 172, '', bodyText(14)).setOrigin(0.5);
     this.drawBoard();
     this.revealPreview();
-    new GameButton(this, 195, 770, '광장으로', 238, 54, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
+    new GameButton(this, 195, 790, '광장으로', 250, 56, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
   }
 
   private drawForestDecor(): void {
@@ -79,19 +80,19 @@ export class MemoryForestScene extends Phaser.Scene {
   }
 
   private drawBoard(): void {
-    if (this.textures.exists('uiMemoryBoard')) this.add.image(195, 454, 'uiMemoryBoard').setDisplaySize(326, 430).setAlpha(0.82);
+    if (this.textures.exists('uiMemoryBoard')) this.add.image(195, 446, 'uiMemoryBoard').setDisplaySize(330, 416).setAlpha(0.82);
     const deck = this.shuffle(this.stage.pairs.flatMap((pair) => [pair, pair]));
     const compact = deck.length > 16;
     const columns = deck.length > 20 ? 5 : 4;
     const rows = Math.ceil(deck.length / columns);
     const gapX = columns === 5 ? 8 : compact ? 10 : 14;
     const gapY = columns === 5 ? 8 : compact ? 10 : 16;
-    const maxBoardHeight = 462;
+    const maxBoardHeight = 430;
     const cardW = columns === 5 ? 58 : compact ? 66 : 72;
     const cardH = Math.min(columns === 5 ? 68 : compact ? 76 : 92, Math.floor((maxBoardHeight - gapY * (rows - 1)) / rows));
     const startX = 195 - (cardW * columns + gapX * (columns - 1)) / 2 + cardW / 2;
-    const startY = 236 + cardH / 2;
-    this.add.text(195, 208, `보드 ${columns}열 · ${deck.length}장 · 프리뷰 ${this.stage.previewSeconds}초`, mutedText(10)).setOrigin(0.5);
+    const startY = 226 + cardH / 2;
+    this.add.text(195, 202, `보드 ${columns}열 · ${deck.length}장 · 프리뷰 ${this.stage.previewSeconds}초`, mutedText(10)).setOrigin(0.5);
 
     deck.forEach((pair, index) => {
       const col = index % columns;
@@ -181,6 +182,7 @@ export class MemoryForestScene extends Phaser.Scene {
   }
 
   private finish(): void {
+    assertNoVerticalOverlap(this, 'MemoryForestScene', [['header', 78, 132], ['status', 156, 196], ['board', 208, 694], ['actions', 756, 824]]);
     const targetMoves = this.stage.pairs.length + Math.ceil(this.stage.pairs.length * 0.45);
     const efficiency = Math.max(0, targetMoves + 4 - this.moves);
     const stageBonus = this.stage.id * 35 + Math.max(0, this.stage.pairs.length - 8) * 12;

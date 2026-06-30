@@ -1,4 +1,4 @@
-export const LOBBY_LAYOUT_PLAN_VERSION = '1.0.57' as const;
+export const LOBBY_LAYOUT_PLAN_VERSION = '1.0.58' as const;
 
 export type LobbySafeZone = {
   id: string;
@@ -101,3 +101,5 @@ export const LOBBY_VISIBLE_ASSET_ROUTE_AUDIT = [
   '1.0.57 keeps larger mobile text paired with resized card-game panels and bottom rails',
   'mobile-card-layout-v157 protects word cards, answer buttons, and bottom controls from overlap'
 ] as const;
+
+export const CARDVILLE_SCREEN_UI_AUDIT_V158 = 'screen-ui-redesign-v158 · playfield-safezone-v158 · mobile-touch-target-v158' as const;

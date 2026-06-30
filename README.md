@@ -1,7 +1,43 @@
-# CardVille 1.0.57
+# CardVille 1.0.58
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
+
+
+## 1.0.58 업데이트 내역
+
+- **플레이 화면 단위 UI 정밀 재배치 + 카드게임 엔진 점검 패스**를 진행했습니다.
+- 커진 모바일 글씨에 맞춰 카드/패널/버튼/힌트 레일의 실제 컨테이너 크기를 함께 조정했습니다.
+- `ScreenUISystem.ts`를 추가했습니다.
+  - `screen-ui-redesign-v158`
+  - `playfield-safezone-v158`
+  - 세로 영역 겹침 경고 `assertNoVerticalOverlap()`
+- `GameButton` 기본 터치 영역을 56px 이상으로 보강했습니다.
+  - `mobile-touch-target-v158`
+  - `screen-wide-premium-button-v158`
+- 말 카드 화면을 다시 정리했습니다.
+  - 하단 액션 레일 높이 확장
+  - 보드 높이/카드 스택 간격 조정
+  - 목표/보드/액션/안내 문구 세로 안전 영역 재검사
+  - `mobile-card-layout-v158`
+- 연산 연구소/영어 학교를 모바일 큰 글씨 기준으로 재배치했습니다.
+  - 답안 카드 170×104 터치존
+  - 선택 카드 영역과 하단 버튼 영역 겹침 방지
+  - `drawReadablePanel()`로 답안 영역 배경 분리
+- 기억의 숲 보드 높이와 하단 버튼 위치를 재조정했습니다.
+- 일일 미션 보드의 미션 행/완주 보상/하단 버튼 영역 겹침을 다시 점검했습니다.
+- 카드게임 엔진 보강:
+  - `card-game-performance-v158`
+  - `card-engine-upgrade-v158`
+  - `calculateComboScore()` 추가
+  - `createTapGuard()` 기반 추가
+- 검증 추가:
+  - `tools/check-screen-playfield-v158.mjs`
+  - `npm run check:screen-playfield`
+- `npm run verify`에 `check:screen-playfield`를 포함했습니다.
+- 신규 문서 파일은 만들지 않았습니다.
+- 삭제 파일은 없습니다.
+- `node_modules`, `dist`, `package-lock.json`은 통파일 ZIP에서 제외합니다.
 
 
 ## 1.0.57 업데이트 내역
@@ -1412,3 +1448,11 @@ CardVille_Project_Patch_이전버전_to_새버전.zip
 - Service Worker 비활성
 - 시작 시 Firebase와 대량 에셋 preload 방지
 - GitHub Actions 배포 증명 유지
+
+
+## 1.0.58 ScreenPlayfieldEnginePolish
+- 모바일 큰 글씨 기준으로 말 카드, 연산 연구소, 영어 학교, 기억의 숲, 일일 미션 화면의 패널/카드/버튼 레일 간격을 재조정했다.
+- `ScreenUISystem`을 추가해 화면 안전 영역 태그, 터치 타깃, 세로 겹침 경고를 공통화했다.
+- `GameButton` 기본 터치 영역을 56px 이상으로 보강하고 라벨 기본 크기를 상향했다.
+- 카드게임 엔진 태그 `card-engine-upgrade-v158` 및 `calculateComboScore`/tap guard 기반을 추가했다.
+- `check-screen-playfield` 검증을 추가해 UI 안전 영역, 카드 레이아웃, 터치 타깃, 엔진 태그가 누락되지 않게 했다.

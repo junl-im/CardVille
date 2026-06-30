@@ -6,7 +6,8 @@ import { allowAmbientMotion, ambientCount, CardVilleQuality, getCardVilleQuality
 import { EnglishCard, EnglishStage, getEnglishStage } from '../data/englishStages';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
-import { shuffleCopy, CARDVILLE_CARD_GAME_PERFORMANCE_TAG } from '../systems/CardGameSystem';
+import { calculateComboScore, CARDVILLE_CARD_ENGINE_UPGRADE_TAG, shuffleCopy, CARDVILLE_CARD_GAME_PERFORMANCE_TAG } from '../systems/CardGameSystem';
+import { assertNoVerticalOverlap, CARDVILLE_SCREEN_UI_REDESIGN_TAG, drawReadablePanel } from '../systems/ScreenUISystem';
 import { applyWrap, bodyText, cardText, darkText, goldText, mutedText, titleText } from '../ui/TextStyles';
 import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 
@@ -36,7 +37,7 @@ export class EnglishSchoolScene extends Phaser.Scene {
 
   create(): void {
     applyResponsiveCamera(this);
-    this.add.text(12, 836, CARDVILLE_CARD_GAME_PERFORMANCE_TAG, mutedText(6)).setAlpha(0.01);
+    this.add.text(12, 836, `${CARDVILLE_CARD_GAME_PERFORMANCE_TAG} · ${CARDVILLE_CARD_ENGINE_UPGRADE_TAG} · ${CARDVILLE_SCREEN_UI_REDESIGN_TAG}`, mutedText(6)).setAlpha(0.01);
     this.quality = getCardVilleQuality();
     this.stage = getEnglishStage(this.stageId);
     this.deck = this.shuffle(this.stage.cards);
@@ -49,12 +50,12 @@ export class EnglishSchoolScene extends Phaser.Scene {
 
     DrawSystem.background(this, '영어 학교');
     this.drawSchoolDecor();
-    this.add.text(195, 94, this.stage.title, goldText(24)).setOrigin(0.5);
-    this.add.text(195, 122, `${this.stage.subtitle} · ${this.stage.difficulty} · ${this.stage.theme}`, applyWrap(mutedText(12), 314)).setOrigin(0.5);
-    this.add.text(195, 148, this.lessonRewardLabel(), goldText(10)).setOrigin(0.5).setAlpha(0.9);
+    this.add.text(195, 88, this.stage.title, goldText(24)).setOrigin(0.5);
+    this.add.text(195, 118, `${this.stage.subtitle} · ${this.stage.difficulty} · ${this.stage.theme}`, applyWrap(mutedText(12), 314)).setOrigin(0.5);
+    this.add.text(195, 146, this.lessonRewardLabel(), goldText(10)).setOrigin(0.5).setAlpha(0.9);
     this.drawClassBoard();
     this.drawQuestion();
-    new GameButton(this, 195, 768, '광장으로', 238, 54, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
+    new GameButton(this, 195, 788, '광장으로', 250, 56, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'MainLobbyScene'));
     this.showEnglishCoach();
   }
 
@@ -89,16 +90,17 @@ export class EnglishSchoolScene extends Phaser.Scene {
   }
 
   private drawClassBoard(): void {
-    panel(this, 195, 426, 342, 526, 34);
-    this.add.rectangle(195, 218, 286, 52, 0xffffff, 0.10).setStrokeStyle(1, 0xffd86f, 0.38);
-    this.statusText = this.add.text(195, 211, '', goldText(13)).setOrigin(0.5);
-    this.add.text(195, 234, '영어 단어와 뜻을 맞추면 콤보 보상이 올라가요.', mutedText(9)).setOrigin(0.5);
-    this.add.rectangle(195, 258, 276, 10, 0x07142c, 0.62).setStrokeStyle(1, 0xffffff, 0.16);
-    this.progressFill = this.add.rectangle(57, 258, 0, 8, 0x9fe7ff, 0.92).setOrigin(0, 0.5);
-    this.add.rectangle(195, 348, 262, 112, 0x08233f, 0.84).setStrokeStyle(3, 0xffd86f, 0.48);
-    this.wordText = this.add.text(195, 326, '', titleText(42)).setOrigin(0.5);
-    this.exampleText = this.add.text(195, 382, '', applyWrap(bodyText(13), 238)).setOrigin(0.5).setAlpha(0.92);
-    this.hintText = this.add.text(195, 452, '', applyWrap(mutedText(12), 288)).setOrigin(0.5);
+    panel(this, 195, 420, 348, 500, 34);
+    drawReadablePanel(this, 195, 602, 348, 218, 0x061127, 0.52);
+    this.add.rectangle(195, 202, 286, 52, 0xffffff, 0.10).setStrokeStyle(1, 0xffd86f, 0.38);
+    this.statusText = this.add.text(195, 196, '', goldText(13)).setOrigin(0.5);
+    this.add.text(195, 220, '영어 단어와 뜻을 맞추면 콤보 보상이 올라가요.', mutedText(9)).setOrigin(0.5);
+    this.add.rectangle(195, 240, 276, 10, 0x07142c, 0.62).setStrokeStyle(1, 0xffffff, 0.16);
+    this.progressFill = this.add.rectangle(57, 240, 0, 8, 0x9fe7ff, 0.92).setOrigin(0, 0.5);
+    this.add.rectangle(195, 334, 262, 112, 0x08233f, 0.84).setStrokeStyle(3, 0xffd86f, 0.48);
+    this.wordText = this.add.text(195, 316, '', titleText(42)).setOrigin(0.5);
+    this.exampleText = this.add.text(195, 374, '', applyWrap(bodyText(13), 238)).setOrigin(0.5).setAlpha(0.92);
+    this.hintText = this.add.text(195, 448, '', applyWrap(mutedText(12), 288)).setOrigin(0.5);
   }
 
   private drawQuestion(): void {
@@ -114,7 +116,7 @@ export class EnglishSchoolScene extends Phaser.Scene {
     const choices = this.makeChoices(card);
     choices.forEach((choice, slot) => {
       const x = slot % 2 === 0 ? 112 : 278;
-      const y = 548 + Math.floor(slot / 2) * 96;
+      const y = 550 + Math.floor(slot / 2) * 102;
       this.drawChoiceCard(card, choice, x, y);
     });
   }
@@ -127,10 +129,10 @@ export class EnglishSchoolScene extends Phaser.Scene {
   private drawChoiceCard(answer: EnglishCard, choice: EnglishCard, x: number, y: number): void {
     const group = this.add.container(x, y);
     this.questionLayer?.add(group);
-    group.add(this.add.rectangle(0, 0, 150, 88, 0xfffbf1, 0.96).setStrokeStyle(3, 0xffd86f, 0.66));
-    group.add(this.add.text(0, -8, choice.meaning, darkText(choice.meaning.length > 5 ? 17 : 21)).setOrigin(0.5));
-    group.add(this.add.text(0, 32, '뜻 카드', cardText(10)).setOrigin(0.5).setAlpha(0.7));
-    group.setSize(156, 94).setInteractive({ useHandCursor: true });
+    group.add(this.add.rectangle(0, 0, 164, 96, 0xfffbf1, 0.96).setStrokeStyle(3, 0xffd86f, 0.66));
+    group.add(this.add.text(0, -7, choice.meaning, darkText(choice.meaning.length > 5 ? 17 : 21)).setOrigin(0.5));
+    group.add(this.add.text(0, 37, '뜻 카드', cardText(10)).setOrigin(0.5).setAlpha(0.7));
+    group.setSize(170, 104).setInteractive({ useHandCursor: true });
     group.on('pointerover', () => { if (!this.locked) this.tweens.add({ targets: group, scale: 1.04, duration: 110 }); });
     group.on('pointerout', () => { if (!this.locked) this.tweens.add({ targets: group, scale: 1, duration: 110 }); });
     group.on('pointerup', () => this.chooseAnswer(group, answer, choice));
@@ -143,7 +145,7 @@ export class EnglishSchoolScene extends Phaser.Scene {
     if (correct) {
       this.combo += 1;
       this.bestCombo = Math.max(this.bestCombo, this.combo);
-      this.score += 105 + this.combo * 18 + this.stage.id * 8;
+      this.score += calculateComboScore(104, this.combo, this.stage.id * 8);
       this.flash(0x9fe7ff, 0.14);
       if (isMotionEnabled(this.quality)) this.tweens.add({ targets: group, scale: 1.16, duration: 110, yoyo: true, ease: 'Back.easeOut' });
       this.spawnResultText(group.x, group.y - 56, 'Good!', 0x9fe7ff);
@@ -167,6 +169,7 @@ export class EnglishSchoolScene extends Phaser.Scene {
   }
 
   private finish(success: boolean): void {
+    assertNoVerticalOverlap(this, 'EnglishSchoolScene', [['header', 78, 154], ['classBoard', 188, 468], ['choices', 498, 704], ['actions', 754, 822]]);
     const solved = success ? this.deck.length : this.index;
     const difficultyBonus = this.stage.difficulty === '도전' ? 80 : this.stage.difficulty === '연습' ? 42 : 18;
     const stars = success ? (this.hearts >= 3 ? 3 : this.hearts >= 2 ? 2 : 1) : 1;
