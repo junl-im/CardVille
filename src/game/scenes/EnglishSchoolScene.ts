@@ -6,6 +6,7 @@ import { allowAmbientMotion, ambientCount, CardVilleQuality, getCardVilleQuality
 import { EnglishCard, EnglishStage, getEnglishStage } from '../data/englishStages';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
+import { shuffleCopy, CARDVILLE_CARD_GAME_PERFORMANCE_TAG } from '../systems/CardGameSystem';
 import { applyWrap, bodyText, cardText, darkText, goldText, mutedText, titleText } from '../ui/TextStyles';
 import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 
@@ -35,6 +36,7 @@ export class EnglishSchoolScene extends Phaser.Scene {
 
   create(): void {
     applyResponsiveCamera(this);
+    this.add.text(12, 836, CARDVILLE_CARD_GAME_PERFORMANCE_TAG, mutedText(6)).setAlpha(0.01);
     this.quality = getCardVilleQuality();
     this.stage = getEnglishStage(this.stageId);
     this.deck = this.shuffle(this.stage.cards);
@@ -87,7 +89,7 @@ export class EnglishSchoolScene extends Phaser.Scene {
   }
 
   private drawClassBoard(): void {
-    panel(this, 195, 404, 342, 466, 34);
+    panel(this, 195, 426, 342, 526, 34);
     this.add.rectangle(195, 218, 286, 52, 0xffffff, 0.10).setStrokeStyle(1, 0xffd86f, 0.38);
     this.statusText = this.add.text(195, 211, '', goldText(13)).setOrigin(0.5);
     this.add.text(195, 234, '영어 단어와 뜻을 맞추면 콤보 보상이 올라가요.', mutedText(9)).setOrigin(0.5);
@@ -112,7 +114,7 @@ export class EnglishSchoolScene extends Phaser.Scene {
     const choices = this.makeChoices(card);
     choices.forEach((choice, slot) => {
       const x = slot % 2 === 0 ? 112 : 278;
-      const y = 544 + Math.floor(slot / 2) * 98;
+      const y = 548 + Math.floor(slot / 2) * 96;
       this.drawChoiceCard(card, choice, x, y);
     });
   }
@@ -125,10 +127,10 @@ export class EnglishSchoolScene extends Phaser.Scene {
   private drawChoiceCard(answer: EnglishCard, choice: EnglishCard, x: number, y: number): void {
     const group = this.add.container(x, y);
     this.questionLayer?.add(group);
-    group.add(this.add.rectangle(0, 0, 136, 76, 0xfffbf1, 0.94).setStrokeStyle(3, 0xffd86f, 0.62));
-    group.add(this.add.text(0, -6, choice.meaning, darkText(choice.meaning.length > 5 ? 17 : 20)).setOrigin(0.5));
-    group.add(this.add.text(0, 27, '뜻 카드', cardText(10)).setOrigin(0.5).setAlpha(0.7));
-    group.setSize(142, 82).setInteractive({ useHandCursor: true });
+    group.add(this.add.rectangle(0, 0, 150, 88, 0xfffbf1, 0.96).setStrokeStyle(3, 0xffd86f, 0.66));
+    group.add(this.add.text(0, -8, choice.meaning, darkText(choice.meaning.length > 5 ? 17 : 21)).setOrigin(0.5));
+    group.add(this.add.text(0, 32, '뜻 카드', cardText(10)).setOrigin(0.5).setAlpha(0.7));
+    group.setSize(156, 94).setInteractive({ useHandCursor: true });
     group.on('pointerover', () => { if (!this.locked) this.tweens.add({ targets: group, scale: 1.04, duration: 110 }); });
     group.on('pointerout', () => { if (!this.locked) this.tweens.add({ targets: group, scale: 1, duration: 110 }); });
     group.on('pointerup', () => this.chooseAnswer(group, answer, choice));
@@ -182,7 +184,7 @@ export class EnglishSchoolScene extends Phaser.Scene {
   }
 
   private shuffle<T>(items: readonly T[]): T[] {
-    return [...items].sort(() => Math.random() - 0.5);
+    return shuffleCopy(items);
   }
 
   private flash(color: number, alpha: number): void {

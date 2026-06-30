@@ -1,4 +1,4 @@
-export const LOBBY_LAYOUT_PLAN_VERSION = '1.0.56' as const;
+export const LOBBY_LAYOUT_PLAN_VERSION = '1.0.57' as const;
 
 export type LobbySafeZone = {
   id: string;
@@ -97,5 +97,7 @@ export const LOBBY_VISIBLE_ASSET_ROUTE_AUDIT = [
   '1.0.55 uses PNG source for critical lobby assets instead of runtime WebP substitution',
   '1.0.55 lobby transition uses scene-navigation-no-freeze-v154 native timer fallback',
   '1.0.55 art placement uses lobby-art-placement-v155 and scene-premium-backdrop-v155',
-  '1.0.56 keeps lobby HUD/UI in safe lanes so building art and NPCs stay visible'
+  '1.0.56 keeps lobby HUD/UI in safe lanes so building art and NPCs stay visible',
+  '1.0.57 keeps larger mobile text paired with resized card-game panels and bottom rails',
+  'mobile-card-layout-v157 protects word cards, answer buttons, and bottom controls from overlap'
 ] as const;

@@ -4,11 +4,51 @@
 CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고, 그다음 실제 코드를 확인하세요.
 
 
-## 현재 작업 기준: 1.0.56
+## 현재 작업 기준: 1.0.57
 
-현재 기준 버전은 1.0.56입니다.  
-이번 버전은 1.0.55 LobbyArtUIUXPolish를 기준으로, 마을 HUD/UI 겹침과 사용자 제공 건물/NPC 에셋 미적용처럼 보이는 문제를 핫픽스한 패스입니다. `lobby-ui-nonoverlap-v156`, `user-lobby-asset-assignment-v156`, `user-lobby-npc-visible-v156`, `mobile-readable-text-v156`가 핵심 기준입니다.
+현재 기준 버전은 1.0.57입니다.  
+이번 버전은 1.0.56 LobbyAssetUIOverlapHotfix를 기준으로, 사용자가 제공한 WordCard UI 에셋을 선별 적용하고 커진 모바일 글씨에 맞춰 카드게임 UI 레이아웃과 셔플/성능 검증을 보강한 패스입니다. `word-card-ui-frame-v157`, `mobile-card-layout-v157`, `mobile-readable-text-v157`, `card-game-performance-v157`가 핵심 기준입니다.
 
+
+
+### 1.0.57 카드 UI/성능 점검
+
+- 업로드 파일:
+  - `CardVille_WordCard_UI_1.0.51_PNG.zip`
+- 적용 목적:
+  - 말 카드 화면에 사용 가능한 프리미엄 카드 프레임/카드 뒷면을 실제 런타임에 연결했습니다.
+  - 커진 모바일 글씨 때문에 기존 카드/패널/버튼 배치가 답답해지는 문제를 보정했습니다.
+- 에셋 처리:
+  - 원본 카드 UI PNG는 텍스트가 없어 no baked text 정책에는 맞습니다.
+  - 외곽 체크무늬 배경이 RGB로 구워져 있어 flood-fill 기반으로 alpha PNG로 재가공했습니다.
+  - `public/assets/cards/word_ui/`에 PNG/WebP companion을 저장했습니다.
+- 코드 반영:
+  - `src/game/data/assetManifest.ts`
+    - `CARDVILLE_ASSET_VERSION = 1.0.57`
+    - `wordCardFrameLayoutA`, `wordCardFrameLayoutB`, `wordCardFrameLayoutC`, `wordCardFrameSyllableSlots`, `wordCardBackDesign` 추가
+  - `src/game/systems/CardGameSystem.ts`
+    - `word-card-ui-frame-v157`
+    - `mobile-card-layout-v157`
+    - `card-game-performance-v157`
+    - `shuffleCopy()` Fisher-Yates 셔플 추가
+  - `src/game/scenes/PlayScene.ts`
+    - 말 카드 보드 폭을 확장하고 왼쪽 세로 버튼 레일을 하단 액션 레일로 이동
+    - 목표 카드/플레이 카드/카드 뒷면에 새 WordCard UI 프레임 적용
+  - `src/game/scenes/MathLabScene.ts`, `EnglishSchoolScene.ts`
+    - 답안 카드와 터치존을 모바일 글씨 크기에 맞게 확대
+  - `src/game/scenes/MemoryForestScene.ts`, `MathLabScene.ts`, `EnglishSchoolScene.ts`
+    - `sort(() => Math.random() - 0.5)` 대신 `shuffleCopy()` 사용
+  - `src/game/ui/TextStyles.ts`
+    - `mobile-readable-text-v157`
+    - 기본 배율 1.20, 큰 글씨 1.38
+- 검증:
+  - `tools/check-card-game-ui.mjs` 추가
+  - `check:card-game-ui` 추가
+  - `npm run verify`에 포함
+- 패치 정책:
+  - 1.0.57 패치 ZIP도 self-contained 안정형 패치로 유지합니다.
+  - `src/`, `tools/`, `public/assets`, 버전 동기화 파일, README, AI_HANDOFF, docs를 포함합니다.
+- 신규 문서 파일은 생성하지 않았습니다.
 
 
 ### 1.0.56 로비 HUD/에셋 가시성 핫픽스

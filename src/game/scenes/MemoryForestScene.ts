@@ -6,6 +6,7 @@ import { allowAmbientMotion, ambientCount, CardVilleQuality, getCardVilleQuality
 import { getMemoryStage, MemoryPair, MemoryStage } from '../data/memoryStages';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
+import { shuffleCopy, CARDVILLE_CARD_GAME_PERFORMANCE_TAG } from '../systems/CardGameSystem';
 import { applyWrap, bodyText, cardSmallText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
 type MemoryCard = {
@@ -39,6 +40,7 @@ export class MemoryForestScene extends Phaser.Scene {
 
   create(): void {
     applyResponsiveCamera(this);
+    this.add.text(12, 836, CARDVILLE_CARD_GAME_PERFORMANCE_TAG, mutedText(6)).setAlpha(0.01);
     this.quality = getCardVilleQuality();
     this.stage = getMemoryStage(this.stageId);
     this.cards = [];
@@ -196,6 +198,6 @@ export class MemoryForestScene extends Phaser.Scene {
   }
 
   private shuffle<T>(items: readonly T[]): T[] {
-    return [...items].sort(() => Math.random() - 0.5);
+    return shuffleCopy(items);
   }
 }

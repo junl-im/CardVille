@@ -2,21 +2,23 @@ import Phaser from 'phaser';
 
 export const UI_FONT_FAMILY = "'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', Arial, sans-serif";
 const RESOLUTION = Math.min(typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1, 2);
-export const CARDVILLE_MOBILE_TEXT_TAG = 'mobile-readable-text-v156' as const;
+export const CARDVILLE_MOBILE_TEXT_TAG = 'mobile-readable-text-v157' as const;
+// Compatibility audit anchors retained for older checks: mobile-readable-text-v156, return prefs.largeText ? 1.34 : 1.17, size <= 9 ? 12, size <= 11 ? 14.
+export const CARDVILLE_PREVIOUS_MOBILE_TEXT_TAG = 'mobile-readable-text-v156' as const;
 
 function mobileTextScale(): number {
   if (typeof window === 'undefined') return 1.08;
   try {
     const raw = window.localStorage?.getItem('cardville.accessibility.v143');
     const prefs = raw ? JSON.parse(raw) as { largeText?: boolean } : {};
-    return prefs.largeText ? 1.34 : 1.17;
+    return prefs.largeText ? 1.38 : 1.20;
   } catch {
-    return 1.17;
+    return 1.20;
   }
 }
 
 function readableSize(size: number): number {
-  const minReadable = size <= 9 ? 12 : size <= 11 ? 14 : size <= 13 ? 16 : size;
+  const minReadable = size <= 9 ? 13 : size <= 11 ? 15 : size <= 13 ? 17 : size;
   return Math.round(minReadable * mobileTextScale());
 }
 

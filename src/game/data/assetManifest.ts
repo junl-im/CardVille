@@ -1,4 +1,4 @@
-export const CARDVILLE_ASSET_VERSION = '1.0.56' as const;
+export const CARDVILLE_ASSET_VERSION = '1.0.57' as const;
 
 export const LOBBY_CRITICAL_PNG_ASSET_KEYS = [
   'dioramaBg',
@@ -178,6 +178,11 @@ export const ASSET_MANIFEST: readonly CardVilleAsset[] = [
   { key: 'assetHome', path: 'assets/icons/icon_game_home.png', category: 'icon', role: 'legacy gameplay icon', required: true },
   { key: 'assetShop', path: 'assets/icons/icon_game_shop.png', category: 'icon', role: 'legacy gameplay icon', required: true },
   { key: 'assetGift', path: 'assets/icons/icon_game_gift.png', category: 'icon', role: 'legacy gameplay icon', required: true },
+  { key: 'wordCardFrameLayoutA', path: 'assets/cards/word_ui/word_card_frame_layout_a.png', category: 'card', role: 'premium word card front frame A', required: true },
+  { key: 'wordCardFrameLayoutB', path: 'assets/cards/word_ui/word_card_frame_layout_b.png', category: 'card', role: 'premium word card goal frame B', required: true },
+  { key: 'wordCardFrameLayoutC', path: 'assets/cards/word_ui/word_card_frame_layout_c.png', category: 'card', role: 'premium word card choice frame C', required: true },
+  { key: 'wordCardFrameSyllableSlots', path: 'assets/cards/word_ui/word_card_frame_syllable_slots.png', category: 'card', role: 'premium word card syllable slot frame', required: true },
+  { key: 'wordCardBackDesign', path: 'assets/cards/word_ui/word_card_back_design.png', category: 'card', role: 'premium word card back design', required: true },
   { key: 'cardBackLibraryPremium', path: 'assets/cards/card_back_library.png', category: 'card', role: 'premium library card back', required: true },
   { key: 'cardBackMathPremium', path: 'assets/cards/card_back_math.png', category: 'card', role: 'premium math card back', required: true },
   { key: 'cardBackMemoryPremium', path: 'assets/cards/card_back_memory.png', category: 'card', role: 'premium memory card back', required: true },

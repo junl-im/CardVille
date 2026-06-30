@@ -6,6 +6,7 @@ import { allowAmbientMotion, ambientCount, CardVilleQuality, getCardVilleQuality
 import { getMathStage, MathProblem, MathStage } from '../data/mathStages';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
+import { shuffleCopy, CARDVILLE_CARD_GAME_PERFORMANCE_TAG } from '../systems/CardGameSystem';
 import { applyWrap, bodyText, cardText, darkText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
 export class MathLabScene extends Phaser.Scene {
@@ -34,6 +35,7 @@ export class MathLabScene extends Phaser.Scene {
 
   create(): void {
     applyResponsiveCamera(this);
+    this.add.text(12, 836, CARDVILLE_CARD_GAME_PERFORMANCE_TAG, mutedText(6)).setAlpha(0.01);
     this.quality = getCardVilleQuality();
     this.stage = getMathStage(this.stageId);
     this.index = 0;
@@ -72,7 +74,7 @@ export class MathLabScene extends Phaser.Scene {
   }
 
   private drawConsole(): void {
-    panel(this, 195, 396, 342, 458, 34);
+    panel(this, 195, 426, 342, 526, 34);
     if (this.textures.exists('uiMathConsole')) {
       this.add.image(195, 356, 'uiMathConsole').setDisplaySize(318, 212).setAlpha(0.88);
     }
@@ -102,7 +104,7 @@ export class MathLabScene extends Phaser.Scene {
     const choices = this.shuffle(problem.choices);
     choices.forEach((answer, slot) => {
       const x = slot % 2 === 0 ? 112 : 278;
-      const y = 542 + Math.floor(slot / 2) * 98;
+      const y = 546 + Math.floor(slot / 2) * 96;
       this.drawAnswerCard(problem, answer, x, y);
     });
   }
@@ -110,11 +112,11 @@ export class MathLabScene extends Phaser.Scene {
   private drawAnswerCard(problem: MathProblem, answer: number, x: number, y: number): void {
     const group = this.add.container(x, y);
     this.answerLayer?.add(group);
-    if (this.textures.exists('uiPanelGold')) group.add(this.add.image(0, 0, 'uiPanelGold').setDisplaySize(136, 76));
-    else group.add(this.add.rectangle(0, 0, 136, 76, 0xffd86f, 0.94).setStrokeStyle(3, 0xffffff, 0.72));
-    group.add(this.add.text(0, 0, `${answer}`, darkText(28)).setOrigin(0.5));
-    group.add(this.add.text(0, 30, '숫자 카드', cardText(10)).setOrigin(0.5).setAlpha(0.7));
-    group.setSize(142, 82).setInteractive({ useHandCursor: true });
+    if (this.textures.exists('uiPanelGold')) group.add(this.add.image(0, 0, 'uiPanelGold').setDisplaySize(150, 88));
+    else group.add(this.add.rectangle(0, 0, 150, 88, 0xffd86f, 0.94).setStrokeStyle(3, 0xffffff, 0.72));
+    group.add(this.add.text(0, -3, `${answer}`, darkText(30)).setOrigin(0.5));
+    group.add(this.add.text(0, 34, '숫자 카드', cardText(10)).setOrigin(0.5).setAlpha(0.7));
+    group.setSize(156, 94).setInteractive({ useHandCursor: true });
     group.on('pointerover', () => { if (!this.locked) this.tweens.add({ targets: group, scale: 1.04, duration: 110 }); });
     group.on('pointerout', () => { if (!this.locked) this.tweens.add({ targets: group, scale: 1, duration: 110 }); });
     group.on('pointerup', () => this.chooseAnswer(group, problem, answer));
@@ -168,7 +170,7 @@ export class MathLabScene extends Phaser.Scene {
   }
 
   private shuffle<T>(items: readonly T[]): T[] {
-    return [...items].sort(() => Math.random() - 0.5);
+    return shuffleCopy(items);
   }
 
   private flash(color: number, alpha: number): void {

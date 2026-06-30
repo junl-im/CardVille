@@ -1,7 +1,49 @@
-# CardVille 1.0.56
+# CardVille 1.0.57
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
+
+
+## 1.0.57 업데이트 내역
+
+- **카드 UI 에셋 선별 적용 + 모바일 카드게임 레이아웃/성능 점검 패스**를 진행했습니다.
+- 업로드 에셋 `CardVille_WordCard_UI_1.0.51_PNG.zip`을 검수했습니다.
+  - 원본은 텍스트가 박혀 있지 않아 사용 가능했습니다.
+  - 다만 RGB PNG에 체크무늬 배경이 구워져 있어, 외곽 배경을 alpha로 정리한 뒤 적용했습니다.
+- 적용한 카드 UI 에셋:
+  - `word_card_frame_layout_a.png`
+  - `word_card_frame_layout_b.png`
+  - `word_card_frame_layout_c.png`
+  - `word_card_frame_syllable_slots.png`
+  - `word_card_back_design.png`
+  - `word-card-ui-frame-v157`
+- 모든 카드 UI 에셋에 WebP companion을 생성했습니다.
+- `assetManifest.ts`에 `wordCardFrameLayoutA/B/C`, `wordCardFrameSyllableSlots`, `wordCardBackDesign`을 등록했습니다.
+- `PlayScene` 말 카드 화면을 다시 배치했습니다.
+  - 기존 왼쪽 세로 컨트롤 레일을 하단 액션 레일로 이동
+  - 보드 폭을 거의 전체 화면으로 확장
+  - 카드 폭/높이, 목표 카드, 카드 뒷면을 새 에셋 기준으로 조정
+  - `mobile-card-layout-v157`
+- 모바일 가독성 기준을 `mobile-readable-text-v157`로 갱신했습니다.
+  - 기본 텍스트 배율 1.20
+  - 큰 안내 문구 배율 1.38
+  - 9~13px급 작은 문구의 최소 가독 크기를 다시 상향
+- 글씨가 커진 만큼 UI도 같이 조정했습니다.
+  - 말 카드 보드/목표 카드/하단 안내 레일 재배치
+  - 연산 연구소/영어 학교 선택 카드 크기 확대
+  - 답안 카드 터치존을 156×94 기준으로 확대
+- 카드게임 성능/공정성 개선:
+  - `CardGameSystem.ts` 추가
+  - `shuffleCopy()` Fisher-Yates 셔플 추가
+  - `MathLabScene`, `MemoryForestScene`, `EnglishSchoolScene`의 `sort(() => Math.random() - 0.5)` 셔플 제거
+  - `card-game-performance-v157`
+- 검증 추가:
+  - `tools/check-card-game-ui.mjs`
+  - `npm run check:card-game-ui`
+- `npm run verify`에 `check:card-game-ui`를 포함했습니다.
+- 신규 문서 파일은 만들지 않았습니다.
+- 삭제 파일은 없습니다.
+- `node_modules`, `dist`, `package-lock.json`은 통파일 ZIP에서 제외합니다.
 
 
 ## 1.0.56 업데이트 내역
