@@ -1,7 +1,39 @@
-# CardVille 1.0.59
+# CardVille 1.0.60
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
+
+
+## 1.0.60 업데이트 내역
+
+- **오프닝 유지/로비 입력 복구/전체폭 마을 폴리시 패스**를 진행했습니다.
+- 사용자 요청 반영:
+  - SVG 파일 없음 정책 유지
+  - 첫 시작 준비가 길어져도 오프닝 영상이 계속 보이도록 `video.loop = true` 적용
+  - 사용자용 `로딩중` 문구 대신 오프닝 영상 + 얇은 진행 바만 표시
+  - 마을 건물 위 `OPEN`/`LOCK` 상태 텍스트와 `badgeOpen` 렌더링 제거
+  - 건물 fallback 카드는 정상 화면에 표시하지 않고 숨김 처리
+  - 건물 진입 후 광장 복귀 시 입력이 먹통이 되던 원인인 `MainLobbyScene.busy` 미초기화 수정
+- 로비/UI 수정:
+  - `lobby-input-reset-v160`: 로비 `create()` 시작 때 busy, 걷기 타이머, NPC/영웅 참조, 활성 말풍선/설정 패널 상태 초기화
+  - `lobby-fullscreen-spread-v160`: 상단 HUD는 왼쪽 실제 화면 가장자리 기준, 앨범/설정은 오른쪽 실제 화면 가장자리 기준으로 재배치
+  - 좌우 어둡게 막던 사이드 음영을 제거해 마을 배경을 더 넓게 사용
+  - 도서관/연구소/상점/학교/숲/항구를 390×844 기준 좌우 끝에 더 가깝게 재배치하고, NPC도 같이 이동
+  - `lobby-edge-to-edge-spread-v160`, `lobby-edge-npc-spread-v160`
+- 인트로/에셋 게이트 수정:
+  - `intro-video-holds-until-assets-v160`
+  - `delayedCall(4200` 조기 진입 타이머 없음
+  - 로비 핵심 PNG가 준비되기 전 fallback 마을로 진입하지 않음
+  - `lobby-force-load-gate-v159`, `lobby-critical-png-runtime-v154` 유지
+- 검증 추가/보강:
+  - `tools/check-real-village-lobby.mjs` 추가
+  - `npm run check:real-village-lobby` 추가
+  - `npm run verify` 맨 앞에 `check:real-village-lobby` 포함
+  - 검증 기준: SVG 없음, OPEN/LOCK/fallback 문구 없음, 4.2초 조기 진입 없음, 건물/NPC PNG 포함, busy reset 포함
+- 기존 로비 배치/겹침 감사, cover 배경, HUD/UI 비겹침, 마을 건물 가독성 확대, 마을 진입 먹통/건물 이미지 미표시 검증 기준은 유지했습니다.
+- 신규 문서 파일은 만들지 않았습니다.
+- 삭제 파일은 없습니다.
+- `node_modules`, `dist`, `package-lock.json`은 통파일 ZIP에서 제외합니다.
 
 
 ## 1.0.59 업데이트 내역

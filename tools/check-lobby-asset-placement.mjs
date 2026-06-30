@@ -63,10 +63,10 @@ for (const token of [
   "assetKey: 'dioramaLibrary'",
   "assetKey: 'dioramaLab'",
   "assetKey: 'dioramaForest'",
-  'x: 73',
-  'x: 317',
-  'visualWidth: 144',
-  'visualWidth: 118',
+  'x: 60',
+  'x: 330',
+  'visualWidth: 150',
+  'visualWidth: 124',
   'lobby-wide-village-spacing-v159'
 ]) {
   if (!diorama.includes(token)) throw new Error(`dioramaBuildings missing visible assignment token: ${token}`);
@@ -75,10 +75,10 @@ const entities = read('src/game/data/lobbyEntities.ts');
 for (const token of [
   'LOBBY_USER_ASSET_NPC_TAG',
   'user-lobby-npc-visible-v156',
-  "key: 'npcMerchant', x: 108, y: 604, width: 58, height: 76",
-  "key: 'npcWizard', x: 278, y: 448, width: 54, height: 72",
-  "key: 'npcLibrarian', x: 112, y: 448, width: 54, height: 72",
-  "key: 'npcForestSagePremium', x: 72, y: 724, width: 52, height: 72"
+  "key: 'npcMerchant', x: 91, y: 604, width: 58, height: 76",
+  "key: 'npcWizard', x: 296, y: 448, width: 54, height: 72",
+  "key: 'npcLibrarian', x: 94, y: 448, width: 54, height: 72",
+  "key: 'npcForestSagePremium', x: 54, y: 724, width: 52, height: 72"
 ]) {
   if (!entities.includes(token)) throw new Error(`lobbyEntities missing visible NPC token: ${token}`);
 }
@@ -89,7 +89,7 @@ for (const token of [
   'lobby-user-assets-visible-v156',
   'USER_LOBBY_ASSET_ASSIGNMENT_TAG',
   'LOBBY_USER_ASSET_NPC_TAG',
-  'this.add.container(195, 92)',
+  'LOBBY_FULLSCREEN_SPREAD_TAG',
   'this.add.image(195, 826',
   'visible-npc:',
   'visible:${building.assetKey}'

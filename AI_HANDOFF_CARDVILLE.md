@@ -4,11 +4,59 @@
 CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고, 그다음 실제 코드를 확인하세요.
 
 
-## 현재 작업 기준: 1.0.59
+## 현재 작업 기준: 1.0.60
 
-현재 기준 버전은 1.0.59입니다.  
-이번 버전은 1.0.58 ScreenPlayfieldEnginePolish를 기준으로, 사용자 스크린샷에서 확인된 마을 fallback 카드 표시/건물 이미지 미표시/상단 HUD와 건물 겹침/하단 패치 문구 노출을 바로잡은 핫픽스입니다. `lobby-force-load-gate-v159`, `lobby-screenshot-repair-v159`, `lobby-no-bottom-patch-text-v159`, `lobby-wide-village-spacing-v159`가 핵심 기준입니다.
+현재 기준 버전은 1.0.60입니다.  
+이번 버전은 1.0.59 LobbyImageGateVillageRepair를 기준으로, 오프닝 영상 유지, 로비 복귀 후 입력 먹통, 건물 위 OPEN/LOCK 텍스트, fallback 카드 노출 위험, 좌우 여백 낭비를 함께 보정한 폴리시/안정화 패스입니다. `intro-video-holds-until-assets-v160`, `lobby-input-reset-v160`, `lobby-fullscreen-spread-v160`, `lobby-edge-to-edge-spread-v160`, `lobby-edge-npc-spread-v160`가 핵심 기준입니다.
 
+
+
+### 1.0.60 오프닝 유지/로비 입력 복구/전체폭 마을 폴리시 패스
+
+- 목적:
+  - 첫 시작 준비가 길어지는 환경에서도 오프닝 영상이 끊기지 않고 계속 보이게 합니다.
+  - 마을 건물 위 `OPEN`/`LOCK` 같은 상태 텍스트와 fallback 카드 느낌을 제거해 실제 마을 그림이 먼저 보이게 합니다.
+  - 건물에 들어갔다가 광장으로 돌아온 뒤 아무 입력도 되지 않는 문제를 고칩니다.
+  - 390×844 모바일 기준 좌우 끝 공간을 더 적극적으로 사용합니다.
+- 원인:
+  - `MainLobbyScene` 인스턴스는 재사용되는데, 건물 진입 시 `busy = true`가 된 뒤 로비로 돌아와도 `create()`에서 다시 `false`로 초기화하지 않아 건물/NPC/설정 버튼 입력이 막힐 수 있었습니다.
+  - 1.0.59는 fallback을 크게 보이지 않도록 줄였지만, `drawMissingBuildingFallback()`와 `OPEN`/`LOCK` 상태 칩 코드가 아직 남아 있어 사용자 기준 실패 화면처럼 보일 여지가 있었습니다.
+- 코드 반영:
+  - `src/game/scenes/IntroLoadingScene.ts`
+    - `video.loop = true`
+    - `delayedCall(4200` 조기 진입 타이머 없음
+    - 사용자용 `로딩중` 문구 제거, 얇은 진행 바만 유지
+    - `intro-video-holds-until-assets-v160`
+  - `src/game/scenes/MainLobbyScene.ts`
+    - `create()` 시작 때 `busy`, 걷기 타이머, hero/cat 참조, 말풍선/설정 패널 상태 초기화
+    - `lobby-input-reset-v160`
+    - 상단 HUD는 왼쪽 실제 화면 끝 기준, 앨범/설정은 오른쪽 실제 화면 끝 기준으로 배치
+    - 좌우 사이드 음영 제거
+    - `OPEN`/`LOCK` 텍스트와 `badgeOpen` 렌더링 제거
+    - 누락 건물 fallback은 보이지 않게 숨김 처리
+    - `lobby-fullscreen-spread-v160`
+  - `src/game/data/dioramaBuildings.ts`
+    - 좌우 건물 컬럼을 더 바깥쪽으로 이동하고 시각 크기를 소폭 확대
+    - `lobby-edge-to-edge-spread-v160`
+  - `src/game/data/lobbyEntities.ts`
+    - 건물 이동에 맞춰 주요 NPC와 사이드 소품도 좌우 끝으로 재배치
+    - `lobby-edge-npc-spread-v160`
+  - `src/game/data/assetManifest.ts`
+    - `CARDVILLE_ASSET_VERSION = 1.0.60`
+    - `LOBBY_INTRO_VIDEO_HOLD_TAG` 추가
+  - `tools/check-real-village-lobby.mjs`
+    - SVG 파일 없음
+    - 4.2초 조기 진입 없음
+    - OPEN/LOCK/fallback 문구 없음
+    - busy reset 있음
+    - 건물/NPC PNG 포함
+- 검증:
+  - `npm run check:real-village-lobby` 추가
+  - `npm run verify`에 포함
+- 주의:
+  - 로비 하단에는 패치 버전/자산 개수/업데이트 문구를 다시 노출하지 마세요.
+  - 정상 플레이 화면에 fallback 카드, `이미지 재시도`, `OPEN`, `LOCK`, `에셋 적용` 문구가 보이면 실패로 봅니다.
+  - 새 문서 파일은 만들지 말고 README.md와 AI_HANDOFF_CARDVILLE.md에만 기록하세요.
 
 
 ### 1.0.59 로비 이미지 강제 로딩/스크린샷 기반 배치 핫픽스

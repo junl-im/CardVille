@@ -1,11 +1,11 @@
 {
-  "name": "LobbyForceLoadVillageRepair",
-  "version": "1.0.59",
-  "mode": "lobby-force-load-gate-v159-lobby-screenshot-repair-v159-lobby-no-bottom-patch-text-v159",
+  "name": "FullscreenVillageInputRepair",
+  "version": "1.0.60",
+  "mode": "intro-video-hold-v160-lobby-input-reset-v160-lobby-fullscreen-spread-v160-no-open-chip-v160",
   "svg": "disabled",
   "pwa": "disabled",
-  "notes": "Prevents early lobby entry before critical PNG building/NPC assets load, removes exposed patch/debug text from lobby bottom, and repositions HUD/buildings from the screenshot audit.",
-  "label": "Lobby image load gate + village UI repair",
-  "description": "Critical lobby PNG asset load gate, real building visibility, HUD alignment, no exposed patch text.",
-  "assetVersion": "1.0.59"
+  "notes": "Keeps intro video visible until assets complete, removes lobby OPEN/fallback labels, resets lobby input after scene returns, and uses wider edge-to-edge village spacing.",
+  "label": "Fullscreen village polish + input repair",
+  "description": "Opening video asset gate, no open/fallback lobby labels, input reset on return, wider village screen usage.",
+  "assetVersion": "1.0.60"
 }

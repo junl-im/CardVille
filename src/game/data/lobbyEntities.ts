@@ -24,21 +24,22 @@ export type LobbyNpc = {
 };
 
 export const LOBBY_USER_ASSET_NPC_TAG = 'user-lobby-npc-visible-v156' as const;
+export const LOBBY_EDGE_NPC_SPREAD_TAG = 'lobby-edge-npc-spread-v160' as const;
 
 export const LOBBY_PROPS: readonly LobbyProp[] = [
   { key: 'propPlazaTile96', x: 195, y: 416, width: 64, height: 44, alpha: 0.26, depth: 382 },
   { key: 'propFountain', x: 195, y: 430, width: 56, height: 50, depth: 430, bob: 2 },
-  { key: 'propTreeOak', x: 24, y: 245, width: 52, height: 64, depth: 246, bob: 2 },
-  { key: 'propTreeOak', x: 366, y: 245, width: 52, height: 64, depth: 246, bob: 2 },
+  { key: 'propTreeOak', x: 12, y: 245, width: 52, height: 64, depth: 246, bob: 2 },
+  { key: 'propTreeOak', x: 378, y: 245, width: 52, height: 64, depth: 246, bob: 2 },
   { key: 'propFlagRed', x: 122, y: 196, width: 38, height: 62, depth: 198, bob: 2 },
   { key: 'propFlagRed', x: 268, y: 196, width: 38, height: 62, depth: 198, bob: 2 },
-  { key: 'propBench', x: 27, y: 623, width: 48, height: 28, depth: 623 },
-  { key: 'propBench', x: 363, y: 623, width: 48, height: 28, depth: 623 },
+  { key: 'propBench', x: 14, y: 623, width: 48, height: 28, depth: 623 },
+  { key: 'propBench', x: 376, y: 623, width: 48, height: 28, depth: 623 },
   { key: 'propSignpost', x: 292, y: 626, width: 40, height: 38, depth: 626 },
-  { key: 'propFlowerPot', x: 24, y: 492, width: 34, height: 34, depth: 494, bob: 1 },
-  { key: 'propFlowerPot', x: 366, y: 492, width: 34, height: 34, depth: 494, bob: 1 },
-  { key: 'propLantern', x: 22, y: 705, width: 28, height: 48, depth: 704 },
-  { key: 'propLantern', x: 368, y: 705, width: 28, height: 48, depth: 704 },
+  { key: 'propFlowerPot', x: 12, y: 492, width: 34, height: 34, depth: 494, bob: 1 },
+  { key: 'propFlowerPot', x: 378, y: 492, width: 34, height: 34, depth: 494, bob: 1 },
+  { key: 'propLantern', x: 10, y: 705, width: 28, height: 48, depth: 704 },
+  { key: 'propLantern', x: 380, y: 705, width: 28, height: 48, depth: 704 },
   { key: 'propSmokePuff', x: 112, y: 282, width: 36, height: 26, depth: 284, alpha: 0.42, bob: 7 },
   { key: 'propSmokePuff', x: 320, y: 468, width: 36, height: 26, depth: 470, alpha: 0.36, bob: 7 },
   { key: 'propCardTrail', x: 302, y: 208, width: 48, height: 38, depth: 210, alpha: 0.78, bob: 8 }
@@ -50,23 +51,23 @@ export const LOBBY_NPCS: readonly LobbyNpc[] = [
     lines: ['카드 성은 왕실 홀 에셋 앞으로 다시 배치했어요.', '위쪽 HUD와 성이 겹치지 않도록 길을 넓혔습니다.']
   },
   {
-    key: 'npcLibrarian', x: 112, y: 448, width: 54, height: 72, label: '마법 사서', delay: 100, animation: 'book',
+    key: 'npcLibrarian', x: 94, y: 448, width: 54, height: 72, label: '마법 사서', delay: 100, animation: 'book',
     lines: ['이번엔 네가 준 마법 학자 NPC를 도서관 안내자로 크게 세웠어요.', '도서관 건물도 새 프리미엄 컷아웃이 바로 보이게 키웠답니다.']
   },
   {
-    key: 'npcWizard', x: 278, y: 448, width: 54, height: 72, label: '연금술사', delay: 200, animation: 'sparkle',
+    key: 'npcWizard', x: 296, y: 448, width: 54, height: 72, label: '연금술사', delay: 200, animation: 'sparkle',
     lines: ['연구소는 새 연금술/천문 연구소 건물과 발명가 NPC를 연결했어요.', '숫자 마법을 시작하려면 오른쪽 연구소를 눌러 보세요.']
   },
   {
-    key: 'npcMerchant', x: 108, y: 604, width: 58, height: 76, label: '상점 주인', delay: 300, animation: 'wave',
+    key: 'npcMerchant', x: 91, y: 604, width: 58, height: 76, label: '상점 주인', delay: 300, animation: 'wave',
     lines: ['새 상점 주인 컷아웃을 더 크게 보이도록 다시 배치했어요.', '상점 건물과 카드팩 버튼 사이도 더 넓혔답니다.']
   },
   {
-    key: 'npcTeacher', x: 282, y: 604, width: 38, height: 52, label: '선생님', delay: 400, animation: 'teach',
+    key: 'npcTeacher', x: 300, y: 604, width: 38, height: 52, label: '선생님', delay: 400, animation: 'teach',
     lines: ['학교는 영어 카드 수업을 준비 중이에요.', '오른쪽 건물 사이 간격을 넓혀 터치가 섞이지 않게 했어요.']
   },
   {
-    key: 'npcForestSagePremium', x: 72, y: 724, width: 52, height: 72, label: '숲지기', delay: 500, animation: 'book',
+    key: 'npcForestSagePremium', x: 54, y: 724, width: 52, height: 72, label: '숲지기', delay: 500, animation: 'book',
     lines: ['기억의 숲 게이트와 숲지기 NPC가 하단 HUD에 가리지 않도록 위로 정리했어요.', '숲의 등불이 켜지면 다음 짝을 찾을 준비가 된 거예요.']
   },
   {

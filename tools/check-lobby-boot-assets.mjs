@@ -70,7 +70,7 @@ for (const token of [
 }
 
 const diorama = read('src/game/data/dioramaBuildings.ts');
-for (const token of ['imageY?: number', 'visualWidth: 176', 'visualWidth: 144', 'visualWidth: 118', 'x: 73', 'x: 317', 'targetY: 724', 'lobby-wide-village-spacing-v159']) {
+for (const token of ['imageY?: number', 'visualWidth: 176', 'visualWidth: 150', 'visualWidth: 124', 'x: 60', 'x: 330', 'targetY: 720', 'lobby-wide-village-spacing-v159']) {
   if (!diorama.includes(token)) throw new Error(`dioramaBuildings missing v154 layout token: ${token}`);
 }
 

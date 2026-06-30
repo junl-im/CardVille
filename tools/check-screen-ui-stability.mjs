@@ -13,7 +13,7 @@ for (const token of [pkg.version, 'screen-ui-stability-pass-v152', 'scene-naviga
   if (!layout.includes(token)) throw new Error(`lobbyLayoutPlan missing UI stability token: ${token}`);
 }
 const lobby = read('src/game/scenes/MainLobbyScene.ts');
-for (const token of ['drawRouteOverviewRibbon', 'SCREEN_UI_STABILITY_TAG', 'MOBILE_READABLE_LAYOUT_TAG', 'VILLAGE_EDGE_SPACE_TAG', '배치 플랜', '추천 건물을 따라가면']) {
+for (const token of ['drawRouteOverviewRibbon', 'SCREEN_UI_STABILITY_TAG', 'MOBILE_READABLE_LAYOUT_TAG', 'VILLAGE_EDGE_SPACE_TAG', 'lobby-fullscreen-spread-v160', '추천 건물을 따라가면']) {
   if (!lobby.includes(token)) throw new Error(`MainLobbyScene missing route/UI token: ${token}`);
 }
 const button = read('src/game/ui/GameButton.ts');

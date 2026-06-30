@@ -1,4 +1,4 @@
-export const CARDVILLE_ASSET_VERSION = '1.0.59' as const;
+export const CARDVILLE_ASSET_VERSION = '1.0.60' as const;
 
 export const LOBBY_CRITICAL_PNG_ASSET_KEYS = [
   'dioramaBg',
@@ -22,6 +22,7 @@ export type LobbyCriticalPngAssetKey = typeof LOBBY_CRITICAL_PNG_ASSET_KEYS[numb
 export const LOBBY_CRITICAL_PNG_ASSET_KEY_SET = new Set<string>(LOBBY_CRITICAL_PNG_ASSET_KEYS);
 export const LOBBY_CRITICAL_PNG_RUNTIME_TAG = 'lobby-critical-png-runtime-v154' as const;
 export const LOBBY_FORCE_LOAD_GATE_TAG = 'lobby-force-load-gate-v159' as const;
+export const LOBBY_INTRO_VIDEO_HOLD_TAG = 'intro-video-holds-until-assets-v160' as const;
 
 
 export const USER_LOBBY_ASSET_ASSIGNMENTS = [

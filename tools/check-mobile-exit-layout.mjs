@@ -22,7 +22,7 @@ for (const token of ['mobile-readable-text-v156', 'return prefs.largeText ? 1.34
   if (!text.includes(token)) throw new Error(`Mobile text sizing missing token: ${token}`);
 }
 const diorama = read('src/game/data/dioramaBuildings.ts');
-for (const token of ['x: 73', 'x: 317', 'visualWidth: 144', 'visualWidth: 118', 'statusX: -31', 'statusX: 31', 'npcForestSagePremium', 'lobby-wide-village-spacing-v159']) {
+for (const token of ['x: 60', 'x: 330', 'visualWidth: 150', 'visualWidth: 124', 'statusX: -31', 'statusX: 31', 'npcForestSagePremium', 'lobby-wide-village-spacing-v159']) {
   if (!diorama.includes(token)) throw new Error(`Village edge spacing missing token: ${token}`);
 }
 const blocks = [...diorama.matchAll(/\{\n\s+id: '([^']+)'[\s\S]*?\n\s+\}/g)].filter((match) => match[0].includes('assetKey:'));
@@ -50,7 +50,7 @@ for (let i = 0; i < rects.length; i += 1) {
   }
 }
 const lobby = read('src/game/scenes/MainLobbyScene.ts');
-for (const token of ['mobile-readable-layout-v153', 'village-edge-spacing-v153', 'bodyText(14)', 'mutedText(10)', 'fontSize: \'11px\'']) {
+for (const token of ['mobile-readable-layout-v153', 'village-edge-spacing-v153', 'bodyText(14)', 'mutedText(11)', 'fontSize: \'11px\'']) {
   if (!lobby.includes(token)) throw new Error(`Lobby mobile UI missing token: ${token}`);
 }
 const readme = read('README.md');

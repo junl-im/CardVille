@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { NavigationSystem } from '../systems/NavigationSystem';
 import { addCoverImage, applyResponsiveCamera, layout } from '../systems/LayoutSystem';
 import { ASSET_MANIFEST, CARDVILLE_ASSET_VERSION, LOBBY_CRITICAL_PNG_ASSET_KEY_SET, LOBBY_CRITICAL_PNG_RUNTIME_TAG, LOBBY_FORCE_LOAD_GATE_TAG } from '../data/assetManifest';
-import { applyWrap, goldText, mutedText, titleText } from '../ui/TextStyles';
+import { goldText, titleText } from '../ui/TextStyles';
 
 export const CARDVILLE_WEBP_RUNTIME_TAG = 'webp-asset-runtime-v152' as const;
 export const CARDVILLE_LOBBY_BOOT_HARDENING_TAG = 'lobby-boot-asset-hardening-v154' as const;
@@ -12,7 +12,7 @@ export class IntroLoadingScene extends Phaser.Scene {
   private minIntroDone = false;
   private finished = false;
   private videoEl?: HTMLVideoElement;
-  private progressText?: Phaser.GameObjects.Text;
+  private progressBar?: Phaser.GameObjects.Rectangle;
   private nextScene = 'MainLobbyScene';
   private queuedKeys = new Set<string>();
   private preferWebp = false;
@@ -35,14 +35,14 @@ export class IntroLoadingScene extends Phaser.Scene {
     this.queueGameAssets();
 
     this.load.on('progress', (value: number) => {
-      this.progressText?.setText(`게임 준비 중... ${Math.round(value * 100)}%`);
+      this.updateProgressBar(value);
     });
     this.load.on('loaderror', (file: Phaser.Loader.File) => {
       console.warn('[CardVille] asset load failed', file.key, file.url, CARDVILLE_ASSET_VERSION);
     });
     this.load.once('complete', () => {
       this.readyToContinue = true;
-      this.progressText?.setText('카드마을 입장 준비 완료!');
+      this.updateProgressBar(1);
       this.tryFinish();
     });
 
@@ -54,17 +54,8 @@ export class IntroLoadingScene extends Phaser.Scene {
       this.minIntroDone = true;
       this.tryFinish();
     });
-    // 1.0.59: never force-enter the lobby before the image loader completes.
-    // The previous 4.2s fallback could open MainLobbyScene with missing building textures on mobile,
-    // which produced the yellow fallback cards shown in the user screenshot.
-    this.time.delayedCall(4200, () => {
-      if (!this.readyToContinue) {
-        this.progressText?.setText('마을 건물 이미지를 끝까지 불러오는 중...');
-        console.info('[CardVille] waiting for lobby assets before entering village', LOBBY_FORCE_LOAD_GATE_TAG);
-      } else {
-        this.tryFinish();
-      }
-    });
+    // 1.0.60: no 4.2s early-entry timer. The opening video remains on screen
+    // until the critical image loader is complete, so the village never appears with fallback cards.
 
     if (this.load.totalToLoad > 0) this.load.start();
     else {
@@ -78,12 +69,17 @@ export class IntroLoadingScene extends Phaser.Scene {
     if (this.textures.exists('loginBg')) addCoverImage(this, 'loginBg', 1, 390, 844);
     else this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x071126);
 
-    this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x020814, 0.24);
-    this.add.rectangle(l.visibleX + l.visibleWidth / 2, 724, l.visibleWidth, 240 + l.extraY, 0x020814, 0.42);
+    this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x020814, 0.14);
+    this.add.rectangle(l.visibleX + l.visibleWidth / 2, 724, l.visibleWidth, 210 + l.extraY, 0x020814, 0.22);
     this.add.text(195, 72, 'CardVille', titleText(31)).setOrigin(0.5);
-    this.add.text(195, 112, '오프닝과 함께 게임을 준비하고 있어요', goldText(16)).setOrigin(0.5);
-    this.progressText = this.add.text(195, 754, '마을 건물 이미지 준비 중... 0%', goldText(18)).setOrigin(0.5);
-    this.add.text(195, 792, '화면을 터치하면 빠르게 넘어갈 수 있어요.', applyWrap(mutedText(12), 340)).setOrigin(0.5);
+    this.add.text(195, 112, '오프닝 영상 뒤 바로 카드마을로 입장합니다', goldText(16)).setOrigin(0.5);
+    this.add.rectangle(195, 790, 258, 6, 0xffffff, 0.18).setOrigin(0.5);
+    this.progressBar = this.add.rectangle(66, 790, 1, 6, 0xffd86f, 0.92).setOrigin(0, 0.5);
+  }
+
+  private updateProgressBar(value: number): void {
+    const width = Phaser.Math.Clamp(value, 0, 1) * 258;
+    this.progressBar?.setDisplaySize(Math.max(1, width), 6);
   }
 
   private mountOpeningVideo(): void {
@@ -97,6 +93,7 @@ export class IntroLoadingScene extends Phaser.Scene {
     video.autoplay = true;
     video.playsInline = true;
     video.preload = 'auto';
+    video.loop = true;
     video.controls = false;
     video.disablePictureInPicture = true;
     video.setAttribute('playsinline', 'true');
@@ -123,6 +120,8 @@ export class IntroLoadingScene extends Phaser.Scene {
       if (this.videoEl === video) video.style.opacity = '1';
     };
     const onVideoDone = () => {
+      // The video loops while images are prepared; this handler only matters on browsers
+      // that still emit ended despite loop=true.
       this.minIntroDone = true;
       this.tryFinish();
     };
@@ -136,7 +135,6 @@ export class IntroLoadingScene extends Phaser.Scene {
     };
     video.addEventListener('playing', revealVideo, { once: true });
     video.addEventListener('canplay', () => { if (!video.paused) revealVideo(); }, { once: true });
-    video.addEventListener('ended', onVideoDone, { once: true });
     video.addEventListener('error', onVideoBlocked, { once: true });
     void video.play().catch(() => onVideoBlocked());
   }

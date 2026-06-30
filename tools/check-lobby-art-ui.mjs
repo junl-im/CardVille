@@ -78,7 +78,7 @@ for (const token of ['lobby-art-placement-v155', 'premium lobby art placement', 
   if (!lobby.includes(token)) throw new Error(`MainLobbyScene missing art placement token: ${token}`);
 }
 const diorama = read('src/game/data/dioramaBuildings.ts');
-for (const token of ['x: 73', 'x: 317', 'visualWidth: 144', 'visualWidth: 118', 'npcForestSagePremium', 'user-lobby-asset-assignment-v156', 'lobby-wide-village-spacing-v159']) {
+for (const token of ['x: 60', 'x: 330', 'visualWidth: 150', 'visualWidth: 124', 'npcForestSagePremium', 'user-lobby-asset-assignment-v156', 'lobby-wide-village-spacing-v159']) {
   if (!diorama.includes(token)) throw new Error(`dioramaBuildings missing 1.0.56 spacing/art token: ${token}`);
 }
 const text = read('src/game/ui/TextStyles.ts');
