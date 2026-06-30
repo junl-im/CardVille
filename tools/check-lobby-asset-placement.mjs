@@ -63,10 +63,11 @@ for (const token of [
   "assetKey: 'dioramaLibrary'",
   "assetKey: 'dioramaLab'",
   "assetKey: 'dioramaForest'",
-  'x: 66',
-  'x: 324',
-  'visualWidth: 184',
-  'visualWidth: 158'
+  'x: 73',
+  'x: 317',
+  'visualWidth: 144',
+  'visualWidth: 118',
+  'lobby-wide-village-spacing-v159'
 ]) {
   if (!diorama.includes(token)) throw new Error(`dioramaBuildings missing visible assignment token: ${token}`);
 }
@@ -88,8 +89,8 @@ for (const token of [
   'lobby-user-assets-visible-v156',
   'USER_LOBBY_ASSET_ASSIGNMENT_TAG',
   'LOBBY_USER_ASSET_NPC_TAG',
-  'this.add.container(195, 108)',
-  'this.add.image(195, 817',
+  'this.add.container(195, 92)',
+  'this.add.image(195, 826',
   'visible-npc:',
   'visible:${building.assetKey}'
 ]) {

@@ -1,4 +1,4 @@
-# CardVille Art Direction Bible 1.0.58
+# CardVille Art Direction Bible 1.0.59
 
 ## 0. Purpose
 

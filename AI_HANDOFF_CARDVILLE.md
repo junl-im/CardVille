@@ -4,11 +4,43 @@
 CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고, 그다음 실제 코드를 확인하세요.
 
 
-## 현재 작업 기준: 1.0.58
+## 현재 작업 기준: 1.0.59
 
-현재 기준 버전은 1.0.58입니다.  
-이번 버전은 1.0.57 WordCardMobileSystemPolish를 기준으로, 커진 모바일 글씨에 맞춰 말 카드/연산 연구소/영어 학교/기억의 숲/일일 미션의 실제 UI 컨테이너 크기와 터치 영역을 재배치하고 카드게임 엔진/검증을 보강한 패스입니다. `screen-ui-redesign-v158`, `playfield-safezone-v158`, `mobile-touch-target-v158`, `mobile-card-layout-v158`, `card-game-performance-v158`, `card-engine-upgrade-v158`가 핵심 기준입니다.
+현재 기준 버전은 1.0.59입니다.  
+이번 버전은 1.0.58 ScreenPlayfieldEnginePolish를 기준으로, 사용자 스크린샷에서 확인된 마을 fallback 카드 표시/건물 이미지 미표시/상단 HUD와 건물 겹침/하단 패치 문구 노출을 바로잡은 핫픽스입니다. `lobby-force-load-gate-v159`, `lobby-screenshot-repair-v159`, `lobby-no-bottom-patch-text-v159`, `lobby-wide-village-spacing-v159`가 핵심 기준입니다.
 
+
+
+### 1.0.59 로비 이미지 강제 로딩/스크린샷 기반 배치 핫픽스
+
+- 목적:
+  - 사용자 스크린샷에서 마을이 실제 건물 이미지가 아니라 노란 fallback 카드처럼 보이는 문제를 최우선 수정했습니다.
+- 원인:
+  - `IntroLoadingScene`의 4.2초 강제 `finish()`가 로비 핵심 이미지 로딩 완료 전 `MainLobbyScene`을 시작할 수 있었습니다.
+- 코드 반영:
+  - `src/game/scenes/IntroLoadingScene.ts`
+    - 강제 `finish()` 제거
+    - 로딩 완료 전에는 `tryFinish()`만 호출
+    - `lobby-force-load-gate-v159`
+  - `src/game/scenes/MainLobbyScene.ts`
+    - `ensureLobbyCriticalAssets()` 추가
+    - 로비 직접 진입 시 누락된 핵심 건물/NPC/배경 PNG 재로딩
+    - 상단 HUD 왼쪽 정렬, 앨범/설정 우측 정렬
+    - 최하단 패치/자산/업데이트 문구 런타임 노출 제거
+    - `lobby-screenshot-repair-v159`
+    - `lobby-no-bottom-patch-text-v159`
+  - `src/game/data/dioramaBuildings.ts`
+    - 카드 성을 아래로 내리고, 좌우/하단 건물 좌표와 크기 재조정
+    - `lobby-wide-village-spacing-v159`
+  - `src/game/data/assetManifest.ts`
+    - `CARDVILLE_ASSET_VERSION = 1.0.59`
+    - `LOBBY_FORCE_LOAD_GATE_TAG` 추가
+- 검증:
+  - `tools/check-lobby-screenshot-repair.mjs` 추가
+  - `npm run check:lobby-screenshot-repair` 추가
+- 주의:
+  - 로비 하단에는 패치 버전/자산 개수/업데이트 문구를 다시 노출하지 마세요.
+  - 로비 건물 fallback 카드를 크게 보여주는 방식은 금지합니다.
 
 
 ### 1.0.58 플레이필드/UI/엔진 점검

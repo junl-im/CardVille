@@ -22,7 +22,7 @@ for (const token of ['mobile-readable-text-v156', 'return prefs.largeText ? 1.34
   if (!text.includes(token)) throw new Error(`Mobile text sizing missing token: ${token}`);
 }
 const diorama = read('src/game/data/dioramaBuildings.ts');
-for (const token of ['x: 66', 'x: 324', 'visualWidth: 184', 'visualWidth: 158', 'statusX: -31', 'statusX: 31', 'npcForestSagePremium']) {
+for (const token of ['x: 73', 'x: 317', 'visualWidth: 144', 'visualWidth: 118', 'statusX: -31', 'statusX: 31', 'npcForestSagePremium', 'lobby-wide-village-spacing-v159']) {
   if (!diorama.includes(token)) throw new Error(`Village edge spacing missing token: ${token}`);
 }
 const blocks = [...diorama.matchAll(/\{\n\s+id: '([^']+)'[\s\S]*?\n\s+\}/g)].filter((match) => match[0].includes('assetKey:'));

@@ -1,7 +1,36 @@
-# CardVille 1.0.58
+# CardVille 1.0.59
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
+
+
+## 1.0.59 업데이트 내역
+
+- **로비 강제 진입/건물 이미지 미표시/하단 패치 문구 노출 핫픽스**를 진행했습니다.
+- 사용자 스크린샷 기준으로 마을이 fallback 카드 패널처럼 보이던 원인을 수정했습니다.
+- 핵심 원인: `IntroLoadingScene`의 4.2초 강제 `finish()`가 모바일에서 대형 에셋 로딩 완료 전 `MainLobbyScene`으로 넘어가게 만들 수 있었습니다.
+- 수정:
+  - `lobby-force-load-gate-v159`
+  - 로비 핵심 PNG 건물/NPC/배경이 로드되기 전에는 마을 씬으로 진입하지 않음
+  - `MainLobbyScene.ensureLobbyCriticalAssets()` 추가로 직접 마을에 진입해도 누락된 핵심 에셋을 다시 로드
+  - 노란색 대체 건물 카드가 크게 보이는 fallback을 제거하고, 실제 이미지 로딩 게이트로 대체
+- 로비 HUD/UI 수정:
+  - 상단 CardVille HUD를 왼쪽으로 정렬
+  - 앨범/설정 버튼을 우측 전용 레인으로 정렬
+  - 추천 리본을 얇게 줄여 건물 그림을 덮지 않게 조정
+  - 최하단 패치/자산/업데이트 문구 런타임 노출 제거
+  - `lobby-no-bottom-patch-text-v159`
+- 마을 배치 수정:
+  - 카드 성을 아래로 내려 상단 HUD/리본과 겹치지 않게 조정
+  - 좌우 건물 컬럼을 화면 가장자리까지 활용하되, 건물끼리 너무 붙지 않게 축소/간격 재조정
+  - `lobby-wide-village-spacing-v159`
+  - `lobby-screenshot-repair-v159`
+- 검증 추가:
+  - `tools/check-lobby-screenshot-repair.mjs`
+  - `npm run check:lobby-screenshot-repair`
+- 신규 문서 파일은 만들지 않았습니다.
+- 삭제 파일은 없습니다.
+- `node_modules`, `dist`, `package-lock.json`은 통파일 ZIP에서 제외합니다.
 
 
 ## 1.0.58 업데이트 내역

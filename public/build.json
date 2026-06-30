@@ -1,11 +1,11 @@
 {
-  "name": "ScreenPlayfieldEnginePolish",
-  "version": "1.0.58",
-  "mode": "word-card-ui-frame-v157-mobile-card-layout-v157-card-game-performance-v157",
+  "name": "LobbyForceLoadVillageRepair",
+  "version": "1.0.59",
+  "mode": "lobby-force-load-gate-v159-lobby-screenshot-repair-v159-lobby-no-bottom-patch-text-v159",
   "svg": "disabled",
   "pwa": "disabled",
-  "notes": "Applies selected word card UI assets, cleans baked checker backgrounds to alpha PNG, adapts mobile card and answer layouts for larger text, and replaces sort-random shuffles with Fisher-Yates shuffleCopy.",
-  "label": "Premium word card UI + mobile card readability",
-  "description": "Mobile playfield spacing, touch targets, card UI layout and card-game engine guards.",
-  "assetVersion": "1.0.57"
+  "notes": "Prevents early lobby entry before critical PNG building/NPC assets load, removes exposed patch/debug text from lobby bottom, and repositions HUD/buildings from the screenshot audit.",
+  "label": "Lobby image load gate + village UI repair",
+  "description": "Critical lobby PNG asset load gate, real building visibility, HUD alignment, no exposed patch text.",
+  "assetVersion": "1.0.59"
 }

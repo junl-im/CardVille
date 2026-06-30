@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { NavigationSystem } from '../systems/NavigationSystem';
 import { addCoverImage, applyResponsiveCamera, layout } from '../systems/LayoutSystem';
-import { ASSET_MANIFEST, CARDVILLE_ASSET_VERSION, LOBBY_CRITICAL_PNG_ASSET_KEY_SET, LOBBY_CRITICAL_PNG_RUNTIME_TAG } from '../data/assetManifest';
+import { ASSET_MANIFEST, CARDVILLE_ASSET_VERSION, LOBBY_CRITICAL_PNG_ASSET_KEY_SET, LOBBY_CRITICAL_PNG_RUNTIME_TAG, LOBBY_FORCE_LOAD_GATE_TAG } from '../data/assetManifest';
 import { applyWrap, goldText, mutedText, titleText } from '../ui/TextStyles';
 
 export const CARDVILLE_WEBP_RUNTIME_TAG = 'webp-asset-runtime-v152' as const;
@@ -54,7 +54,17 @@ export class IntroLoadingScene extends Phaser.Scene {
       this.minIntroDone = true;
       this.tryFinish();
     });
-    this.time.delayedCall(4200, () => this.finish());
+    // 1.0.59: never force-enter the lobby before the image loader completes.
+    // The previous 4.2s fallback could open MainLobbyScene with missing building textures on mobile,
+    // which produced the yellow fallback cards shown in the user screenshot.
+    this.time.delayedCall(4200, () => {
+      if (!this.readyToContinue) {
+        this.progressText?.setText('마을 건물 이미지를 끝까지 불러오는 중...');
+        console.info('[CardVille] waiting for lobby assets before entering village', LOBBY_FORCE_LOAD_GATE_TAG);
+      } else {
+        this.tryFinish();
+      }
+    });
 
     if (this.load.totalToLoad > 0) this.load.start();
     else {
@@ -72,7 +82,7 @@ export class IntroLoadingScene extends Phaser.Scene {
     this.add.rectangle(l.visibleX + l.visibleWidth / 2, 724, l.visibleWidth, 240 + l.extraY, 0x020814, 0.42);
     this.add.text(195, 72, 'CardVille', titleText(31)).setOrigin(0.5);
     this.add.text(195, 112, '오프닝과 함께 게임을 준비하고 있어요', goldText(16)).setOrigin(0.5);
-    this.progressText = this.add.text(195, 754, '게임 준비 중... 0%', goldText(18)).setOrigin(0.5);
+    this.progressText = this.add.text(195, 754, '마을 건물 이미지 준비 중... 0%', goldText(18)).setOrigin(0.5);
     this.add.text(195, 792, '화면을 터치하면 빠르게 넘어갈 수 있어요.', applyWrap(mutedText(12), 340)).setOrigin(0.5);
   }
 
@@ -178,6 +188,7 @@ export class IntroLoadingScene extends Phaser.Scene {
 
     // One-screen CardVille diorama lobby assets. The lobby stays fixed-camera and
     // uses individual PNG building/object layers instead of an SVG or scrolling tile map.
+    console.info('[CardVille] lobby force-load gate active', LOBBY_FORCE_LOAD_GATE_TAG);
     this.queueImage('dioramaBg', 'assets/diorama/diorama_bg.png');
     this.queueImage('dioramaCastle', 'assets/diorama/building_castle.png');
     this.queueImage('dioramaLibrary', 'assets/diorama/building_library.png');

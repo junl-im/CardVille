@@ -1,15 +1,15 @@
 {
   "name": "cardville",
-  "version": "1.0.58",
+  "version": "1.0.59",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.58 refines mobile playfield spacing, touch targets, card UI layout, and card-game engine guards across core play scenes.",
+  "description": "CardVille 1.0.59 repairs lobby asset load gating, removes exposed patch text, and repositions the village HUD/buildings from the screenshot audit.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "check:deploy": "node tools/check-deploy.mjs",
-    "verify": "npm run build && npm run check:screen-playfield && npm run check:card-game-ui && npm run check:lobby-asset-placement && npm run check:lobby-art-ui && npm run check:lobby-boot-assets && npm run check:mobile-exit-layout && npm run check:screen-ui-stability && npm run check:webp-runtime && npm run check:navigation-guard && npm run check:full-individual-assets && npm run check:village-visuals && npm run check:exit-flow && npm run check:art-direction && npm run check:applied-assets && npm run check:premium-asset-select && npm run check:premium-buttons && npm run check:asset-runtime && npm run check:deploy && npm run check:brand && npm run check:assets && npm run check:premium-assets && npm run check:building-assets && npm run check:lobby-layout && npm run check:lobby-premium-fit && npm run check:content-engine && npm run check:progression && npm run check:shop-economy && npm run check:polish && npm run check:ci-coherence && npm run check:coach && npm run check:daily-mission && npm run check:weekly-mission && npm run check:reward-popup && npm run check:accessibility && npm run check:mission-route && npm run check:ui && npm run check:ux-safety && npm run check:content-scale && npm run check:english-school && npm run check:layout && npm run check:association && npm run check:security",
+    "verify": "npm run build && npm run check:lobby-screenshot-repair && npm run check:screen-playfield && npm run check:card-game-ui && npm run check:lobby-asset-placement && npm run check:lobby-art-ui && npm run check:lobby-boot-assets && npm run check:mobile-exit-layout && npm run check:screen-ui-stability && npm run check:webp-runtime && npm run check:navigation-guard && npm run check:full-individual-assets && npm run check:village-visuals && npm run check:exit-flow && npm run check:art-direction && npm run check:applied-assets && npm run check:premium-asset-select && npm run check:premium-buttons && npm run check:asset-runtime && npm run check:deploy && npm run check:brand && npm run check:assets && npm run check:premium-assets && npm run check:building-assets && npm run check:lobby-layout && npm run check:lobby-premium-fit && npm run check:content-engine && npm run check:progression && npm run check:shop-economy && npm run check:polish && npm run check:ci-coherence && npm run check:coach && npm run check:daily-mission && npm run check:weekly-mission && npm run check:reward-popup && npm run check:accessibility && npm run check:mission-route && npm run check:ui && npm run check:ux-safety && npm run check:content-scale && npm run check:english-school && npm run check:layout && npm run check:association && npm run check:security",
     "check:brand": "node tools/check-brand.mjs",
     "check:ui": "node tools/check-ui.mjs",
     "check:layout": "node tools/check-layout.mjs",
@@ -50,7 +50,8 @@
     "check:lobby-art-ui": "node tools/check-lobby-art-ui.mjs",
     "check:lobby-asset-placement": "node tools/check-lobby-asset-placement.mjs",
     "check:card-game-ui": "node tools/check-card-game-ui.mjs",
-    "check:screen-playfield": "node tools/check-screen-playfield-v158.mjs"
+    "check:screen-playfield": "node tools/check-screen-playfield-v158.mjs",
+    "check:lobby-screenshot-repair": "node tools/check-lobby-screenshot-repair.mjs"
   },
   "dependencies": {
     "phaser": "3.90.0"

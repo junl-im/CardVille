@@ -4,7 +4,7 @@ import { addCoverImage, applyResponsiveCamera, hasTouchDebug, layout } from '../
 import { DrawSystem } from '../systems/DrawSystem';
 import { SaveSystem } from '../systems/SaveSystem';
 import { WORD_STAGES } from '../data/wordStages';
-import { ASSET_COUNTS } from '../data/assetManifest';
+import { ASSET_MANIFEST, LOBBY_CRITICAL_PNG_ASSET_KEYS, LOBBY_FORCE_LOAD_GATE_TAG } from '../data/assetManifest';
 import { LOBBY_NPCS, LOBBY_PROPS, LOBBY_SAFE_RULES, LOBBY_USER_ASSET_NPC_TAG, LobbyNpc } from '../data/lobbyEntities';
 import { allowAmbientMotion, ambientCount, CardVilleQuality, getCardVilleQuality, isMotionEnabled, qualitySummary, scaledCount, scaledDuration } from '../systems/QualitySystem';
 import { DIORAMA_BUILDINGS, DioramaBuilding, DioramaRoute, USER_LOBBY_ASSET_ASSIGNMENT_TAG } from '../data/dioramaBuildings';
@@ -17,7 +17,7 @@ import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 import { AccessibilitySystem } from '../systems/AccessibilitySystem';
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
-const LOBBY_VERSION = '1.0.58';
+const LOBBY_VERSION = '1.0.59';
 const MISSION_TONE_COLORS = { gold: 0xffd86f, blue: 0x8fd3ff, purple: 0xd7a5ff, green: 0xa9f5b5, coral: 0xffb39a } as const;
 const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-visible-v149' as const;
 const VILLAGE_VISIBLE_BUILDING_SCALE_TAG = 'village-readable-building-scale-v150' as const;
@@ -29,6 +29,8 @@ const LOBBY_TOUCH_RECOVERY_TAG = 'lobby-input-recovery-v154' as const;
 const LOBBY_ART_PLACEMENT_TAG = 'lobby-art-placement-v155' as const;
 const LOBBY_UI_NON_OVERLAP_TAG = 'lobby-ui-nonoverlap-v156' as const;
 const LOBBY_USER_ASSET_VISIBLE_TAG = 'lobby-user-assets-visible-v156' as const;
+const LOBBY_SCREENSHOT_REPAIR_TAG = 'lobby-screenshot-repair-v159' as const;
+const LOBBY_NO_PATCH_TEXT_TAG = 'lobby-no-bottom-patch-text-v159' as const;
 const HERO_HOME = { x: 195, y: 566 } as const;
 const CAT_HOME = { x: 146, y: 612 } as const;
 
@@ -47,7 +49,7 @@ export class MainLobbyScene extends Phaser.Scene {
 
   constructor() { super('MainLobbyScene'); }
 
-  create(): void {
+  create(data: { lobbyReloadAttempt?: number } = {}): void {
     applyResponsiveCamera(this);
     this.quality = getCardVilleQuality();
     const profile = SaveSystem.loadProfile();
@@ -56,6 +58,7 @@ export class MainLobbyScene extends Phaser.Scene {
     const cards = Object.values(SaveSystem.loadCollection()).reduce((sum, count) => sum + count, 0);
 
     this.input.enabled = true;
+    if (this.ensureLobbyCriticalAssets(data.lobbyReloadAttempt ?? 0)) return;
     this.drawDioramaBackground();
     this.drawAtmosphericPolish();
     this.drawAmbientLife();
@@ -69,10 +72,46 @@ export class MainLobbyScene extends Phaser.Scene {
     this.drawDioramaNPCs();
     this.drawHeroParty();
     this.drawBottomHint(profile.nickname);
-    this.add.text(344, 28, LOBBY_VERSION, mutedText(11)).setOrigin(0.5).setAlpha(0.9);
+    // 1.0.59: no version/update/debug text is exposed on the lobby HUD.
     console.info('[CardVille] premium lobby art placement', LOBBY_ART_PLACEMENT_TAG, LOBBY_UI_NON_OVERLAP_TAG, LOBBY_USER_ASSET_VISIBLE_TAG, USER_LOBBY_ASSET_ASSIGNMENT_TAG, LOBBY_USER_ASSET_NPC_TAG);
     console.info('[CardVille] lobby ready', { version: LOBBY_VERSION, tag: LOBBY_TOUCH_RECOVERY_TAG, ui: LOBBY_UI_NON_OVERLAP_TAG });
     this.showLobbyCoach(recommendedBuildingId);
+  }
+
+  private ensureLobbyCriticalAssets(attempt: number): boolean {
+    const lobbyKeys = new Set<string>([...LOBBY_CRITICAL_PNG_ASSET_KEYS, 'npcMerchant', 'npcWizard', 'npcLibrarian', 'npcForestSagePremium']);
+    const requiredAssets = ASSET_MANIFEST.filter((asset) => lobbyKeys.has(asset.key));
+    const missing = requiredAssets.filter((asset) => !this.textures.exists(asset.key));
+    if (!missing.length) return false;
+
+    const l = layout(this);
+    this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x061126, 1).setDepth(5000);
+    this.add.text(l.cx, 284, '마을 이미지 불러오는 중', titleText(25)).setOrigin(0.5).setDepth(5001);
+    this.add.text(l.cx, 326, '건물/NPC 원본 PNG를 모두 확인한 뒤 입장합니다.', applyWrap(goldText(15), 326)).setOrigin(0.5).setDepth(5001);
+    this.add.text(l.cx, 380, '대기 에셋 ' + missing.length + '개 · ' + LOBBY_FORCE_LOAD_GATE_TAG, applyWrap(mutedText(12), 326)).setOrigin(0.5).setDepth(5001).setAlpha(0.8);
+
+    if (attempt >= 2) {
+      this.add.text(l.cx, 456, '이미지 로딩이 계속 실패했어요. 새로고침 후 다시 시도해 주세요.', applyWrap(goldText(14), 326)).setOrigin(0.5).setDepth(5001);
+      console.error('[CardVille] lobby critical asset reload failed twice', missing.map((asset) => asset.key), LOBBY_FORCE_LOAD_GATE_TAG);
+      return true;
+    }
+
+    const base = import.meta.env.BASE_URL || '/';
+    const normalizedBase = base.endsWith('/') ? base : base + '/';
+    const version = '1.0.59';
+    for (const asset of missing) {
+      const path = asset.path.startsWith('/') ? asset.path.slice(1) : asset.path;
+      this.load.image(asset.key, normalizedBase + path + '?v=' + version);
+    }
+    this.load.once('complete', () => {
+      console.info('[CardVille] lobby critical assets reloaded', missing.map((asset) => asset.key), LOBBY_FORCE_LOAD_GATE_TAG);
+      NavigationSystem.safeRestart(this, { lobbyReloadAttempt: attempt + 1 }, 'lobby-critical-assets');
+    });
+    this.load.on('loaderror', (file: Phaser.Loader.File) => {
+      console.warn('[CardVille] lobby critical asset load failed in lobby scene', file.key, file.url, LOBBY_FORCE_LOAD_GATE_TAG);
+    });
+    this.load.start();
+    return true;
   }
 
   private showLobbyCoach(recommendedBuildingId: string): void {
@@ -119,23 +158,23 @@ export class MainLobbyScene extends Phaser.Scene {
   }
 
   private drawTopBrandHud(coins: number, level: number, cleared: number, cards: number): void {
-    const panelX = 129;
-    const panelY = 44;
+    const panelX = 124;
+    const panelY = 38;
     if (this.textures.exists('uiPanelGlass')) {
-      this.add.image(panelX, panelY, 'uiPanelGlass').setDisplaySize(224, 56).setAlpha(0.88).setDepth(940).setName(LOBBY_UI_NON_OVERLAP_TAG);
+      this.add.image(panelX, panelY, 'uiPanelGlass').setDisplaySize(228, 52).setAlpha(0.88).setDepth(940).setName(LOBBY_UI_NON_OVERLAP_TAG);
     } else {
       const g = this.add.graphics().setDepth(940).setName(LOBBY_UI_NON_OVERLAP_TAG);
       g.fillStyle(0x07142c, 0.68);
-      g.fillRoundedRect(18, 18, 224, 56, 22);
+      g.fillRoundedRect(18, 18, 228, 52, 22);
       g.lineStyle(1, 0xffffff, 0.18);
-      g.strokeRoundedRect(18, 18, 224, 56, 22);
+      g.strokeRoundedRect(18, 18, 228, 52, 22);
     }
-    this.add.text(34, 36, 'CardVille', titleText(18)).setOrigin(0, 0.5).setDepth(942);
+    this.add.text(24, 31, 'CardVille', titleText(18)).setOrigin(0, 0.5).setDepth(942);
     const totalOpenStages = WORD_STAGES.length + ENGLISH_STAGES.length + MATH_STAGES.length + MEMORY_STAGES.length;
-    this.add.text(34, 58, `Lv.${level} · 🪙 ${coins} · 카드 ${cards} · ${cleared}/${totalOpenStages}`, mutedText(11)).setOrigin(0, 0.5).setDepth(942);
+    this.add.text(24, 54, `Lv.${level} · 🪙 ${coins} · 카드 ${cards} · ${cleared}/${totalOpenStages}`, mutedText(11)).setOrigin(0, 0.5).setDepth(942);
 
-    const album = this.add.container(305, 44).setDepth(945).setName(`album:${LOBBY_UI_NON_OVERLAP_TAG}`);
-    if (this.textures.exists('uiNameplateGold')) album.add(this.add.image(0, 0, 'uiNameplateGold').setDisplaySize(76, 48));
+    const album = this.add.container(300, 38).setDepth(945).setName(`album:${LOBBY_UI_NON_OVERLAP_TAG}`);
+    if (this.textures.exists('uiNameplateGold')) album.add(this.add.image(0, 0, 'uiNameplateGold').setDisplaySize(72, 44));
     else {
       const bg = this.add.graphics();
       bg.fillStyle(0xffd86f, 0.90);
@@ -145,8 +184,8 @@ export class MainLobbyScene extends Phaser.Scene {
       album.add(bg);
     }
     if (this.textures.exists('assetAlbum')) album.add(this.add.image(-17, 0, 'assetAlbum').setDisplaySize(24, 24));
-    album.add(this.add.text(9, 1, '앨범', { fontFamily: 'system-ui, sans-serif', fontSize: '13px', color: '#2a160c', fontStyle: '900' }).setOrigin(0.5));
-    album.setSize(78, 50).setInteractive({ useHandCursor: true });
+    album.add(this.add.text(9, 1, '앨범', { fontFamily: 'system-ui, sans-serif', fontSize: '12px', color: '#2a160c', fontStyle: '900' }).setOrigin(0.5));
+    album.setSize(74, 48).setInteractive({ useHandCursor: true });
     album.on('pointerup', () => NavigationSystem.safeStart(this, 'CollectionScene'));
   }
 
@@ -157,12 +196,12 @@ export class MainLobbyScene extends Phaser.Scene {
     const copy = recommendedBuildingId === 'event'
       ? missionStatus.nextActionCopy
       : '추천 건물을 따라가면 좋아요. 건물 그림을 가리지 않도록 안내는 상단 얇은 리본에만 표시해요.';
-    const ribbon = this.add.container(195, 108).setDepth(938).setName(`${SCREEN_UI_STABILITY_TAG}:${MOBILE_READABLE_LAYOUT_TAG}:${LOBBY_UI_NON_OVERLAP_TAG}`);
-    ribbon.add(this.add.rectangle(0, 0, 330, 36, 0x07142c, 0.70).setStrokeStyle(1, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.42));
-    ribbon.add(this.add.rectangle(-124, 0, 50, 24, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.90).setStrokeStyle(1, 0xffffff, 0.32));
+    const ribbon = this.add.container(195, 92).setDepth(938).setName(`${SCREEN_UI_STABILITY_TAG}:${MOBILE_READABLE_LAYOUT_TAG}:${LOBBY_UI_NON_OVERLAP_TAG}`);
+    ribbon.add(this.add.rectangle(0, 0, 330, 28, 0x07142c, 0.70).setStrokeStyle(1, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.42));
+    ribbon.add(this.add.rectangle(-124, 0, 50, 20, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.90).setStrokeStyle(1, 0xffffff, 0.32));
     ribbon.add(this.add.text(-124, 0, '추천', darkText(10)).setOrigin(0.5));
-    ribbon.add(this.add.text(-91, -7, label, goldText(11)).setOrigin(0, 0.5));
-    ribbon.add(this.add.text(-91, 9, copy, applyWrap(mutedText(10), 246, 'left')).setOrigin(0, 0.5));
+    ribbon.add(this.add.text(-91, -4, label, goldText(11)).setOrigin(0, 0.5));
+    ribbon.add(this.add.text(-91, 9, copy.length > 34 ? `${copy.slice(0, 34)}...` : copy, applyWrap(mutedText(9), 246, 'left')).setOrigin(0, 0.5));
     if (allowAmbientMotion(this.quality) && missionStatus.shouldPrioritizeEvent) {
       this.tweens.add({ targets: ribbon, alpha: 0.78, duration: scaledDuration(1100, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
@@ -213,8 +252,7 @@ export class MainLobbyScene extends Phaser.Scene {
   private assertCriticalLobbyTextures(): void {
     const missing = DIORAMA_BUILDINGS.filter((building) => !this.textures.exists(building.assetKey)).map((building) => building.assetKey);
     if (missing.length) {
-      console.warn('[CardVille] critical lobby building textures missing before draw', missing, LOBBY_BOOT_ASSET_HARDENING_TAG);
-      this.add.text(195, 162, '마을 이미지 로딩 점검 중', goldText(13)).setOrigin(0.5).setDepth(935).setName('lobby-critical-texture-warning-v154');
+      console.warn('[CardVille] critical lobby building textures missing before draw', missing, LOBBY_BOOT_ASSET_HARDENING_TAG, LOBBY_FORCE_LOAD_GATE_TAG);
     }
   }
 
@@ -324,21 +362,13 @@ export class MainLobbyScene extends Phaser.Scene {
   private drawMissingBuildingFallback(building: DioramaBuilding, width: number, height: number): Phaser.GameObjects.Container {
     const fallback = this.add.container(0, 0);
     const g = this.add.graphics();
-    g.fillGradientStyle(0xfff8dd, 0xfff8dd, building.open ? 0xffd86f : 0x8b96ad, building.open ? 0xffd86f : 0x8b96ad, 1, 1, 0.95, 0.95);
-    g.fillRoundedRect(-width / 2, -height / 2, width, height, 28);
-    g.fillStyle(0x07142c, 0.12);
-    g.fillRoundedRect(-width * 0.32, -height * 0.10, width * 0.64, height * 0.44, 18);
-    g.lineStyle(3, 0xffffff, 0.72);
-    g.strokeRoundedRect(-width / 2, -height / 2, width, height, 28);
-    g.lineStyle(2, 0xffd86f, 0.58);
-    g.strokeRoundedRect(-width / 2 + 7, -height / 2 + 7, width - 14, height - 14, 22);
+    g.fillStyle(0x07142c, 0.20);
+    g.fillRoundedRect(-width * 0.28, -height * 0.18, width * 0.56, height * 0.36, 18);
+    g.lineStyle(2, 0xffd86f, 0.45);
+    g.strokeRoundedRect(-width * 0.28, -height * 0.18, width * 0.56, height * 0.36, 18);
     fallback.add(g);
-    const icon = this.textures.exists(building.iconKey)
-      ? this.add.image(0, -height * 0.08, building.iconKey).setDisplaySize(Math.min(48, width * 0.38), Math.min(48, height * 0.38))
-      : this.add.text(0, -height * 0.07, '□', goldText(22)).setOrigin(0.5);
-    fallback.add(icon);
-    fallback.add(this.add.text(0, height * 0.30, '이미지 재시도', mutedText(12)).setOrigin(0.5));
-    fallback.setName(`missing:${building.assetKey}`);
+    fallback.add(this.add.text(0, 0, '이미지 로딩', mutedText(10)).setOrigin(0.5));
+    fallback.setName(`missing:${building.assetKey}:${LOBBY_FORCE_LOAD_GATE_TAG}`);
     console.warn('[CardVille] lobby building texture missing', building.assetKey, building.title);
     return fallback;
   }
@@ -397,14 +427,14 @@ export class MainLobbyScene extends Phaser.Scene {
   }
 
   private drawLobbySettingsButton(): void {
-    const button = this.add.container(359, 44).setDepth(946).setName(LOBBY_UI_NON_OVERLAP_TAG);
+    const button = this.add.container(360, 38).setDepth(946).setName(LOBBY_UI_NON_OVERLAP_TAG);
     if (this.textures.exists('uiSettingsButton')) button.add(this.add.image(0, 0, 'uiSettingsButton').setDisplaySize(46, 46));
     else button.add(this.add.circle(0, 0, 22, 0xffd86f, 0.90));
     button.add(this.add.text(0, 1, '⚙', goldText(20)).setOrigin(0.5));
     button.setSize(50, 50).setInteractive({ useHandCursor: true });
     button.on('pointerup', () => {
       if (this.busy) return;
-      this.spawnTouchRipple(359, 44);
+      this.spawnTouchRipple(360, 38);
       this.toggleLobbySettingsPanel();
     });
     if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: button, angle: 4, duration: scaledDuration(2200, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
@@ -612,22 +642,20 @@ export class MainLobbyScene extends Phaser.Scene {
   }
 
   private drawBottomHint(nickname: string): void {
-    if (this.textures.exists('uiPanelGlass')) this.add.image(195, 817, 'uiPanelGlass').setDisplaySize(344, 50).setAlpha(0.88).setDepth(940).setName(LOBBY_UI_NON_OVERLAP_TAG);
+    if (this.textures.exists('uiPanelGlass')) this.add.image(195, 826, 'uiPanelGlass').setDisplaySize(344, 34).setAlpha(0.88).setDepth(940).setName(LOBBY_UI_NON_OVERLAP_TAG);
     else {
       const g = this.add.graphics().setDepth(940).setName(LOBBY_UI_NON_OVERLAP_TAG);
       g.fillStyle(0x07142c, 0.66);
-      g.fillRoundedRect(23, 792, 344, 50, 20);
+      g.fillRoundedRect(23, 808, 344, 34, 16);
       g.lineStyle(1, 0xffffff, 0.16);
-      g.strokeRoundedRect(23, 792, 344, 50, 20);
+      g.strokeRoundedRect(23, 808, 344, 34, 16);
     }
     this.hintText = this.add.text(
       195,
-      807,
-      `${nickname} 모험가님, 큰 건물 그림을 눌러 바로 이동하세요.`,
+      826,
+      `${nickname} 모험가님, 건물 그림을 눌러 이동하세요.`,
       applyWrap(bodyText(14), 318)
-    ).setOrigin(0.5).setDepth(942);
-    const assetTotal = Object.values(ASSET_COUNTS).reduce((sum, count) => sum + count, 0);
-    this.add.text(195, 829, `건물/NPC 에셋 적용 · HUD 비겹침 · 자산 ${assetTotal}개`, mutedText(10)).setOrigin(0.5).setDepth(942);
+    ).setOrigin(0.5).setDepth(942).setName(LOBBY_NO_PATCH_TEXT_TAG);
   }
 
   private drawAmbientLife(): void {

@@ -1,4 +1,4 @@
-export const LOBBY_LAYOUT_PLAN_VERSION = '1.0.58' as const;
+export const LOBBY_LAYOUT_PLAN_VERSION = '1.0.59' as const;
 
 export type LobbySafeZone = {
   id: string;
@@ -11,13 +11,13 @@ export type LobbySafeZone = {
 };
 
 export const LOBBY_SAFE_ZONES: readonly LobbySafeZone[] = [
-  { id: 'topHud', label: '상단 브랜드 HUD', x: 129, y: 44, width: 224, height: 56, rule: '성/추천 리본/설정 버튼과 겹치지 않음' },
-  { id: 'album', label: '앨범 버튼', x: 305, y: 44, width: 78, height: 50, rule: '상단 HUD 오른쪽 독립 버튼' },
-  { id: 'settings', label: '설정 버튼', x: 359, y: 44, width: 50, height: 50, rule: '오른쪽 상단 고정, 추천 리본과 분리' },
-  { id: 'routeRibbon', label: '추천 루트 리본', x: 195, y: 108, width: 330, height: 36, rule: '건물 그림 위를 덮지 않는 상단 얇은 안내' },
+  { id: 'topHud', label: '상단 브랜드 HUD', x: 124, y: 38, width: 228, height: 52, rule: '성/추천 리본/설정 버튼과 겹치지 않음' },
+  { id: 'album', label: '앨범 버튼', x: 300, y: 38, width: 74, height: 48, rule: '상단 HUD 오른쪽 독립 버튼' },
+  { id: 'settings', label: '설정 버튼', x: 360, y: 38, width: 50, height: 50, rule: '오른쪽 상단 고정, 추천 리본과 분리' },
+  { id: 'routeRibbon', label: '추천 루트 리본', x: 195, y: 92, width: 330, height: 28, rule: '건물 그림 위를 덮지 않는 상단 얇은 안내' },
   { id: 'buildingField', label: '건물/NPC 필드', x: 195, y: 492, width: 374, height: 658, rule: '좌우 끝 공간까지 쓰되 HUD와 하단 힌트 미겹침' },
   { id: 'heroHome', label: '주인공/고양이 홈', x: 178, y: 588, width: 112, height: 136, rule: '중앙 주인공이 건물 이름표와 하단 HUD에 묻히지 않음' },
-  { id: 'bottomHint', label: '하단 힌트 패널', x: 195, y: 817, width: 344, height: 50, rule: '하단 세이프 영역 전용, 건물 이름표와 분리' }
+  { id: 'bottomHint', label: '하단 힌트 패널', x: 195, y: 826, width: 344, height: 34, rule: '하단 세이프 영역 전용, 건물 이름표와 분리' }
 ] as const;
 
 export const LOBBY_LAYOUT_GUARDS = [
@@ -38,7 +38,13 @@ export const LOBBY_LAYOUT_GUARDS = [
   'scene-premium-backdrop-v155 must be used by gameplay scenes with content-specific backgrounds',
   '1.0.56 separates top HUD, route ribbon, settings, building field, and bottom hint into non-overlap safe zones',
   'user-lobby-asset-assignment-v156 locks uploaded castle/library/lab/forest building art to runtime building keys',
-  'user-lobby-npc-visible-v156 makes uploaded shopkeeper/alchemist/scholar/forest-sage NPCs visible and larger'
+  'user-lobby-npc-visible-v156 makes uploaded shopkeeper/alchemist/scholar/forest-sage NPCs visible and larger',
+  '1.0.59 blocks lobby entry until critical PNG building/NPC textures finish loading',
+  '1.0.59 removes visible patch/update/debug text from the bottom lobby HUD',
+  'lobby-force-load-gate-v159',
+  'lobby-screenshot-repair-v159',
+  'lobby-no-bottom-patch-text-v159',
+  'lobby-wide-village-spacing-v159'
 ] as const;
 
 export const LOBBY_DESIGN_CHECKS = [
@@ -66,13 +72,17 @@ export const LOBBY_DESIGN_CHECKS = [
   'lobby-ui-nonoverlap-v156',
   'lobby-user-assets-visible-v156',
   'user-lobby-asset-assignment-v156',
-  'user-lobby-npc-visible-v156'
+  'user-lobby-npc-visible-v156',
+  'lobby-force-load-gate-v159',
+  'lobby-screenshot-repair-v159',
+  'lobby-no-bottom-patch-text-v159',
+  'lobby-wide-village-spacing-v159'
 ] as const;
 
 export const LOBBY_PREMIUM_VISUAL_FIT_AUDIT = [
   'building_castle/library/lab/shop/school/forest/event/harbor/plaza are square 1254 PNG cutouts after 1.0.46',
   '1.0.51 renders those square assets with fitImageToBox instead of setDisplaySize(width,height) stretch',
-  '1.0.56 bottom row nameplates stay above y=764 and bottom hint starts at y=792',
+  '1.0.59 bottom row nameplates stay above the compact y=808 hint panel',
   'event READY badge is offset inward so READY n does not collide with forest/harbor chips',
   'npc_merchant and npc_forest_sage use aspect-fit readable sizes after premium asset import',
   '1.0.55 selected castle/library/lab/forest buildings use new 1254 RGBA cutouts',

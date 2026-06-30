@@ -54,7 +54,7 @@ mustContain('src/game/data/lobbyLayoutPlan.ts', [
   `LOBBY_LAYOUT_PLAN_VERSION = '${pkg.version}'`,
   'LOBBY_PREMIUM_VISUAL_FIT_AUDIT',
   'fitImageToBox instead of setDisplaySize(width,height) stretch',
-  '1.0.56 bottom row nameplates stay above y=764',
+  '1.0.59 bottom row nameplates stay above the compact y=808 hint panel',
   'npc_merchant and npc_forest_sage use aspect-fit readable sizes', 'village-readable-building-scale-v150', 'lobby-ui-nonoverlap-v156'
 ]);
 mustContain('src/game/data/lobbyEntities.ts', [
@@ -85,7 +85,7 @@ for (const [id, block] of blocks.map((match) => [match[1], match[0]])) {
   if (x - touchWidth / 2 < 8 || x + touchWidth / 2 > 382 || zoneY - touchHeight / 2 < 92 || zoneY + touchHeight / 2 > 766) {
     throw new Error(`Premium touch zone outside safe playfield: ${id}`);
   }
-  if (nameplateY !== undefined && y + nameplateY + 42 > 766) throw new Error(`Nameplate would collide with bottom HUD: ${id}`);
+  if (nameplateY !== undefined && y + nameplateY + 42 > 806) throw new Error(`Nameplate would collide with bottom HUD: ${id}`);
 }
 
 for (const token of [`# CardVille ${pkg.version}`, `## ${pkg.version} 업데이트 내역`, '프리미엄 로비 에셋 배치 보정', 'check:lobby-premium-fit']) {
