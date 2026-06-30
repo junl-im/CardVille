@@ -1,4 +1,4 @@
-export const LOBBY_LAYOUT_PLAN_VERSION = '1.0.62' as const;
+export const LOBBY_LAYOUT_PLAN_VERSION = '1.0.63' as const;
 
 export type LobbySafeZone = {
   id: string;
@@ -111,7 +111,7 @@ export const LOBBY_PREMIUM_VISUAL_FIT_AUDIT = [
   '1.0.51 renders those square assets with fitImageToBox instead of setDisplaySize(width,height) stretch',
   '1.0.59 bottom row nameplates stay above the compact y=808 hint panel',
   '1.0.60 moves side buildings and NPCs closer to the screen edges without overlapping touch zones',
-  '1.0.62 maps lobby buildings/NPCs/props through real viewport width, height, and safe-area insets instead of one screenshot size',
+  '1.0.63 maps lobby buildings/NPCs/props through real viewport width, height, and safe-area insets instead of one screenshot size',
   'event READY badge is offset inward so READY n does not collide with forest/harbor chips',
   'npc_merchant and npc_forest_sage use aspect-fit readable sizes after premium asset import',
   '1.0.55 selected castle/library/lab/forest buildings use new 1254 RGBA cutouts',

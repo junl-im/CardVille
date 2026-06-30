@@ -8,7 +8,7 @@ import { WORD_STAGES } from '../data/wordStages';
 import { MATH_STAGES } from '../data/mathStages';
 import { MEMORY_STAGES } from '../data/memoryStages';
 import { ENGLISH_STAGES } from '../data/englishStages';
-import { applyWrap, bodyText, darkText, goldText, mutedText, titleText } from '../ui/TextStyles';
+import { applyNoticeBox, applyWrap, bodyText, darkText, goldText, mutedText, noticeText, titleText } from '../ui/TextStyles';
 import { applyResponsiveCamera, hasTouchDebug } from '../systems/LayoutSystem';
 import { getModeById } from '../data/modeCatalog';
 import { CoachMarkSystem } from '../systems/CoachMarkSystem';
@@ -184,9 +184,9 @@ export class StageSelectScene extends Phaser.Scene {
   private showLockedHint(stageId: number): void {
     const toast = this.add.container(195, 630).setDepth(1000);
     if (this.textures.exists('uiToast')) toast.add(this.add.image(0, 0, 'uiToast').setDisplaySize(284, 64).setAlpha(0.94));
-    else toast.add(this.add.rectangle(0, 0, 284, 64, 0x07142c, 0.94).setStrokeStyle(2, 0xffd86f, 0.48));
-    toast.add(this.add.text(0, -10, `${stageId - 1}단계를 먼저 클리어하세요`, goldText(14)).setOrigin(0.5));
-    toast.add(this.add.text(0, 14, '진행 기록은 모드별로 따로 저장됩니다.', mutedText(10)).setOrigin(0.5));
+    else toast.add(this.add.rectangle(0, 0, 306, 70, 0x07142c, 0.94).setStrokeStyle(1, 0xffd86f, 0.28));
+    toast.add(this.add.text(0, -12, `${stageId - 1}단계를 먼저 클리어하세요`, applyNoticeBox(noticeText(12), 266, 28)).setOrigin(0.5));
+    toast.add(this.add.text(0, 17, '진행 기록은 모드별로 따로 저장됩니다.', applyNoticeBox(noticeText(10), 266, 28)).setOrigin(0.5));
     toast.setAlpha(0).setScale(0.92);
     this.tweens.add({ targets: toast, alpha: 1, scale: 1, duration: 120, ease: 'Back.easeOut' });
     this.time.delayedCall(1300, () => this.tweens.add({ targets: toast, alpha: 0, y: 610, duration: 220, onComplete: () => toast.destroy() }));

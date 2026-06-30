@@ -12,12 +12,12 @@ import { LOBBY_LAYOUT_GUARDS, LOBBY_LAYOUT_PLAN_VERSION } from '../data/lobbyLay
 import { MATH_STAGES } from '../data/mathStages';
 import { MEMORY_STAGES } from '../data/memoryStages';
 import { ENGLISH_STAGES } from '../data/englishStages';
-import { applyWrap, bodyText, darkText, goldText, mutedText, titleText } from '../ui/TextStyles';
+import { applyNoticeBox, applyWrap, bodyText, darkText, goldText, mutedText, noticeText, titleText } from '../ui/TextStyles';
 import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 import { AccessibilitySystem } from '../systems/AccessibilitySystem';
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
-const LOBBY_VERSION = '1.0.62';
+const LOBBY_VERSION = '1.0.63';
 const MISSION_TONE_COLORS = { gold: 0xffd86f, blue: 0x8fd3ff, purple: 0xd7a5ff, green: 0xa9f5b5, coral: 0xffb39a } as const;
 const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-visible-v149' as const;
 const VILLAGE_VISIBLE_BUILDING_SCALE_TAG = 'village-readable-building-scale-v150' as const;
@@ -33,7 +33,9 @@ const LOBBY_SCREENSHOT_REPAIR_TAG = 'lobby-screenshot-repair-v159' as const;
 const LOBBY_NO_PATCH_TEXT_TAG = 'lobby-no-bottom-patch-text-v159' as const;
 const LOBBY_FULLSCREEN_SPREAD_TAG = 'lobby-fullscreen-spread-v160' as const;
 const LOBBY_INPUT_RESET_TAG = 'lobby-input-reset-v160' as const;
-const RESPONSIVE_MOBILE_VIEWPORT_TAG = 'responsive-mobile-viewport-v162' as const;
+const RESPONSIVE_MOBILE_VIEWPORT_TAG = 'responsive-mobile-viewport-v163' as const;
+const NPC_RELATIVE_SCALE_LOCK_TAG = 'npc-relative-scale-lock-v163' as const;
+const SILENT_INTRO_VIDEO_LOOP_TAG = 'silent-intro-video-loop-v163' as const;
 const HERO_HOME = { x: 195, y: 566 } as const;
 const CAT_HOME = { x: 146, y: 612 } as const;
 
@@ -86,7 +88,7 @@ export class MainLobbyScene extends Phaser.Scene {
     this.drawBottomHint(profile.nickname);
     // Runtime HUD shows only player-facing village UI, never build/debug notes.
     console.info('[CardVille] premium lobby art placement', LOBBY_ART_PLACEMENT_TAG, LOBBY_UI_NON_OVERLAP_TAG, LOBBY_USER_ASSET_VISIBLE_TAG, USER_LOBBY_ASSET_ASSIGNMENT_TAG, LOBBY_USER_ASSET_NPC_TAG);
-    console.info('[CardVille] lobby ready', { version: LOBBY_VERSION, tag: LOBBY_TOUCH_RECOVERY_TAG, input: LOBBY_INPUT_RESET_TAG, spread: LOBBY_FULLSCREEN_SPREAD_TAG });
+    console.info('[CardVille] lobby ready', { version: LOBBY_VERSION, tag: LOBBY_TOUCH_RECOVERY_TAG, input: LOBBY_INPUT_RESET_TAG, spread: LOBBY_FULLSCREEN_SPREAD_TAG, npcScale: NPC_RELATIVE_SCALE_LOCK_TAG, intro: SILENT_INTRO_VIDEO_LOOP_TAG });
     this.showLobbyCoach(recommendedBuildingId);
   }
 
@@ -97,6 +99,37 @@ export class MainLobbyScene extends Phaser.Scene {
   private vs(min = 0.96, max = 1.12): number { return responsiveScale(this, min, max); }
 
   private point(baseX: number, baseY: number): { x: number; y: number } { return responsivePoint(this, baseX, baseY); }
+
+  private rememberBaseScale<T extends Phaser.GameObjects.GameObject & Phaser.GameObjects.Components.Transform>(target: T): T {
+    target.setData('cvBaseScaleX', target.scaleX);
+    target.setData('cvBaseScaleY', target.scaleY);
+    return target;
+  }
+
+  private baseScaleOf(target: Phaser.GameObjects.GameObject & Phaser.GameObjects.Components.Transform): { x: number; y: number } {
+    return {
+      x: Number(target.getData('cvBaseScaleX') ?? target.scaleX),
+      y: Number(target.getData('cvBaseScaleY') ?? target.scaleY)
+    };
+  }
+
+  private tweenRelativeScale(target: Phaser.GameObjects.GameObject & Phaser.GameObjects.Components.Transform, multiplier: number, duration = 120, yoyo = false): void {
+    const base = this.baseScaleOf(target);
+    this.tweens.add({
+      targets: target,
+      scaleX: base.x * multiplier,
+      scaleY: base.y * multiplier,
+      duration,
+      yoyo,
+      ease: 'Quad.easeOut',
+      onComplete: () => { if (yoyo) target.setScale(base.x, base.y); }
+    });
+  }
+
+  private restoreRelativeScale(target: Phaser.GameObjects.GameObject & Phaser.GameObjects.Components.Transform, duration = 110): void {
+    const base = this.baseScaleOf(target);
+    this.tweens.add({ targets: target, scaleX: base.x, scaleY: base.y, duration, ease: 'Quad.easeOut' });
+  }
 
   private buildingPoint(building: Pick<DioramaBuilding, 'x' | 'y'>): { x: number; y: number } {
     return this.point(building.x, building.y);
@@ -433,7 +466,7 @@ export class MainLobbyScene extends Phaser.Scene {
       const y = this.vy(npc.y);
       const width = npc.width * scale;
       const height = npc.height * scale;
-      const npcImage = this.fitImageToBox(this.add.image(x, y, npc.key).setName(`visible-npc:${npc.key}:${LOBBY_USER_ASSET_NPC_TAG}:${RESPONSIVE_MOBILE_VIEWPORT_TAG}`), width, height)
+      const npcImage = this.rememberBaseScale(this.fitImageToBox(this.add.image(x, y, npc.key).setName(`visible-npc:${npc.key}:${LOBBY_USER_ASSET_NPC_TAG}:${RESPONSIVE_MOBILE_VIEWPORT_TAG}:${NPC_RELATIVE_SCALE_LOCK_TAG}`), width, height))
         .setDepth(y + 3);
       if (allowAmbientMotion(this.quality)) {
         this.tweens.add({ targets: npcImage, y: y - 2 * scale, duration: scaledDuration(900, this.quality), delay: npc.delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
@@ -456,8 +489,8 @@ export class MainLobbyScene extends Phaser.Scene {
         this.showNpcDialogue(npc, x, y);
         this.playNpcGesture(npc, npcImage, x, y);
       });
-      zone.on('pointerover', () => { if (!this.busy) this.tweens.add({ targets: npcImage, scale: 1.08, duration: 120 }); });
-      zone.on('pointerout', () => { if (!this.busy) this.tweens.add({ targets: npcImage, scale: 1, duration: 120 }); });
+      zone.on('pointerover', () => { if (!this.busy) this.tweenRelativeScale(npcImage, 1.045, 120); });
+      zone.on('pointerout', () => { if (!this.busy) this.restoreRelativeScale(npcImage, 120); });
 
       if (hasTouchDebug()) {
         this.add.rectangle(x, y, width + 34 * scale, height + 42 * scale, 0xffd86f, 0.10)
@@ -591,7 +624,7 @@ export class MainLobbyScene extends Phaser.Scene {
       bubble.add(bg);
     }
     bubble.add(this.add.text(-88, -24, npc.label, goldText(13)).setOrigin(0, 0.5));
-    bubble.add(this.add.text(0, 10, line, applyWrap(bodyText(12), 188)).setOrigin(0.5));
+    bubble.add(this.add.text(0, 10, line, applyNoticeBox(noticeText(11), 188, 46)).setOrigin(0.5));
     bubble.setScale(0.82).setAlpha(0);
     this.tweens.add({ targets: bubble, scale: 1, alpha: 1, y: bubbleY - 4, duration: 170, ease: 'Back.easeOut' });
     this.time.delayedCall(3300, () => {
@@ -604,7 +637,7 @@ export class MainLobbyScene extends Phaser.Scene {
   }
 
   private playNpcGesture(npc: LobbyNpc, npcImage: Phaser.GameObjects.Image, x = npc.x, y = npc.y): void {
-    this.tweens.add({ targets: npcImage, scale: 1.14, duration: 90, yoyo: true, ease: 'Quad.easeOut' });
+    this.tweenRelativeScale(npcImage, 1.075, 90, true);
     if (npc.animation === 'sparkle') {
       this.spawnNpcSparkle(x, y - 18, 7);
       return;
@@ -641,10 +674,11 @@ export class MainLobbyScene extends Phaser.Scene {
 
   private spawnFloatingCue(key: string, x: number, y: number): void {
     const cue = this.textures.exists(key)
-      ? this.add.image(x, y, key).setDisplaySize(24, 24)
-      : this.add.text(x, y, '✦', goldText(15)).setOrigin(0.5);
+      ? this.rememberBaseScale(this.add.image(x, y, key).setDisplaySize(24, 24))
+      : this.rememberBaseScale(this.add.text(x, y, '✦', goldText(15)).setOrigin(0.5));
     cue.setDepth(1160).setAlpha(0.92);
-    this.tweens.add({ targets: cue, y: y - 26, scale: 0.76, alpha: 0, duration: 760, ease: 'Sine.easeOut', onComplete: () => cue.destroy() });
+    const base = this.baseScaleOf(cue);
+    this.tweens.add({ targets: cue, y: y - 26, scaleX: base.x * 0.76, scaleY: base.y * 0.76, alpha: 0, duration: 760, ease: 'Sine.easeOut', onComplete: () => cue.destroy() });
   }
 
   private spawnNpcSparkle(x: number, y: number, count: number): void {
@@ -653,8 +687,9 @@ export class MainLobbyScene extends Phaser.Scene {
       const sparkle = this.textures.exists('particleSparkle')
         ? this.add.image(x + Phaser.Math.Between(-18, 18), y + Phaser.Math.Between(-18, 18), 'particleSparkle').setDisplaySize(14, 14)
         : this.add.text(x + Phaser.Math.Between(-18, 18), y + Phaser.Math.Between(-18, 18), '✦', goldText(12)).setOrigin(0.5);
-      sparkle.setDepth(1160).setAlpha(0.85);
-      this.tweens.add({ targets: sparkle, y: sparkle.y - Phaser.Math.Between(14, 30), alpha: 0, scale: 0.45, duration: 700, delay: i * 45, ease: 'Sine.easeOut', onComplete: () => sparkle.destroy() });
+      this.rememberBaseScale(sparkle).setDepth(1160).setAlpha(0.85);
+      const base = this.baseScaleOf(sparkle);
+      this.tweens.add({ targets: sparkle, y: sparkle.y - Phaser.Math.Between(14, 30), alpha: 0, scaleX: base.x * 0.45, scaleY: base.y * 0.45, duration: 700, delay: i * 45, ease: 'Sine.easeOut', onComplete: () => sparkle.destroy() });
     }
   }
 
@@ -759,7 +794,9 @@ export class MainLobbyScene extends Phaser.Scene {
       ? this.add.image(px, py, 'dioramaButterfly').setDisplaySize(30 * scale, 22 * scale)
       : this.add.text(px, py, '✦', goldText(16)).setOrigin(0.5);
     butterfly.setAlpha(0.78).setDepth(650);
-    if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: butterfly, x: px + Phaser.Math.Between(-24, 28) * scale, y: py - Phaser.Math.Between(16, 34) * scale, scale: 0.82, duration: scaledDuration(1500, this.quality), delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    this.rememberBaseScale(butterfly);
+    const base = this.baseScaleOf(butterfly);
+    if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: butterfly, x: px + Phaser.Math.Between(-24, 28) * scale, y: py - Phaser.Math.Between(16, 34) * scale, scaleX: base.x * 0.82, scaleY: base.y * 0.82, duration: scaledDuration(1500, this.quality), delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
   }
 
   private addBird(x: number, y: number, delay: number): void {
@@ -779,7 +816,9 @@ export class MainLobbyScene extends Phaser.Scene {
       ? this.add.image(px, py, 'propFirefly').setDisplaySize(14 * scale, 14 * scale)
       : this.add.circle(px, py, 4 * scale, 0xffdf7a, 0.7);
     firefly.setDepth(760).setAlpha(0.58);
-    if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: firefly, x: px + Phaser.Math.Between(-18, 22) * scale, y: py - Phaser.Math.Between(12, 30) * scale, alpha: 0.18, scale: 0.72, duration: scaledDuration(1800, this.quality), delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    this.rememberBaseScale(firefly);
+    const base = this.baseScaleOf(firefly);
+    if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: firefly, x: px + Phaser.Math.Between(-18, 22) * scale, y: py - Phaser.Math.Between(12, 30) * scale, alpha: 0.18, scaleX: base.x * 0.72, scaleY: base.y * 0.72, duration: scaledDuration(1800, this.quality), delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
   }
 
   private enterBuilding(building: DioramaBuilding, buildingContainer: Phaser.GameObjects.Container): void {
@@ -859,8 +898,9 @@ export class MainLobbyScene extends Phaser.Scene {
 
   private spawnTouchRipple(x: number, y: number): void {
     if (this.textures.exists('uiTouchRipple')) {
-      const ripple = this.add.image(x, y, 'uiTouchRipple').setDisplaySize(54, 54).setDepth(1000).setAlpha(0.72);
-      this.tweens.add({ targets: ripple, scale: 1.75, alpha: 0, duration: 360, ease: 'Cubic.easeOut', onComplete: () => ripple.destroy() });
+      const ripple = this.rememberBaseScale(this.add.image(x, y, 'uiTouchRipple').setDisplaySize(54, 54)).setDepth(1000).setAlpha(0.72);
+      const base = this.baseScaleOf(ripple);
+      this.tweens.add({ targets: ripple, scaleX: base.x * 1.75, scaleY: base.y * 1.75, alpha: 0, duration: 360, ease: 'Cubic.easeOut', onComplete: () => ripple.destroy() });
       return;
     }
     const ripple = this.add.circle(x, y, 18, 0xffffff, 0.3).setDepth(1000);
@@ -885,7 +925,9 @@ export class MainLobbyScene extends Phaser.Scene {
     const glow = this.textures.exists('uiDoorLight')
       ? this.add.image(point.x, point.y + 18 * scale, 'uiDoorLight').setDisplaySize(92 * scale, 118 * scale).setDepth(900).setAlpha(0.62)
       : this.add.circle(point.x, point.y + 22 * scale, 46 * scale, 0xffe28c, 0.28).setDepth(900);
-    this.tweens.add({ targets: glow, scale: 2.1, alpha: 0, duration: 420, ease: 'Cubic.easeOut', onComplete: () => glow.destroy() });
+    this.rememberBaseScale(glow);
+    const base = this.baseScaleOf(glow);
+    this.tweens.add({ targets: glow, scaleX: base.x * 2.1, scaleY: base.y * 2.1, alpha: 0, duration: 420, ease: 'Cubic.easeOut', onComplete: () => glow.destroy() });
     this.cameras.main.flash(220, 255, 232, 166, false);
     this.time.delayedCall(360, () => this.goToRoute(route));
     this.tweens.add({ targets: buildingContainer, alpha: 0.82, duration: 100, yoyo: true, repeat: 1 });
@@ -908,7 +950,7 @@ export class MainLobbyScene extends Phaser.Scene {
     const l = layout(this);
     const toastY = l.bottom - 104;
     const toastBg = this.textures.exists('uiToast') ? this.add.image(l.cx, toastY, 'uiToast').setDisplaySize(166, 56).setDepth(999).setAlpha(0.90) : undefined;
-    const toast = this.add.text(l.cx, toastY, '준비중', goldText(18)).setOrigin(0.5).setDepth(1000);
+    const toast = this.add.text(l.cx, toastY, '준비중', applyNoticeBox(noticeText(13), 144, 34)).setOrigin(0.5).setDepth(1000);
     this.tweens.add({ targets: [toast, toastBg].filter(Boolean), y: toastY - 24, alpha: 0, duration: 900, ease: 'Sine.easeOut', onComplete: () => { toast.destroy(); toastBg?.destroy(); } });
   }
 }

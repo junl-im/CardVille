@@ -2,10 +2,10 @@ import Phaser from 'phaser';
 import { NavigationSystem } from '../systems/NavigationSystem';
 import { addCoverImage, applyResponsiveCamera, layout } from '../systems/LayoutSystem';
 import { ASSET_MANIFEST, CARDVILLE_ASSET_VERSION, LOBBY_CRITICAL_PNG_ASSET_KEY_SET, LOBBY_CRITICAL_PNG_RUNTIME_TAG, LOBBY_FORCE_LOAD_GATE_TAG } from '../data/assetManifest';
-import { goldText, titleText } from '../ui/TextStyles';
 
 export const CARDVILLE_WEBP_RUNTIME_TAG = 'webp-asset-runtime-v152' as const;
 export const CARDVILLE_LOBBY_BOOT_HARDENING_TAG = 'lobby-boot-asset-hardening-v154' as const;
+export const CARDVILLE_SILENT_INTRO_VIDEO_TAG = 'silent-intro-video-loop-v163' as const;
 
 export class IntroLoadingScene extends Phaser.Scene {
   private readyToContinue = false;
@@ -46,16 +46,9 @@ export class IntroLoadingScene extends Phaser.Scene {
       this.tryFinish();
     });
 
-    this.input.once('pointerdown', () => {
-      this.minIntroDone = true;
-      this.tryFinish();
-    });
-    this.time.delayedCall(2400, () => {
-      this.minIntroDone = true;
-      this.tryFinish();
-    });
-    // 1.0.60: no 4.2s early-entry timer. The opening video remains on screen
-    // until the critical image loader is complete, so the village never appears with fallback cards.
+    this.minIntroDone = true;
+    // 1.0.63: silent intro video controls the loading surface. It loops while assets load,
+    // then is removed immediately when the loader completes. No loading copy is drawn.
 
     if (this.load.totalToLoad > 0) this.load.start();
     else {
@@ -66,16 +59,11 @@ export class IntroLoadingScene extends Phaser.Scene {
 
   private drawLoadingStage(): void {
     const l = layout(this);
-    if (this.textures.exists('loginBg')) addCoverImage(this, 'loginBg', 1, 390, 844);
+    if (this.textures.exists('loginBg')) addCoverImage(this, 'loginBg', 1, 390, 844)?.setAlpha(0.22);
     else this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x071126);
-
-    this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x020814, 0.14);
-    this.add.rectangle(l.visibleX + l.visibleWidth / 2, 724, l.visibleWidth, 210 + l.extraY, 0x020814, 0.22);
-    this.add.text(l.cx, l.top + 54, 'CardVille', titleText(31)).setOrigin(0.5);
-    this.add.text(l.cx, l.top + 94, '오프닝 영상 뒤 바로 카드마을로 입장합니다', goldText(16)).setOrigin(0.5);
-    const barY = l.bottom - 24;
-    this.add.rectangle(l.cx, barY, 258, 6, 0xffffff, 0.18).setOrigin(0.5);
-    this.progressBar = this.add.rectangle(l.cx - 129, barY, 1, 6, 0xffd86f, 0.92).setOrigin(0, 0.5);
+    this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x020814, 0.28)
+      .setName(CARDVILLE_SILENT_INTRO_VIDEO_TAG);
+    this.progressBar = undefined;
   }
 
   private updateProgressBar(value: number): void {
@@ -181,7 +169,7 @@ export class IntroLoadingScene extends Phaser.Scene {
     for (const asset of ASSET_MANIFEST) {
       this.queueImage(asset.key, asset.path);
     }
-    console.info('[CardVille] lobby critical assets use PNG source', LOBBY_CRITICAL_PNG_RUNTIME_TAG, CARDVILLE_LOBBY_BOOT_HARDENING_TAG);
+    console.info('[CardVille] lobby critical assets use PNG source', LOBBY_CRITICAL_PNG_RUNTIME_TAG, CARDVILLE_LOBBY_BOOT_HARDENING_TAG, CARDVILLE_SILENT_INTRO_VIDEO_TAG);
 
     this.queueImage('assetVillageBg', 'assets/backgrounds/cherry_blossom_day.png');
 

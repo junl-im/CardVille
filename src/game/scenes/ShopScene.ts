@@ -5,7 +5,7 @@ import { DrawSystem } from '../systems/DrawSystem';
 import { SaveSystem } from '../systems/SaveSystem';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
-import { applyWrap, bodyText, darkText, goldText, mutedText, titleText } from '../ui/TextStyles';
+import { applyNoticeBox, applyWrap, bodyText, darkText, goldText, mutedText, noticeText, titleText } from '../ui/TextStyles';
 import { allowAmbientMotion, CardVilleQuality, getCardVilleQuality, scaledDuration } from '../systems/QualitySystem';
 import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 
@@ -302,9 +302,9 @@ export class ShopScene extends Phaser.Scene {
   private showShopToast(title: string, copy: string): void {
     const toast = this.add.container(195, 622).setDepth(1000);
     if (this.textures.exists('uiToast')) toast.add(this.add.image(0, 0, 'uiToast').setDisplaySize(310, 70).setAlpha(0.94));
-    else toast.add(this.add.rectangle(0, 0, 310, 70, 0x07142c, 0.94).setStrokeStyle(2, 0xffd86f, 0.52));
-    toast.add(this.add.text(0, -14, title, titleText(15)).setOrigin(0.5));
-    toast.add(this.add.text(0, 14, copy, applyWrap(mutedText(10), 260)).setOrigin(0.5));
+    else toast.add(this.add.rectangle(0, 0, 318, 76, 0x07142c, 0.94).setStrokeStyle(1, 0xffd86f, 0.28));
+    toast.add(this.add.text(0, -16, title, applyNoticeBox(noticeText(13), 278, 26)).setOrigin(0.5));
+    toast.add(this.add.text(0, 17, copy, applyNoticeBox(noticeText(10), 272, 34)).setOrigin(0.5));
     toast.setScale(0.9).setAlpha(0);
     this.tweens.add({ targets: toast, scale: 1, alpha: 1, duration: 130, ease: 'Back.easeOut' });
     this.time.delayedCall(1500, () => this.tweens.add({ targets: toast, y: 600, alpha: 0, duration: 220, onComplete: () => toast.destroy() }));

@@ -24,6 +24,7 @@ export const CARDVILLE_PREMIUM_BUTTON_STYLE_TAG = 'premium-vector-button-v148' a
 // Compatibility audit token: screen-wide-premium-button-v152
 export const CARDVILLE_BUTTON_UX_AUDIT_TAG = 'screen-wide-premium-button-v158' as const;
 export const CARDVILLE_TOUCH_TARGET_TAG = 'mobile-touch-target-v158' as const;
+export const CARDVILLE_BUTTON_SEAM_FIX_TAG = 'button-seamless-touch-v163' as const;
 
 type ButtonPalette = { top: number; bottom: number; stroke: number; glow: number; text: string };
 
@@ -66,7 +67,7 @@ export class GameButton extends Phaser.GameObjects.Container {
     this.heightValue = height;
     this.colorValue = color;
     this.debounceMs = options.debounceMs ?? 360;
-    this.shineEnabled = options.shine !== false;
+    this.shineEnabled = options.shine === true;
     this.lockOnClick = options.lockOnClick === true;
 
     const hitW = Math.max(width + 10, 56);
@@ -167,7 +168,7 @@ export class GameButton extends Phaser.GameObjects.Container {
     const height = this.heightValue;
     const color = this.disabled ? 0x9aa4ba : this.colorValue;
     this.bg.clear();
-    this.bg.fillStyle(0x000000, pressed ? 0.10 : 0.22);
+    this.bg.fillStyle(0x000000, pressed ? 0.08 : 0.13);
     this.bg.fillRoundedRect(-width / 2 + 4, -height / 2 + 8, width, height, 20);
 
     if (this.skinImage && this.skin) {
@@ -175,8 +176,8 @@ export class GameButton extends Phaser.GameObjects.Container {
       this.skinImage.setDisplaySize(width + 16, height + 16);
       this.skinImage.setAlpha(pressed ? 0.96 : 1);
       if (this.shineEnabled) {
-        this.bg.lineStyle(1, 0xffffff, pressed ? 0.08 : 0.14);
-        this.bg.strokeRoundedRect(-width / 2 + 3, -height / 2 + 3, width - 6, height - 6, 18);
+        this.bg.lineStyle(1, 0xffffff, pressed ? 0.04 : 0.07);
+        this.bg.strokeRoundedRect(-width / 2 + 5, -height / 2 + 5, width - 10, height - 10, 18);
       }
       return;
     }
@@ -188,15 +189,11 @@ export class GameButton extends Phaser.GameObjects.Container {
     this.bg.fillRoundedRect(-width / 2 - 3, -height / 2 + yOffset - 2, width + 6, height + 6, radius + 3);
     this.bg.fillGradientStyle(palette.top, palette.top, palette.bottom, palette.bottom, this.disabled ? 0.58 : 1, this.disabled ? 0.58 : 1, this.disabled ? 0.66 : 1, this.disabled ? 0.66 : 1);
     this.bg.fillRoundedRect(-width / 2, -height / 2 + yOffset, width, height, radius);
-    this.bg.fillStyle(0x5f3608, pressed ? 0.10 : 0.18);
-    this.bg.fillRoundedRect(-width / 2 + 8, height / 2 - 13 + yOffset, width - 16, 8, 7);
-    this.bg.lineStyle(3, palette.stroke, pressed ? 0.58 : 0.82);
+    this.bg.lineStyle(2, palette.stroke, pressed ? 0.36 : 0.50);
     this.bg.strokeRoundedRect(-width / 2, -height / 2 + yOffset, width, height, radius);
-    this.bg.lineStyle(1, 0x07152f, pressed ? 0.18 : 0.28);
-    this.bg.strokeRoundedRect(-width / 2 + 4, -height / 2 + 4 + yOffset, width - 8, height - 8, Math.max(10, radius - 5));
     if (this.shineEnabled) {
-      this.bg.fillStyle(0xffffff, this.disabled ? 0.06 : pressed ? 0.07 : 0.16);
-      this.bg.fillRoundedRect(-width / 2 + 18, -height / 2 + 8 + yOffset, width - 36, Math.max(6, height * 0.13), 8);
+      this.bg.fillStyle(0xffffff, this.disabled ? 0.04 : pressed ? 0.04 : 0.07);
+      this.bg.fillRoundedRect(-width / 2 + 22, -height / 2 + 9 + yOffset, width - 44, Math.max(4, height * 0.08), 8);
     }
   }
 }

@@ -2,8 +2,8 @@ import Phaser from 'phaser';
 
 export const GAME_WIDTH = 390;
 export const GAME_HEIGHT = 844;
-export const RESPONSIVE_MOBILE_LAYOUT_TAG = 'responsive-mobile-viewport-v162' as const;
-export const RESPONSIVE_SURFACE_SPREAD_TAG = 'responsive-surface-spread-v162' as const;
+export const RESPONSIVE_MOBILE_LAYOUT_TAG = 'responsive-mobile-viewport-v163' as const;
+export const RESPONSIVE_SURFACE_SPREAD_TAG = 'responsive-surface-spread-v163' as const;
 
 export type SafeAreaInsets = {
   top: number;

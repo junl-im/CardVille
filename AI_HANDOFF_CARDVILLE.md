@@ -1,18 +1,29 @@
+
+## 1.0.63 - TouchScaleNoticeFix
+
+- NPC에 스치거나 터치했을 때 화면을 덮을 정도로 커지던 원인을 수정했습니다. 원인은 `setDisplaySize()`로 맞춘 이미지에 절대 `scale: 1.08` 계열 tween을 걸어 원본 PNG 기준으로 확대될 수 있던 문제였습니다. 이제 NPC/리플/문 아이콘/스파클/떠오르는 아이콘은 기준 scaleX/scaleY를 저장하고 상대 배율로만 움직입니다.
+- 게임 시작 후 IntroLoadingScene은 로딩 문구 없이 무음 오프닝 영상만 유지합니다. 에셋 로딩이 길면 영상이 loop로 계속 나오고, 로딩이 끝나면 즉시 영상 DOM을 제거하고 다음 씬으로 이동합니다.
+- 모든 공통 버튼의 과한 안쪽 선/하단 줄/광택선을 줄여 seam-free 버튼 규칙을 적용했습니다.
+- 알림/토스트/보상 팝업 텍스트가 패널보다 커져 밀려나는 문제를 줄이기 위해 notice 전용 글자 크기와 고정 박스 래핑을 추가했습니다.
+- 검증 추가: `tools/check-interaction-polish-v163.mjs` / `npm run check:interaction-polish`.
+
 # CardVille AI Handoff
 
 이 파일은 대화가 끊겼을 때 다른 AI나 개발자가 바로 이어받을 수 있도록 만든 인계서입니다.  
 CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고, 그다음 실제 코드를 확인하세요.
 
 
-## 현재 작업 기준: 1.0.62
+## 현재 작업 기준: 1.0.63
 
-현재 기준 버전은 1.0.62입니다.  
-이번 버전은 1.0.61 ResponsiveMobile을 기준으로, 패치 ZIP 용량이 커지는 이유를 self-contained 패치 정책으로 명확히 기록하고, 모든 화면의 중앙 패널/읽기 패널/주요 버튼이 실제 폰 viewport의 남는 좌우 폭을 더 쓰도록 공통 UI 표면을 확장한 패스입니다. `responsive-surface-spread-v162`, `self-contained-patch-payload-audit-v162`, `responsive-mobile-viewport-v162`가 핵심 기준입니다.
-
-
+현재 기준 버전은 1.0.63입니다.  
+이번 버전은 1.0.62 SurfacePayload를 기준으로, NPC/효과 이미지의 절대 scale tween 확대 버그를 막고, 시작 로딩 구간을 문구 없는 오프닝 영상으로 유지하며, 버튼 줄/알림 텍스트 넘침을 공통 UI 규칙으로 줄인 패스입니다. `silent-intro-video-loop-v163`, `npc-relative-scale-lock-v163`, `button-seamless-touch-v163`, `notice-text-fit-v163`, `responsive-surface-spread-v163`가 핵심 기준입니다.
 
 
-### 1.0.62 실제 모바일 반응형 viewport / 패치 표면 완전성 / 용량 감사 패스
+
+
+### 1.0.63 실제 모바일 반응형 viewport / 터치 확대/알림 텍스트/무음 인트로 영상 패스
+
+- NPC 절대 scale tween 금지: `setDisplaySize()` 적용 후에는 `scale: 1.xx`를 쓰지 말고 `rememberBaseScale()` + `scaleX/scaleY` 상대 배율을 사용해야 합니다.
 
 - 작업명: `ResponsiveSurfacePayloadAudit`
 - 핵심 이유:
@@ -49,8 +60,8 @@ CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고,
   - `npm run check:patch-payload` 추가
   - `npm run verify` 앞단에 포함
 - ZIP 명명 규칙:
-  - `CardVille_v1.0.62_SurfacePayload_Full.zip`
-  - `CardVille_v1.0.62_SurfacePayload_Patch.zip`
+  - `CardVille_v1.0.63_TouchScaleNotice_Full.zip`
+  - `CardVille_v1.0.63_TouchScaleNotice_Patch.zip`
 
 
 ### 1.0.61 실제 모바일 반응형 viewport / safe-area 패스

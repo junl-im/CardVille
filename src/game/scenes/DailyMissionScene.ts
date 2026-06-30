@@ -7,7 +7,7 @@ import { applyResponsiveCamera } from '../systems/LayoutSystem';
 import { assertNoVerticalOverlap, CARDVILLE_SCREEN_UI_REDESIGN_TAG } from '../systems/ScreenUISystem';
 import { GameButton } from '../ui/GameButton';
 import { panel } from '../ui/Panel';
-import { applyWrap, bodyText, darkText, goldText, mutedText, titleText } from '../ui/TextStyles';
+import { applyNoticeBox, applyWrap, bodyText, darkText, goldText, mutedText, noticeText, titleText } from '../ui/TextStyles';
 import { CoachMarkSystem } from '../systems/CoachMarkSystem';
 import { RewardPopupSystem, RewardPopupTone } from '../systems/RewardPopupSystem';
 
@@ -153,8 +153,8 @@ export class DailyMissionScene extends Phaser.Scene {
   private showToast(message: string): void {
     this.toast?.destroy();
     const toast = this.add.container(195, 640).setDepth(2000);
-    toast.add(this.add.rectangle(0, 0, 308, 56, 0x07142c, 0.94).setStrokeStyle(2, 0xffd86f, 0.54));
-    toast.add(this.add.text(0, 0, message, applyWrap(goldText(11), 278)).setOrigin(0.5));
+    toast.add(this.add.rectangle(0, 0, 318, 62, 0x07142c, 0.94).setStrokeStyle(1, 0xffd86f, 0.28));
+    toast.add(this.add.text(0, 0, message, applyNoticeBox(noticeText(11), 286, 44)).setOrigin(0.5));
     toast.setAlpha(0).setScale(0.96);
     this.toast = toast;
     this.tweens.add({ targets: toast, alpha: 1, scale: 1, duration: 120, ease: 'Back.easeOut' });

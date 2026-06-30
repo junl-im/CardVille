@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { GameButton } from '../ui/GameButton';
-import { applyWrap, bodyText, darkText, goldText, mutedText, titleText } from '../ui/TextStyles';
+import { applyNoticeBox, applyWrap, bodyText, darkText, goldText, mutedText, noticeText, titleText } from '../ui/TextStyles';
 import { addFullBleedRect } from './LayoutSystem';
 import { getCardVilleQuality, isMotionEnabled, scaledDuration } from './QualitySystem';
 
@@ -66,7 +66,7 @@ export class RewardPopupSystem {
     const titleStyle = quality.highContrast ? darkText(20) : titleText(20);
     const messageStyle = quality.highContrast ? { ...darkText(12), fontStyle: '800' } : bodyText(12);
     const title = scene.add.text(-76, -78, options.title, titleStyle).setOrigin(0, 0.5);
-    const body = scene.add.text(0, -10, options.message, { ...applyWrap(messageStyle, 282, 'center'), lineSpacing: 5 }).setOrigin(0.5);
+    const body = scene.add.text(0, -10, options.message, { ...applyNoticeBox(noticeText(12), 286, 72, 'center'), lineSpacing: 3 }).setOrigin(0.5);
     const caption = scene.add.text(0, 60, '보상은 프로필과 주간 미션 게이지에 안전하게 저장됩니다.', quality.highContrast ? darkText(9) : mutedText(9)).setOrigin(0.5);
     popup.add([shadow, bg]);
     if (resultStars) popup.add(resultStars);

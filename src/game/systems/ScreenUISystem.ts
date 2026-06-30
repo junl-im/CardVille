@@ -5,6 +5,7 @@ export const CARDVILLE_SCREEN_UI_REDESIGN_TAG = 'screen-ui-redesign-v158' as con
 export const CARDVILLE_TOUCH_TARGET_TAG = 'mobile-touch-target-v158' as const;
 export const CARDVILLE_PLAYFIELD_SAFEZONE_TAG = 'playfield-safezone-v158' as const;
 export const CARDVILLE_RESPONSIVE_SURFACE_TAG = 'responsive-surface-spread-v162' as const;
+export const CARDVILLE_NOTICE_FIT_TAG = 'notice-text-fit-v163' as const;
 
 export type MobileSceneFrame = {
   centerX: number;
@@ -45,10 +46,10 @@ export function drawMobileActionDock(scene: Phaser.Scene, y = 744, height = 112)
   const g = scene.add.graphics().setName(CARDVILLE_SCREEN_UI_REDESIGN_TAG);
   g.fillStyle(0x061127, 0.82);
   g.fillRoundedRect(l.visibleX + 12, y - height / 2, l.visibleWidth - 24, height, 24);
-  g.lineStyle(2, 0xffffff, 0.16);
+  g.lineStyle(2, 0xffffff, 0.08);
   g.strokeRoundedRect(l.visibleX + 12, y - height / 2, l.visibleWidth - 24, height, 24);
-  g.fillStyle(0xffffff, 0.06);
-  g.fillRoundedRect(l.visibleX + 26, y - height / 2 + 10, l.visibleWidth - 52, 12, 8);
+  g.fillStyle(0xffffff, 0.025);
+  g.fillRoundedRect(l.visibleX + 26, y - height / 2 + 10, l.visibleWidth - 52, 8, 8);
   return g;
 }
 
@@ -61,7 +62,7 @@ export function drawReadablePanel(scene: Phaser.Scene, x: number, y: number, wid
   const g = scene.add.graphics().setName(`${CARDVILLE_PLAYFIELD_SAFEZONE_TAG}:${RESPONSIVE_SURFACE_SPREAD_TAG}:${CARDVILLE_RESPONSIVE_SURFACE_TAG}`);
   g.fillStyle(color, alpha);
   g.fillRoundedRect(x - width / 2, y - height / 2, width, height, 28);
-  g.lineStyle(2, 0xffffff, 0.18);
+  g.lineStyle(2, 0xffffff, 0.10);
   g.strokeRoundedRect(x - width / 2, y - height / 2, width, height, 28);
   return g;
 }

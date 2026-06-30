@@ -3,6 +3,7 @@ import Phaser from 'phaser';
 export const UI_FONT_FAMILY = "'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', Arial, sans-serif";
 const RESOLUTION = Math.min(typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1, 2);
 export const CARDVILLE_MOBILE_TEXT_TAG = 'mobile-readable-text-v158' as const;
+export const CARDVILLE_NOTICE_TEXT_FIT_TAG = 'notice-text-fit-v163' as const;
 // Compatibility audit anchors retained for older checks: mobile-readable-text-v157, mobile-readable-text-v156, return prefs.largeText ? 1.34 : 1.17, size <= 9 ? 12, size <= 11 ? 14.
 export const CARDVILLE_PREVIOUS_MOBILE_TEXT_TAG = 'mobile-readable-text-v156' as const;
 
@@ -20,6 +21,22 @@ function mobileTextScale(): number {
 function readableSize(size: number): number {
   const minReadable = size <= 9 ? 13 : size <= 11 ? 15 : size <= 13 ? 17 : size;
   return Math.round(minReadable * mobileTextScale());
+}
+
+function noticeTextScale(): number {
+  if (typeof window === 'undefined') return 1.0;
+  try {
+    const raw = window.localStorage?.getItem('cardville.accessibility.v143');
+    const prefs = raw ? JSON.parse(raw) as { largeText?: boolean } : {};
+    return prefs.largeText ? 1.12 : 1.0;
+  } catch {
+    return 1.0;
+  }
+}
+
+function noticeReadableSize(size: number): number {
+  const minReadable = size <= 9 ? 10 : size <= 11 ? 12 : size <= 13 ? 14 : size;
+  return Math.round(minReadable * noticeTextScale());
 }
 
 type TextStyle = Phaser.Types.GameObjects.Text.TextStyle;
@@ -112,10 +129,41 @@ export function cardSmallText(size = 13): TextStyle {
   };
 }
 
+export function noticeText(size = 12): TextStyle {
+  return {
+    fontFamily: UI_FONT_FAMILY,
+    fontSize: `${noticeReadableSize(size)}px`,
+    fontStyle: '800',
+    color: '#f4fbff',
+    stroke: '#07142c',
+    strokeThickness: 2,
+    lineSpacing: 1,
+    shadow: {
+      offsetX: 0,
+      offsetY: 1,
+      color: '#000000',
+      blur: 4,
+      fill: true
+    },
+    resolution: RESOLUTION
+  };
+}
+
 export function applyWrap(style: TextStyle, width: number, align: 'left' | 'center' | 'right' = 'center'): TextStyle {
   return {
     ...style,
     align,
     wordWrap: { width, useAdvancedWrap: true }
+  };
+}
+
+export function applyNoticeBox(style: TextStyle, width: number, height: number, align: 'left' | 'center' | 'right' = 'center'): TextStyle {
+  return {
+    ...style,
+    align,
+    wordWrap: { width, useAdvancedWrap: true },
+    fixedWidth: width,
+    fixedHeight: height,
+    maxLines: Math.max(1, Math.floor(height / Math.max(12, Number.parseInt(String(style.fontSize ?? '12'), 10) + 3)))
   };
 }
