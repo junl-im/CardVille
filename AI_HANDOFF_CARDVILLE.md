@@ -1,8 +1,21 @@
 # CardVille AI Handoff
 
-## 현재 작업 기준: 1.0.71
+## 현재 작업 기준: 1.0.72
 
-현재 기준 버전은 1.0.71입니다.
+현재 기준 버전은 1.0.72입니다.
+
+
+### 1.0.72 IntroCleanSweep / 예전 로딩 UI 재발 방지 패스
+
+- 목적: 사용자가 본 큰 기본 플레이 마크와 영상 이후 로딩바처럼 보이는 표면을 다시 차단합니다.
+- 핵심 수정: `intro-preplay-shield-v172`로 실제 `playing` 이벤트 전까지 video를 poster shield 뒤에 숨기고, playing 이후에만 드러냅니다.
+- 핵심 수정: `intro-no-progress-surface-v172`로 native progress/timeline UI와 이전 Phaser 로딩바 경로를 다시 검사합니다.
+- 핵심 수정: `legacy-loading-code-quarantine-v172`로 예전 코드가 살아나 `로딩중`, `로딩 중`, `이동 중...`, `progressBar = this.add`, `controls` 속성 재부여가 생기는지 감시합니다.
+- 유지 규칙: 영상 최소 3초, 에셋 로딩이 더 길면 영상 반복, 로딩 문구/로딩바 없음, SVG 없음, 새 docs 문서 생성 금지.
+- 검증 호환 앵커: IntroNoOverlayPolish, IntroVideoHardVisible, IntroGuardUIPolish, IntroVideoMinFit, corner-sweep-v166, input-watchdog-v166, 새 docs 문서 생성 금지.
+- 산출물 이름: `CardVille_v1.0.72_IntroCleanSweep_Full.zip`, `CardVille_v1.0.72_IntroCleanSweep_Patch.zip`.
+- 이전 검증 호환 ZIP 앵커: CardVille_v1.0.72_IntroCleanSweep_Full.zip, CardVille_v1.0.72_IntroCleanSweep_Patch.zip, CardVille_v1.0.72_IntroNoOverlayPolish_Full.zip, CardVille_v1.0.72_IntroGuardUIPolish_Full.zip, CardVille_v1.0.72_IntroVideoHardVisible_Full.zip.
+
 이번 패스 이름은 **IntroNoOverlayPolish**입니다.
 
 ## 1.0.71 - IntroNoOverlayPolish

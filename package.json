@@ -1,15 +1,15 @@
 {
   "name": "cardville",
-  "version": "1.0.71",
+  "version": "1.0.72",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.71 hides native video play/progress UI, keeps a silent video-only startup for at least 3 seconds, and audits old loading surfaces.",
+  "description": "CardVille 1.0.72 keeps the intro video hidden behind a poster shield until real playback, blocks native play/progress UI, and audits legacy loading code revival.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "check:deploy": "node tools/check-deploy.mjs",
-    "verify": "npm run build && npm run check:intro-no-overlay-v171 && npm run check:intro-video-hard-visible-v170 && npm run check:intro-guard-ui-v169 && npm run check:intro-video-min-v168 && npm run check:intro-exit-copy-v167 && npm run check:corner-sweep-v166 && npm run check:patch-payload && npm run check:flow-fit && npm run check:flow-ui-v165 && npm run check:interaction-polish && npm run check:responsive-mobile-layout && npm run check:real-village-lobby && npm run check:lobby-screenshot-repair && npm run check:screen-playfield && npm run check:card-game-ui && npm run check:lobby-asset-placement && npm run check:lobby-art-ui && npm run check:lobby-boot-assets && npm run check:mobile-exit-layout && npm run check:screen-ui-stability && npm run check:webp-runtime && npm run check:navigation-guard && npm run check:full-individual-assets && npm run check:village-visuals && npm run check:exit-flow && npm run check:art-direction && npm run check:applied-assets && npm run check:premium-asset-select && npm run check:premium-buttons && npm run check:asset-runtime && npm run check:deploy && npm run check:brand && npm run check:assets && npm run check:premium-assets && npm run check:building-assets && npm run check:lobby-layout && npm run check:lobby-premium-fit && npm run check:content-engine && npm run check:progression && npm run check:shop-economy && npm run check:polish && npm run check:ci-coherence && npm run check:coach && npm run check:daily-mission && npm run check:weekly-mission && npm run check:reward-popup && npm run check:accessibility && npm run check:mission-route && npm run check:ui && npm run check:ux-safety && npm run check:content-scale && npm run check:english-school && npm run check:layout && npm run check:association && npm run check:security",
+    "verify": "npm run build && npm run check:intro-clean-sweep-v172 && npm run check:intro-no-overlay-v171 && npm run check:intro-video-hard-visible-v170 && npm run check:intro-guard-ui-v169 && npm run check:intro-video-min-v168 && npm run check:intro-exit-copy-v167 && npm run check:corner-sweep-v166 && npm run check:patch-payload && npm run check:flow-fit && npm run check:flow-ui-v165 && npm run check:interaction-polish && npm run check:responsive-mobile-layout && npm run check:real-village-lobby && npm run check:lobby-screenshot-repair && npm run check:screen-playfield && npm run check:card-game-ui && npm run check:lobby-asset-placement && npm run check:lobby-art-ui && npm run check:lobby-boot-assets && npm run check:mobile-exit-layout && npm run check:screen-ui-stability && npm run check:webp-runtime && npm run check:navigation-guard && npm run check:full-individual-assets && npm run check:village-visuals && npm run check:exit-flow && npm run check:art-direction && npm run check:applied-assets && npm run check:premium-asset-select && npm run check:premium-buttons && npm run check:asset-runtime && npm run check:deploy && npm run check:brand && npm run check:assets && npm run check:premium-assets && npm run check:building-assets && npm run check:lobby-layout && npm run check:lobby-premium-fit && npm run check:content-engine && npm run check:progression && npm run check:shop-economy && npm run check:polish && npm run check:ci-coherence && npm run check:coach && npm run check:daily-mission && npm run check:weekly-mission && npm run check:reward-popup && npm run check:accessibility && npm run check:mission-route && npm run check:ui && npm run check:ux-safety && npm run check:content-scale && npm run check:english-school && npm run check:layout && npm run check:association && npm run check:security",
     "check:brand": "node tools/check-brand.mjs",
     "check:ui": "node tools/check-ui.mjs",
     "check:layout": "node tools/check-layout.mjs",
@@ -63,7 +63,8 @@
     "check:intro-video-min-v168": "node tools/check-intro-video-min-v168.mjs",
     "check:intro-guard-ui-v169": "node tools/check-intro-guard-ui-v169.mjs",
     "check:intro-video-hard-visible-v170": "node tools/check-intro-video-hard-visible-v170.mjs",
-    "check:intro-no-overlay-v171": "node tools/check-intro-no-overlay-v171.mjs"
+    "check:intro-no-overlay-v171": "node tools/check-intro-no-overlay-v171.mjs",
+    "check:intro-clean-sweep-v172": "node tools/check-intro-clean-sweep-v172.mjs"
   },
   "dependencies": {
     "phaser": "3.90.0"

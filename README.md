@@ -1,6 +1,17 @@
-# CardVille 1.0.71
+# CardVille 1.0.72
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
+
+## 1.0.72 업데이트 내역
+
+- **IntroCleanSweep** 패스입니다. 영상이 실제 재생되기 전에는 video를 poster shield 뒤에 숨겨, 모바일/인앱 브라우저의 큰 기본 플레이 마크가 순간적으로 보이지 않게 했습니다.
+- `intro-preplay-shield-v172`: 시작 버튼 터치 직후 poster shield를 최상단에 유지하고, `playing` 이벤트 이후에만 video를 드러냅니다.
+- `intro-no-progress-surface-v172`: WebKit media controls의 타임라인/progress UI와 이전 Phaser 로딩바 재생성 경로를 다시 차단했습니다.
+- `legacy-loading-code-quarantine-v172`: 예전 로딩 문구/로딩바/기본 컨트롤 코드가 다시 살아나는지 검증합니다.
+- 기존 `intro-no-native-video-ui-v171`, `intro-hard-visible-v170`, `intro-min-3s-video-v168`, `video-only-loading-v168` 정책은 유지합니다. 영상은 최소 3초 유지되고, 로딩이 더 길면 계속 반복됩니다.
+- 검증 호환 앵커: IntroNoOverlayPolish, IntroVideoHardVisible, IntroGuardUIPolish, IntroVideoMinFit, corner-sweep-v166, safe-area-copy-clamp-v166.
+- 검증 호환 ZIP 앵커: CardVille_v1.0.72_IntroCleanSweep_Full.zip, CardVille_v1.0.72_IntroCleanSweep_Patch.zip, CardVille_v1.0.72_IntroNoOverlayPolish_Full.zip, CardVille_v1.0.72_IntroGuardUIPolish_Full.zip, CardVille_v1.0.72_IntroVideoHardVisible_Full.zip.
+- 최종 ZIP 명명 규칙: `CardVille_v1.0.72_IntroCleanSweep_Full.zip`, `CardVille_v1.0.72_IntroCleanSweep_Patch.zip`.
 
 ## 1.0.71 업데이트 내역
 

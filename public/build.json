@@ -1,13 +1,13 @@
 {
-  "name": "IntroNoOverlayPolish",
-  "version": "1.0.71",
-  "mode": "intro-no-native-video-ui-v171-intro-playmark-shield-v171-intro-no-loading-surface-v171-intro-hard-visible-v170-intro-min-3s-video-v168",
+  "name": "IntroCleanSweep",
+  "version": "1.0.72",
+  "mode": "intro-preplay-shield-v172-intro-no-progress-surface-v172-legacy-loading-code-quarantine-v172-intro-no-native-video-ui-v171-intro-no-loading-surface-v171-intro-min-3s-video-v168-video-only-loading-v168-intro-started-at-zero-guard-v169-intro-touch-prime-v169-corner-sweep-v166-safe-area-copy-clamp-v166-input-watchdog-v166-flow-fit-ui-v164-flow-ui-v165-IntroVideoMinFit-IntroGuardUIPolish-IntroNoOverlayPolish-IntroVideoHardVisible",
   "svg": "disabled",
   "pwa": "disabled",
-  "notes": "The startup surface is video-only for at least 3 seconds. Native play buttons, video controls, progress/timeline UI, and old loading bars/copy are hidden or guarded.",
-  "label": "No native video overlay and no loading surface",
-  "description": "Game start displays the intro video without browser play marks or progress bars, holds it for at least 3 seconds, and keeps it until assets are ready.",
-  "assetVersion": "1.0.71",
-  "previousRepairName": "IntroVideoHardVisible / IntroGuardUIPolish / IntroVideoMinFit / CornerSweepStability",
-  "compatibilityTags": "IntroVideoHardVisible intro-hard-visible-v170 IntroVideoMinFit IntroGuardUIPolish corner-sweep-v166 flow-fit-ui-v164 flow-ui-v165"
+  "notes": "The intro video stays behind a poster shield until actual playback so native play marks cannot flash; generic loading bars/copy and old loading surfaces are quarantined.",
+  "label": "No native play mark, no progress bar, no legacy loading surface",
+  "description": "Game start displays a silent video-only intro with a preplay shield, holds for at least 3 seconds, and blocks old loading UI revival.",
+  "assetVersion": "1.0.72",
+  "previousRepairName": "IntroNoOverlayPolish / IntroVideoHardVisible / IntroGuardUIPolish / IntroVideoMinFit",
+  "compatibilityTags": "IntroVideoHardVisible intro-hard-visible-v170 IntroVideoMinFit IntroGuardUIPolish corner-sweep-v166 flow-fit-ui-v164 flow-ui-v165 intro-preplay-shield-v172 intro-no-progress-surface-v172 legacy-loading-code-quarantine-v172 intro-no-loading-surface-v171 intro-min-3s-video-v168 video-only-loading-v168 intro-started-at-zero-guard-v169 intro-touch-prime-v169 safe-area-copy-clamp-v166 input-watchdog-v166 IntroNoOverlayPolish"
 }

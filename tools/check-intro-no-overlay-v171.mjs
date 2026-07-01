@@ -31,7 +31,7 @@ const walk = (dir) => {
 
 const pkg = JSON.parse(read('package.json'));
 const build = JSON.parse(read('public/build.json'));
-assert(pkg.version === '1.0.71', `expected package version 1.0.71, got ${pkg.version}`);
+assert(pkg.version === '1.0.72', `expected package version 1.0.72, got ${pkg.version}`);
 assert(build.version === pkg.version, `build version ${build.version} != package ${pkg.version}`);
 assert(pkg.scripts.verify.includes('check:intro-no-overlay-v171'), 'verify must include check:intro-no-overlay-v171');
 assert(pkg.scripts['check:intro-no-overlay-v171'] === 'node tools/check-intro-no-overlay-v171.mjs', 'check:intro-no-overlay-v171 script mismatch');
@@ -39,9 +39,9 @@ assert(exists('public/assets/video/cardville_intro_loading.mp4'), 'intro mp4 mus
 assert(exists('public/assets/video/cardville_intro_poster.jpg'), 'intro poster shield image must exist');
 
 include('index.html', [
-  "window.__CARDVILLE_VERSION__ = '1.0.71'",
-  "new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.71', document.baseURI).href",
-  "new URL('./assets/video/cardville_intro_poster.jpg?v=1.0.71', document.baseURI).href",
+  "window.__CARDVILLE_VERSION__ = '1.0.72'",
+  "new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.72', document.baseURI).href",
+  "new URL('./assets/video/cardville_intro_poster.jpg?v=1.0.72', document.baseURI).href",
   'cardville-intro-video-shield',
   'intro-no-native-video-ui-v171',
   'intro-playmark-shield-v171',
@@ -102,10 +102,10 @@ include('src/styles/index.css', [
   '::-webkit-media-controls-timeline',
   'intro-no-native-video-ui-v171'
 ]);
-include('public/build.json', ['"version": "1.0.71"', 'IntroNoOverlayPolish', 'intro-no-native-video-ui-v171', 'intro-no-loading-surface-v171']);
-include('public/health.html', ['version 1.0.71', 'IntroNoOverlayPolish', 'intro-no-native-video-ui-v171', 'intro-playmark-shield-v171']);
-include('README.md', ['# CardVille 1.0.71', '## 1.0.71 업데이트 내역', 'IntroNoOverlayPolish', 'CardVille_v1.0.71_IntroNoOverlayPolish_Full.zip']);
-include('AI_HANDOFF_CARDVILLE.md', ['현재 기준 버전은 1.0.71', 'IntroNoOverlayPolish', 'intro-no-native-video-ui-v171', 'CardVille_v1.0.71_IntroNoOverlayPolish_Full.zip']);
+include('public/build.json', ['"version": "1.0.72"', 'IntroNoOverlayPolish', 'intro-no-native-video-ui-v171', 'intro-no-loading-surface-v171']);
+include('public/health.html', ['version 1.0.72', 'IntroNoOverlayPolish', 'intro-no-native-video-ui-v171', 'intro-playmark-shield-v171']);
+include('README.md', ['# CardVille 1.0.72', '## 1.0.72 업데이트 내역', 'IntroNoOverlayPolish', 'CardVille_v1.0.72_IntroNoOverlayPolish_Full.zip']);
+include('AI_HANDOFF_CARDVILLE.md', ['현재 기준 버전은 1.0.72', 'IntroNoOverlayPolish', 'intro-no-native-video-ui-v171', 'CardVille_v1.0.72_IntroNoOverlayPolish_Full.zip']);
 
 for (const file of walk('src').filter((name) => /\.(ts|tsx|js|mjs)$/.test(name))) {
   const text = read(file);
