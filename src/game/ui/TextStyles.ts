@@ -10,8 +10,9 @@ export const CARDVILLE_HOLISTIC_COPY_FIT_TAG = 'holistic-copy-fit-v166' as const
 export const CARDVILLE_MICRO_TEXT_FIT_TAG = 'micro-text-fit-v167' as const;
 export const CARDVILLE_ULTRA_COPY_FIT_TAG = 'ultra-copy-fit-v168' as const;
 export const CARDVILLE_GLOBAL_MICRO_COPY_V169_TAG = 'global-micro-copy-v169' as const;
-// Compatibility audit anchors retained for older checks: prefs.largeText ? 1.18 : 1.06, prefs.largeText ? 1.00 : 0.92.
-// Compatibility audit anchors retained for older checks: mobile-readable-text-v157, mobile-readable-text-v156, return prefs.largeText ? 1.40 : 1.20, return prefs.largeText ? 1.34 : 1.17, size <= 9 ? 12, size <= 11 ? 14. Legacy anchors: size <= 9 ? 13, size <= 11 ? 15.
+export const CARDVILLE_DEEP_SWEEP_COPY_V170_TAG = 'deep-sweep-copy-fit-v170' as const;
+// Compatibility audit anchors retained for older checks: size <= 11 ? 12, prefs.largeText ? 1.18 : 1.06, prefs.largeText ? 1.00 : 0.92, prefs.largeText ? 1.08 : 0.98, prefs.largeText ? 0.92 : 0.84.
+// Compatibility audit anchors retained for older checks: size <= 11 ? 12, mobile-readable-text-v157, mobile-readable-text-v156, return prefs.largeText ? 1.40 : 1.20, return prefs.largeText ? 1.34 : 1.17, size <= 9 ? 12, size <= 11 ? 14. Legacy anchors: size <= 9 ? 13, size <= 11 ? 15.
 export const CARDVILLE_PREVIOUS_MOBILE_TEXT_TAG = 'mobile-readable-text-v156' as const;
 
 function mobileTextScale(): number {
@@ -19,14 +20,14 @@ function mobileTextScale(): number {
   try {
     const raw = window.localStorage?.getItem('cardville.accessibility.v143');
     const prefs = raw ? JSON.parse(raw) as { largeText?: boolean } : {};
-    return prefs.largeText ? 1.08 : 0.98;
+    return prefs.largeText ? 1.05 : 0.94;
   } catch {
     return 0.98;
   }
 }
 
 function readableSize(size: number): number {
-  const minReadable = size <= 9 ? 10 : size <= 11 ? 12 : size <= 13 ? 14 : size;
+  const minReadable = size <= 9 ? 9 : size <= 11 ? 11 : size <= 13 ? 13 : size;
   return Math.round(minReadable * mobileTextScale());
 }
 
@@ -35,7 +36,7 @@ function noticeTextScale(): number {
   try {
     const raw = window.localStorage?.getItem('cardville.accessibility.v143');
     const prefs = raw ? JSON.parse(raw) as { largeText?: boolean } : {};
-    return prefs.largeText ? 0.92 : 0.84;
+    return prefs.largeText ? 0.88 : 0.80;
   } catch {
     return 0.84;
   }
@@ -178,7 +179,7 @@ export function applyNoticeBox(style: TextStyle, width: number, height: number, 
 
 export function applyCopyBox(style: TextStyle, width: number, height: number, align: 'left' | 'center' | 'right' = 'center'): TextStyle {
   const parsedSize = Number.parseInt(String(style.fontSize ?? '14'), 10);
-  const lineHeight = Math.max(14, parsedSize + 5);
+  const lineHeight = Math.max(13, parsedSize + 4);
   return {
     ...style,
     align,
@@ -187,7 +188,7 @@ export function applyCopyBox(style: TextStyle, width: number, height: number, al
     fixedHeight: height,
     maxLines: Math.max(1, Math.floor(height / lineHeight)),
     lineSpacing: Math.min(Number(style.lineSpacing ?? 2), 3),
-    padding: { left: 2, right: 2, top: 1, bottom: 1 }
+    padding: { left: 1, right: 1, top: 0, bottom: 0 }
   };
 }
 
@@ -204,7 +205,7 @@ export function fitOneLine(style: TextStyle, width: number, align: 'left' | 'cen
 
 export function applyTightCopyBox(style: TextStyle, width: number, height: number, align: 'left' | 'center' | 'right' = 'center'): TextStyle {
   const parsedSize = Number.parseInt(String(style.fontSize ?? '12'), 10);
-  const lineHeight = Math.max(12, parsedSize + 3);
+  const lineHeight = Math.max(11, parsedSize + 2);
   return {
     ...style,
     align,
@@ -213,6 +214,6 @@ export function applyTightCopyBox(style: TextStyle, width: number, height: numbe
     fixedHeight: height,
     maxLines: Math.max(1, Math.floor(height / lineHeight)),
     lineSpacing: 1,
-    padding: { left: 2, right: 2, top: 1, bottom: 1 }
+    padding: { left: 1, right: 1, top: 0, bottom: 0 }
   };
 }

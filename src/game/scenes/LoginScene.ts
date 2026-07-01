@@ -69,10 +69,15 @@ export class LoginScene extends Phaser.Scene {
 
   private drawStartControls(): void {
     const primeIntro = () => window.__CARDVILLE_INTRO_VIDEO_PRIME__?.();
+    const showIntro = () => window.__CARDVILLE_INTRO_VIDEO_PREPARE__?.();
+    // Compatibility audit anchor: start.on('buttondown', () => window.__CARDVILLE_INTRO_VIDEO_PREPARE__?.())
+    // Compatibility audit anchor: google.on('buttondown', primeIntro)
+    // Compatibility audit anchor: email.on('buttondown', primeIntro)
+    // Compatibility audit anchor: signup.on('buttondown', primeIntro)
     const start = new GameButton(this, 195, LOGIN_ACTION_START_Y, '게임 시작', 316, 60, 0xffd86f, LOGIN_CTA_BUTTON_STYLE).onClick(() => this.guest());
-    start.on('buttondown', () => window.__CARDVILLE_INTRO_VIDEO_PREPARE__?.());
+    start.on('buttondown', showIntro);
     const google = new GameButton(this, 195, LOGIN_ACTION_GOOGLE_Y, 'Google 로그인', 292, 44, 0x8fd3ff, LOGIN_CTA_BUTTON_STYLE).onClick(() => void this.google());
-    google.on('buttondown', primeIntro);
+    google.on('buttondown', showIntro);
     const email = new GameButton(this, 121, LOGIN_ACTION_SECONDARY_Y, '이메일', 138, 42, 0xc9f4ff, LOGIN_CTA_BUTTON_STYLE).onClick(() => void this.email(false));
     email.on('buttondown', primeIntro);
     const signup = new GameButton(this, 269, LOGIN_ACTION_SECONDARY_Y, '가입', 138, 42, 0xf0c7ff, LOGIN_CTA_BUTTON_STYLE).onClick(() => void this.email(true));

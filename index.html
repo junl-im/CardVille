@@ -34,14 +34,15 @@
       }
     </script>
     <script>
-      window.__CARDVILLE_VERSION__ = '1.0.69';
+      window.__CARDVILLE_VERSION__ = '1.0.70';
       window.__CARDVILLE_READY__ = false;
       window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = 0;
       window.__CARDVILLE_INTRO_TOUCH_PRIME_TAG__ = 'intro-touch-prime-v169';
+      window.__CARDVILLE_INTRO_HARD_VISIBLE_TAG__ = 'intro-hard-visible-v170';
 
       window.__CARDVILLE_INTRO_VIDEO_PRIME__ = function(){
         var id = 'cardville-intro-video';
-        var src = new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.69', document.baseURI).href;
+        var src = new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.70', document.baseURI).href;
         var old = document.getElementById(id);
         if (old) return old;
         var video = document.createElement('video');
@@ -49,7 +50,7 @@
         video.src = src;
         video.muted = true;
         video.defaultMuted = true;
-        video.autoplay = false;
+        video.autoplay = true;
         video.playsInline = true;
         video.loop = true;
         video.preload = 'auto';
@@ -60,6 +61,7 @@
         video.setAttribute('data-cardville-intro-touch-prime-v169', 'true');
         video.setAttribute('data-cardville-min-intro-ms-v168', '3000');
         video.setAttribute('data-cardville-video-only-loading-v168', 'true');
+        video.setAttribute('data-cardville-intro-hard-visible-v170', 'true');
         video.style.position = 'fixed';
         video.style.inset = '0';
         video.style.width = '100vw';
@@ -69,16 +71,23 @@
         video.style.zIndex = '2147482000';
         video.style.pointerEvents = 'none';
         video.style.background = '#071126';
-        video.style.opacity = '0';
-        video.style.display = 'none';
+        video.style.opacity = '1';
+        video.style.display = 'block';
+        video.style.visibility = 'visible';
         document.body.appendChild(video);
+        document.documentElement.classList.add('cardville-intro-hard-visible-v170');
+        if (!window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ || window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ <= 0) {
+          window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = Date.now();
+        }
+        var revealPrime = function(){ video.style.display = 'block'; video.style.visibility = 'visible'; video.style.opacity = '1'; };
         try { video.load(); } catch(e) {}
+        try { video.play().then(revealPrime).catch(function(){ revealPrime(); }); } catch(e) { revealPrime(); }
         return video;
       };
       window.__CARDVILLE_INTRO_VIDEO_PREPARE__ = function(){
         var video = window.__CARDVILLE_INTRO_VIDEO_PRIME__ ? window.__CARDVILLE_INTRO_VIDEO_PRIME__() : null;
         if (!video) return null;
-        var src = new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.69', document.baseURI).href;
+        var src = new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.70', document.baseURI).href;
         if (video.getAttribute('src') !== src && video.currentSrc !== src) video.setAttribute('src', src);
         if (!window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ || window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ <= 0) {
           window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = Date.now();
@@ -94,9 +103,11 @@
         video.setAttribute('data-cardville-intro-touch-prime-v169', 'true');
         video.setAttribute('data-cardville-started-at-zero-guard-v169', 'true');
         video.style.display = 'block';
+        video.style.visibility = 'visible';
         video.style.opacity = '1';
         video.style.background = '#071126';
-        var reveal = function(){ video.style.display = 'block'; video.style.opacity = '1'; };
+        document.documentElement.classList.add('cardville-intro-hard-visible-v170');
+        var reveal = function(){ video.style.display = 'block'; video.style.visibility = 'visible'; video.style.opacity = '1'; };
         video.addEventListener('loadeddata', reveal, { once: true });
         video.addEventListener('canplay', reveal, { once: true });
         video.addEventListener('playing', reveal, { once: true });
@@ -107,6 +118,7 @@
       window.__CARDVILLE_INTRO_VIDEO_DONE__ = function(){
         var video = document.getElementById('cardville-intro-video');
         if (video) video.remove();
+        document.documentElement.classList.remove('cardville-intro-hard-visible-v170');
         window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = 0;
       };
       window.__CARDVILLE_BOOT_OK__ = function(){
@@ -114,7 +126,7 @@
         var el = document.getElementById('boot-fallback');
         if (el) el.remove();
       };
-      // 1.0.69: no generic loading copy on boot; no generic loading copy/bar on boot; the touch-primed opening video is forced visible for at least 3 seconds, then remains until assets are ready.
+      // 1.0.70: no generic loading copy on boot; no generic loading copy/bar on boot; the touch-primed opening video is hard-visible from the user tap for at least 3 seconds, then remains until assets are ready.
     </script>
     <script type="module" src="/src/main.ts"></script>
   </body>

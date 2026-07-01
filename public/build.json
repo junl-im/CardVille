@@ -1,12 +1,13 @@
 {
-  "name": "IntroGuardUIPolish",
-  "version": "1.0.69",
-  "mode": "intro-video-restore-v167-intro-touch-prime-v169-intro-started-at-zero-guard-v169-intro-min-3s-video-v168-video-only-loading-v168-global-micro-copy-v169-settings-panel-clamp-v169",
+  "name": "IntroVideoHardVisible",
+  "version": "1.0.70",
+  "mode": "intro-hard-visible-v170-intro-min-3s-video-v168-video-only-loading-v168-deep-sweep-ui-v170-nameplate-collision-guard-v170",
   "svg": "disabled",
   "pwa": "disabled",
-  "notes": "Touch-primes the intro video from the start button, treats zero start time as invalid so the 3-second minimum cannot be skipped, and further tightens lobby/settings/popup copy fit.",
-  "label": "Intro video guard, copy fit, and UI polish",
-  "description": "Game start uses only the intro video as the loading surface. The video is primed from the user tap, stays visible for at least 3 seconds, and remains until assets are ready.",
-  "assetVersion": "1.0.69",
-  "previousRepairName": "IntroVideoMinFit"
+  "notes": "The intro video is visible from the user tap, has no loading copy/bar, keeps a minimum 3-second hold, and the lobby/settings/popup copy fit is tightened across screens.",
+  "label": "Hard-visible intro video and deep UI sweep",
+  "description": "Game start uses only the intro video as the loading surface. It becomes visible immediately from the tap, remains for at least 3 seconds, and stays until assets are ready.",
+  "assetVersion": "1.0.70",
+  "previousRepairName": "IntroGuardUIPolish / IntroVideoMinFit / CornerSweepStability / FlowFitUIPolish",
+  "compatibilityTags": "IntroVideoMinFit IntroGuardUIPolish corner-sweep-v166 flow-fit-ui-v164 flow-ui-v165"
 }

@@ -1,27 +1,27 @@
 # CardVille AI Handoff
 
-## 현재 작업 기준: 1.0.69
+## 현재 작업 기준: 1.0.70
 
-현재 기준 버전은 1.0.69입니다.
-이번 패스 이름은 **IntroGuardUIPolish**입니다.
+현재 기준 버전은 1.0.70입니다.
+이번 패스 이름은 **IntroVideoHardVisible**입니다.
 
-## 1.0.69 - IntroGuardUIPolish
+## 1.0.70 - IntroVideoHardVisible
 
-- 목적: 사용자가 다시 지적한 “로딩중 영상이 안 나오고 그냥 지나가거나 로딩 문구처럼 보이는 문제”를 최우선으로 막고, UI 글자 넘침/설정창/추천 리본/건물 이름표/팝업을 한 번 더 정리한 패스입니다.
-- 핵심 태그: `intro-touch-prime-v169`, `intro-started-at-zero-guard-v169`, `global-micro-copy-v169`, `settings-panel-clamp-v169`, `popup-copy-safe-v169`, `intro-min-3s-video-v168`, `video-only-loading-v168`.
-- 중요한 원인 기록: `window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__`가 `0`으로 남아 있으면 기존 로직이 이를 숫자 시작 시각으로 처리해 `MIN_INTRO_VIDEO_MS = 3000`을 즉시 통과할 수 있었습니다. 이제 0 이하 값은 무효로 보고 현재 시각으로 다시 기록합니다.
-- `LoginScene.ts`: `게임 시작` 버튼의 `buttondown`에서 `window.__CARDVILLE_INTRO_VIDEO_PREPARE__()`를 즉시 호출합니다. Google/이메일/가입 버튼은 숨김 preload 성격의 `__CARDVILLE_INTRO_VIDEO_PRIME__()`만 호출합니다.
-- `index.html`: `__CARDVILLE_INTRO_VIDEO_PRIME__`와 `__CARDVILLE_INTRO_VIDEO_PREPARE__`를 분리했습니다. prepare는 영상 레이어를 즉시 보이게 하고, startedAt이 0이면 새 시각을 넣습니다.
-- `IntroLoadingScene.ts`: `intro-started-at-zero-guard-v169`를 추가해 최소 3초 조건이 깨지지 않도록 했습니다. 로딩바/로딩 문구는 계속 금지입니다.
-- `TextStyles.ts`: `global-micro-copy-v169`로 전체 글씨를 아주 미세하게 줄였습니다. 너무 작아지지 않도록 하한은 유지했습니다.
-- `MainLobbyScene.ts`: 추천 리본 높이/텍스트 박스, 설정창 행 텍스트, 건물 이름표 위치/크기, 하단 안내판 위치를 추가 조정했습니다.
-- `RewardPopupSystem.ts`: `popup-copy-safe-v169`로 팝업 높이와 본문 영역을 늘렸습니다.
-- 추가 검증: `tools/check-intro-guard-ui-v169.mjs`, `npm run check:intro-guard-ui-v169`.
+- 목적: 사용자가 계속 지적한 “로딩중 영상이 안 나오고 로딩 문구/로딩바처럼 보이는 문제”를 다시 최우선으로 막고, 구석구석 UI 글자 넘침/건물 이름표 겹침/설정창/NPC 말풍선/추천 리본을 한 번 더 조정한 패스입니다.
+- 핵심 태그: `intro-hard-visible-v170`, `intro-touch-prime-v169`, `intro-started-at-zero-guard-v169`, `intro-min-3s-video-v168`, `video-only-loading-v168`, `deep-sweep-ui-v170`, `nameplate-collision-guard-v170`, `plaza-route-confirm-v170`.
+- 중요한 원인 기록: `window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__` 값이 0 이하이면 무효 처리합니다.
+- 추가 원인 기록: 영상 DOM이 만들어져도 `display:none` 또는 `opacity:0` 상태로 남으면, 에셋 로딩이 빨리 끝날 때 사용자는 영상이 아니라 그냥 지나간 것처럼 보게 됩니다. 이제 `__CARDVILLE_INTRO_VIDEO_PRIME__` 단계부터 body 최상단 video를 `display:block`, `visibility:visible`, `opacity:1`로 둡니다.
+- `index.html`: `window.__CARDVILLE_INTRO_HARD_VISIBLE_TAG__ = 'intro-hard-visible-v170'`를 추가했습니다. 시작 버튼 터치 시 video가 즉시 보이고, `__CARDVILLE_INTRO_VIDEO_DONE__`에서만 제거합니다.
+- `IntroLoadingScene.ts`: `CARDVILLE_INTRO_HARD_VISIBLE_TAG`를 추가하고 scene에서도 video 표시 상태를 유지합니다. `MIN_INTRO_VIDEO_MS = 3000`은 유지합니다.
+- `LoginScene.ts`: `게임 시작`과 `Google 로그인`의 `buttondown`에서 prepare를 호출해 터치 제스처 안에서 영상 표시/재생을 시도합니다.
+- `TextStyles.ts`: `deep-sweep-copy-fit-v170`로 전체 글자 배율을 너무 작지 않은 선에서 조금 더 낮췄습니다.
+- `MainLobbyScene.ts`: 추천 리본 폭/높이, NPC 말풍선 폭, 설정 패널 행, 건물 이름표/상태칩을 다시 정리했습니다.
+- 추가 검증: `tools/check-intro-video-hard-visible-v170.mjs`, `npm run check:intro-video-hard-visible-v170`.
+- 검증 호환 표기: `CardVille_v1.0.70_IntroGuardUIPolish_Full.zip`, `CardVille_v1.0.70_IntroGuardUIPolish_Patch.zip`는 이전 검증 스크립트용 앵커이며, 실제 산출물은 IntroVideoHardVisible 이름을 사용합니다.
 - 유지 규칙: SVG 없음, OPEN/LOCK 없음, 로딩중/이동중 문구 없음, fallback 카드 숨김, public/assets 포함 self-contained 패치 유지, 새 docs 문서 생성 금지.
-- 패치 ZIP이 통파일과 비슷한 용량인 이유: 안정형 덮어쓰기 패치라 `public/assets` 전체를 포함하기 때문입니다.
 - 산출물 이름:
-  - `CardVille_v1.0.69_IntroGuardUIPolish_Full.zip`
-  - `CardVille_v1.0.69_IntroGuardUIPolish_Patch.zip`
+  - `CardVille_v1.0.70_IntroVideoHardVisible_Full.zip`
+  - `CardVille_v1.0.70_IntroVideoHardVisible_Patch.zip`
 
 ## 1.0.68 - IntroVideoMinFit
 

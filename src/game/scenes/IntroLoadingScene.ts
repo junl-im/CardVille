@@ -12,6 +12,7 @@ export const CARDVILLE_INTRO_MIN_VIDEO_TAG = 'intro-min-3s-video-v168' as const;
 export const CARDVILLE_VIDEO_ONLY_LOADING_TAG = 'video-only-loading-v168' as const;
 export const CARDVILLE_INTRO_TOUCH_PRIME_TAG = 'intro-touch-prime-v169' as const;
 export const CARDVILLE_INTRO_STARTED_AT_GUARD_TAG = 'intro-started-at-zero-guard-v169' as const;
+export const CARDVILLE_INTRO_HARD_VISIBLE_TAG = 'intro-hard-visible-v170' as const;
 const MIN_INTRO_VIDEO_MS = 3000;
 
 declare global {
@@ -138,6 +139,7 @@ export class IntroLoadingScene extends Phaser.Scene {
     video.setAttribute('data-cardville-video-only-loading-v168', CARDVILLE_VIDEO_ONLY_LOADING_TAG);
     video.setAttribute('data-cardville-intro-touch-prime-v169', CARDVILLE_INTRO_TOUCH_PRIME_TAG);
     video.setAttribute('data-cardville-started-at-zero-guard-v169', CARDVILLE_INTRO_STARTED_AT_GUARD_TAG);
+    video.setAttribute('data-cardville-intro-hard-visible-v170', CARDVILLE_INTRO_HARD_VISIBLE_TAG);
     video.setAttribute('data-cardville-hidden-until-playing', 'false');
     video.style.position = 'fixed';
     video.style.inset = '0';
@@ -149,11 +151,18 @@ export class IntroLoadingScene extends Phaser.Scene {
     video.style.pointerEvents = 'none';
     video.style.background = '#071126';
     video.style.opacity = '1';
+    video.style.display = 'block';
+    video.style.visibility = 'visible';
     video.style.transition = 'opacity 120ms ease';
+    if (typeof document !== 'undefined') document.documentElement.classList.add(CARDVILLE_INTRO_HARD_VISIBLE_TAG);
     this.videoEl = video;
 
     const revealVideo = () => {
-      if (this.videoEl === video) video.style.opacity = '1';
+      if (this.videoEl === video) {
+        video.style.display = 'block';
+        video.style.visibility = 'visible';
+        video.style.opacity = '1';
+      }
     };
     const keepSilentFallback = () => {
       // Do not remove the surface on mobile autoplay errors; keep the silent video layer

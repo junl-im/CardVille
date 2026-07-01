@@ -30,16 +30,16 @@ const walk = (dir) => {
 };
 
 const pkg = JSON.parse(read('package.json'));
-assert(pkg.version === '1.0.69', `expected package version 1.0.69, got ${pkg.version}`);
+assert(pkg.version === '1.0.70', `expected package version 1.0.70, got ${pkg.version}`);
 assert(pkg.scripts.verify.includes('check:intro-guard-ui-v169'), 'verify must include check:intro-guard-ui-v169');
 assert(pkg.scripts['check:intro-guard-ui-v169'] === 'node tools/check-intro-guard-ui-v169.mjs', 'check:intro-guard-ui-v169 script mismatch');
 assert(exists('public/assets/video/cardville_intro_loading.mp4'), 'intro video file missing');
 
 include('index.html', [
-  "window.__CARDVILLE_VERSION__ = '1.0.69'",
+  "window.__CARDVILLE_VERSION__ = '1.0.70'",
   '__CARDVILLE_INTRO_VIDEO_PRIME__',
   '__CARDVILLE_INTRO_VIDEO_PREPARE__',
-  "new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.69', document.baseURI).href",
+  "new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.70', document.baseURI).href",
   'data-cardville-intro-touch-prime-v169',
   'data-cardville-started-at-zero-guard-v169',
   'video.style.display = \'block\'',
@@ -54,8 +54,8 @@ exclude('index.html', [
 ]);
 
 include('src/game/scenes/LoginScene.ts', [
-  "start.on('buttondown', () => window.__CARDVILLE_INTRO_VIDEO_PREPARE__?.())",
-  "google.on('buttondown', primeIntro)",
+  "start.on('buttondown', showIntro)",
+  "google.on('buttondown', showIntro)",
   "email.on('buttondown', primeIntro)",
   "signup.on('buttondown', primeIntro)",
   "this.status.setText('')"
@@ -88,9 +88,9 @@ include('src/game/scenes/MainLobbyScene.ts', [
   'intro-guard-ui-polish-v169',
   'global-micro-copy-v169',
   'settings-panel-clamp-v169',
-  'applyTightCopyBox(goldText(7)',
-  'compactText(building.title, 6), goldText(9)',
-  'const panelH = 336',
+  'applyTightCopyBox(goldText(6)',
+  'compactText(building.title, 6), goldText(8)',
+  'const panelH = 354',
   '뒤로가기 한 번: 확인 · 한 번 더: 닫기 시도',
   'applyTightCopyBox(bodyText(11), panelW - 24, 28)'
 ]);
@@ -107,10 +107,10 @@ include('src/game/systems/RewardPopupSystem.ts', [
   'noticeText(9)',
   '128'
 ]);
-include('public/build.json', ['"version": "1.0.69"', 'IntroGuardUIPolish', 'intro-touch-prime-v169']);
-include('public/health.html', ['version 1.0.69', 'IntroGuardUIPolish', 'intro-started-at-zero-guard-v169']);
-include('README.md', ['# CardVille 1.0.69', '## 1.0.69 업데이트 내역', 'intro-touch-prime-v169', 'CardVille_v1.0.69_IntroGuardUIPolish_Full.zip']);
-include('AI_HANDOFF_CARDVILLE.md', ['현재 기준 버전은 1.0.69', 'IntroGuardUIPolish', 'window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__', 'CardVille_v1.0.69_IntroGuardUIPolish_Full.zip']);
+include('public/build.json', ['"version": "1.0.70"', 'IntroVideoHardVisible', 'intro-hard-visible-v170']);
+include('public/health.html', ['version 1.0.70', 'IntroVideoHardVisible', 'intro-started-at-zero-guard-v169']);
+include('README.md', ['# CardVille 1.0.70', '## 1.0.70 업데이트 내역', 'intro-hard-visible-v170', 'CardVille_v1.0.70_IntroVideoHardVisible_Full.zip']);
+include('AI_HANDOFF_CARDVILLE.md', ['현재 기준 버전은 1.0.70', 'IntroVideoHardVisible', 'window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__', 'CardVille_v1.0.70_IntroVideoHardVisible_Full.zip']);
 
 for (const file of walk('src').filter((name) => /\.(ts|tsx|js|mjs)$/.test(name))) {
   const text = read(file);
