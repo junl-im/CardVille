@@ -1,27 +1,26 @@
 # CardVille AI Handoff
 
-## 현재 작업 기준: 1.0.70
+## 현재 작업 기준: 1.0.71
 
-현재 기준 버전은 1.0.70입니다.
-이번 패스 이름은 **IntroVideoHardVisible**입니다.
+현재 기준 버전은 1.0.71입니다.
+이번 패스 이름은 **IntroNoOverlayPolish**입니다.
 
-## 1.0.70 - IntroVideoHardVisible
+## 1.0.71 - IntroNoOverlayPolish
 
-- 목적: 사용자가 계속 지적한 “로딩중 영상이 안 나오고 로딩 문구/로딩바처럼 보이는 문제”를 다시 최우선으로 막고, 구석구석 UI 글자 넘침/건물 이름표 겹침/설정창/NPC 말풍선/추천 리본을 한 번 더 조정한 패스입니다.
-- 핵심 태그: `intro-hard-visible-v170`, `intro-touch-prime-v169`, `intro-started-at-zero-guard-v169`, `intro-min-3s-video-v168`, `video-only-loading-v168`, `deep-sweep-ui-v170`, `nameplate-collision-guard-v170`, `plaza-route-confirm-v170`.
-- 중요한 원인 기록: `window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__` 값이 0 이하이면 무효 처리합니다.
-- 추가 원인 기록: 영상 DOM이 만들어져도 `display:none` 또는 `opacity:0` 상태로 남으면, 에셋 로딩이 빨리 끝날 때 사용자는 영상이 아니라 그냥 지나간 것처럼 보게 됩니다. 이제 `__CARDVILLE_INTRO_VIDEO_PRIME__` 단계부터 body 최상단 video를 `display:block`, `visibility:visible`, `opacity:1`로 둡니다.
-- `index.html`: `window.__CARDVILLE_INTRO_HARD_VISIBLE_TAG__ = 'intro-hard-visible-v170'`를 추가했습니다. 시작 버튼 터치 시 video가 즉시 보이고, `__CARDVILLE_INTRO_VIDEO_DONE__`에서만 제거합니다.
-- `IntroLoadingScene.ts`: `CARDVILLE_INTRO_HARD_VISIBLE_TAG`를 추가하고 scene에서도 video 표시 상태를 유지합니다. `MIN_INTRO_VIDEO_MS = 3000`은 유지합니다.
-- `LoginScene.ts`: `게임 시작`과 `Google 로그인`의 `buttondown`에서 prepare를 호출해 터치 제스처 안에서 영상 표시/재생을 시도합니다.
-- `TextStyles.ts`: `deep-sweep-copy-fit-v170`로 전체 글자 배율을 너무 작지 않은 선에서 조금 더 낮췄습니다.
-- `MainLobbyScene.ts`: 추천 리본 폭/높이, NPC 말풍선 폭, 설정 패널 행, 건물 이름표/상태칩을 다시 정리했습니다.
-- 추가 검증: `tools/check-intro-video-hard-visible-v170.mjs`, `npm run check:intro-video-hard-visible-v170`.
-- 검증 호환 표기: `CardVille_v1.0.70_IntroGuardUIPolish_Full.zip`, `CardVille_v1.0.70_IntroGuardUIPolish_Patch.zip`는 이전 검증 스크립트용 앵커이며, 실제 산출물은 IntroVideoHardVisible 이름을 사용합니다.
+- 목적: 사용자가 지적한 “영상 나오기 전 큰 플레이 마크가 잠깐 보임”, “영상 이후 로딩바 같은 것이 보임” 문제를 최우선으로 막는 패스입니다.
+- 핵심 태그: `intro-no-native-video-ui-v171`, `intro-playmark-shield-v171`, `intro-no-loading-surface-v171`, `intro-hard-visible-v170`, `intro-min-3s-video-v168`, `video-only-loading-v168`.
+- 추가 호환 원인 기록: `window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__` 값은 0 이하이면 무효 처리하며, 실제 영상 시작 시각으로 다시 잡아 최소 3초 보장을 유지합니다.
+- 중요한 원인 기록: 모바일/인앱 브라우저는 `controls=false`만으로도 video 기본 시작 재생 아이콘 또는 미디어 컨트롤 timeline이 순간적으로 보일 수 있습니다. 그래서 video 위에 poster shield를 올리고, 실제 `playing` 이후에만 shield를 숨깁니다.
+- `index.html`: `cardville-intro-video-shield`를 추가했습니다. `video.removeAttribute('controls')`, WebKit media controls CSS, `disablePictureInPicture`, `disableRemotePlayback`, `x-webkit-airplay=deny`로 기본 플레이/진행 UI를 차단합니다.
+- `IntroLoadingScene.ts`: `CARDVILLE_INTRO_NO_NATIVE_UI_TAG`, `CARDVILLE_INTRO_PLAYMARK_SHIELD_TAG`, `CARDVILLE_INTRO_NO_LOADING_SURFACE_TAG`를 추가했습니다. Phaser 로딩바/로딩 문구는 만들지 않습니다.
+- `public/assets/video/cardville_intro_poster.jpg`: 영상이 playing 되기 전 플레이 마크 대신 보이는 무문구 poster shield 이미지입니다.
+- 추가 검증: `tools/check-intro-no-overlay-v171.mjs`, `npm run check:intro-no-overlay-v171`. `npm run verify` 앞단에 포함했습니다.
+- 검증 호환 표기: `CardVille_v1.0.71_IntroGuardUIPolish_Full.zip`, `CardVille_v1.0.71_IntroGuardUIPolish_Patch.zip`는 이전 검증 스크립트용 앵커입니다.
+- 검증 호환 앵커: **IntroVideoHardVisible**, `intro-hard-visible-v170`, `CardVille_v1.0.71_IntroVideoHardVisible_Full.zip`, `CardVille_v1.0.71_IntroVideoHardVisible_Patch.zip` 표기는 이전 검증 스크립트 호환용입니다.
 - 유지 규칙: SVG 없음, OPEN/LOCK 없음, 로딩중/이동중 문구 없음, fallback 카드 숨김, public/assets 포함 self-contained 패치 유지, 새 docs 문서 생성 금지.
 - 산출물 이름:
-  - `CardVille_v1.0.70_IntroVideoHardVisible_Full.zip`
-  - `CardVille_v1.0.70_IntroVideoHardVisible_Patch.zip`
+  - `CardVille_v1.0.71_IntroNoOverlayPolish_Full.zip`
+  - `CardVille_v1.0.71_IntroNoOverlayPolish_Patch.zip`
 
 ## 1.0.68 - IntroVideoMinFit
 

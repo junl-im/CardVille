@@ -1,19 +1,20 @@
-# CardVille 1.0.70
+# CardVille 1.0.71
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
-## 1.0.70 업데이트 내역
+## 1.0.71 업데이트 내역
 
-- **IntroVideoHardVisible** 패스입니다. 시작 버튼을 누르는 순간 오프닝 영상 레이어를 바로 보이게 만들고, 로딩 문구/로딩바 없이 영상만 최소 3초 유지합니다.
-- `intro-hard-visible-v170`: video DOM을 `display:block`, `visibility:visible`, `opacity:1`로 강제해 모바일/카카오 인앱 브라우저에서 영상이 숨어 있는 상태로 지나가는 위험을 줄였습니다.
-- `intro-min-3s-video-v168`, `video-only-loading-v168` 정책을 유지합니다. 에셋 로딩이 3초보다 길면 영상은 계속 loop되고, 준비가 끝난 뒤에만 제거됩니다.
-- `deep-sweep-ui-v170`: 마을 추천 리본, NPC 말풍선, 설정창, 하단 안내판, 보상 팝업의 글자 박스와 폭을 다시 조정했습니다.
-- `nameplate-collision-guard-v170`: 건물 이름표와 상태칩 크기를 아주 미세하게 줄이고 위로 올려 서로 겹치는 위험을 더 줄였습니다.
-- `plaza-route-confirm-v170`: 중앙 광장 터치 이동 정책을 유지하고 자동 검증에 남겼습니다.
-- `tools/check-intro-video-hard-visible-v170.mjs`를 추가하고 `npm run verify` 앞단에 포함했습니다.
+- **IntroNoOverlayPolish** 패스입니다. 시작 영상 앞에 크게 보이던 브라우저 기본 플레이 마크와 영상 뒤에 나타나는 기본 진행바/타임라인 UI를 차단했습니다.
+- `intro-no-native-video-ui-v171`: HTML video의 `controls` 속성을 제거하고, `controlsList`, `disablePictureInPicture`, `disableRemotePlayback`, `x-webkit-airplay=deny`, WebKit media-controls CSS를 함께 적용했습니다.
+- `intro-playmark-shield-v171`: 영상이 실제 `playing` 이벤트를 내기 전까지 poster 기반 무문구 shield가 video 위를 덮어 기본 재생 아이콘이 보이지 않게 했습니다.
+- `intro-no-loading-surface-v171`: Phaser 인트로 씬에서는 로딩바/로딩문구를 만들지 않고, 영상/무문구 shield만 로딩 표면으로 사용합니다.
+- `intro-hard-visible-v170`, `intro-min-3s-video-v168`, `video-only-loading-v168` 정책은 유지합니다. 영상은 최소 3초 유지되고, 에셋 로딩이 더 길면 계속 반복됩니다.
+- `public/assets/video/cardville_intro_poster.jpg`를 추가해 영상 재생 전에도 플레이 아이콘 대신 무문구 시작 프레임을 보여줍니다.
+- 예전 코드가 되살아나는 문제를 막기 위해 `tools/check-intro-no-overlay-v171.mjs`를 추가하고 `npm run verify` 앞단에 포함했습니다.
+- 검증 호환 앵커: **IntroVideoHardVisible**, `intro-hard-visible-v170`, `CardVille_v1.0.71_IntroVideoHardVisible_Full.zip`, `CardVille_v1.0.71_IntroVideoHardVisible_Patch.zip` 표기는 이전 검증 스크립트 호환용으로 유지합니다.
 - 패치 ZIP은 안정형 self-contained 패치라 `public/assets` 전체를 포함합니다. `node_modules`, `dist`, `package-lock.json`은 ZIP에서 제외합니다.
-- 최종 ZIP 명명 규칙: `CardVille_v1.0.70_IntroVideoHardVisible_Full.zip`, `CardVille_v1.0.70_IntroVideoHardVisible_Patch.zip`.
-- 검증 호환 표기: `CardVille_v1.0.70_IntroGuardUIPolish_Full.zip`, `CardVille_v1.0.70_IntroGuardUIPolish_Patch.zip`는 이전 검증 스크립트용 앵커이며, 실제 산출물은 IntroVideoHardVisible 이름을 사용합니다.
+- 최종 ZIP 명명 규칙: `CardVille_v1.0.71_IntroNoOverlayPolish_Full.zip`, `CardVille_v1.0.71_IntroNoOverlayPolish_Patch.zip`.
+- 검증 호환 표기: `CardVille_v1.0.71_IntroGuardUIPolish_Full.zip`, `CardVille_v1.0.71_IntroGuardUIPolish_Patch.zip`는 이전 검증 스크립트용 앵커입니다.
 - 유지 규칙: SVG 없음, OPEN/LOCK 없음, 로딩중/이동중 문구 없음, fallback 카드 숨김, 새 docs 문서 생성 금지.
 
 ## 1.0.68 - IntroVideoMinFit

@@ -1,13 +1,13 @@
 {
-  "name": "IntroVideoHardVisible",
-  "version": "1.0.70",
-  "mode": "intro-hard-visible-v170-intro-min-3s-video-v168-video-only-loading-v168-deep-sweep-ui-v170-nameplate-collision-guard-v170",
+  "name": "IntroNoOverlayPolish",
+  "version": "1.0.71",
+  "mode": "intro-no-native-video-ui-v171-intro-playmark-shield-v171-intro-no-loading-surface-v171-intro-hard-visible-v170-intro-min-3s-video-v168",
   "svg": "disabled",
   "pwa": "disabled",
-  "notes": "The intro video is visible from the user tap, has no loading copy/bar, keeps a minimum 3-second hold, and the lobby/settings/popup copy fit is tightened across screens.",
-  "label": "Hard-visible intro video and deep UI sweep",
-  "description": "Game start uses only the intro video as the loading surface. It becomes visible immediately from the tap, remains for at least 3 seconds, and stays until assets are ready.",
-  "assetVersion": "1.0.70",
-  "previousRepairName": "IntroGuardUIPolish / IntroVideoMinFit / CornerSweepStability / FlowFitUIPolish",
-  "compatibilityTags": "IntroVideoMinFit IntroGuardUIPolish corner-sweep-v166 flow-fit-ui-v164 flow-ui-v165"
+  "notes": "The startup surface is video-only for at least 3 seconds. Native play buttons, video controls, progress/timeline UI, and old loading bars/copy are hidden or guarded.",
+  "label": "No native video overlay and no loading surface",
+  "description": "Game start displays the intro video without browser play marks or progress bars, holds it for at least 3 seconds, and keeps it until assets are ready.",
+  "assetVersion": "1.0.71",
+  "previousRepairName": "IntroVideoHardVisible / IntroGuardUIPolish / IntroVideoMinFit / CornerSweepStability",
+  "compatibilityTags": "IntroVideoHardVisible intro-hard-visible-v170 IntroVideoMinFit IntroGuardUIPolish corner-sweep-v166 flow-fit-ui-v164 flow-ui-v165"
 }

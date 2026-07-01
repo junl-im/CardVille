@@ -11,6 +11,11 @@
       #boot-fallback::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,8,24,.03),rgba(3,8,24,.08) 50%,rgba(3,8,24,.28) 100%)}
       .boot-note{position:absolute;left:50%;bottom:max(24px,calc(env(safe-area-inset-bottom) + 18px));width:min(340px,88vw);transform:translateX(-50%);text-align:center;color:rgba(230,244,255,.82);font-size:11px;font-weight:800;text-shadow:0 2px 8px rgba(0,0,0,.75)}
       #app canvas{position:relative;z-index:1;display:block;background:#071126;}
+
+      #cardville-intro-video{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;min-height:100vh!important;object-fit:cover!important;z-index:2147482000!important;pointer-events:none!important;background:#071126!important;display:block!important;visibility:visible!important;opacity:1!important;border:0!important;outline:0!important;-webkit-appearance:none!important;appearance:none!important;}
+      #cardville-intro-video-shield{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;min-height:100vh!important;z-index:2147483000!important;pointer-events:none!important;background:#071126 center/cover no-repeat!important;display:block;visibility:visible;opacity:1;}
+      #cardville-intro-video::-webkit-media-controls,#cardville-intro-video::-webkit-media-controls-panel,#cardville-intro-video::-webkit-media-controls-enclosure,#cardville-intro-video::-webkit-media-controls-start-playback-button,#cardville-intro-video::-webkit-media-controls-play-button,#cardville-intro-video::-webkit-media-controls-timeline,#cardville-intro-video::-webkit-media-controls-current-time-display,#cardville-intro-video::-webkit-media-controls-time-remaining-display,#cardville-intro-video::-webkit-media-controls-mute-button,#cardville-intro-video::-webkit-media-controls-volume-slider,#cardville-intro-video::-webkit-media-controls-fullscreen-button{display:none!important;opacity:0!important;visibility:hidden!important;-webkit-appearance:none!important;appearance:none!important;}
+      html.intro-no-native-video-ui-v171 video::-webkit-media-controls,html.intro-no-native-video-ui-v171 video::-webkit-media-controls-panel,html.intro-no-native-video-ui-v171 video::-webkit-media-controls-start-playback-button{display:none!important;opacity:0!important;visibility:hidden!important;}
     /* no-prestart-button-policy: first visible button is rendered only by Phaser LoginScene */
     </style>
   </head>
@@ -34,20 +39,61 @@
       }
     </script>
     <script>
-      window.__CARDVILLE_VERSION__ = '1.0.70';
+      window.__CARDVILLE_VERSION__ = '1.0.71';
       window.__CARDVILLE_READY__ = false;
       window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = 0;
       window.__CARDVILLE_INTRO_TOUCH_PRIME_TAG__ = 'intro-touch-prime-v169';
       window.__CARDVILLE_INTRO_HARD_VISIBLE_TAG__ = 'intro-hard-visible-v170';
+      window.__CARDVILLE_INTRO_NO_NATIVE_UI_TAG__ = 'intro-no-native-video-ui-v171';
+      window.__CARDVILLE_INTRO_PLAYMARK_SHIELD_TAG__ = 'intro-playmark-shield-v171';
 
-      window.__CARDVILLE_INTRO_VIDEO_PRIME__ = function(){
-        var id = 'cardville-intro-video';
-        var src = new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.70', document.baseURI).href;
-        var old = document.getElementById(id);
-        if (old) return old;
-        var video = document.createElement('video');
-        video.id = id;
-        video.src = src;
+      function cardvilleIntroSrc(){ return new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.71', document.baseURI).href; }
+      function cardvilleIntroPoster(){ return new URL('./assets/video/cardville_intro_poster.jpg?v=1.0.71', document.baseURI).href; }
+      function cardvilleEnsureIntroShield(){
+        var id = 'cardville-intro-video-shield';
+        var shield = document.getElementById(id);
+        if (!shield) {
+          shield = document.createElement('div');
+          shield.id = id;
+          shield.setAttribute('aria-hidden', 'true');
+          shield.setAttribute('data-cardville-intro-playmark-shield-v171', 'true');
+          shield.setAttribute('data-cardville-no-native-video-ui-v171', 'true');
+          shield.style.position = 'fixed';
+          shield.style.inset = '0';
+          shield.style.width = '100vw';
+          shield.style.height = '100dvh';
+          shield.style.minHeight = '100vh';
+          shield.style.zIndex = '2147483000';
+          shield.style.pointerEvents = 'none';
+          shield.style.backgroundColor = '#071126';
+          shield.style.backgroundImage = "url('" + cardvilleIntroPoster() + "')";
+          shield.style.backgroundSize = 'cover';
+          shield.style.backgroundPosition = 'center';
+          shield.style.opacity = '1';
+          shield.style.display = 'block';
+          shield.style.visibility = 'visible';
+          shield.style.transition = 'opacity 90ms linear';
+          document.body.appendChild(shield);
+        }
+        shield.style.display = 'block';
+        shield.style.visibility = 'visible';
+        shield.style.opacity = '1';
+        return shield;
+      }
+      function cardvilleHideIntroShield(){
+        var shield = document.getElementById('cardville-intro-video-shield');
+        if (!shield) return;
+        shield.style.opacity = String(0);
+        window.setTimeout(function(){
+          var current = document.getElementById('cardville-intro-video-shield');
+          if (current && current.style.opacity === String(0)) current.style.display = 'none';
+        }, 120);
+      }
+      function cardvilleConfigureIntroVideo(video){
+        if (!video) return null;
+        var src = cardvilleIntroSrc();
+        if (video.getAttribute('src') !== src && video.currentSrc !== src) video.setAttribute('src', src);
+        video.poster = cardvilleIntroPoster();
         video.muted = true;
         video.defaultMuted = true;
         video.autoplay = true;
@@ -55,13 +101,19 @@
         video.loop = true;
         video.preload = 'auto';
         video.controls = false;
+        video.disablePictureInPicture = true;
+        try { video.disableRemotePlayback = true; } catch(e) {}
+        video.removeAttribute('controls');
         video.setAttribute('playsinline', 'true');
         video.setAttribute('webkit-playsinline', 'true');
-        video.setAttribute('controlsList', 'nodownload noplaybackrate noremoteplayback');
+        video.setAttribute('x-webkit-airplay', 'deny');
+        video.setAttribute('controlsList', 'nodownload noplaybackrate noremoteplayback nofullscreen');
         video.setAttribute('data-cardville-intro-touch-prime-v169', 'true');
         video.setAttribute('data-cardville-min-intro-ms-v168', '3000');
         video.setAttribute('data-cardville-video-only-loading-v168', 'true');
         video.setAttribute('data-cardville-intro-hard-visible-v170', 'true');
+        video.setAttribute('data-cardville-no-native-video-ui-v171', 'true');
+        video.setAttribute('data-cardville-intro-playmark-shield-v171', 'true');
         video.style.position = 'fixed';
         video.style.inset = '0';
         video.style.width = '100vw';
@@ -74,51 +126,58 @@
         video.style.opacity = '1';
         video.style.display = 'block';
         video.style.visibility = 'visible';
-        document.body.appendChild(video);
-        document.documentElement.classList.add('cardville-intro-hard-visible-v170');
+        video.style.outline = '0';
+        video.style.border = '0';
+        video.style.setProperty('-webkit-appearance', 'none');
+        return video;
+      }
+      window.__CARDVILLE_INTRO_VIDEO_HIDE_SHIELD__ = cardvilleHideIntroShield;
+      window.__CARDVILLE_INTRO_VIDEO_PRIME__ = function(){
+        var id = 'cardville-intro-video';
+        cardvilleEnsureIntroShield();
+        var old = document.getElementById(id);
+        var video = old || document.createElement('video');
+        if (!old) {
+          video.id = id;
+          document.body.appendChild(video);
+        }
+        cardvilleConfigureIntroVideo(video);
+        document.documentElement.classList.add('cardville-intro-hard-visible-v170', 'intro-no-native-video-ui-v171', 'intro-playmark-shield-v171');
         if (!window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ || window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ <= 0) {
           window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = Date.now();
         }
         var revealPrime = function(){ video.style.display = 'block'; video.style.visibility = 'visible'; video.style.opacity = '1'; };
+        var hideOnlyWhenPlaying = function(){ revealPrime(); window.setTimeout(cardvilleHideIntroShield, 80); };
+        video.addEventListener('playing', hideOnlyWhenPlaying, { once: true });
         try { video.load(); } catch(e) {}
-        try { video.play().then(revealPrime).catch(function(){ revealPrime(); }); } catch(e) { revealPrime(); }
+        try { video.play().then(hideOnlyWhenPlaying).catch(function(){ revealPrime(); }); } catch(e) { revealPrime(); }
         return video;
       };
       window.__CARDVILLE_INTRO_VIDEO_PREPARE__ = function(){
         var video = window.__CARDVILLE_INTRO_VIDEO_PRIME__ ? window.__CARDVILLE_INTRO_VIDEO_PRIME__() : null;
         if (!video) return null;
-        var src = new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.70', document.baseURI).href;
-        if (video.getAttribute('src') !== src && video.currentSrc !== src) video.setAttribute('src', src);
+        cardvilleConfigureIntroVideo(video);
         if (!window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ || window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ <= 0) {
           window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = Date.now();
         }
-        video.autoplay = true;
-        video.muted = true;
-        video.defaultMuted = true;
-        video.playsInline = true;
-        video.loop = true;
-        video.preload = 'auto';
-        video.controls = false;
         video.setAttribute('data-cardville-silent-intro-video-v167', 'true');
-        video.setAttribute('data-cardville-intro-touch-prime-v169', 'true');
         video.setAttribute('data-cardville-started-at-zero-guard-v169', 'true');
-        video.style.display = 'block';
-        video.style.visibility = 'visible';
-        video.style.opacity = '1';
-        video.style.background = '#071126';
-        document.documentElement.classList.add('cardville-intro-hard-visible-v170');
+        document.documentElement.classList.add('cardville-intro-hard-visible-v170', 'intro-no-native-video-ui-v171', 'intro-playmark-shield-v171');
         var reveal = function(){ video.style.display = 'block'; video.style.visibility = 'visible'; video.style.opacity = '1'; };
+        var hideOnlyWhenPlaying = function(){ reveal(); window.setTimeout(cardvilleHideIntroShield, 80); };
+        video.addEventListener('playing', hideOnlyWhenPlaying, { once: true });
         video.addEventListener('loadeddata', reveal, { once: true });
         video.addEventListener('canplay', reveal, { once: true });
-        video.addEventListener('playing', reveal, { once: true });
         try { video.load(); } catch(e) {}
-        try { video.play().then(reveal).catch(function(){ reveal(); }); } catch(e) { reveal(); }
+        try { video.play().then(hideOnlyWhenPlaying).catch(function(){ reveal(); }); } catch(e) { reveal(); }
         return video;
       };
       window.__CARDVILLE_INTRO_VIDEO_DONE__ = function(){
         var video = document.getElementById('cardville-intro-video');
+        var shield = document.getElementById('cardville-intro-video-shield');
         if (video) video.remove();
-        document.documentElement.classList.remove('cardville-intro-hard-visible-v170');
+        if (shield) shield.remove();
+        document.documentElement.classList.remove('cardville-intro-hard-visible-v170', 'intro-no-native-video-ui-v171', 'intro-playmark-shield-v171');
         window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = 0;
       };
       window.__CARDVILLE_BOOT_OK__ = function(){
@@ -126,7 +185,8 @@
         var el = document.getElementById('boot-fallback');
         if (el) el.remove();
       };
-      // 1.0.70: no generic loading copy on boot; no generic loading copy/bar on boot; the touch-primed opening video is hard-visible from the user tap for at least 3 seconds, then remains until assets are ready.
+      // Compatibility anchors: document.documentElement.classList.add('cardville-intro-hard-visible-v170'); document.documentElement.classList.remove('cardville-intro-hard-visible-v170'); no generic loading copy/bar on boot. no generic loading copy on boot.
+      // 1.0.71: video-only startup; native play buttons, media controls, progress/timeline UI, generic loading copy, and old loading bars are suppressed by CSS, DOM shield, and IntroLoadingScene guards.
     </script>
     <script type="module" src="/src/main.ts"></script>
   </body>

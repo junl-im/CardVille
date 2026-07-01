@@ -13,6 +13,9 @@ export const CARDVILLE_VIDEO_ONLY_LOADING_TAG = 'video-only-loading-v168' as con
 export const CARDVILLE_INTRO_TOUCH_PRIME_TAG = 'intro-touch-prime-v169' as const;
 export const CARDVILLE_INTRO_STARTED_AT_GUARD_TAG = 'intro-started-at-zero-guard-v169' as const;
 export const CARDVILLE_INTRO_HARD_VISIBLE_TAG = 'intro-hard-visible-v170' as const;
+export const CARDVILLE_INTRO_NO_NATIVE_UI_TAG = 'intro-no-native-video-ui-v171' as const;
+export const CARDVILLE_INTRO_PLAYMARK_SHIELD_TAG = 'intro-playmark-shield-v171' as const;
+export const CARDVILLE_INTRO_NO_LOADING_SURFACE_TAG = 'intro-no-loading-surface-v171' as const;
 const MIN_INTRO_VIDEO_MS = 3000;
 
 declare global {
@@ -21,6 +24,7 @@ declare global {
     __CARDVILLE_INTRO_VIDEO_PREPARE__?: () => HTMLVideoElement | null;
     __CARDVILLE_INTRO_VIDEO_DONE__?: () => void;
     __CARDVILLE_INTRO_VIDEO_STARTED_AT__?: number;
+    __CARDVILLE_INTRO_VIDEO_HIDE_SHIELD__?: () => void;
   }
 }
 
@@ -68,8 +72,8 @@ export class IntroLoadingScene extends Phaser.Scene {
       this.tryFinish();
     });
 
-    // 1.0.69: the opening video is the only startup loading surface. It is shown
-    // for at least MIN_INTRO_VIDEO_MS and loops longer if asset loading needs more time.
+    // 1.0.71: the opening video is the only startup loading surface. Native video
+    // controls/play marks and Phaser loading bars are explicitly suppressed.
 
     if (this.load.totalToLoad > 0) this.load.start();
     else {
@@ -82,13 +86,13 @@ export class IntroLoadingScene extends Phaser.Scene {
     const l = layout(this);
     if (this.textures.exists('loginBg')) addCoverImage(this, 'loginBg', 1, 390, 844)?.setAlpha(0.22);
     else this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x071126);
-    this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x020814, 0.28)
-      .setName(CARDVILLE_SILENT_INTRO_VIDEO_TAG);
+    this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x020814, 0.18)
+      .setName(CARDVILLE_INTRO_NO_LOADING_SURFACE_TAG);
     this.progressBar = undefined;
   }
 
   private updateProgressBar(_value: number): void {
-    // 1.0.69: no startup loading bar. The intro video is the full loading surface.
+    // 1.0.71: no Phaser startup loading bar. The intro video plus shield is the full loading surface.
     this.progressBar = undefined;
   }
 
@@ -116,6 +120,7 @@ export class IntroLoadingScene extends Phaser.Scene {
     const base = import.meta.env.BASE_URL || '/';
     const normalizedBase = base.endsWith('/') ? base : `${base}/`;
     const expectedSrc = `${normalizedBase}assets/video/cardville_intro_loading.mp4?v=${CARDVILLE_ASSET_VERSION}`;
+    const expectedPoster = `${normalizedBase}assets/video/cardville_intro_poster.jpg?v=${CARDVILLE_ASSET_VERSION}`;
     if (!prepared) {
       video.id = 'cardville-intro-video';
       video.src = expectedSrc;
@@ -124,22 +129,30 @@ export class IntroLoadingScene extends Phaser.Scene {
       video.src = expectedSrc;
     }
     if (typeof window !== 'undefined' && (!window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ || window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ <= 0)) window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = Date.now();
+    video.poster = expectedPoster;
     video.muted = true;
+    video.defaultMuted = true;
     video.autoplay = true;
     video.playsInline = true;
     video.preload = 'auto';
     video.loop = true;
     video.controls = false;
+    video.removeAttribute('controls');
     video.disablePictureInPicture = true;
+    try { video.disableRemotePlayback = true; } catch { /* ignore */ }
     video.setAttribute('playsinline', 'true');
     video.setAttribute('webkit-playsinline', 'true');
-    video.setAttribute('controlsList', 'nodownload noplaybackrate noremoteplayback');
+    video.setAttribute('controlsList', 'nodownload noplaybackrate noremoteplayback nofullscreen');
+    video.setAttribute('x-webkit-airplay', 'deny');
     video.setAttribute('data-cardville-silent-intro-video-v167', CARDVILLE_INTRO_VIDEO_RESTORE_TAG);
     video.setAttribute('data-cardville-min-intro-ms-v168', String(MIN_INTRO_VIDEO_MS));
     video.setAttribute('data-cardville-video-only-loading-v168', CARDVILLE_VIDEO_ONLY_LOADING_TAG);
     video.setAttribute('data-cardville-intro-touch-prime-v169', CARDVILLE_INTRO_TOUCH_PRIME_TAG);
     video.setAttribute('data-cardville-started-at-zero-guard-v169', CARDVILLE_INTRO_STARTED_AT_GUARD_TAG);
     video.setAttribute('data-cardville-intro-hard-visible-v170', CARDVILLE_INTRO_HARD_VISIBLE_TAG);
+    video.setAttribute('data-cardville-no-native-video-ui-v171', CARDVILLE_INTRO_NO_NATIVE_UI_TAG);
+    video.setAttribute('data-cardville-intro-playmark-shield-v171', CARDVILLE_INTRO_PLAYMARK_SHIELD_TAG);
+    video.setAttribute('data-cardville-no-loading-surface-v171', CARDVILLE_INTRO_NO_LOADING_SURFACE_TAG);
     video.setAttribute('data-cardville-hidden-until-playing', 'false');
     video.style.position = 'fixed';
     video.style.inset = '0';
@@ -154,7 +167,10 @@ export class IntroLoadingScene extends Phaser.Scene {
     video.style.display = 'block';
     video.style.visibility = 'visible';
     video.style.transition = 'opacity 120ms ease';
-    if (typeof document !== 'undefined') document.documentElement.classList.add(CARDVILLE_INTRO_HARD_VISIBLE_TAG);
+    video.style.border = '0';
+    video.style.outline = '0';
+    video.style.setProperty('-webkit-appearance', 'none');
+    if (typeof document !== 'undefined') document.documentElement.classList.add(CARDVILLE_INTRO_HARD_VISIBLE_TAG, CARDVILLE_INTRO_NO_NATIVE_UI_TAG, CARDVILLE_INTRO_PLAYMARK_SHIELD_TAG);
     this.videoEl = video;
 
     const revealVideo = () => {
@@ -172,11 +188,11 @@ export class IntroLoadingScene extends Phaser.Scene {
     };
     video.addEventListener('loadeddata', revealVideo, { once: true });
     video.addEventListener('canplay', revealVideo, { once: true });
-    video.addEventListener('playing', revealVideo, { once: true });
+    video.addEventListener('playing', () => { revealVideo(); window.__CARDVILLE_INTRO_VIDEO_HIDE_SHIELD__?.(); }, { once: true });
     video.addEventListener('error', keepSilentFallback, { once: true });
     this.time.delayedCall(90, revealVideo);
     this.tryReplayVideo(video);
-    void video.play().then(revealVideo).catch(() => {
+    void video.play().then(() => { revealVideo(); window.__CARDVILLE_INTRO_VIDEO_HIDE_SHIELD__?.(); }).catch(() => {
       try { video.load(); } catch { /* ignore */ }
       keepSilentFallback();
     });
@@ -230,7 +246,7 @@ export class IntroLoadingScene extends Phaser.Scene {
     for (const asset of ASSET_MANIFEST) {
       this.queueImage(asset.key, asset.path);
     }
-    console.info('[CardVille] lobby critical assets use PNG source', LOBBY_CRITICAL_PNG_RUNTIME_TAG, CARDVILLE_LOBBY_BOOT_HARDENING_TAG, CARDVILLE_SILENT_INTRO_VIDEO_TAG, CARDVILLE_INTRO_VIDEO_LIFECYCLE_TAG, CARDVILLE_INTRO_VIDEO_RESTORE_TAG);
+    console.info('[CardVille] lobby critical assets use PNG source', LOBBY_CRITICAL_PNG_RUNTIME_TAG, CARDVILLE_LOBBY_BOOT_HARDENING_TAG, CARDVILLE_SILENT_INTRO_VIDEO_TAG, CARDVILLE_INTRO_VIDEO_LIFECYCLE_TAG, CARDVILLE_INTRO_VIDEO_RESTORE_TAG, CARDVILLE_INTRO_NO_NATIVE_UI_TAG, CARDVILLE_INTRO_NO_LOADING_SURFACE_TAG);
 
     this.queueImage('assetVillageBg', 'assets/backgrounds/cherry_blossom_day.png');
 

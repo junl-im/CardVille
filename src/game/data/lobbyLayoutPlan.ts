@@ -1,4 +1,4 @@
-export const LOBBY_LAYOUT_PLAN_VERSION = '1.0.70' as const;
+export const LOBBY_LAYOUT_PLAN_VERSION = '1.0.71' as const;
 
 export type LobbySafeZone = {
   id: string;

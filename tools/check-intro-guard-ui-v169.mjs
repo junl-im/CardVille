@@ -30,16 +30,16 @@ const walk = (dir) => {
 };
 
 const pkg = JSON.parse(read('package.json'));
-assert(pkg.version === '1.0.70', `expected package version 1.0.70, got ${pkg.version}`);
+assert(pkg.version === '1.0.71', `expected package version 1.0.71, got ${pkg.version}`);
 assert(pkg.scripts.verify.includes('check:intro-guard-ui-v169'), 'verify must include check:intro-guard-ui-v169');
 assert(pkg.scripts['check:intro-guard-ui-v169'] === 'node tools/check-intro-guard-ui-v169.mjs', 'check:intro-guard-ui-v169 script mismatch');
 assert(exists('public/assets/video/cardville_intro_loading.mp4'), 'intro video file missing');
 
 include('index.html', [
-  "window.__CARDVILLE_VERSION__ = '1.0.70'",
+  "window.__CARDVILLE_VERSION__ = '1.0.71'",
   '__CARDVILLE_INTRO_VIDEO_PRIME__',
   '__CARDVILLE_INTRO_VIDEO_PREPARE__',
-  "new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.70', document.baseURI).href",
+  "new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.71', document.baseURI).href",
   'data-cardville-intro-touch-prime-v169',
   'data-cardville-started-at-zero-guard-v169',
   'video.style.display = \'block\'',
@@ -107,10 +107,10 @@ include('src/game/systems/RewardPopupSystem.ts', [
   'noticeText(9)',
   '128'
 ]);
-include('public/build.json', ['"version": "1.0.70"', 'IntroVideoHardVisible', 'intro-hard-visible-v170']);
-include('public/health.html', ['version 1.0.70', 'IntroVideoHardVisible', 'intro-started-at-zero-guard-v169']);
-include('README.md', ['# CardVille 1.0.70', '## 1.0.70 업데이트 내역', 'intro-hard-visible-v170', 'CardVille_v1.0.70_IntroVideoHardVisible_Full.zip']);
-include('AI_HANDOFF_CARDVILLE.md', ['현재 기준 버전은 1.0.70', 'IntroVideoHardVisible', 'window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__', 'CardVille_v1.0.70_IntroVideoHardVisible_Full.zip']);
+include('public/build.json', ['"version": "1.0.71"', 'IntroVideoHardVisible', 'intro-hard-visible-v170']);
+include('public/health.html', ['version 1.0.71', 'IntroVideoHardVisible', 'intro-started-at-zero-guard-v169']);
+include('README.md', ['# CardVille 1.0.71', '## 1.0.71 업데이트 내역', 'intro-hard-visible-v170', 'CardVille_v1.0.71_IntroVideoHardVisible_Full.zip']);
+include('AI_HANDOFF_CARDVILLE.md', ['현재 기준 버전은 1.0.71', 'IntroVideoHardVisible', 'window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__', 'CardVille_v1.0.71_IntroVideoHardVisible_Full.zip']);
 
 for (const file of walk('src').filter((name) => /\.(ts|tsx|js|mjs)$/.test(name))) {
   const text = read(file);
