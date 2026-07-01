@@ -8,6 +8,7 @@ export const DYNAMIC_PHONE_FRAME_TAG = 'dynamic-phone-frame-v165' as const;
 export const SCENE_INPUT_RECOVERY_TAG = 'scene-input-recovery-v165' as const;
 export const CARDVILLE_CORNER_SWEEP_TAG = 'corner-sweep-v166' as const;
 export const CARDVILLE_INPUT_WATCHDOG_TAG = 'input-watchdog-v166' as const;
+export const PRODUCTION_DEBUG_OVERLAY_KILL_TAG = 'production-debug-overlay-kill-v173' as const;
 
 export type SafeAreaInsets = {
   top: number;
@@ -299,7 +300,13 @@ export function addFullBleedShade(scene: Phaser.Scene, color: number, alpha: num
 }
 
 export function hasTouchDebug(): boolean {
-  return typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('touchDebug');
+  if (import.meta.env.PROD) return false;
+  if (typeof window === 'undefined') return false;
+  try {
+    return window.localStorage?.getItem('cardvilleTouchDebug') === PRODUCTION_DEBUG_OVERLAY_KILL_TAG;
+  } catch {
+    return false;
+  }
 }
 
 export function clamp(value: number, min: number, max: number): number {

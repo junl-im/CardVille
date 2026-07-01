@@ -19,6 +19,11 @@ export const CARDVILLE_INTRO_NO_LOADING_SURFACE_TAG = 'intro-no-loading-surface-
 export const CARDVILLE_INTRO_PREPLAY_SHIELD_TAG = 'intro-preplay-shield-v172' as const;
 export const CARDVILLE_INTRO_NO_PROGRESS_SURFACE_TAG = 'intro-no-progress-surface-v172' as const;
 export const CARDVILLE_LEGACY_LOADING_QUARANTINE_TAG = 'legacy-loading-code-quarantine-v172' as const;
+export const CARDVILLE_NO_PHASER_PROGRESS_TAG = 'intro-no-phaser-progress-v173' as const;
+export const CARDVILLE_LEGACY_CODE_GUARD_TAG = 'legacy-code-revival-guard-v173' as const;
+export const CARDVILLE_INTRO_NATIVE_CONTROL_MASK_TAG = 'intro-native-control-mask-v174' as const;
+export const CARDVILLE_INTRO_CANVAS_VIDEO_TAG = 'intro-canvas-video-surface-v175' as const;
+export const CARDVILLE_LEGACY_LOADING_DEADLOCK_TAG = 'legacy-loading-ui-deadlock-v175' as const;
 const MIN_INTRO_VIDEO_MS = 3000;
 
 declare global {
@@ -30,6 +35,10 @@ declare global {
     __CARDVILLE_INTRO_VIDEO_HIDE_SHIELD__?: () => void;
     __CARDVILLE_INTRO_VIDEO_KEEP_SHIELD__?: (video?: HTMLVideoElement | null) => void;
     __CARDVILLE_INTRO_VIDEO_REVEAL__?: (video?: HTMLVideoElement | null) => void;
+    __CARDVILLE_INTRO_VIDEO_KEEP_MASK__?: () => void;
+    __CARDVILLE_INTRO_VIDEO_REMOVE_MASK__?: () => void;
+    __CARDVILLE_INTRO_CANVAS_START__?: (video?: HTMLVideoElement | null) => void;
+    __CARDVILLE_INTRO_CANVAS_STOP__?: () => void;
   }
 }
 
@@ -39,7 +48,6 @@ export class IntroLoadingScene extends Phaser.Scene {
   private finished = false;
   private videoEl?: HTMLVideoElement;
   private minIntroTimer?: Phaser.Time.TimerEvent;
-  private progressBar?: Phaser.GameObjects.Rectangle;
   private nextScene = 'MainLobbyScene';
   private queuedKeys = new Set<string>();
   private preferWebp = false;
@@ -65,21 +73,16 @@ export class IntroLoadingScene extends Phaser.Scene {
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.removeOpeningVideo());
     this.queueGameAssets();
 
-    this.load.on('progress', (value: number) => {
-      this.updateProgressBar(value);
-    });
     this.load.on('loaderror', (file: Phaser.Loader.File) => {
       console.warn('[CardVille] asset load failed', file.key, file.url, CARDVILLE_ASSET_VERSION);
     });
     this.load.once('complete', () => {
       this.readyToContinue = true;
-      this.updateProgressBar(1);
       this.tryFinish();
     });
 
-    // 1.0.72: the opening video is the only startup loading surface. Native video
-    // controls/play marks and Phaser loading bars are explicitly suppressed.
-    // legacy-loading-code-quarantine-v172 keeps old loading bars/copy from returning.
+    // 1.0.75: the opening video, preplay shield, and native-control mask are the only startup preparation surfaces.
+    // No Phaser progress surface is kept alive; legacy-code-revival-guard-v173 prevents old paths from returning.
 
     if (this.load.totalToLoad > 0) this.load.start();
     else {
@@ -93,13 +96,7 @@ export class IntroLoadingScene extends Phaser.Scene {
     if (this.textures.exists('loginBg')) addCoverImage(this, 'loginBg', 1, 390, 844)?.setAlpha(0.22);
     else this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x071126);
     this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x020814, 0.18)
-      .setName(CARDVILLE_INTRO_NO_LOADING_SURFACE_TAG);
-    this.progressBar = undefined;
-  }
-
-  private updateProgressBar(_value: number): void {
-    // 1.0.72: no Phaser startup loading bar. The intro video plus shield is the full loading surface.
-    this.progressBar = undefined;
+      .setName(`${CARDVILLE_INTRO_NO_LOADING_SURFACE_TAG}:${CARDVILLE_NO_PHASER_PROGRESS_TAG}:${CARDVILLE_LEGACY_CODE_GUARD_TAG}`);
   }
 
   private armMinimumIntroHold(): void {
@@ -162,6 +159,11 @@ export class IntroLoadingScene extends Phaser.Scene {
     video.setAttribute('data-cardville-intro-preplay-shield-v172', CARDVILLE_INTRO_PREPLAY_SHIELD_TAG);
     video.setAttribute('data-cardville-no-progress-surface-v172', CARDVILLE_INTRO_NO_PROGRESS_SURFACE_TAG);
     video.setAttribute('data-cardville-legacy-loading-quarantine-v172', CARDVILLE_LEGACY_LOADING_QUARANTINE_TAG);
+    video.setAttribute('data-cardville-no-phaser-progress-v173', CARDVILLE_NO_PHASER_PROGRESS_TAG);
+    video.setAttribute('data-cardville-legacy-code-guard-v173', CARDVILLE_LEGACY_CODE_GUARD_TAG);
+    video.setAttribute('data-cardville-intro-native-control-mask-v174', CARDVILLE_INTRO_NATIVE_CONTROL_MASK_TAG);
+    video.setAttribute('data-cardville-intro-canvas-video-surface-v175', CARDVILLE_INTRO_CANVAS_VIDEO_TAG);
+    video.setAttribute('data-cardville-legacy-loading-ui-deadlock-v175', CARDVILLE_LEGACY_LOADING_DEADLOCK_TAG);
     video.setAttribute('data-cardville-video-playing-v172', 'false');
     video.setAttribute('data-cardville-hidden-until-playing', 'true');
     video.style.position = 'fixed';
@@ -180,13 +182,14 @@ export class IntroLoadingScene extends Phaser.Scene {
     video.style.border = '0';
     video.style.outline = '0';
     video.style.setProperty('-webkit-appearance', 'none');
-    if (typeof document !== 'undefined') document.documentElement.classList.add(CARDVILLE_INTRO_HARD_VISIBLE_TAG, CARDVILLE_INTRO_NO_NATIVE_UI_TAG, CARDVILLE_INTRO_PLAYMARK_SHIELD_TAG, CARDVILLE_INTRO_PREPLAY_SHIELD_TAG, CARDVILLE_INTRO_NO_PROGRESS_SURFACE_TAG);
+    if (typeof document !== 'undefined') document.documentElement.classList.add(CARDVILLE_INTRO_HARD_VISIBLE_TAG, CARDVILLE_INTRO_NO_NATIVE_UI_TAG, CARDVILLE_INTRO_PLAYMARK_SHIELD_TAG, CARDVILLE_INTRO_PREPLAY_SHIELD_TAG, CARDVILLE_INTRO_NO_PROGRESS_SURFACE_TAG, CARDVILLE_NO_PHASER_PROGRESS_TAG, CARDVILLE_LEGACY_CODE_GUARD_TAG, CARDVILLE_INTRO_NATIVE_CONTROL_MASK_TAG, CARDVILLE_INTRO_CANVAS_VIDEO_TAG, CARDVILLE_LEGACY_LOADING_DEADLOCK_TAG);
     this.videoEl = video;
 
     const keepShielded = () => {
       if (this.videoEl === video) {
         video.setAttribute('data-cardville-video-playing-v172', 'false');
         video.style.display = 'block';
+        window.__CARDVILLE_INTRO_VIDEO_KEEP_MASK__?.();
         window.__CARDVILLE_INTRO_VIDEO_KEEP_SHIELD__?.(video);
       }
     };
@@ -196,12 +199,14 @@ export class IntroLoadingScene extends Phaser.Scene {
         video.style.display = 'block';
         video.style.visibility = 'visible';
         video.style.opacity = '1';
+        window.__CARDVILLE_INTRO_VIDEO_KEEP_MASK__?.();
+        window.__CARDVILLE_INTRO_CANVAS_START__?.(video);
         window.__CARDVILLE_INTRO_VIDEO_REVEAL__?.(video);
       }
     };
     const keepSilentFallback = () => {
       // Do not remove the surface on mobile autoplay errors; keep the silent video layer
-      // or its first frame/dark poster until asset loading completes.
+      // or its first frame/dark poster until asset preparation completes.
       keepShielded();
       this.tryReplayVideo(video);
     };
@@ -265,13 +270,13 @@ export class IntroLoadingScene extends Phaser.Scene {
     for (const asset of ASSET_MANIFEST) {
       this.queueImage(asset.key, asset.path);
     }
-    console.info('[CardVille] lobby critical assets use PNG source', LOBBY_CRITICAL_PNG_RUNTIME_TAG, CARDVILLE_LOBBY_BOOT_HARDENING_TAG, CARDVILLE_SILENT_INTRO_VIDEO_TAG, CARDVILLE_INTRO_VIDEO_LIFECYCLE_TAG, CARDVILLE_INTRO_VIDEO_RESTORE_TAG, CARDVILLE_INTRO_NO_NATIVE_UI_TAG, CARDVILLE_INTRO_NO_LOADING_SURFACE_TAG, CARDVILLE_INTRO_PREPLAY_SHIELD_TAG, CARDVILLE_INTRO_NO_PROGRESS_SURFACE_TAG, CARDVILLE_LEGACY_LOADING_QUARANTINE_TAG);
+    if (import.meta.env.DEV) console.info('[CardVille] lobby critical assets use PNG source', LOBBY_CRITICAL_PNG_RUNTIME_TAG, CARDVILLE_LOBBY_BOOT_HARDENING_TAG, CARDVILLE_SILENT_INTRO_VIDEO_TAG, CARDVILLE_INTRO_VIDEO_LIFECYCLE_TAG, CARDVILLE_INTRO_VIDEO_RESTORE_TAG, CARDVILLE_INTRO_NO_NATIVE_UI_TAG, CARDVILLE_INTRO_NO_LOADING_SURFACE_TAG, CARDVILLE_INTRO_PREPLAY_SHIELD_TAG, CARDVILLE_INTRO_NO_PROGRESS_SURFACE_TAG, CARDVILLE_LEGACY_LOADING_QUARANTINE_TAG, CARDVILLE_NO_PHASER_PROGRESS_TAG, CARDVILLE_LEGACY_CODE_GUARD_TAG, CARDVILLE_INTRO_NATIVE_CONTROL_MASK_TAG, CARDVILLE_INTRO_CANVAS_VIDEO_TAG, CARDVILLE_LEGACY_LOADING_DEADLOCK_TAG);
 
     this.queueImage('assetVillageBg', 'assets/backgrounds/cherry_blossom_day.png');
 
     // One-screen CardVille diorama lobby assets. The lobby stays fixed-camera and
     // uses individual PNG building/object layers instead of an SVG or scrolling tile map.
-    console.info('[CardVille] lobby force-load gate active', LOBBY_FORCE_LOAD_GATE_TAG);
+    if (import.meta.env.DEV) console.info('[CardVille] lobby force-load gate active', LOBBY_FORCE_LOAD_GATE_TAG);
     this.queueImage('dioramaBg', 'assets/diorama/diorama_bg.png');
     this.queueImage('dioramaCastle', 'assets/diorama/building_castle.png');
     this.queueImage('dioramaLibrary', 'assets/diorama/building_library.png');
@@ -331,7 +336,11 @@ export class IntroLoadingScene extends Phaser.Scene {
   }
 
   private removeOpeningVideo(): void {
-    try { window.__CARDVILLE_INTRO_VIDEO_DONE__?.(); } catch { /* ignore */ }
+    try {
+      window.__CARDVILLE_INTRO_VIDEO_REMOVE_MASK__?.();
+      window.__CARDVILLE_INTRO_CANVAS_STOP__?.();
+      window.__CARDVILLE_INTRO_VIDEO_DONE__?.();
+    } catch { /* ignore */ }
     if (!this.videoEl) return;
     try {
       this.videoEl.pause();

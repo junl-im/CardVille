@@ -18,7 +18,7 @@ import { AccessibilitySystem } from '../systems/AccessibilitySystem';
 // Accessibility audit anchor retained: AccessibilitySystem.summary()
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
-const LOBBY_VERSION = '1.0.72';
+const LOBBY_VERSION = '1.0.75';
 const MISSION_TONE_COLORS = { gold: 0xffd86f, blue: 0x8fd3ff, purple: 0xd7a5ff, green: 0xa9f5b5, coral: 0xffb39a } as const;
 const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-visible-v149' as const;
 const VILLAGE_VISIBLE_BUILDING_SCALE_TAG = 'village-readable-building-scale-v150' as const;
@@ -49,6 +49,9 @@ const SETTINGS_PANEL_CLAMP_TAG = 'settings-panel-clamp-v169' as const;
 const DEEP_SWEEP_UI_TAG = 'deep-sweep-ui-v170' as const;
 const NAMEPLATE_COLLISION_GUARD_TAG = 'nameplate-collision-guard-v170' as const;
 const PLAZA_ROUTE_CONFIRM_TAG = 'plaza-route-confirm-v170' as const;
+const INTRO_MASK_FLOOR_MOVE_TAG = 'intro-mask-floor-move-v174' as const;
+const FREE_PLAZA_FLOOR_WALK_TAG = 'free-plaza-floor-walk-v174' as const;
+const FLOOR_WALK_HIT_GUARD_TAG = 'floor-walk-hit-guard-v175' as const;
 // Legacy mobile-exit-layout audit anchor retained while actual chip copy uses micro-fit: fontSize: '11px'.
 const HERO_HOME = { x: 195, y: 566 } as const;
 const CAT_HOME = { x: 146, y: 612 } as const;
@@ -99,6 +102,7 @@ export class MainLobbyScene extends Phaser.Scene {
     this.drawBuildings(recommendedBuildingId);
     this.drawDioramaNPCs();
     this.drawHeroParty();
+    this.drawFreeWalkFloor();
     this.drawBottomHint(profile.nickname);
     // Runtime HUD shows only player-facing village UI, never build/debug notes.
     console.info('[CardVille] premium lobby art placement', LOBBY_ART_PLACEMENT_TAG, LOBBY_UI_NON_OVERLAP_TAG, LOBBY_USER_ASSET_VISIBLE_TAG, USER_LOBBY_ASSET_ASSIGNMENT_TAG, LOBBY_USER_ASSET_NPC_TAG);
@@ -191,11 +195,9 @@ export class MainLobbyScene extends Phaser.Scene {
     if (!missing.length) return false;
 
     const l = layout(this);
-    this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x061126, 1).setDepth(5000);
-    const barBg = this.add.rectangle(l.cx, l.cy, 238, 7, 0xffffff, 0.10).setDepth(5001);
-    const bar = this.add.rectangle(l.cx - 119, l.cy, 150, 7, 0xffd86f, 0.48).setOrigin(0, 0.5).setDepth(5002);
-    this.tweens.add({ targets: bar, scaleX: 0.28, alpha: 0.42, duration: scaledDuration(760, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-    barBg.setName(LOBBY_FORCE_LOAD_GATE_TAG);
+    this.add.rectangle(l.visibleX + l.visibleWidth / 2, l.visibleY + l.visibleHeight / 2, l.visibleWidth, l.visibleHeight, 0x061126, 1)
+      .setDepth(5000)
+      .setName(`${LOBBY_FORCE_LOAD_GATE_TAG}:${INTRO_MASK_FLOOR_MOVE_TAG}:silent-critical-asset-gate-no-bar`);
 
     if (attempt >= 2) {
       console.error('[CardVille] lobby critical asset reload failed twice', missing.map((asset) => asset.key), LOBBY_FORCE_LOAD_GATE_TAG);
@@ -861,6 +863,73 @@ export class MainLobbyScene extends Phaser.Scene {
     this.rememberBaseScale(firefly);
     const base = this.baseScaleOf(firefly);
     if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: firefly, x: px + Phaser.Math.Between(-18, 22) * scale, y: py - Phaser.Math.Between(12, 30) * scale, alpha: 0.18, scaleX: base.x * 0.72, scaleY: base.y * 0.72, duration: scaledDuration(1800, this.quality), delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+  }
+
+  private drawFreeWalkFloor(): void {
+    const l = layout(this);
+    const top = Math.max(l.top + 154, this.vy(174));
+    const bottom = Math.min(l.bottom - 62, this.vy(790));
+    if (bottom <= top + 60) return;
+    const floor = this.add.zone(l.cx, (top + bottom) / 2, Math.max(l.visibleWidth, this.scale.width), bottom - top)
+      .setInteractive({ useHandCursor: false })
+      .setDepth(80)
+      .setName(`${FREE_PLAZA_FLOOR_WALK_TAG}:${INTRO_MASK_FLOOR_MOVE_TAG}:${FLOOR_WALK_HIT_GUARD_TAG}`);
+    floor.on('pointerup', (pointer: Phaser.Input.Pointer) => {
+      if (this.busy || this.activeSettingsPanel) return;
+      const targetObjects = this.input.manager?.hitTest?.(pointer, this.children.list, this.cameras.main) ?? [];
+      const blockedByInteractiveSurface = targetObjects.some((object) => {
+        const name = typeof object.name === 'string' ? object.name : '';
+        return object !== floor && (name.startsWith('building-touch:') || name.includes(PLAZA_TAP_ROUTE_EXPAND_TAG) || name.includes('npc-touch') || name.includes('lobby-settings'));
+      });
+      if (blockedByInteractiveSurface) return;
+      const x = Number.isFinite(pointer.worldX) ? pointer.worldX : pointer.x;
+      const y = Number.isFinite(pointer.worldY) ? pointer.worldY : pointer.y;
+      this.walkPartyToFreePoint(x, y);
+    });
+  }
+
+  private walkPartyToFreePoint(rawX: number, rawY: number): void {
+    if (!this.hero || !this.cat || this.busy) return;
+    const l = layout(this);
+    const scale = this.vs(0.94, 1.10);
+    const target = {
+      x: Phaser.Math.Clamp(rawX, l.visibleX + 30, l.visibleX + l.visibleWidth - 30),
+      y: Phaser.Math.Clamp(rawY - 24 * scale, l.top + 188, l.bottom - 96)
+    };
+    this.busy = true;
+    this.activeSpeech?.destroy();
+    this.activeSpeech = undefined;
+    this.hintText?.setText('빈 광장으로 살짝 이동했어요.');
+    this.tweens.killTweensOf(this.hero);
+    this.tweens.killTweensOf(this.cat);
+    this.spawnTouchRipple(rawX, rawY);
+    this.spawnFootsteps(this.hero.x, this.hero.y, target.x, target.y);
+    this.startWalkAnimation();
+    this.tweens.add({
+      targets: this.hero,
+      x: target.x,
+      y: target.y,
+      scale: 1,
+      duration: 430,
+      ease: 'Sine.easeInOut',
+      onComplete: () => {
+        this.stopWalkAnimation();
+        this.busy = false;
+      }
+    });
+    this.tweens.add({
+      targets: this.cat,
+      x: target.x - 30 * scale,
+      y: target.y + 22 * scale,
+      scale: 1,
+      duration: 400,
+      delay: 50,
+      ease: 'Sine.easeInOut'
+    });
+    if (isMotionEnabled(this.quality)) {
+      this.addStepBounce(this.hero, 4, 4);
+      this.addStepBounce(this.cat, 3, 3);
+    }
   }
 
   private enterBuilding(building: DioramaBuilding, buildingContainer: Phaser.GameObjects.Container): void {

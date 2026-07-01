@@ -1,6 +1,31 @@
-# CardVille 1.0.72
+# CardVille 1.0.75
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
+
+## 1.0.75 업데이트 내역
+
+- **CanvasIntroFloorPolish** 패스입니다. 인트로 영상은 raw video를 직접 보여주지 않고 `intro-canvas-video-surface-v175` 캔버스에 프레임을 복사해 보여줍니다. 이렇게 해서 모바일/인앱 브라우저의 기본 video 타임라인이 화면에 그려질 경로를 줄였습니다.
+- `legacy-loading-ui-deadlock-v175`: 이전 시작 표면, 진행 표면, native controls, Phaser progress 경로가 다시 살아나는지 검사합니다.
+- `floor-walk-hit-guard-v175`: 마을 빈 공간 터치 이동 영역을 조금 더 넓히고, 건물/NPC/설정 버튼 터치와 겹칠 때는 바닥 이동이 끼어들지 않도록 막았습니다.
+- 기존 `intro-native-control-mask-v174`, `free-plaza-floor-walk-v174`, `intro-no-phaser-progress-v173`, `legacy-code-revival-guard-v173`, `intro-preplay-shield-v172` 정책은 유지합니다.
+- 검증 추가: `tools/check-canvas-intro-floor-v175.mjs` / `npm run check:canvas-intro-floor-v175`.
+- 최종 ZIP 명명 규칙: `CardVille_v1.0.75_CanvasIntroFloorPolish_Full.zip`, `CardVille_v1.0.75_CanvasIntroFloorPolish_Patch.zip`.
+
+
+- **IntroMaskFloorMove** 패스입니다. LegacyGuardUIPolish 검증 호환 표기도 유지합니다. 인트로 영상/무문구 로딩 표면/전역 UI 검증에서 예전 코드가 다시 살아나는 경로를 더 강하게 막았습니다.
+- `intro-no-phaser-progress-v173`: `IntroLoadingScene`에 남아 있던 `progressBar` 필드와 업데이트 경로를 제거했습니다. 앞으로 Phaser 로딩바는 다시 만들지 않습니다.
+- `legacy-code-revival-guard-v173`: `로딩중`, `로딩 중`, `이동 중...`, `progressBar = this.add`, `video.setAttribute('controls'...)` 같은 예전 UI 코드 재발을 검사합니다.
+- `production-debug-overlay-kill-v173`: `?touchDebug` URL만으로 초록 터치 영역/디버그 박스가 보이지 않게 했습니다. 프로덕션에서는 디버그 터치 오버레이가 항상 꺼집니다.
+- `cardvilleStripNativeVideoUi` / `cardvilleScrubNativeVideoUi`: 영상 시작 직전과 직후 native video controls를 반복 제거해 큰 플레이 마크/진행바가 다시 보이는 위험을 줄였습니다.
+- 기존 `IntroCleanSweep`, `IntroNoOverlayPolish`, `IntroVideoHardVisible`, `IntroGuardUIPolish`, `IntroVideoMinFit`, `corner-sweep-v166`, `safe-area-copy-clamp-v166`, `input-watchdog-v166` 정책은 유지합니다.
+- 검증 추가: `tools/check-legacy-guard-ui-v173.mjs` / `npm run check:legacy-guard-ui-v173`.
+- 검증 호환 ZIP 앵커: CardVille_v1.0.75_IntroMaskFloorMove_Full.zip, CardVille_v1.0.75_IntroMaskFloorMove_Patch.zip, CardVille_v1.0.75_LegacyGuardUIPolish_Full.zip, CardVille_v1.0.75_IntroCleanSweep_Full.zip, CardVille_v1.0.75_IntroCleanSweep_Patch.zip, CardVille_v1.0.75_IntroNoOverlayPolish_Full.zip, CardVille_v1.0.75_IntroGuardUIPolish_Full.zip, CardVille_v1.0.75_IntroVideoHardVisible_Full.zip.
+
+- `intro-native-control-mask-v174`: 일부 모바일/인앱 브라우저가 HTML video 기본 타임라인을 다시 그리는 경우를 대비해, 영상 하단 native control 영역을 무문구 마스크로 덮습니다.
+- `silent-critical-asset-gate-no-bar`: 로비 핵심 에셋 재확인 중에도 Phaser 로딩바/진행바를 만들지 않고 무문구 차폐만 사용합니다.
+- `free-plaza-floor-walk-v174`: 마을 빈 공간을 터치하면 건물 이동이 아니라 캐릭터와 고양이가 해당 지점으로 짧게 걸어갑니다.
+- 검증 추가: `tools/check-intro-mask-floor-v174.mjs` / `npm run check:intro-mask-floor-v174`.
+- 최종 ZIP 명명 규칙: `CardVille_v1.0.75_IntroMaskFloorMove_Full.zip`, `CardVille_v1.0.75_IntroMaskFloorMove_Patch.zip`.
 
 ## 1.0.72 업데이트 내역
 

@@ -13,10 +13,16 @@
       #app canvas{position:relative;z-index:1;display:block;background:#071126;}
 
       #cardville-intro-video{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;min-height:100vh!important;object-fit:cover!important;z-index:2147482000!important;pointer-events:none!important;background:#071126!important;display:block!important;visibility:visible!important;opacity:1!important;border:0!important;outline:0!important;-webkit-appearance:none!important;appearance:none!important;}
+      #cardville-intro-video[data-cardville-canvas-video-v175='true']{opacity:.001!important;visibility:hidden!important;left:-100vw!important;top:0!important;width:1px!important;height:1px!important;min-height:1px!important;}
+      #cardville-intro-video-canvas{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;min-height:100vh!important;z-index:2147482400!important;pointer-events:none!important;background:#071126 center/cover no-repeat!important;display:block!important;visibility:visible!important;opacity:1!important;border:0!important;outline:0!important;image-rendering:auto!important;}
       #cardville-intro-video[data-cardville-video-playing-v172='false']{opacity:0!important;visibility:hidden!important;}
       #cardville-intro-video-shield{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;min-height:100vh!important;z-index:2147483000!important;pointer-events:none!important;background:#071126 center/cover no-repeat!important;display:block;visibility:visible;opacity:1;}
+      #cardville-intro-video-control-mask{position:fixed!important;left:0!important;right:0!important;bottom:0!important;height:max(132px,24dvh)!important;z-index:2147482500!important;pointer-events:none!important;display:block!important;visibility:visible!important;opacity:1!important;background:linear-gradient(180deg,rgba(7,17,38,0) 0%,rgba(7,17,38,.72) 42%,#071126 100%)!important;}
       #cardville-intro-video::-webkit-media-controls,#cardville-intro-video::-webkit-media-controls-panel,#cardville-intro-video::-webkit-media-controls-enclosure,#cardville-intro-video::-webkit-media-controls-overlay-play-button,#cardville-intro-video::-webkit-media-controls-start-playback-button,#cardville-intro-video::-webkit-media-controls-play-button,#cardville-intro-video::-webkit-media-controls-playback-button,#cardville-intro-video::-webkit-media-controls-timeline,#cardville-intro-video::-webkit-media-controls-progress-bar,#cardville-intro-video::-webkit-media-controls-current-time-display,#cardville-intro-video::-webkit-media-controls-time-remaining-display,#cardville-intro-video::-webkit-media-controls-mute-button,#cardville-intro-video::-webkit-media-controls-volume-slider,#cardville-intro-video::-webkit-media-controls-fullscreen-button{display:none!important;opacity:0!important;visibility:hidden!important;-webkit-appearance:none!important;appearance:none!important;}
       html.intro-no-native-video-ui-v171 video::-webkit-media-controls,html.intro-no-native-video-ui-v171 video::-webkit-media-controls-panel,html.intro-no-native-video-ui-v171 video::-webkit-media-controls-overlay-play-button,html.intro-no-native-video-ui-v171 video::-webkit-media-controls-start-playback-button,html.intro-no-native-video-ui-v171 video::-webkit-media-controls-timeline,html.intro-no-native-video-ui-v171 video::-webkit-media-controls-progress-bar{display:none!important;opacity:0!important;visibility:hidden!important;}
+
+      #cardville-intro-video::-webkit-media-controls-loading-panel,#cardville-intro-video::-webkit-media-controls-rewind-button,#cardville-intro-video::-webkit-media-controls-seek-back-button,#cardville-intro-video::-webkit-media-controls-seek-forward-button,#cardville-intro-video::-webkit-media-controls-picture-in-picture-button,#cardville-intro-video::-webkit-media-controls-toggle-closed-captions-button{display:none!important;opacity:0!important;visibility:hidden!important;-webkit-appearance:none!important;appearance:none!important;}
+      html.legacy-code-revival-guard-v173 #boot-fallback .boot-note{display:none!important;visibility:hidden!important;opacity:0!important;}
     /* no-prestart-button-policy: first visible button is rendered only by Phaser LoginScene */
     </style>
   </head>
@@ -40,7 +46,7 @@
       }
     </script>
     <script>
-      window.__CARDVILLE_VERSION__ = '1.0.72';
+      window.__CARDVILLE_VERSION__ = '1.0.75';
       window.__CARDVILLE_READY__ = false;
       window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = 0;
       window.__CARDVILLE_INTRO_TOUCH_PRIME_TAG__ = 'intro-touch-prime-v169';
@@ -48,10 +54,86 @@
       window.__CARDVILLE_INTRO_NO_NATIVE_UI_TAG__ = 'intro-no-native-video-ui-v171';
       window.__CARDVILLE_INTRO_PREPLAY_SHIELD_TAG__ = 'intro-preplay-shield-v172';
       window.__CARDVILLE_INTRO_NO_PROGRESS_SURFACE_TAG__ = 'intro-no-progress-surface-v172';
+      window.__CARDVILLE_INTRO_NO_PHASER_PROGRESS_TAG__ = 'intro-no-phaser-progress-v173';
+      window.__CARDVILLE_LEGACY_CODE_GUARD_TAG__ = 'legacy-code-revival-guard-v173';
+      window.__CARDVILLE_PROD_DEBUG_OVERLAY_KILL_TAG__ = 'production-debug-overlay-kill-v173';
+      window.__CARDVILLE_INTRO_CONTROL_MASK_TAG__ = 'intro-native-control-mask-v174';
       window.__CARDVILLE_INTRO_PLAYMARK_SHIELD_TAG__ = 'intro-playmark-shield-v171';
+      window.__CARDVILLE_INTRO_CANVAS_VIDEO_TAG__ = 'intro-canvas-video-surface-v175';
+      window.__CARDVILLE_LEGACY_LOADING_DEADLOCK_TAG__ = 'legacy-loading-ui-deadlock-v175';
 
-      function cardvilleIntroSrc(){ return new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.72', document.baseURI).href; }
-      function cardvilleIntroPoster(){ return new URL('./assets/video/cardville_intro_poster.jpg?v=1.0.72', document.baseURI).href; }
+      function cardvilleIntroSrc(){ return new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.75', document.baseURI).href; }
+      function cardvilleIntroPoster(){ return new URL('./assets/video/cardville_intro_poster.jpg?v=1.0.75', document.baseURI).href; }
+      function cardvilleEnsureIntroCanvas(){
+        var id = 'cardville-intro-video-canvas';
+        var canvas = document.getElementById(id);
+        if (!canvas) {
+          canvas = document.createElement('canvas');
+          canvas.id = id;
+          canvas.setAttribute('aria-hidden', 'true');
+          canvas.setAttribute('data-cardville-intro-canvas-video-surface-v175', 'true');
+          canvas.setAttribute('data-cardville-no-progress-surface-v172', 'true');
+          canvas.setAttribute('data-cardville-legacy-loading-ui-deadlock-v175', 'true');
+          canvas.style.backgroundImage = "url('" + cardvilleIntroPoster() + "')";
+          canvas.style.backgroundSize = 'cover';
+          canvas.style.backgroundPosition = 'center';
+          document.body.appendChild(canvas);
+        }
+        canvas.style.display = 'block';
+        canvas.style.visibility = 'visible';
+        canvas.style.opacity = '1';
+        return canvas;
+      }
+      function cardvilleResizeIntroCanvas(canvas){
+        if (!canvas) return;
+        var dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+        var width = Math.max(1, Math.ceil((window.visualViewport ? window.visualViewport.width : window.innerWidth) * dpr));
+        var height = Math.max(1, Math.ceil((window.visualViewport ? window.visualViewport.height : window.innerHeight) * dpr));
+        if (canvas.width !== width) canvas.width = width;
+        if (canvas.height !== height) canvas.height = height;
+      }
+      function cardvillePaintIntroCanvasFrame(video, canvas){
+        if (!video || !canvas) return false;
+        var ctx = canvas.getContext('2d');
+        if (!ctx) return false;
+        cardvilleResizeIntroCanvas(canvas);
+        if (video.readyState < 2 || !video.videoWidth || !video.videoHeight) return false;
+        var cw = canvas.width;
+        var ch = canvas.height;
+        var vw = video.videoWidth;
+        var vh = video.videoHeight;
+        var scale = Math.max(cw / vw, ch / vh);
+        var sw = cw / scale;
+        var sh = ch / scale;
+        var sx = Math.max(0, (vw - sw) / 2);
+        var sy = Math.max(0, (vh - sh) / 2);
+        try {
+          ctx.drawImage(video, sx, sy, sw, sh, 0, 0, cw, ch);
+          canvas.setAttribute('data-cardville-canvas-painted-v175', 'true');
+          return true;
+        } catch(e) { return false; }
+      }
+      function cardvilleStartIntroCanvasMirror(video){
+        if (!video) return;
+        var canvas = cardvilleEnsureIntroCanvas();
+        video.setAttribute('data-cardville-canvas-video-v175', 'true');
+        if (window.__CARDVILLE_INTRO_CANVAS_RAF__) window.cancelAnimationFrame(window.__CARDVILLE_INTRO_CANVAS_RAF__);
+        var tick = function(){
+          var liveVideo = document.getElementById('cardville-intro-video');
+          var liveCanvas = document.getElementById('cardville-intro-video-canvas');
+          if (!liveVideo || !liveCanvas) return;
+          cardvilleStripNativeVideoUi(liveVideo);
+          cardvillePaintIntroCanvasFrame(liveVideo, liveCanvas);
+          window.__CARDVILLE_INTRO_CANVAS_RAF__ = window.requestAnimationFrame(tick);
+        };
+        tick();
+      }
+      function cardvilleStopIntroCanvasMirror(){
+        if (window.__CARDVILLE_INTRO_CANVAS_RAF__) window.cancelAnimationFrame(window.__CARDVILLE_INTRO_CANVAS_RAF__);
+        window.__CARDVILLE_INTRO_CANVAS_RAF__ = 0;
+        var canvas = document.getElementById('cardville-intro-video-canvas');
+        if (canvas) canvas.remove();
+      }
       function cardvilleEnsureIntroShield(){
         var id = 'cardville-intro-video-shield';
         var shield = document.getElementById(id);
@@ -61,6 +143,8 @@
           shield.setAttribute('aria-hidden', 'true');
           shield.setAttribute('data-cardville-intro-playmark-shield-v171', 'true');
           shield.setAttribute('data-cardville-no-native-video-ui-v171', 'true');
+          shield.setAttribute('data-cardville-no-phaser-progress-v173', 'true');
+          shield.setAttribute('data-cardville-legacy-code-guard-v173', 'true');
           shield.style.position = 'fixed';
           shield.style.inset = '0';
           shield.style.width = '100vw';
@@ -83,6 +167,27 @@
         shield.style.opacity = '1';
         return shield;
       }
+      function cardvilleEnsureIntroControlMask(){
+        var id = 'cardville-intro-video-control-mask';
+        var mask = document.getElementById(id);
+        if (!mask) {
+          mask = document.createElement('div');
+          mask.id = id;
+          mask.setAttribute('aria-hidden', 'true');
+          mask.setAttribute('data-cardville-intro-native-control-mask-v174', 'true');
+          mask.setAttribute('data-cardville-no-progress-surface-v172', 'true');
+          mask.setAttribute('data-cardville-legacy-code-guard-v173', 'true');
+          document.body.appendChild(mask);
+        }
+        mask.style.display = 'block';
+        mask.style.visibility = 'visible';
+        mask.style.opacity = '1';
+        return mask;
+      }
+      function cardvilleRemoveIntroControlMask(){
+        var mask = document.getElementById('cardville-intro-video-control-mask');
+        if (mask) mask.remove();
+      }
       function cardvilleHideIntroShield(){
         var shield = document.getElementById('cardville-intro-video-shield');
         if (!shield) return;
@@ -94,6 +199,8 @@
       }
       function cardvilleKeepIntroShield(video){
         cardvilleEnsureIntroShield();
+        cardvilleEnsureIntroControlMask();
+        cardvilleEnsureIntroCanvas();
         if (video) {
           video.setAttribute('data-cardville-video-playing-v172', 'false');
           video.style.display = 'block';
@@ -101,11 +208,31 @@
       }
       function cardvilleRevealIntroVideo(video){
         if (!video) return;
+        cardvilleEnsureIntroControlMask();
+        cardvilleStartIntroCanvasMirror(video);
         video.setAttribute('data-cardville-video-playing-v172', 'true');
         video.style.display = 'block';
         video.style.visibility = 'visible';
         video.style.opacity = '1';
         window.setTimeout(cardvilleHideIntroShield, 80);
+      }
+      function cardvilleStripNativeVideoUi(video){
+        if (!video) return;
+        try { video.pause = video.pause.bind(video); } catch(e) {}
+        video.controls = false;
+        video.disablePictureInPicture = true;
+        try { video.disableRemotePlayback = true; } catch(e) {}
+        video.removeAttribute('controls');
+        video.setAttribute('controlsList', 'nodownload noplaybackrate noremoteplayback nofullscreen');
+        video.setAttribute('x-webkit-airplay', 'deny');
+        video.setAttribute('data-cardville-no-phaser-progress-v173', 'intro-no-phaser-progress-v173');
+        video.setAttribute('data-cardville-legacy-code-guard-v173', 'legacy-code-revival-guard-v173');
+      }
+      function cardvilleScrubNativeVideoUi(video){
+        cardvilleStripNativeVideoUi(video);
+        for (var i = 1; i <= 8; i += 1) {
+          window.setTimeout(function(){ cardvilleStripNativeVideoUi(video); }, i * 220);
+        }
       }
       function cardvilleConfigureIntroVideo(video){
         if (!video) return null;
@@ -134,6 +261,11 @@
         video.setAttribute('data-cardville-intro-playmark-shield-v171', 'true');
         video.setAttribute('data-cardville-intro-preplay-shield-v172', 'true');
         video.setAttribute('data-cardville-no-progress-surface-v172', 'true');
+        video.setAttribute('data-cardville-intro-native-control-mask-v174', 'true');
+        video.setAttribute('data-cardville-intro-canvas-video-surface-v175', 'true');
+        video.setAttribute('data-cardville-legacy-loading-ui-deadlock-v175', 'true');
+        cardvilleEnsureIntroControlMask();
+        cardvilleStripNativeVideoUi(video);
         if (video.getAttribute('data-cardville-video-playing-v172') !== 'true') video.setAttribute('data-cardville-video-playing-v172', 'false');
         video.style.position = 'fixed';
         video.style.inset = '0';
@@ -153,8 +285,12 @@
         return video;
       }
       window.__CARDVILLE_INTRO_VIDEO_HIDE_SHIELD__ = cardvilleHideIntroShield;
+      window.__CARDVILLE_INTRO_VIDEO_KEEP_MASK__ = cardvilleEnsureIntroControlMask;
+      window.__CARDVILLE_INTRO_VIDEO_REMOVE_MASK__ = cardvilleRemoveIntroControlMask;
       window.__CARDVILLE_INTRO_VIDEO_KEEP_SHIELD__ = cardvilleKeepIntroShield;
       window.__CARDVILLE_INTRO_VIDEO_REVEAL__ = cardvilleRevealIntroVideo;
+      window.__CARDVILLE_INTRO_CANVAS_START__ = cardvilleStartIntroCanvasMirror;
+      window.__CARDVILLE_INTRO_CANVAS_STOP__ = cardvilleStopIntroCanvasMirror;
       window.__CARDVILLE_INTRO_VIDEO_PRIME__ = function(){
         var id = 'cardville-intro-video';
         cardvilleEnsureIntroShield();
@@ -165,12 +301,12 @@
           document.body.appendChild(video);
         }
         cardvilleConfigureIntroVideo(video);
-        document.documentElement.classList.add('cardville-intro-hard-visible-v170', 'intro-no-native-video-ui-v171', 'intro-playmark-shield-v171', 'intro-preplay-shield-v172', 'intro-no-progress-surface-v172');
+        document.documentElement.classList.add('cardville-intro-hard-visible-v170', 'intro-hard-visible-v170', 'intro-no-native-video-ui-v171', 'intro-playmark-shield-v171', 'intro-preplay-shield-v172', 'intro-no-progress-surface-v172', 'intro-no-phaser-progress-v173', 'legacy-code-revival-guard-v173', 'production-debug-overlay-kill-v173', 'intro-native-control-mask-v174', 'intro-canvas-video-surface-v175', 'legacy-loading-ui-deadlock-v175');
         if (!window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ || window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ <= 0) {
           window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = Date.now();
         }
         var revealPrime = function(){ cardvilleKeepIntroShield(video); };
-        var hideOnlyWhenPlaying = function(){ cardvilleRevealIntroVideo(video); };
+        var hideOnlyWhenPlaying = function(){ cardvilleScrubNativeVideoUi(video); cardvilleRevealIntroVideo(video); };
         video.addEventListener('playing', hideOnlyWhenPlaying, { once: true });
         try { video.load(); } catch(e) {}
         try { video.play().then(hideOnlyWhenPlaying).catch(function(){ revealPrime(); }); } catch(e) { revealPrime(); }
@@ -185,9 +321,9 @@
         }
         video.setAttribute('data-cardville-silent-intro-video-v167', 'true');
         video.setAttribute('data-cardville-started-at-zero-guard-v169', 'true');
-        document.documentElement.classList.add('cardville-intro-hard-visible-v170', 'intro-no-native-video-ui-v171', 'intro-playmark-shield-v171', 'intro-preplay-shield-v172', 'intro-no-progress-surface-v172');
+        document.documentElement.classList.add('cardville-intro-hard-visible-v170', 'intro-hard-visible-v170', 'intro-no-native-video-ui-v171', 'intro-playmark-shield-v171', 'intro-preplay-shield-v172', 'intro-no-progress-surface-v172', 'intro-no-phaser-progress-v173', 'legacy-code-revival-guard-v173', 'production-debug-overlay-kill-v173', 'intro-native-control-mask-v174', 'intro-canvas-video-surface-v175', 'legacy-loading-ui-deadlock-v175');
         var reveal = function(){ cardvilleKeepIntroShield(video); };
-        var hideOnlyWhenPlaying = function(){ cardvilleRevealIntroVideo(video); };
+        var hideOnlyWhenPlaying = function(){ cardvilleScrubNativeVideoUi(video); cardvilleRevealIntroVideo(video); };
         video.addEventListener('playing', hideOnlyWhenPlaying, { once: true });
         video.addEventListener('loadeddata', reveal, { once: true });
         video.addEventListener('canplay', reveal, { once: true });
@@ -198,9 +334,12 @@
       window.__CARDVILLE_INTRO_VIDEO_DONE__ = function(){
         var video = document.getElementById('cardville-intro-video');
         var shield = document.getElementById('cardville-intro-video-shield');
+        var mask = document.getElementById('cardville-intro-video-control-mask');
+        cardvilleStopIntroCanvasMirror();
         if (video) video.remove();
         if (shield) shield.remove();
-        document.documentElement.classList.remove('cardville-intro-hard-visible-v170', 'intro-no-native-video-ui-v171', 'intro-playmark-shield-v171', 'intro-preplay-shield-v172', 'intro-no-progress-surface-v172');
+        if (mask) mask.remove();
+        document.documentElement.classList.remove('cardville-intro-hard-visible-v170', 'intro-hard-visible-v170', 'intro-no-native-video-ui-v171', 'intro-playmark-shield-v171', 'intro-preplay-shield-v172', 'intro-no-progress-surface-v172', 'intro-no-phaser-progress-v173', 'legacy-code-revival-guard-v173', 'production-debug-overlay-kill-v173', 'intro-native-control-mask-v174', 'intro-canvas-video-surface-v175', 'legacy-loading-ui-deadlock-v175');
         window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = 0;
       };
       window.__CARDVILLE_BOOT_OK__ = function(){
@@ -209,7 +348,7 @@
         if (el) el.remove();
       };
       // Compatibility anchors: document.documentElement.classList.add('cardville-intro-hard-visible-v170'); document.documentElement.classList.remove('cardville-intro-hard-visible-v170'); no generic loading copy/bar on boot. no generic loading copy on boot.
-      // 1.0.72: video remains behind the poster shield until real playing; native play marks, progress/timeline UI, generic loading copy, and old loading bars are quarantined by CSS, DOM shield, and IntroLoadingScene guards.
+      // 1.0.75: raw video is mirrored to a canvas surface, native timelines stay masked, progress surfaces are removed, old startup surfaces are quarantined, old loading bars are quarantined, and empty lobby floor taps move the hero.
     </script>
     <script type="module" src="/src/main.ts"></script>
   </body>

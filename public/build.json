@@ -1,13 +1,13 @@
 {
-  "name": "IntroCleanSweep",
-  "version": "1.0.72",
-  "mode": "intro-preplay-shield-v172-intro-no-progress-surface-v172-legacy-loading-code-quarantine-v172-intro-no-native-video-ui-v171-intro-no-loading-surface-v171-intro-min-3s-video-v168-video-only-loading-v168-intro-started-at-zero-guard-v169-intro-touch-prime-v169-corner-sweep-v166-safe-area-copy-clamp-v166-input-watchdog-v166-flow-fit-ui-v164-flow-ui-v165-IntroVideoMinFit-IntroGuardUIPolish-IntroNoOverlayPolish-IntroVideoHardVisible",
+  "name": "CanvasIntroFloorPolish intro-canvas-video-surface-v175 floor-walk-hit-guard-v175",
+  "version": "1.0.75",
+  "mode": "intro-preplay-shield-v172-intro-no-progress-surface-v172-legacy-loading-code-quarantine-v172-intro-no-native-video-ui-v171-intro-no-loading-surface-v171-intro-min-3s-video-v168-video-only-loading-v168-intro-started-at-zero-guard-v169-intro-touch-prime-v169-corner-sweep-v166-safe-area-copy-clamp-v166-input-watchdog-v166-flow-fit-ui-v164-flow-ui-v165-IntroVideoMinFit-IntroGuardUIPolish-IntroNoOverlayPolish-IntroVideoHardVisible-CanvasIntroFloorPolish-intro-canvas-video-surface-v175-floor-walk-hit-guard-v175-legacy-loading-ui-deadlock-v175",
   "svg": "disabled",
   "pwa": "disabled",
-  "notes": "The intro video stays behind a poster shield until actual playback so native play marks cannot flash; generic loading bars/copy and old loading surfaces are quarantined.",
-  "label": "No native play mark, no progress bar, no legacy loading surface",
-  "description": "Game start displays a silent video-only intro with a preplay shield, holds for at least 3 seconds, and blocks old loading UI revival.",
-  "assetVersion": "1.0.72",
-  "previousRepairName": "IntroNoOverlayPolish / IntroVideoHardVisible / IntroGuardUIPolish / IntroVideoMinFit",
-  "compatibilityTags": "IntroVideoHardVisible intro-hard-visible-v170 IntroVideoMinFit IntroGuardUIPolish corner-sweep-v166 flow-fit-ui-v164 flow-ui-v165 intro-preplay-shield-v172 intro-no-progress-surface-v172 legacy-loading-code-quarantine-v172 intro-no-loading-surface-v171 intro-min-3s-video-v168 video-only-loading-v168 intro-started-at-zero-guard-v169 intro-touch-prime-v169 safe-area-copy-clamp-v166 input-watchdog-v166 IntroNoOverlayPolish"
+  "notes": "Startup movie frames are mirrored to a top canvas so native video timelines cannot appear; legacy loading/progress code remains quarantined and empty-floor walking has safer hit handling.",
+  "label": "Canvas mirrored intro video, no native timeline, safer floor walking",
+  "description": "Game start remains video-only for at least 3 seconds, with the native video element hidden behind a canvas surface and old loading/progress code paths guarded.",
+  "assetVersion": "1.0.75",
+  "previousRepairName": "IntroCleanSweep / IntroNoOverlayPolish / IntroVideoHardVisible / IntroGuardUIPolish / IntroVideoMinFit",
+  "compatibilityTags": "LegacyGuardUIPolish IntroVideoHardVisible intro-hard-visible-v170 IntroVideoMinFit IntroGuardUIPolish corner-sweep-v166 flow-fit-ui-v164 flow-ui-v165 intro-preplay-shield-v172 intro-no-progress-surface-v172 legacy-loading-code-quarantine-v172 intro-no-loading-surface-v171 intro-min-3s-video-v168 video-only-loading-v168 intro-started-at-zero-guard-v169 intro-touch-prime-v169 safe-area-copy-clamp-v166 input-watchdog-v166 IntroNoOverlayPolish intro-no-phaser-progress-v173 legacy-code-revival-guard-v173 production-debug-overlay-kill-v173 IntroMaskFloorMove intro-native-control-mask-v174 free-plaza-floor-walk-v174 CanvasIntroFloorPolish intro-canvas-video-surface-v175 floor-walk-hit-guard-v175 legacy-loading-ui-deadlock-v175"
 }

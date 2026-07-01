@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { darkText } from './TextStyles';
-import { GAME_WIDTH, compactText, fitTextSize, responsiveSurfaceWidth, RESPONSIVE_SURFACE_SPREAD_TAG } from '../systems/LayoutSystem';
+import { GAME_WIDTH, compactText, fitTextSize, hasTouchDebug, responsiveSurfaceWidth, RESPONSIVE_SURFACE_SPREAD_TAG } from '../systems/LayoutSystem';
 
 export type ButtonAction = () => unknown | Promise<unknown>;
 
@@ -136,7 +136,7 @@ export class GameButton extends Phaser.GameObjects.Container {
       this.resetVisual();
     });
 
-    if (typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('touchDebug')) {
+    if (hasTouchDebug()) {
       const debug = scene.add.rectangle(0, 0, hitW, hitH, 0x00ff66, 0.14).setStrokeStyle(1, 0x00ff66, 0.75);
       this.add(debug);
     }

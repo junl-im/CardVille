@@ -1,8 +1,36 @@
 # CardVille AI Handoff
 
-## 현재 작업 기준: 1.0.72
+## 현재 작업 기준: 1.0.75
 
-현재 기준 버전은 1.0.72입니다.
+현재 기준 버전은 1.0.75입니다.
+
+### 1.0.75 CanvasIntroFloorPolish / native 영상 UI 우회 / 바닥 이동 hit guard 패스
+
+- 목적: 인트로 영상 뒤에 남는 native 타임라인/진행 표면과 예전 시작 코드 재발을 더 강하게 막고, 빈 광장 터치 이동을 더 자연스럽게 만드는 패스입니다.
+- 핵심 수정: `intro-canvas-video-surface-v175`로 raw HTML video는 숨기고, 실제 표시 표면은 canvas mirror로 바꿨습니다. 영상 프레임은 계속 보이지만 native video controls/timeline이 화면에 그려질 표면을 차단합니다.
+- 핵심 수정: `legacy-loading-ui-deadlock-v175`로 시작 표면에 진행바/문구/native controls/Phaser progress가 되살아나는지 검증합니다.
+- 핵심 수정: `floor-walk-hit-guard-v175`로 빈 광장 터치 영역을 넓히고, 건물/NPC/설정 버튼과 겹치는 터치에서는 바닥 이동을 무시합니다.
+- 추가 검증: `tools/check-canvas-intro-floor-v175.mjs`, `npm run check:canvas-intro-floor-v175`.
+- 산출물 이름: `CardVille_v1.0.75_CanvasIntroFloorPolish_Full.zip`, `CardVille_v1.0.75_CanvasIntroFloorPolish_Patch.zip`.
+
+
+### 1.0.75 IntroMaskFloorMove / LegacyGuardUIPolish 호환 / 예전 코드 재발 방지 강화 패스
+
+- 목적: 사용자가 계속 우려한 코드 꼬임/예전 로딩 UI/디버그 표면 재발을 더 강하게 막는 패스입니다.
+- 핵심 수정: `intro-no-phaser-progress-v173`로 `IntroLoadingScene`의 `progressBar` 필드와 업데이트 경로를 제거했습니다. 이제 시작 구간은 영상/포스터 shield만 사용합니다.
+- 핵심 수정: `legacy-code-revival-guard-v173`로 `로딩중`, `로딩 중`, `이동 중...`, `progressBar = this.add`, native video `controls` 재활성화가 되살아나는지 자동 검수합니다.
+- 핵심 수정: `production-debug-overlay-kill-v173`로 `?touchDebug` URL만으로 초록 디버그 hitbox가 표시되는 문제를 막았습니다. 프로덕션 빌드에서는 항상 false입니다.
+- 핵심 수정: `cardvilleStripNativeVideoUi`와 `cardvilleScrubNativeVideoUi`로 영상 재생 직전/직후 native controls를 반복 제거합니다.
+- 핵심 수정: `intro-native-control-mask-v174`로 일부 모바일/인앱 브라우저의 video native timeline/progress UI가 다시 보여도 하단 무문구 마스크로 덮습니다.
+- 핵심 수정: `silent-critical-asset-gate-no-bar`로 로비 핵심 에셋 재확인 중에도 진행바/로딩바를 만들지 않습니다.
+- 핵심 수정: `free-plaza-floor-walk-v174`로 건물/NPC가 아닌 빈 광장 터치 시 캐릭터와 고양이가 해당 지점으로 이동합니다.
+- 추가 검증: `tools/check-intro-mask-floor-v174.mjs`, `npm run check:intro-mask-floor-v174`.
+
+- 유지 규칙: 영상 최소 3초, 에셋 로딩이 더 길면 영상 반복, 로딩 문구/로딩바 없음, 큰 플레이 마크 차단, SVG 없음, 새 docs 문서 생성 금지.
+- 추가 검증: `tools/check-legacy-guard-ui-v173.mjs`, `npm run check:legacy-guard-ui-v173`.
+- 산출물 이름: `CardVille_v1.0.75_IntroMaskFloorMove_Full.zip`, `CardVille_v1.0.75_IntroMaskFloorMove_Patch.zip`.
+- 이전 검증 호환 ZIP 앵커: CardVille_v1.0.75_LegacyGuardUIPolish_Full.zip, CardVille_v1.0.75_IntroCleanSweep_Full.zip, CardVille_v1.0.75_IntroCleanSweep_Patch.zip, CardVille_v1.0.75_IntroNoOverlayPolish_Full.zip, CardVille_v1.0.75_IntroGuardUIPolish_Full.zip, CardVille_v1.0.75_IntroVideoHardVisible_Full.zip.
+
 
 
 ### 1.0.72 IntroCleanSweep / 예전 로딩 UI 재발 방지 패스
