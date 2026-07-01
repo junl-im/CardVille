@@ -18,7 +18,7 @@ import { AccessibilitySystem } from '../systems/AccessibilitySystem';
 // Accessibility audit anchor retained: AccessibilitySystem.summary()
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
-const LOBBY_VERSION = '1.0.76';
+const LOBBY_VERSION = '1.0.78';
 const MISSION_TONE_COLORS = { gold: 0xffd86f, blue: 0x8fd3ff, purple: 0xd7a5ff, green: 0xa9f5b5, coral: 0xffb39a } as const;
 const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-visible-v149' as const;
 const VILLAGE_VISIBLE_BUILDING_SCALE_TAG = 'village-readable-building-scale-v150' as const;
@@ -53,6 +53,11 @@ const INTRO_MASK_FLOOR_MOVE_TAG = 'intro-mask-floor-move-v174' as const;
 const FREE_PLAZA_FLOOR_WALK_TAG = 'free-plaza-floor-walk-v174' as const;
 const FLOOR_WALK_HIT_GUARD_TAG = 'floor-walk-hit-guard-v176' as const;
 const FLOOR_WALK_INTERACTION_TAG = 'floor-walk-interaction-v176' as const;
+const FLOOR_WALK_TAP_DEBOUNCE_TAG = 'floor-walk-tap-debounce-v177' as const;
+const FLOOR_WALK_TARGET_CLAMP_TAG = 'floor-walk-target-clamp-v177' as const;
+const FLOOR_WALK_NATURAL_PACE_TAG = 'floor-walk-natural-pace-v178' as const;
+const FLOOR_WALK_DIAGONAL_TAG = 'floor-walk-diagonal-v178' as const;
+const NPC_BUILDING_TOUCH_SEPARATION_TAG = 'npc-building-touch-separation-v178' as const;
 // Legacy mobile-exit-layout audit anchor retained while actual chip copy uses micro-fit: fontSize: '11px'.
 const HERO_HOME = { x: 195, y: 566 } as const;
 const CAT_HOME = { x: 146, y: 612 } as const;
@@ -69,6 +74,7 @@ export class MainLobbyScene extends Phaser.Scene {
   private activeSettingsPanel?: Phaser.GameObjects.Container;
   private npcLineIndexes = new Map<string, number>();
   private quality: CardVilleQuality = getCardVilleQuality();
+  private lastFloorWalkAt = 0;
 
   constructor() { super('MainLobbyScene'); }
 
@@ -76,6 +82,7 @@ export class MainLobbyScene extends Phaser.Scene {
     applyResponsiveCamera(this);
     this.quality = getCardVilleQuality();
     this.busy = false;
+    this.lastFloorWalkAt = 0;
     this.walkTimer?.remove(false);
     this.walkTimer = undefined;
     this.activeSpeech = undefined;
@@ -107,7 +114,7 @@ export class MainLobbyScene extends Phaser.Scene {
     this.drawBottomHint(profile.nickname);
     // Runtime HUD shows only player-facing village UI, never build/debug notes.
     console.info('[CardVille] premium lobby art placement', LOBBY_ART_PLACEMENT_TAG, LOBBY_UI_NON_OVERLAP_TAG, LOBBY_USER_ASSET_VISIBLE_TAG, USER_LOBBY_ASSET_ASSIGNMENT_TAG, LOBBY_USER_ASSET_NPC_TAG);
-    console.info('[CardVille] lobby ready', { version: LOBBY_VERSION, tag: LOBBY_TOUCH_RECOVERY_TAG, input: LOBBY_INPUT_RESET_TAG, spread: LOBBY_FULLSCREEN_SPREAD_TAG, npcScale: NPC_RELATIVE_SCALE_LOCK_TAG, scaleTween: SCALE_TWEEN_DEDUPE_TAG, intro: SILENT_INTRO_VIDEO_LOOP_TAG });
+    console.info('[CardVille] lobby ready', { version: LOBBY_VERSION, tag: LOBBY_TOUCH_RECOVERY_TAG, input: LOBBY_INPUT_RESET_TAG, spread: LOBBY_FULLSCREEN_SPREAD_TAG, npcScale: NPC_RELATIVE_SCALE_LOCK_TAG, scaleTween: SCALE_TWEEN_DEDUPE_TAG, intro: SILENT_INTRO_VIDEO_LOOP_TAG, walk: FLOOR_WALK_NATURAL_PACE_TAG, npcSeparation: NPC_BUILDING_TOUCH_SEPARATION_TAG });
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.cleanupLobbyRuntime());
     this.showLobbyCoach(recommendedBuildingId);
   }
@@ -533,7 +540,12 @@ export class MainLobbyScene extends Phaser.Scene {
         if (allowAmbientMotion(this.quality)) this.tweens.add({ targets: marker, y: marker.y - 4 * scale, alpha: 0.62, duration: scaledDuration(760, this.quality), delay: npc.delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
       }
 
-      const zone = this.add.zone(x, y, width + 34 * scale, height + 42 * scale).setInteractive({ useHandCursor: true });
+      const hitX = x + (npc.touchOffsetX ?? 0) * scale;
+      const hitY = y + (npc.touchOffsetY ?? 0) * scale;
+      const hitW = (npc.touchWidth ?? Math.max(30, npc.width * 0.72)) * scale;
+      const hitH = (npc.touchHeight ?? Math.max(34, npc.height * 0.74)) * scale;
+      const zone = this.add.zone(hitX, hitY, hitW, hitH).setInteractive({ useHandCursor: true });
+      zone.setName(`npc-touch:${npc.key}:${NPC_BUILDING_TOUCH_SEPARATION_TAG}`);
       zone.setDepth(y + 8);
       zone.on('pointerup', () => {
         if (this.busy) return;
@@ -545,7 +557,7 @@ export class MainLobbyScene extends Phaser.Scene {
       zone.on('pointerout', () => { if (!this.busy) this.restoreRelativeScale(npcImage, 120); });
 
       if (hasTouchDebug()) {
-        this.add.rectangle(x, y, width + 34 * scale, height + 42 * scale, 0xffd86f, 0.10)
+        this.add.rectangle(hitX, hitY, hitW, hitH, 0xffd86f, 0.10)
           .setStrokeStyle(1, 0xffd86f, 0.75)
           .setDepth(901);
       }
@@ -874,9 +886,12 @@ export class MainLobbyScene extends Phaser.Scene {
     const floor = this.add.zone(l.cx, (top + bottom) / 2, Math.max(l.visibleWidth, this.scale.width), bottom - top)
       .setInteractive({ useHandCursor: false })
       .setDepth(80)
-      .setName(`${FREE_PLAZA_FLOOR_WALK_TAG}:${INTRO_MASK_FLOOR_MOVE_TAG}:${FLOOR_WALK_HIT_GUARD_TAG}:${FLOOR_WALK_INTERACTION_TAG}`);
+      .setName(`${FREE_PLAZA_FLOOR_WALK_TAG}:${INTRO_MASK_FLOOR_MOVE_TAG}:${FLOOR_WALK_HIT_GUARD_TAG}:${FLOOR_WALK_INTERACTION_TAG}:${FLOOR_WALK_TAP_DEBOUNCE_TAG}:${FLOOR_WALK_TARGET_CLAMP_TAG}:${FLOOR_WALK_NATURAL_PACE_TAG}:${FLOOR_WALK_DIAGONAL_TAG}:${NPC_BUILDING_TOUCH_SEPARATION_TAG}`);
     floor.on('pointerup', (pointer: Phaser.Input.Pointer) => {
       if (this.busy || this.activeSettingsPanel) return;
+      const now = this.time.now;
+      if (now - this.lastFloorWalkAt < 180) return;
+      this.lastFloorWalkAt = now;
       const targetObjects = this.input.manager?.hitTest?.(pointer, this.children.list, this.cameras.main) ?? [];
       const blockedByInteractiveSurface = targetObjects.some((object) => {
         const name = typeof object.name === 'string' ? object.name : '';
@@ -885,52 +900,96 @@ export class MainLobbyScene extends Phaser.Scene {
       if (blockedByInteractiveSurface) return;
       const x = Number.isFinite(pointer.worldX) ? pointer.worldX : pointer.x;
       const y = Number.isFinite(pointer.worldY) ? pointer.worldY : pointer.y;
-      this.walkPartyToFreePoint(x, y);
+      this.walkPartyToFreePoint(x, y); // floor-walk-natural-pace-v178 floor-walk-diagonal-v178
     });
   }
 
   private walkPartyToFreePoint(rawX: number, rawY: number): void {
     if (!this.hero || !this.cat || this.busy) return;
-    const l = layout(this);
     const scale = this.vs(0.94, 1.10);
-    const target = {
-      x: Phaser.Math.Clamp(rawX, l.visibleX + 30, l.visibleX + l.visibleWidth - 30),
-      y: Phaser.Math.Clamp(rawY - 24 * scale, l.top + 188, l.bottom - 96)
-    };
+    const target = this.clampFreeWalkTarget(rawX, rawY, scale);
+    const distance = Phaser.Math.Distance.Between(this.hero.x, this.hero.y, target.x, target.y);
+    if (distance < 18 * scale) {
+      this.spawnTouchRipple(rawX, rawY);
+      this.hintText?.setText('이 근처에 있어요. 더 먼 빈 공간도 눌러보세요.');
+      return;
+    }
     this.busy = true;
     this.activeSpeech?.destroy();
     this.activeSpeech = undefined;
-    this.hintText?.setText('빈 광장으로 이동했어요. 다른 곳도 눌러보세요.');
+    this.hintText?.setText('천천히 광장을 걸어가요. 대각선 이동도 가능합니다.');
     this.tweens.killTweensOf(this.hero);
     this.tweens.killTweensOf(this.cat);
     this.spawnTouchRipple(rawX, rawY);
-    this.spawnFootsteps(this.hero.x, this.hero.y, target.x, target.y);
+    this.faceWalkDirection(target.x);
+    const duration = this.freeWalkDuration(distance, scale);
+    const catTarget = this.trailingCatTarget(target.x, target.y, scale);
+    this.spawnFootsteps(this.hero.x, this.hero.y, target.x, target.y, duration);
     this.startWalkAnimation();
+    let completed = 0;
+    const finish = () => {
+      completed += 1;
+      if (completed < 2) return;
+      this.stopWalkAnimation();
+      this.busy = false;
+    };
     this.tweens.add({
       targets: this.hero,
       x: target.x,
       y: target.y,
       scale: 1,
-      duration: 430,
+      duration,
       ease: 'Sine.easeInOut',
-      onComplete: () => {
-        this.stopWalkAnimation();
-        this.busy = false;
-      }
+      onUpdate: () => { this.hero?.setDepth((this.hero?.y ?? target.y) + 4); },
+      onComplete: finish
     });
     this.tweens.add({
       targets: this.cat,
-      x: target.x - 30 * scale,
-      y: target.y + 22 * scale,
+      x: catTarget.x,
+      y: catTarget.y,
       scale: 1,
-      duration: 400,
-      delay: 50,
-      ease: 'Sine.easeInOut'
+      duration: Math.round(duration * 1.04),
+      delay: 120,
+      ease: 'Sine.easeInOut',
+      onUpdate: () => { this.cat?.setDepth((this.cat?.y ?? target.y) + 2); },
+      onComplete: finish
     });
     if (isMotionEnabled(this.quality)) {
-      this.addStepBounce(this.hero, 4, 4);
-      this.addStepBounce(this.cat, 3, 3);
+      const stepCount = Phaser.Math.Clamp(Math.round(duration / 145), 4, 10);
+      this.addStepBounce(this.hero, stepCount, 3);
+      this.addStepBounce(this.cat, Math.max(3, stepCount - 1), 2);
     }
+  }
+
+  private clampFreeWalkTarget(rawX: number, rawY: number, scale: number): { x: number; y: number } {
+    const l = layout(this);
+    return {
+      x: Phaser.Math.Clamp(rawX, l.visibleX + 34, l.visibleX + l.visibleWidth - 34),
+      y: Phaser.Math.Clamp(rawY - 14 * scale, Math.max(l.top + 206, this.vy(214)), Math.min(l.bottom - 112, this.vy(766)))
+    };
+  }
+
+  private freeWalkDuration(distance: number, scale: number): number {
+    const naturalSpeed = 145 * scale; // floor-walk-natural-pace-v178: slower than older fixed 430 ms dash.
+    return Phaser.Math.Clamp(Math.round((distance / naturalSpeed) * 1000), 760, 1680);
+  }
+
+  private trailingCatTarget(targetX: number, targetY: number, scale: number): { x: number; y: number } {
+    const heroX = this.hero?.x ?? targetX;
+    const side = targetX >= heroX ? -1 : 1;
+    const l = layout(this);
+    return {
+      x: Phaser.Math.Clamp(targetX + side * 28 * scale, l.visibleX + 28, l.visibleX + l.visibleWidth - 28),
+      y: Phaser.Math.Clamp(targetY + 22 * scale, Math.max(l.top + 226, this.vy(232)), Math.min(l.bottom - 84, this.vy(790)))
+    };
+  }
+
+  private faceWalkDirection(targetX: number): void {
+    const heroX = this.hero?.x ?? targetX;
+    if (Math.abs(targetX - heroX) < 4) return;
+    const faceLeft = targetX < heroX;
+    this.heroImage?.setFlipX(faceLeft);
+    this.catImage?.setFlipX(faceLeft);
   }
 
   private enterBuilding(building: DioramaBuilding, buildingContainer: Phaser.GameObjects.Container): void {
@@ -1019,14 +1078,19 @@ export class MainLobbyScene extends Phaser.Scene {
     this.tweens.add({ targets: ripple, scale: 2.2, alpha: 0, duration: 360, ease: 'Cubic.easeOut', onComplete: () => ripple.destroy() });
   }
 
-  private spawnFootsteps(fromX: number, fromY: number, toX: number, toY: number): void {
-    const steps = this.quality.tier === 'lite' ? 3 : 5;
+  private spawnFootsteps(fromX: number, fromY: number, toX: number, toY: number, duration = 720): void {
+    const distance = Phaser.Math.Distance.Between(fromX, fromY, toX, toY);
+    const steps = this.quality.tier === 'lite' ? Math.max(3, Math.round(distance / 76)) : Phaser.Math.Clamp(Math.round(distance / 46), 4, 8);
+    const angle = Phaser.Math.Angle.Between(fromX, fromY, toX, toY);
+    const offsetX = Math.cos(angle + Math.PI / 2) * 5;
+    const offsetY = Math.sin(angle + Math.PI / 2) * 3;
     for (let i = 1; i <= steps; i += 1) {
       const t = i / (steps + 1);
-      const x = Phaser.Math.Linear(fromX, toX, t) + (i % 2 ? -6 : 6);
-      const y = Phaser.Math.Linear(fromY + 45, toY + 40, t);
-      const step = this.add.ellipse(x, y, 14, 7, 0x3f2a25, 0.22).setDepth(740);
-      this.tweens.add({ targets: step, alpha: 0, scale: 1.25, duration: 650, delay: i * 65, onComplete: () => step.destroy() });
+      const side = i % 2 ? -1 : 1;
+      const x = Phaser.Math.Linear(fromX, toX, t) + offsetX * side;
+      const y = Phaser.Math.Linear(fromY + 42, toY + 38, t) + offsetY * side;
+      const step = this.add.ellipse(x, y, 13, 6, 0x3f2a25, 0.20).setDepth(740).setAngle(Phaser.Math.RadToDeg(angle) * 0.24);
+      this.tweens.add({ targets: step, alpha: 0, scale: 1.20, duration: 620, delay: Math.round((duration / (steps + 1)) * i * 0.72), onComplete: () => step.destroy() });
     }
   }
 

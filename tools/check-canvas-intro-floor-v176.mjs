@@ -32,7 +32,7 @@ const walk = (dir) => {
 
 const pkg = JSON.parse(read('package.json'));
 const build = JSON.parse(read('public/build.json'));
-assert(pkg.version === '1.0.76', `expected package version 1.0.76, got ${pkg.version}`);
+assert(pkg.version === '1.0.78', `expected package version 1.0.78, got ${pkg.version}`);
 assert(build.version === pkg.version, `build version ${build.version} != package ${pkg.version}`);
 assert(pkg.scripts.verify.includes('check:canvas-intro-floor-v176'), 'verify must include check:canvas-intro-floor-v176');
 assert(pkg.scripts['check:canvas-intro-floor-v176'] === 'node tools/check-canvas-intro-floor-v176.mjs', 'check script mismatch');
@@ -40,7 +40,7 @@ assert(exists('public/assets/video/cardville_intro_loading.mp4'), 'intro mp4 mus
 assert(exists('public/assets/video/cardville_intro_poster.jpg'), 'intro poster must exist');
 
 include('index.html', [
-  "window.__CARDVILLE_VERSION__ = '1.0.76'",
+  "window.__CARDVILLE_VERSION__ = '1.0.78'",
   'cardville-intro-video-canvas',
   'intro-canvas-video-surface-v176',
   'legacy-loading-ui-deadlock-v176',
@@ -102,10 +102,10 @@ exclude('src/game/scenes/MainLobbyScene.ts', [
 ]);
 
 include('src/styles/index.css', ['#cardville-intro-video-canvas', 'data-cardville-canvas-video-v176']);
-include('public/build.json', ['"version": "1.0.76"', 'CanvasIntroFloorPolish', 'intro-canvas-video-surface-v176', 'floor-walk-hit-guard-v176']);
-include('public/health.html', ['version 1.0.76', 'CanvasIntroFloorPolish', 'intro-canvas-video-surface-v176']);
-include('README.md', ['# CardVille 1.0.76', '## 1.0.76 업데이트 내역', 'CanvasIntroFloorPolish', 'CardVille_v1.0.76_CanvasIntroFloorPolish_Full.zip']);
-include('AI_HANDOFF_CARDVILLE.md', ['현재 기준 버전은 1.0.76', 'CanvasIntroFloorPolish', 'intro-canvas-video-surface-v176', 'floor-walk-hit-guard-v176']);
+include('public/build.json', ['"version": "1.0.78"', 'CanvasIntroFloorPolish', 'intro-canvas-video-surface-v176', 'floor-walk-hit-guard-v176']);
+include('public/health.html', ['version 1.0.78', 'CanvasIntroFloorPolish', 'intro-canvas-video-surface-v176']);
+include('README.md', ['# CardVille 1.0.78', '## 1.0.78 업데이트 내역', 'CanvasIntroFloorPolish', 'CardVille_v1.0.78_CanvasIntroFloorPolish_Full.zip']);
+include('AI_HANDOFF_CARDVILLE.md', ['현재 기준 버전은 1.0.78', 'CanvasIntroFloorPolish', 'intro-canvas-video-surface-v176', 'floor-walk-hit-guard-v176']);
 
 for (const file of walk('src').filter((name) => /\.(ts|tsx|js|mjs)$/.test(name))) {
   const text = read(file);

@@ -8,9 +8,9 @@ const include = (file, token) => assert(read(file).includes(token), `${file} mis
 const exclude = (file, token) => assert(!read(file).includes(token), `${file} must not include token: ${token}`);
 
 const pkg = JSON.parse(read('package.json'));
-assert(pkg.version === '1.0.76', `expected package version 1.0.76, got ${pkg.version}`);
+assert(pkg.version === '1.0.78', `expected package version 1.0.78, got ${pkg.version}`);
 
-include('src/game/data/assetManifest.ts', "CARDVILLE_ASSET_VERSION = '1.0.76'");
+include('src/game/data/assetManifest.ts', "CARDVILLE_ASSET_VERSION = '1.0.78'");
 include('src/game/data/assetManifest.ts', 'LOBBY_INTRO_VIDEO_HOLD_TAG');
 include('src/game/scenes/IntroLoadingScene.ts', 'video.loop = true');
 include('src/game/scenes/IntroLoadingScene.ts', 'intro-no-phaser-progress-v173');
@@ -38,7 +38,7 @@ for (const token of ['x: 60', 'x: 330', 'x: 56', 'x: 334', 'x: 52', 'x: 338', 'v
   include('src/game/data/dioramaBuildings.ts', token);
 }
 include('src/game/data/lobbyEntities.ts', 'lobby-edge-npc-spread-v160');
-for (const token of ["key: 'npcMerchant', x: 91", "key: 'npcWizard', x: 296", "key: 'npcLibrarian', x: 94", "key: 'npcForestSagePremium', x: 54"]) {
+for (const token of ["key: 'npcMerchant', x: 132", "key: 'npcWizard', x: 254", "key: 'npcLibrarian', x: 128", "key: 'npcForestSagePremium', x: 128"]) {
   include('src/game/data/lobbyEntities.ts', token);
 }
 
@@ -71,15 +71,15 @@ const walk = (dir) => {
 for (const dir of ['src', 'public', 'tools']) walk(dir);
 assert(svgFiles.length === 0, `SVG files are not allowed: ${svgFiles.join(', ')}`);
 
-include('README.md', '## 1.0.76 업데이트 내역');
+include('README.md', '## 1.0.78 업데이트 내역');
 include('README.md', '## 1.0.60 업데이트 내역');
 include('README.md', 'intro-video-holds-until-assets-v160');
 include('README.md', 'lobby-input-reset-v160');
 include('README.md', 'lobby-fullscreen-spread-v160');
-include('AI_HANDOFF_CARDVILLE.md', '현재 기준 버전은 1.0.76');
+include('AI_HANDOFF_CARDVILLE.md', '현재 기준 버전은 1.0.78');
 include('AI_HANDOFF_CARDVILLE.md', '1.0.65 전역 UI 흐름/텍스트/전환 안정화 패스');
 include('AI_HANDOFF_CARDVILLE.md', '1.0.60 오프닝 유지/로비 입력 복구/전체폭 마을 폴리시 패스');
 include('public/build.json', 'IntroVideoMinFit');
-include('index.html', "window.__CARDVILLE_VERSION__ = '1.0.76'");
+include('index.html', "window.__CARDVILLE_VERSION__ = '1.0.78'");
 
 console.log('check:real-village-lobby passed');

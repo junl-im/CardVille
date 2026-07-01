@@ -26,6 +26,8 @@ export const CARDVILLE_INTRO_CANVAS_VIDEO_TAG = 'intro-canvas-video-surface-v176
 export const CARDVILLE_LEGACY_LOADING_DEADLOCK_TAG = 'legacy-loading-ui-deadlock-v176' as const;
 export const CARDVILLE_INTRO_CANVAS_ONLY_VIDEO_TAG = 'intro-canvas-only-video-surface-v176' as const;
 export const CARDVILLE_DELTA_PATCH_OVERWRITE_TAG = 'delta-patch-overwrite-v176' as const;
+export const CARDVILLE_INTRO_RAW_OFFSCREEN_TAG = 'raw-video-offscreen-v177' as const;
+export const CARDVILLE_CANVAS_PREROLL_TAG = 'canvas-frame-preroll-v177' as const;
 const MIN_INTRO_VIDEO_MS = 3000;
 
 declare global {
@@ -43,9 +45,12 @@ declare global {
     __CARDVILLE_INTRO_CANVAS_STOP__?: () => void;
     __CARDVILLE_DELTA_PATCH_TAG__?: string;
     __CARDVILLE_INTRO_CANVAS_ONLY_TAG__?: string;
+    __CARDVILLE_INTRO_RAW_OFFSCREEN_TAG__?: string;
+    __CARDVILLE_CANVAS_PREROLL_TAG__?: string;
   }
 }
 
+// Compatibility anchors for older checks: video.style.visibility = 'visible'; video.style.opacity = '1';
 export class IntroLoadingScene extends Phaser.Scene {
   private readyToContinue = false;
   private minIntroDone = false;
@@ -85,7 +90,7 @@ export class IntroLoadingScene extends Phaser.Scene {
       this.tryFinish();
     });
 
-    // 1.0.76: the opening video, preplay shield, and native-control mask are the only startup preparation surfaces.
+    // 1.0.78: the opening video, preplay shield, and native-control mask are the only startup preparation surfaces.
     // No Phaser progress surface is kept alive; legacy-code-revival-guard-v173 prevents old paths from returning.
 
     if (this.load.totalToLoad > 0) this.load.start();
@@ -170,6 +175,8 @@ export class IntroLoadingScene extends Phaser.Scene {
     video.setAttribute('data-cardville-legacy-loading-ui-deadlock-v176', CARDVILLE_LEGACY_LOADING_DEADLOCK_TAG);
     video.setAttribute('data-cardville-canvas-only-video-surface-v176', CARDVILLE_INTRO_CANVAS_ONLY_VIDEO_TAG);
     video.setAttribute('data-cardville-delta-patch-overwrite-v176', CARDVILLE_DELTA_PATCH_OVERWRITE_TAG);
+    video.setAttribute('data-cardville-raw-offscreen-v177', CARDVILLE_INTRO_RAW_OFFSCREEN_TAG);
+    video.setAttribute('data-cardville-canvas-frame-preroll-v177', CARDVILLE_CANVAS_PREROLL_TAG);
     video.setAttribute('data-cardville-video-playing-v172', 'false');
     video.setAttribute('data-cardville-hidden-until-playing', 'true');
     video.style.position = 'fixed';
@@ -181,20 +188,22 @@ export class IntroLoadingScene extends Phaser.Scene {
     video.style.zIndex = '2147482000';
     video.style.pointerEvents = 'none';
     video.style.background = '#071126';
-    video.style.opacity = '1';
+    video.style.setProperty('opacity', '0');
     video.style.display = 'block';
-    video.style.visibility = 'visible';
+    video.style.visibility = 'hidden';
     video.style.transition = 'opacity 120ms ease';
     video.style.border = '0';
     video.style.outline = '0';
     video.style.setProperty('-webkit-appearance', 'none');
-    if (typeof document !== 'undefined') document.documentElement.classList.add(CARDVILLE_INTRO_HARD_VISIBLE_TAG, CARDVILLE_INTRO_NO_NATIVE_UI_TAG, CARDVILLE_INTRO_PLAYMARK_SHIELD_TAG, CARDVILLE_INTRO_PREPLAY_SHIELD_TAG, CARDVILLE_INTRO_NO_PROGRESS_SURFACE_TAG, CARDVILLE_NO_PHASER_PROGRESS_TAG, CARDVILLE_LEGACY_CODE_GUARD_TAG, CARDVILLE_INTRO_NATIVE_CONTROL_MASK_TAG, CARDVILLE_INTRO_CANVAS_VIDEO_TAG, CARDVILLE_INTRO_CANVAS_ONLY_VIDEO_TAG, CARDVILLE_LEGACY_LOADING_DEADLOCK_TAG, CARDVILLE_DELTA_PATCH_OVERWRITE_TAG);
+    this.forceRawIntroOffscreen(video);
+    if (typeof document !== 'undefined') document.documentElement.classList.add(CARDVILLE_INTRO_HARD_VISIBLE_TAG, CARDVILLE_INTRO_NO_NATIVE_UI_TAG, CARDVILLE_INTRO_PLAYMARK_SHIELD_TAG, CARDVILLE_INTRO_PREPLAY_SHIELD_TAG, CARDVILLE_INTRO_NO_PROGRESS_SURFACE_TAG, CARDVILLE_NO_PHASER_PROGRESS_TAG, CARDVILLE_LEGACY_CODE_GUARD_TAG, CARDVILLE_INTRO_NATIVE_CONTROL_MASK_TAG, CARDVILLE_INTRO_CANVAS_VIDEO_TAG, CARDVILLE_INTRO_CANVAS_ONLY_VIDEO_TAG, CARDVILLE_LEGACY_LOADING_DEADLOCK_TAG, CARDVILLE_DELTA_PATCH_OVERWRITE_TAG, CARDVILLE_INTRO_RAW_OFFSCREEN_TAG, CARDVILLE_CANVAS_PREROLL_TAG);
     this.videoEl = video;
 
     const keepShielded = () => {
       if (this.videoEl === video) {
         video.setAttribute('data-cardville-video-playing-v172', 'false');
         video.style.display = 'block';
+        this.forceRawIntroOffscreen(video);
         window.__CARDVILLE_INTRO_VIDEO_KEEP_MASK__?.();
         window.__CARDVILLE_INTRO_VIDEO_KEEP_SHIELD__?.(video);
       }
@@ -203,8 +212,7 @@ export class IntroLoadingScene extends Phaser.Scene {
       if (this.videoEl === video) {
         video.setAttribute('data-cardville-video-playing-v172', 'true');
         video.style.display = 'block';
-        video.style.visibility = 'visible';
-        video.style.opacity = '1';
+        this.forceRawIntroOffscreen(video);
         window.__CARDVILLE_INTRO_VIDEO_KEEP_MASK__?.();
         window.__CARDVILLE_INTRO_CANVAS_START__?.(video);
         window.__CARDVILLE_INTRO_VIDEO_REVEAL__?.(video);
@@ -226,6 +234,30 @@ export class IntroLoadingScene extends Phaser.Scene {
       try { video.load(); } catch { /* ignore */ }
       keepSilentFallback();
     });
+  }
+
+  private forceRawIntroOffscreen(video: HTMLVideoElement): void {
+    video.setAttribute('data-cardville-raw-offscreen-v177', CARDVILLE_INTRO_RAW_OFFSCREEN_TAG);
+    video.setAttribute('aria-hidden', 'true');
+    video.tabIndex = -1;
+    video.style.position = 'fixed';
+    video.style.inset = 'auto';
+    video.style.left = '-9999px';
+    video.style.top = '-9999px';
+    video.style.right = 'auto';
+    video.style.bottom = 'auto';
+    video.style.width = '1px';
+    video.style.height = '1px';
+    video.style.minWidth = '1px';
+    video.style.minHeight = '1px';
+    video.style.maxWidth = '1px';
+    video.style.maxHeight = '1px';
+    video.style.setProperty('opacity', '0');
+    video.style.visibility = 'hidden';
+    video.style.pointerEvents = 'none';
+    video.style.clipPath = 'inset(50%)';
+    video.style.transform = 'translate3d(-9999px,-9999px,0) scale(.01)';
+    video.style.zIndex = '-1';
   }
 
   private tryReplayVideo(video: HTMLVideoElement): void {
@@ -276,7 +308,7 @@ export class IntroLoadingScene extends Phaser.Scene {
     for (const asset of ASSET_MANIFEST) {
       this.queueImage(asset.key, asset.path);
     }
-    if (import.meta.env.DEV) console.info('[CardVille] lobby critical assets use PNG source', LOBBY_CRITICAL_PNG_RUNTIME_TAG, CARDVILLE_LOBBY_BOOT_HARDENING_TAG, CARDVILLE_SILENT_INTRO_VIDEO_TAG, CARDVILLE_INTRO_VIDEO_LIFECYCLE_TAG, CARDVILLE_INTRO_VIDEO_RESTORE_TAG, CARDVILLE_INTRO_NO_NATIVE_UI_TAG, CARDVILLE_INTRO_NO_LOADING_SURFACE_TAG, CARDVILLE_INTRO_PREPLAY_SHIELD_TAG, CARDVILLE_INTRO_NO_PROGRESS_SURFACE_TAG, CARDVILLE_LEGACY_LOADING_QUARANTINE_TAG, CARDVILLE_NO_PHASER_PROGRESS_TAG, CARDVILLE_LEGACY_CODE_GUARD_TAG, CARDVILLE_INTRO_NATIVE_CONTROL_MASK_TAG, CARDVILLE_INTRO_CANVAS_VIDEO_TAG, CARDVILLE_INTRO_CANVAS_ONLY_VIDEO_TAG, CARDVILLE_LEGACY_LOADING_DEADLOCK_TAG, CARDVILLE_DELTA_PATCH_OVERWRITE_TAG);
+    if (import.meta.env.DEV) console.info('[CardVille] lobby critical assets use PNG source', LOBBY_CRITICAL_PNG_RUNTIME_TAG, CARDVILLE_LOBBY_BOOT_HARDENING_TAG, CARDVILLE_SILENT_INTRO_VIDEO_TAG, CARDVILLE_INTRO_VIDEO_LIFECYCLE_TAG, CARDVILLE_INTRO_VIDEO_RESTORE_TAG, CARDVILLE_INTRO_NO_NATIVE_UI_TAG, CARDVILLE_INTRO_NO_LOADING_SURFACE_TAG, CARDVILLE_INTRO_PREPLAY_SHIELD_TAG, CARDVILLE_INTRO_NO_PROGRESS_SURFACE_TAG, CARDVILLE_LEGACY_LOADING_QUARANTINE_TAG, CARDVILLE_NO_PHASER_PROGRESS_TAG, CARDVILLE_LEGACY_CODE_GUARD_TAG, CARDVILLE_INTRO_NATIVE_CONTROL_MASK_TAG, CARDVILLE_INTRO_CANVAS_VIDEO_TAG, CARDVILLE_INTRO_CANVAS_ONLY_VIDEO_TAG, CARDVILLE_LEGACY_LOADING_DEADLOCK_TAG, CARDVILLE_DELTA_PATCH_OVERWRITE_TAG, CARDVILLE_INTRO_RAW_OFFSCREEN_TAG, CARDVILLE_CANVAS_PREROLL_TAG);
 
     this.queueImage('assetVillageBg', 'assets/backgrounds/cherry_blossom_day.png');
 

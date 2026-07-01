@@ -32,7 +32,7 @@ const walk = (dir) => {
 
 const pkg = JSON.parse(read('package.json'));
 const build = JSON.parse(read('public/build.json'));
-assert(pkg.version === '1.0.76', `expected package version 1.0.76, got ${pkg.version}`);
+assert(pkg.version === '1.0.78', `expected package version 1.0.78, got ${pkg.version}`);
 assert(build.version === pkg.version, `build version ${build.version} != package ${pkg.version}`);
 assert(pkg.scripts.verify.includes('check:delta-patch-v176'), 'verify must include check:delta-patch-v176');
 assert(pkg.scripts['check:delta-patch-v176'] === 'node tools/check-delta-patch-v176.mjs', 'delta check script mismatch');
@@ -41,20 +41,20 @@ include('public/build.json', ['DeltaPatchCanvasGuard', 'delta-patch-overwrite-v1
 include('README.md', [
   'DeltaPatchCanvasGuard',
   'CardVille_v1.0.75_CanvasIntroFloorPolish_Full.zip',
-  'CardVille_v1.0.76_DeltaPatchCanvasGuard_DeltaPatch.zip',
+  'CardVille_v1.0.78_DeltaPatchCanvasGuard_DeltaPatch.zip',
   '덮어쓰기용 Delta Patch',
   'public/assets` 전체를 넣지 않습니다'
 ]);
 include('AI_HANDOFF_CARDVILLE.md', [
   'DeltaPatchCanvasGuard',
   'CardVille_v1.0.75_CanvasIntroFloorPolish_Full.zip',
-  'CardVille_v1.0.76_DeltaPatchCanvasGuard_DeltaPatch.zip',
+  'CardVille_v1.0.78_DeltaPatchCanvasGuard_DeltaPatch.zip',
   'delta-patch-overwrite-v176',
   'intro-canvas-only-video-surface-v176'
 ]);
 include('index.html', [
-  "window.__CARDVILLE_VERSION__ = '1.0.76'",
-  "cardvilleIntroSrc(){ return new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.76'",
+  "window.__CARDVILLE_VERSION__ = '1.0.78'",
+  "cardvilleIntroSrc(){ return new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.78'",
   'delta-patch-overwrite-v176',
   'intro-canvas-only-video-surface-v176',
   "data-cardville-canvas-only-video-surface-v176",

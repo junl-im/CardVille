@@ -58,8 +58,8 @@ mustContain('src/game/data/lobbyLayoutPlan.ts', [
   'npc_merchant and npc_forest_sage use aspect-fit readable sizes', 'village-readable-building-scale-v150', 'lobby-ui-nonoverlap-v156'
 ]);
 mustContain('src/game/data/lobbyEntities.ts', [
-  "npcMerchant', x: 91, y: 604, width: 58, height: 76",
-  "npcForestSagePremium', x: 54, y: 724, width: 52, height: 72",
+  "npcMerchant', x: 132, y: 646, width: 50, height: 66",
+  "npcForestSagePremium', x: 128, y: 746, width: 46, height: 62",
   "propFountain', x: 195, y: 430"
 ]);
 

@@ -8,7 +8,7 @@ const include = (file, token) => assert(read(file).includes(token), `${file} mis
 const exclude = (file, token) => assert(!read(file).includes(token), `${file} must not include ${token}`);
 
 const pkg = JSON.parse(read('package.json'));
-assert(pkg.version === '1.0.76', `expected package version 1.0.76, got ${pkg.version}`);
+assert(pkg.version === '1.0.78', `expected package version 1.0.78, got ${pkg.version}`);
 
 include('package.json', 'check:flow-fit');
 include('package.json', 'tools/check-flow-fit-v164.mjs');
@@ -57,11 +57,11 @@ for (const file of ['src', 'index.html', 'public/health.html']) {
   }
 }
 
-include('README.md', '## 1.0.76 업데이트 내역');
-include('README.md', 'CardVille_v1.0.76_IntroGuardUIPolish_Full.zip');
-include('AI_HANDOFF_CARDVILLE.md', '현재 기준 버전은 1.0.76');
+include('README.md', '## 1.0.78 업데이트 내역');
+include('README.md', 'CardVille_v1.0.78_IntroGuardUIPolish_Full.zip');
+include('AI_HANDOFF_CARDVILLE.md', '현재 기준 버전은 1.0.78');
 include('AI_HANDOFF_CARDVILLE.md', '1.0.65 전역 UI 흐름/텍스트/전환 안정화 패스');
 include('public/build.json', 'IntroVideoMinFit');
-include('index.html', "window.__CARDVILLE_VERSION__ = '1.0.76'");
+include('index.html', "window.__CARDVILLE_VERSION__ = '1.0.78'");
 
-console.log('check:flow-fit v1.0.76 passed: silent transitions, text fit, line-soft surfaces, and scale tween dedupe verified.');
+console.log('check:flow-fit v1.0.78 passed: silent transitions, text fit, line-soft surfaces, and scale tween dedupe verified.');

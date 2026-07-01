@@ -75,10 +75,10 @@ const entities = read('src/game/data/lobbyEntities.ts');
 for (const token of [
   'LOBBY_USER_ASSET_NPC_TAG',
   'user-lobby-npc-visible-v156',
-  "key: 'npcMerchant', x: 91, y: 604, width: 58, height: 76",
-  "key: 'npcWizard', x: 296, y: 448, width: 54, height: 72",
-  "key: 'npcLibrarian', x: 94, y: 448, width: 54, height: 72",
-  "key: 'npcForestSagePremium', x: 54, y: 724, width: 52, height: 72"
+  "key: 'npcMerchant', x: 132, y: 646, width: 50, height: 66",
+  "key: 'npcWizard', x: 254, y: 512, width: 46, height: 62",
+  "key: 'npcLibrarian', x: 128, y: 512, width: 46, height: 62",
+  "key: 'npcForestSagePremium', x: 128, y: 746, width: 46, height: 62"
 ]) {
   if (!entities.includes(token)) throw new Error(`lobbyEntities missing visible NPC token: ${token}`);
 }

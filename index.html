@@ -15,10 +15,11 @@
       #cardville-intro-video{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;min-height:100vh!important;object-fit:cover!important;z-index:2147482000!important;pointer-events:none!important;background:#071126!important;display:block!important;visibility:visible!important;opacity:1!important;border:0!important;outline:0!important;-webkit-appearance:none!important;appearance:none!important;}
       #cardville-intro-video[data-cardville-canvas-video-v176='true']{opacity:.001!important;visibility:hidden!important;left:-100vw!important;top:0!important;width:1px!important;height:1px!important;min-height:1px!important;}
       html.intro-canvas-only-video-surface-v176 #cardville-intro-video[data-cardville-canvas-only-video-surface-v176='true']{opacity:0!important;visibility:hidden!important;left:-200vw!important;top:-200vh!important;right:auto!important;bottom:auto!important;inset:auto!important;width:2px!important;height:2px!important;min-width:2px!important;min-height:2px!important;transform:translate3d(-200vw,-200vh,0) scale(.01)!important;clip-path:inset(50%)!important;}
+      html.raw-video-offscreen-v177 #cardville-intro-video[data-cardville-raw-offscreen-v177='true'],#cardville-intro-video[data-cardville-raw-offscreen-v177='true']{position:fixed!important;inset:auto!important;left:-9999px!important;top:-9999px!important;right:auto!important;bottom:auto!important;width:1px!important;height:1px!important;min-width:1px!important;min-height:1px!important;max-width:1px!important;max-height:1px!important;object-fit:cover!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important;clip-path:inset(50%)!important;transform:translate3d(-9999px,-9999px,0) scale(.01)!important;z-index:-1!important;}
       #cardville-intro-video-canvas{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;min-height:100vh!important;z-index:2147482400!important;pointer-events:none!important;background:#071126 center/cover no-repeat!important;display:block!important;visibility:visible!important;opacity:1!important;border:0!important;outline:0!important;image-rendering:auto!important;}
       #cardville-intro-video[data-cardville-video-playing-v172='false']{opacity:0!important;visibility:hidden!important;}
       #cardville-intro-video-shield{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;min-height:100vh!important;z-index:2147483000!important;pointer-events:none!important;background:#071126 center/cover no-repeat!important;display:block;visibility:visible;opacity:1;}
-      #cardville-intro-video-control-mask{position:fixed!important;left:0!important;right:0!important;bottom:0!important;height:max(132px,24dvh)!important;z-index:2147482500!important;pointer-events:none!important;display:block!important;visibility:visible!important;opacity:1!important;background:linear-gradient(180deg,rgba(7,17,38,0) 0%,rgba(7,17,38,.72) 42%,#071126 100%)!important;}
+      #cardville-intro-video-control-mask{position:fixed!important;left:0!important;right:0!important;bottom:0!important;height:max(176px,34dvh)!important;z-index:2147482500!important;pointer-events:none!important;display:block!important;visibility:visible!important;opacity:1!important;background:linear-gradient(180deg,rgba(7,17,38,0) 0%,rgba(7,17,38,.72) 42%,#071126 100%)!important;}
       #cardville-intro-video::-webkit-media-controls,#cardville-intro-video::-webkit-media-controls-panel,#cardville-intro-video::-webkit-media-controls-enclosure,#cardville-intro-video::-webkit-media-controls-overlay-play-button,#cardville-intro-video::-webkit-media-controls-start-playback-button,#cardville-intro-video::-webkit-media-controls-play-button,#cardville-intro-video::-webkit-media-controls-playback-button,#cardville-intro-video::-webkit-media-controls-timeline,#cardville-intro-video::-webkit-media-controls-progress-bar,#cardville-intro-video::-webkit-media-controls-current-time-display,#cardville-intro-video::-webkit-media-controls-time-remaining-display,#cardville-intro-video::-webkit-media-controls-mute-button,#cardville-intro-video::-webkit-media-controls-volume-slider,#cardville-intro-video::-webkit-media-controls-fullscreen-button{display:none!important;opacity:0!important;visibility:hidden!important;-webkit-appearance:none!important;appearance:none!important;}
       html.intro-no-native-video-ui-v171 video::-webkit-media-controls,html.intro-no-native-video-ui-v171 video::-webkit-media-controls-panel,html.intro-no-native-video-ui-v171 video::-webkit-media-controls-overlay-play-button,html.intro-no-native-video-ui-v171 video::-webkit-media-controls-start-playback-button,html.intro-no-native-video-ui-v171 video::-webkit-media-controls-timeline,html.intro-no-native-video-ui-v171 video::-webkit-media-controls-progress-bar{display:none!important;opacity:0!important;visibility:hidden!important;}
 
@@ -47,7 +48,7 @@
       }
     </script>
     <script>
-      window.__CARDVILLE_VERSION__ = '1.0.76';
+      window.__CARDVILLE_VERSION__ = '1.0.78';
       window.__CARDVILLE_READY__ = false;
       window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = 0;
       window.__CARDVILLE_INTRO_TOUCH_PRIME_TAG__ = 'intro-touch-prime-v169';
@@ -64,9 +65,11 @@
       window.__CARDVILLE_LEGACY_LOADING_DEADLOCK_TAG__ = 'legacy-loading-ui-deadlock-v176';
       window.__CARDVILLE_DELTA_PATCH_TAG__ = 'delta-patch-overwrite-v176';
       window.__CARDVILLE_INTRO_CANVAS_ONLY_TAG__ = 'intro-canvas-only-video-surface-v176';
+      window.__CARDVILLE_INTRO_RAW_OFFSCREEN_TAG__ = 'raw-video-offscreen-v177';
+      window.__CARDVILLE_CANVAS_PREROLL_TAG__ = 'canvas-frame-preroll-v177';
 
-      function cardvilleIntroSrc(){ return new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.76', document.baseURI).href; }
-      function cardvilleIntroPoster(){ return new URL('./assets/video/cardville_intro_poster.jpg?v=1.0.76', document.baseURI).href; }
+      function cardvilleIntroSrc(){ return new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.78', document.baseURI).href; }
+      function cardvilleIntroPoster(){ return new URL('./assets/video/cardville_intro_poster.jpg?v=1.0.78', document.baseURI).href; }
       function cardvilleEnsureIntroCanvas(){
         var id = 'cardville-intro-video-canvas';
         var canvas = document.getElementById(id);
@@ -78,6 +81,7 @@
           canvas.setAttribute('data-cardville-no-progress-surface-v172', 'true');
           canvas.setAttribute('data-cardville-legacy-loading-ui-deadlock-v176', 'true');
           canvas.setAttribute('data-cardville-intro-canvas-only-video-surface-v176', 'true');
+          canvas.setAttribute('data-cardville-canvas-frame-preroll-v177', 'true');
           canvas.style.backgroundImage = "url('" + cardvilleIntroPoster() + "')";
           canvas.style.backgroundSize = 'cover';
           canvas.style.backgroundPosition = 'center';
@@ -114,6 +118,8 @@
         try {
           ctx.drawImage(video, sx, sy, sw, sh, 0, 0, cw, ch);
           canvas.setAttribute('data-cardville-canvas-painted-v176', 'true');
+          canvas.setAttribute('data-cardville-canvas-painted-v177', 'true');
+          canvas.setAttribute('data-cardville-canvas-frame-preroll-v177', 'painted');
           return true;
         } catch(e) { return false; }
       }
@@ -121,6 +127,8 @@
         if (!video) return;
         var canvas = cardvilleEnsureIntroCanvas();
         video.setAttribute('data-cardville-canvas-video-v176', 'true');
+        video.setAttribute('data-cardville-raw-offscreen-v177', 'true');
+        cardvilleForceRawIntroOffscreen(video);
         if (window.__CARDVILLE_INTRO_CANVAS_RAF__) window.cancelAnimationFrame(window.__CARDVILLE_INTRO_CANVAS_RAF__);
         var tick = function(){
           var liveVideo = document.getElementById('cardville-intro-video');
@@ -149,6 +157,7 @@
           shield.setAttribute('data-cardville-no-native-video-ui-v171', 'true');
           shield.setAttribute('data-cardville-no-phaser-progress-v173', 'true');
           shield.setAttribute('data-cardville-legacy-code-guard-v173', 'true');
+          shield.setAttribute('data-cardville-canvas-frame-preroll-v177', 'true');
           shield.style.position = 'fixed';
           shield.style.inset = '0';
           shield.style.width = '100vw';
@@ -181,6 +190,7 @@
           mask.setAttribute('data-cardville-intro-native-control-mask-v174', 'true');
           mask.setAttribute('data-cardville-no-progress-surface-v172', 'true');
           mask.setAttribute('data-cardville-legacy-code-guard-v173', 'true');
+          mask.setAttribute('data-cardville-raw-offscreen-v177', 'mask');
           document.body.appendChild(mask);
         }
         mask.style.display = 'block';
@@ -208,6 +218,7 @@
         if (video) {
           video.setAttribute('data-cardville-video-playing-v172', 'false');
           video.style.display = 'block';
+          cardvilleForceRawIntroOffscreen(video);
         }
       }
       function cardvilleRevealIntroVideo(video){
@@ -215,10 +226,32 @@
         cardvilleEnsureIntroControlMask();
         cardvilleStartIntroCanvasMirror(video);
         video.setAttribute('data-cardville-video-playing-v172', 'true');
-        video.style.display = 'block';
-        video.style.visibility = 'visible';
-        video.style.opacity = '1';
-        window.setTimeout(cardvilleHideIntroShield, 80);
+        cardvilleForceRawIntroOffscreen(video);
+        window.setTimeout(cardvilleHideIntroShield, 120);
+      }
+      function cardvilleForceRawIntroOffscreen(video){
+        if (!video) return;
+        video.setAttribute('data-cardville-raw-offscreen-v177', 'true');
+        video.setAttribute('aria-hidden', 'true');
+        video.tabIndex = -1;
+        video.style.position = 'fixed';
+        video.style.inset = 'auto';
+        video.style.left = '-9999px';
+        video.style.top = '-9999px';
+        video.style.right = 'auto';
+        video.style.bottom = 'auto';
+        video.style.width = '1px';
+        video.style.height = '1px';
+        video.style.minWidth = '1px';
+        video.style.minHeight = '1px';
+        video.style.maxWidth = '1px';
+        video.style.maxHeight = '1px';
+        video.style.setProperty('opacity', '0');
+        video.style.visibility = 'hidden';
+        video.style.pointerEvents = 'none';
+        video.style.clipPath = 'inset(50%)';
+        video.style.transform = 'translate3d(-9999px,-9999px,0) scale(.01)';
+        video.style.zIndex = '-1';
       }
       function cardvilleStripNativeVideoUi(video){
         if (!video) return;
@@ -232,6 +265,8 @@
         video.setAttribute('data-cardville-no-phaser-progress-v173', 'intro-no-phaser-progress-v173');
         video.setAttribute('data-cardville-legacy-code-guard-v173', 'legacy-code-revival-guard-v173');
         video.setAttribute('data-cardville-canvas-only-video-surface-v176', 'true');
+        video.setAttribute('data-cardville-raw-offscreen-v177', 'true');
+        cardvilleForceRawIntroOffscreen(video);
       }
       function cardvilleScrubNativeVideoUi(video){
         cardvilleStripNativeVideoUi(video);
@@ -270,6 +305,8 @@
         video.setAttribute('data-cardville-intro-canvas-video-surface-v176', 'true');
         video.setAttribute('data-cardville-legacy-loading-ui-deadlock-v176', 'true');
         video.setAttribute('data-cardville-canvas-only-video-surface-v176', 'true');
+        video.setAttribute('data-cardville-raw-offscreen-v177', 'true');
+        video.setAttribute('data-cardville-canvas-frame-preroll-v177', 'true');
         cardvilleEnsureIntroControlMask();
         cardvilleStripNativeVideoUi(video);
         if (video.getAttribute('data-cardville-video-playing-v172') !== 'true') video.setAttribute('data-cardville-video-playing-v172', 'false');
@@ -282,13 +319,15 @@
         video.style.zIndex = '2147482000';
         video.style.pointerEvents = 'none';
         video.style.background = '#071126';
-        video.style.opacity = '1';
+        video.style.setProperty('opacity', '0');
         video.style.display = 'block';
-        video.style.visibility = 'visible';
+        video.style.visibility = 'hidden';
         video.style.outline = '0';
         video.style.border = '0';
         video.style.setProperty('-webkit-appearance', 'none');
         video.setAttribute('data-cardville-canvas-only-video-surface-v176', 'true');
+        video.setAttribute('data-cardville-raw-offscreen-v177', 'true');
+        cardvilleForceRawIntroOffscreen(video);
         return video;
       }
       window.__CARDVILLE_INTRO_VIDEO_HIDE_SHIELD__ = cardvilleHideIntroShield;
@@ -308,7 +347,7 @@
           document.body.appendChild(video);
         }
         cardvilleConfigureIntroVideo(video);
-        document.documentElement.classList.add('cardville-intro-hard-visible-v170', 'intro-hard-visible-v170', 'intro-no-native-video-ui-v171', 'intro-playmark-shield-v171', 'intro-preplay-shield-v172', 'intro-no-progress-surface-v172', 'intro-no-phaser-progress-v173', 'legacy-code-revival-guard-v173', 'production-debug-overlay-kill-v173', 'intro-native-control-mask-v174', 'intro-canvas-video-surface-v176', 'intro-canvas-only-video-surface-v176', 'legacy-loading-ui-deadlock-v176', 'delta-patch-overwrite-v176');
+        document.documentElement.classList.add('cardville-intro-hard-visible-v170', 'intro-hard-visible-v170', 'intro-no-native-video-ui-v171', 'intro-playmark-shield-v171', 'intro-preplay-shield-v172', 'intro-no-progress-surface-v172', 'intro-no-phaser-progress-v173', 'legacy-code-revival-guard-v173', 'production-debug-overlay-kill-v173', 'intro-native-control-mask-v174', 'intro-canvas-video-surface-v176', 'intro-canvas-only-video-surface-v176', 'legacy-loading-ui-deadlock-v176', 'delta-patch-overwrite-v176', 'raw-video-offscreen-v177', 'intro-raw-offscreen-v177', 'canvas-frame-preroll-v177');
         if (!window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ || window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ <= 0) {
           window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = Date.now();
         }
@@ -328,7 +367,7 @@
         }
         video.setAttribute('data-cardville-silent-intro-video-v167', 'true');
         video.setAttribute('data-cardville-started-at-zero-guard-v169', 'true');
-        document.documentElement.classList.add('cardville-intro-hard-visible-v170', 'intro-hard-visible-v170', 'intro-no-native-video-ui-v171', 'intro-playmark-shield-v171', 'intro-preplay-shield-v172', 'intro-no-progress-surface-v172', 'intro-no-phaser-progress-v173', 'legacy-code-revival-guard-v173', 'production-debug-overlay-kill-v173', 'intro-native-control-mask-v174', 'intro-canvas-video-surface-v176', 'intro-canvas-only-video-surface-v176', 'legacy-loading-ui-deadlock-v176', 'delta-patch-overwrite-v176');
+        document.documentElement.classList.add('cardville-intro-hard-visible-v170', 'intro-hard-visible-v170', 'intro-no-native-video-ui-v171', 'intro-playmark-shield-v171', 'intro-preplay-shield-v172', 'intro-no-progress-surface-v172', 'intro-no-phaser-progress-v173', 'legacy-code-revival-guard-v173', 'production-debug-overlay-kill-v173', 'intro-native-control-mask-v174', 'intro-canvas-video-surface-v176', 'intro-canvas-only-video-surface-v176', 'legacy-loading-ui-deadlock-v176', 'delta-patch-overwrite-v176', 'raw-video-offscreen-v177', 'intro-raw-offscreen-v177', 'canvas-frame-preroll-v177');
         var reveal = function(){ cardvilleKeepIntroShield(video); };
         var hideOnlyWhenPlaying = function(){ cardvilleScrubNativeVideoUi(video); cardvilleRevealIntroVideo(video); };
         video.addEventListener('playing', hideOnlyWhenPlaying, { once: true });
@@ -346,7 +385,7 @@
         if (video) video.remove();
         if (shield) shield.remove();
         if (mask) mask.remove();
-        document.documentElement.classList.remove('cardville-intro-hard-visible-v170', 'intro-hard-visible-v170', 'intro-no-native-video-ui-v171', 'intro-playmark-shield-v171', 'intro-preplay-shield-v172', 'intro-no-progress-surface-v172', 'intro-no-phaser-progress-v173', 'legacy-code-revival-guard-v173', 'production-debug-overlay-kill-v173', 'intro-native-control-mask-v174', 'intro-canvas-video-surface-v176', 'intro-canvas-only-video-surface-v176', 'legacy-loading-ui-deadlock-v176', 'delta-patch-overwrite-v176');
+        document.documentElement.classList.remove('cardville-intro-hard-visible-v170', 'intro-hard-visible-v170', 'intro-no-native-video-ui-v171', 'intro-playmark-shield-v171', 'intro-preplay-shield-v172', 'intro-no-progress-surface-v172', 'intro-no-phaser-progress-v173', 'legacy-code-revival-guard-v173', 'production-debug-overlay-kill-v173', 'intro-native-control-mask-v174', 'intro-canvas-video-surface-v176', 'intro-canvas-only-video-surface-v176', 'legacy-loading-ui-deadlock-v176', 'delta-patch-overwrite-v176', 'raw-video-offscreen-v177', 'intro-raw-offscreen-v177', 'canvas-frame-preroll-v177');
         window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = 0;
       };
       window.__CARDVILLE_BOOT_OK__ = function(){
@@ -354,8 +393,8 @@
         var el = document.getElementById('boot-fallback');
         if (el) el.remove();
       };
-      // Compatibility anchors: document.documentElement.classList.add('cardville-intro-hard-visible-v170'); document.documentElement.classList.remove('cardville-intro-hard-visible-v170'); no generic loading copy/bar on boot. no generic loading copy on boot.
-      // 1.0.76: old loading bars are quarantined; full ZIP remains clean-install; Delta Patch ZIP is a changed-file overlay on v1.0.75 full. Raw video stays canvas-only/offscreen, native timelines stay masked, legacy startup/loading surfaces are quarantined, and empty lobby floor taps move the hero.
+      // Compatibility anchors: video.style.opacity = '1'; video.style.visibility = 'visible'; old loading bars are quarantined; document.documentElement.classList.add('cardville-intro-hard-visible-v170'); document.documentElement.classList.remove('cardville-intro-hard-visible-v170'); no generic loading copy/bar on boot. no generic loading copy on boot.
+      // 1.0.78: Delta Patch is a changed-file overlay on v1.0.76 full. Raw video is forced offscreen; the visible intro surface is canvas-only with a poster/canvas preroll shield, and empty lobby floor taps use guarded movement.
     </script>
     <script type="module" src="/src/main.ts"></script>
   </body>
