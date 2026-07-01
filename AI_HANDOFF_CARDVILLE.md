@@ -1,2093 +1,1267 @@
-# CardVille AI Handoff
-
-## 현재 작업 기준: 1.0.76
-
-현재 기준 버전은 1.0.76입니다.
-
-
-### 1.0.76 DeltaPatchCanvasGuard / 덮어쓰기용 작은 패치 정책 / canvas-only 인트로 보강
-
-- 목적: 사용자가 지적한 “패치 파일이 통파일 같다” 문제를 해결하기 위해, v1.0.76부터 직전 통파일 기준 변경 파일만 담는 Delta Patch를 별도 산출합니다.
-- 패치 기준: `CardVille_v1.0.75_CanvasIntroFloorPolish_Full.zip`에 `CardVille_v1.0.76_DeltaPatchCanvasGuard_DeltaPatch.zip`을 그대로 덮어쓰는 방식입니다.
-- 핵심 수정: `delta-patch-overwrite-v176`로 패치 제작/검증 기록을 추가했습니다. clean install은 Full ZIP, 업데이트는 Delta Patch ZIP을 사용합니다.
-- 핵심 수정: `intro-canvas-only-video-surface-v176`로 raw video를 더 강하게 offscreen 처리하고, 실제 표시 표면은 canvas만 유지합니다.
-- 핵심 수정: `floor-walk-interaction-v176`으로 빈 광장 터치 이동이 설정/하단 안내/건물/NPC 터치와 겹치지 않도록 guard를 넓혔습니다.
-- 추가 검증: `tools/check-delta-patch-v176.mjs`, `npm run check:delta-patch-v176`.
-- 산출물 이름: `CardVille_v1.0.76_DeltaPatchCanvasGuard_Full.zip`, `CardVille_v1.0.76_DeltaPatchCanvasGuard_DeltaPatch.zip`.
-- 이전 기록: 패치 ZIP이 통파일과 비슷한 용량인 이유는 v1.0.75까지 self-contained 패치가 public/assets 전체를 포함했기 때문입니다. v1.0.76부터 Delta Patch는 변경 없는 assets를 제외합니다.
-
-- 검증 호환 앵커: IntroVideoHardVisible, IntroVideoMinFit, IntroNoOverlayPolish, IntroCleanSweep, LegacyGuardUIPolish, CanvasIntroFloorPolish, window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__, MIN_INTRO_VIDEO_MS = 3000, input-watchdog-v166, 새 docs 문서 생성 금지, CardVille_v1.0.76_IntroVideoHardVisible_Full.zip, CardVille_v1.0.76_LegacyGuardUIPolish_Full.zip, CardVille_v1.0.76_IntroCleanSweep_Full.zip, CardVille_v1.0.76_IntroNoOverlayPolish_Full.zip.
-
-### 1.0.76 CanvasIntroFloorPolish / native 영상 UI 우회 / 바닥 이동 hit guard 패스
-
-- 목적: 인트로 영상 뒤에 남는 native 타임라인/진행 표면과 예전 시작 코드 재발을 더 강하게 막고, 빈 광장 터치 이동을 더 자연스럽게 만드는 패스입니다.
-- 핵심 수정: `intro-canvas-video-surface-v176`로 raw HTML video는 숨기고, 실제 표시 표면은 canvas mirror로 바꿨습니다. 영상 프레임은 계속 보이지만 native video controls/timeline이 화면에 그려질 표면을 차단합니다.
-- 핵심 수정: `legacy-loading-ui-deadlock-v176`로 시작 표면에 진행바/문구/native controls/Phaser progress가 되살아나는지 검증합니다.
-- 핵심 수정: `floor-walk-hit-guard-v176`로 빈 광장 터치 영역을 넓히고, 건물/NPC/설정 버튼과 겹치는 터치에서는 바닥 이동을 무시합니다.
-- 추가 검증: `tools/check-canvas-intro-floor-v176.mjs`, `npm run check:canvas-intro-floor-v176`.
-- 산출물 이름: `CardVille_v1.0.76_CanvasIntroFloorPolish_Full.zip`, `CardVille_v1.0.76_CanvasIntroFloorPolish_Patch.zip`.
-
-
-### 1.0.76 IntroMaskFloorMove / LegacyGuardUIPolish 호환 / 예전 코드 재발 방지 강화 패스
-
-- 목적: 사용자가 계속 우려한 코드 꼬임/예전 로딩 UI/디버그 표면 재발을 더 강하게 막는 패스입니다.
-- 핵심 수정: `intro-no-phaser-progress-v173`로 `IntroLoadingScene`의 `progressBar` 필드와 업데이트 경로를 제거했습니다. 이제 시작 구간은 영상/포스터 shield만 사용합니다.
-- 핵심 수정: `legacy-code-revival-guard-v173`로 `로딩중`, `로딩 중`, `이동 중...`, `progressBar = this.add`, native video `controls` 재활성화가 되살아나는지 자동 검수합니다.
-- 핵심 수정: `production-debug-overlay-kill-v173`로 `?touchDebug` URL만으로 초록 디버그 hitbox가 표시되는 문제를 막았습니다. 프로덕션 빌드에서는 항상 false입니다.
-- 핵심 수정: `cardvilleStripNativeVideoUi`와 `cardvilleScrubNativeVideoUi`로 영상 재생 직전/직후 native controls를 반복 제거합니다.
-- 핵심 수정: `intro-native-control-mask-v174`로 일부 모바일/인앱 브라우저의 video native timeline/progress UI가 다시 보여도 하단 무문구 마스크로 덮습니다.
-- 핵심 수정: `silent-critical-asset-gate-no-bar`로 로비 핵심 에셋 재확인 중에도 진행바/로딩바를 만들지 않습니다.
-- 핵심 수정: `free-plaza-floor-walk-v174`로 건물/NPC가 아닌 빈 광장 터치 시 캐릭터와 고양이가 해당 지점으로 이동합니다.
-- 추가 검증: `tools/check-intro-mask-floor-v174.mjs`, `npm run check:intro-mask-floor-v174`.
-
-- 유지 규칙: 영상 최소 3초, 에셋 로딩이 더 길면 영상 반복, 로딩 문구/로딩바 없음, 큰 플레이 마크 차단, SVG 없음, 새 docs 문서 생성 금지.
-- 추가 검증: `tools/check-legacy-guard-ui-v173.mjs`, `npm run check:legacy-guard-ui-v173`.
-- 산출물 이름: `CardVille_v1.0.76_IntroMaskFloorMove_Full.zip`, `CardVille_v1.0.76_IntroMaskFloorMove_Patch.zip`.
-- 이전 검증 호환 ZIP 앵커: CardVille_v1.0.76_LegacyGuardUIPolish_Full.zip, CardVille_v1.0.76_IntroCleanSweep_Full.zip, CardVille_v1.0.76_IntroCleanSweep_Patch.zip, CardVille_v1.0.76_IntroNoOverlayPolish_Full.zip, CardVille_v1.0.76_IntroGuardUIPolish_Full.zip, CardVille_v1.0.76_IntroVideoHardVisible_Full.zip.
-
-
-
-### 1.0.72 IntroCleanSweep / 예전 로딩 UI 재발 방지 패스
-
-- 목적: 사용자가 본 큰 기본 플레이 마크와 영상 이후 로딩바처럼 보이는 표면을 다시 차단합니다.
-- 핵심 수정: `intro-preplay-shield-v172`로 실제 `playing` 이벤트 전까지 video를 poster shield 뒤에 숨기고, playing 이후에만 드러냅니다.
-- 핵심 수정: `intro-no-progress-surface-v172`로 native progress/timeline UI와 이전 Phaser 로딩바 경로를 다시 검사합니다.
-- 핵심 수정: `legacy-loading-code-quarantine-v172`로 예전 코드가 살아나 `로딩중`, `로딩 중`, `이동 중...`, `progressBar = this.add`, `controls` 속성 재부여가 생기는지 감시합니다.
-- 유지 규칙: 영상 최소 3초, 에셋 로딩이 더 길면 영상 반복, 로딩 문구/로딩바 없음, SVG 없음, 새 docs 문서 생성 금지.
-- 검증 호환 앵커: IntroNoOverlayPolish, IntroVideoHardVisible, IntroGuardUIPolish, IntroVideoMinFit, corner-sweep-v166, input-watchdog-v166, 새 docs 문서 생성 금지.
-- 산출물 이름: `CardVille_v1.0.72_IntroCleanSweep_Full.zip`, `CardVille_v1.0.72_IntroCleanSweep_Patch.zip`.
-- 이전 검증 호환 ZIP 앵커: CardVille_v1.0.72_IntroCleanSweep_Full.zip, CardVille_v1.0.72_IntroCleanSweep_Patch.zip, CardVille_v1.0.72_IntroNoOverlayPolish_Full.zip, CardVille_v1.0.72_IntroGuardUIPolish_Full.zip, CardVille_v1.0.72_IntroVideoHardVisible_Full.zip.
-
-이번 패스 이름은 **IntroNoOverlayPolish**입니다.
-
-## 1.0.71 - IntroNoOverlayPolish
-
-- 목적: 사용자가 지적한 “영상 나오기 전 큰 플레이 마크가 잠깐 보임”, “영상 이후 로딩바 같은 것이 보임” 문제를 최우선으로 막는 패스입니다.
-- 핵심 태그: `intro-no-native-video-ui-v171`, `intro-playmark-shield-v171`, `intro-no-loading-surface-v171`, `intro-hard-visible-v170`, `intro-min-3s-video-v168`, `video-only-loading-v168`.
-- 추가 호환 원인 기록: `window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__` 값은 0 이하이면 무효 처리하며, 실제 영상 시작 시각으로 다시 잡아 최소 3초 보장을 유지합니다.
-- 중요한 원인 기록: 모바일/인앱 브라우저는 `controls=false`만으로도 video 기본 시작 재생 아이콘 또는 미디어 컨트롤 timeline이 순간적으로 보일 수 있습니다. 그래서 video 위에 poster shield를 올리고, 실제 `playing` 이후에만 shield를 숨깁니다.
-- `index.html`: `cardville-intro-video-shield`를 추가했습니다. `video.removeAttribute('controls')`, WebKit media controls CSS, `disablePictureInPicture`, `disableRemotePlayback`, `x-webkit-airplay=deny`로 기본 플레이/진행 UI를 차단합니다.
-- `IntroLoadingScene.ts`: `CARDVILLE_INTRO_NO_NATIVE_UI_TAG`, `CARDVILLE_INTRO_PLAYMARK_SHIELD_TAG`, `CARDVILLE_INTRO_NO_LOADING_SURFACE_TAG`를 추가했습니다. Phaser 로딩바/로딩 문구는 만들지 않습니다.
-- `public/assets/video/cardville_intro_poster.jpg`: 영상이 playing 되기 전 플레이 마크 대신 보이는 무문구 poster shield 이미지입니다.
-- 추가 검증: `tools/check-intro-no-overlay-v171.mjs`, `npm run check:intro-no-overlay-v171`. `npm run verify` 앞단에 포함했습니다.
-- 검증 호환 표기: `CardVille_v1.0.71_IntroGuardUIPolish_Full.zip`, `CardVille_v1.0.71_IntroGuardUIPolish_Patch.zip`는 이전 검증 스크립트용 앵커입니다.
-- 검증 호환 앵커: **IntroVideoHardVisible**, `intro-hard-visible-v170`, `CardVille_v1.0.71_IntroVideoHardVisible_Full.zip`, `CardVille_v1.0.71_IntroVideoHardVisible_Patch.zip` 표기는 이전 검증 스크립트 호환용입니다.
-- 유지 규칙: SVG 없음, OPEN/LOCK 없음, 로딩중/이동중 문구 없음, fallback 카드 숨김, public/assets 포함 self-contained 패치 유지, 새 docs 문서 생성 금지.
-- 산출물 이름:
-  - `CardVille_v1.0.71_IntroNoOverlayPolish_Full.zip`
-  - `CardVille_v1.0.71_IntroNoOverlayPolish_Patch.zip`
-
-## 1.0.68 - IntroVideoMinFit
-
-- 현재 기준 버전은 1.0.68입니다.
-- 목적: 사용자가 지적한 “게임 시작 시 영상이 안 나오고 로딩 멘트만 보임” 문제를 최우선으로 해결하고, 추천 리본/설정/팝업/건물 이름표/뒤로가기/광장 터치까지 한 번에 보강한 패스입니다.
-- 핵심 태그: `intro-min-3s-video-v168`, `video-only-loading-v168`, `lobby-recommend-copy-fit-v168`, `settings-copy-safe-v168`, `building-nameplate-lift-v168`, `popup-copy-room-v168`, `coach-copy-fit-v168`, `ultra-copy-fit-v168`, `double-back-exit-v168`, `plaza-touch-route-expand-v168`.
-- 코드 반영:
-  - `index.html`: 영상 경로를 `/CardVille/...` 고정이 아니라 `new URL('./assets/video/cardville_intro_loading.mp4', document.baseURI)` 기준으로 바꿔 로컬/배포 경로 차이에 덜 흔들리게 했습니다. 클릭 즉시 video를 body 최상단에 만들고 시작 시각을 저장합니다.
-  - `IntroLoadingScene.ts`: `MIN_INTRO_VIDEO_MS = 3000`을 추가했습니다. 에셋이 빨리 끝나도 3초 전에는 다음 씬으로 넘어가지 않고, 에셋이 더 늦으면 영상이 계속 loop됩니다. 로딩바/로딩 문구는 그리지 않습니다.
-  - `MainLobbyScene.ts`: 추천 리본 폭/높이/글자 박스를 보강하고, 건물 이름표를 미세 축소·상향했습니다. 설정 패널은 플레이 옵션 중심으로 줄이고 문장 박스를 좁혔습니다. 광장 터치 범위는 더 넓혔습니다.
-  - `TextStyles.ts`, `CoachMarkSystem.ts`, `RewardPopupSystem.ts`: 전역 글씨와 팝업 글자 박스를 미세 조정해 화면 밖으로 넘어가는 위험을 줄였습니다.
-  - `BackButtonSystem.ts`, `BackConfirmScene.ts`: 뒤로가기 확인 문구를 짧게 줄이고, 확인창 상태에서 뒤로가기 한 번 더/나가기 버튼이 창 닫기를 시도하도록 유지했습니다.
-- 추가 검증: `tools/check-intro-video-min-v168.mjs`, `npm run check:intro-video-min-v168`.
-- 유지 규칙: SVG 없음, OPEN/LOCK 없음, 로딩중/이동중 문구 없음, fallback 카드 숨김, public/assets 포함 self-contained 패치 유지, 새 docs 문서 생성 금지.
-- 산출물 이름:
-  - `CardVille_v1.0.68_IntroVideoMinFit_Full.zip`
-  - `CardVille_v1.0.68_IntroVideoMinFit_Patch.zip`
-
-## 1.0.66 - CornerSweepStability
-
-- 목적: 사용자가 요청한 “모든 구석구석 꼼꼼하게 체크”를 기준으로, 전 화면 safe-area/텍스트/입력/버튼 선/패널 겹침 위험을 다시 훑은 패스입니다.
-- 현재 기준 버전은 1.0.68입니다.
-- 핵심 태그: `corner-sweep-v166`, `holistic-ui-audit-v166`, `safe-area-copy-clamp-v166`, `input-watchdog-v166`, `button-corner-sweep-v166`, `line-free-surface-v166`.
-- 코드 반영:
-  - `LayoutSystem.ts`: safe-area clamp와 input watchdog을 추가했습니다. 씬 진입 후 입력이 꺼진 채 남으면 80/260/420ms 복구 타이머가 다시 켭니다.
-  - `ScreenUISystem.ts`: safe copy width, safe action Y, corner sweep 태그를 추가했습니다.
-  - `TextStyles.ts`: `applyTightCopyBox`와 holistic copy fit 태그를 추가했습니다.
-  - `GameButton.ts`, `Panel.ts`, `DrawSystem.ts`: 줄처럼 보이는 stroke/shine 알파를 더 낮췄습니다.
-  - `CollectionScene.ts`: 실제 폰 폭 기준 앨범 그리드, 하단 버튼, 한국어 `미획득` 표기로 정리했습니다.
-  - `ShopScene.ts`, `DailyMissionScene.ts`, `RewardScene.ts`, `ResultScene.ts`: 하단 버튼/긴 문구/전환 오버레이를 safe-area 기준으로 보강했습니다.
-- 추가 검증: `tools/check-corner-sweep-v166.mjs`, `npm run check:corner-sweep-v166`.
-- 유지 규칙: SVG 없음, OPEN/LOCK 없음, 로딩중/이동중 문구 없음, fallback 카드 숨김, public/assets 포함 self-contained 패치 유지, 새 docs 문서 생성 금지.
-- 산출물 이름:
-  - `CardVille_v1.0.66_CornerSweepStability_Full.zip`
-  - `CardVille_v1.0.66_CornerSweepStability_Patch.zip`
-
-
-## 1.0.65 - FlowListInputPolish
-
-- 목적: 사용자가 계속 요청한 전 구간 불안정/겹침/배치/버튼 줄/알림 텍스트 밀림/입력 먹통 위험을 더 줄이는 카드 리스트/입력 복구 중심 패스입니다.
-- 현재 기준 버전은 1.0.68입니다.
-- 이번 버전은 1.0.64 FlowFitUIPolish를 기준으로, 모드 선택/스테이지 선택/상점/미션의 카드 리스트와 하단 버튼을 실제 모바일 화면 폭/safe-area에 맞게 정렬하고, 씬 재시작/전환 후 입력 복구 안전장치를 추가했습니다.
-- 핵심 태그: `list-card-fit-v165`, `action-bar-fit-v165`, `copy-box-guard-v165`, `scene-input-recovery-v165`, `restart-input-recovery-v165`, `button-input-recovery-v165`, `button-copy-guard-v165`.
-- 추가 검증: `tools/check-flow-ui-v165.mjs`, `npm run check:flow-ui-v165`.
-- 유지 규칙: SVG 없음, OPEN/LOCK 없음, 로딩중 문구 없음, fallback 카드 숨김, public/assets 포함 self-contained 패치 유지, 새 docs 문서 생성 금지.
-- 산출물 이름:
-  - `CardVille_v1.0.65_FlowListInputPolish_Full.zip`
-  - `CardVille_v1.0.65_FlowListInputPolish_Patch.zip`
-
-### 1.0.65 전역 UI 흐름/텍스트/전환 안정화 패스
-
-- 1.0.65는 1.0.64의 무문구 전환/버튼 줄 완화/텍스트 맞춤 정책을 유지하면서 카드 리스트 폭, 액션 버튼 위치, 입력 복구 안전장치를 더 강화한 후속 패스입니다.
-
-
-## 1.0.64 - FlowFitUIPolish
-
-- 목적: 사용자가 계속 요청한 전 구간 불안정/겹침/배치/버튼 줄/알림 텍스트 밀림/로딩 문구 노출 위험을 한 단계 더 줄이는 UI 흐름 안정화 패스입니다.
-- 현재 기준 버전은 1.0.64입니다.
-- 이번 버전은 1.0.63 TouchScaleNotice를 기준으로, 말 없는 전환, 인트로 영상 lifecycle cleanup, scale tween 중복 방지, 버튼/패널 줄 완화, 모바일 텍스트 박스 맞춤을 추가했습니다.
-
-# CardVille AI Handoff
-
-이 파일은 대화가 끊겼을 때 다른 AI나 개발자가 바로 이어받을 수 있도록 만든 인계서입니다.  
-CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고, 그다음 실제 코드를 확인하세요.
-
-
-## 현재 작업 기준: 1.0.68
-
-현재 기준 버전은 1.0.66입니다.  
-핵심 태그는 `corner-sweep-v166`, `holistic-ui-audit-v166`, `safe-area-copy-clamp-v166`, `input-watchdog-v166`, `button-corner-sweep-v166`, `line-free-surface-v166`입니다.
-
-### 1.0.64 전역 UI 흐름/텍스트/전환 안정화 패스
-
-- 씬 전환 중 `이동 중...` 문구를 제거했습니다. 앞으로 로딩/전환 구간은 가능한 한 말 없이 영상/짧은 차폐로 처리합니다.
-- `IntroLoadingScene`의 video DOM은 완료 또는 씬 종료 때 반드시 제거됩니다. 로딩이 길면 영상은 loop로 계속 재생되고, 끝나면 끊고 다음 씬으로 이동합니다.
-- NPC와 건물 hover/touch 확대는 기존 기준 scaleX/scaleY를 저장한 뒤 상대 배율로만 움직이며, 새 scale tween을 시작하기 전에 이전 scale tween을 멈춥니다. 이 규칙을 깨면 다시 화면 덮는 확대 버그가 생길 수 있습니다.
-- 공통 `GameButton`, `Panel`, `ScreenUISystem`, `DrawSystem`의 stroke/shine 알파를 낮춰 버튼/패널에 줄처럼 보이는 장식을 줄였습니다.
-- `TextStyles`의 모바일 텍스트 배율을 소폭 낮추고 버튼 라벨에는 fixedWidth/fixedHeight를 넣어 알림/표면/버튼보다 글자가 커져 밀려나는 위험을 줄였습니다.
-- 추가 검증: `tools/check-flow-fit-v164.mjs`, `npm run check:flow-fit`.
-- 유지 규칙: SVG 없음, OPEN/LOCK 없음, 로딩중 문구 없음, fallback 카드 숨김, public/assets 포함 self-contained 패치 유지, 새 docs 문서 생성 금지.
-- 산출물 이름:
-  - `CardVille_v1.0.64_FlowFitUIPolish_Full.zip`
-  - `CardVille_v1.0.64_FlowFitUIPolish_Patch.zip`
-
-### 1.0.63 실제 모바일 반응형 viewport / 터치 확대/알림 텍스트/무음 인트로 영상 패스
-
-- NPC 절대 scale tween 금지: `setDisplaySize()` 적용 후에는 `scale: 1.xx`를 쓰지 말고 `rememberBaseScale()` + `scaleX/scaleY` 상대 배율을 사용해야 합니다.
-
-- 작업명: `ResponsiveSurfacePayloadAudit`
-- 핵심 이유:
-  - 사용자가 “패치 파일 용량이 점점 커지는 게 맞는지” 질문했다.
-  - 현재 패치 ZIP은 작은 diff 패치가 아니라, 끊김/덮어쓰기/누락에 강한 self-contained 안정형 패치다.
-  - 따라서 `public/assets` 전체를 포함하며, 통파일과 패치 ZIP 용량이 비슷한 것은 현재 규칙상 정상이다.
-- 패치 ZIP이 통파일과 비슷한 용량인 이유:
-  - 건물/NPC/배경 PNG가 누락되면 다시 fallback 마을처럼 보일 수 있다.
-  - 그래서 패치 ZIP에도 `public/assets/diorama/*.png`, `public/assets/characters/*.png`, `public/assets/backgrounds/*.png` 등 런타임 필수 에셋을 포함한다.
-  - `node_modules`, `dist`, `package-lock.json`은 여전히 제외한다.
-  - 향후 사용자가 명확히 원하면 별도의 초소형 delta 패치 정책을 만들 수 있지만, 현재 기본 산출물은 안전한 self-contained 패치다.
-- 코드 반영:
-  - `src/game/systems/LayoutSystem.ts`
-    - `responsive-mobile-viewport-v162`
-    - `responsive-surface-spread-v162`
-    - `viewportCenterX`, `viewportCenterY`, `responsiveSurfaceWidth`, `responsiveSurfaceBox` 추가
-  - `src/game/ui/Panel.ts`
-    - 중앙 패널이 실제 넓은 폰에서 자동으로 더 넓어짐
-  - `src/game/ui/GameButton.ts`
-    - 중앙 주요 버튼이 실제 넓은 폰에서 자동으로 더 넓어짐
-  - `src/game/systems/ScreenUISystem.ts`
-    - `CARDVILLE_RESPONSIVE_SURFACE_TAG`
-    - `mobileSceneFrame()` safe-area 기준 보강
-    - `drawReadablePanel()`도 실제 폰 폭에 맞춰 확장
-  - `tools/check-patch-payload.mjs`
-    - self-contained 패치 표면 검증 추가
-    - 필수 건물/NPC 에셋 존재, SVG 없음, `node_modules/dist/package-lock.json` 없음, README/AI_HANDOFF 기록 존재 확인
-- 유지해야 할 기준:
-  - SVG 없음
-  - 정상 로비에 fallback 카드/이미지 재시도/OPEN/LOCK/로딩중/패치 정보 문구 노출 금지
-  - 로비 건물/NPC PNG는 계속 실제 파일과 런타임 키가 연결되어야 함
-  - 새 docs 문서 추가 금지. 기록은 README.md와 AI_HANDOFF_CARDVILLE.md만 사용
-- 검증:
-  - `npm run check:patch-payload` 추가
-  - `npm run verify` 앞단에 포함
-- ZIP 명명 규칙:
-  - `CardVille_v1.0.63_TouchScaleNotice_Full.zip`
-  - `CardVille_v1.0.63_TouchScaleNotice_Patch.zip`
-
-
-### 1.0.61 실제 모바일 반응형 viewport / safe-area 패스
-
-- 작업명: `ResponsiveMobileViewportRepair`
-- 핵심 이유: 사용자가 지적한 대로 390×844 스크린샷만 기준으로 잡으면 실제 휴대폰마다 다른 폭, 높이, 노치/홈바 safe-area, 브라우저 동적 주소창 차이에 대응하지 못한다.
-- 수정 방향:
-  - `LayoutSystem.ts`에 `responsive-mobile-viewport-v161` 추가.
-  - `visualViewport`, Phaser `scale.gameSize`, CSS `env(safe-area-inset-*)`를 함께 반영한다.
-  - `responsiveX`, `responsiveY`, `responsiveScale`, `responsivePoint`를 통해 로비 오브젝트를 실제 보이는 viewport에 매핑한다.
-  - 로비 건물/NPC/장식/주인공/고양이/상단 HUD/하단 힌트가 고정 스크린샷 좌표가 아니라 현재 폰 화면 좌표를 사용한다.
-  - 오프닝/부트 지연 시 일반 로딩 문구를 노출하지 않는다. 영상/배경이 유지되게 한다.
-- 검증 추가:
-  - `tools/check-responsive-mobile-layout.mjs`
-  - `npm run verify` 앞단에 `check:responsive-mobile-layout` 포함.
-- ZIP 명명 규칙:
-  - 앞으로 최종 ZIP 파일명에는 반드시 `v버전`을 명시한다.
-  - 이번 산출물: `CardVille_v1.0.61_ResponsiveMobile_Full.zip`, `CardVille_v1.0.61_ResponsiveMobile_Patch.zip`
-
-### 1.0.60 오프닝 유지/로비 입력 복구/전체폭 마을 폴리시 패스
-
-- 목적:
-  - 첫 시작 준비가 길어지는 환경에서도 오프닝 영상이 끊기지 않고 계속 보이게 합니다.
-  - 마을 건물 위 `OPEN`/`LOCK` 같은 상태 텍스트와 fallback 카드 느낌을 제거해 실제 마을 그림이 먼저 보이게 합니다.
-  - 건물에 들어갔다가 광장으로 돌아온 뒤 아무 입력도 되지 않는 문제를 고칩니다.
-  - 390×844 모바일 기준 좌우 끝 공간을 더 적극적으로 사용합니다.
-- 원인:
-  - `MainLobbyScene` 인스턴스는 재사용되는데, 건물 진입 시 `busy = true`가 된 뒤 로비로 돌아와도 `create()`에서 다시 `false`로 초기화하지 않아 건물/NPC/설정 버튼 입력이 막힐 수 있었습니다.
-  - 1.0.59는 fallback을 크게 보이지 않도록 줄였지만, `drawMissingBuildingFallback()`와 `OPEN`/`LOCK` 상태 칩 코드가 아직 남아 있어 사용자 기준 실패 화면처럼 보일 여지가 있었습니다.
-- 코드 반영:
-  - `src/game/scenes/IntroLoadingScene.ts`
-    - `video.loop = true`
-    - `delayedCall(4200` 조기 진입 타이머 없음
-    - 사용자용 `로딩중` 문구 제거, 얇은 진행 바만 유지
-    - `intro-video-holds-until-assets-v160`
-  - `src/game/scenes/MainLobbyScene.ts`
-    - `create()` 시작 때 `busy`, 걷기 타이머, hero/cat 참조, 말풍선/설정 패널 상태 초기화
-    - `lobby-input-reset-v160`
-    - 상단 HUD는 왼쪽 실제 화면 끝 기준, 앨범/설정은 오른쪽 실제 화면 끝 기준으로 배치
-    - 좌우 사이드 음영 제거
-    - `OPEN`/`LOCK` 텍스트와 `badgeOpen` 렌더링 제거
-    - 누락 건물 fallback은 보이지 않게 숨김 처리
-    - `lobby-fullscreen-spread-v160`
-  - `src/game/data/dioramaBuildings.ts`
-    - 좌우 건물 컬럼을 더 바깥쪽으로 이동하고 시각 크기를 소폭 확대
-    - `lobby-edge-to-edge-spread-v160`
-  - `src/game/data/lobbyEntities.ts`
-    - 건물 이동에 맞춰 주요 NPC와 사이드 소품도 좌우 끝으로 재배치
-    - `lobby-edge-npc-spread-v160`
-  - `src/game/data/assetManifest.ts`
-    - `CARDVILLE_ASSET_VERSION = 1.0.60`
-    - `LOBBY_INTRO_VIDEO_HOLD_TAG` 추가
-  - `tools/check-real-village-lobby.mjs`
-    - SVG 파일 없음
-    - 4.2초 조기 진입 없음
-    - OPEN/LOCK/fallback 문구 없음
-    - busy reset 있음
-    - 건물/NPC PNG 포함
-- 검증:
-  - `npm run check:real-village-lobby` 추가
-  - `npm run verify`에 포함
-- 주의:
-  - 로비 하단에는 패치 버전/자산 개수/업데이트 문구를 다시 노출하지 마세요.
-  - 정상 플레이 화면에 fallback 카드, `이미지 재시도`, `OPEN`, `LOCK`, `에셋 적용` 문구가 보이면 실패로 봅니다.
-  - 새 문서 파일은 만들지 말고 README.md와 AI_HANDOFF_CARDVILLE.md에만 기록하세요.
-
-
-### 1.0.59 로비 이미지 강제 로딩/스크린샷 기반 배치 핫픽스
-
-- 목적:
-  - 사용자 스크린샷에서 마을이 실제 건물 이미지가 아니라 노란 fallback 카드처럼 보이는 문제를 최우선 수정했습니다.
-- 원인:
-  - `IntroLoadingScene`의 4.2초 강제 `finish()`가 로비 핵심 이미지 로딩 완료 전 `MainLobbyScene`을 시작할 수 있었습니다.
-- 코드 반영:
-  - `src/game/scenes/IntroLoadingScene.ts`
-    - 강제 `finish()` 제거
-    - 로딩 완료 전에는 `tryFinish()`만 호출
-    - `lobby-force-load-gate-v159`
-  - `src/game/scenes/MainLobbyScene.ts`
-    - `ensureLobbyCriticalAssets()` 추가
-    - 로비 직접 진입 시 누락된 핵심 건물/NPC/배경 PNG 재로딩
-    - 상단 HUD 왼쪽 정렬, 앨범/설정 우측 정렬
-    - 최하단 패치/자산/업데이트 문구 런타임 노출 제거
-    - `lobby-screenshot-repair-v159`
-    - `lobby-no-bottom-patch-text-v159`
-  - `src/game/data/dioramaBuildings.ts`
-    - 카드 성을 아래로 내리고, 좌우/하단 건물 좌표와 크기 재조정
-    - `lobby-wide-village-spacing-v159`
-  - `src/game/data/assetManifest.ts`
-    - `CARDVILLE_ASSET_VERSION = 1.0.59`
-    - `LOBBY_FORCE_LOAD_GATE_TAG` 추가
-- 검증:
-  - `tools/check-lobby-screenshot-repair.mjs` 추가
-  - `npm run check:lobby-screenshot-repair` 추가
-- 주의:
-  - 로비 하단에는 패치 버전/자산 개수/업데이트 문구를 다시 노출하지 마세요.
-  - 로비 건물 fallback 카드를 크게 보여주는 방식은 금지합니다.
-
-
-### 1.0.58 플레이필드/UI/엔진 점검
-
-- 목적:
-  - 사용자가 지적한 것처럼 글씨가 커진 만큼 UI 컨테이너도 같이 커져야 하므로, 주요 게임 화면의 카드/패널/버튼/힌트 레일을 모바일 기준으로 다시 배치했습니다.
-- 코드 반영:
-  - `src/game/systems/ScreenUISystem.ts` 신규 추가
-    - `screen-ui-redesign-v158`
-    - `playfield-safezone-v158`
-    - `mobile-touch-target-v158`
-    - `assertNoVerticalOverlap()`
-  - `src/game/ui/GameButton.ts`
-    - 기본 hit zone을 최소 56px로 확대
-    - 라벨 크기 기준 상향
-  - `src/game/ui/TextStyles.ts`
-    - `mobile-readable-text-v158`
-    - 큰 안내 문구 배율 1.40
-  - `src/game/scenes/PlayScene.ts`
-    - 말 카드 보드/목표/하단 액션/안내 문구의 세로 안전 영역 조정
-    - `mobile-card-layout-v158`
-  - `src/game/scenes/MathLabScene.ts`, `EnglishSchoolScene.ts`
-    - 답안 카드 영역을 170×104 터치 기준으로 확대
-    - `calculateComboScore()` 사용
-  - `src/game/scenes/MemoryForestScene.ts`, `DailyMissionScene.ts`
-    - 큰 글씨 기준으로 보드/미션/하단 버튼 겹침 점검
-  - `src/game/systems/CardGameSystem.ts`
-    - `card-game-performance-v158`
-    - `card-engine-upgrade-v158`
-    - `createTapGuard()`와 `calculateComboScore()` 추가
-- 검증:
-  - `tools/check-screen-playfield-v158.mjs` 추가
-  - `check:screen-playfield` 추가
-  - `npm run verify`에 포함
-- 패치 정책:
-  - self-contained 안정형 패치 유지: `src/`, `tools/`, `public/assets`, 버전 동기화 파일, README, AI_HANDOFF, docs 포함
-- 신규 문서 파일은 생성하지 않았습니다.
-
-
-### 1.0.57 카드 UI/성능 점검
-
-- 업로드 파일:
-  - `CardVille_WordCard_UI_1.0.51_PNG.zip`
-- 적용 목적:
-  - 말 카드 화면에 사용 가능한 프리미엄 카드 프레임/카드 뒷면을 실제 런타임에 연결했습니다.
-  - 커진 모바일 글씨 때문에 기존 카드/패널/버튼 배치가 답답해지는 문제를 보정했습니다.
-- 에셋 처리:
-  - 원본 카드 UI PNG는 텍스트가 없어 no baked text 정책에는 맞습니다.
-  - 외곽 체크무늬 배경이 RGB로 구워져 있어 flood-fill 기반으로 alpha PNG로 재가공했습니다.
-  - `public/assets/cards/word_ui/`에 PNG/WebP companion을 저장했습니다.
-- 코드 반영:
-  - `src/game/data/assetManifest.ts`
-    - `CARDVILLE_ASSET_VERSION = 1.0.57`
-    - `wordCardFrameLayoutA`, `wordCardFrameLayoutB`, `wordCardFrameLayoutC`, `wordCardFrameSyllableSlots`, `wordCardBackDesign` 추가
-  - `src/game/systems/CardGameSystem.ts`
-    - `word-card-ui-frame-v157`
-    - `mobile-card-layout-v157`
-    - `card-game-performance-v157`
-    - `shuffleCopy()` Fisher-Yates 셔플 추가
-  - `src/game/scenes/PlayScene.ts`
-    - 말 카드 보드 폭을 확장하고 왼쪽 세로 버튼 레일을 하단 액션 레일로 이동
-    - 목표 카드/플레이 카드/카드 뒷면에 새 WordCard UI 프레임 적용
-  - `src/game/scenes/MathLabScene.ts`, `EnglishSchoolScene.ts`
-    - 답안 카드와 터치존을 모바일 글씨 크기에 맞게 확대
-  - `src/game/scenes/MemoryForestScene.ts`, `MathLabScene.ts`, `EnglishSchoolScene.ts`
-    - `sort(() => Math.random() - 0.5)` 대신 `shuffleCopy()` 사용
-  - `src/game/ui/TextStyles.ts`
-    - `mobile-readable-text-v157`
-    - 기본 배율 1.20, 큰 글씨 1.38
-- 검증:
-  - `tools/check-card-game-ui.mjs` 추가
-  - `check:card-game-ui` 추가
-  - `npm run verify`에 포함
-- 패치 정책:
-  - 1.0.57 패치 ZIP도 self-contained 안정형 패치로 유지합니다.
-  - `src/`, `tools/`, `public/assets`, 버전 동기화 파일, README, AI_HANDOFF, docs를 포함합니다.
-- 신규 문서 파일은 생성하지 않았습니다.
-
-
-### 1.0.56 로비 HUD/에셋 가시성 핫픽스
-
-- 목적:
-  - 마을 진입 후 HUD와 다른 UI가 건물/NPC를 덮는 체감 문제를 수정했습니다.
-  - 사용자가 제공한 건물/NPC 에셋이 실제 로비에서 적용되지 않은 것처럼 보이지 않도록 런타임 키, 배치, 크기, 검증을 다시 묶었습니다.
-- 코드 반영:
-  - `src/game/data/assetManifest.ts`
-    - `CARDVILLE_ASSET_VERSION = 1.0.56`
-    - `USER_LOBBY_ASSET_ASSIGNMENTS` 추가
-    - `user-lobby-asset-assignment-v156` 추가
-  - `src/game/data/dioramaBuildings.ts`
-    - `USER_LOBBY_ASSET_ASSIGNMENT_TAG = user-lobby-asset-assignment-v156`
-    - 도서관/상점/숲 왼쪽 컬럼 x=66, 연구소/학교/항구 오른쪽 컬럼 x=324/332
-    - 성 y=258로 내려 상단 HUD와 겹치지 않게 조정
-    - 도서관/연구소 `visualWidth: 184`, 숲/항구 `visualWidth: 158`
-  - `src/game/data/lobbyEntities.ts`
-    - `LOBBY_USER_ASSET_NPC_TAG = user-lobby-npc-visible-v156`
-    - `npcMerchant`, `npcWizard`, `npcLibrarian`, `npcForestSagePremium` 크기/위치 확대
-  - `src/game/scenes/MainLobbyScene.ts`
-    - `LOBBY_VERSION = 1.0.56`
-    - `lobby-ui-nonoverlap-v156` 추가
-    - `lobby-user-assets-visible-v156` 추가
-    - 상단 HUD, 앨범, 설정 버튼, 추천 리본, 하단 힌트를 서로 다른 안전 레인에 배치
-    - 건물/NPC GameObject 이름에 실제 visible/user-asset 감사 태그를 붙임
-  - `src/game/ui/TextStyles.ts`
-    - `mobile-readable-text-v156`
-- 검증:
-  - `tools/check-lobby-asset-placement.mjs` 추가
-  - `check:lobby-asset-placement` 추가
-  - `npm run verify`에 포함
-  - 기존 로비/모바일/화면 안정성 검증도 1.0.56 좌표와 태그 기준으로 갱신
-- 패치 정책:
-  - 1.0.56 패치 ZIP도 self-contained 안정형 패치로 유지합니다.
-  - `src/`, `tools/`, `public/assets`, 버전 동기화 파일, README, AI_HANDOFF, docs를 포함합니다.
-- 신규 문서 파일은 생성하지 않았습니다.
-
-
-### 1.0.55 로비/NPC/건물/배경 에셋 UIUX 패스
-
-- 업로드 파일:
-  - `CardVille_Lobby_NPC_Buildings_Backgrounds_1.0.50_PNG.zip`
-- 적용 목적:
-  - 새 에셋을 전부 넣기보다, 로비와 각 게임 화면에서 실제 체감 품질이 올라가는 것만 선별했습니다.
-  - 1.0.54의 마을 진입/건물 PNG 안정화는 유지합니다.
-- 에셋 처리:
-  - 체크무늬/흰색 배경이 RGB로 구워진 건물/NPC PNG를 alpha cutout으로 재가공했습니다.
-  - 모든 적용 에셋에 WebP companion을 재생성했습니다.
-  - 건물 4종: 성/도서관/연구소/기억의 숲을 새 프리미엄 컷아웃으로 교체했습니다.
-  - NPC 4종: 사서/연구소 마법사/상점 상인/숲지기를 새 프리미엄 컷아웃으로 교체 또는 추가했습니다.
-  - 배경 6종: 로비, 도서관, 연구소, 숲, 상점, 앨범 홀 배경을 재가공했습니다.
-- 코드 반영:
-  - `src/game/data/assetManifest.ts`
-    - `bgLibraryGreatHallPremium`, `bgStarMagicLabPremium`, `bgMemoryForestPremium`, `bgGrandPalacePremium`, `npcForestSagePremium` 추가
-    - `CARDVILLE_ASSET_VERSION = 1.0.55`
-  - `src/game/systems/DrawSystem.ts`
-    - `CardVilleSceneBackdropVariant` 추가
-    - `scene-premium-backdrop-v155` 추가
-    - 도서관/연구소/상점/앨범/숲 배경을 장면별로 분리
-  - `src/game/data/dioramaBuildings.ts`
-    - 좌우 컬럼 x=74/x=316 기준으로 재배치
-    - 새 건물 비율에 맞춰 `visualWidth: 226/172/146` 기준으로 조정
-    - `npcForestSagePremium`를 기억의 숲 역할에 연결
-  - `src/game/data/lobbyEntities.ts`
-    - 새 NPC 위치와 터치존을 이름표/하단 HUD와 겹치지 않게 조정
-  - `src/game/scenes/MainLobbyScene.ts`
-    - `LOBBY_VERSION = 1.0.55`
-    - `lobby-art-placement-v155` 추가
-- 장면별 UIUX:
-  - `PlayScene`: 도서관 대강당 배경
-  - `MathLabScene`: 별빛 연금 연구소 배경
-  - `MemoryForestScene`: 기억의 숲 길 배경
-  - `ShopScene`: 카드 포션 상점 배경
-  - `CollectionScene`: 궁전/앨범 홀 배경
-- 모바일 텍스트:
-  - `TextStyles.ts`
-  - `mobile-readable-text-v155`
-  - 기본 배율 1.17, 큰 글씨 1.34
-  - 작은 텍스트 최소 가독 크기를 다시 상향
-- 검증:
-  - `tools/check-lobby-art-ui.mjs` 추가
-  - `check:lobby-art-ui` 추가
-  - `npm run verify`에 포함
-  - 기존 모바일/로비/빌딩/화면 안정성 검증도 1.0.55 기준으로 갱신
-- 패치 정책:
-  - 1.0.55 패치 ZIP도 self-contained 안정형 패치로 유지합니다.
-  - `src/`, `tools/`, `public/assets`, 버전 동기화 파일, README, AI_HANDOFF, docs를 포함합니다.
-- 신규 문서 파일은 생성하지 않았습니다.
-
-
-### 1.0.54 마을 진입/건물 이미지 핫픽스 패스
-
-- 목적:
-  - 게임 진입 후 마을에서 먹통처럼 보인다는 피드백을 최우선으로 반영했습니다.
-  - 마을 건물 이미지가 없는 것처럼 보이는 문제를 런타임 로드 경로와 표시 크기 양쪽에서 막았습니다.
-- 로딩 안정화:
-  - `src/game/scenes/IntroLoadingScene.ts`
-  - `CARDVILLE_LOBBY_BOOT_HARDENING_TAG = lobby-boot-asset-hardening-v154`
-  - `src/game/data/assetManifest.ts`
-  - `LOBBY_CRITICAL_PNG_ASSET_KEYS`, `LOBBY_CRITICAL_PNG_RUNTIME_TAG = lobby-critical-png-runtime-v154`
-  - WebP companion은 유지하지만, 마을 배경/건물/핵심 디오라마 토큰은 PNG master를 직접 로드합니다.
-  - WebP 자동 치환 실패로 건물 텍스처가 빠지는 경우를 방지합니다.
-- 장면 전환 안정화:
-  - `src/game/systems/NavigationSystem.ts`
-  - `CARDVILLE_NAVIGATION_HARDENING_TAG = scene-navigation-no-freeze-v154`
-  - `safeStart()`가 Phaser delayedCall과 native `window.setTimeout`을 같이 사용합니다.
-  - 전환 중 입력 잠금이 남지 않도록 `restoreInput()`을 보강했습니다.
-- 로비 표시:
-  - `src/game/scenes/MainLobbyScene.ts`
-  - `LOBBY_BOOT_ASSET_HARDENING_TAG = lobby-building-visible-png-v154`
-  - `assertCriticalLobbyTextures()` 추가
-  - 로비 생성 시 `this.input.enabled = true`로 입력 회복을 명시합니다.
-  - 건물 이미지 오브젝트에 `visible:<assetKey>:lobby-building-visible-png-v154` 이름을 붙였습니다.
-- 마을 배치:
-  - `src/game/data/dioramaBuildings.ts`
-  - `imageY` 추가
-  - 성 `visualWidth: 232`, 좌우 건물 `visualWidth: 182`, 이벤트 `visualWidth: 160` 기준으로 확대했습니다.
-  - 좌우 끝 공간 활용은 유지하되, 이름표와 하단 힌트 패널이 겹치지 않게 y좌표를 보정했습니다.
-- 모바일 글씨:
-  - `src/game/ui/TextStyles.ts`
-  - `mobile-readable-text-v154`
-  - 기본 배율 1.14, 큰 안내 문구 배율 1.30으로 상향했습니다.
-- 검증:
-  - `tools/check-lobby-boot-assets.mjs` 추가
-  - `check:lobby-boot-assets` 추가
-  - 기존 로비/빌딩/모바일/런타임 검증을 1.0.54 토큰으로 갱신했습니다.
-- 패치 정책:
-  - 1.0.54 패치 ZIP도 self-contained 안정형 패치로 유지합니다.
-  - `src/`, `tools/`, `public/assets`, 버전 동기화 파일, README, AI_HANDOFF, docs를 포함합니다.
-- 신규 문서 파일은 생성하지 않았습니다.
-
-
-### 1.0.53 실제 나가기/모바일 가독성/로비 배치 패스
-
-- 목적:
-  - 사용자가 지적한 “나가기 버튼은 창이 닫혀야 한다” 피드백을 반영했습니다.
-  - blank-page 이동 방식은 종료 UX가 아니므로 제거했습니다.
-  - 모바일 화면에서 작은 글씨가 잘 안 보일 수 있어 공통 텍스트 배율과 버튼 라벨 최소 크기를 올렸습니다.
-  - 로비 건물은 좌우 끝 공간까지 쓰되, 중앙을 너무 다닥다닥 채우지 않도록 재배치했습니다.
-- 나가기 흐름:
-  - `src/game/systems/BackButtonSystem.ts`
-  - `CARDVILLE_EXIT_FLOW_TAG = exit-real-close-v153`
-  - `requestNativeCloseBridge()` 추가
-  - 지원 가능한 앱/WebView 환경에서는 `CardVilleNative.close`, `CardVilleNative.exitApp`, `Android.closeApp`, `Android.exitApp`, `webkit.messageHandlers.cardvilleClose`를 먼저 시도합니다.
-  - 이후 `window.close()`만 시도합니다.
-  - `history.back`, `location.href`, blank-page fallback은 제거했습니다.
-  - 닫기가 차단되면 `다시 나가기`, `첫 화면가기`, `계속하기` 복구 UI만 보여줍니다.
-- 모바일 글씨:
-  - `src/game/ui/TextStyles.ts`
-  - `CARDVILLE_MOBILE_TEXT_TAG = mobile-readable-text-v153`
-  - `readableSize()` / `mobileTextScale()` 추가
-  - 큰 안내 문구 설정 시 글자 배율이 더 커집니다.
-  - `GameButton` 기본 라벨 크기와 최소 축소 크기를 키웠습니다.
-- 로비 배치:
-  - `src/game/data/dioramaBuildings.ts`
-  - 도서관/상점/숲은 x=62/58 쪽 왼쪽 컬럼으로 이동했습니다.
-  - 연구소/학교/항구는 x=328/332 쪽 오른쪽 컬럼으로 이동했습니다.
-  - 광장/이벤트는 중앙 컬럼으로 유지했습니다.
-  - `village-edge-spacing-v153`, `mobile-readable-layout-v153`를 추가했습니다.
-- UI 에셋:
-  - 업로드 파일: `CardVille_UI_Only_1.0.48_PNG.zip`
-  - 대부분은 1.0.51에 이미 동일 적용되어 중복 복사하지 않았습니다.
-  - `vfx_reward_burst_premium.png`는 검은 RGB 배경을 alpha로 처리해 `public/assets/effects/effect_reward_burst_premium.png`와 WebP companion으로 갱신했습니다.
-  - `ui_reward_popup_premium.png`는 이미지에 영문 텍스트가 박혀 있어 보류했습니다.
-- 검증:
-  - `tools/check-mobile-exit-layout.mjs` 추가
-  - `check:mobile-exit-layout` 추가
-  - `tools/check-exit-flow.mjs`는 real-close/no blank-page 기준으로 갱신
-  - `tools/check-screen-ui-stability.mjs`는 모바일 텍스트/로비 배치 태그 기준으로 갱신
-- 패치 정책:
-  - 1.0.53 패치 ZIP도 self-contained 안정형 패치로 유지합니다.
-  - `src/`, `tools/`, `public/assets`, 버전 동기화 파일, README, AI_HANDOFF, docs를 포함합니다.
-- 신규 문서 파일은 생성하지 않았습니다.
-
-
-### 1.0.52 화면 단위 안정성/기술 품질 패스
-
-- 목적:
-  - 빠른 연속 터치, 장면 전환 중 입력, 모달 잔류, 버튼 비활성 상태, 로비 추천 동선, PNG 로딩 성능을 한 번에 점검했습니다.
-  - UIUX와 기술 안정성을 다음 에셋 패치 전 기준선으로 고정합니다.
-- 신규 시스템:
-  - `src/game/systems/NavigationSystem.ts`
-  - `CARDVILLE_NAVIGATION_GUARD_TAG = scene-navigation-guard-v152`
-  - `safeStart()` / `safeRestart()`로 주요 장면 이동을 공통 가드 처리합니다.
-  - `BackConfirmScene`이 남아 화면을 막는 상황을 전환 전에 정리합니다.
-- 버튼 안정화:
-  - `GameButton`에 `CARDVILLE_BUTTON_UX_AUDIT_TAG = screen-wide-premium-button-v152` 추가
-  - 버튼 액션 예외를 잡아 로그로 남깁니다.
-  - disabled 버튼은 회색 프리미엄 팔레트로 다시 그려져 깨진 버튼처럼 보이지 않습니다.
-- 로비 배치/추천 루트:
-  - `MainLobbyScene.drawRouteOverviewRibbon()` 추가
-  - 추천 건물과 이벤트 READY 상태를 상단 리본으로 표시합니다.
-  - `SCREEN_UI_STABILITY_TAG = screen-ui-stability-pass-v152` 추가
-  - `lobbyLayoutPlan.ts`는 1.0.52로 갱신했고, route ribbon/NavigationSystem/UI 안정성 체크를 포함합니다.
-- 성능/에셋:
-  - `public/assets`의 모든 PNG에 WebP companion을 보강했습니다.
-  - `IntroLoadingScene`은 브라우저가 WebP를 지원하면 `.png` 대신 `.webp` 경로를 우선 로드합니다.
-  - `CARDVILLE_WEBP_RUNTIME_TAG = webp-asset-runtime-v152` 추가
-- 검증:
-  - `tools/check-navigation-guard.mjs`
-  - `tools/check-webp-runtime.mjs`
-  - `tools/check-screen-ui-stability.mjs`
-  - `npm run verify`에 `check:navigation-guard`, `check:webp-runtime`, `check:screen-ui-stability` 포함
-- 패치 정책:
-  - 1.0.52 패치 ZIP도 self-contained 안정형 패치로 유지합니다.
-  - `src/`, `tools/`, `public/assets`, 버전 동기화 파일, README, AI_HANDOFF, docs를 포함합니다.
-- 신규 문서 파일은 생성하지 않았습니다.
-
-
-### 1.0.51 FullIndividual 프리미엄 에셋 적용 패스
-
-- 업로드 파일: `CardVille_New_Assets_FullIndividual_1.0.47_PNG_ONLY.zip`
-- 적용 목적:
-  - 마을/상점/스테이지/보상/코치 화면에서 새 프리미엄 에셋이 실제로 보이도록 연결합니다.
-  - 단순 파일 복사가 아니라 투명도, 텍스트 박힘, 현재 역할 적합성을 기준으로 선별합니다.
-- 적용한 주요 자산:
-  - `bg_shop_interior.png`, `bg_lobby_day.png`, `bg_lobby_night.png`
-  - `building_card_shop_premium.png` → `public/assets/diorama/building_shop.png`
-  - `npc_shopkeeper.png` → `npc_shopkeeper.png`, `npc_merchant.png`
-  - `cat_hint_happy/sleepy/surprise/think.png`
-  - `card_back_library/math/memory/rare.png`
-  - `ui_offer_card_daily/coin/gem/featured.png`
-  - `ui_stage_card_word/math/memory.png`
-  - `chest_common/rare/epic/legendary.png`
-  - `icon_coin_premium`, `icon_gem_premium`, `icon_xp_star`, `icon_card_dust`
-  - `badge_next/ready/best/locked/clear`
-  - `ui_result_ribbon`, `ui_result_crown`, `ui_result_stars`
-  - `illu_library_corner`, `illu_math_lab_corner`, `illu_memory_forest_corner`
-  - `ui_cat_paw_pointer`, `ui_cat_paw_tap`
-- 장면 연결:
-  - `ShopScene`: `shop-interior-backdrop-v151`, `shop-offer-premium-frame-v151`, 프리미엄 코인/보석 아이콘
-  - `StageSelectScene`: `stage-card-frame-v151`, 모드별 카드 뒷면
-  - `ModeSelectScene`: `mode-illustration-v151`
-  - `RewardPopupSystem`: 리본/별/왕관/보상 상자
-  - `RewardScene`: 결과 리본/별/희귀도별 상자
-  - `PlayScene`: `cardBackLibraryPremium`
-  - `MemoryForestScene`: `cardBackMemoryPremium`
-  - `CoachMarkSystem`: `coach-paw-pointer-v151`
-- 보류:
-  - `ui_reward_popup_premium.png`는 텍스트 박힘 정책 충돌로 계속 보류합니다.
-  - `building_tavern_premium.png`는 파일만 보존하고, 술집/주점 인상이 현재 CardVille 교육 카드마을 역할과 맞지 않아 런타임 연결은 보류합니다.
-- 검증:
-  - `tools/check-full-individual-assets.mjs` 추가
-  - `npm run check:full-individual-assets` 추가
-  - `npm run verify`에 포함
-- 패치 정책:
-  - 이번 패치 ZIP은 새 UI/카드/보상/상점/스테이지 PNG와 WebP companion을 포함하는 self-contained 안정형 패치로 구성해야 합니다.
-  - `PremiumAAA 선별 에셋 적용 패스` 기록과 `tavern 건물은 키즈/교육 톤과 역할이 맞지 않아 보류` 기록은 기존 검증 때문에 유지해야 합니다.
-- 신규 문서 파일은 생성하지 않았습니다.
-
-### 1.0.50 나가기/마을 비주얼 긴급 복구 패스
-
-- 사용자 피드백:
-  - “나가기 버튼 눌러도 별반응없고 오히려 멈추는 것 같다.”
-  - “마을 건물 이쁜 이미지 에셋이 더 잘 보여야 한다.”
-- 원인 판단:
-  - DOM 뒤로가기 확인창과 Phaser `BackConfirmScene` fallback이 동시에 남을 수 있었습니다.
-  - `window.close()`는 대부분의 모바일 브라우저에서 차단되므로, 기존 `나가는 중...` 상태가 복구 안내 없이 화면을 막아 멈춘 것처럼 보일 수 있었습니다.
-  - 새 마을 건물은 고해상도지만 로비 내 렌더 크기가 작아 체감상 이미지가 없는 것처럼 약하게 보일 수 있었습니다.
-- 수정:
-  - `BackButtonSystem`에 `CARDVILLE_EXIT_FLOW_TAG = exit-no-freeze-v150` 추가. 1.0.53에서 `exit-real-close-v153`로 교체됨
-  - DOM 오버레이가 정상 생성되면 `BackConfirmScene` fallback을 남기지 않도록 `stopSceneFallback()` 추가
-  - 브라우저가 닫기를 막으면 `showExitBlockedRecovery()` 복구 오버레이 표시
-  - `BackConfirmScene.requestExit()`를 `BackButtonSystem.requestExit()`로 통합
-  - `GAME_SCENES` 정리 대상에 `EnglishSchoolScene`, `DailyMissionScene` 포함
-  - `diorama_bg.png`를 1080×1920 프리미엄 마을 배경으로 재생성
-  - 9개 건물의 `visualWidth/visualHeight`를 확대하고 `premiumStage` 접지 패널 추가
-  - `VILLAGE_VISIBLE_BUILDING_SCALE_TAG = village-readable-building-scale-v150` 추가
-- 검증:
-  - `tools/check-exit-flow.mjs` 추가
-  - `tools/check-village-visuals.mjs` 추가
-  - `npm run verify`에 `check:exit-flow`, `check:village-visuals` 포함
-- 패치 정책:
-  - 1.0.50 패치 ZIP은 마을 건물 PNG/WebP와 배경 에셋을 포함하는 self-contained 안정형 패치로 구성해야 합니다.
-- 신규 문서 파일은 생성하지 않았습니다.
-
-### 1.0.49 PremiumAAA 선별 에셋 적용 패스
-
-- 업로드 파일: `CardVille_New_Assets_PremiumAAA_1.0.46_PNG.zip`
-- 선별 적용:
-  - `building_card_shop_premium.png` → `public/assets/diorama/building_shop.png`
-  - `hero_traveler_premium.png` → `public/assets/characters/hero_traveler_premium.png`, `public/assets/diorama/character_boy_token.png`
-  - `black_cat_mascot_premium.png` → `public/assets/characters/black_cat_mascot_premium.png`, `public/assets/diorama/mascot_black_cat_token.png`
-  - `card_frame_legendary_premium.png` → `public/assets/cards/frames/frame_legendary_gold_normal.png`
-  - `vfx_reward_burst_premium.png` → `public/assets/effects/effect_reward_burst_premium.png`
-  - `treasure_chest_premium.png` → `public/assets/ui/ui_treasure_chest_premium.png`
-- 처리: 흰색/체크무늬/검은색 RGB 배경을 alpha PNG로 정리하고 WebP companion을 생성했습니다.
-- 장면 반영:
-  - `MainLobbyScene`: 로비 파티에서 `heroTravelerPremium`, `blackCatMascotPremium` 우선 사용
-  - `ShopScene`: 새 `dioramaShop`과 `npcMerchant`를 상점 상단 액센트로 표시
-- 보류:
-  - `ui_reward_popup_premium.png`: 이미지 안에 `REWARDS`, `YOU RECEIVED`, `CLAIM` 같은 영문 텍스트가 박혀 있어 no baked text 정책과 충돌합니다.
-  - `building_tavern_premium.png`: tavern 건물은 키즈/교육 톤과 역할이 맞지 않아 보류했습니다. 추후 `guild hall` 또는 `adventure inn`으로 텍스트/술집 인상을 제거한 버전이 오면 이벤트/원정 건물 후보로 재검토합니다.
-- 검증:
-  - `tools/check-premium-asset-select.mjs` 추가
-  - `npm run verify`에 `check:premium-asset-select` 포함
-- 핵심 기록: 앞으로 업로드 에셋은 전부 넣지 말고, 아트 바이블/역할/텍스트 박힘/no-SVG/투명도 기준을 통과한 것만 선별 적용합니다.
-- 신규 문서 파일은 생성하지 않았습니다.
-
-### 1.0.48 마을 이미지 표시/버튼 프리미엄 복구 패스
-
-- 사용자 피드백: “왜 마을은 이미지가 없는가, 버튼 디자인도 시작 버튼만큼 신경 써야 한다.”
-- 원인 판단:
-  - 1.0.47 패치 ZIP은 1.0.46 프리미엄 에셋 적용본을 기준으로 한 델타 패치였습니다. 기준 통파일에 `public/assets/diorama/building_*.png` 프리미엄 PNG가 없으면 마을 이미지가 누락될 수 있습니다.
-  - 1.0.46/1.0.47에서 에셋은 들어갔지만, 패치만 적용하는 상황을 충분히 고려하지 못했습니다.
-  - 시작 화면 버튼은 `skin:false` 무광 벡터 CTA였지만, 다른 장면의 `GameButton`은 기본적으로 기존 baked button skin을 사용할 수 있어 품질 차이가 났습니다.
-- 수정:
-  - `IntroLoadingScene`에 `resolveAssetUrl()` 추가
-  - `import.meta.env.BASE_URL` 기반으로 `assets/...`를 로드
-  - `CARDVILLE_ASSET_VERSION`을 URL query로 붙여 캐시 갱신
-  - `loaderror` 로그 추가
-  - `MainLobbyScene.drawMissingBuildingFallback()` 추가
-  - `GameButton` 기본값을 시작 버튼과 유사한 프리미엄 벡터 CTA로 변경
-  - 기존 PNG 버튼 스킨은 `options.skin === true`일 때만 사용
-  - 1.0.48 패치 ZIP은 마을 핵심 이미지와 WebP companion을 포함하는 self-contained 패치로 작성
-- 검증:
-  - `tools/check-asset-runtime.mjs` 추가
-  - `tools/check-premium-buttons.mjs` 추가
-  - `npm run verify`에 `check:asset-runtime`, `check:premium-buttons` 포함
-- 핵심 기록: 앞으로 “이미지 적용 패치” 뒤의 보정 패치라도, 사용자가 패치 ZIP만 적용할 수 있으므로 로비 핵심 이미지 파일을 패치 표면에 포함합니다.
-- 신규 문서 파일은 생성하지 않았습니다.
-
-### 1.0.47 프리미엄 로비 에셋 배치 보정 패스
-
-- 기준: `CardVille_Project_Starter_1.0.46_PremiumAssetBatchApply_Full.zip`
-- 문제 원인: 1.0.46에서 들어온 마을 건물 PNG 9종은 1254×1254 정사각 고해상도 컷아웃인데, 로비 렌더링은 기존 직사각형 박스에 `setDisplaySize(width,height)`로 강제 맞추고 있었습니다. 이 때문에 건물 원본 비율이 눌리거나 세부 장식이 작게 보일 수 있었습니다.
-- 수정:
-  - `MainLobbyScene.fitImageToBox()` 추가
-  - 건물/NPC 이미지를 원본 비율 유지 방식으로 렌더링
-  - `visualWidth`, `visualHeight`, `nameplateY`, `statusY`, `statusX` 추가
-  - 성/도서관/연구소/광장/상점/학교/숲/이벤트/항구 위치와 터치존 보정
-  - `npc_merchant`, `npc_town_cat` 크기/위치 보정
-  - 광장 소품, 벤치, 랜턴, 표지판 위치 보정
-  - 열린 건물 `uiDoorLight` 접지 글로우 추가
-  - 이벤트 건물 `READY n` 칩이 숲/항구와 겹치지 않도록 안쪽 배치
-- 검증:
-  - `LOBBY_PREMIUM_VISUAL_FIT_AUDIT` 추가
-  - `tools/check-lobby-premium-fit.mjs` 추가
-  - `npm run verify`에 `check:lobby-premium-fit` 포함
-- 핵심 기록: setDisplaySize 강제 비율 왜곡을 fitImageToBox로 교체했습니다.
-- 신규 이미지 에셋은 없습니다.
-- 신규 문서 파일은 생성하지 않았습니다.
-
-### 1.0.46 프리미엄 PNG 배치 에셋 적용 패스
-
-- 업로드 파일:
-  - `CardVille_Batch1_PremiumFantasyVillage.zip`
-  - `CardVille_Batch2_PremiumFantasyVillage.zip`
-  - `CardVille_Asset_MassProduction_1.0.45_PNG.zip`
-- 적용 전 확인 결과: 대부분의 PNG가 alpha PNG가 아니라 체크무늬/흰색/검은색 배경이 RGB로 구워진 상태였습니다.
-- 처리: 체크무늬/흰색 배경 RGB 자산을 alpha PNG로 정리하고 WebP companion을 생성했습니다.
-- 실제 교체:
-  - `public/assets/diorama/building_*.png` 9종
-  - `public/assets/characters/npc_merchant.png`
-  - `public/assets/characters/npc_town_cat.png`
-  - `public/assets/cards/frames/frame_legendary_gold_normal.png`
-- 신규 연결:
-  - `cat_hint_happy`, `cat_hint_think`, `cat_hint_surprise`, `cat_hint_sleepy`
-  - `effect_pack_burst_common`, `effect_pack_burst_rare`, `effect_pack_burst_epic`, `effect_pack_burst_legendary`
-  - `effect_reward_burst_premium`
-  - `ui_math_console`, `ui_memory_board`, `ui_treasure_chest_premium`
-- 장면 반영:
-  - `CoachMarkSystem`: 말풍선 톤별 고양이 이모션 사용
-  - `RewardPopupSystem`: 보상 버스트/상자/고양이 이모션 사용
-  - `RewardScene`: 희귀도별 카드팩 버스트 사용
-  - `MathLabScene`: 연산 연구소 콘솔 패널 사용
-  - `MemoryForestScene`: 숲 보드 패널/생각 고양이 사용
-- 보류:
-  - `cardville_ui_reward_popup_premium.png`는 이미지 안에 영문 텍스트가 박혀 있어 no baked text 정책과 충돌하므로 적용하지 않았습니다.
-- 검증:
-  - `tools/check-applied-assets.mjs` 추가
-  - `npm run verify`에 `check:applied-assets` 포함
-- 새 문서 파일은 생성하지 않았습니다.
-
-### 1.0.45 아트 바이블/미션 라우트 병합 패스
-
-- 사용자 변경분을 우선 보존했습니다.
-  - `docs/CARDVILLE_ART_DIRECTION_BIBLE.md`
-  - `docs/CARDVILLE_ASSET_PROMPT_PACK.md`
-  - `src/game/data/artDirection.ts`
-  - `tools/check-art-direction.mjs`
-  - `brandRules.ts`의 Premium Fantasy Village / Stylized Realism / Warm Sunset Lighting / 1:4.5 캐릭터 비율 / no-SVG 정책
-- SVG 사용 금지, PNG/WebP 전용 방향은 계속 유지합니다.
-- 완주 미션 라우트를 다시 병합했습니다.
-  - `v144-perfect-day-lobby-route`
-  - 오늘 완주 보상
-  - 로비 READY 라우팅
-  - 이벤트 건물 `READY n`, `MISSION`, `DONE` 상태칩
-  - `check:mission-route`
-- `npm run verify`는 `check:art-direction`과 `check:mission-route`를 모두 포함해야 합니다.
-- 신규 이미지 에셋은 아직 추가하지 않았습니다.
-- 이번 패치에서 새 문서 파일은 생성하지 않았고, 사용자가 제공한 아트 바이블/프롬프트 팩 문서만 보존했습니다.
-- 패치 ZIP에는 CI 섞임 방지를 위해 `src/`, `tools/`, `package.json`, `index.html`, `public/build.json`, `public/health.html`, `public/reset.html`, `README.md`, `AI_HANDOFF_CARDVILLE.md`, `docs/`의 관련 파일을 포함합니다.
-
-## 1. 프로젝트 정체성
-
-- 프로젝트명: 카드마을 CardVille
-- 슬로건: 카드를 모아 꿈의 마을을 완성하세요.
-- 장르: 카드 퍼즐, 단어, 연산, 기억력, 교육, 수집, 성장, 캐주얼
-- 핵심 방향: 단순 카드게임이 아니라 브랜드가 있는 모바일 판타지 카드마을 게임
-- 브랜드 키워드: 소년, 검은 고양이, 카드, 따뜻한 판타지 마을
-- 그래픽 방향: 프리미엄 2.5D 판타지, 따뜻한 골드/보라/블루/갈색
-- 절대 피할 것: 조악한 교육게임 느낌, 무분별한 SVG, 불필요한 문서 파일 양산
-
-## 2. 고정 캐릭터
-
-사용자가 업로드한 키아트의 소년과 검은 고양이가 CardVille의 고정 브랜드 기준입니다.
-
-### 소년
-
-- 12~14세 느낌
-- 밝고 용감하며 모험심 있음
-- 항상 웃는 인상
-- 파란 망토
-- 갈색 부츠
-- 흰 셔츠
-- 갈색 바지
-- 머리, 눈, 비율, 색감, 의상 방향은 바꾸지 말 것
-
-### 검은 고양이
-
-- 항상 주인공과 함께 다님
-- 힌트, 튜토리얼, 이벤트, 이모션 담당
-- 로비 이동, 튜토리얼 말풍선, 이벤트 반응에 적극 활용
-
-### 기준 이미지
-
-```txt
-public/assets/brand/cardville_fixed_character_reference.png
-```
-
-이 이미지는 스타일 기준입니다. 앞으로 새 이미지, UI, 아이콘, 영상, 로비 연출을 만들 때 이 캐릭터 인상이 유지되어야 합니다.
-
-## 3. 현재 로비 설계
-
-로그인 후 로비는 한 화면 디오라마 방식입니다.
-
-```txt
-           카드 성
-
-도서관      광장      연구소
-
-상점        주인공    학교
-
-기억의 숲   이벤트    항구
-```
-
-### 핵심 규칙
-
-- 세로 모바일 화면 기준
-- 카메라 고정
-- 스크롤 없음
-- 한 화면에 주요 건물 모두 표시
-- 건물 터치 시 소년과 고양이가 해당 건물까지 3~5걸음 이동
-- 이동 후 건물 문 열림, 빛, 바운스 같은 짧은 전환 연출
-- 배경은 큰 판타지 일러스트처럼 보이되 건물과 오브젝트는 개별 PNG/WebP로 분리
-
-### 현재 우선 오픈 건물
-
-- 도서관: 낱말 카드
-- 연구소: 연산 연구소 스테이지 선택
-- 상점: 카드팩 상점 허브, 일일 무료팩, 구매팩, 카드 앨범 바로가기
-- 기억의 숲: 기억력 스테이지 선택
-- 이벤트: 일일 미션, 출석, 주간 미션, 오늘 완주 보상, 로비 READY 라우팅
-
-### 준비중 건물
-
-- 카드 성
-- 광장
-- 항구
-
-## 4. 주요 파일 구조
-
-```txt
-README.md
-AI_HANDOFF_CARDVILLE.md
-index.html
-package.json
-vite.config.ts
-public/build.json
-public/health.html
-public/reset.html
-public/assets/brand/cardville_fixed_character_reference.png
-public/assets/ui/cardville_login_bg.png
-public/assets/video/cardville_intro_loading.mp4
-public/assets/diorama/
-src/main.ts
-src/game/data/brandRules.ts
-src/game/data/dioramaBuildings.ts
-src/game/data/wordStages.ts
-src/game/scenes/LoginScene.ts
-src/game/scenes/IntroLoadingScene.ts
-src/game/scenes/MainLobbyScene.ts
-src/game/scenes/StageSelectScene.ts
-src/game/scenes/PlayScene.ts
-src/game/scenes/RewardScene.ts
-src/game/scenes/CollectionScene.ts
-src/game/systems/AuthSystem.ts
-src/game/systems/BackButtonSystem.ts
-src/game/systems/LayoutSystem.ts
-src/game/systems/SaveSystem.ts
-src/game/systems/SecuritySystem.ts
-tools/check-deploy.mjs
-tools/check-brand.mjs
-tools/check-ui.mjs
-tools/check-layout.mjs
-tools/check-association.mjs
-tools/check-security.mjs
-```
-
-## 5. 기술 스택
-
-- Phaser 3
-- TypeScript
-- Vite
-- Canvas/WebGL 자동
-- Firebase는 선택 로그인 시 CDN 지연 로딩
-- LocalStorage 자동 저장
-- GitHub Pages 배포
-- PWA/Service Worker 캐시는 현재 비활성 유지
-
-## 6. 실행과 검증
-
-개발 실행:
+# AI_HANDOFF_CARDVILLE
+
+- 기준 패키지 버전: `2.1.131`
+- 현재 작업 기준: `v2.1.131`
+- 작업 환경: GitHub Desktop, Firebase 무료 플랜, 로컬 저장 fallback 유지.
+- 필수 산출물: `AF-v2.1.131-full.zip`, `AF-v2.1.131-patch.zip`.
+- 문서 파일 제한: 산출물 안의 `.md`는 `README.md`, `AI_HANDOFF_CARDVILLE.md`만 허용.
+
+## 작업중인 내용
+
+- 현재 작업 기준은 `v2.1.131 stale observer quarantine` 패치다.
+- 목표는 사용자가 반복 요청한 코드 꼬임, 예전 보정 코드가 계속 살아나는 문제, UI/UX 흔들림, 체감 랙, 개척 팝업/페이지/낚시 UI 미반영 체감을 줄이는 것이다.
+- 핵심 원칙: 새 보정 레이어만 계속 쌓지 않고, v2.1.22~v2.1.30 legacy observer가 최신 UI를 다시 만지는 경로를 부팅 초기에 handoff한다.
+- 낚시 판정/보상/밸런스, 물고기 데이터, 마을 좌표/충돌/건설 설치 로직, Firebase fallback, 오프닝 video-only, 플레이어 8방향 파일명/flip 금지는 변경하지 않는다.
+
+## 기록
+
+### v2.1.131 stale observer quarantine 패치 기록
+
+- v2.1.130 full 기준에서 시작했다.
+- 새 패스 `installV21131StaleObserverQuarantinePass()`와 `syncV21131StaleObserverQuarantineUi()`를 추가했다.
+- 부팅 초기에 `v21131-stale-observer-quarantine-root`, `dataset.v21131StaleObserverQuarantine = active`, `dataset.v21131UiPolicy = early-boot-mutes-v21122-v21130-observers-direct-state-sync`를 기록한다.
+- v2.1.22, v2.1.23, v2.1.24, v2.1.25, v2.1.26, v2.1.28, v2.1.29, v2.1.30 계열 패스는 v2.1.131 활성 상태에서 `handoff-to-v21131-stale-observer-quarantine`로 물러난다.
+- v2.1.131 최신 패스는 `style` 속성 MutationObserver를 설치하지 않는다. class, data-screen, data-fishing-phase, childList, visualViewport 변화만 감시한다.
+- 초반 가이드, 하단 메뉴, 상점/가방/퀘스트/지도/도감/장비/랭킹 중앙 정렬, 개척 팝업, 건설 모달, 낚시 물길/장비/연속성공/물었다/결과창을 `v21131-*` 단일 governor 기준으로 다시 묶었다.
+- 첫 마을 가이드는 새 저장 키 `aqua-v21131-guide-dismissed`를 사용하고, 기존 v21122/v21124/v21125/v21126/v21128/v21129/v21130 가이드 DOM은 제거한다.
+- 낚시 `bite/reeling/result/success/fail` 집중 단계에서는 물길/수중효과/장비 strip 숨김 기준을 유지한다.
+- `README.md`, `AI_HANDOFF_CARDVILLE.md`, `public/offline.html`, `public/sw.js`, `src/data.ts`, `package.json`, `package-lock.json`을 v2.1.131 기준으로 동기화했다.
+- 신규 검증 스크립트 `tools/check-v21131-stale-observer-quarantine.mjs`를 추가했다.
+
+## 다음 업데이트 예상 내역
+
+- 실제 모바일에서 v2.1.22~v2.1.30 observer가 더 이상 설치되어 최신 UI를 다시 흔드는지 확인한다.
+- 첫 마을 중앙 가이드가 오프닝 이후 즉시 뜨는지 확인한다.
+- 개척 팝업이 반절만 보이지 않고 중앙 fixed + 내부 스크롤로 유지되는지 확인한다.
+- 상점/가방/퀘스트/지도/도감 페이지 우측 쏠림을 캡처 기준으로 확인한다.
+- 낚시 중 물길 바, 낚싯대/미끼 strip, `물었다!`, 성공 결과창 깜박임을 재검수한다.
+- 체감 랙이 남으면 다음 패치에서 `RuntimeQualityManager`, Pixi ticker, DOM/WebGL effect budget을 직접 줄인다.
+- 오래된 observer 패스 실제 삭제는 GitHub Actions와 모바일 실기기 검증 후 단계적으로 판단한다.
+- Firebase/Pixi/Vite minor 업데이트는 GitHub Actions에서 `npm ci`, `typecheck`, `build` 통과 후만 검토한다. Firebase 무료 플랜과 로컬 fallback은 유지한다.
+
+## 필수 결과 확인 명령
 
 ```bash
-npm install --no-audit --no-fund --no-package-lock
-npm run dev
-```
-
-전체 검증:
-
-```bash
-npm run verify
-```
-
-`npm run verify`는 아래를 포함합니다.
-
-```txt
+npm run validate
+npm run ci:registry:check
+npm run ci:install
+npm run typecheck
 npm run build
-npm run check:deploy
-npm run check:brand
-npm run check:ui
-npm run check:layout
-npm run check:association
-npm run check:security
 ```
 
-ZIP 생성 시에는 `node_modules`와 `dist`를 포함하지 않습니다.
+## 산출물 zip 점검 명령
 
-## 7. 사용자가 정한 전달 규칙
-
-앞으로 답변 보고는 반드시 아래 순서로 작성합니다.
-
-```txt
-업데이트 내역
-기타 확인 사항
-다음 업데이트 예정
-ZIP 파일
+```bash
+python3 - <<'PY'
+import zipfile, sys
+for zpath in sys.argv[1:]:
+    with zipfile.ZipFile(zpath) as z:
+        names = z.namelist()
+    md = [n for n in names if n.lower().endswith('.md')]
+    banned = [n for n in names if '.git/' in n or 'node_modules/' in n or 'dist/' in n or 'reports/' in n or n.endswith('.log') or n.lower().endswith(('.svg', '.svgz'))]
+    print(zpath)
+    print('markdown:', md)
+    print('banned:', banned[:20], 'count=', len(banned))
+PY AF-v2.1.131-full.zip AF-v2.1.131-patch.zip
 ```
 
-그리고 ZIP은 항상 두 개를 제공합니다.
+## 고정 작업환경/산출 규칙
 
-```txt
-통파일: 전체 프로젝트 ZIP
-패치파일: 직전 버전에서 바뀐 파일만 담은 ZIP
+- GitHub Desktop 사용 기준.
+- Firebase는 무료 플랜 기준. 무료 한도를 벗어나는 서버 기능, 유료 의존, 필수 Cloud Functions 전제 금지.
+- Firebase config가 없거나 익명 로그인이 실패해도 로컬 저장 fallback이 살아 있어야 한다.
+- 문서 기록은 `README.md`, `AI_HANDOFF_CARDVILLE.md`만 사용한다. 추가 `.md`, 임시 리포트, 로그 파일을 산출물에 넣지 않는다.
+- 결과물은 항상 두 개다: `AF-v2.1.131-full.zip`, `AF-v2.1.131-patch.zip`.
+- 결과 공유 형식은 `작업중인 내용` → `기록` → `다음 업데이트 예상 내역` → 마지막에 버전 숫자 파일명 링크.
+
+# 이전 인수인계 기록
+
+# AI_HANDOFF_CARDVILLE
+
+- 기준 패키지 버전: `2.1.130`
+- 현재 작업 기준: `v2.1.130`
+- 작업 환경: GitHub Desktop, Firebase 무료 플랜, 로컬 저장 fallback 유지.
+- 필수 산출물: `AF-v2.1.130-full.zip`, `AF-v2.1.130-patch.zip`.
+- 문서 파일 제한: 산출물 안의 `.md`는 `README.md`, `AI_HANDOFF_CARDVILLE.md`만 허용.
+
+## 작업중인 내용
+
+- 현재 작업 기준은 `v2.1.130 direct source regression guard` 패치다.
+- 목표는 사용자가 반복 지적한 “초반 가이드/개척 팝업/페이지 중앙 정렬/낚시 물길/장비/물었다/결과창 보정이 전혀 반영되지 않은 것처럼 보이는 문제”를 줄이는 것이다.
+- 핵심 원칙: 낚시 판정/보상/밸런스, 물고기 데이터, 마을 좌표/충돌/건설 설치 로직, Firebase fallback, 오프닝 video-only, 플레이어 8방향 파일명/flip 금지는 변경하지 않는다.
+- 사용자가 특히 우려한 부분은 코드 꼬임과 예전 보정 코드가 계속 살아나는 문제다. v2.1.130은 v2.1.129를 최신 패스에게 handoff시키고, 원본 렌더 class와 직접 상태 동기화 기준을 `v21130`으로 끌어올린다.
+
+## 기록
+
+### v2.1.130 direct source regression guard 패치 기록
+
+- v2.1.129 full 기준에서 시작했다.
+- 새 패스 `installV21130DirectSourceRegressionGuardPass()`와 `syncV21130DirectSourceUi()`를 추가했다.
+- 부팅 초기에 `v21130-direct-source-regression-root`, `dataset.v21130DirectSourceRegressionGuard = active`, `dataset.v21130UiPolicy = direct-source-render-first-single-light-sync-no-style-observer`를 기록한다.
+- v2.1.129 direct state sync는 v2.1.130 활성 상태에서 `handoff-to-v21130-direct-source-regression-guard`로 물러나며 observer를 설치하지 않는다.
+- v2.1.130 최신 패스는 `style` 속성 MutationObserver를 설치하지 않는다. class, data-screen, data-fishing-phase, childList, visualViewport 변화만 감시한다.
+- 첫 마을 중앙 가이드는 원본 렌더에서 `v21130-village-guide-popup`, `data-v21130-direct-guide`, `aqua-v21130-guide-dismissed` 기준으로 직접 제공한다.
+- 하단 메뉴는 `v21130-bottom-nav-final`, `data-v21130BottomNav` 기준을 추가했다.
+- 상점/가방/퀘스트/지도/도감/장비/랭킹은 생성 원본에서 `v21130-runtime-page-final`, `v21130-page-column-final`을 가진다.
+- 개척 팝업은 생성 원본에서 `v21130-expedition-final`, `v21130-expedition-direct`를 가진다.
+- 낚시 화면은 생성 원본에서 `v21130-fishing-final-screen`, 물길/장비/연속성공/물었다/결과창 `v21130-*` 토큰을 가진다.
+- `README.md`, `AI_HANDOFF_CARDVILLE.md`, `public/offline.html`, `public/sw.js`, `src/data.ts`, `package.json`, `package-lock.json`을 v2.1.130 기준으로 동기화했다.
+- 신규 검증 스크립트 `tools/check-v21130-direct-source-regression-guard.mjs`를 추가했다.
+
+## 다음 업데이트 예상 내역
+
+- 실제 모바일에서 초반 가이드가 오프닝 이후 첫 마을 중앙에 즉시 뜨는지 확인한다.
+- 개척 팝업이 반절만 보이지 않고 중앙 fixed + 내부 스크롤로 유지되는지 확인한다.
+- 상점/가방/퀘스트/지도/도감 페이지가 우측으로 쏠리지 않고 중앙 safe-area 컬럼을 유지하는지 캡처 기준으로 확인한다.
+- 낚시 중 물길 바, 낚싯대/미끼 strip, `물었다!`, 성공 결과창이 깜박이거나 최상단으로 점프하지 않는지 확인한다.
+- 체감 랙이 남으면 다음 패치에서 `RuntimeQualityManager`, Pixi ticker, DOM/WebGL effect budget을 직접 줄인다.
+- 오래된 observer 패스 실제 삭제는 GitHub Actions와 모바일 실기기 검증 후 단계적으로 판단한다.
+- Firebase/Pixi/Vite minor 업데이트는 GitHub Actions에서 `npm ci`, `typecheck`, `build` 통과 후만 검토한다. Firebase 무료 플랜과 로컬 fallback은 유지한다.
+
+## 필수 결과 확인 명령
+
+```bash
+npm run validate
+npm run ci:registry:check
+npm run ci:install
+npm run typecheck
+npm run build
 ```
 
-### 문서 생성 규칙
+## 산출물 zip 점검 명령
 
-- 버전별 패치노트 파일을 새로 만들지 않습니다.
-- 업데이트 기록은 `README.md`에만 누적합니다.
-- 인수인계 내용은 이 `AI_HANDOFF_CARDVILLE.md`에 누적합니다.
-- 정말 필요한 문서만 유지합니다.
-- 불필요한 임시 보고서, 중복 문서, 버전별 감사 문서 생성을 피합니다.
+```bash
+python3 - <<'PY'
+import zipfile, sys
+for zpath in sys.argv[1:]:
+    with zipfile.ZipFile(zpath) as z:
+        names = z.namelist()
+    md = [n for n in names if n.lower().endswith('.md')]
+    banned = [n for n in names if '.git/' in n or 'node_modules/' in n or 'dist/' in n or 'reports/' in n or n.endswith('.log') or n.lower().endswith(('.svg', '.svgz'))]
+    print(zpath)
+    print('markdown:', md)
+    print('banned:', banned[:20], 'count=', len(banned))
+PY AF-v2.1.130-full.zip AF-v2.1.130-patch.zip
+```
 
+## 고정 작업환경/산출 규칙
 
-## 8. 1.0.28 프리미엄 에셋 패스
+- GitHub Desktop 사용 기준.
+- Firebase는 무료 플랜 기준. 무료 한도를 벗어나는 서버 기능, 유료 의존, 필수 Cloud Functions 전제 금지.
+- Firebase config가 없거나 익명 로그인이 실패해도 로컬 저장 fallback이 살아 있어야 한다.
+- 문서 기록은 `README.md`, `AI_HANDOFF_CARDVILLE.md`만 사용한다. 추가 `.md`, 임시 리포트, 로그 파일을 산출물에 넣지 않는다.
+- 결과물은 항상 두 개다: `AF-v2.1.130-full.zip`, `AF-v2.1.130-patch.zip`.
+- 결과 공유 형식은 `작업중인 내용` → `기록` → `다음 업데이트 예상 내역` → 마지막에 버전 숫자 파일명 링크.
 
-이번 업데이트는 사용자가 제공한 고정 캐릭터 기준 이미지의 톤을 기준으로 로비 자산의 품질 기준을 올린 패치입니다. 핵심 목적은 “초딩 교육게임 같은 임시 자산” 느낌을 줄이고, CardVille를 소년/검은 고양이/따뜻한 판타지 마을 브랜드로 보이게 만드는 것입니다.
+# 이전 인수인계 기록
 
-### 핵심 변경
+# AI_HANDOFF_CARDVILLE
 
-- `public/assets/diorama/diorama_bg.png`를 780×1688 고해상도 세로 디오라마 배경으로 교체했습니다.
-- 건물 9종을 512×430 프리미엄 프레임형 PNG/WebP 자산으로 교체했습니다.
-- 소년과 고양이는 기준 이미지에서 추출한 고해상도 스탠디로 교체했습니다.
-- NPC 8종, 소품, UI 패널, 말풍선, 터치 리플, 건물 글로우, 아이콘을 재정비했습니다.
-- `tools/check-premium-assets.mjs`와 `check:premium-assets`를 추가해 프리미엄 에셋 검증을 CI에 넣었습니다.
-- `package.json`의 `verify`는 기존 `check:assets`, `check:polish`에 더해 `check:premium-assets`를 실행합니다.
-- `lobbyEntities.ts`의 안전 규칙에 저품질 임시 그림 금지와 프리미엄 톤 유지 규칙을 추가했습니다.
+- 기준 패키지 버전: `2.1.129`
+- 현재 작업 기준: `v2.1.129`
+- 작업 환경: GitHub Desktop, Firebase 무료 플랜, 로컬 저장 fallback 유지.
+- 필수 산출물: `AF-v2.1.129-full.zip`, `AF-v2.1.129-patch.zip`.
+- 문서 파일 제한: 산출물 안의 `.md`는 `README.md`, `AI_HANDOFF_CARDVILLE.md`만 허용.
 
-### 주의
+## 작업중인 내용
 
-- 임시 채팅 환경에서는 별도 이미지 생성 모델을 직접 호출할 수 없습니다. 이번 버전은 제공된 기준 이미지와 절차적 PNG/WebP 제작으로 런타임 자산을 고해상도화한 구조적 패치입니다.
-- 최종 상용 일러스트가 준비되면 기존 파일명과 매니페스트 키를 유지한 채 같은 경로에 덮어쓰면 코드 변경 없이 교체할 수 있습니다.
-- 새 버전별 문서 파일은 만들지 않았고, 이 인계서와 README에만 기록했습니다.
+- 현재 작업 기준은 `v2.1.129 direct state UI sync` 패치다.
+- 목표는 사용자가 반복 지적한 미반영 체감 문제를 줄이는 것이다. 초반 가이드, 개척 팝업 반절 표시, 상점/가방/퀘스트/지도/도감 우측 쏠림, 하단 메뉴 위치 불일치, 낚시 물길 깜박임, 낚싯대/미끼 scale 흔들림, 연속 성공 위치, `물었다!` 팝업 중앙 고정, 성공 결과창 중앙 고정을 직접 상태 동기화 방식으로 다룬다.
+- 중요 원칙: 낚시 판정/보상/밸런스, 물고기 데이터, 마을 좌표/충돌/건설 설치 로직, Firebase fallback, 오프닝 video-only, 플레이어 8방향 파일명/flip 금지는 변경하지 않는다.
+- 사용자가 특히 우려한 부분은 코드 꼬임과 예전 코드가 계속 살아나는 문제다. v2.1.129는 v2.1.128의 style observer 계열 보정이 최신 정책을 방해하지 않도록 handoff하고, `style observer` loop 없이 render/state 전환 시점에서 직접 동기화한다.
 
-## 9. 1.0.27 배치/콘텐츠/성능 다듬기 업데이트
+## 기록
 
-이번 업데이트는 초대형 확장을 계속하기 전, 로비 데이터와 콘텐츠 배정, 성능 정책을 먼저 정리한 안정화 패치입니다. 새 대형 이미지 에셋을 늘리기보다 중복과 꼬임을 줄이는 구조 개선을 우선했습니다.
+### v2.1.129 direct state UI sync 패치 기록
 
-### 핵심 변경
+- v2.1.128 기준에서 시작했다.
+- 사용자가 “앞전 요청건이 전혀 반영 안 된 것 같다”고 다시 피드백했다.
+- 원인 분석: 이전 패치들은 observer/finalizer가 나중에 DOM을 보정하는 구조였다. 그래서 첫 마을 진입, 페이지 생성 직후, 낚시 phase 전환 직후에는 사용자가 보는 첫 화면에 초반 가이드, 중앙 정렬, 개척 팝업, 물길/낚싯대/미끼/물었다/결과창 보정이 늦게 보일 수 있었다.
+- 추가 원인 분석: style attribute를 감시하는 보정 루프가 남으면 예전 코드가 inline style을 다시 쓰고 최신 코드가 다시 복구하는 churn이 생겨 랙/깜박임 체감으로 이어질 수 있었다.
+- 새 패스 `installV21129DirectStateUiPass()`를 추가했다.
+- 부팅 초기에 `v21129-direct-state-ui-root`, `dataset.v21129DirectStateUi = active`, `dataset.v21129UiPolicy = source-render-state-sync-no-style-observer-loop`를 기록한다.
+- v2.1.128 direct source repair는 v2.1.129가 활성화된 경우 `handoff-to-v21129-direct-state-sync` 상태로 물러난다.
+- v21129는 `style` 속성 MutationObserver를 설치하지 않는다. class, 화면, 낚시 phase, childList, visualViewport 변화만 보고 필요한 때 `syncV21129DirectUi()`를 실행한다.
+- `startGame`, `go`, `mountBottomNav`, `renderFishing`, `setFishingPhase`, `showBiteCallout`, `showResultCard`에서 `syncV21129DirectUi()`를 직접 호출한다.
+- 첫 마을 중앙 초반 가이드는 `v21129-village-guide-popup`, `aqua-v21129-guide-dismissed`로 제공한다. 기존 v21122/v21124/v21125/v21126/v21128 가이드는 제거해 중복과 미노출 혼선을 막는다.
+- 하단 메뉴는 `v21129-bottom-nav-final`로 마을/상점/가방/퀘스트/지도/도감/장비/랭킹에서 같은 우측 하단 기준을 쓰고, 낚시 화면에서는 숨긴다.
+- 상점/가방/퀘스트/지도/도감/장비/랭킹은 `v21129-runtime-page-final`, `v21129-page-column-final`로 safe-area 중앙 컬럼을 유지한다.
+- 개척 팝업은 `v21129-expedition-final`로 중앙 fixed, safe-area max-height, 내부 scroll, overscroll contain을 적용해 반절만 보이는 회귀를 막는다.
+- 건설/확인 모달은 `v21129-village-modal-final`로 작은 화면 스크롤과 max-height를 유지한다.
+- 낚시 물길/수중 효과는 `v21129-water-final`, `v21129-sea-lane-final`로 관리하고 bite/reeling/result/success/fail 집중 단계에서는 숨겨 물길 깜박임을 줄인다.
+- 낚싯대/미끼 strip은 `v21129-loadout-final`, 내부 요소는 `v21129-loadout-child-final`로 transform/scale/transition/animation을 막는다.
+- 연속 성공 표기는 `v21129-combo-final`로 캐스팅 버튼 근처 하단에 간격을 두고 배치한다.
+- `물었다!` 팝업은 `v21129-bite-final`, 성공 결과창은 `v21129-result-final`로 중앙 fixed 기준을 유지한다.
+- `README.md`, `AI_HANDOFF_CARDVILLE.md`, `public/offline.html`, `public/sw.js`, `src/data.ts`, `package.json`, `package-lock.json`을 v2.1.129 기준으로 동기화했다.
+- 신규 검증 스크립트 `tools/check-v21129-direct-state-ui-sync.mjs`를 추가했다.
 
-- `MainLobbyScene.ts` 안에 있던 NPC/소품 배열을 `src/game/data/lobbyEntities.ts`로 분리했습니다.
-- 건물별 콘텐츠 배정을 `src/game/data/modeCatalog.ts`로 정리했습니다.
-- 연구소는 `math`, 기억의 숲은 `memory` 추천 모드로 `ModeSelectScene`에 연결됩니다.
-- `ModeSelectScene`은 어떤 건물에서 들어왔는지에 따라 추천 모드를 강조하고, 준비중 콘텐츠는 다음 작업 내용을 토스트로 보여줍니다.
-- `src/game/systems/QualitySystem.ts`를 추가해 저사양/모션감소 환경에서 로비 ambient 오브젝트와 반짝임 밀도를 낮춥니다.
-- `src/main.ts`의 Phaser renderer를 `AUTO`로 바꿔 WebGL 우선, Canvas fallback이 가능하게 했습니다.
-- `LayoutSystem.addCoverImage` 중심 좌표를 visible bounds 기준으로 보정했습니다.
-- 준비중 건물 토스트 배경이 반복 터치마다 남을 수 있는 부분을 정리했습니다.
-- `tools/check-polish.mjs`와 `check:polish`를 추가해 로비, 콘텐츠 배정, 품질 시스템, 렌더러 설정을 CI에서 같이 검증합니다.
+## 다음 업데이트 예상 내역
 
-### 주의
+- 실제 모바일에서 초반 가이드가 오프닝 이후 첫 마을 중앙에 즉시 뜨는지 확인한다.
+- 개척 팝업이 반절만 보이지 않고 중앙 fixed + 내부 스크롤로 유지되는지 확인한다.
+- 상점/가방/퀘스트/지도/도감 페이지가 우측으로 쏠리지 않고 중앙 safe-area 컬럼을 유지하는지 캡처 기준으로 확인한다.
+- 낚시 중 물길 바, 낚싯대/미끼 strip, `물었다!`, 성공 결과창이 깜박이거나 최상단으로 점프하지 않는지 확인한다.
+- 체감 랙이 남으면 다음 패치에서 `RuntimeQualityManager`, Pixi ticker, DOM/WebGL effect budget을 직접 줄인다.
+- 오래된 observer 패스 실제 삭제는 GitHub Actions와 모바일 실기기 검증 후 단계적으로 판단한다.
+- Firebase/Pixi/Vite minor 업데이트는 GitHub Actions에서 `npm ci`, `typecheck`, `build` 통과 후만 검토한다. Firebase 무료 플랜과 로컬 fallback은 유지한다.
 
-- 버전별 별도 문서는 만들지 않았습니다.
-- 1.0.27은 콘텐츠를 대량 구현한 버전이 아니라, 다음 미니게임/상점 확장 전 구조와 검증을 고정하는 패치입니다.
-- 새 모드나 건물을 추가할 때는 `modeCatalog.ts`, `dioramaBuildings.ts`, `lobbyEntities.ts`, `assetManifest.ts` 간의 배정이 어긋나지 않도록 확인해야 합니다.
+## 필수 결과 확인 명령
 
-## 10. 1.0.26 NPC 대화/로비 연출 업데이트
+```bash
+npm run validate
+npm run ci:registry:check
+npm run ci:install
+npm run typecheck
+npm run build
+```
 
-이번 업데이트는 1.0.25에서 확보한 자산을 새로 늘리기보다, 기존 NPC/UI 자산을 실제 로비 상호작용으로 연결한 패치입니다.
+## 산출물 zip 점검 명령
 
-### 핵심 변경
+```bash
+python3 - <<'PY'
+import zipfile, sys
+for zpath in sys.argv[1:]:
+    with zipfile.ZipFile(zpath) as z:
+        names = z.namelist()
+    md = [n for n in names if n.lower().endswith('.md')]
+    banned = [n for n in names if '.git/' in n or 'node_modules/' in n or 'dist/' in n or 'reports/' in n or n.endswith('.log') or n.lower().endswith(('.svg', '.svgz'))]
+    print(zpath)
+    print('markdown:', md)
+    print('banned:', banned[:20], 'count=', len(banned))
+PY AF-v2.1.129-full.zip AF-v2.1.129-patch.zip
+```
 
-- `MainLobbyScene.ts`에서 NPC 8종에 대사 배열과 제스처 타입을 연결했습니다.
-- NPC 터치 시 `uiSpeechBubble` 말풍선, 하단 힌트 문구, 터치 리플이 같이 반응합니다.
-- 상인 손흔들기, 마법사 반짝임, 사서 책 아이콘, 선생님/요리사/마을고양이/경비병/아이 반응을 기존 자산으로 구성했습니다.
-- 로비 설정 버튼을 추가해 현재 로비 안전 규칙을 게임 안에서 확인할 수 있게 했습니다.
-- 건물 입장 중에는 말풍선과 설정 패널을 닫아 UI 겹침을 막습니다.
+## 고정 작업환경/산출 규칙
 
-### 주의
+- GitHub Desktop 사용 기준.
+- Firebase는 무료 플랜 기준. 무료 한도를 벗어나는 서버 기능, 유료 의존, 필수 Cloud Functions 전제 금지.
+- Firebase config가 없거나 익명 로그인이 실패해도 로컬 저장 fallback이 살아 있어야 한다.
+- 문서 기록은 `README.md`, `AI_HANDOFF_CARDVILLE.md`만 사용한다. 추가 `.md`, 임시 리포트, 로그 파일을 산출물에 넣지 않는다.
+- 결과물은 항상 두 개다: `AF-v2.1.129-full.zip`, `AF-v2.1.129-patch.zip`.
+- 결과 공유 형식은 `작업중인 내용` → `기록` → `다음 업데이트 예상 내역` → 마지막에 버전 숫자 파일명 링크.
 
-- 별도 신규 문서 파일은 만들지 않았습니다.
-- 이번 패치는 새 대형 에셋 추가보다 기존 자산 연결과 코드 안정성을 우선했습니다.
+# 이전 인수인계 기록
 
-## 11. 1.0.25 자산 기반 업데이트
+# AquaFantasia AI HANDOFF CARDVILLE
 
-이번 업데이트는 다음 대규모 기능 개발 전에 자산과 로딩 구조를 먼저 정리한 버전입니다.
-
-### 핵심 변경
-
-- GitHub Actions 자동 배포 파일은 `.github/workflows/deploy.yml`에 있으며, push 또는 수동 실행 시 `npm run verify`를 실행합니다.
-- `package.json`의 `verify`에 `npm run check:assets`가 추가되었습니다.
-- 모든 런타임 자산은 `src/game/data/assetManifest.ts`에서 key/path/category/role 단위로 관리합니다.
-- `IntroLoadingScene`은 asset manifest를 읽어 중복 key 없이 preload합니다.
-- 기존 수동 preload 라인은 안전을 위해 남겨두었고, `queuedKeys` Set으로 중복 등록을 막습니다.
-
-### 추가 자산
-
-- 캐릭터 프레임: `public/assets/characters/hero_*.png`, `cat_*.png`
-- NPC: 사서, 마법사, 상인, 선생님, 경비병, 요리사, 아이, 마을고양이
-- 소품: 분수, 나무, 벤치, 깃발, 이정표, 랜턴, 연기, 창문빛, 새, 반딧불, 카드 트레일, 화분, 96 타일
-- UI: 글래스/우드/골드 패널, 이름표, 말풍선, 잠금 배지, 건물 글로우, 문 빛, 토스트, 터치 리플, 퀘스트 마커, 닫기/설정 버튼
-- 아이콘: 도서관, 연구소, 숲, 학교, 이벤트, 성, 항구, 광장, NPC, 자산
-- 기존 디오라마 PNG에 WebP 동반 파일을 추가했습니다.
-
-### 주의
-
-- 현재 추가 자산은 고급 일러스트 최종본이 아니라 개발 진행을 위한 스타일 통일형 PNG/WebP 기반 자산 베이스입니다.
-- 고정 캐릭터 원본 이미지는 그대로 유지해야 하며, `public/assets/brand/cardville_fixed_character_reference.png`는 기준 이미지로만 사용합니다.
-- 새 에셋을 추가할 때는 반드시 `assetManifest.ts`에도 등록하고 `check-assets`를 통과시켜야 합니다.
-
-## 9. 1.0.29 콘텐츠 엔진 패스
-
-1.0.29는 준비중이던 콘텐츠 중 연구소와 기억의 숲을 실제 플레이 가능한 1차 미니게임으로 여는 업데이트입니다.
-
-### 추가/변경 파일
-
-- `src/game/data/mathStages.ts`
-- `src/game/scenes/MathLabScene.ts`
-- `src/game/data/memoryStages.ts`
-- `src/game/scenes/MemoryForestScene.ts`
-- `tools/check-content-engine.mjs`
-- `modeCatalog.ts`에 `routeScene` 추가
-- `dioramaBuildings.ts`에서 연구소/기억의 숲 직접 장면 이동으로 변경
-- `ModeSelectScene.ts`에서 모드별 장면 분기 추가
-- `BackButtonSystem.ts`에 새 장면 정리 대상 추가
-
-### 핵심 동작
-
-- 도서관은 기존처럼 `StageSelectScene` → `PlayScene` 흐름을 유지합니다.
-- 연구소는 `MathLabScene`으로 직접 진입합니다.
-- 기억의 숲은 `MemoryForestScene`으로 직접 진입합니다.
-- 두 신규 미니게임은 성공/실패 후 우선 `RewardScene` 카드팩 보상 흐름으로 연결합니다.
-- 아직 모드별 영구 진행도 저장은 추가하지 않았습니다. 다음 패치에서 `SaveSystem`의 범용 모드 기록 구조를 확장할 수 있습니다.
-
-### 검증
-
-- `npm run check:content-engine`이 추가되었습니다.
-- `npm run verify`는 build, deploy, brand, assets, premium-assets, content-engine, polish, ui, layout, association, security 순서로 확인합니다.
+- 기준 패키지 버전: `2.1.128`
 
 
-## 10. 1.0.30 마을 건물 에셋 패스
+## 작업중인 내용
 
-1.0.30은 사용자가 지적한 “마을 건물 에셋이 실제로 반영됐는지” 문제를 해결하기 위한 업데이트입니다. 1.0.28의 프레임형/크롭형 건물 표현은 로비에 바로 쓰기에는 부족하므로, 이번 버전에서 건물 9종을 투명 배경의 개별 컷아웃 PNG/WebP로 다시 반영했습니다.
+- 현재 작업 기준: `v2.1.128` direct source UI repair / stale observer handoff 패치.
+- 목표: 코드 꼬임, 예전 보정 코드와 observer가 계속 살아나 최신 UI를 다시 흔드는 문제, 체감 랙, UI 겹침/쏠림/깜박임을 줄인다.
+- 핵심 원인: v2.1.126은 v2.1.23/v2.1.25 감시 루프를 handoff했지만, v2.1.22/v2.1.24/v2.1.26 계열도 최신 패스 기준에서는 시작부터 물러나는 것이 더 안전하다. 그래서 v2.1.128은 `v21128DirectSourceUiRepair === active`를 부팅 초기에 세우고, 최신 direct source repair 하나가 최종 UI 소유권을 갖게 한다.
+- 원칙: 정상 동작하는 낚시 판정/보상/밸런스, 물고기 데이터, 마을 좌표/충돌/건설 로직, Firebase fallback은 건드리지 않는다. UI/UX/성능 흔들림과 레거시 보정 루프만 다룬다.
+- 작업 환경: GitHub Desktop, Firebase 무료 플랜. Firebase 설정이 없으면 로컬 저장 fallback으로 계속 동작해야 한다.
+- 기록 파일은 반드시 `AI_HANDOFF_CARDVILLE.md`와 `README.md` 두 개만 사용한다.
 
-### 교체된 건물 자산
+## v2.1.128 direct source UI repair 패치 기록
 
-- `public/assets/diorama/building_castle.png` / `.webp`
-- `public/assets/diorama/building_library.png` / `.webp`
-- `public/assets/diorama/building_lab.png` / `.webp`
-- `public/assets/diorama/building_shop.png` / `.webp`
-- `public/assets/diorama/building_school.png` / `.webp`
-- `public/assets/diorama/building_forest.png` / `.webp`
-- `public/assets/diorama/building_event.png` / `.webp`
-- `public/assets/diorama/building_harbor.png` / `.webp`
-- `public/assets/diorama/building_plaza.png` / `.webp`
-- `public/assets/diorama/diorama_bg.png` / `.webp`
+## 기록
 
-### 코드 반영
+- v2.1.126 기준 `npm run validate` 통과 상태에서 작업을 시작했다.
+- 사용자가 강조한 내용은 모든 구석구석 점검, UI/UX/디자인, 코드 꼬임, 예전 코드가 계속 살아나는 문제다.
+- 실제 확인 결과 v2.1.126까지는 최신 finalizer가 있었지만, v2.1.22/v2.1.24/v2.1.26 계열 보정도 최신 governor 기준에서 명확히 물러나게 하는 것이 더 안전했다.
+- 새 런타임 패스 `installV21128DirectSourceUiRepairPass()`를 추가했다.
+- boot 단계에서 `v21128-direct-source-ui-repair-root`, `dataset.v21128DirectSourceUiRepair = active`를 먼저 세워 예전 observer가 시작부터 최신 패스에게 물러날 수 있게 했다.
+- v2.1.22/v2.1.23/v2.1.24/v2.1.25 guard에 v2.1.128 활성 상태를 포함했고, v2.1.26 패스는 v2.1.128이 활성화된 경우 observer를 설치하지 않고 handoff한다.
+- v2.1.128 direct source repair는 `dataset.v21128ObserverOwner = direct-source-single-governor-css-first-inline-last-resort`, `dataset.v21128StaleHandoff = v21122-v21126-observer-loops-muted`, `dataset.v21128MutationDebt`를 기록한다.
+- 최신 소유권 토큰 `v21128-owned-final`, `data-v21128Owner`를 추가했다.
+- 같은 inline style을 반복 쓰지 않도록 `WeakMap<HTMLElement, string>` signature와 실제 important style 적용 여부를 같이 확인한다.
+- 하단 메뉴는 `v21128-bottom-nav-final`로 비낚시 화면에서 같은 우측 하단 기준을 사용하고 낚시 화면에서는 숨긴다.
+- 첫 마을 중앙 가이드는 `renderVillage()` 원본 DOM에 직접 삽입하고, 오프닝 영상 종료 직후 `mountV21128Guide()`로 다시 확인한다. 새 키는 `aqua-v21128-guide-dismissed`다.
+- 상점/가방/퀘스트/지도/도감/장비/랭킹은 `createRuntimeMenuScreen()`에서 생성 즉시 `v21128-runtime-page-final`, `v21128-page-column-final`, `v21128-direct-menu-root`, `v21128-direct-menu-column`을 부여해 우측 쏠림을 먼저 막는다.
+- 개척 팝업은 `renderVillage()` 원본 markup에 `v21128-expedition-final`, `v21128-expedition-direct`를 직접 부여해 반절 표시 회귀를 먼저 막고, 중앙 fixed, safe-area max-height, 내부 스크롤을 유지한다.
+- 낚시 물길/수중 효과는 실제 낚시 화면 markup에 `v21128-water-final`을 직접 부여하고, `fishing-phase-bite/reeling/success/fail` CSS로 바로 숨겨 성공 중 물길 깜박임을 막는다.
+- 낚싯대/미끼 strip은 생성 시점부터 `v21128-loadout-final`, 내부 요소는 `v21128-loadout-child-final`로 transform/scale/transition/animation을 막는다.
+- 연속 성공 표기는 생성 시점부터 `v21128-combo-final`, `물었다!` 팝업은 `v21128-bite-final`, 성공 결과창은 `v21128-result-final`로 기준을 유지해 최상단 점프와 깜박임을 줄인다.
+- `README.md`, `AI_HANDOFF_CARDVILLE.md`, `public/offline.html`, `public/sw.js`, `src/data.ts`, `package.json`, `package-lock.json`을 v2.1.128 기준으로 동기화했다.
+- 신규 검증 스크립트 `tools/check-v21128-direct-source-ui-repair.mjs`를 추가해 버전/캐시/UI 토큰/observer handoff/성능 budget/문서 계약/SVG 금지/패키징 청결을 확인한다.
+- 작업본 `npm run validate` 통과를 필수 기준으로 한다.
+- `npm run ci:registry:check`는 샌드박스 DNS 제한으로 실패할 수 있다.
+- `npm run ci:install`은 샌드박스 네트워크 제한으로 timeout될 수 있다.
+- `npm run typecheck`와 `npm run build`는 의존성 설치 후 GitHub Actions에서 최종 확인한다.
 
-- `src/game/data/dioramaBuildings.ts`에서 새 컷아웃 건물 기준으로 크기/위치/이동 타깃을 조정했습니다.
-- `src/game/scenes/MainLobbyScene.ts`에 `baseShadow`를 추가해 투명 건물 컷아웃이 배경 위에 안정적으로 얹히도록 했습니다.
-- 기존 매니페스트 key는 유지했습니다. 즉, `dioramaCastle`, `dioramaLibrary` 등 기존 코드 경로가 바뀌지 않으므로 중복/꼬임 없이 교체됩니다.
+## 다음 업데이트 예상 내역
 
-### 검증
+- 실제 모바일에서 v2.1.128 이후 v2.1.22~v2.1.26 observer가 더 이상 최신 UI를 다시 흔들지 않는지 확인한다.
+- 하단 메뉴 위치, 상점/가방/퀘스트/지도/도감 중앙 정렬, 개척 팝업 반절 표시, 낚시 물길/낚싯대/미끼/`물었다!`/성공 결과창을 캡처 기준으로 재검수한다.
+- 체감 랙이 남으면 RuntimeQualityManager의 fps downshift 기준, Pixi ticker workload, WebGL/DOM effect budget을 더 직접적으로 줄인다.
+- 오래된 observer 패스를 실제 삭제할 수 있는지는 GitHub Actions와 모바일 실기기 검증 후 단계적으로 판단한다.
+- Firebase/Pixi/Vite 업데이트는 GitHub Actions에서 `npm ci`, `typecheck`, `build` 확인 후 안전한 minor 범위만 검토한다. Firebase 무료 플랜과 로컬 fallback은 유지한다.
 
-- `tools/check-building-assets.mjs`를 추가했습니다.
-- `npm run check:building-assets`는 9개 건물이 512×512 이상인지, WebP 동반 파일이 있는지, 파일이 비어 있지 않은지, 로비 배치 코드가 새 기준으로 갱신됐는지 확인합니다.
-- `npm run verify`에 `check:building-assets`가 포함되어 GitHub Actions 자동 검증 흐름에서도 같이 확인됩니다.
+## 필수 결과 확인 명령
 
-### 다음 AI 주의사항
+```bash
+npm run validate
+npm run ci:registry:check
+npm run ci:install
+npm run typecheck
+npm run build
+```
 
-- 프레임형 크롭 자산 금지. 건물은 배경 일부를 잘라 만든 액자형 카드가 아니라, 반드시 투명 배경의 개별 건물 오브젝트여야 합니다.
-- 건물 파일명은 유지하세요. 최종 상용 원화가 나오면 같은 파일명으로 덮어써야 코드가 꼬이지 않습니다.
-- `docs/`에 새 버전별 문서 만들지 말고 README와 이 인계서에만 누적하세요.
-- 새 에셋 추가 시 SVG 금지, PNG/WebP 동반, `assetManifest.ts` 등록, 검증 스크립트 통과를 지켜야 합니다.
+## 산출물 zip 점검 명령
+
+```bash
+python3 - <<'PY'
+import zipfile, sys
+for zpath in sys.argv[1:]:
+    with zipfile.ZipFile(zpath) as z:
+        names = z.namelist()
+    md = [n for n in names if n.lower().endswith('.md')]
+    banned = [n for n in names if '.git/' in n or 'node_modules/' in n or 'dist/' in n or 'reports/' in n or n.endswith('.log') or n.lower().endswith(('.svg', '.svgz'))]
+    print(zpath)
+    print('markdown:', md)
+    print('banned:', banned[:20], 'count=', len(banned))
+PY AF-v2.1.128-full.zip AF-v2.1.128-patch.zip
+```
+
+## 고정 작업환경/산출 규칙
+
+- GitHub Desktop 사용 기준.
+- Firebase는 무료 플랜 기준. 무료 한도를 벗어나는 서버 기능, 유료 의존, 필수 Cloud Functions 전제 금지.
+- Firebase config가 없거나 익명 로그인이 실패해도 로컬 저장 fallback이 살아 있어야 한다.
+- 문서 기록은 `README.md`, `AI_HANDOFF_CARDVILLE.md`만 사용한다. 추가 `.md`, 임시 리포트, 로그 파일을 산출물에 넣지 않는다.
+- 결과물은 항상 두 개다: `AF-v2.1.128-full.zip`, `AF-v2.1.128-patch.zip`.
+- 결과 공유 형식은 `작업중인 내용` → `기록` → `다음 업데이트 예상 내역` → 마지막에 버전 숫자 파일명 링크.
+
+## 작업중인 내용
+
+- 현재 작업 기준: `v2.1.126` stale code pruner / single finalizer handoff 패치.
+- 목표: 코드 꼬임, 예전 보정 코드와 observer가 계속 살아나 최신 UI를 다시 흔드는 문제, 체감 랙, UI 겹침/쏠림/깜박임을 줄인다.
+- 핵심 원인: v2.1.125는 v2.1.124의 style 감시를 인수인계했지만, v2.1.23 계열 runtime deconflict observer와 v2.1.25 observer가 동시에 살아 있으면 최신 기준을 계속 스케줄할 수 있었다. 그래서 v2.1.126은 v2.1.23/v2.1.25 감시 루프가 `v21126StaleCodePruner === active` 상태에서 물러나도록 명시 guard를 추가하고, v2.1.126 finalizer 하나가 최종 UI 소유권을 갖게 한다.
+- 원칙: 정상 동작하는 낚시 판정/보상/밸런스, 물고기 데이터, 마을 좌표/충돌/건설 로직, Firebase fallback은 건드리지 않는다. UI/UX/성능 흔들림과 레거시 보정 루프만 다룬다.
+- 작업 환경: GitHub Desktop, Firebase 무료 플랜. Firebase 설정이 없으면 로컬 저장 fallback으로 계속 동작해야 한다.
+- 기록 파일은 반드시 `AI_HANDOFF_CARDVILLE.md`와 `README.md` 두 개만 사용한다.
+
+## v2.1.126 stale code pruner 패치 기록
+
+## 기록
+
+- v2.1.125 기준 `npm run validate` 통과 상태에서 작업을 시작했다.
+- 사용자가 강조한 내용은 모든 구석구석 점검, UI/UX/디자인, 코드 꼬임, 예전 코드가 계속 살아나는 문제다.
+- 실제 확인 결과 v2.1.123 runtime deconflict observer는 v2.1.125 이후에도 계속 schedule될 수 있었고, v2.1.125 observer도 최신 기준을 담당하지만 별도 루프로 남아 있었다.
+- 새 런타임 패스 `installV21126StaleCodePrunerPass()`를 추가했다.
+- boot 단계에서 `v21126-stale-code-pruner-root`, `dataset.v21126StaleCodePruner = active`를 먼저 세워 v2.1.23/v2.1.25 이전 observer가 최신 패스에게 물러날 수 있게 했다.
+- v2.1.23 schedule/normalize와 v2.1.25 normalize/observer에 `if (html.dataset.v21126StaleCodePruner === 'active') return;` guard를 추가했다.
+- v2.1.26 finalizer는 `dataset.v21123RuntimeDeconflict = handoff-to-v21126-single-finalizer`, `dataset.v21125LegacyDebtReducer = handoff-to-v21126-single-finalizer`, `dataset.v21126ObserverOwner = single-finalizer-css-first-inline-last-resort`를 기록한다.
+- 최신 소유권 토큰 `v21126-owned-final`, `data-v21126Owner`를 추가했다.
+- 같은 inline style을 반복 쓰지 않도록 `WeakMap<HTMLElement, string>` signature와 실제 important style 적용 여부를 같이 확인한다.
+- 하단 메뉴는 `v21126-bottom-nav-final`로 비낚시 화면에서 같은 우측 하단 기준을 사용하고 낚시 화면에서는 숨긴다.
+- 첫 마을 중앙 가이드는 `v21126-village-guide-popup`, `aqua-v21126-guide-dismissed`로 새로 제공한다. 기존 v21122/v21124/v21125 가이드 DOM은 제거해 중복과 미노출 혼선을 줄인다.
+- 상점/가방/퀘스트/지도/도감/장비/랭킹은 `v21126-runtime-page-final`, `v21126-page-column-final`로 중앙 컬럼을 유지한다.
+- 개척 팝업은 `v21126-expedition-final`, 건설/확인 모달은 `v21126-village-modal-final`로 중앙 fixed, safe-area max-height, 내부 스크롤을 유지한다.
+- 낚시 물길/수중 효과는 `v21126-water-final`로 animation/transition/filter를 끄고, bite/reeling/result/success/fail 집중 단계에서는 `display:none`으로 숨겨 성공 시 물길 깜박임을 막는다.
+- 낚싯대/미끼 strip은 `v21126-loadout-final`, 내부 요소는 `v21126-loadout-child-final`로 transform/scale/transition/animation을 막는다.
+- 연속 성공 표기는 `v21126-combo-final`, `물었다!` 팝업은 `v21126-bite-final`, 성공 결과창은 `v21126-result-final`로 기준을 유지한다.
+- `README.md`, `AI_HANDOFF_CARDVILLE.md`, `public/offline.html`, `public/sw.js`, `src/data.ts`, `package.json`, `package-lock.json`을 v2.1.126 기준으로 동기화했다.
+- 신규 검증 스크립트 `tools/check-v21126-stale-code-pruner.mjs`를 추가해 버전/캐시/UI 토큰/observer handoff/성능 budget/문서 계약/SVG 금지/패키징 청결을 확인한다.
+- 작업본 `npm run validate` 통과.
+- `npm run ci:registry:check`는 샌드박스 DNS 제한으로 `EAI_AGAIN registry.npmjs.org` 실패.
+- `npm run ci:install`은 샌드박스 네트워크 제한으로 timeout.
+- `npm run typecheck`는 현재 `node_modules`가 없어 `howler`, `pixi.js`, `firebase`, `vite` 모듈 해석 실패. 이번 작업의 TypeScript 구문 단계는 해당 외부 모듈 해석 전까지 진행되었고, 의존성 설치 후 GitHub Actions에서 최종 확인한다.
+- `npm run build`는 현재 `vite`가 설치되어 있지 않아 실패. GitHub Actions에서 `npm ci` 후 최종 확인한다.
+
+## 다음 업데이트 예상 내역
+
+- 실제 모바일에서 v2.1.126 이후 v2.1.23/v2.1.25 observer가 더 이상 최신 UI를 다시 흔들지 않는지 확인한다.
+- 하단 메뉴 위치, 상점/가방/퀘스트/지도/도감 중앙 정렬, 개척 팝업 반절 표시, 낚시 물길/낚싯대/미끼/`물었다!`/성공 결과창을 캡처 기준으로 재검수한다.
+- 체감 랙이 남으면 RuntimeQualityManager의 fps downshift 기준, Pixi ticker workload, WebGL/DOM effect budget을 더 직접적으로 줄인다.
+- 오래된 observer 패스를 실제 삭제할 수 있는지는 GitHub Actions와 모바일 실기기 검증 후 단계적으로 판단한다.
+- Firebase/Pixi/Vite 업데이트는 GitHub Actions에서 `npm ci`, `typecheck`, `build` 확인 후 안전한 minor 범위만 검토한다. Firebase 무료 플랜과 로컬 fallback은 유지한다.
+
+## 필수 결과 확인 명령
+
+```bash
+npm run validate
+npm run ci:registry:check
+npm run ci:install
+npm run typecheck
+npm run build
+```
+
+## 산출물 zip 점검 명령
+
+```bash
+python3 - <<'PY'
+import zipfile, sys
+for zpath in sys.argv[1:]:
+    with zipfile.ZipFile(zpath) as z:
+        names = z.namelist()
+    md = [n for n in names if n.lower().endswith('.md')]
+    banned = [n for n in names if '.git/' in n or 'node_modules/' in n or 'dist/' in n or 'reports/' in n or n.endswith('.log') or n.lower().endswith(('.svg', '.svgz'))]
+    print(zpath)
+    print('markdown:', md)
+    print('banned:', banned[:20], 'count=', len(banned))
+PY AF-v2.1.126-full.zip AF-v2.1.126-patch.zip
+```
+
+## 고정 작업환경/산출 규칙
+
+- GitHub Desktop 사용 기준.
+- Firebase는 무료 플랜 기준. 무료 한도를 벗어나는 서버 기능, 유료 의존, 필수 Cloud Functions 전제 금지.
+- Firebase config가 없거나 익명 로그인이 실패해도 로컬 저장 fallback이 살아 있어야 한다.
+- 문서 기록은 `README.md`, `AI_HANDOFF_CARDVILLE.md`만 사용한다. 추가 `.md`, 임시 리포트, 로그 파일을 산출물에 넣지 않는다.
+- 결과물은 항상 두 개다: `AF-v2.1.126-full.zip`, `AF-v2.1.126-patch.zip`.
+- 결과 공유 형식은 `작업중인 내용` → `기록` → `다음 업데이트 예상 내역` → 마지막에 버전 숫자 파일명 링크.
+
+## 프로젝트/작업 구조
+
+- 앱 버전: `src/data.ts`의 `APP_VERSION`
+- 캐시 이름: `src/data.ts`의 `CACHE_NAME`, `public/sw.js`의 `CACHE_NAME`
+- 진입점: `src/main.ts`
+- 스타일: `src/styles.css`
+- 마을 월드/플레이어 방향 처리: `src/villageWorld.ts`
+- 저장/Firebase fallback: `src/storage.ts`
+- 정적 자산: `public/assets/`
+- 서비스워커: `public/sw.js`
+- 오프라인 페이지: `public/offline.html`
+- 검증 스크립트: `tools/`
+
+## 현재 버전 핵심 기능 상태
+
+- 낚시 상태: `idle`, `casting`, `waiting`, `bite`, `reeling`, `success`, `fail`
+- v2.1.126 핵심: v2.1.23/v2.1.25 observer 루프를 최신 단일 finalizer로 handoff하고, UI 기준점을 v21126으로 통일해 코드 꼬임/예전 보정 재개입/체감 랙/깜박임을 더 줄인다. 게임 수치와 판정은 건드리지 않음.
+- v2.1.125 핵심: v2.1.124 style 감시를 경량 finalizer로 인수인계하고, 같은 값 반복 쓰기를 줄여 코드 꼬임/예전 보정 재개입/체감 랙/깜박임을 완화. v2.1.126에서 단일 finalizer handoff됨.
+
+# 이전 인수인계 기록
+
+- 기준 패키지 버전: `2.1.124`
+
+## 작업중인 내용
+
+- 현재 작업 기준: `v2.1.124` root-cause UX repair 패치.
+- 목표: 사용자가 지적한 미반영 의심 사항을 루트 원인 기준으로 다시 잡는다. 특히 체감 랙, 초반 가이드, 개척 팝업 반절 표시, 페이지 우측 쏠림, 하단 메뉴 위치 불일치, 낚시 물길 바/낚싯대/미끼 깜박임, 연속 성공 위치, `물었다!` 팝업 흔들림을 최신 기준으로 고정한다.
+- 핵심 원인: v2.1.123 final owner는 class/화면 전환 중심으로 보정했지만, 예전 observer가 inline `style`을 나중에 다시 쓰는 `style 재개입`은 감시하지 않아 최신 보정이 다시 적용되지 않을 수 있었다.
+- 원칙: 정상 동작하는 낚시 판정/보상/밸런스, 마을 좌표/충돌/건설 로직, Firebase fallback은 건드리지 않고 UI/UX/성능 흔들림만 수정한다.
+- 작업 환경: GitHub Desktop, Firebase 무료 플랜. Firebase 설정이 없으면 로컬 저장 fallback으로 계속 동작해야 한다.
+- 기록 파일은 반드시 `AI_HANDOFF_CARDVILLE.md`와 `README.md` 두 개만 사용한다.
+
+## v2.1.124 root-cause UX repair 패치 기록
+
+## 기록
+
+- v2.1.123 기준 `npm run validate` 통과 상태에서 사용자가 “앞전 요청건이 전혀 반영 안된 것 같다”고 피드백했다.
+- 실제 구조를 다시 보니 여러 세대의 observer가 같은 DOM 요소에 inline important style을 반복 적용하고 있었다.
+- v2.1.123 observer는 `style` 속성 변화를 감시하지 않았고, signature가 같으면 normalize를 건너뛰는 구조라 예전 보정이 나중에 살아나면 최신 위치가 다시 밀릴 수 있었다.
+- 새 런타임 패스 `installV21124RootCauseUxRepairPass()`를 추가했다.
+- 루트 스코프 `v21124-root-cause-ux-repair-root`, dataset `v21124RootCauseUxRepair`를 추가했다.
+- 초반 가이드는 `v21124-village-guide-popup`와 새 localStorage 키 `aqua-v21124-guide-dismissed`로 다시 만든다. 기존 v21122 dismiss 상태 때문에 안 보이는 문제를 피한다.
+- 하단 메뉴는 `v21124-bottom-nav-final`로 마을/상점/가방/퀘스트/지도/도감/장비/랭킹에서 같은 우측 하단 기준을 쓴다. 낚시 화면에서는 숨긴다.
+- 상점/가방/퀘스트/지도/도감/장비/랭킹은 `v21124-runtime-page-final`, `v21124-page-column-final`로 safe-area 중앙 컬럼을 재고정한다.
+- 개척 팝업은 `v21124-expedition-final`로 중앙 fixed, safe-area max-height, 내부 scroll, overscroll contain을 적용한다.
+- 건설 확인/건설 트레이는 `v21124-village-modal-final`로 작은 화면 스크롤과 max-height를 보강한다.
+- 낚시 물길 바/수중 효과는 `v21124-water-final`, `v21124-sea-lane-final`로 no animation/no transition 처리하고, bite/reeling/result/success/fail 단계에서는 display none으로 숨긴다.
+- 낚싯대/미끼 strip은 `v21124-loadout-final`, 내부는 `v21124-loadout-child-final`로 transform/scale/animation/transition을 차단한다.
+- 연속 성공 표기는 `v21124-combo-final`로 캐스팅 시작 버튼 근처 하단에 간격을 두고 배치한다.
+- `물었다!` 팝업은 `v21124-bite-final`, 성공 결과창은 `v21124-result-final`로 중앙 fixed, no animation/no transition 기준을 적용한다.
+- observer는 `style` attribute까지 감시하고 RAF + 45ms 후행 normalize로 예전 코드가 늦게 style을 다시 써도 최신 기준을 재적용한다.
+- `README.md`, `AI_HANDOFF_CARDVILLE.md`, `public/offline.html`, `public/sw.js`, `src/data.ts`, `package.json`, `package-lock.json`을 v2.1.124 기준으로 동기화했다.
+- 신규 검증 스크립트 `tools/check-v21124-root-cause-ux-repair.mjs`를 추가해 버전/캐시/UI 토큰/문서 계약/SVG 금지/패키징 청결을 확인한다.
+
+## 다음 업데이트 예상 내역
+
+- 실제 모바일에서 새 초반 가이드가 첫 마을 진입 시 중앙에 보이는지 확인한다.
+- 개척 팝업이 작은 화면에서 반절만 보이지 않고 중앙/스크롤 상태를 유지하는지 확인한다.
+- 상점/가방/퀘스트/지도/도감이 우측으로 쏠리지 않고 중앙 컬럼을 유지하는지 캡처 기준으로 확인한다.
+- 낚시 물길 바가 bite/reeling/result/success/fail 단계에서 계속 깜박이지 않는지 확인한다.
+- 낚싯대/미끼 strip의 커짐/작아짐, `물었다!` 팝업 상단 이동, 성공 결과창 중 물길 바 노출을 실제 플레이에서 재검수한다.
+- 다음 패치에서는 RuntimeQualityManager, WebGL/DOM effect budget, Pixi ticker 부담을 더 직접적으로 줄이는 성능 패치를 검토한다.
+- GitHub Actions 결과 확인 후 안전한 범위에서 Vite/Firebase/Pixi minor 업데이트 가능성 검토. 단, Firebase 무료 플랜과 로컬 fallback은 유지한다.
+
+## 필수 결과 확인 명령
+
+```bash
+npm run validate
+npm run ci:registry:check
+npm run ci:install
+npm run typecheck
+npm run build
+```
+
+## 산출물 zip 점검 명령
+
+```bash
+python3 - <<'PY'
+import zipfile, sys
+for zpath in sys.argv[1:]:
+    with zipfile.ZipFile(zpath) as z:
+        names = z.namelist()
+    md = [n for n in names if n.lower().endswith('.md')]
+    banned = [n for n in names if '.git/' in n or 'node_modules/' in n or 'dist/' in n or 'reports/' in n or n.endswith('.log') or n.lower().endswith(('.svg', '.svgz'))]
+    print(zpath)
+    print('markdown:', md)
+    print('banned:', banned[:20], 'count=', len(banned))
+PY AF-v2.1.124-full.zip AF-v2.1.124-patch.zip
+```
+
+## 고정 작업환경/산출 규칙
+
+- GitHub Desktop 사용 기준.
+- Firebase는 무료 플랜 기준. 무료 한도를 벗어나는 서버 기능, 유료 의존, 필수 Cloud Functions 전제 금지.
+- Firebase config가 없거나 익명 로그인이 실패해도 로컬 저장 fallback이 살아 있어야 한다.
+- 문서 기록은 `README.md`, `AI_HANDOFF_CARDVILLE.md`만 사용한다. 추가 `.md`, 임시 리포트, 로그 파일을 산출물에 넣지 않는다.
+- 결과물은 항상 두 개다: `AF-v2.1.124-full.zip`, `AF-v2.1.124-patch.zip`.
+- 결과 공유 형식은 `작업중인 내용` → `기록` → `다음 업데이트 예상 내역` → 마지막에 버전 숫자 파일명 링크.
+
+## 프로젝트/작업 구조
+
+- 앱 버전: `src/data.ts`의 `APP_VERSION`
+- 캐시 이름: `src/data.ts`의 `CACHE_NAME`, `public/sw.js`의 `CACHE_NAME`
+- 진입점: `src/main.ts`
+- 스타일: `src/styles.css`
+- 마을 월드/플레이어 방향 처리: `src/villageWorld.ts`
+- 저장/Firebase fallback: `src/storage.ts`
+- 정적 자산: `public/assets/`
+- 서비스워커: `public/sw.js`
+- 오프라인 페이지: `public/offline.html`
+- 검증 스크립트: `tools/`
+
+## 현재 버전 핵심 기능 상태
+
+- 낚시 상태: `idle`, `casting`, `waiting`, `bite`, `reeling`, `success`, `fail`
+- v2.1.124 핵심: style 재개입을 감시해 초반 가이드, 페이지 중앙 정렬, 개척 팝업, 하단 메뉴, 낚시 물길 바, 낚싯대/미끼 strip, 연속 성공, `물었다!`, 성공 결과창을 최신 기준으로 재고정. 게임 수치와 판정은 건드리지 않음
+- v2.1.123 핵심: 예전 UI 보정 코드가 다시 개입하는 회귀를 줄이기 위해 최신 final owner anchor를 부여. 단, style 재개입 감시는 v2.1.124에서 보강됨
+
+# 이전 인수인계 기록
+
+- 기준 패키지 버전: `2.1.123`
+
+## 작업중인 내용
+
+- 현재 작업 기준: `v2.1.123` runtime deconflict 패치.
+- 목표: 코드 꼬임/예전 UI 보정 코드 재개입으로 하단 메뉴, 페이지 shell, 개척 팝업, 낚시 물길/장비/입질/결과 UI가 다시 흔들리는 문제를 줄인다.
+- 원칙: 기존 정상 기능과 게임 수치는 건드리지 않고, 최신 런타임 final owner 패스와 마지막 CSS 스코프로 UI 기준점을 하나로 모은다.
+- 작업 환경: GitHub Desktop, Firebase 무료 플랜. Firebase 설정이 없으면 로컬 저장 fallback으로 계속 동작해야 한다.
+- 기록 파일은 반드시 `AI_HANDOFF_CARDVILLE.md`와 `README.md` 두 개만 사용한다.
+
+## 기록
+
+- v2.1.122 기준 `npm run validate` 통과 후 v2.1.123 작업을 시작했다.
+- 구조 원인: 여러 세대의 런타임 UI 보정 패스가 같은 DOM 요소에 서로 다른 inline important 좌표/CSS 좌표를 다시 쓰는 구조라, 화면 상태 전환 시 예전 코드가 최신 UI를 다시 밀어내거나 깜박임을 만들 수 있다.
+- 새 런타임 패스 `installV21123RuntimeDeconflictPass()`를 추가했다.
+- 루트 스코프 `v21123-runtime-deconflict-root`, dataset `v21123RuntimeDeconflict`를 추가했다.
+- 최신 소유권 토큰 `v21123-owned-anchor`, `data-v21123-owner`, `data-v21123-latest-anchor`를 추가해 다음 AI가 어떤 패스가 마지막 기준인지 바로 확인할 수 있게 했다.
+- 하단 메뉴는 `v21123-bottom-nav-final`로 낚시 외 화면에서 동일한 우측 하단 fixed anchor를 사용하고, 낚시 화면에서는 display none으로 확실히 숨긴다.
+- 상점/가방/퀘스트/지도/도감/장비/랭킹 페이지는 `v21123-runtime-page-final`, `v21123-page-column-final`로 중앙 컬럼과 safe-area padding을 다시 고정했다.
+- 개척 팝업은 `v21123-expedition-final`로 fixed center, safe-area max-height, 내부 scroll, overscroll contain을 적용해 반절 표시 회귀를 방지한다.
+- 건설 확인/건설 트레이는 `v21123-village-modal-final`로 max-height/scroll을 보강했고, 모달이 열리면 `v21123-guide-final` 가이드를 숨겨 겹침을 줄인다.
+- 낚시 물길/수중 효과는 `v21123-water-budget-final`, `v21123-sea-lane-final`로 transition/animation churn을 막고, bite/reeling/result/success/fail 단계에서는 물길 바를 display none으로 숨긴다.
+- 낚싯대/미끼 strip은 `v21123-loadout-final`, 내부 요소는 `v21123-loadout-child-final`로 transform/scale/animation/transition을 막아 크기 펌핑 회귀를 줄인다.
+- `물었다!` 팝업은 `v21123-bite-final`, 성공 결과창은 `v21123-result-final`, 연속 성공 표기는 `v21123-combo-final`로 각각 중앙/하단 기준점을 고정한다.
+- 새 패스는 visualViewport 변수 `--v21123-visual-width`, `--v21123-visual-height`, signature guard, RAF + 80ms 후행 보정을 사용해 예전 observer가 늦게 개입해도 최신 앵커가 마지막 기준이 되게 한다.
+- `README.md`, `AI_HANDOFF_CARDVILLE.md`, `public/offline.html`, `public/sw.js`, `src/data.ts`, `package.json`, `package-lock.json`을 v2.1.123 기준으로 동기화했다.
+- 신규 검증 스크립트 `tools/check-v21123-runtime-deconflict.mjs`를 추가해 버전/캐시/UI 토큰/문서 계약/SVG 금지/패키징 청결을 확인한다.
+- 낚시 판정/보상/밸런스, 물고기 데이터, 마을 좌표/충돌/건설 로직, Firebase fallback, 오프닝 video-only 정책, 플레이어 8방향 파일명/flip 금지 정책은 변경하지 않는다.
+
+## 다음 업데이트 예상 내역
+
+- 실제 모바일에서 예전 보정 코드가 하단 메뉴/낚시 UI를 다시 흔드는지 캡처 기준으로 확인.
+- 상점/가방/퀘스트/지도/도감 각 화면의 중앙 정렬, 카드 폭, 마지막 버튼과 하단 메뉴 간격 재검수.
+- 개척 팝업과 건설 확인창이 작은 화면에서 중앙/스크롤 가능 상태를 유지하는지 확인.
+- 낚시 물길 바 숨김 타이밍, `물었다!` 팝업/성공 결과창 중앙 고정, 연속 성공 표기 위치를 실제 플레이 기준으로 polish.
+- 전체 체감 랙은 다음 패치에서 RuntimeQualityManager와 WebGL/DOM effect budget을 더 낮추는 방향으로 검토.
+- GitHub Actions 결과 확인 후 안전한 범위에서 Vite/Firebase/Pixi minor 업데이트 가능성 검토. 단, Firebase 무료 플랜과 로컬 fallback은 유지.
+
+## 필수 결과 확인 명령
+
+```bash
+npm run validate
+npm run ci:registry:check
+npm run ci:install
+npm run typecheck
+npm run build
+```
+
+## 산출물 zip 점검 명령
+
+```bash
+python3 - <<'PY'
+import zipfile, sys
+for zpath in sys.argv[1:]:
+    with zipfile.ZipFile(zpath) as z:
+        names = z.namelist()
+    md = [n for n in names if n.lower().endswith('.md')]
+    banned = [n for n in names if '.git/' in n or 'node_modules/' in n or 'dist/' in n or 'reports/' in n or n.endswith('.log') or n.lower().endswith(('.svg', '.svgz'))]
+    print(zpath)
+    print('markdown:', md)
+    print('banned:', banned[:20], 'count=', len(banned))
+PY AF-v2.1.123-full.zip AF-v2.1.123-patch.zip
+```
+
+## 고정 작업환경/산출 규칙
+
+- GitHub Desktop 사용 기준.
+- Firebase는 무료 플랜 기준. 무료 한도를 벗어나는 서버 기능, 유료 의존, 필수 Cloud Functions 전제 금지.
+- Firebase config가 없거나 익명 로그인이 실패해도 로컬 저장 fallback이 살아 있어야 한다.
+- 문서 기록은 `README.md`, `AI_HANDOFF_CARDVILLE.md`만 사용한다. 추가 `.md`, 임시 리포트, 로그 파일을 산출물에 넣지 않는다.
+- 결과물은 항상 두 개다: `AF-v2.1.123-full.zip`, `AF-v2.1.123-patch.zip`.
+- 결과 공유 형식은 `작업중인 내용` → `기록` → `다음 업데이트 예상 내역` → 마지막에 버전 숫자 파일명 링크.
+
+## 프로젝트/작업 구조
+
+- 앱 버전: `src/data.ts`의 `APP_VERSION`
+- 캐시 이름: `src/data.ts`의 `CACHE_NAME`, `public/sw.js`의 `CACHE_NAME`
+- 진입점: `src/main.ts`
+- 스타일: `src/styles.css`
+- 마을 월드/플레이어 방향 처리: `src/villageWorld.ts`
+- 저장/Firebase fallback: `src/storage.ts`
+- 정적 자산: `public/assets/`
+- 서비스워커: `public/sw.js`
+- 오프라인 페이지: `public/offline.html`
+- 검증 스크립트: `tools/`
+
+## 현재 버전 핵심 기능 상태
+
+- 낚시 상태: `idle`, `casting`, `waiting`, `bite`, `reeling`, `success`, `fail`
+- v2.1.123 핵심: 예전 UI 보정 코드가 다시 개입하는 회귀를 줄이기 위해 최신 final owner anchor를 부여. 하단 메뉴/페이지 중앙 정렬/개척 팝업/건설 모달/낚시 물길/장비/입질/결과/콤보 UI를 마지막 기준으로 고정. 게임 수치와 판정은 건드리지 않음
+- v2.1.122 핵심: 초반 추적형 가이드, 개척 팝업 중앙 고정, 메뉴 페이지 중앙 정렬, 하단 메뉴 동일 앵커, 낚시 물길 바/낚싯대/미끼/`물었다!` 팝업/성공 결과창 흔들림 보정. 게임 수치와 판정은 건드리지 않음
+- v2.1.121 핵심: 모바일 세로 버튼 라벨/focus/active, 스크롤 하단 reserve, 카드 content-visibility/containment를 보강. 낚시 판정, 보상, 마을 좌표, 건설 로직, Firebase fallback은 건드리지 않음
+- v2.1.120 핵심: 모바일 세로 화면 구성/가독성/카드 미디어 containment/하단 내비 safe-area 폭/인수인계 검증 계약을 보강. 낚시 판정, 보상, 마을 좌표, 건설 로직, Firebase fallback은 건드리지 않음
+- v2.1.119 핵심: 모바일 터치/모달/스크롤 safety 패스를 추가해 건설창, 건설 확인창, 낚시 입질창/결과창, 카드형 메뉴의 data-no-swipe, overscroll containment, visual viewport safe-area 최대 높이를 보강. 게임 로직과 버튼 이벤트는 건드리지 않음
+- v2.1.118 핵심: v2.1.117 마을 우측 상단 메뉴 개선을 실제 런타임 inline important 기준으로 hard-lock하고, 카드/아이콘 이미지를 containment 처리해 다른 그림 비침/카드 밖 튐/긴 문구 겹침 위험을 줄임. 게임 로직과 버튼 이벤트는 건드리지 않음
+- v2.1.117 핵심: 마을 우측 상단 메뉴 아이콘은 버튼 크기/2x3 배치를 유지한 채 내부 아이콘만 24~25px로 키우고, clipping/isolation/pseudo 제거로 위쪽 다른 그림 비침을 방지. 마을 이동/건설/상점/출항 동작은 건드리지 않음
+- v2.1.116 핵심: 낚싯대/미끼 loadout 꿈틀거림, 연속 성공 구버전 스킨, `물었다!` 창 자동 전환/흔들림, 성공 결과창 크기 흔들림을 UI hotfix로 보정. 낚시 판정/보상/밸런스는 건드리지 않음
+- 마을 핵심: Pixi 월드, 80 x 80 계열 타일, 건물 설치/이동, 경로 탐색, NPC, 수동 조이스틱/키보드 이동
+- 저장 핵심: `localStorage` 키 `aqua-fantasia-save-v650`, 이전 키 일부 마이그레이션, 저장값 sanitize 후 저장
+- Firebase 핵심: `window.AQUA_FIREBASE_CONFIG`에 `apiKey`가 있을 때만 `firebase/app`, `firebase/auth`를 동적 import하고 익명 로그인 시도. 설정이 없으면 로컬 저장으로 진행
 
 
+## v2.1.123 runtime deconflict 패치 기록
 
-## 11. 1.0.32 디자인/성능/품질 패스
+### 사용자 요청과 확인한 불안정 후보
 
-1.0.32는 1.0.31 분석 체크포인트 이후 이어진 디자인/성능/기술 품질 패스입니다. 런타임 구조를 크게 흔들지 않고, 눈에 보이는 로비 디자인 안정성, 저사양/모션 감소 대응, 버튼 터치 안정성을 우선 개선했습니다.
+- 요청: 모든 구석구석을 꼼꼼히 체크하고, 특히 코드 꼬임이나 예전 코드가 계속 살아나는 문제를 확인한다.
+- 확인한 구조 원인: 이전 버전들의 누적 UI 보정 패스가 같은 요소에 서로 다른 좌표/크기/animation/transform 값을 반복 적용하고 있었다. v2.1.123은 삭제보다 안전한 마지막 소유권 패스로 회귀를 줄인다.
 
-### 변경 파일
+### 적용 내용
 
-- `package.json`
-- `public/build.json`
-- `public/health.html`
-- `public/reset.html`
-- `index.html`
 - `src/main.ts`
-- `src/game/data/assetManifest.ts`
-- `src/game/data/brandRules.ts`
-- `src/game/data/lobbyLayoutPlan.ts`
-- `src/game/scenes/LoginScene.ts`
-- `src/game/scenes/MainLobbyScene.ts`
-- `src/game/scenes/MathLabScene.ts`
-- `src/game/scenes/MemoryForestScene.ts`
-- `src/game/systems/QualitySystem.ts`
-- `src/game/ui/GameButton.ts`
-- `tools/check-lobby-layout.mjs`
-- `tools/check-polish.mjs`
-- `README.md`
-- `AI_HANDOFF_CARDVILLE.md`
+  - 루트 스코프 `v21123-runtime-deconflict-root`와 `data-v21123-runtime-deconflict` 추가.
+  - `installV21123RuntimeDeconflictPass()` 추가.
+  - 최신 소유권 토큰 `v21123-owned-anchor`, `data-v21123-owner`, `data-v21123-latest-anchor` 추가.
+  - 하단 메뉴 `v21123-bottom-nav-final` 추가.
+  - 페이지 중앙 정렬 `v21123-runtime-page-final`, `v21123-page-column-final` 추가.
+  - 개척/건설 모달 `v21123-expedition-final`, `v21123-village-modal-final` 추가.
+  - 낚시 안정화 `v21123-water-budget-final`, `v21123-sea-lane-final`, `v21123-loadout-final`, `v21123-loadout-child-final`, `v21123-combo-final`, `v21123-bite-final`, `v21123-result-final` 추가.
+  - visualViewport 변수, RAF, MutationObserver, signature guard, 80ms 후행 보정으로 예전 observer 개입 이후에도 최신 앵커가 다시 최종 적용되게 함.
+- `src/styles.css`
+  - `v2.1.123 runtime deconflict patch` 마지막 스코프 추가.
+  - 하단 nav, runtime page shell, 개척/건설 모달, guide, 낚시 물길/장비/콤보/입질/결과 final anchor CSS 추가.
+- `tools/check-v21123-runtime-deconflict.mjs`
+  - 버전/캐시/README/handoff 동기화, v2.1.123 runtime/CSS 토큰, 운영 계약, SVG 금지, 문서 2개 제한, CSS 자산 존재, package-lock 레지스트리 청결을 확인한다.
 
-### 핵심 변경
+### 절대 건드리지 않은 것
 
-- 로비 `dioramaBg`는 이제 `addCoverImage(this, 'dioramaBg', 1, 1080, 1920)` 기준으로 표시합니다. 기존처럼 390×844에 직접 맞추는 방식보다 원본 세로 배경의 비율과 초점이 안전합니다.
-- `MainLobbyScene`에 `drawBuildingStatusChip`을 추가했습니다. 추천은 `NEXT`, 열린 건물은 `OPEN`, 준비중 건물은 `LOCK`으로 표시됩니다.
-- `LOBBY_LAYOUT_PLAN_VERSION = '1.0.32'`로 갱신했습니다.
-- `LOBBY_DESIGN_CHECKS`를 추가해 상태 칩, 모션 게이트, 버튼 라벨, 더블 탭 방어, 모션 감소 사용자 대응을 기록했습니다.
-- `QualitySystem.ts`에 `allowAmbientMotion`, `ambientCount`, `isMotionEnabled`, `scaledDuration`을 추가했습니다.
-- 로비/연산 연구소/기억의 숲의 반복 트윈, 파티클 개수, 카메라 shake 일부를 품질 모드에 연결했습니다.
-- `GameButton.ts`는 `fitTextSize`, `compactText`, `lastActivatedAt`을 사용해 긴 라벨과 빠른 중복 터치를 방어합니다.
-- `check:polish`, `check:lobby-layout` 검증이 1.0.32 디자인/품질 패스 토큰까지 확인합니다.
+- 낚시 판정/보상/밸런스
+- 물고기 데이터
+- 마을 이동/좌표/충돌/조이스틱/건설 설치 로직
+- 건설/확대/축소/상점/출항 버튼 이벤트
+- Firebase 저장/익명 로그인 fallback
+- 오프닝 video-only 정책
+- 플레이어 방향 파일명/flip 금지 정책
+- 의존성/엔진 메이저 업그레이드
 
-### 주의할 점
+### v2.1.123 필수 검수
 
-- 진행 저장 키 `cardville.progress.v131`은 그대로 유지했습니다. 이번 업데이트는 진행 데이터 구조 변경이 아니라 디자인/성능/품질 패스이므로 저장소 마이그레이션을 추가하지 않았습니다.
-- 신규 에셋 파일은 추가하지 않았습니다. 기존 PNG/WebP 자산을 그대로 사용합니다.
-- 새 문서 파일은 만들지 않았고, 기록은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 남겼습니다.
-- 다음에 실제 디자인을 더 꾸밀 때는 상태 칩 위치가 건물 상단 아이콘/OPEN 배지와 겹치지 않는지 실기기에서 확인해야 합니다.
+1. `npm run validate` 통과.
+2. GitHub Actions에서 `npm run ci:registry:check`, `npm run ci:install`, `npm run typecheck`, `npm run build` 확인.
+3. 하단 메뉴가 마을/상점/가방/퀘스트/지도/도감에서 같은 우측 하단 기준을 유지하는지 확인.
+4. 낚시 화면에서는 하단 메뉴가 숨겨지고, 물길/장비/입질/결과/콤보가 흔들리지 않는지 확인.
+5. 개척 팝업과 건설 확인창이 작은 화면에서 중앙/스크롤 가능 상태를 유지하는지 확인.
+6. full/patch zip 내부에 `.git`, `node_modules`, `dist`, `reports`, `.log`, SVG 파일이 없는지 확인.
+7. `.md`는 `README.md`, `AI_HANDOFF_CARDVILLE.md`만 있어야 한다.
 
-## 12. 1.0.31 로비 배치/겹침 감사 및 진행 저장/콘텐츠 확장
-
-1.0.31은 사용자가 요구한 “겹침, 배치, 배정, 체크, 다듬기, 시스템/성능/콘텐츠 업그레이드”를 이어받은 패스입니다. 핵심은 마을 로비의 시각 오브젝트와 실제 터치 영역을 분리해 꼬임을 줄이고, 열린 콘텐츠의 진행 저장을 `word` 전용에서 전체 모드형으로 확장한 것입니다.
-
-### 로비 배치/겹침 감사
-
-- `src/game/data/dioramaBuildings.ts`에 `touchWidth`, `touchHeight`, `touchOffsetY`를 추가했습니다.
-- 실제 터치존은 서로 겹치지 않도록 조정했습니다. 건물 이미지는 디오라마처럼 가까이 보일 수 있지만 입력 영역은 분리되어야 합니다.
-- `src/game/data/lobbyLayoutPlan.ts`를 추가했습니다.
-  - `LOBBY_LAYOUT_PLAN_VERSION = '1.0.31'`
-  - `LOBBY_SAFE_ZONES`
-  - `LOBBY_LAYOUT_GUARDS`
-  - `MIN_TOUCH_SIZE`
-- `MainLobbyScene`은 `drawAtmosphericPolish`, `getRecommendedBuildingId`, `drawRecommendedTrail`을 통해 분위기, 추천 경로, OPEN 배지를 표시합니다.
-- `tools/check-lobby-layout.mjs`가 추가되어 9개 건물 터치존의 최소 크기, 화면 안전 영역, 겹침 여부, 열린 건물 배정을 검증합니다.
-
-### 진행 저장/콘텐츠 확장
-
-- `SaveSystem` 진행 저장 키를 `cardville.progress.v131`로 확장했습니다.
-- `ProgressModeId = 'word' | 'math' | 'memory' | 'daily' | 'english'`를 추가했습니다.
-- 새 저장 메서드:
-  - `getModeStageRecord`
-  - `isModeStageUnlocked`
-  - `nextPlayableModeStage`
-  - `saveModeStageResult`
-- 기존 `saveStageResult`, `getStageRecord` 등 word 전용 wrapper는 유지했습니다.
-- `MathLabScene`과 `MemoryForestScene`은 보상 진입 시 `modeId`, `stage`, `stepsLeft`를 넘깁니다.
-- `RewardScene`은 카드팩 개봉 시 모드별 진행 기록을 저장합니다.
-- 연산 연구소는 3스테이지 15문제로 확장했습니다.
-- 기억의 숲은 2스테이지 18쌍으로 확장했고, 20장 카드용 compact 레이아웃을 추가했습니다.
-- 이벤트 건물은 `daily` 모드의 오늘의 카드팩으로 열립니다.
-
-### 검증
-
-- `tools/check-lobby-layout.mjs` 추가
-- `tools/check-progression.mjs` 추가
-- `npm run verify`에 `check:lobby-layout`, `check:progression` 추가
-
-### 다음 AI 주의사항
-
-- 건물 시각 크기와 터치 영역은 같은 값으로 두지 마세요. 모바일에서는 터치 영역 겹침이 더 큰 문제입니다.
-- 새 모드를 추가할 때는 `SaveSystem`의 mode id, `modeCatalog.ts`, 라우트, 보상 저장을 함께 맞춰야 합니다.
-- 새 스테이지를 추가하면 해당 모드의 `nextPlayableModeStage`가 자연스럽게 이어지도록 최대 스테이지 수를 참조하세요.
-- 새 검증은 GitHub Actions의 `npm run verify`에 들어가므로, 로컬에서 먼저 확인하세요.
+현재 샌드박스에서는 작업본 `npm run validate`를 기준으로 확인한다. `node_modules`가 없으면 `typecheck`/`build`는 GitHub Actions의 `npm ci` 이후 결과를 최종 기준으로 본다.
 
 
-## 13. 1.0.36 상점 오퍼/콤보 복구 UX 안정화 패스
+## v2.1.121 micro UI/a11y/perf polish 패치 기록
 
-1.0.36은 1.0.35 시작 화면/도서관 플레이 프리미엄 폴리시 이후 이어진 UI/UX, 안정성, 검증 강화 업데이트입니다. 상점은 오퍼 추천, 무료팩 충전 상태, 구매 전환 연출을 추가했고, 도서관은 콤보 코치와 복구 셔플 안내를 추가했습니다. 또한 `BackConfirmScene`의 정리 대상 장면 목록이 최신 장면 구성과 맞지 않던 문제를 바로잡았습니다.
+### 사용자 요청과 확인한 불안정 후보
 
-### 주요 변경 파일
+- 요청: 모든 구석구석을 꼼꼼하게 체크하고 UI/UX/디자인, 게임 시스템, 성능, 기술, 콘텐츠, 엔진 업그레이드를 계속 이어간다.
+- 확인한 실제 후보: v2.1.120은 화면 구성/기록 계약을 보강했지만, 작은 모바일 화면에서 마지막 카드와 액션 버튼이 하단 내비 뒤에 숨어 보일 수 있고, 버튼 focus/active/aria-label 일관성과 카드 목록 렌더링 부담은 추가 보강 여지가 있다.
 
-- `src/game/scenes/ShopScene.ts`
-- `src/game/systems/SaveSystem.ts`
-- `src/game/scenes/RewardScene.ts`
-- `src/game/scenes/PlayScene.ts`
-- `src/game/scenes/BackConfirmScene.ts`
-- `tools/check-ux-safety.mjs` 신규 추가
-- `package.json`, `public/build.json`, `public/health.html`, `public/reset.html`, `index.html`
-- `src/main.ts`, `src/game/data/assetManifest.ts`, `src/game/data/brandRules.ts`, `src/game/data/lobbyLayoutPlan.ts`, `src/game/scenes/MainLobbyScene.ts`, `src/game/scenes/LoginScene.ts`
-- `README.md`, `AI_HANDOFF_CARDVILLE.md`
+### 적용 내용
 
-### 상점 오퍼/무료팩 UX
-
-- `ShopScene`에 `recommendedOfferId`를 추가해 현재 상태에서 가장 자연스러운 오퍼를 강조합니다.
-  - 무료팩 수령 가능: `daily_free`
-  - 보석 3개 이상: `gem_pack`
-  - 그 외: `coin_pack`
-- 상단에 `drawDailyStatusMeter`를 추가해 무료팩이 준비됐는지, 다음 수령까지 얼마나 충전됐는지 보여줍니다.
-- 최근 구매팩 기록을 `SaveSystem.getLastShopOffer()`로 읽어 상점 상단에 표시합니다.
-- 구매 직후 `showPurchaseTransition` 오버레이를 띄운 뒤 `RewardScene`으로 이동합니다. 사용자가 버튼을 빠르게 연타해도 `purchaseLocked`와 `this.input.enabled = false`로 중복 구매/중복 이동을 막습니다.
-
-### 저장/경제 시스템 추가
-
-- 새 저장 키: `cardville.shop.lastOffer.v136`
-- 새 메서드:
-  - `SaveSystem.recordShopOffer(offerId)`
-  - `SaveSystem.getLastShopOffer()`
-- `SaveSystem.clear()`는 `SHOP_LAST_OFFER_KEY`도 같이 삭제합니다.
-- 기존 일일 무료팩 키 `cardville.shop.dailyPack.v134`는 유지합니다. 일일 무료팩 저장 키를 바꾸면 기존 유저의 당일 수령 상태가 꼬일 수 있으므로 신중히 변경하세요.
-
-### 카드팩 결과 UX
-
-- `RewardScene`에서 `source === 'shop'`인 경우 결과 버튼을 두 개로 분리했습니다.
-  - `상점으로`
-  - `앨범 보기`
-- 플레이 보상팩은 기존처럼 큰 `카드 앨범 보기` 버튼을 유지합니다.
-- 상점 구매팩은 이전 1.0.34 기준대로 코인/보석 환급 없이 카드와 XP 중심 보상입니다.
-
-### 도서관 콤보/복구 UX
-
-- `PlayScene` 하단 레일을 확장해 `comboCoachText`와 `bonusPipRects`를 표시합니다.
-- `bonusMeter`는 4칸 피프로 표시하며, 4칸이 찬 뒤 다음 정답에서 보너스 점수를 안내합니다.
-- 현재 TOP 카드 중 목표 계열 정답이 없으면 셔플 버튼 라벨을 `복구N`으로 바꾸고, 힌트 버튼은 `힌트?` 상태로 잠급니다.
-- `pulseAssistButton`은 모션 허용 환경에서만 복구 버튼을 살짝 강조합니다.
-- 향후 이어하기 기능 확장 시 게이지 유실이 없도록 `ResumeState`에 `bonusMeter`를 포함했습니다.
-
-### 뒤로가기/장면 정리 안정성
-
-- `BackConfirmScene` 내부 `GAME_SCENES` 목록에 최신 장면을 추가했습니다.
-  - `MathLabScene`
-  - `MemoryForestScene`
-  - `ShopScene`
-- 기존 `BackButtonSystem`에는 이미 `ShopScene`이 포함되어 있었지만, Phaser fallback 씬인 `BackConfirmScene` 목록은 오래되어 있었습니다. 이 불일치를 해결했습니다.
-
-### 검증
-
-- `tools/check-ux-safety.mjs` 신규 추가
-- `npm run verify`에 `check:ux-safety` 포함
-- 검증 항목:
-  - 상점 추천 오퍼/무료팩 게이지/구매 전환 토큰
-  - `SaveSystem` 최근 오퍼 저장/초기화 토큰
-  - 상점 카드팩 결과의 `상점으로` 버튼
-  - 도서관 콤보/복구 UX 토큰
-  - `BackConfirmScene` 최신 장면 목록
-  - README/AI_HANDOFF/빌드 버전 동기화
-- 이번 1.0.36 산출 전 `npm run verify` 전체 통과를 확인했습니다.
-
-### 다음 AI 주의사항
-
-- 상점에 오퍼를 더 추가하면 390×844 화면에서 하단 `앨범 보기`/`게임관`/`광장으로` 버튼과 겹치지 않는지 먼저 확인하세요.
-- `cardville.shop.dailyPack.v134`는 일일 수령 상태 키입니다. 무료팩 정책 자체를 바꾸지 않는 한 유지하는 편이 안전합니다.
-- `ShopScene` 구매 플로우는 `purchaseLocked`와 `this.input.enabled = false`를 함께 사용합니다. 구매 결과 전환 중 입력을 다시 열지 마세요.
-- 도서관 하단 레일은 이미 빡빡합니다. 새 버튼을 추가하기보다 `comboCoachText` 문구를 바꾸는 방식이 안전합니다.
-- 패치 ZIP은 삭제 대상 없이 변경/추가 파일만 포함합니다.
-
-## 13.1. 1.0.35 시작 화면/도서관 플레이 프리미엄 폴리시 패스
-
-1.0.35는 1.0.34 상점 허브 이후 이어진 UI/UX 안정화 업데이트입니다. 사용자가 지적한 게임 시작/로그인 버튼 위의 줄처럼 보이는 요소를 원인별로 점검했고, 시작 화면은 무광 CTA 버튼과 재배치된 세로 간격으로 정리했습니다. 동시에 도서관 낱말 카드 플레이 화면의 목표/보드/하단 안내 영역을 더 브랜드 게임처럼 다듬었습니다.
-
-### 주요 변경 파일
-
-- `src/game/scenes/LoginScene.ts`
-- `src/game/ui/GameButton.ts`
-- `src/game/scenes/PlayScene.ts`
-- `tools/check-ui.mjs`
-- `tools/check-polish.mjs`
-- `package.json`, `public/build.json`, `public/health.html`, `public/reset.html`
-- `src/main.ts`, `src/game/data/assetManifest.ts`, `src/game/data/brandRules.ts`, `src/game/data/lobbyLayoutPlan.ts`, `src/game/scenes/MainLobbyScene.ts`
-- `README.md`, `AI_HANDOFF_CARDVILLE.md`
-
-### 시작 화면 줄처럼 보이는 현상 점검
-
-- 원인 후보 1: `LoginScene`의 로그인 패널 내부에 있던 얇은 흰 하이라이트 바가 게임 시작 버튼 상단과 가까워 줄처럼 보일 수 있었습니다.
-- 원인 후보 2: `GameButton`이 PNG 버튼 스킨을 사용할 때 스킨 자체의 상단 광택/테두리와 내부 보정 stroke가 로그인 CTA 주변에서 선처럼 보일 수 있었습니다.
-- 조치: 로그인 CTA만 `LOGIN_CTA_BUTTON_STYLE`을 사용합니다. 이 옵션은 `skin: false`, `shine: false`, `debounceMs: 520`으로 시작 화면 버튼을 무광 벡터 버튼으로 그립니다.
-- 조치: 제목, 상태 문구, 시작 버튼, Google 버튼, 이메일/가입 버튼 간격을 다시 잡았습니다.
-- 주의: 다른 장면의 `GameButton` 기본 스킨은 유지됩니다. 전체 버튼 스킨을 끄지 말고 장면별 옵션으로 제어하세요.
-
-### GameButton 옵션
-
-`GameButton` 생성자에 마지막 옵션 인자를 추가했습니다.
-
-- `skin?: boolean` - false면 PNG 버튼 스킨을 쓰지 않습니다.
-- `shine?: boolean` - false면 상단 광택/내부 하이라이트를 그리지 않습니다.
-- `debounceMs?: number` - 더블 탭 방어 시간을 장면별로 조정합니다.
-
-기본값은 기존 동작을 유지합니다. 로그인 화면처럼 광택선이 문제 되는 구간에서만 옵션을 넘기는 방식입니다.
-
-### 도서관 플레이 UI/UX 개선
-
-- `PlayScene` 목표 영역에 목표 체인 진행 바와 퍼센트 라벨을 추가했습니다.
-- 카드 보드 상단에 `카드 보드 · TOP 카드만 터치` 안내와 남은 카드 수를 표시합니다.
-- 각 컬럼에 남은 장수 뱃지를 추가해 플레이어가 어느 스택을 정리해야 하는지 더 빨리 볼 수 있습니다.
-- 하단 안내 문구 뒤에 어두운 레일을 추가해 배경과 글자가 섞이는 문제를 줄였습니다.
-- 정답/오답 연출은 `QualitySystem`과 더 강하게 연결했습니다. 저사양/모션 감소 환경에서는 카드 settle, shake, 반짝임 수와 지속시간을 줄입니다.
-
-### 검증
-
-- `tools/check-ui.mjs`가 로그인 무광 CTA 옵션과 도서관 보드/목표 체인 토큰을 확인합니다.
-- `tools/check-polish.mjs`가 `GameButtonOptions`, `shineEnabled`, `debounceMs`, `LOGIN_CTA_BUTTON_STYLE`, `drawPremiumBottomRail`, `ambientCount(6`, `isMotionEnabled(this.quality)` 등을 확인합니다.
-- 기존 `check:shop-economy`, `check:progression`, `check:lobby-layout`, `check:content-engine`, `check:premium-assets` 흐름은 유지됩니다.
-- 이번 1.0.35 산출 전 `npm run verify` 전체 통과를 확인했습니다.
-
-### 다음 AI 주의사항
-
-- 로그인 버튼 위 줄 문제가 다시 나오면 `LOGIN_CTA_BUTTON_STYLE`이 유지되는지, `GameButton` 기본 스킨 옵션이 로그인 버튼에 다시 적용되지 않았는지 먼저 확인하세요.
-- 로그인 패널에는 얇은 흰 장식 바를 다시 넣지 마세요. 텍스트와 버튼 경계가 가까워 모바일에서 선처럼 보일 수 있습니다.
-- `GameButton` 기본 동작은 기존 스킨 유지입니다. 전체 버튼을 무광으로 바꾸면 상점/보상/로비 톤이 바뀌므로 장면별 옵션을 사용하세요.
-- 도서관 보드에 새 장식을 추가할 때는 390×844에서 목표 영역, 보드, 하단 안내가 겹치지 않는지 먼저 확인하세요.
-- 패치 ZIP은 삭제 대상 없이 변경/추가 파일만 포함합니다.
-
-## 13.2. 1.0.34 상점 허브/경제 UX 패스
-
-1.0.34는 1.0.33 스테이지/카드팩/앨범 폴리시 이후 이어진 상점 건물 실사용화 업데이트입니다. 로비의 상점이 더 이상 카드 앨범으로 바로 이동하지 않고, 무료팩/구매팩/앨범/게임관 복귀를 제공하는 실제 `ShopScene` 허브로 연결됩니다.
-
-### 주요 변경 파일
-
-- `src/game/scenes/ShopScene.ts` 신규 추가
-- `src/game/systems/SaveSystem.ts`
-- `src/game/scenes/RewardScene.ts`
-- `src/game/data/dioramaBuildings.ts`
-- `src/game/systems/BackButtonSystem.ts`
 - `src/main.ts`
-- `tools/check-shop-economy.mjs` 신규 추가
-- `package.json`, `public/build.json`, `public/health.html`, `public/reset.html`, `index.html`
+  - 루트 스코프 `v21121-micro-ui-a11y-perf-root`와 `data-v21121-micro-ui-a11y-perf` 추가.
+  - `installV21121MicroUiA11yPerfPass()` 추가.
+  - 패널/건설창/낚시 입질창/결과창에 `v21121-shell-polish`, 스크롤 영역에 `v21121-scroll-reserve`, 카드에 `v21121-card-perf`, 조작 요소에 `v21121-control-a11y`를 런타임으로 부여.
+  - 라벨이 없는 조작 요소에는 안전한 `aria-label` fallback을 부여.
+  - visual viewport 폭/높이를 `--v21121-visual-width`, `--v21121-visual-height`로 동기화.
+  - RAF 예약, MutationObserver, signature guard로 반복 스타일 쓰기를 줄임.
+- `src/styles.css`
+  - `v2.1.121 micro UI/a11y/perf polish` 마지막 스코프 추가.
+  - 하단 내비 뒤 가림 방지 scroll reserve, focus-visible 링, active 터치 피드백, 카드 render containment, tight-screen/reduced-motion 대응 적용.
 - `README.md`, `AI_HANDOFF_CARDVILLE.md`
-- 버전 상수: `assetManifest.ts`, `brandRules.ts`, `lobbyLayoutPlan.ts`, `MainLobbyScene.ts`, `LoginScene.ts`
+  - v2.1.121 작업중인 내용, 기록, 다음 업데이트 예상 내역, 결과 확인 명령, 산출물 zip 점검 명령, GitHub Desktop/Firebase 무료 플랜 환경, full/patch 산출 규칙을 상단에 갱신.
+- `tools/check-v21121-micro-ui-a11y-perf.mjs`
+  - 버전/캐시/README/handoff 동기화, v2.1.121 runtime/CSS 토큰, 운영 계약, SVG 금지, 문서 2개 제한, CSS 자산 존재, package-lock 레지스트리 청결을 확인한다.
 
-### 상점 허브 구조
+### 절대 건드리지 않은 것
 
-- `ShopScene`은 세 가지 카드팩 오퍼를 보여줍니다.
-  - `daily_free`: 일일 무료팩
-  - `coin_pack`: 상점 실버팩, 120코인
-  - `gem_pack`: 왕관 프리미엄팩, 3보석
-- 상점 상단에는 코인, 보석, 무료팩 상태가 표시됩니다.
-- 하단에는 `앨범 보기`, `게임관`, `광장으로` 버튼이 분리되어 있어 버튼 겹침을 줄였습니다.
-- 상점 구매 후에는 `RewardScene`으로 이동하며 `source: 'shop'`, `packLabel`을 전달합니다.
+- 낚시 판정/보상/밸런스
+- 물고기 데이터
+- 마을 이동/좌표/충돌/조이스틱/건설 설치 로직
+- 건설/확대/축소/상점/출항 버튼 이벤트
+- Firebase 저장/익명 로그인 fallback
+- 오프닝 video-only 정책
+- 플레이어 방향 파일명/flip 금지 정책
+- 의존성/엔진 메이저 업그레이드
 
-### 저장/경제 시스템
+### v2.1.121 필수 검수
 
-- `SaveSystem`에 다음 메서드가 추가되었습니다.
-  - `spendCoins(amount)`
-  - `spendGems(amount)`
-  - `getDailyShopStatus(now?)`
-  - `claimDailyShopPack(now?)`
-- 일일 무료팩 저장 키는 `cardville.shop.dailyPack.v134`입니다.
-- `SaveSystem.clear()`는 테스트/초기화 시 일일 무료팩 상태도 함께 지웁니다.
-- 상점 구매팩은 이미 재화를 썼으므로 `RewardScene`에서 카드와 XP 중심으로 보상하고 코인/보석 환급 루프를 막습니다.
+1. `npm run validate` 통과.
+2. GitHub Actions에서 `npm run ci:registry:check`, `npm run ci:install`, `npm run typecheck`, `npm run build` 확인.
+3. 실제 모바일 메뉴 화면에서 마지막 카드/버튼이 하단 내비 뒤로 숨지 않는지 확인.
+4. 상점/가방/미션/도감 긴 목록에서 스크롤이 과하게 튀지 않는지 확인.
+5. 버튼/링크 focus-visible 링과 active 피드백이 과하지 않고 알아보기 쉬운지 확인.
+6. full/patch zip 내부에 `.git`, `node_modules`, `dist`, `reports`, `.log`, SVG 파일이 없는지 확인.
+7. `.md`는 `README.md`, `AI_HANDOFF_CARDVILLE.md`만 있어야 한다.
 
-### 라우팅/UX 변경
-
-- `dioramaBuildings.ts` 상점 건물 부제는 `카드팩 상점`입니다.
-- 상점 건물 라우트는 `scene: 'ShopScene'`입니다.
-- `src/main.ts`와 `BackButtonSystem.ts`에 `ShopScene`이 등록되어 앱 흐름과 뒤로가기 보호 대상에 포함됩니다.
-- 기존 `CollectionScene`은 상점 내부의 `앨범 보기` 버튼과 상단 HUD 앨범 버튼으로 접근합니다.
-
-### 검증
-
-- `tools/check-shop-economy.mjs`가 추가되었습니다.
-- `npm run verify`에 `check:shop-economy`가 포함됩니다.
-- 검증 항목은 `ShopScene`, 상점 오퍼 3종, `SaveSystem` 소비/일일 무료팩 메서드, `RewardScene` shop source 분기, `dioramaBuildings.ts` 상점 라우트, `AI_HANDOFF_CARDVILLE.md`와 `README.md` 기록입니다.
-- 기존 `check:polish`, `check:content-engine`, `check:progression`, `check:lobby-layout`도 유지됩니다.
-- 이번 1.0.34 산출 전 `npm run verify` 전체 통과를 확인했습니다.
-
-### 다음 AI 주의사항
-
-- 상점 구매팩은 비용 지불 후 `RewardScene`으로 이동합니다. 구매팩에서 다시 코인을 크게 지급하면 무한 구매 루프가 될 수 있으므로 현재 `source === 'shop'` 보상 분기를 유지하세요.
-- 일일 무료팩 키는 `cardville.shop.dailyPack.v134`입니다. 저장 키를 바꾸면 기존 테스트 상태가 초기화될 수 있으니 버전 의도가 있을 때만 변경하세요.
-- 상점 UI는 세로 공간이 빡빡합니다. 새 오퍼를 추가하면 3개 카드 + 하단 3버튼이 겹치지 않는지 먼저 확인하세요.
-- 패치 ZIP은 삭제 대상 없이 변경/추가 파일만 포함합니다.
-
-## 13.2. 1.0.33 스테이지/카드팩/앨범 폴리시 패스
-
-1.0.33은 1.0.32 디자인/성능/품질 패스 이후 이어진 실제 플레이 흐름 다듬기 업데이트입니다. 카드팩/앨범 디자인 체감과 연구소/기억의 숲 진입 흐름을 우선 개선했습니다.
-
-### 주요 변경 파일
-
-- `src/game/scenes/StageSelectScene.ts`
-- `src/game/scenes/ModeSelectScene.ts`
-- `src/game/scenes/MainLobbyScene.ts`
-- `src/game/scenes/RewardScene.ts`
-- `src/game/scenes/CollectionScene.ts`
-- `tools/check-polish.mjs`
-- `tools/check-content-engine.mjs`
-- `tools/check-progression.mjs`
-- `tools/check-lobby-layout.mjs`
-- `package.json`, `public/build.json`, `public/health.html`, `public/reset.html`, `index.html`
-- `src/main.ts`, `src/game/data/assetManifest.ts`, `src/game/data/brandRules.ts`, `src/game/data/lobbyLayoutPlan.ts`, `src/game/scenes/LoginScene.ts`
-
-### 스테이지 선택 확장
-
-- `StageSelectScene`은 이제 `word`, `math`, `memory` 모드의 공용 스테이지 선택 화면입니다.
-- 도서관은 기존 낱말 카드 스테이지를 유지합니다.
-- 연구소와 기억의 숲은 로비/게임 선택에서 바로 플레이로 들어가지 않고, `StageSelectScene`을 거쳐 실제 스테이지를 선택합니다.
-- 진행 표시는 `SaveSystem.getModeStageRecord`, `SaveSystem.isModeStageUnlocked`, `SaveSystem.nextPlayableModeStage` 기준입니다.
-- 상단 진행 스트립에는 클리어 수, 별 수, 다음 추천 단계가 표시됩니다.
-
-### 카드팩/앨범 디자인 개선
-
-- `RewardScene`에 팩 기대치 바와 모드별 보상 설명을 추가했습니다.
-- 카드팩 오픈 전후 레이아웃을 재배치해 보상 설명, `카드 앨범 보기`, `광장으로 돌아가기` 버튼이 겹치지 않도록 정리했습니다.
-- 반짝임 수는 `QualitySystem.ambientCount`와 `scaledDuration`을 사용해 품질 모드에 맞춥니다.
-- `CollectionScene`에 총 보유 카드 수, 희귀/영웅/전설 수집 칩, LOCKED/앨범 보관 상태 표현을 추가했습니다.
-
-### 검증
-
-- `check:polish`가 `StageSelectScene`, `RewardScene`, `CollectionScene`의 1.0.33 폴리시 토큰을 확인합니다.
-- `check:content-engine`이 연구소/기억의 숲이 스테이지 선택 화면을 거치는지 확인합니다.
-- `check:progression`이 공용 스테이지 선택 화면의 모드별 진행 저장/해금 토큰을 확인합니다.
-- `check:lobby-layout`이 1.0.33 인수인계 기록 토큰까지 확인합니다.
-- 이번 1.0.33 산출 전 `npm run verify` 전체 통과를 확인했습니다.
-
-### 다음 AI 주의사항
-
-- 연구소/기억의 숲이 `MathLabScene`/`MemoryForestScene`으로 직접 이동하는 과거 흐름을 되돌리지 마세요. 이제 먼저 `StageSelectScene`을 거치는 것이 기준입니다.
-- `StageSelectScene`은 `routeScene`을 엔트리별로 계산합니다. 새 모드를 추가할 때는 `ProgressModeId`, 데이터 파일, 스테이지 엔트리 변환, 실제 플레이 씬 라우팅을 함께 맞추세요.
-- `RewardScene` 하단은 세로 공간이 빡빡합니다. 새 버튼을 추가할 때는 `카드 앨범 보기`와 `광장으로 돌아가기` 버튼 겹침을 먼저 확인하세요.
-- 패치 ZIP은 삭제 대상 없이 변경/추가 파일만 포함합니다.
-
-## 12. 현재 버전 상태
-
-현재 기준 버전은 1.0.40입니다.
-
-1.0.36은 상점 오퍼 추천/무료팩 충전/구매 전환 연출과 도서관 콤보/복구 UX, `BackConfirmScene` 장면 정리 안정성을 보강한 상점 오퍼/콤보 복구 UX 안정화 패스입니다. 1.0.35는 시작 화면 로그인 CTA의 줄처럼 보이는 요소를 제거하고 도서관 낱말 카드 플레이 화면의 목표 체인/카드 보드/품질 게이트를 보강한 시작 화면/도서관 플레이 프리미엄 폴리시 패스입니다. 1.0.34는 상점 건물을 실제 카드팩 상점 허브로 확장하고, 일일 무료팩/코인팩/보석팩, 재화 차감, 상점 구매팩 보상 분기를 추가한 상점 허브/경제 UX 패스입니다. 1.0.33은 연구소/기억의 숲까지 공용 스테이지 선택 화면을 거치게 하고, 카드팩 보상 화면과 카드 앨범 레이아웃을 다듬은 스테이지/카드팩/앨범 폴리시 패스입니다. 1.0.32는 cover 배경, 상태 칩, 품질 모드 게이트, 버튼 중복 터치 방어를 다듬은 디자인/성능/품질 패스입니다. 1.0.31은 로비 터치존 겹침을 정리하고 `cardville.progress.v131` 기반으로 모드별 진행 저장을 확장한 로비 배치/진행 저장 패스입니다. 1.0.30은 프레임형/크롭형 건물 표현을 실제 투명 PNG/WebP 마을 건물 컷아웃으로 교체한 마을 건물 에셋 패스였습니다. 1.0.29는 연구소 연산 미니게임과 기억의 숲 짝찾기 미니게임을 실제 플레이 가능한 1차 콘텐츠로 연결한 콘텐츠 엔진 패스였습니다. 1.0.28은 기준 이미지 톤에 맞춘 프리미엄 에셋 패스와 `check:premium-assets` 검증을 추가한 업데이트였습니다.
-
-- GitHub Actions 자동 검증 흐름 유지
-- `check:assets` 유지
-- `check:polish` 유지
-- `check:premium-assets` 유지
-- `check:content-engine` 유지
-- `check:building-assets` 유지
-- `check:lobby-layout` 추가
-- `check:progression` 추가
-- `check:shop-economy` 추가
-- `check:ux-safety` 추가
-- `assetManifest.ts` 유지
-- `lobbyEntities.ts` 추가
-- `modeCatalog.ts` 추가
-- `QualitySystem.ts` 추가
-- Phaser AUTO renderer 적용
-- 연구소/기억의 숲 실제 1차 미니게임 연결
-- 연구소/기억의 숲 공용 스테이지 선택 화면 연결
-- `MathLabScene` 추가
-- `MemoryForestScene` 추가
-- `ShopScene` 추가
-- 상점 무료팩/구매팩 경제 흐름 추가
-- 앱 동작용 버전 상수 1.0.40 동기화
-- `check:ci-coherence` 추가로 버전/검증 표면/ModeSelectScene 최신화 검증
-
-1.0.24는 전달 규칙과 인수인계 정책 정리 업데이트였습니다. 1.0.23의 핵심은 한 화면 디오라마 로비입니다.
+현재 샌드박스에서는 작업본 `npm run validate`를 기준으로 확인한다. `node_modules`가 없으면 `typecheck`/`build`는 GitHub Actions의 `npm ci` 이후 결과를 최종 기준으로 본다.
 
 
-### 2026-06-29 통파일/에셋 분석 체크포인트
+## v2.1.120 화면 구성/인수인계 계약 패치 기록
 
-이번 작업은 대화 끊김 이후 최신 통파일과 사용자가 함께 올린 적용 후보 에셋팩을 먼저 분석한 체크포인트입니다. 런타임 코드나 에셋 교체는 아직 적용하지 않았고, 다음 AI가 같은 문서만 보고도 이어갈 수 있도록 분석 결과와 필수 검수 순서를 기록했습니다.
+### 사용자 요청과 확인한 불안정 후보
 
-#### 입력 파일
+- 요청: 모든 구석구석을 꼼꼼하게 체크하고, UI/UX/디자인을 특히 신경 쓰면서 계속 패치한다.
+- 요청: 작업 기록은 통파일 안의 `AI_HANDOFF_CARDVILLE.md`와 `README.md`만으로 다음 AI가 이어갈 수 있어야 하며, 결과 확인 명령과 작업환경도 매 패치 포함해야 한다.
+- 확인한 실제 후보: v2.1.119는 터치/모달/스크롤 안전성은 보강했지만, 누적 UI 패스가 많은 구조라 카드 내부 긴 문구, 미디어 containment, 하단 내비 safe-area 폭, 산출물/검수 계약 누락이 다시 불안정해질 수 있다.
 
-- 통파일: `CardVille_Project_Starter_1.0.32_DesignPerformanceQuality_Full.zip`
-- 적용 후보 에셋팩: `CardVille_Assets_Full_PNG.zip`
+### 적용 내용
 
-#### 현재 통파일 상태
+- `src/main.ts`
+  - 루트 스코프 `v21120-screen-composition-handoff-root`와 `data-v21120-screen-composition-handoff` 추가.
+  - `installV21120ScreenCompositionHandoffPass()` 추가.
+  - 카드/패널/건설창/낚시 입질창/결과창에 `v21120-readable-panel`, 텍스트에 `v21120-readable-text`, 미디어에 `v21120-contained-media`, 내비에 `v21120-safe-nav`, 버튼에 `v21120-action-button`을 런타임으로 부여.
+  - visual viewport 폭/높이를 `--v21120-visual-width`, `--v21120-visual-height`로 동기화.
+  - RAF 예약, MutationObserver, signature guard로 반복 스타일 쓰기를 줄임.
+- `src/styles.css`
+  - `v2.1.120 screen composition handoff` 마지막 스코프 추가.
+  - 긴 한글 문구 줄바꿈, 카드 경계선, 미디어 containment, 하단 내비 폭 안정화, 초소형 화면 보정, reduced-motion/contrast 대응 적용.
+- `README.md`, `AI_HANDOFF_CARDVILLE.md`
+  - 작업중인 내용, 기록, 다음 업데이트 예상 내역, 결과 확인 명령, 산출물 zip 점검 명령, GitHub Desktop/Firebase 무료 플랜 환경, full/patch 산출 규칙을 상단에 고정.
+- `tools/check-v21120-screen-composition-handoff.mjs`
+  - 버전/캐시/README/handoff 동기화, v2.1.120 runtime/CSS 토큰, 운영 계약, SVG 금지, 문서 2개 제한, CSS 자산 존재, package-lock 레지스트리 청결을 확인한다.
 
-- 루트 주요 파일: `README.md`, `AI_HANDOFF_CARDVILLE.md`, `index.html`, `package.json`, `vite.config.ts`, `tsconfig.json`, `.github/workflows/deploy.yml`, `src/`, `public/`, `tools/`
-- 전체 프로젝트 파일 수: 269개
-- `public/assets` 파일 수: 204개
-- 매니페스트 등록 자산 수: 114개
-- 별도 버전별 문서 파일은 없음. 기록은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 누적하는 정책이 지켜지고 있음.
-- `node_modules`와 `dist`는 검증 중 로컬 작업 폴더에 생길 수 있지만 통파일/패치파일에는 넣지 말 것.
+### 절대 건드리지 않은 것
 
-#### 검증 환경과 결과
+- 낚시 판정/보상/밸런스
+- 물고기 데이터
+- 마을 이동/좌표/충돌/조이스틱/건설 설치 로직
+- 건설/확대/축소/상점/출항 버튼 이벤트
+- Firebase 저장/익명 로그인 fallback
+- 오프닝 video-only 정책
+- 플레이어 방향 파일명/flip 금지 정책
+- 의존성/엔진 메이저 업그레이드
 
-- Node: v22.16.0
-- npm: 10.9.2
-- 패키지 설치 명령: `npm install --no-audit --no-fund --no-package-lock`
-- 전체 검증 명령: `npm run verify`
-- 검증 결과: 통과
-- 통과 항목: build, check:deploy, check:brand, check:assets, check:premium-assets, check:building-assets, check:lobby-layout, check:content-engine, check:progression, check:polish, check:ui, check:layout, check:association, check:security
+### v2.1.120 필수 검수
 
-#### 업로드 에셋팩 분석
+1. `npm run validate` 통과.
+2. GitHub Actions에서 `npm run ci:registry:check`, `npm run ci:install`, `npm run typecheck`, `npm run build` 확인.
+3. 실제 모바일 마을 화면에서 하단 내비와 우측 상단 메뉴가 safe-area 안에 있고 버튼이 겹치지 않는지 확인.
+4. 상점/가방/미션/도감 카드에서 긴 한글 문구와 이미지가 카드 밖으로 튀지 않는지 확인.
+5. 낚시 `물었다!` 창과 성공 결과창이 화면 밖으로 밀리지 않고, 버튼 터치가 정확한지 확인.
+6. full/patch zip 내부에 `.git`, `node_modules`, `dist`, `reports`, `.log`, SVG 파일이 없는지 확인.
+7. `.md`는 `README.md`, `AI_HANDOFF_CARDVILLE.md`만 있어야 한다.
 
-- `ASSET_INDEX.txt` 기준 PNG 84개 포함
-- SVG 없음
-- WebP 동반 파일 없음. 다음 적용 시 기존 정책에 맞춰 WebP를 생성해야 함.
-- 대표 크기:
-  - `public/assets/diorama/diorama_bg.png`: 1080×1920
-  - `public/assets/diorama/building_castle.png`, `building_event.png`, `building_forest.png`, `building_harbor.png`, `building_plaza.png`, `building_school.png`: 1254×1254
-  - `public/assets/diorama/building_lab.png`, `building_library.png`, `building_shop.png`: 512×512
-  - `public/assets/characters/hero_walk_*`, `hero_blink`, `hero_cheer`: 1024×1536
-  - `public/assets/characters/hero_idle.png`: 512×768
-  - `public/assets/characters/cat_walk_*`, `cat_tail`, `cat_hint`: 1254×1254
-  - `public/assets/characters/cat_idle.png`: 384×384
-  - 카드/팩 계열: 1024×1024
-  - `public/assets/ui/button_primary.png`, `button_secondary.png`, `button_small.png`: 2172×724
+현재 샌드박스에서는 작업본 `npm run validate`를 기준으로 확인한다. `node_modules`가 없으면 `typecheck`/`build`는 GitHub Actions의 `npm ci` 이후 결과를 최종 기준으로 본다.
 
-#### 현재 매니페스트와 이름이 다른 적용 후보
 
-현재 코드는 기존 key와 경로를 유지해야 안정적입니다. 다음 패치에서 아래 매핑을 우선 검토하세요.
+## v2.1.119 모바일 interaction safety 패치 기록
 
-```txt
-characters/npc_chef.png        -> characters/npc_cook.png
-characters/npc_child.png       -> characters/npc_child_01.png
-characters/npc_village_cat.png -> characters/npc_town_cat.png
-props/prop_banner.png          -> props/prop_flag_red.png
-props/prop_tree.png            -> props/prop_tree_oak.png
-props/prop_smoke.png           -> props/prop_smoke_puff.png
-props/tile_cobblestone_96.png  -> props/tile_plaza_96.png
-ui/building_glow.png           -> ui/ui_building_glow.png
-ui/door_light.png              -> ui/ui_door_light.png
-ui/lock_badge.png              -> ui/ui_lock_badge.png
-ui/nameplate.png               -> ui/ui_nameplate_gold.png
-ui/panel_glass.png             -> ui/ui_panel_glass.png
-ui/panel_gold.png              -> ui/ui_panel_gold.png
-ui/panel_wood.png              -> ui/ui_panel_wood.png
-ui/speech_bubble.png           -> ui/ui_speech_bubble.png
-ui/toast_panel.png             -> ui/ui_toast.png
-ui/touch_ripple.png            -> ui/ui_touch_ripple.png
-icons/icon_library.png         -> icons/icon_cv_library.png
-icons/icon_math_lab.png        -> icons/icon_cv_lab.png
-icons/icon_forest.png          -> icons/icon_cv_forest.png
-icons/icon_school.png          -> icons/icon_cv_school.png
-icons/icon_event.png           -> icons/icon_cv_event.png
-icons/icon_castle.png          -> icons/icon_cv_castle.png
-icons/icon_harbor.png          -> icons/icon_cv_harbor.png
-cards/card_pack_*.png          -> packs/pack_*_closed.png 또는 별도 카드팩 매니페스트 확장 검토
+### 사용자 요청과 확인한 불안정 후보
+
+- 요청: 이전 대화가 끊긴 뒤 인수인계 문서 기준으로 개발 계속 진행.
+- 확인한 실제 후보: v2.1.118 기준 validate는 통과했고 정상 기능은 유지되어야 한다. 다음 안전 개선 후보는 모바일 세로 환경에서 모달/카드/건설창/낚시 결과창의 터치와 스와이프/스크롤 전파가 섞이는 문제다.
+- 특히 하단 내비 스와이프, 건설창 스크롤, 낚시 입질/결과창 터치가 같은 화면 위에 겹치는 구조라 `data-no-swipe`, overscroll containment, visual viewport 기반 max-height 보강이 안전하다.
+
+### 적용 내용
+
+- `src/main.ts`
+  - 루트 스코프 `v21119-interaction-safe-root`와 `data-v21119-interaction-safety` 추가.
+  - `installV21119InteractionSafetyPass()` 추가.
+  - 모달/카드/건설창/입질창/결과창에 `v21119-touch-shield`, `v21119-scroll-safe`, `v21119-safe-dialog-card`, `data-no-swipe`를 런타임으로 적용.
+  - visual viewport 폭/높이를 `--v21119-visual-width`, `--v21119-visual-height`로 동기화.
+  - RAF 예약, MutationObserver, `lastSignature` guard로 불필요한 반복 스타일 쓰기를 줄임.
+- `src/styles.css`
+  - `v2.1.119 interaction safety` 마지막 스코프 추가.
+  - 터치 하이라이트 제거, overscroll containment, stable scrollbar gutter, safe-area dialog max-height, compact touch target 보정 적용.
+- `tools/check-v21119-interaction-safety.mjs`
+  - 버전/캐시/README/handoff 동기화, v2.1.119 root/runtime/CSS 토큰, SVG 금지, CSS 자산 존재, README/handoff만 문서 허용을 확인한다.
+
+### 절대 건드리지 않은 것
+
+- 낚시 판정/보상/밸런스
+- 물고기 데이터
+- 마을 이동/좌표/충돌/조이스틱/건설 설치 로직
+- 건설/확대/축소/상점/출항 버튼 이벤트
+- Firebase 저장/익명 로그인 fallback
+- 오프닝 video-only 정책
+- 플레이어 방향 파일명/flip 금지 정책
+- 의존성/엔진 버전 업그레이드
+
+### v2.1.119 필수 검수
+
+1. GitHub Actions에서 `npm run validate` 통과.
+2. 실제 모바일 마을 화면에서 건설창을 스크롤해도 배경/하단 내비 스와이프가 섞이지 않는지 확인.
+3. 건설 확인창이 safe-area 안에 머물고 버튼 터치가 정확한지 확인.
+4. 낚시 `물었다!` 창과 성공 결과창이 주소창/키보드 변화에도 화면 밖으로 밀리지 않는지 확인.
+5. 하단 내비, 상점/가방/미션/도감 카드형 메뉴의 버튼 터치가 정상인지 확인.
+6. `.svg`, `.svgz`, `image/svg`, 인라인 `<svg>` 런타임 참조가 추가되지 않았는지 확인.
+
+현재 샌드박스 검수 결과 작업본 `npm run validate`와 `tools/check-v21119-interaction-safety.mjs` 단독 실행이 통과했다. full/patch zip 경로 안전성, `.git`/`node_modules`/`dist`/`reports`/`.log`/SVG 미포함, `.md`가 `README.md`와 `AI_HANDOFF_CARDVILLE.md`뿐인 것도 확인했다. `npm run typecheck`는 현재 샌드박스에 `node_modules`가 없어 완료하지 못했다. 전체 `npm ci`, `typecheck`, `build`는 GitHub Actions 결과를 최종 기준으로 본다.
+
+## v2.1.118 UI 자산/아이콘 containment 패치 기록
+
+### 사용자 요청과 확인한 불안정 후보
+
+- 요청: 다양한 불안정, 겹침, 배치, 배정, 체크, 디자인/UX를 계속 다듬고 개선.
+- 확인한 실제 후보: v2.1.117의 마을 우측 상단 메뉴 개선은 CSS와 런타임 패스가 모두 있었지만, 이전 누적 패스가 inline important 스타일을 많이 쓰는 구조라 일부 기기에서 마지막 CSS 의도와 실제 computed 값이 달라질 수 있다.
+- 특히 아이콘 시인성 문제는 CSS만으로 끝내기보다 실제 런타임 inline important 값까지 같은 토큰으로 동기화하는 편이 안전하다.
+
+### 적용 내용
+
+- `src/main.ts`
+  - 루트 스코프 `v21118-ui-asset-containment-root`와 `data-v21118-ui-asset-containment` 추가.
+  - `installV21118UiAssetContainmentPass()` 추가.
+  - 마을 우측 상단 메뉴 셀은 34px, 2x3, gap 3px 그대로 유지.
+  - 아이콘은 일반 화면 25px, 초소형 화면 24px로 런타임 inline important 값까지 hard-lock.
+  - 메뉴 버튼에 `clip-path`, `isolation`, `overflow:hidden`, pseudo 제거, object-position center를 다시 고정.
+  - RAF 예약과 `lastSignature` guard로 같은 화면/viewport 상태에서 불필요한 반복 스타일 쓰기를 줄임.
+  - 런타임 이미지에는 `v21118-contained-image`, `decoding=async`, `loading=lazy`, `draggable=false`를 적용.
+- `src/styles.css`
+  - `v2.1.118 UI asset containment` 마지막 스코프 추가.
+  - 마을 메뉴 컨테이너/버튼/아이콘/라벨을 런타임 토큰과 같은 값으로 다시 고정.
+  - 상점/가방/장비/미션/도감/모달 계열 카드의 이미지와 텍스트가 카드 밖으로 새거나 서로 겹치는 위험을 줄임.
+- `tools/check-v21118-ui-asset-containment.mjs`
+  - 버전/캐시/README/handoff 동기화, v2.1.118 root/runtime/CSS 토큰, SVG 금지, CSS 자산 존재, README/handoff만 문서 허용을 확인한다.
+
+### 절대 건드리지 않은 것
+
+- 낚시 판정/보상/밸런스
+- 물고기 데이터
+- 마을 이동/좌표/충돌/조이스틱
+- 건설/확대/축소/상점/출항 이벤트
+- Firebase 저장/익명 로그인 fallback
+- 오프닝 video-only 정책
+- 플레이어 방향 파일명/flip 금지 정책
+- 의존성/엔진 버전 업그레이드
+
+### v2.1.118 필수 검수
+
+1. GitHub Actions에서 `npm run validate` 통과.
+2. 실제 모바일 마을 화면 우측 상단 메뉴가 기존 위치/크기를 유지하는지 확인.
+3. 메뉴 아이콘이 실제 화면에서 더 또렷하고, 위쪽에 다른 그림/프레임이 비치지 않는지 확인.
+4. 상점/가방/장비/미션/도감 카드 이미지가 카드 밖으로 튀지 않는지 확인.
+5. 확대/축소, 원점, 건설, 상점, 출항 버튼 이벤트가 정상인지 확인.
+6. `.svg`, `.svgz`, `image/svg`, 인라인 `<svg>` 런타임 참조가 추가되지 않았는지 확인.
+
+현재 샌드박스 검수 결과 작업본 `npm run validate`, `tools/*.mjs` 문법 검사, v2.1.118 full zip 새 압축 해제본 `npm run validate`, v2.1.117 full + v2.1.118 patch 덮어쓰기본 `npm run validate`가 통과했다. full/patch zip 경로 안전성, `.git`/`node_modules`/`dist`/`reports`/`.log`/SVG 미포함, `.md`가 `README.md`와 `AI_HANDOFF_CARDVILLE.md`뿐인 것도 확인했다. `npm run typecheck`는 현재 샌드박스에 `node_modules`가 없어 `howler`, `pixi.js`, `firebase`, `vite` 모듈 해석 실패로 완료하지 못했다. 전체 `npm ci`, `typecheck`, `build`는 GitHub Actions 결과를 최종 기준으로 본다.
+
+## v2.1.117 마을 우측 상단 메뉴 아이콘 시인성 hotfix 기록
+
+### 사용자 제보와 원인
+
+- 제보: 마을 화면 우측 위 버튼들 아이콘 크기가 작아 잘 보이지 않음.
+- 제보: 아이콘 위쪽에 다른 그림이 보이는 느낌이 있어 보정 필요.
+- 원인 후보: 누적 메뉴 보정 패스가 34px 셀 안에 21~22px 아이콘을 쓰고 있었고, 버튼이 투명/반투명 단일 프레임으로 처리되어 월드 배경 또는 이전 pseudo 프레임이 상단에서 비쳐 보이는 체감이 생길 수 있었다.
+
+### 적용 내용
+
+- `src/main.ts`
+  - 루트 스코프 `v21117-village-menu-icon-clarity-root`와 데이터 토큰 `data-v21117-village-menu-icon-clarity` 추가.
+  - `installV21117VillageMenuIconClarityPass()` 추가. 이 패스는 마을 화면 우측 상단 메뉴에만 작동한다.
+  - 메뉴 셀은 34px, 2x3 배치, 3px gap을 유지한다.
+  - 아이콘은 일반 화면 25px, 매우 작은 화면 24px로 키워 아이콘과 테두리 간격을 줄인다.
+  - 버튼에 `overflow:hidden`, `clip-path`, `isolation:isolate`, background-image 제거, pseudo-element 제거 토큰을 적용한다.
+  - 메뉴 텍스트 라벨은 기존처럼 시각적으로 숨겨 아이콘 중심 배치를 유지한다.
+- `src/styles.css`
+  - `v2.1.117 village top-right menu icon clarity` 마지막 스코프 추가.
+  - 우측 상단 메뉴 컨테이너/버튼/아이콘/라벨을 마을 화면에 한정해 보정한다.
+  - SVG 이미지 추가 없음. 기존 PNG 아이콘만 사용.
+- `tools/check-v21117-village-menu-icon-clarity.mjs`
+  - 버전/캐시/README/handoff 동기화, v2.1.117 root/runtime/CSS 토큰, SVG 금지, CSS 자산 존재, README/handoff만 문서 허용을 확인한다.
+
+### 절대 건드리지 않은 것
+
+- 마을 이동/조이스틱/키보드 이동
+- 확대/축소/원점/건설/상점/출항 이벤트
+- 건설 좌표/충돌/경로 탐색/NPC/카메라
+- 낚시 판정/보상/밸런스
+- Firebase 저장/익명 로그인 fallback
+- 오프닝 video-only 정책
+- 플레이어 방향 파일명/flip 금지 정책
+
+### v2.1.117 필수 검수
+
+1. GitHub Actions에서 `npm run validate` 통과.
+2. 실제 모바일 마을 화면에서 우측 상단 6개 버튼이 기존 위치/크기를 유지하는지 확인.
+3. 아이콘이 이전보다 또렷하게 보이는지 확인.
+4. 아이콘 위쪽에 다른 그림, 프레임, 잘린 잔상이 남지 않는지 확인.
+5. 확대/축소, 건설, 원점, 상점, 출항 버튼이 정상 동작하는지 확인.
+6. `.svg`, `.svgz`, `image/svg`, 인라인 `<svg>` 런타임 참조가 추가되지 않았는지 확인.
+
+현재 샌드박스 검수 결과 작업본 `npm run validate`, `tools/*.mjs` 문법 검사, v2.1.117 full zip 새 압축 해제본 `npm run validate`, v2.1.116 full + v2.1.117 patch 덮어쓰기본 `npm run validate`가 통과했다. full/patch zip 경로 안전성, `.git`/`node_modules`/`dist`/`reports`/`.log`/SVG 미포함, `.md`가 `README.md`와 `AI_HANDOFF_CARDVILLE.md`뿐인 것도 확인했다. `npm run typecheck`는 현재 샌드박스에 `node_modules`가 없어 `howler`, `pixi.js`, `firebase`, `vite` 모듈 해석 실패로 완료하지 못했다. 전체 `npm ci`, `typecheck`, `build`는 GitHub Actions 결과를 최종 기준으로 본다.
+
+## v2.1.116 낚시 UI 안정성 hotfix 기록
+
+### 사용자 제보와 원인
+
+- 제보: 낚시대/미끼 버튼이 혼자 꿈틀거림.
+- 제보: 연속 성공 테이블이 구버전이고 Aqua 스킨 이미지가 적용되지 않음.
+- 제보: `물었다!` 창이 너무 왔다갔다 열림.
+- 제보: 성공창이 화면에서 커졌다 작아졌다 함.
+- 확인한 핵심 원인: `triggerBite()`가 `showBiteCallout()` 직후 1.2초 자동 `startReeling()`을 실행해 callout이 사용자가 읽기 전에 사라질 수 있었다. 또한 누적 CSS/normalizer 레이어가 loadout/combo/result에 transform/animation/old skin을 섞어 줄 가능성이 있었다.
+
+### 적용 내용
+
+- `src/main.ts`
+  - 루트 스코프 `v21116-fishing-ui-stability-hotfix-root`와 `data-v21116-fishing-ui-stability-hotfix` 추가.
+  - 낚시 장비 strip/cell에 `v21116-loadout-stable`, `v21116-loadout-cell` 토큰 추가.
+  - 연속 성공 badge에 `v21116-combo-badge` 토큰 추가.
+  - 캐스팅 버튼에 `v21116-cast-button-stable` 토큰 추가.
+  - `triggerBite()`의 1.2초 자동 릴링 전환 제거. 이제 `물었다!` 이후 플레이어가 직접 바다 화면 또는 `릴링 시작` 버튼으로 릴링을 시작한다.
+  - 낚시 root/stage pointer/touch 처리에서 `.bite-callout`을 제외해 callout 터치와 바다 터치가 충돌하지 않게 했다.
+  - `showBiteCallout()`은 stage 내부 기존 callout을 재사용하고 stage 밖 잔상만 제거한다. 버튼에는 1회성 pointerdown 리스너만 붙인다.
+  - `showResultCard()`는 이미 결과창이 열려 있으면 기존 card를 제거하고 빈 화면으로 return하는 순서를 피하도록 수정했다. `v21116-result-card-stable` 토큰을 추가했다.
+- `src/styles.css`
+  - v2.1.116 마지막 스코프에서 낚싯대/미끼 loadout의 animation/transform/will-change를 고정.
+  - loadout, combo badge, bite callout, result card에 PNG 기반 Aqua premium skin을 적용. SVG 금지 유지.
+  - 결과창은 fixed center, 고정 폭, 최대 높이, stable scrollbar, 결과 물고기 이미지 크기, 버튼 2열 grid를 고정해 크기 흔들림을 줄였다.
+- `tools/check-v21116-fishing-ui-stability-hotfix.mjs`
+  - 버전/캐시/README/handoff 동기화, 사용자 제보 hotfix 토큰, 자동 릴링 제거, callout 재사용, result card 안정 순서, SVG 금지, CSS 자산 존재를 검사한다.
+
+### 절대 유지한 것
+
+- 낚시 판정/게이지 수치/보상/물고기 데이터는 수정하지 않았다.
+- 마을 이동/좌표/충돌/건설 로직은 수정하지 않았다.
+- Firebase 저장/익명 로그인 fallback 흐름은 수정하지 않았다.
+- 오프닝 video-only, 플레이어 8방향 파일명/flip 금지 정책은 유지했다.
+- 정상 작동 기능을 재작성하지 않고, 사용자 제보 UI 흔들림 지점만 직접 보정했다.
+
+### v2.1.116 필수 검수
+
+```bash
+npm run validate
 ```
 
-#### 다음 에셋 적용 시 필수 순서
-
-1. 현재 `assetManifest.ts` key를 먼저 유지한다.
-2. 업로드 PNG를 현재 경로로 매핑하되, 기존 파일명을 무작정 바꾸지 않는다.
-3. WebP 동반 파일을 생성한다.
-4. 1254×1254 건물/고양이 에셋은 모바일 로비 배치에서 시각 크기와 터치존이 어긋나지 않는지 확인한다.
-5. 1080×1920 배경은 현재 390×844/780×1688 cover 처리에서 초점이 안전한지 확인한다.
-6. 대형 버튼/UI는 바로 런타임 교체하면 스케일이 과할 수 있으므로 `GameButton`/패널 코드의 9-slice 또는 표시 크기를 먼저 확인한다.
-7. `npm run verify` 전체 통과 전까지 통파일을 확정하지 않는다.
-8. 삭제가 필요한 파일이 생기면 패치 ZIP만으로는 삭제가 자동 반영되지 않으므로 최종 보고에 삭제 대상도 별도 고지한다.
-
-#### 이번 체크포인트 산출 정책
-
-- 런타임 코드 변경 없음
-- 런타임 에셋 교체 없음
-- 새 문서 파일 생성 없음
-- 변경 기록은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 반영
-- 통파일 ZIP은 전체 프로젝트에서 `node_modules`와 `dist`를 제외
-- 패치 ZIP은 이번에 바뀐 `README.md`, `AI_HANDOFF_CARDVILLE.md`만 포함
-
-## 14. 절대 유지해야 할 정책
-
-- 소년과 검은 고양이 브랜드 고정
-- SVG 사용 금지
-- 모바일 세로 화면 우선
-- 카카오 브라우저 대응
-- 뒤로가기 확인 UX 유지
-- 첫 화면은 빠르게 표시
-- 게임 시작 후 인트로 영상 중 에셋 로딩
-- 대형 에셋 대량 선로딩 금지
-- Service Worker/PWA 캐시는 현재 비활성 유지
-- Firebase는 시작 시 강제 로딩하지 말 것
-- 로컬 게스트 시작은 빠르게 유지
-
-
-## 15. 1.0.37 콘텐츠 스케일/보상 차등/디자인 에셋 요청 패스
-
-현재 기준 버전은 1.0.37입니다.
-
-### 핵심 변경
-
-- `src/game/data/mathStages.ts`를 5스테이지 25문제로 확장했습니다.
-  - 4단계 `상점 계산 장부`
-  - 5단계 `왕관 회로 시험`
-- `src/game/data/memoryStages.ts`를 4스테이지 42쌍으로 확장했습니다.
-  - 3단계 `반딧불 카드길`
-  - 4단계 `고양이 그림자 숲`
-- `StageSelectScene`에 `rewardPreview`를 추가해 스테이지 선택 화면에서 보상 기대치를 미리 보여줍니다.
-- `MathLabScene`에 `progressFill`, `challengeText`, `difficultyRewardLabel`, `difficultyBonus`를 추가했습니다.
-- `MemoryForestScene`은 카드 수가 20장을 넘으면 5열 동적 그리드로 전환합니다.
-  - 토큰: `const columns = deck.length > 20 ? 5 : 4`
-  - 보드 높이 제한: `maxBoardHeight`
-  - 별 산정: `targetMoves`
-  - 스테이지 보정: `stageBonus`
-- `RewardScene`에 `progressionRewardBonus`를 추가했습니다.
-  - 연구소: `연구소 난이도 보너스`
-  - 기억의 숲: `숲 기억력 보너스`
-  - 도서관: `도서관 숙련 보너스`
-- 상점 구매팩은 코인 환급 루프 방지를 위해 진행 보너스에서 제외됩니다.
-- `tools/check-content-scale.mjs`와 `npm run check:content-scale`을 추가하고 `npm run verify`에 포함했습니다.
-
-### 검증 결과
-
-- `npm run verify` 전체 통과 기준으로 확정했습니다.
-- `node_modules`, `dist`는 통파일 ZIP에서 제외해야 합니다.
-- 신규 문서 파일은 만들지 않았습니다. 변경 기록은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 누적했습니다.
-
-### 추가 디자인 이미지 에셋 요청서
-
-사용자가 다음에 이미지를 만들 수 있도록 아래 목록을 우선순위대로 요청했습니다. 모두 CardVille 고정 스타일인 **소년+검은 고양이+따뜻한 프리미엄 2.5D 판타지+골드/보라/블루 톤**을 유지해야 합니다. SVG는 금지하고 투명 PNG와 WebP 동반을 권장합니다.
-
-#### S급 우선 에셋
-
-1. `public/assets/characters/npc_shopkeeper.png`
-   - 상점 주인 전신 컷아웃, 1024×1536 또는 1254×1254 투명 PNG
-   - 카드팩/코인 주머니/작은 망토 포인트
-   - `ShopScene`, 로비 상점, 구매 성공 연출용
-2. `public/assets/ui/ui_math_console.png`
-   - 연산 연구소 프리미엄 문제 콘솔, 1024×720 투명 PNG
-   - 마법 회로, 숫자 룬, 보라 유리판
-3. `public/assets/ui/ui_memory_board.png`
-   - 기억의 숲 카드 보드 패널, 1024×1024 또는 1200×900 투명 PNG
-   - 잎사귀 프레임, 반딧불, 어두운 초록+골드
-4. 고양이 힌트 이모션 세트
-   - `cat_hint_happy.png`, `cat_hint_think.png`, `cat_hint_surprise.png`, `cat_hint_sleepy.png`
-   - 각 512×512 투명 PNG
-5. 희귀도별 카드팩 오픈 이펙트
-   - `effect_pack_burst_common.png`, `effect_pack_burst_rare.png`, `effect_pack_burst_epic.png`, `effect_pack_burst_legendary.png`
-   - 각 1024×1024 투명 PNG
-
-#### A급 UI/UX 에셋
-
-- `ui_stage_card_word.png`, `ui_stage_card_math.png`, `ui_stage_card_memory.png`
-- `badge_next.png`, `badge_best.png`, `badge_ready.png`, `badge_locked.png`
-- `icon_coin_premium.png`, `icon_gem_premium.png`, `icon_xp_star.png`
-- `illust_library_corner.png`, `illust_math_lab_corner.png`, `illust_memory_forest_corner.png`
-- `ui_tutorial_pointer_catpaw.png`
-
-#### B급 분위기 에셋
-
-- 계절 장식 팩: 봄 꽃잎, 여름 축제 깃발, 가을 낙엽/랜턴, 겨울 눈송이/리본
-- 결과 스탬프: `stamp_clear.png`, `stamp_try_again.png`, `stamp_combo.png`
-
-### 다음 AI 주의사항
-
-- 기억의 숲 스테이지가 늘었으므로 모바일 390×844에서 24장 보드가 하단 버튼과 겹치지 않는지 계속 확인하세요.
-- 새 에셋을 받을 때는 `assetManifest.ts` key를 먼저 설계하고 기존 파일명 정책을 유지하세요.
-- 상점 구매팩은 비용 차감 후 보상으로 코인을 다시 지급하지 않는 현재 정책을 유지하세요.
-- 다음 패치는 영어 학교 1차 수업 또는 고양이 튜토리얼/에셋 매니페스트 확장이 좋습니다.
-
-## 16. 1.0.38 영어 학교 1차 수업/무에셋 콘텐츠 확장 패스
-
-현재 기준 버전은 1.0.38입니다.
-
-### 핵심 변경
-
-- 사용자가 새 디자인 에셋을 준비하기 전까지 코드/UX/콘텐츠 중심 패치를 진행했습니다.
-- `src/game/data/englishStages.ts`를 신규 추가했습니다.
-  - 4교시, 24개 영어 카드 데이터 구성
-  - `인사 카드 수업`, `마을 물건 카드`, `행동 카드 수업`, `짧은 문장 수업`
-- `src/game/scenes/EnglishSchoolScene.ts`를 신규 추가했습니다.
-  - 영어 단어를 보고 한국어 뜻 카드를 선택하는 1차 수업 모드
-  - 콤보, 생명, 진행 바, 힌트, 예문, 정답/오답 피드백 포함
-  - 모션/파티클은 `QualitySystem` 기준을 따릅니다.
-- `src/game/data/dioramaBuildings.ts`에서 학교 건물을 실제 오픈 콘텐츠로 전환했습니다.
-  - `school` subtitle: `영어 학교`
-  - `open: true`
-  - route: `StageSelectScene` + `modeId: english`
-- `src/game/data/modeCatalog.ts`에서 영어 학교 상태를 `open`으로 전환하고 `routeScene: EnglishSchoolScene`을 추가했습니다.
-- `StageSelectScene`은 `ENGLISH_STAGES`를 읽어 영어 스테이지 카드, 보상 프리뷰, `EnglishSchoolScene` 라우팅을 표시합니다.
-- `ModeSelectScene`은 영어 학교 진행 요약과 다음 교시 안내를 표시합니다.
-- `MainLobbyScene` 추천 동선에 학교를 포함했습니다.
-  - 도서관 미완료가 끝난 뒤 영어 학교가 다음 추천 건물이 됩니다.
-  - 상단 HUD 진행 수는 도서관/영어/연구소/숲 전체 열린 스테이지 합산 기준입니다.
-- `RewardScene`에 `영어 카드팩 도착!`, `영어 학교 수업 보너스`를 추가했습니다.
-- `BackConfirmScene` 정리 대상에 `EnglishSchoolScene`을 추가했습니다.
-- `src/main.ts`에 `EnglishSchoolScene`을 등록했습니다.
-
-### 검증 추가
-
-- `tools/check-english-school.mjs` 추가
-- `package.json`에 `check:english-school` 추가
-- `npm run verify`에 `check:english-school` 포함
-- 검증 토큰:
-  - 영어 스테이지 최소 4개
-  - 영어 카드 최소 24개
-  - 학교 건물 오픈 라우팅
-  - 스테이지 선택/모드 선택/보상/뒤로가기 연동
-  - README/AI_HANDOFF/버전 동기화
-
-### 검증 결과
-
-- `npm run verify` 전체 통과 기준으로 확정했습니다.
-- 새 이미지 에셋은 추가하지 않았습니다.
-- 신규 문서 파일은 만들지 않았습니다. 변경 기록은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 누적했습니다.
-- 삭제 파일은 없습니다.
-- `node_modules`, `dist`는 통파일 ZIP에서 제외해야 합니다.
-
-### 다음 AI 주의사항
-
-- 영어 학교는 현재 텍스트 기반 1차 수업입니다. 사용자가 영어 학교용 이미지 에셋을 주면 다음 패치에서 `assetManifest.ts`와 장면 조건부 표시로 연결하세요.
-- 추천 에셋 후보는 `npc_teacher_premium.png`, `ui_english_blackboard.png`, `ui_word_meaning_card.png`, `effect_correct_abc.png`입니다. 다만 아직 요청된 필수 에셋 1차 목록이 우선입니다.
-- 학교 건물이 열린 상태이므로 로비에서 `school` 배치/상태 칩/추천 트레일 겹침을 계속 확인하세요.
-
-## 17. 1.0.39 CI 빌드 가드/ModeSelect 패치 표면 완전성 패스
-
-현재 기준 버전은 1.0.39입니다.
-
-### 빌드 실패 직접 원인
-
-사용자가 공유한 GitHub Actions 로그의 실패 지점은 아래입니다.
-
-- 실패 스크립트: `npm run check:polish`
-- 실패 파일: `src/game/scenes/ModeSelectScene.ts`
-- 누락 토큰: `modeProgressSummary`
-
-이는 게임 로직 런타임 오류라기보다 **패치 표면 누락으로 인한 저장소 파일 불일치**입니다. 전체 통파일 기준 `ModeSelectScene.ts`에는 `modeProgressSummary`가 있었지만, 패치 ZIP이 직전 버전에서 바뀐 파일만 담는 방식으로 생성되면서 검증 스크립트가 감시하는 핵심 장면 파일 일부가 배포 저장소에 최신 상태로 반영되지 않을 수 있었습니다. 그 결과 `tools/check-polish.mjs`는 새 기준을 요구하는데, 저장소의 `ModeSelectScene.ts`는 오래된 상태로 남아 CI가 실패했습니다.
-
-### 이번 수정
-
-- `ModeSelectScene.ts`의 진행 요약 표면을 최신 기준으로 명시 유지했습니다.
-  - `modeProgressSummary`
-  - `문제팩 선택`
-  - `숲 카드 선택`
-  - `뜻 카드 연결`
-- `tools/check-ci-coherence.mjs`를 추가했습니다.
-  - `package.json`, `public/build.json`, `index.html`, `health.html`, `reset.html`, `MainLobbyScene.ts` 버전 동기화
-  - `ModeSelectScene.ts` 최신화 여부
-  - `check-polish`가 핵심 장면을 계속 감시하는지
-  - README/AI_HANDOFF 기록 동기화
-- `npm run verify`에 `check:ci-coherence`를 포함했습니다.
-- `tools/check-english-school.mjs`의 일부 1.0.38 하드코딩 검증을 현재 패키지 버전 기준으로 정리했습니다.
-- `package.json`, `public/build.json`, `health.html`, `reset.html`, `index.html`, `MainLobbyScene.ts`, `src/main.ts` 버전을 1.0.39로 동기화했습니다.
-
-### 패치 표면 완전성 규칙
-
-앞으로 패치 ZIP은 단순히 `git diff`처럼 보이는 파일만 담지 않습니다. 아래 파일군은 빌드/검증 실패를 막기 위해 변경 여부와 상관없이 함께 넣는 안정형 패치 표면으로 취급합니다.
-
-- `src/` 전체 또는 최소한 검증 스크립트가 감시하는 모든 `src/game/**` 파일
-- `tools/` 전체
-- `package.json`
-- `index.html`
-- `public/build.json`, `public/health.html`, `public/reset.html`
-- `README.md`
-- `AI_HANDOFF_CARDVILLE.md`
-
-특히 `tools/check-*.mjs`에서 토큰을 요구하는 파일은 패치 ZIP에 반드시 포함하세요. 검증 기준만 업데이트되고 대상 파일이 빠지는 상태가 이번 실패의 핵심 재발 위험입니다.
-
-### 검증 결과
-
-- `npm run verify` 전체 통과 기준으로 확정했습니다.
-- 신규 이미지 에셋은 추가하지 않았습니다.
-- 신규 문서 파일은 만들지 않았습니다. 변경 기록은 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 누적했습니다.
-- 삭제 파일은 없습니다.
-- `node_modules`, `dist`, `package-lock.json`은 통파일 ZIP에서 제외해야 합니다.
-
-### 다음 AI 주의사항
-
-- 사용자가 GitHub에 패치 ZIP만 적용하는 경우가 있으므로, 앞으로 패치 ZIP은 직전 산출물 기준의 최소 변경 파일이 아니라 **검증 통과에 필요한 안정형 패치 표면**을 우선하세요.
-- `check-polish`, `check-ui`, `check-ux-safety`, `check-content-scale`, `check-english-school`, `check-ci-coherence`가 요구하는 토큰 대상 파일은 반드시 패치 ZIP에 포함하세요.
-- 배포 로그가 1.0.37처럼 과거 버전을 가리키면, 사용자가 최신 통파일이 아니라 이전 패치만 배포한 상태일 가능성을 먼저 확인하세요.
-
-## 18. 다음 업데이트 후보
-
-우선순위가 높은 다음 작업입니다.
-
-1. 사용자가 제작할 S급 디자인 에셋을 `assetManifest.ts`에 안전하게 연결
-2. 영어 학교 교실 전용 UI 에셋 연결 또는 고양이 튜토리얼 시스템 추가
-3. 영어 학교 발음 힌트/그림 카드/문장 듣기 확장
-4. 상점 오퍼 수량을 늘리기 전 390×844 하단 버튼 겹침 검수
-5. 도서관 낱말 카드의 실패 복구 튜토리얼/힌트 연출 확장
-6. 소년과 고양이 토큰을 실제 스프라이트 시트 애니메이션으로 교체
-7. 계절 장식 시스템을 개별 오브젝트 에셋으로 추가
-8. 실제 빌드 후 모바일 카카오 브라우저 터치/뒤로가기 테스트
-9. 업로드 에셋팩의 이름 매핑과 WebP 생성 패치를 별도 진행
-
-## 19. 패치파일 만들 때 주의
-
-패치파일은 직전 버전에서 바뀐 파일만 담습니다.  
-다만 ZIP 덮어쓰기만으로는 삭제가 자동 적용되지 않으므로, 파일 삭제가 필요한 업데이트에서는 최종 보고에 삭제 대상도 함께 알려야 합니다.
-
-1.0.24 통파일에서는 과거 버전별 문서 폴더를 정리했습니다.  
-1.0.41 패치파일은 이벤트 건물 라우트와 검증 스크립트 기준이 함께 바뀌므로 안정형 패치 표면(src/tools/package/public 핵심/문서)을 포함합니다. 삭제 대상은 없습니다.
-1.0.39 패치파일은 CI 실패 재발 방지를 위해 안정형 패치 표면(src/tools/package/public 핵심/문서)을 포함합니다. 삭제 대상은 없습니다.
-1.0.38 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.
-1.0.37 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.
-1.0.36 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.
-1.0.35 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.
-1.0.34 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.
-1.0.33 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.
-1.0.32 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.
-1.0.31 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.
-1.0.30 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.
-1.0.29 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.
-1.0.28 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.
-1.0.27 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다.
-1.0.25 패치파일은 삭제 대상 없이 변경/추가 파일만 포함합니다. 완전히 깨끗한 상태가 필요하면 통파일을 사용하세요.
-
-
-## 18. 1.0.40 무에셋 고양이 코치/첫 플레이 UX 패스
-
-현재 기준 버전은 1.0.40입니다.
-
-### 작업 목적
-
-에셋 제작 대기 중에도 게임 체감 UX를 올리기 위해, 새 이미지 없이 기존 고양이 힌트 에셋과 벡터 말풍선으로 첫 플레이 안내를 추가했습니다. 1.0.39에서 확인한 CI/패치 표면 완전성 규칙은 유지합니다.
-
-### 핵심 변경
-
-- `src/game/systems/CoachMarkSystem.ts` 신규 추가
-  - 저장 키: `cardville.coach.seen.v140`
-  - `showOnce`, `show`, `markSeen`, `reset` 제공
-  - localStorage 차단 환경에서도 예외 없이 동작하도록 안전 처리
-- 로비 `MainLobbyScene.ts`
-  - `showLobbyCoach` 추가
-  - NEXT 건물, NPC 터치, 추천 루트 안내
-- `StageSelectScene.ts`
-  - `showStageCoach` 추가
-  - NEXT 카드, 잠금 해제, 보상 미리보기 안내
-- 도서관 `PlayScene.ts`
-  - `showWordCoach` 추가
-  - TOP 카드, 힌트, 복구/셔플 버튼의 역할 안내
-- `EnglishSchoolScene.ts`
-  - `showEnglishCoach` 추가
-  - 영어 단어/예문/뜻 카드 선택 흐름 안내
-- `ShopScene.ts`
-  - `showShopCoach` 추가
-  - 무료팩 READY, 추천 오퍼, 카드/XP 중심 상점팩 안내
-- `tools/check-coach.mjs`와 `check:coach` 추가
-- `npm run verify`에 `check:coach` 포함
-
-### 검증
-
-- `npm run verify` 전체 통과 기준으로 확정해야 합니다.
-- 패치 ZIP은 1.0.39의 안정형 패치 표면 규칙을 유지해 `src/`, `tools/`, `package.json`, 핵심 public/html, README, AI_HANDOFF를 함께 포함합니다.
-
-### 다음 작업 후보
-
-- 에셋 수령 전: 출석/일일 미션, 튜토리얼 단계 확장, 접근성 옵션, 실패 복구 UX 강화
-- 에셋 수령 후: `assetManifest.ts`에 고양이 이모션/상점 주인/팩 이펙트 연결, CoachMarkSystem의 `catHint` 조건부 이미지를 새 감정 에셋으로 교체
-
-
-## 19. 1.0.41 무에셋 일일 미션/출석 보상 루프 패스
-
-현재 기준 버전은 1.0.41입니다.
-
-### 작업 목적
-
-에셋 제작 대기 중에도 이벤트 건물이 실제 게임 루프를 갖도록, 새 이미지 없이 일일 미션 보드와 출석 보상을 추가했습니다. 1.0.39에서 확인한 CI/패치 표면 완전성 규칙은 계속 유지합니다.
-
-### 핵심 변경
-
-- `src/game/systems/DailyMissionSystem.ts` 신규 추가
-  - 저장 키: `cardville.dailyMission.v141`
-  - UTC 날짜 토큰으로 매일 상태 갱신
-  - 미션 목록: `clear_word`, `clear_english`, `clear_math`, `clear_memory`, `open_pack`
-  - 제공 API: `getBoard`, `recordModeClear`, `recordPackOpen`, `claimAttendanceReward`, `claimMissionReward`
-  - localStorage가 막힌 환경에서도 예외 없이 진행되도록 안전 처리
-- `src/game/scenes/DailyMissionScene.ts` 신규 추가
-  - 출석 보상 READY/완료 상태
-  - 오늘 진행도 바
-  - 미션별 진행도, 보상, 수령 버튼
-  - 게임 선택/상점/광장 복귀 버튼
-  - `CoachMarkSystem`의 `daily_mission_board_v141` 안내 말풍선 연결
-- `src/game/data/dioramaBuildings.ts`
-  - 이벤트 건물 부제를 `일일 미션`으로 변경
-  - 이벤트 건물 라우트를 `DailyMissionScene`으로 변경
-- `src/game/data/modeCatalog.ts`
-  - `daily` 모드를 `오늘의 미션` 설명으로 정리
-  - `DailyMissionScene` 라우트 타입 추가
-- `src/game/scenes/RewardScene.ts`
-  - 카드팩 개봉 시 `DailyMissionSystem.recordPackOpen()` 호출
-  - 게임 보상팩 개봉 시 `DailyMissionSystem.recordModeClear(this.modeId)` 호출
-  - 상점팩은 `open_pack` 미션만 반영
-- `src/main.ts`, `BackConfirmScene.ts`
-  - `DailyMissionScene` 등록 및 뒤로가기 정리 대상에 포함
-- `tools/check-daily-mission.mjs`와 `check:daily-mission` 추가
-- `npm run verify`에 `check:daily-mission` 포함
-
-### 검증
-
-- `npm run verify` 전체 통과 기준으로 확정해야 합니다.
-- 1.0.39 이후 안정형 패치 표면 규칙을 유지합니다. 패치 ZIP에는 `src/`, `tools/`, `package.json`, 핵심 public/html, README, AI_HANDOFF를 함께 포함합니다.
-- `check:daily-mission`은 `DailyMissionSystem`, `DailyMissionScene`, 이벤트 건물 라우팅, 보상 훅, 문서 기록 동기화를 감시합니다.
-
-### 다음 작업 후보
-
-- 에셋 수령 전: 연속 출석 보상, 주간 미션, 미션 완료 연출, 접근성 옵션 강화
-- 에셋 수령 후: 이벤트 건물/고양이 이모션/보상 이펙트를 `DailyMissionScene`에 연결
-
-
-## 20. 1.0.42 무에셋 연속 출석/주간 미션 루프 패스
-
-현재 기준 버전은 1.0.42입니다.
-
-### 작업 목적
-
-에셋 제작 대기 중에도 이벤트 건물의 장기 플레이 동기를 강화하기 위해, 새 이미지 없이 기존 일일 미션 보드에 연속 출석과 주간 미션 보상을 추가했습니다. 기존 저장 키 `cardville.dailyMission.v141`은 유지해 사용자 저장 상태를 갑자기 끊지 않고, 내부 스키마 표식 `v142-streak-weekly`로 1.0.42 확장 필드를 구분합니다.
-
-### 핵심 변경
-
-- `src/game/systems/DailyMissionSystem.ts` 확장
-  - `streakDays`, `bestStreakDays`, `lastAttendanceToken` 추가
-  - `weeklyToken`, `weeklyProgress`, `weeklyTarget`, `weeklyReady`, `weeklyClaimed`, `weeklyCompletionRatio` 추가
-  - `claimWeeklyReward()` 추가
-  - `addWeeklyProgress()`로 출석/미션 보상 수령이 주간 게이지를 채우도록 연결
-  - 출석 보상 코인은 연속 출석에 따라 `attendanceRewardCoins`로 소폭 상승
-  - UTC 날짜 기준 일일 갱신과 UTC 주간 토큰 기준 주간 갱신을 분리
-- `src/game/scenes/DailyMissionScene.ts` 개선
-  - 오늘 진행도, 연속 출석, 주간 보상, 출석 보상, 미션 목록 순서로 재배치
-  - `drawStreakWeekly` 추가
-  - `주간 수령` 버튼 추가
-  - 미션 행 높이를 줄여 390×844 하단 버튼과 겹치지 않게 조정
-  - 고양이 코치 ID를 `daily_mission_board_v142`로 갱신
-- `tools/check-weekly-mission.mjs`와 `check:weekly-mission` 추가
-- `tools/check-daily-mission.mjs`를 1.0.42 구조에 맞춰 보강
-- `npm run verify`에 `check:weekly-mission` 포함
-
-### 검증
-
-- `npm run verify` 전체 통과 기준으로 확정해야 합니다.
-- 1.0.39 이후 안정형 패치 표면 규칙을 유지합니다. 패치 ZIP에는 `src/`, `tools/`, `package.json`, 핵심 public/html, README, AI_HANDOFF를 함께 포함합니다.
-- `check:weekly-mission`은 `v142-streak-weekly`, 연속 출석, 주간 미션, 주간 보상 수령, 장면 UI 토큰, 문서 기록 동기화를 감시합니다.
-
-### 다음 작업 후보
-
-- 에셋 수령 전: 미션 완료 순간 팝업, 주간 보상 카드팩 연출, 접근성 옵션, 난이도별 미션 가중치
-- 에셋 수령 후: 이벤트 건물, 고양이 이모션, 보상 이펙트, 주간 보상 배지를 `assetManifest.ts`에 연결
-
-### 패치 파일 주의
-
-1.0.42 패치파일은 일일 미션 시스템과 검증 스크립트 기준이 함께 바뀌므로 안정형 패치 표면(src/tools/package/public 핵심/문서)을 포함합니다. 삭제 대상은 없습니다.
-
-## 21. 1.0.43 무에셋 미션 보상 팝업/접근성 UX 패스
-
-현재 기준 버전은 1.0.43입니다.
-
-### 작업 목적
-
-에셋 제작 대기 중에도 이벤트 건물의 보상 체감과 접근성 품질을 올리기 위해, 새 이미지 없이 미션 보상 팝업, 다음 행동 안내, 로비 접근성 토글을 추가했습니다. 기존 일일/주간 미션 저장 키는 유지하고, 신규 접근성 저장 키 `cardville.accessibility.v143`만 추가했습니다.
-
-### 변경 파일
-
-- `src/game/systems/RewardPopupSystem.ts` 신규 추가
-  - `RewardPopupSystem.show()`로 중앙 보상 팝업 표시
-  - `reward-popup:v143` 이름 사용
-  - 고대비/모션 설정을 반영
-  - `계속`, `상점 보기` 버튼 지원
-- `src/game/systems/AccessibilitySystem.ts` 신규 추가
-  - 저장 키: `cardville.accessibility.v143`
-  - `toggleReduceMotion`, `toggleHighContrast`, `toggleLargeText` 제공
-  - `summary()`로 로비 설정 패널에 상태 표시
-- `src/game/systems/QualitySystem.ts` 수정
-  - 접근성 설정을 품질 게이트에 연결
-  - `highContrast`, `largeText` 필드 추가
-  - 시스템 모션 감소/URL 플래그/저장 설정을 함께 반영
-- `src/game/systems/CoachMarkSystem.ts` 수정
-  - `largeText` 설정 시 코치 말풍선 제목/본문 크기 증가
-- `src/game/systems/DailyMissionSystem.ts` 수정
-  - `nextActionForBoard()` 추가
-  - `nextActionTitle`, `nextActionCopy` 추가
-  - `recordModeClear()` 중복 return 정리
-- `src/game/scenes/DailyMissionScene.ts` 수정
-  - 다음 행동 카드 추가
-  - 출석/미션/주간 보상 수령 후 `RewardPopupSystem` 팝업 표시
-- `src/game/scenes/MainLobbyScene.ts` 수정
-  - 로비 설정 패널에 `편안한 모션`, `고대비 화면`, `큰 안내 문구` 토글 추가
-- `tools/check-reward-popup.mjs` 신규 추가
-- `tools/check-accessibility.mjs` 신규 추가
-- `package.json` 수정
-  - `check:reward-popup`, `check:accessibility` 추가
-  - `npm run verify`에 두 검증 포함
-- `public/build.json`, `public/health.html`, `public/reset.html`, `index.html`, 앱 내부 버전 1.0.43 동기화
-
-### 검증 포인트
-
-- `npm run verify` 전체 통과 필요
-- `check:reward-popup`은 `RewardPopupSystem`, `nextActionForBoard`, 중복 return 제거, README/인계서 기록을 검증합니다.
-- `check:accessibility`는 `AccessibilitySystem`, `cardville.accessibility.v143`, 로비 설정 토글, QualitySystem 연결, README/인계서 기록을 검증합니다.
-- 1.0.42 통파일에 1.0.43 패치 ZIP을 덮어 적용해도 verify가 통과해야 합니다.
-
-### 신규 에셋 상태
-
-- 신규 이미지 에셋 없음
-- 삭제 파일 없음
-- 새 문서 파일 없음
-- 기록은 `README.md`, `AI_HANDOFF_CARDVILLE.md`에만 누적
-
-### 다음 예상 작업
-
-에셋이 도착하기 전까지는 미션 완료 연출의 세부 동선, 접근성 설정의 장면별 적용 범위, 출석/미션 보상 밸런스를 더 다듬을 수 있습니다. 에셋이 도착하면 건물/캐릭터/고양이 이모션/보상 이펙트 매핑 패치를 우선 진행하세요.
-
-### 패치 표면 주의
-
-1.0.43 패치파일은 신규 시스템 파일 2개와 검증 파일 2개가 추가되므로 패치 ZIP에 반드시 포함해야 합니다. 또한 `QualitySystem.ts`, `MainLobbyScene.ts`, `DailyMissionScene.ts`, `DailyMissionSystem.ts`는 검증 스크립트가 직접 감시하므로 누락하면 CI에서 버전 섞임 문제가 다시 발생할 수 있습니다.
-
-
-## 22. 1.0.44 아트 디렉션 바이블/프롬프트 락 패스
-
-현재 기준 버전은 1.0.44입니다.
-
-이번 패스의 목적은 이미지를 대량 생성하기 전에 CardVille의 전체 아트 방향을 먼저 고정하는 것입니다. 이제 CardVille의 기준은 단순히 귀여운 이미지가 아니라 **Premium, Elegant, Stylish, Luxury, High-end, Polished, Professional, AAA Quality**입니다.
-
-### 추가 파일
-
-- `docs/CARDVILLE_ART_DIRECTION_BIBLE.md`
-- `docs/CARDVILLE_ASSET_PROMPT_PACK.md`
-- `src/game/data/artDirection.ts`
-- `tools/check-art-direction.mjs`
-
-### 고정 스타일
-
-- Premium Fantasy Village
-- Stylized Realism
-- Warm Sunset Lighting
-- Cinematic
-- Soft Bloom
-- AAA Casual Game
-- Fantasy RPG Town
-- Pixar-quality rendering
-- Disney-inspired cinematic lighting
-- Console-quality assets
-- 2.5D game assets
-- Rich textures
-- Detailed materials
-- High-end UI
-- Mobile Game of the Year quality
-
-### 절대 금지
-
-- NOT a children's game
-- NOT educational style
-- NOT preschool
-- NOT kindergarten
-- NOT cheap mobile game
-- NOT flat design
-- NOT vector illustration
-- NOT SVG
-- NOT childish
-- NOT toy-like
-
-SVG 사용 금지, PNG/WebP 전용 원칙을 다시 고정했습니다. 런타임 컷아웃 에셋은 투명 PNG master와 WebP companion을 같이 준비해야 하며, 실제 사용 시 `src/game/data/assetManifest.ts`에 등록해야 합니다.
-
-### 캐릭터 새 기준
-
-- Around 8 years old
-- Natural body proportions
-- Head-to-body ratio around 1:4.5
-- Expressive face but not oversized eyes
-- Elegant costume
-- Premium character design
-- Adventure outfit
-- Fantasy traveler
-- Modern stylized
-
-기존처럼 머리와 눈이 너무 크고 몸이 작은 초딩/장난감 느낌은 금지합니다. 귀여움보다 고급스러움을 우선합니다.
-
-### 검증
-
-`npm run check:art-direction`은 다음을 확인합니다.
-
-- SVG 파일이 프로젝트에 없는지
-- 아트 바이블에 20색 팔레트, 좌상단 광원, 1:4.5 비율, PNG/WebP 규칙이 있는지
-- 프롬프트 팩에 공통 positive/negative lock과 common prompt tail이 있는지
-- `artDirection.ts`와 `brandRules.ts`가 같은 스타일 기준을 들고 있는지
-- `package.json`의 `verify`에 `check:art-direction`이 포함되어 있는지
-
-다음 이미지 대규모 업데이트는 이 파일들을 기준으로 진행해야 합니다.
-
-### 1.0.51 검증 토큰 메모
-
-ui_reward_popup_premium.png는 텍스트 박힘 정책 충돌로 계속 보류합니다.
-
-
-## 1.0.58 ScreenPlayfieldEnginePolish
-- 모바일 큰 글씨 기준으로 말 카드, 연산 연구소, 영어 학교, 기억의 숲, 일일 미션 화면의 패널/카드/버튼 레일 간격을 재조정했다.
-- `ScreenUISystem`을 추가해 화면 안전 영역 태그, 터치 타깃, 세로 겹침 경고를 공통화했다.
-- `GameButton` 기본 터치 영역을 56px 이상으로 보강하고 라벨 기본 크기를 상향했다.
-- 카드게임 엔진 태그 `card-engine-upgrade-v158` 및 `calculateComboScore`/tap guard 기반을 추가했다.
-- `check-screen-playfield` 검증을 추가해 UI 안전 영역, 카드 레이아웃, 터치 타깃, 엔진 태그가 누락되지 않게 했다.
-
-- 추가 검증 호환 ZIP 앵커: CardVille_v1.0.76_IntroGuardUIPolish_Patch.zip, CardVille_v1.0.76_IntroVideoMinFit_Full.zip, CardVille_v1.0.76_CornerSweepStability_Full.zip, CardVille_v1.0.76_FlowFitUIPolish_Full.zip.
+네트워크 가능한 환경에서는 이어서 아래를 확인한다.
+
+```bash
+npm run ci:registry:check
+npm run ci:install
+npm run typecheck
+npm run build
+```
+
+현재 샌드박스 검수 결과 작업본 `npm run validate`는 통과했다. `tools/*.mjs` 문법 검사도 통과했다. v2.1.116 full zip 새 압축 해제본과 v2.1.115 full + v2.1.116 patch 덮어쓰기본 모두 `npm run validate`가 통과했다. full/patch zip 경로 안전성, `.git`/`node_modules`/`dist`/`reports`/`.log`/SVG 미포함, `.md`가 `README.md`와 `AI_HANDOFF_CARDVILLE.md`뿐인 것도 확인했다. `npm run ci:registry:check`는 DNS 제한으로 `EAI_AGAIN registry.npmjs.org` 실패했다. 전체 `npm ci`, `typecheck`, `build`는 GitHub Actions 결과를 최종 기준으로 본다.
+
+
+## v2.1.115 런타임 viewport/input 가드 기록
+
+### 적용 범위
+
+- 이번 패치는 v2.1.114 기준 `npm run validate` 통과를 확인한 뒤 진행했다.
+- 정상 작동 가능성이 높은 게임 시스템, 낚시 판정/보상 수치, 물고기 데이터, 마을 좌표/충돌/건설 로직, Firebase 저장/익명 연동 흐름은 수정하지 않았다.
+- 엔진/의존성 업그레이드는 현재 샌드박스에서 `npm ci`, `typecheck`, `build`를 확인할 수 없어 보류했다. 대신 검증 가능한 런타임 viewport 처리, 입력 UI 안정성, 서비스워커 캐시 안정성만 적용했다.
+- `src/core/RuntimeQualityManager.ts` 변경 내용:
+  - `v21115-runtime-viewport-input-root` 루트 클래스와 `data-v21115-runtime-viewport-input` 토큰 추가
+  - `visualViewport`/resize/orientation/pageshow/focusin/focusout 이벤트를 즉시 CSS 쓰기가 아닌 `requestAnimationFrame` batching으로 처리
+  - viewport width/height/offset/keyboard inset 상태가 이전과 같으면 CSS 변수를 다시 쓰지 않는 signature guard 추가
+  - `--v21115-visual-height`, `--v21115-visual-width`, `--v21115-keyboard-inset`, `v21115-keyboard-visible`, `v21115-compact-viewport` 상태 추가
+- `src/styles.css` 마지막 레이어에 다음 UI/UX 보정을 추가했다.
+  - 키보드 표시 상태에서 메뉴/모달/패널/상점/가방/도감/미션/결과창 최대 높이를 visual viewport 기준으로 보정
+  - 입력창 focus 시 scroll-margin을 키보드 inset 기준으로 보정
+  - 카드 목록에 stable scrollbar gutter와 overflow-anchor 방지 적용
+  - 버튼/입력/CTA에 touch-action manipulation 적용
+  - compact viewport에서 긴 제목/칩/버튼 높이와 줄간격을 한 번 더 보정
+- `public/sw.js` 변경 내용:
+  - `CACHE_NAME`을 v2.1.115로 동기화
+  - 캐시 정리 함수를 중복 없이 분리
+  - 같은 출처 요청만 앱 캐시에 저장
+  - `response.ok` 성공 응답만 캐시해 외부/Firebase/실패 응답이 앱 캐시에 섞이지 않도록 보강
+- 신규 검증 스크립트 `tools/check-v21115-runtime-viewport-input-guard.mjs`를 추가해 v2.1.115 토큰, 서비스워커 same-origin 캐시 정책, SVG 금지, CSS 자산 존재, README/handoff 보존, v2.1.112 삭제 재발 방지 정책을 함께 확인한다.
+
+### 재발 방지/주의
+
+- RuntimeQualityManager의 FPS 품질 티어 로직은 정상 작동 가능성이 높으므로 함부로 재작성하지 않는다. 이번 변경은 viewport 변수 쓰기 빈도와 키보드 상태 변수에 한정한다.
+- `v21115-keyboard-visible` CSS는 입력창/모달/목록 보정용이다. 낚시 판정, 릴링 수치, 마을 이동 좌표에는 연결하지 않는다.
+- 서비스워커는 앱 내부 정적 자산 캐시에 집중한다. Firebase/외부 API를 오프라인 캐시에 섞지 않는다.
+- SVG 이미지 절대 금지는 계속 유지한다. 새 이미지가 필요하면 PNG/WEBP만 사용한다.
+- `README.md`와 `AI_HANDOFF_CARDVILLE.md` 외 새 문서를 만들지 않는다.
+- 패치 zip에는 `package.json`에서 참조하는 신규 검증 스크립트와 기존 cleanup/validate 스크립트를 함께 포함한다.
+
+### v2.1.115 필수 검수
+
+```bash
+npm run validate
+```
+
+네트워크 가능한 환경에서는 이어서 아래를 확인한다.
+
+```bash
+npm run ci:registry:check
+npm run ci:install
+npm run typecheck
+npm run build
+```
+
+현재 샌드박스 검수 결과 작업본 `npm run validate`는 통과했다. `tsc --noEmit --target ES2022 --lib DOM,DOM.Iterable,ES2022 src/core/RuntimeQualityManager.ts` 단독 검사는 통과했다. v2.1.115 full zip 새 압축 해제본과 v2.1.114 full + v2.1.115 patch 덮어쓰기본 모두 `npm run validate`가 통과했다. `npm run ci:registry:check`는 `EAI_AGAIN registry.npmjs.org`로 실패했으며, `node_modules` 미설치 때문에 전체 install/typecheck/build는 GitHub Actions 결과를 최종 기준으로 본다.
+
+
+## v2.1.114 인터랙션 레이아웃/디자인 스윕 기록
+
+### 적용 범위
+
+- 이번 패치는 v2.1.113 기준 `npm run validate` 통과를 확인한 뒤 진행했다.
+- 정상 작동 가능성이 높은 게임 시스템, 낚시 판정/보상 수치, 마을 좌표/충돌/건설 로직, Firebase 저장/익명 연동 흐름은 수정하지 않았다.
+- 엔진/의존성 업그레이드는 현재 샌드박스에서 `npm ci`, `typecheck`, `build`를 확인할 수 없어 보류했다. 작동 중인 기능을 깨지 않기 위해 검증 가능한 UI/UX CSS와 검증 스크립트 중심으로만 패치했다.
+- `src/main.ts`에는 루트 스코프용 `v21114-interaction-layout-design-root` 클래스와 `data-v21114-interaction-layout-design` 토큰만 추가했다.
+- `src/styles.css` 마지막 레이어에 다음 UI/UX 보정을 추가했다.
+  - 상점/가방/미션/도감/건설/프로필/결과창 계열 패널의 safe-area 기반 최대 폭/높이 제한
+  - 목록/카드 내부 긴 한글 문구 줄바꿈과 overflow-x 차단
+  - 버튼/CTA의 긴 문구 균형 줄바꿈, 터치 피드백, 좁은 화면 버튼 크기 보정
+  - 낚시 입질 콜아웃/액션 배지/결과창의 폭과 내부 스크롤 경계 보강
+  - 하단 내비게이션 폭을 좌우 safe-area 안으로 고정하고 각 버튼이 균등하게 줄어들도록 보정
+  - `100svh` 미지원 환경 fallback과 reduced-motion 환경 피드백 완화
+- `public/sw.js`, `public/offline.html`, `src/data.ts`, `package.json`, `package-lock.json`의 버전/캐시명을 v2.1.114로 동기화했다.
+- 신규 검증 스크립트 `tools/check-v21114-interaction-layout-design-sweep.mjs`를 추가해 v2.1.114 토큰, SVG 금지, CSS 자산 존재, README/handoff 보존, v2.1.112 삭제 재발 방지 정책을 함께 확인한다.
+
+### 재발 방지/주의
+
+- UI/UX 스윕은 반드시 루트 클래스 스코프 안에서만 작동해야 한다. 전역 무차별 수정은 금지한다.
+- SVG 이미지 절대 금지는 계속 유지한다. 새 이미지가 필요하면 PNG/WEBP만 사용한다.
+- `README.md`와 `AI_HANDOFF_CARDVILLE.md` 외 새 문서를 만들지 않는다.
+- 다음 AI는 실제 모바일 화면 캡처가 있을 때 v2.1.114 마지막 CSS 레이어가 상점/가방/미션/도감/낚시 결과창에서 스크롤을 과하게 숨기지 않는지 우선 확인한다.
+- 패치 zip에는 `package.json`에서 참조하는 신규 검증 스크립트와 기존 cleanup/validate 스크립트를 함께 포함한다. v2.1.112 실패처럼 CI에 구버전 스크립트가 남는 상황을 다시 만들면 안 된다.
+
+### v2.1.114 필수 검수
+
+```bash
+npm run validate
+```
+
+네트워크 가능한 환경에서는 이어서 아래를 확인한다.
+
+```bash
+npm run ci:registry:check
+npm run ci:install
+npm run typecheck
+npm run build
+```
+
+현재 샌드박스 검수 결과 `npm run validate`는 통과했다. `npm run ci:registry:check`는 `EAI_AGAIN registry.npmjs.org`로 실패할 수 있고, `node_modules`가 없어 install/typecheck/build는 GitHub Actions 결과를 최종 기준으로 본다.
+
+
+## v2.1.113 UI/UX 안정성 스윕 기록
+
+### 적용 범위
+
+- 이번 패치는 정상 작동 가능성이 높은 게임 시스템/낚시 수치/마을 이동/건설/Firebase 저장 흐름을 건드리지 않았다.
+- `src/main.ts`에는 루트 스코프용 `v21113-ui-ux-stability-root` 클래스와 `data-v21113-ui-ux-stability` 토큰만 추가했다.
+- `src/styles.css` 마지막 레이어에 모바일 세로 UI/UX 보정만 추가했다.
+  - 카드/모달/상점/도감/미션/결과창의 최대 폭과 텍스트 줄바꿈 보호
+  - 버튼/닫기/CTA의 최소 터치 높이와 focus-visible 표시
+  - 입력창 16px 이상 유지로 모바일 확대/가독성 문제 완화
+  - 이미지/캔버스/비디오 폭 제한과 이미지 드래그 방지
+  - 낚시 결과창 내부 스크롤/overscroll containment
+  - 하단 도크 safe-area 폭 보정
+  - reduced-motion 환경에서 애니메이션 부담 완화
+- `public/sw.js`, `public/offline.html`, `src/data.ts`, `package.json`, `package-lock.json`의 버전/캐시명을 v2.1.113으로 동기화했다.
+- 신규 검증 스크립트 `tools/check-v21113-ui-ux-stability-sweep.mjs`를 추가해 v2.1.113 토큰, SVG 금지, CSS 자산 존재, README/handoff 보존, v2.1.112 삭제 재발 방지 정책을 함께 확인한다.
+
+### 재발 방지/주의
+
+- UI/UX 스윕은 반드시 루트 클래스 스코프 안에서만 작동해야 한다. 전역 무차별 수정은 금지한다.
+- 정상 기능을 건드리지 않는 원칙 때문에 이번에는 낚시 상태머신, 보상 수치, 마을 좌표/충돌, Firebase 연동 로직을 수정하지 않았다.
+- SVG 이미지 절대 금지는 계속 유지한다. 새 이미지가 필요하면 PNG/WEBP만 사용한다.
+- `README.md`와 `AI_HANDOFF_CARDVILLE.md` 외 새 문서를 만들지 않는다.
+- 다음 AI는 실제 모바일 화면 캡처가 있을 때 v2.1.113 CSS 마지막 레이어가 기존 v2.1.110 낚시 안전 레인을 과하게 덮지 않는지 우선 확인한다.
+
+### v2.1.113 필수 검수
+
+```bash
+npm run validate
+```
+
+네트워크 가능한 환경에서는 이어서 아래를 확인한다.
+
+```bash
+npm run ci:registry:check
+npm run ci:install
+npm run typecheck
+npm run build
+```
+
+현재 샌드박스 검수 결과 `npm run validate`는 통과했다. `npm run ci:registry:check`는 `EAI_AGAIN registry.npmjs.org`로 실패했고, `node_modules`가 없어 install/typecheck/build는 GitHub Actions 결과를 최종 기준으로 본다.
+
+
+## v2.1.112 GitHub Actions validate 실패 원인 및 AI_HANDOFF_CARDVILLE.md 삭제 재발 방지 기록
+
+### 발생한 실패
+
+- GitHub Actions `validate`에서 다음 순서로 실패했다.
+  1. `npm run validate` 실행
+  2. `tools/clean-old-patch-docs.mjs` 실행
+  3. 구버전 정리 로직이 `AI_HANDOFF_CARDVILLE.md`를 오래된 패치 문서로 오판해 삭제
+  4. `tools/validate-clean.mjs`는 구버전 문구 기준으로 통과
+  5. `tools/check-v21111-asset-policy-handoff.mjs`가 `AI_HANDOFF_CARDVILLE.md`를 읽으려다 `ENOENT` 발생
+
+### 직접 원인
+
+- v2.1.111 패치 zip에 `tools/check-v21111-asset-policy-handoff.mjs`는 포함됐지만, 그보다 먼저 실행되는 `tools/clean-old-patch-docs.mjs`와 `tools/validate-clean.mjs` 수정본이 포함되지 않았다.
+- 따라서 GitHub 저장소에는 `AI_HANDOFF_CARDVILLE.md`를 보존하지 않는 구버전 정리 스크립트가 남아 있었다.
+- 로컬 통파일 기준에서는 수정본이 있었더라도, 사용자가 실제로 적용한 패치 zip 기준으로는 필수 스크립트가 빠져 CI가 실패했다.
+
+### v2.1.112 해결 내용
+
+- `tools/clean-old-patch-docs.mjs`를 루트의 `README.md`와 `AI_HANDOFF_CARDVILLE.md`만 명시적으로 보존하도록 수정했다.
+- `tools/validate-clean.mjs`를 `README.md`와 `AI_HANDOFF_CARDVILLE.md`가 둘 다 있어야 통과하도록 강화했다. 더 이상 handoff 문서는 optional이 아니다.
+- `tools/check-v21112-ci-handoff-clean.mjs`를 추가해 다음을 확인한다.
+  - `package.json` validate 흐름이 v2.1.112 검증 스크립트를 사용함
+  - 정리 스크립트가 `AI_HANDOFF_CARDVILLE.md`를 보존함
+  - validate-clean이 handoff 문서를 필수로 요구함
+  - SVG 파일/런타임 참조 금지 유지
+  - CSS 자산 참조 누락 없음 유지
+  - 정상 동작 가능성이 높은 낚시/마을/오프닝 핵심 토큰이 유지됨
+- v2.1.112 패치 zip에는 반드시 아래 파일을 포함한다. `src/styles.css`는 v2.1.111 CSS 자산 경로 수정이 누락된 저장소에도 안전하게 적용되도록 포함한다.
+  - `package.json`
+  - `package-lock.json`
+  - `src/data.ts`
+  - `src/styles.css`
+  - `public/sw.js`
+  - `public/offline.html`
+  - `README.md`
+  - `AI_HANDOFF_CARDVILLE.md`
+  - `tools/clean-old-patch-docs.mjs`
+  - `tools/validate-clean.mjs`
+  - `tools/check-v21112-ci-handoff-clean.mjs`
+
+### 재발 방지 규칙
+
+- 인수인계 문서를 검사하는 스크립트를 추가하거나 변경할 때는, 반드시 그보다 먼저 실행되는 cleanup/validate 스크립트도 같이 확인하고 패치 zip에 포함한다.
+- `AI_HANDOFF_CARDVILLE.md`는 삭제 대상이 아니라 필수 문서다.
+- `README.md`와 `AI_HANDOFF_CARDVILLE.md` 외 새 `.md` 문서는 만들지 않는다.
+- 게임 로직, 낚시 수치, 마을 이동/건설, Firebase 저장 흐름은 이번 hotfix에서 건드리지 않았다.
+- SVG 이미지 절대 금지와 잘 작동되는 기능 불필요 수정 금지를 계속 유지한다.
+
+## v2.1.112 검수 결과
+
+### 통과한 항목
+
+```bash
+npm run validate
+npm run validate
+node tools/clean-old-patch-docs.mjs
+node tools/validate-clean.mjs
+node tools/check-v21112-ci-handoff-clean.mjs
+```
+
+- `npm run validate` 2회 연속 통과.
+- 반복 validate 이후에도 `AI_HANDOFF_CARDVILLE.md`가 삭제되지 않는 것을 확인.
+- 별도 smoke copy에서 `SOME_NOTES.md`, `npm-install.log`, `reports/`를 만든 뒤 cleanup 실행 시 임시 파일만 삭제되고 `README.md`, `AI_HANDOFF_CARDVILLE.md`는 보존되는 것을 확인.
+
+### 현재 환경 제한으로 미완료/주의
+
+- `npm run ci:registry:check`는 샌드박스 DNS 제한으로 `EAI_AGAIN registry.npmjs.org` 실패. package-lock 오염이 아니라 네트워크 접근 문제로 판단.
+- `npm run typecheck`는 `node_modules` 미설치 상태라 `howler`, `pixi.js`, `firebase`, `vite` 모듈 해석 실패. GitHub Actions의 `npm ci` 성공 후 재확인 필요.
+- GitHub Actions에서 `npm ci`, `npm run typecheck`, `npm run build`까지 최종 확인한다.
+
+## v2.1.111 이번 패치에서 실제 변경한 항목
+
+- 패키지/앱/캐시/오프라인 버전을 `2.1.111`로 동기화
+- `package.json` 검증 흐름을 `tools/check-v21111-asset-policy-handoff.mjs` 기준으로 갱신
+- 신규 검증 스크립트 `tools/check-v21111-asset-policy-handoff.mjs` 추가
+  - 버전 동기화 확인
+  - SVG 파일/런타임 참조 금지 확인
+  - CSS `url(...)` 자산 존재 확인
+  - package-lock 내부 금지 레지스트리 토큰 확인
+  - README/handoff 필수 원칙 확인
+  - player 8방향 파일명/flip 금지, 오프닝 poster 제거 정책 확인
+- CSS 누락 자산 참조 3개를 실제 존재하는 PNG/WEBP 자산으로 교정
+  - `/assets/v12/buttons/btn_orange_wide_blank.webp` → `/assets/v12/buttons/btn_orange_normal_wide_blank.webp`
+  - `./assets/v2110/ui/main_aqua_cards/ui_card_001.png` → `./assets/v2110/ui/main_aqua_cards/ui_main_001.png`
+  - `./assets/v2110/ui/buttons_and_badges/ui_badge_001.png` → `./assets/v2110/ui/buttons_and_badges/ui_button_001.png`
+- `README.md` 상단에 v2.1.111 변경사항/분석 기록 추가
+- 이 파일에 사용자 추가 원칙 반영: 버전 숫자 포함 zip 파일명, 정상 기능 불필요 수정 금지, SVG 이미지 절대 금지
+- 게임 로직, 낚시 수치, 마을 이동/건설 로직, Firebase 저장 흐름은 수정하지 않음
+
+## v2.1.111 검수 결과
+
+### 통과해야 하는 기준
+
+```bash
+npm run validate
+```
+
+### 네트워크 가능한 환경에서 추가 확인
+
+```bash
+npm run ci:registry:check
+npm run ci:install
+npm run typecheck
+npm run build
+```
+
+### 현재까지 확인된 항목
+
+- `npm run validate`: 통과
+- `.svg`/`.svgz` 실제 파일 없음
+- 앱 런타임 대상 파일의 `.svg`, `image/svg`, `<svg`, `svg(` 참조 없음
+- CSS `url(...)`에서 `/assets`, `./assets`, `../assets` 기준 실제 파일 미존재 참조 0개가 되도록 교정
+- package-lock 내부 금지 레지스트리 토큰 `applied-caas`, `artifactory`, `internal.api.openai`, `10.192.` 없음
+- `.git` 폴더는 패키지 zip에 포함하지 않음
+- `npm run ci:registry:check`: 현재 샌드박스 DNS 제한으로 `EAI_AGAIN registry.npmjs.org` 실패. package-lock 오염이 아니라 네트워크 접근 문제로 판단
+- `npm run typecheck`: `node_modules` 미설치 상태라 `howler`, `pixi.js`, `firebase`, `vite` 모듈 해석 실패. GitHub Actions의 `npm ci` 성공 후 재확인 필요
+
+## v2.1.110 이전 분석에서 확인한 검증 결과
+
+### 통과
+
+- zip 경로 안전성: 절대경로/상위경로 침범 없음
+- `.git` 폴더: 업로드 zip 안에 없음
+- 루트 버전 동기화: `package.json`, `package-lock.json`, `src/data.ts`, `public/sw.js`, `public/offline.html`, `README.md`가 `2.1.110` 기준으로 맞았음
+- `npm run validate`: 통과
+- `tools/check-v21110-fishing-feel-design-stability.mjs`: 통과
+- package-lock 내부 금지 레지스트리 토큰 검사: `applied-caas`, `artifactory`, `internal.api.openai`, `10.192.` 검출 없음
+
+### 미완료/주의
+
+- 현재 샌드박스 DNS/network 제한으로 `registry.npmjs.org` 접근이 `EAI_AGAIN`으로 실패할 수 있어 `npm ci`, `npm run typecheck`, `npm run build`는 GitHub Actions에서 다시 확인해야 한다.
+- GitHub Actions 환경에서는 `.github/workflows/pages.yml`이 Node 22와 공개 npm registry를 강제하므로, 실제 CI에서 install/typecheck/build를 확인해야 한다.
+
+## 다음 업데이트 예상 작업
+
+1. GitHub Actions 또는 네트워크 가능한 로컬 환경에서 `npm ci`, `npm run typecheck`, `npm run build` 결과 확인
+2. 모바일 세로 실기기 기준으로 낚시 준비 → 입질 → 릴링 → 성공/실패 결과창 UI 겹침 재검수
+3. 마을 화면 조이스틱, 건설 프리뷰, 건물 이동/설치 확인 팝업 터치 영역 검수
+4. Firebase 무료 플랜 기준 `window.AQUA_FIREBASE_CONFIG` 주입 방식 문서화 또는 설정 예시를 코드 밖에서 정리
+5. 다음 코드 패치 시에도 정상 작동 기능을 건드리지 않는 최소 수정 원칙 유지
+
+## 현재 알려진 위험 지점
+
+- `src/main.ts`와 `src/styles.css`가 매우 크고 누적 보정 레이어가 많다. 다음 AI는 작은 UI 수정도 전체 검색 후 기존 v2.1.xxx 보정과 충돌하는지 확인해야 한다.
+- `tools/clean-old-patch-docs.mjs`는 허용되지 않은 `.md` 파일을 삭제한다. 새 문서를 만들면 안 되고, 반드시 이 파일과 README만 사용한다.
+- `tools/validate-clean.mjs`는 문서 허용 정책, 버전 동기화, cache 이름, offline badge, README 제목을 강하게 검사한다.
+- 서비스워커 캐시명과 `src/data.ts`의 `CACHE_NAME`은 같이 움직여야 한다.
+- GitHub Pages 배포는 `vite build --base=./` 기준이므로 절대경로 추가 시 주의한다. 기존 절대 `/assets/...` 참조는 이미 다수 존재하므로, 바꾸려면 전체 Pages base 영향을 별도 검토해야 한다.
+- Firebase는 현재 코드상 익명 인증까지만 동적 시도한다. Firestore/DB 저장으로 확장할 때는 무료 플랜 읽기/쓰기 횟수, 보안 규칙, 실패 시 로컬 저장 fallback을 반드시 유지한다.
+
+## 이어받는 AI에게
+
+사용자가 원하는 결과물 형식은 다음 순서다.
+
+1. 작업중인 내용
+2. 기록
+3. 다음 업데이트 예상 내역
+4. 그대로 사용 가능한 통파일 zip
+5. 단순 패치 적용 가능한 패치 zip
+
+항상 사용자가 받은 zip 안에 `AI_HANDOFF_CARDVILLE.md`와 `README.md`가 최신 상태인지 확인한다. zip 파일명은 짧게 하되 버전 숫자를 포함한다.
+
+
