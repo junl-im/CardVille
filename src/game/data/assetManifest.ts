@@ -1,4 +1,4 @@
-export const CARDVILLE_ASSET_VERSION = '1.0.68' as const;
+export const CARDVILLE_ASSET_VERSION = '1.0.69' as const;
 
 export const LOBBY_CRITICAL_PNG_ASSET_KEYS = [
   'dioramaBg',

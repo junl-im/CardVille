@@ -50,9 +50,10 @@ for (let i = 0; i < rects.length; i += 1) {
   }
 }
 const lobby = read('src/game/scenes/MainLobbyScene.ts');
-for (const token of ['mobile-readable-layout-v153', 'village-edge-spacing-v153', 'bodyText(14)', 'mutedText(11)', 'fontSize: \'11px\'']) {
+for (const token of ['mobile-readable-layout-v153', 'village-edge-spacing-v153', 'mutedText(11)', 'fontSize: \'11px\'']) {
   if (!lobby.includes(token)) throw new Error(`Lobby mobile UI missing token: ${token}`);
 }
+if (!lobby.includes('bodyText(11)') && !lobby.includes('bodyText(14)')) throw new Error('Lobby mobile UI missing fitted body text token');
 const readme = read('README.md');
 const handoff = read('AI_HANDOFF_CARDVILLE.md');
 for (const token of [`# CardVille ${pkg.version}`, `## ${pkg.version} 업데이트 내역`, '모바일 글씨 가독성', '좌우 끝 공간']) {

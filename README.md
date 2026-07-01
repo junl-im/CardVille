@@ -1,3 +1,21 @@
+# CardVille 1.0.69
+
+카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
+
+## 1.0.69 업데이트 내역
+
+- **IntroGuardUIPolish** 패스입니다. 시작 버튼 터치 순간 오프닝 영상을 먼저 준비하고, 영상 시작 시각이 `0`으로 남아도 최소 3초 조건이 건너뛰어지지 않게 막았습니다.
+- `intro-touch-prime-v169`: `게임 시작` 버튼의 `buttondown`에서 영상 레이어를 즉시 최상단에 표시해 모바일/카카오 인앱 브라우저의 autoplay 타이밍 문제를 줄였습니다.
+- `intro-started-at-zero-guard-v169`: `__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = 0`을 유효한 시작 시각으로 보지 않고 새로 기록합니다. 이 값 때문에 영상이 거의 보이지 않고 지나가는 문제를 방지합니다.
+- `global-micro-copy-v169`: 전체 텍스트 크기를 아주 미세하게 더 낮추고, 알림/팝업/버튼 텍스트가 박스 밖으로 밀리는 위험을 줄였습니다.
+- `settings-panel-clamp-v169`: 설정창 폭/높이/행 텍스트 박스를 다시 잡아 글자가 테두리 밖으로 나가지 않게 보강했습니다.
+- `popup-copy-safe-v169`: 게임 진입/보상 안내 팝업의 본문 높이를 늘리고 글자 크기를 살짝 낮췄습니다.
+- 마을 추천 리본, 건물 이름표, 하단 안내판의 높이/문구/글자 크기를 한 번 더 조정했습니다.
+- `tools/check-intro-guard-ui-v169.mjs`를 추가하고 `npm run verify` 앞단에 포함했습니다.
+- 패치 ZIP 용량이 큰 이유: 안정형 self-contained 패치라 `public/assets` 전체를 포함합니다. `node_modules`, `dist`, `package-lock.json`은 ZIP에서 제외합니다. `self-contained-patch-payload-audit-v162`와 `notice-text-fit-v163` 정책은 유지합니다.
+- 최종 ZIP 명명 규칙: `CardVille_v1.0.69_IntroGuardUIPolish_Full.zip`, `CardVille_v1.0.69_IntroGuardUIPolish_Patch.zip`.
+- 유지 규칙: SVG 없음, OPEN/LOCK 없음, 로딩중/이동중 문구 없음, fallback 카드 숨김, 새 docs 문서 생성 금지.
+
 ## 1.0.68 - IntroVideoMinFit
 
 - **인트로 영상 최소 3초 보장/무문구 영상 로딩/전역 글자 맞춤 보강 패스**를 진행했습니다.

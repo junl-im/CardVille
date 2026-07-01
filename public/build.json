@@ -1,12 +1,12 @@
 {
-  "name": "IntroVideoMinFit",
-  "version": "1.0.68",
-  "mode": "intro-video-restore-v167-intro-min-3s-video-v168-video-only-loading-v168-copy-fit-guard-v168-kakao-exit-double-back-v168",
+  "name": "IntroGuardUIPolish",
+  "version": "1.0.69",
+  "mode": "intro-video-restore-v167-intro-touch-prime-v169-intro-started-at-zero-guard-v169-intro-min-3s-video-v168-video-only-loading-v168-global-micro-copy-v169-settings-panel-clamp-v169",
   "svg": "disabled",
   "pwa": "disabled",
-  "notes": "Guarantees the opening video remains visible for at least 3 seconds and longer if assets still load; removes startup loading bars/copy; tightens lobby/settings/popup text fit and keeps exit UX guarded.",
-  "label": "Minimum intro video, wordless loading, copy fit, and exit guard",
-  "description": "Game start uses only the intro video as the loading surface. The video is shown for at least 3 seconds and loops until all required assets are ready.",
-  "assetVersion": "1.0.68",
-  "previousRepairName": "IntroExitCopyFit"
+  "notes": "Touch-primes the intro video from the start button, treats zero start time as invalid so the 3-second minimum cannot be skipped, and further tightens lobby/settings/popup copy fit.",
+  "label": "Intro video guard, copy fit, and UI polish",
+  "description": "Game start uses only the intro video as the loading surface. The video is primed from the user tap, stays visible for at least 3 seconds, and remains until assets are ready.",
+  "assetVersion": "1.0.69",
+  "previousRepairName": "IntroVideoMinFit"
 }

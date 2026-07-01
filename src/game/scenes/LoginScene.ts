@@ -6,7 +6,7 @@ import { DrawSystem } from '../systems/DrawSystem';
 import { AuthSystem } from '../systems/AuthSystem';
 import { applyWrap, bodyText, goldText, mutedText, titleText } from '../ui/TextStyles';
 
-const LOGIN_VERSION = ''; // hidden in 1.0.68: no developer-facing version text on the first screen
+const LOGIN_VERSION = ''; // hidden in 1.0.69: no developer-facing version text on the first screen
 const LOGIN_PANEL_Y = 546;
 const LOGIN_PANEL_H = 254;
 const LOGIN_TITLE_Y = LOGIN_PANEL_Y + 28;
@@ -17,6 +17,13 @@ const LOGIN_ACTION_SECONDARY_Y = LOGIN_ACTION_START_Y + 110;
 const LOGIN_PANEL_COMPACT = true;
 const LOGIN_CTA_BUTTON_STYLE = { skin: false, shine: false, debounceMs: 520 } as const;
 
+declare global {
+  interface Window {
+    __CARDVILLE_INTRO_VIDEO_PRIME__?: () => HTMLVideoElement | null;
+    __CARDVILLE_INTRO_VIDEO_PREPARE__?: () => HTMLVideoElement | null;
+  }
+}
+
 export class LoginScene extends Phaser.Scene {
   private status!: Phaser.GameObjects.Text;
   private busy = false;
@@ -26,7 +33,7 @@ export class LoginScene extends Phaser.Scene {
     applyResponsiveCamera(this);
     this.drawFullscreenHero();
     this.drawStartControls();
-    // 1.0.68: no developer/version label on the player-facing start screen.
+    // 1.0.69: no developer/version label on the player-facing start screen.
     window.__CARDVILLE_BOOT_OK__?.();
   }
 
@@ -61,10 +68,15 @@ export class LoginScene extends Phaser.Scene {
   }
 
   private drawStartControls(): void {
-    new GameButton(this, 195, LOGIN_ACTION_START_Y, '게임 시작', 316, 60, 0xffd86f, LOGIN_CTA_BUTTON_STYLE).onClick(() => this.guest());
-    new GameButton(this, 195, LOGIN_ACTION_GOOGLE_Y, 'Google 로그인', 292, 44, 0x8fd3ff, LOGIN_CTA_BUTTON_STYLE).onClick(() => void this.google());
-    new GameButton(this, 121, LOGIN_ACTION_SECONDARY_Y, '이메일', 138, 42, 0xc9f4ff, LOGIN_CTA_BUTTON_STYLE).onClick(() => void this.email(false));
-    new GameButton(this, 269, LOGIN_ACTION_SECONDARY_Y, '가입', 138, 42, 0xf0c7ff, LOGIN_CTA_BUTTON_STYLE).onClick(() => void this.email(true));
+    const primeIntro = () => window.__CARDVILLE_INTRO_VIDEO_PRIME__?.();
+    const start = new GameButton(this, 195, LOGIN_ACTION_START_Y, '게임 시작', 316, 60, 0xffd86f, LOGIN_CTA_BUTTON_STYLE).onClick(() => this.guest());
+    start.on('buttondown', () => window.__CARDVILLE_INTRO_VIDEO_PREPARE__?.());
+    const google = new GameButton(this, 195, LOGIN_ACTION_GOOGLE_Y, 'Google 로그인', 292, 44, 0x8fd3ff, LOGIN_CTA_BUTTON_STYLE).onClick(() => void this.google());
+    google.on('buttondown', primeIntro);
+    const email = new GameButton(this, 121, LOGIN_ACTION_SECONDARY_Y, '이메일', 138, 42, 0xc9f4ff, LOGIN_CTA_BUTTON_STYLE).onClick(() => void this.email(false));
+    email.on('buttondown', primeIntro);
+    const signup = new GameButton(this, 269, LOGIN_ACTION_SECONDARY_Y, '가입', 138, 42, 0xf0c7ff, LOGIN_CTA_BUTTON_STYLE).onClick(() => void this.email(true));
+    signup.on('buttondown', primeIntro);
 
     this.status = this.add.text(
       195,
@@ -86,7 +98,7 @@ export class LoginScene extends Phaser.Scene {
   private async google(): Promise<void> {
     if (this.busy) return;
     this.busy = true;
-    this.status.setText('Google 연결 중...');
+    this.status.setText('');
     try { await AuthSystem.signInGoogle(); window.__CARDVILLE_INTRO_VIDEO_PREPARE__?.(); NavigationSystem.safeStart(this, 'IntroLoadingScene', { nextScene: 'MainLobbyScene' }); }
     catch (e) { console.warn(e); this.status.setText('Google 로그인이 취소되었거나 실패했어요. 게임 시작은 계속 가능합니다.'); this.busy = false; }
   }
@@ -98,7 +110,7 @@ export class LoginScene extends Phaser.Scene {
     const password = window.prompt('비밀번호 6자 이상을 입력하세요') ?? '';
     if (password.length < 6) { this.status.setText('비밀번호는 6자 이상이어야 해요.'); return; }
     this.busy = true;
-    this.status.setText(create ? '이메일 가입 처리' : '이메일 로그인 처리');
+    this.status.setText('');
     try { await AuthSystem.signInEmail(email, password, create); window.__CARDVILLE_INTRO_VIDEO_PREPARE__?.(); NavigationSystem.safeStart(this, 'IntroLoadingScene', { nextScene: 'MainLobbyScene' }); }
     catch (e) { console.warn(e); this.status.setText('이메일 처리 실패. 계정 정보를 확인해 주세요.'); this.busy = false; }
   }

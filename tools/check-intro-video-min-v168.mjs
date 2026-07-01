@@ -31,15 +31,15 @@ const walk = (dir) => {
 };
 
 const pkg = JSON.parse(read('package.json'));
-assert(pkg.version === '1.0.68', `expected package version 1.0.68, got ${pkg.version}`);
+assert(pkg.version === '1.0.69', `expected package version 1.0.69, got ${pkg.version}`);
 assert(pkg.scripts.verify.includes('check:intro-video-min-v168'), 'verify must include check:intro-video-min-v168');
 assert(pkg.scripts['check:intro-video-min-v168'] === 'node tools/check-intro-video-min-v168.mjs', 'check script mismatch');
 assert(exists('public/assets/video/cardville_intro_loading.mp4'), 'intro video asset missing from public/assets/video');
 
 include('index.html', [
-  "window.__CARDVILLE_VERSION__ = '1.0.68'",
+  "window.__CARDVILLE_VERSION__ = '1.0.69'",
   '__CARDVILLE_INTRO_VIDEO_STARTED_AT__',
-  "new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.68', document.baseURI).href",
+  "new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.69', document.baseURI).href",
   'data-cardville-min-intro-ms-v168',
   'data-cardville-video-only-loading-v168',
   "video.style.zIndex = '2147482000'",
@@ -79,7 +79,7 @@ include('src/game/scenes/MainLobbyScene.ts', [
   'building-nameplate-lift-v168',
   'settings-copy-safe-v168',
   'plaza-touch-route-expand-v168',
-  'applyTightCopyBox(goldText(8)',
+  'applyTightCopyBox(goldText(7)',
   'compactText(building.title, 6)',
   '화면과 조작을 편하게 조정해요.',
   'zone.setName(building.id === \'plaza\' ? PLAZA_TAP_ROUTE_EXPAND_TAG'
@@ -92,18 +92,19 @@ exclude('src/game/scenes/MainLobbyScene.ts', [
 
 include('src/game/ui/TextStyles.ts', [
   'ultra-copy-fit-v168',
-  'prefs.largeText ? 1.14 : 1.02',
-  'prefs.largeText ? 0.96 : 0.88',
-  'size <= 11 ? 13'
+  'global-micro-copy-v169',
+  'prefs.largeText ? 1.08 : 0.98',
+  'prefs.largeText ? 0.92 : 0.84',
+  'size <= 11 ? 12'
 ]);
 include('src/game/systems/CoachMarkSystem.ts', ['coach-copy-fit-v168', 'applyTightCopyBox(bodyText(bodySize), width - 48, 72']);
-include('src/game/systems/RewardPopupSystem.ts', ['popup-copy-room-v168', 'popupW, 304', 'noticeText(10)', '112']);
+include('src/game/systems/RewardPopupSystem.ts', ['popup-copy-room-v168', 'popup-copy-safe-v169', 'popupW, 320', 'noticeText(9)', '128']);
 include('src/game/systems/BackButtonSystem.ts', ['double-back-exit-v168', 'requestKakaoInAppClose', 'BackButtonSystem.requestExit(); // double-back-exit-v168']);
 include('src/game/scenes/BackConfirmScene.ts', ['뒤로가기 한 번 더 또는 나가기 버튼으로 창 닫기를 시도합니다.']);
-include('public/build.json', ['"version": "1.0.68"', 'IntroVideoMinFit', 'intro-min-3s-video-v168']);
-include('public/health.html', ['version 1.0.68', 'IntroVideoMinFit', 'intro-min-3s-video-v168']);
-include('README.md', ['# CardVille 1.0.68', '## 1.0.68 업데이트 내역', 'intro-min-3s-video-v168', 'CardVille_v1.0.68_IntroVideoMinFit_Full.zip']);
-include('AI_HANDOFF_CARDVILLE.md', ['현재 기준 버전은 1.0.68', 'IntroVideoMinFit', 'MIN_INTRO_VIDEO_MS = 3000', '새 docs 문서 생성 금지']);
+include('public/build.json', ['"version": "1.0.69"', 'IntroVideoMinFit', 'intro-min-3s-video-v168']);
+include('public/health.html', ['version 1.0.69', 'IntroVideoMinFit', 'intro-min-3s-video-v168']);
+include('README.md', ['# CardVille 1.0.69', '## 1.0.69 업데이트 내역', 'intro-min-3s-video-v168', 'CardVille_v1.0.69_IntroGuardUIPolish_Full.zip']);
+include('AI_HANDOFF_CARDVILLE.md', ['현재 기준 버전은 1.0.69', 'IntroVideoMinFit', 'MIN_INTRO_VIDEO_MS = 3000', '새 docs 문서 생성 금지']);
 
 for (const file of walk('src').filter((name) => /\.(ts|tsx|js|mjs)$/.test(name))) {
   const text = read(file);

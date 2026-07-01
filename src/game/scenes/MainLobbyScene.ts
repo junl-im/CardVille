@@ -18,7 +18,7 @@ import { AccessibilitySystem } from '../systems/AccessibilitySystem';
 // Accessibility audit anchor retained: AccessibilitySystem.summary()
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
-const LOBBY_VERSION = '1.0.68';
+const LOBBY_VERSION = '1.0.69';
 const MISSION_TONE_COLORS = { gold: 0xffd86f, blue: 0x8fd3ff, purple: 0xd7a5ff, green: 0xa9f5b5, coral: 0xffb39a } as const;
 const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-visible-v149' as const;
 const VILLAGE_VISIBLE_BUILDING_SCALE_TAG = 'village-readable-building-scale-v150' as const;
@@ -43,6 +43,9 @@ const LOBBY_RECOMMEND_COPY_FIT_TAG = 'lobby-recommend-copy-fit-v168' as const;
 const LOBBY_NAMEPLATE_LIFT_TAG = 'building-nameplate-lift-v168' as const;
 const SETTINGS_COPY_SAFE_TAG = 'settings-copy-safe-v168' as const;
 const PLAZA_TAP_ROUTE_EXPAND_TAG = 'plaza-touch-route-expand-v168' as const;
+const INTRO_GUARD_UI_POLISH_TAG = 'intro-guard-ui-polish-v169' as const;
+const GLOBAL_MICRO_COPY_TAG = 'global-micro-copy-v169' as const;
+const SETTINGS_PANEL_CLAMP_TAG = 'settings-panel-clamp-v169' as const;
 // Legacy mobile-exit-layout audit anchor retained while actual chip copy uses micro-fit: fontSize: '11px'.
 const HERO_HOME = { x: 195, y: 566 } as const;
 const CAT_HOME = { x: 146, y: 612 } as const;
@@ -220,7 +223,7 @@ export class MainLobbyScene extends Phaser.Scene {
     CoachMarkSystem.showOnce(this, {
       id: 'lobby_recommended_route_v144',
       title: '고양이 길잡이',
-      body: recommendedBuildingId === 'event' && missionStatus.rewardReadyCount > 0 ? `이벤트 광장에 ${missionStatus.lobbyBadgeLabel} 보상이 있어요. ${missionStatus.nextActionCopy}` : 'NEXT가 붙은 건물부터 들어가면 도서관, 학교, 연구소, 기억의 숲을 자연스럽게 이어갈 수 있어요. 보상이 준비되면 이벤트 광장이 먼저 안내됩니다.',
+      body: recommendedBuildingId === 'event' && missionStatus.rewardReadyCount > 0 ? `이벤트 광장에 ${missionStatus.lobbyBadgeLabel} 보상이 있어요. ${missionStatus.nextActionCopy}` : '추천 건물부터 들어가면 도서관, 학교, 연구소, 기억의 숲을 자연스럽게 이어갈 수 있어요. 보상이 준비되면 이벤트 광장이 먼저 안내됩니다.',
       x: layout(this).cx,
       y: layout(this).bottom - 96,
       width: 326,
@@ -301,15 +304,15 @@ export class MainLobbyScene extends Phaser.Scene {
       : '추천 건물을 따라가면 좋아요';
     const l = layout(this);
     const ribbonW = Math.min(430, l.visibleWidth - Math.max(20, l.safeLeft + l.safeRight + 20));
-    const ribbonH = 50;
-    const ribbon = this.add.container(l.visibleX + l.visibleWidth / 2, l.top + 82).setDepth(938).setName(`${SCREEN_UI_STABILITY_TAG}:${MOBILE_READABLE_LAYOUT_TAG}:${LOBBY_UI_NON_OVERLAP_TAG}:${LOBBY_FULLSCREEN_SPREAD_TAG}:${LOBBY_COPY_COLLISION_FIX_TAG}:${LOBBY_RECOMMEND_COPY_FIT_TAG}`);
+    const ribbonH = 60;
+    const ribbon = this.add.container(l.visibleX + l.visibleWidth / 2, l.top + 88).setDepth(938).setName(`${SCREEN_UI_STABILITY_TAG}:${MOBILE_READABLE_LAYOUT_TAG}:${LOBBY_UI_NON_OVERLAP_TAG}:${LOBBY_FULLSCREEN_SPREAD_TAG}:${LOBBY_COPY_COLLISION_FIX_TAG}:${LOBBY_RECOMMEND_COPY_FIT_TAG}:${INTRO_GUARD_UI_POLISH_TAG}`);
     ribbon.add(this.add.rectangle(0, 0, ribbonW, ribbonH, 0x07142c, 0.70).setStrokeStyle(1, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.22));
-    ribbon.add(this.add.rectangle(-ribbonW / 2 + 32, -10, 42, 17, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.88).setStrokeStyle(1, 0xffffff, 0.14));
-    ribbon.add(this.add.text(-ribbonW / 2 + 32, -10, '추천', darkText(7)).setOrigin(0.5));
-    const textX = -ribbonW / 2 + 58;
-    const textW = ribbonW - 70;
-    ribbon.add(this.add.text(textX, -11, compactText(label, 16), applyTightCopyBox(goldText(8), textW, 20, 'left')).setOrigin(0, 0.5));
-    ribbon.add(this.add.text(textX, 12, compactText(copy, 20), applyTightCopyBox(mutedText(7), textW, 22, 'left')).setOrigin(0, 0.5));
+    ribbon.add(this.add.rectangle(-ribbonW / 2 + 30, -13, 40, 16, missionStatus.shouldPrioritizeEvent ? 0xffd86f : 0x8fd3ff, 0.88).setStrokeStyle(1, 0xffffff, 0.14));
+    ribbon.add(this.add.text(-ribbonW / 2 + 30, -13, '추천', darkText(6)).setOrigin(0.5));
+    const textX = -ribbonW / 2 + 54;
+    const textW = ribbonW - 66;
+    ribbon.add(this.add.text(textX, -13, compactText(label, 18), applyTightCopyBox(goldText(7), textW, 22, 'left')).setOrigin(0, 0.5));
+    ribbon.add(this.add.text(textX, 15, compactText(copy, 22), applyTightCopyBox(mutedText(6), textW, 24, 'left')).setOrigin(0, 0.5));
     if (allowAmbientMotion(this.quality) && missionStatus.shouldPrioritizeEvent) {
       this.tweens.add({ targets: ribbon, alpha: 0.82, duration: scaledDuration(1100, this.quality), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
@@ -438,9 +441,9 @@ export class MainLobbyScene extends Phaser.Scene {
       this.drawRecommendedTrail(building);
     }
 
-    const plateY = ((building.nameplateY ?? visualHeight * 0.36) - 13) * (building.nameplateY ? scale : 1);
+    const plateY = ((building.nameplateY ?? visualHeight * 0.36) - 18) * (building.nameplateY ? scale : 1);
     if (this.textures.exists('uiNameplateGold')) {
-      container.add(this.add.image(0, plateY + 16 * scale, 'uiNameplateGold').setDisplaySize((building.nameplateWidth ?? 108) * 0.90 * scale, 34 * scale).setAlpha(building.open ? 0.96 : 0.72));
+      container.add(this.add.image(0, plateY + 16 * scale, 'uiNameplateGold').setDisplaySize((building.nameplateWidth ?? 108) * 0.84 * scale, 30 * scale).setAlpha(building.open ? 0.96 : 0.72));
     } else {
       const plate = this.add.graphics();
       plate.fillStyle(0x07142c, building.open ? 0.78 : 0.58);
@@ -449,8 +452,8 @@ export class MainLobbyScene extends Phaser.Scene {
       plate.strokeRoundedRect(-50 * scale, plateY, 100 * scale, 36 * scale, 15 * scale);
       container.add(plate);
     }
-    container.add(this.add.text(0, plateY + 6 * scale, compactText(building.title, 6), goldText(10)).setOrigin(0.5).setName(LOBBY_NAMEPLATE_LIFT_TAG));
-    container.add(this.add.text(0, plateY + 20 * scale, compactText(building.subtitle, 7), mutedText(7)).setOrigin(0.5));
+    container.add(this.add.text(0, plateY + 5 * scale, compactText(building.title, 6), goldText(9)).setOrigin(0.5).setName(`${LOBBY_NAMEPLATE_LIFT_TAG}:${GLOBAL_MICRO_COPY_TAG}`));
+    container.add(this.add.text(0, plateY + 18 * scale, compactText(building.subtitle, 7), mutedText(6)).setOrigin(0.5));
     this.drawBuildingStatusChip(container, building, recommended, scale, visualWidth, visualHeight);
 
     if (!building.open) {
@@ -570,9 +573,9 @@ export class MainLobbyScene extends Phaser.Scene {
     this.activeSpeech = undefined;
 
     const l = layout(this);
-    const panelW = Math.min(340, l.visibleWidth - Math.max(34, l.safeLeft + l.safeRight + 34));
-    const panelH = 316;
-    const panel = this.add.container(l.cx, Phaser.Math.Clamp(l.cy + 4, l.top + panelH / 2 + 10, l.bottom - panelH / 2 - 10)).setDepth(1200).setName(`settings:${LOBBY_COPY_COLLISION_FIX_TAG}:${SETTINGS_COPY_SAFE_TAG}`);
+    const panelW = Math.min(356, l.visibleWidth - Math.max(28, l.safeLeft + l.safeRight + 28));
+    const panelH = 336;
+    const panel = this.add.container(l.cx, Phaser.Math.Clamp(l.cy + 4, l.top + panelH / 2 + 10, l.bottom - panelH / 2 - 10)).setDepth(1200).setName(`settings:${LOBBY_COPY_COLLISION_FIX_TAG}:${SETTINGS_COPY_SAFE_TAG}:${SETTINGS_PANEL_CLAMP_TAG}`);
     if (this.textures.exists('uiPanelWood')) panel.add(this.add.image(0, 0, 'uiPanelWood').setDisplaySize(panelW, panelH).setAlpha(0.97));
     else {
       const bg = this.add.graphics();
@@ -582,15 +585,15 @@ export class MainLobbyScene extends Phaser.Scene {
       bg.strokeRoundedRect(-panelW / 2, -panelH / 2, panelW, panelH, 26);
       panel.add(bg);
     }
-    panel.add(this.add.text(0, -120, '설정', titleText(19)).setOrigin(0.5));
-    panel.add(this.add.text(0, -94, '화면과 조작을 편하게 조정해요.', applyTightCopyBox(mutedText(8), panelW - 52, 24)).setOrigin(0.5));
+    panel.add(this.add.text(0, -128, '설정', titleText(18)).setOrigin(0.5));
+    panel.add(this.add.text(0, -102, '화면과 조작을 편하게 조정해요.', applyTightCopyBox(mutedText(7), panelW - 50, 24)).setOrigin(0.5));
     const prefs = AccessibilitySystem.getPrefs();
 
     const addToggle = (y: number, label: string, enabled: boolean, toggle: () => void) => {
       const row = this.add.container(0, y);
       row.add(this.add.rectangle(0, 0, panelW - 54, 34, enabled ? 0xfffbf1 : 0x26334f, enabled ? 0.90 : 0.64).setStrokeStyle(1, enabled ? 0xffd86f : 0x8fd3ff, enabled ? 0.28 : 0.16));
-      row.add(this.add.text(-panelW / 2 + 44, 0, label, enabled ? darkText(10) : mutedText(10)).setOrigin(0, 0.5));
-      row.add(this.add.text(panelW / 2 - 44, 0, enabled ? '켜짐' : '꺼짐', enabled ? darkText(10) : mutedText(10)).setOrigin(1, 0.5));
+      row.add(this.add.text(-panelW / 2 + 44, 0, label, applyTightCopyBox(enabled ? darkText(9) : mutedText(9), panelW - 142, 26, 'left')).setOrigin(0, 0.5));
+      row.add(this.add.text(panelW / 2 - 44, 0, enabled ? '켜짐' : '꺼짐', applyTightCopyBox(enabled ? darkText(9) : mutedText(9), 58, 26, 'right')).setOrigin(1, 0.5));
       const hit = this.add.zone(0, 0, panelW - 40, 42).setInteractive({ useHandCursor: true });
       hit.on('pointerup', () => {
         toggle();
@@ -602,14 +605,14 @@ export class MainLobbyScene extends Phaser.Scene {
       row.add(hit);
       panel.add(row);
     };
-    addToggle(-50, '편안한 모션', prefs.reduceMotion, () => AccessibilitySystem.toggleReduceMotion());
-    addToggle(-8, '고대비 화면', prefs.highContrast, () => AccessibilitySystem.toggleHighContrast());
-    addToggle(34, '큰 안내 문구', prefs.largeText, () => AccessibilitySystem.toggleLargeText());
-    panel.add(this.add.text(0, 78, '뒤로가기 한 번: 나가기 확인 · 한 번 더: 창 닫기 시도', applyTightCopyBox(mutedText(8), panelW - 56, 38)).setOrigin(0.5));
-    const close = this.add.container(0, 126);
+    addToggle(-58, '편안한 모션', prefs.reduceMotion, () => AccessibilitySystem.toggleReduceMotion());
+    addToggle(-14, '고대비 화면', prefs.highContrast, () => AccessibilitySystem.toggleHighContrast());
+    addToggle(30, '큰 안내 문구', prefs.largeText, () => AccessibilitySystem.toggleLargeText());
+    panel.add(this.add.text(0, 82, '뒤로가기 한 번: 확인 · 한 번 더: 닫기 시도', applyTightCopyBox(mutedText(7), panelW - 48, 44)).setOrigin(0.5));
+    const close = this.add.container(0, 138);
     if (this.textures.exists('uiNameplateGold')) close.add(this.add.image(0, 0, 'uiNameplateGold').setDisplaySize(112, 40));
     else close.add(this.add.rectangle(0, 0, 110, 38, 0xffd86f, 0.90).setStrokeStyle(1, 0xffffff, 0.24));
-    close.add(this.add.text(0, 0, '닫기', { fontFamily: 'system-ui, sans-serif', fontSize: '13px', color: '#2a160c', fontStyle: '900' }).setOrigin(0.5));
+    close.add(this.add.text(0, 0, '닫기', { fontFamily: 'system-ui, sans-serif', fontSize: '12px', color: '#2a160c', fontStyle: '900' }).setOrigin(0.5));
     close.setSize(116, 44).setInteractive({ useHandCursor: true });
     close.on('pointerup', () => this.toggleLobbySettingsPanel());
     panel.add(close);
@@ -761,7 +764,7 @@ export class MainLobbyScene extends Phaser.Scene {
 
   private drawBottomHint(nickname: string): void {
     const l = layout(this);
-    const y = l.bottom + 6;
+    const y = l.bottom - 18;
     const panelW = Math.min(430, l.visibleWidth - Math.max(28, l.safeLeft + l.safeRight + 28));
     if (this.textures.exists('uiPanelGlass')) this.add.image(l.cx, y, 'uiPanelGlass').setDisplaySize(panelW, 34).setAlpha(0.88).setDepth(940).setName(`${LOBBY_UI_NON_OVERLAP_TAG}:${RESPONSIVE_MOBILE_VIEWPORT_TAG}`);
     else {
@@ -775,7 +778,7 @@ export class MainLobbyScene extends Phaser.Scene {
       l.cx,
       y,
       `${nickname} 모험가님, 건물 그림을 눌러 이동하세요.`,
-      applyWrap(bodyText(14), panelW - 26)
+      applyTightCopyBox(bodyText(11), panelW - 24, 28)
     ).setOrigin(0.5).setDepth(942).setName(`${LOBBY_NO_PATCH_TEXT_TAG}:${RESPONSIVE_MOBILE_VIEWPORT_TAG}`);
   }
 

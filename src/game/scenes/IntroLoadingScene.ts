@@ -10,10 +10,13 @@ export const CARDVILLE_INTRO_VIDEO_LIFECYCLE_TAG = 'intro-video-lifecycle-cleanu
 export const CARDVILLE_INTRO_VIDEO_RESTORE_TAG = 'intro-video-restore-v167' as const;
 export const CARDVILLE_INTRO_MIN_VIDEO_TAG = 'intro-min-3s-video-v168' as const;
 export const CARDVILLE_VIDEO_ONLY_LOADING_TAG = 'video-only-loading-v168' as const;
+export const CARDVILLE_INTRO_TOUCH_PRIME_TAG = 'intro-touch-prime-v169' as const;
+export const CARDVILLE_INTRO_STARTED_AT_GUARD_TAG = 'intro-started-at-zero-guard-v169' as const;
 const MIN_INTRO_VIDEO_MS = 3000;
 
 declare global {
   interface Window {
+    __CARDVILLE_INTRO_VIDEO_PRIME__?: () => HTMLVideoElement | null;
     __CARDVILLE_INTRO_VIDEO_PREPARE__?: () => HTMLVideoElement | null;
     __CARDVILLE_INTRO_VIDEO_DONE__?: () => void;
     __CARDVILLE_INTRO_VIDEO_STARTED_AT__?: number;
@@ -64,7 +67,7 @@ export class IntroLoadingScene extends Phaser.Scene {
       this.tryFinish();
     });
 
-    // 1.0.68: the opening video is the only startup loading surface. It is shown
+    // 1.0.69: the opening video is the only startup loading surface. It is shown
     // for at least MIN_INTRO_VIDEO_MS and loops longer if asset loading needs more time.
 
     if (this.load.totalToLoad > 0) this.load.start();
@@ -84,14 +87,15 @@ export class IntroLoadingScene extends Phaser.Scene {
   }
 
   private updateProgressBar(_value: number): void {
-    // 1.0.68: no startup loading bar. The intro video is the full loading surface.
+    // 1.0.69: no startup loading bar. The intro video is the full loading surface.
     this.progressBar = undefined;
   }
 
   private armMinimumIntroHold(): void {
-    const started = typeof window !== 'undefined' && typeof window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ === 'number'
+    const rawStarted = typeof window !== 'undefined' && typeof window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ === 'number'
       ? window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__
-      : Date.now();
+      : 0;
+    const started = rawStarted > 0 ? rawStarted : Date.now();
     if (typeof window !== 'undefined') window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = started;
     const elapsed = Date.now() - started;
     const remaining = Math.max(0, MIN_INTRO_VIDEO_MS - elapsed);
@@ -118,7 +122,7 @@ export class IntroLoadingScene extends Phaser.Scene {
     } else if (!(video.getAttribute('src') ?? video.currentSrc ?? '').includes(`cardville_intro_loading.mp4?v=${CARDVILLE_ASSET_VERSION}`)) {
       video.src = expectedSrc;
     }
-    if (typeof window !== 'undefined' && typeof window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ !== 'number') window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = Date.now();
+    if (typeof window !== 'undefined' && (!window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ || window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ <= 0)) window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = Date.now();
     video.muted = true;
     video.autoplay = true;
     video.playsInline = true;
@@ -132,6 +136,8 @@ export class IntroLoadingScene extends Phaser.Scene {
     video.setAttribute('data-cardville-silent-intro-video-v167', CARDVILLE_INTRO_VIDEO_RESTORE_TAG);
     video.setAttribute('data-cardville-min-intro-ms-v168', String(MIN_INTRO_VIDEO_MS));
     video.setAttribute('data-cardville-video-only-loading-v168', CARDVILLE_VIDEO_ONLY_LOADING_TAG);
+    video.setAttribute('data-cardville-intro-touch-prime-v169', CARDVILLE_INTRO_TOUCH_PRIME_TAG);
+    video.setAttribute('data-cardville-started-at-zero-guard-v169', CARDVILLE_INTRO_STARTED_AT_GUARD_TAG);
     video.setAttribute('data-cardville-hidden-until-playing', 'false');
     video.style.position = 'fixed';
     video.style.inset = '0';
