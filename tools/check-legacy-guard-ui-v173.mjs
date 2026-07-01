@@ -32,15 +32,15 @@ const walk = (dir) => {
 
 const pkg = JSON.parse(read('package.json'));
 const build = JSON.parse(read('public/build.json'));
-assert(pkg.version === '1.0.75', `expected package version 1.0.75, got ${pkg.version}`);
+assert(pkg.version === '1.0.76', `expected package version 1.0.76, got ${pkg.version}`);
 assert(build.version === pkg.version, `build version ${build.version} != package ${pkg.version}`);
 assert(pkg.scripts.verify.includes('check:legacy-guard-ui-v173'), 'verify must include check:legacy-guard-ui-v173');
 assert(pkg.scripts['check:legacy-guard-ui-v173'] === 'node tools/check-legacy-guard-ui-v173.mjs', 'check script mismatch');
 
 include('index.html', [
-  "window.__CARDVILLE_VERSION__ = '1.0.75'",
-  "new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.75', document.baseURI).href",
-  "new URL('./assets/video/cardville_intro_poster.jpg?v=1.0.75', document.baseURI).href",
+  "window.__CARDVILLE_VERSION__ = '1.0.76'",
+  "new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.76', document.baseURI).href",
+  "new URL('./assets/video/cardville_intro_poster.jpg?v=1.0.76', document.baseURI).href",
   'cardvilleStripNativeVideoUi',
   'cardvilleScrubNativeVideoUi',
   'intro-no-phaser-progress-v173',
@@ -90,10 +90,10 @@ include('src/game/systems/LayoutSystem.ts', [
 exclude('src/game/systems/LayoutSystem.ts', "new URLSearchParams(window.location.search).has('touchDebug')");
 include('src/game/ui/GameButton.ts', ['hasTouchDebug()']);
 exclude('src/game/ui/GameButton.ts', "new URLSearchParams(window.location.search).has('touchDebug')");
-include('public/build.json', ['"version": "1.0.75"', 'LegacyGuardUIPolish', 'intro-no-phaser-progress-v173', 'legacy-code-revival-guard-v173']);
-include('public/health.html', ['version 1.0.75', 'LegacyGuardUIPolish', 'production-debug-overlay-kill-v173']);
-include('README.md', ['# CardVille 1.0.75', '## 1.0.75 업데이트 내역', 'LegacyGuardUIPolish', 'CardVille_v1.0.75_LegacyGuardUIPolish_Full.zip']);
-include('AI_HANDOFF_CARDVILLE.md', ['현재 기준 버전은 1.0.75', 'LegacyGuardUIPolish', 'legacy-code-revival-guard-v173', 'CardVille_v1.0.75_LegacyGuardUIPolish_Full.zip']);
+include('public/build.json', ['"version": "1.0.76"', 'LegacyGuardUIPolish', 'intro-no-phaser-progress-v173', 'legacy-code-revival-guard-v173']);
+include('public/health.html', ['version 1.0.76', 'LegacyGuardUIPolish', 'production-debug-overlay-kill-v173']);
+include('README.md', ['# CardVille 1.0.76', '## 1.0.76 업데이트 내역', 'LegacyGuardUIPolish', 'CardVille_v1.0.76_LegacyGuardUIPolish_Full.zip']);
+include('AI_HANDOFF_CARDVILLE.md', ['현재 기준 버전은 1.0.76', 'LegacyGuardUIPolish', 'legacy-code-revival-guard-v173', 'CardVille_v1.0.76_LegacyGuardUIPolish_Full.zip']);
 
 for (const file of walk('src').filter((name) => /\.(ts|tsx|js|mjs)$/.test(name))) {
   const text = read(file);

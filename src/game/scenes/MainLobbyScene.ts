@@ -18,7 +18,7 @@ import { AccessibilitySystem } from '../systems/AccessibilitySystem';
 // Accessibility audit anchor retained: AccessibilitySystem.summary()
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
-const LOBBY_VERSION = '1.0.75';
+const LOBBY_VERSION = '1.0.76';
 const MISSION_TONE_COLORS = { gold: 0xffd86f, blue: 0x8fd3ff, purple: 0xd7a5ff, green: 0xa9f5b5, coral: 0xffb39a } as const;
 const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-visible-v149' as const;
 const VILLAGE_VISIBLE_BUILDING_SCALE_TAG = 'village-readable-building-scale-v150' as const;
@@ -51,7 +51,8 @@ const NAMEPLATE_COLLISION_GUARD_TAG = 'nameplate-collision-guard-v170' as const;
 const PLAZA_ROUTE_CONFIRM_TAG = 'plaza-route-confirm-v170' as const;
 const INTRO_MASK_FLOOR_MOVE_TAG = 'intro-mask-floor-move-v174' as const;
 const FREE_PLAZA_FLOOR_WALK_TAG = 'free-plaza-floor-walk-v174' as const;
-const FLOOR_WALK_HIT_GUARD_TAG = 'floor-walk-hit-guard-v175' as const;
+const FLOOR_WALK_HIT_GUARD_TAG = 'floor-walk-hit-guard-v176' as const;
+const FLOOR_WALK_INTERACTION_TAG = 'floor-walk-interaction-v176' as const;
 // Legacy mobile-exit-layout audit anchor retained while actual chip copy uses micro-fit: fontSize: '11px'.
 const HERO_HOME = { x: 195, y: 566 } as const;
 const CAT_HOME = { x: 146, y: 612 } as const;
@@ -555,7 +556,7 @@ export class MainLobbyScene extends Phaser.Scene {
     const l = layout(this);
     const buttonX = l.visibleX + l.visibleWidth - Math.max(39, l.safeRight + 39);
     const buttonY = l.top + 16;
-    const button = this.add.container(buttonX, buttonY).setDepth(946).setName(`${LOBBY_UI_NON_OVERLAP_TAG}:${LOBBY_FULLSCREEN_SPREAD_TAG}`);
+    const button = this.add.container(buttonX, buttonY).setDepth(946).setName(`lobby-settings-button:${LOBBY_UI_NON_OVERLAP_TAG}:${LOBBY_FULLSCREEN_SPREAD_TAG}`);
     if (this.textures.exists('uiSettingsButton')) button.add(this.add.image(0, 0, 'uiSettingsButton').setDisplaySize(46, 46));
     else button.add(this.add.circle(0, 0, 22, 0xffd86f, 0.90));
     button.add(this.add.text(0, 1, '⚙', goldText(20)).setOrigin(0.5));
@@ -785,7 +786,7 @@ export class MainLobbyScene extends Phaser.Scene {
       y,
       `${nickname} 모험가님, 건물 그림을 눌러 이동하세요.`,
       applyTightCopyBox(bodyText(11), panelW - 24, 28)
-    ).setOrigin(0.5).setDepth(942).setName(`${LOBBY_NO_PATCH_TEXT_TAG}:${RESPONSIVE_MOBILE_VIEWPORT_TAG}`);
+    ).setOrigin(0.5).setDepth(942).setName(`bottom-hint:${LOBBY_NO_PATCH_TEXT_TAG}:${RESPONSIVE_MOBILE_VIEWPORT_TAG}`);
   }
 
   private drawAmbientLife(): void {
@@ -873,13 +874,13 @@ export class MainLobbyScene extends Phaser.Scene {
     const floor = this.add.zone(l.cx, (top + bottom) / 2, Math.max(l.visibleWidth, this.scale.width), bottom - top)
       .setInteractive({ useHandCursor: false })
       .setDepth(80)
-      .setName(`${FREE_PLAZA_FLOOR_WALK_TAG}:${INTRO_MASK_FLOOR_MOVE_TAG}:${FLOOR_WALK_HIT_GUARD_TAG}`);
+      .setName(`${FREE_PLAZA_FLOOR_WALK_TAG}:${INTRO_MASK_FLOOR_MOVE_TAG}:${FLOOR_WALK_HIT_GUARD_TAG}:${FLOOR_WALK_INTERACTION_TAG}`);
     floor.on('pointerup', (pointer: Phaser.Input.Pointer) => {
       if (this.busy || this.activeSettingsPanel) return;
       const targetObjects = this.input.manager?.hitTest?.(pointer, this.children.list, this.cameras.main) ?? [];
       const blockedByInteractiveSurface = targetObjects.some((object) => {
         const name = typeof object.name === 'string' ? object.name : '';
-        return object !== floor && (name.startsWith('building-touch:') || name.includes(PLAZA_TAP_ROUTE_EXPAND_TAG) || name.includes('npc-touch') || name.includes('lobby-settings'));
+        return object !== floor && (name.startsWith('building-touch:') || name.includes(PLAZA_TAP_ROUTE_EXPAND_TAG) || name.includes('npc-touch') || name.includes('lobby-settings') || name.includes('settings:') || name.includes('bottom-hint'));
       });
       if (blockedByInteractiveSurface) return;
       const x = Number.isFinite(pointer.worldX) ? pointer.worldX : pointer.x;
@@ -899,7 +900,7 @@ export class MainLobbyScene extends Phaser.Scene {
     this.busy = true;
     this.activeSpeech?.destroy();
     this.activeSpeech = undefined;
-    this.hintText?.setText('빈 광장으로 살짝 이동했어요.');
+    this.hintText?.setText('빈 광장으로 이동했어요. 다른 곳도 눌러보세요.');
     this.tweens.killTweensOf(this.hero);
     this.tweens.killTweensOf(this.cat);
     this.spawnTouchRipple(rawX, rawY);

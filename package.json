@@ -1,15 +1,15 @@
 {
   "name": "cardville",
-  "version": "1.0.75",
+  "version": "1.0.76",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.75 mirrors the startup movie onto a canvas to avoid native video timelines, hardens legacy loading UI guards, and improves empty-floor walking hits.",
+  "description": "CardVille 1.0.76 keeps the startup movie on a canvas-only surface, strengthens legacy-loading guards, improves lobby floor walking, and introduces a small delta patch workflow.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "check:deploy": "node tools/check-deploy.mjs",
-    "verify": "npm run build && npm run check:canvas-intro-floor-v175 && npm run check:intro-mask-floor-v174 && npm run check:legacy-guard-ui-v173 && npm run check:intro-clean-sweep-v172 && npm run check:intro-no-overlay-v171 && npm run check:intro-video-hard-visible-v170 && npm run check:intro-guard-ui-v169 && npm run check:intro-video-min-v168 && npm run check:intro-exit-copy-v167 && npm run check:corner-sweep-v166 && npm run check:patch-payload && npm run check:flow-fit && npm run check:flow-ui-v165 && npm run check:interaction-polish && npm run check:responsive-mobile-layout && npm run check:real-village-lobby && npm run check:lobby-screenshot-repair && npm run check:screen-playfield && npm run check:card-game-ui && npm run check:lobby-asset-placement && npm run check:lobby-art-ui && npm run check:lobby-boot-assets && npm run check:mobile-exit-layout && npm run check:screen-ui-stability && npm run check:webp-runtime && npm run check:navigation-guard && npm run check:full-individual-assets && npm run check:village-visuals && npm run check:exit-flow && npm run check:art-direction && npm run check:applied-assets && npm run check:premium-asset-select && npm run check:premium-buttons && npm run check:asset-runtime && npm run check:deploy && npm run check:brand && npm run check:assets && npm run check:premium-assets && npm run check:building-assets && npm run check:lobby-layout && npm run check:lobby-premium-fit && npm run check:content-engine && npm run check:progression && npm run check:shop-economy && npm run check:polish && npm run check:ci-coherence && npm run check:coach && npm run check:daily-mission && npm run check:weekly-mission && npm run check:reward-popup && npm run check:accessibility && npm run check:mission-route && npm run check:ui && npm run check:ux-safety && npm run check:content-scale && npm run check:english-school && npm run check:layout && npm run check:association && npm run check:security",
+    "verify": "npm run build && npm run check:delta-patch-v176 && npm run check:canvas-intro-floor-v176 && npm run check:intro-mask-floor-v174 && npm run check:legacy-guard-ui-v173 && npm run check:intro-clean-sweep-v172 && npm run check:intro-no-overlay-v171 && npm run check:intro-video-hard-visible-v170 && npm run check:intro-guard-ui-v169 && npm run check:intro-video-min-v168 && npm run check:intro-exit-copy-v167 && npm run check:corner-sweep-v166 && npm run check:patch-payload && npm run check:flow-fit && npm run check:flow-ui-v165 && npm run check:interaction-polish && npm run check:responsive-mobile-layout && npm run check:real-village-lobby && npm run check:lobby-screenshot-repair && npm run check:screen-playfield && npm run check:card-game-ui && npm run check:lobby-asset-placement && npm run check:lobby-art-ui && npm run check:lobby-boot-assets && npm run check:mobile-exit-layout && npm run check:screen-ui-stability && npm run check:webp-runtime && npm run check:navigation-guard && npm run check:full-individual-assets && npm run check:village-visuals && npm run check:exit-flow && npm run check:art-direction && npm run check:applied-assets && npm run check:premium-asset-select && npm run check:premium-buttons && npm run check:asset-runtime && npm run check:deploy && npm run check:brand && npm run check:assets && npm run check:premium-assets && npm run check:building-assets && npm run check:lobby-layout && npm run check:lobby-premium-fit && npm run check:content-engine && npm run check:progression && npm run check:shop-economy && npm run check:polish && npm run check:ci-coherence && npm run check:coach && npm run check:daily-mission && npm run check:weekly-mission && npm run check:reward-popup && npm run check:accessibility && npm run check:mission-route && npm run check:ui && npm run check:ux-safety && npm run check:content-scale && npm run check:english-school && npm run check:layout && npm run check:association && npm run check:security",
     "check:brand": "node tools/check-brand.mjs",
     "check:ui": "node tools/check-ui.mjs",
     "check:layout": "node tools/check-layout.mjs",
@@ -67,7 +67,8 @@
     "check:intro-clean-sweep-v172": "node tools/check-intro-clean-sweep-v172.mjs",
     "check:legacy-guard-ui-v173": "node tools/check-legacy-guard-ui-v173.mjs",
     "check:intro-mask-floor-v174": "node tools/check-intro-mask-floor-v174.mjs",
-    "check:canvas-intro-floor-v175": "node tools/check-canvas-intro-floor-v175.mjs"
+    "check:canvas-intro-floor-v176": "node tools/check-canvas-intro-floor-v176.mjs",
+    "check:delta-patch-v176": "node tools/check-delta-patch-v176.mjs"
   },
   "dependencies": {
     "phaser": "3.90.0"

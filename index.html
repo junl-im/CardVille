@@ -13,7 +13,8 @@
       #app canvas{position:relative;z-index:1;display:block;background:#071126;}
 
       #cardville-intro-video{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;min-height:100vh!important;object-fit:cover!important;z-index:2147482000!important;pointer-events:none!important;background:#071126!important;display:block!important;visibility:visible!important;opacity:1!important;border:0!important;outline:0!important;-webkit-appearance:none!important;appearance:none!important;}
-      #cardville-intro-video[data-cardville-canvas-video-v175='true']{opacity:.001!important;visibility:hidden!important;left:-100vw!important;top:0!important;width:1px!important;height:1px!important;min-height:1px!important;}
+      #cardville-intro-video[data-cardville-canvas-video-v176='true']{opacity:.001!important;visibility:hidden!important;left:-100vw!important;top:0!important;width:1px!important;height:1px!important;min-height:1px!important;}
+      html.intro-canvas-only-video-surface-v176 #cardville-intro-video[data-cardville-canvas-only-video-surface-v176='true']{opacity:0!important;visibility:hidden!important;left:-200vw!important;top:-200vh!important;right:auto!important;bottom:auto!important;inset:auto!important;width:2px!important;height:2px!important;min-width:2px!important;min-height:2px!important;transform:translate3d(-200vw,-200vh,0) scale(.01)!important;clip-path:inset(50%)!important;}
       #cardville-intro-video-canvas{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;min-height:100vh!important;z-index:2147482400!important;pointer-events:none!important;background:#071126 center/cover no-repeat!important;display:block!important;visibility:visible!important;opacity:1!important;border:0!important;outline:0!important;image-rendering:auto!important;}
       #cardville-intro-video[data-cardville-video-playing-v172='false']{opacity:0!important;visibility:hidden!important;}
       #cardville-intro-video-shield{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;min-height:100vh!important;z-index:2147483000!important;pointer-events:none!important;background:#071126 center/cover no-repeat!important;display:block;visibility:visible;opacity:1;}
@@ -46,7 +47,7 @@
       }
     </script>
     <script>
-      window.__CARDVILLE_VERSION__ = '1.0.75';
+      window.__CARDVILLE_VERSION__ = '1.0.76';
       window.__CARDVILLE_READY__ = false;
       window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = 0;
       window.__CARDVILLE_INTRO_TOUCH_PRIME_TAG__ = 'intro-touch-prime-v169';
@@ -59,11 +60,13 @@
       window.__CARDVILLE_PROD_DEBUG_OVERLAY_KILL_TAG__ = 'production-debug-overlay-kill-v173';
       window.__CARDVILLE_INTRO_CONTROL_MASK_TAG__ = 'intro-native-control-mask-v174';
       window.__CARDVILLE_INTRO_PLAYMARK_SHIELD_TAG__ = 'intro-playmark-shield-v171';
-      window.__CARDVILLE_INTRO_CANVAS_VIDEO_TAG__ = 'intro-canvas-video-surface-v175';
-      window.__CARDVILLE_LEGACY_LOADING_DEADLOCK_TAG__ = 'legacy-loading-ui-deadlock-v175';
+      window.__CARDVILLE_INTRO_CANVAS_VIDEO_TAG__ = 'intro-canvas-video-surface-v176';
+      window.__CARDVILLE_LEGACY_LOADING_DEADLOCK_TAG__ = 'legacy-loading-ui-deadlock-v176';
+      window.__CARDVILLE_DELTA_PATCH_TAG__ = 'delta-patch-overwrite-v176';
+      window.__CARDVILLE_INTRO_CANVAS_ONLY_TAG__ = 'intro-canvas-only-video-surface-v176';
 
-      function cardvilleIntroSrc(){ return new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.75', document.baseURI).href; }
-      function cardvilleIntroPoster(){ return new URL('./assets/video/cardville_intro_poster.jpg?v=1.0.75', document.baseURI).href; }
+      function cardvilleIntroSrc(){ return new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.76', document.baseURI).href; }
+      function cardvilleIntroPoster(){ return new URL('./assets/video/cardville_intro_poster.jpg?v=1.0.76', document.baseURI).href; }
       function cardvilleEnsureIntroCanvas(){
         var id = 'cardville-intro-video-canvas';
         var canvas = document.getElementById(id);
@@ -71,9 +74,10 @@
           canvas = document.createElement('canvas');
           canvas.id = id;
           canvas.setAttribute('aria-hidden', 'true');
-          canvas.setAttribute('data-cardville-intro-canvas-video-surface-v175', 'true');
+          canvas.setAttribute('data-cardville-intro-canvas-video-surface-v176', 'true');
           canvas.setAttribute('data-cardville-no-progress-surface-v172', 'true');
-          canvas.setAttribute('data-cardville-legacy-loading-ui-deadlock-v175', 'true');
+          canvas.setAttribute('data-cardville-legacy-loading-ui-deadlock-v176', 'true');
+          canvas.setAttribute('data-cardville-intro-canvas-only-video-surface-v176', 'true');
           canvas.style.backgroundImage = "url('" + cardvilleIntroPoster() + "')";
           canvas.style.backgroundSize = 'cover';
           canvas.style.backgroundPosition = 'center';
@@ -109,14 +113,14 @@
         var sy = Math.max(0, (vh - sh) / 2);
         try {
           ctx.drawImage(video, sx, sy, sw, sh, 0, 0, cw, ch);
-          canvas.setAttribute('data-cardville-canvas-painted-v175', 'true');
+          canvas.setAttribute('data-cardville-canvas-painted-v176', 'true');
           return true;
         } catch(e) { return false; }
       }
       function cardvilleStartIntroCanvasMirror(video){
         if (!video) return;
         var canvas = cardvilleEnsureIntroCanvas();
-        video.setAttribute('data-cardville-canvas-video-v175', 'true');
+        video.setAttribute('data-cardville-canvas-video-v176', 'true');
         if (window.__CARDVILLE_INTRO_CANVAS_RAF__) window.cancelAnimationFrame(window.__CARDVILLE_INTRO_CANVAS_RAF__);
         var tick = function(){
           var liveVideo = document.getElementById('cardville-intro-video');
@@ -227,6 +231,7 @@
         video.setAttribute('x-webkit-airplay', 'deny');
         video.setAttribute('data-cardville-no-phaser-progress-v173', 'intro-no-phaser-progress-v173');
         video.setAttribute('data-cardville-legacy-code-guard-v173', 'legacy-code-revival-guard-v173');
+        video.setAttribute('data-cardville-canvas-only-video-surface-v176', 'true');
       }
       function cardvilleScrubNativeVideoUi(video){
         cardvilleStripNativeVideoUi(video);
@@ -262,8 +267,9 @@
         video.setAttribute('data-cardville-intro-preplay-shield-v172', 'true');
         video.setAttribute('data-cardville-no-progress-surface-v172', 'true');
         video.setAttribute('data-cardville-intro-native-control-mask-v174', 'true');
-        video.setAttribute('data-cardville-intro-canvas-video-surface-v175', 'true');
-        video.setAttribute('data-cardville-legacy-loading-ui-deadlock-v175', 'true');
+        video.setAttribute('data-cardville-intro-canvas-video-surface-v176', 'true');
+        video.setAttribute('data-cardville-legacy-loading-ui-deadlock-v176', 'true');
+        video.setAttribute('data-cardville-canvas-only-video-surface-v176', 'true');
         cardvilleEnsureIntroControlMask();
         cardvilleStripNativeVideoUi(video);
         if (video.getAttribute('data-cardville-video-playing-v172') !== 'true') video.setAttribute('data-cardville-video-playing-v172', 'false');
@@ -282,6 +288,7 @@
         video.style.outline = '0';
         video.style.border = '0';
         video.style.setProperty('-webkit-appearance', 'none');
+        video.setAttribute('data-cardville-canvas-only-video-surface-v176', 'true');
         return video;
       }
       window.__CARDVILLE_INTRO_VIDEO_HIDE_SHIELD__ = cardvilleHideIntroShield;
@@ -301,7 +308,7 @@
           document.body.appendChild(video);
         }
         cardvilleConfigureIntroVideo(video);
-        document.documentElement.classList.add('cardville-intro-hard-visible-v170', 'intro-hard-visible-v170', 'intro-no-native-video-ui-v171', 'intro-playmark-shield-v171', 'intro-preplay-shield-v172', 'intro-no-progress-surface-v172', 'intro-no-phaser-progress-v173', 'legacy-code-revival-guard-v173', 'production-debug-overlay-kill-v173', 'intro-native-control-mask-v174', 'intro-canvas-video-surface-v175', 'legacy-loading-ui-deadlock-v175');
+        document.documentElement.classList.add('cardville-intro-hard-visible-v170', 'intro-hard-visible-v170', 'intro-no-native-video-ui-v171', 'intro-playmark-shield-v171', 'intro-preplay-shield-v172', 'intro-no-progress-surface-v172', 'intro-no-phaser-progress-v173', 'legacy-code-revival-guard-v173', 'production-debug-overlay-kill-v173', 'intro-native-control-mask-v174', 'intro-canvas-video-surface-v176', 'intro-canvas-only-video-surface-v176', 'legacy-loading-ui-deadlock-v176', 'delta-patch-overwrite-v176');
         if (!window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ || window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ <= 0) {
           window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = Date.now();
         }
@@ -321,7 +328,7 @@
         }
         video.setAttribute('data-cardville-silent-intro-video-v167', 'true');
         video.setAttribute('data-cardville-started-at-zero-guard-v169', 'true');
-        document.documentElement.classList.add('cardville-intro-hard-visible-v170', 'intro-hard-visible-v170', 'intro-no-native-video-ui-v171', 'intro-playmark-shield-v171', 'intro-preplay-shield-v172', 'intro-no-progress-surface-v172', 'intro-no-phaser-progress-v173', 'legacy-code-revival-guard-v173', 'production-debug-overlay-kill-v173', 'intro-native-control-mask-v174', 'intro-canvas-video-surface-v175', 'legacy-loading-ui-deadlock-v175');
+        document.documentElement.classList.add('cardville-intro-hard-visible-v170', 'intro-hard-visible-v170', 'intro-no-native-video-ui-v171', 'intro-playmark-shield-v171', 'intro-preplay-shield-v172', 'intro-no-progress-surface-v172', 'intro-no-phaser-progress-v173', 'legacy-code-revival-guard-v173', 'production-debug-overlay-kill-v173', 'intro-native-control-mask-v174', 'intro-canvas-video-surface-v176', 'intro-canvas-only-video-surface-v176', 'legacy-loading-ui-deadlock-v176', 'delta-patch-overwrite-v176');
         var reveal = function(){ cardvilleKeepIntroShield(video); };
         var hideOnlyWhenPlaying = function(){ cardvilleScrubNativeVideoUi(video); cardvilleRevealIntroVideo(video); };
         video.addEventListener('playing', hideOnlyWhenPlaying, { once: true });
@@ -339,7 +346,7 @@
         if (video) video.remove();
         if (shield) shield.remove();
         if (mask) mask.remove();
-        document.documentElement.classList.remove('cardville-intro-hard-visible-v170', 'intro-hard-visible-v170', 'intro-no-native-video-ui-v171', 'intro-playmark-shield-v171', 'intro-preplay-shield-v172', 'intro-no-progress-surface-v172', 'intro-no-phaser-progress-v173', 'legacy-code-revival-guard-v173', 'production-debug-overlay-kill-v173', 'intro-native-control-mask-v174', 'intro-canvas-video-surface-v175', 'legacy-loading-ui-deadlock-v175');
+        document.documentElement.classList.remove('cardville-intro-hard-visible-v170', 'intro-hard-visible-v170', 'intro-no-native-video-ui-v171', 'intro-playmark-shield-v171', 'intro-preplay-shield-v172', 'intro-no-progress-surface-v172', 'intro-no-phaser-progress-v173', 'legacy-code-revival-guard-v173', 'production-debug-overlay-kill-v173', 'intro-native-control-mask-v174', 'intro-canvas-video-surface-v176', 'intro-canvas-only-video-surface-v176', 'legacy-loading-ui-deadlock-v176', 'delta-patch-overwrite-v176');
         window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = 0;
       };
       window.__CARDVILLE_BOOT_OK__ = function(){
@@ -348,7 +355,7 @@
         if (el) el.remove();
       };
       // Compatibility anchors: document.documentElement.classList.add('cardville-intro-hard-visible-v170'); document.documentElement.classList.remove('cardville-intro-hard-visible-v170'); no generic loading copy/bar on boot. no generic loading copy on boot.
-      // 1.0.75: raw video is mirrored to a canvas surface, native timelines stay masked, progress surfaces are removed, old startup surfaces are quarantined, old loading bars are quarantined, and empty lobby floor taps move the hero.
+      // 1.0.76: old loading bars are quarantined; full ZIP remains clean-install; Delta Patch ZIP is a changed-file overlay on v1.0.75 full. Raw video stays canvas-only/offscreen, native timelines stay masked, legacy startup/loading surfaces are quarantined, and empty lobby floor taps move the hero.
     </script>
     <script type="module" src="/src/main.ts"></script>
   </body>
