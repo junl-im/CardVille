@@ -16,9 +16,9 @@ const walk = (dir) => {
   return out;
 };
 const pkg = JSON.parse(read('package.json'));
-assert(pkg.version === '1.0.79', `expected package version 1.0.79, got ${pkg.version}`);
+assert(pkg.version === '1.0.80', `expected package version 1.0.80, got ${pkg.version}`);
 include('index.html', [
-  "window.__CARDVILLE_VERSION__ = '1.0.79'",
+  "window.__CARDVILLE_VERSION__ = '1.0.80'",
   'raw-video-offscreen-v177',
   'canvas-frame-preroll-v177',
   'cardvilleForceRawIntroOffscreen',
@@ -46,7 +46,7 @@ include('src/game/scenes/MainLobbyScene.ts', [
   'setDepth'
 ]);
 include('public/build.json', ['RawOffscreenCanvasGuard', 'raw-video-offscreen-v177', 'canvas-frame-preroll-v177', 'floor-walk-debounce-v177']);
-include('public/health.html', ['version 1.0.79', 'raw-video-offscreen-v177', 'canvas-frame-preroll-v177']);
+include('public/health.html', ['version 1.0.80', 'raw-video-offscreen-v177', 'canvas-frame-preroll-v177']);
 for (const file of walk('.').filter((name) => /\.(ts|tsx|html|css)$/.test(name) || name === 'index.html')) {
   const text = read(file);
   for (const banned of ['로딩중', '로딩 중', '이동 중...']) assert(!text.includes(banned), `${file} must not expose ${banned}`);

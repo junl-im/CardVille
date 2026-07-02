@@ -31,15 +31,15 @@ const walk = (dir) => {
 };
 
 const pkg = JSON.parse(read('package.json'));
-assert(pkg.version === '1.0.79', `expected package version 1.0.79, got ${pkg.version}`);
+assert(pkg.version === '1.0.80', `expected package version 1.0.80, got ${pkg.version}`);
 assert(pkg.scripts.verify.includes('check:intro-exit-copy-v167'), 'verify must include check:intro-exit-copy-v167');
 assert(pkg.scripts['check:intro-exit-copy-v167'] === 'node tools/check-intro-exit-copy-v167.mjs', 'check script mismatch');
 
 include('index.html', [
-  "window.__CARDVILLE_VERSION__ = '1.0.79'",
+  "window.__CARDVILLE_VERSION__ = '1.0.80'",
   '__CARDVILLE_INTRO_VIDEO_PREPARE__',
   '__CARDVILLE_INTRO_VIDEO_DONE__',
-  'cardville_intro_loading.mp4?v=1.0.79',
+  'cardville_intro_loading.mp4?v=1.0.80',
   'data-cardville-silent-intro-video-v167',
   'zIndex = \'2147482000\''
 ]);
@@ -95,10 +95,10 @@ include('src/game/scenes/BackConfirmScene.ts', ['뒤로가기 한 번 더 또는
 
 include('src/game/ui/TextStyles.ts', ['micro-text-fit-v167', 'global-micro-copy-v169', 'prefs.largeText ? 1.08 : 0.98', 'prefs.largeText ? 0.92 : 0.84']);
 include('src/game/systems/RewardPopupSystem.ts', ['popup-copy-fit-v167', 'popup-copy-safe-v169', 'popupW, 320', 'noticeText(9)', '128']);
-include('public/build.json', ['"version": "1.0.79"', 'IntroVideoHardVisible', 'intro-hard-visible-v170']);
-include('public/health.html', ['version 1.0.79', 'IntroVideoHardVisible']);
-include('README.md', ['# CardVille 1.0.79', '## 1.0.79 업데이트 내역', 'intro-min-3s-video-v168', 'double-back-exit-v168']);
-include('AI_HANDOFF_CARDVILLE.md', ['현재 기준 버전은 1.0.79', 'IntroVideoHardVisible', 'MIN_INTRO_VIDEO_MS = 3000', '새 docs 문서 생성 금지']);
+include('public/build.json', ['"version": "1.0.80"', 'IntroVideoHardVisible', 'intro-hard-visible-v170']);
+include('public/health.html', ['version 1.0.80', 'IntroVideoHardVisible']);
+include('README.md', ['# CardVille 1.0.80', '## 1.0.80 업데이트 내역', 'intro-min-3s-video-v168', 'double-back-exit-v168']);
+include('AI_HANDOFF_CARDVILLE.md', ['현재 기준 버전은 1.0.80', 'IntroVideoHardVisible', 'MIN_INTRO_VIDEO_MS = 3000', '새 docs 문서 생성 금지']);
 
 for (const file of walk('src').filter((name) => /\.(ts|tsx|js|mjs)$/.test(name))) {
   const text = read(file);

@@ -18,7 +18,7 @@ import { AccessibilitySystem } from '../systems/AccessibilitySystem';
 // Accessibility audit anchor retained: AccessibilitySystem.summary()
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
-const LOBBY_VERSION = '1.0.79';
+const LOBBY_VERSION = '1.0.80';
 const MISSION_TONE_COLORS = { gold: 0xffd86f, blue: 0x8fd3ff, purple: 0xd7a5ff, green: 0xa9f5b5, coral: 0xffb39a } as const;
 const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-visible-v149' as const;
 const VILLAGE_VISIBLE_BUILDING_SCALE_TAG = 'village-readable-building-scale-v150' as const;
@@ -58,6 +58,9 @@ const FLOOR_WALK_TARGET_CLAMP_TAG = 'floor-walk-target-clamp-v177' as const;
 const FLOOR_WALK_NATURAL_PACE_TAG = 'floor-walk-natural-pace-v178' as const;
 const FLOOR_WALK_DIAGONAL_TAG = 'floor-walk-diagonal-v178' as const;
 const NPC_BUILDING_TOUCH_SEPARATION_TAG = 'npc-building-touch-separation-v178' as const;
+const FLOOR_WALK_COMFORT_TIMING_TAG = 'floor-walk-comfort-timing-v180' as const;
+const FLOOR_WALK_TRAIL_FOLLOW_TAG = 'floor-walk-trail-follow-v180' as const;
+const NPC_CLEAR_BUILDING_LANE_TAG = 'npc-clear-building-lane-v180' as const;
 // Legacy mobile-exit-layout audit anchor retained while actual chip copy uses micro-fit: fontSize: '11px'.
 const HERO_HOME = { x: 195, y: 566 } as const;
 const CAT_HOME = { x: 146, y: 612 } as const;
@@ -114,7 +117,7 @@ export class MainLobbyScene extends Phaser.Scene {
     this.drawBottomHint(profile.nickname);
     // Runtime HUD shows only player-facing village UI, never build/debug notes.
     console.info('[CardVille] premium lobby art placement', LOBBY_ART_PLACEMENT_TAG, LOBBY_UI_NON_OVERLAP_TAG, LOBBY_USER_ASSET_VISIBLE_TAG, USER_LOBBY_ASSET_ASSIGNMENT_TAG, LOBBY_USER_ASSET_NPC_TAG);
-    console.info('[CardVille] lobby ready', { version: LOBBY_VERSION, tag: LOBBY_TOUCH_RECOVERY_TAG, input: LOBBY_INPUT_RESET_TAG, spread: LOBBY_FULLSCREEN_SPREAD_TAG, npcScale: NPC_RELATIVE_SCALE_LOCK_TAG, scaleTween: SCALE_TWEEN_DEDUPE_TAG, intro: SILENT_INTRO_VIDEO_LOOP_TAG, walk: FLOOR_WALK_NATURAL_PACE_TAG, npcSeparation: NPC_BUILDING_TOUCH_SEPARATION_TAG });
+    console.info('[CardVille] lobby ready', { version: LOBBY_VERSION, tag: LOBBY_TOUCH_RECOVERY_TAG, input: LOBBY_INPUT_RESET_TAG, spread: LOBBY_FULLSCREEN_SPREAD_TAG, npcScale: NPC_RELATIVE_SCALE_LOCK_TAG, scaleTween: SCALE_TWEEN_DEDUPE_TAG, intro: SILENT_INTRO_VIDEO_LOOP_TAG, walk: FLOOR_WALK_COMFORT_TIMING_TAG, npcSeparation: NPC_CLEAR_BUILDING_LANE_TAG });
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.cleanupLobbyRuntime());
     this.showLobbyCoach(recommendedBuildingId);
   }
@@ -545,7 +548,7 @@ export class MainLobbyScene extends Phaser.Scene {
       const hitW = (npc.touchWidth ?? Math.max(30, npc.width * 0.72)) * scale;
       const hitH = (npc.touchHeight ?? Math.max(34, npc.height * 0.74)) * scale;
       const zone = this.add.zone(hitX, hitY, hitW, hitH).setInteractive({ useHandCursor: true });
-      zone.setName(`npc-touch:${npc.key}:${NPC_BUILDING_TOUCH_SEPARATION_TAG}`);
+      zone.setName(`npc-touch:${npc.key}:${NPC_BUILDING_TOUCH_SEPARATION_TAG}:${NPC_CLEAR_BUILDING_LANE_TAG}`);
       zone.setDepth(y + 8);
       zone.on('pointerup', () => {
         if (this.busy) return;
@@ -886,7 +889,7 @@ export class MainLobbyScene extends Phaser.Scene {
     const floor = this.add.zone(l.cx, (top + bottom) / 2, Math.max(l.visibleWidth, this.scale.width), bottom - top)
       .setInteractive({ useHandCursor: false })
       .setDepth(80)
-      .setName(`${FREE_PLAZA_FLOOR_WALK_TAG}:${INTRO_MASK_FLOOR_MOVE_TAG}:${FLOOR_WALK_HIT_GUARD_TAG}:${FLOOR_WALK_INTERACTION_TAG}:${FLOOR_WALK_TAP_DEBOUNCE_TAG}:${FLOOR_WALK_TARGET_CLAMP_TAG}:${FLOOR_WALK_NATURAL_PACE_TAG}:${FLOOR_WALK_DIAGONAL_TAG}:${NPC_BUILDING_TOUCH_SEPARATION_TAG}`);
+      .setName(`${FREE_PLAZA_FLOOR_WALK_TAG}:${INTRO_MASK_FLOOR_MOVE_TAG}:${FLOOR_WALK_HIT_GUARD_TAG}:${FLOOR_WALK_INTERACTION_TAG}:${FLOOR_WALK_TAP_DEBOUNCE_TAG}:${FLOOR_WALK_TARGET_CLAMP_TAG}:${FLOOR_WALK_NATURAL_PACE_TAG}:${FLOOR_WALK_DIAGONAL_TAG}:${FLOOR_WALK_COMFORT_TIMING_TAG}:${FLOOR_WALK_TRAIL_FOLLOW_TAG}:${NPC_BUILDING_TOUCH_SEPARATION_TAG}:${NPC_CLEAR_BUILDING_LANE_TAG}`);
     floor.on('pointerup', (pointer: Phaser.Input.Pointer) => {
       if (this.busy || this.activeSettingsPanel) return;
       const now = this.time.now;
@@ -900,7 +903,7 @@ export class MainLobbyScene extends Phaser.Scene {
       if (blockedByInteractiveSurface) return;
       const x = Number.isFinite(pointer.worldX) ? pointer.worldX : pointer.x;
       const y = Number.isFinite(pointer.worldY) ? pointer.worldY : pointer.y;
-      this.walkPartyToFreePoint(x, y); // floor-walk-natural-pace-v178 floor-walk-diagonal-v178
+      this.walkPartyToFreePoint(x, y); // floor-walk-natural-pace-v178 floor-walk-diagonal-v178 floor-walk-comfort-timing-v180
     });
   }
 
@@ -917,7 +920,7 @@ export class MainLobbyScene extends Phaser.Scene {
     this.busy = true;
     this.activeSpeech?.destroy();
     this.activeSpeech = undefined;
-    this.hintText?.setText('천천히 광장을 걸어가요. 대각선 이동도 가능합니다.');
+    this.hintText?.setText('천천히 자연스럽게 걸어가요. 대각선 이동도 됩니다.');
     this.tweens.killTweensOf(this.hero);
     this.tweens.killTweensOf(this.cat);
     this.spawnTouchRipple(rawX, rawY);
@@ -925,7 +928,7 @@ export class MainLobbyScene extends Phaser.Scene {
     const duration = this.freeWalkDuration(distance, scale);
     const catTarget = this.trailingCatTarget(target.x, target.y, scale);
     this.spawnFootsteps(this.hero.x, this.hero.y, target.x, target.y, duration);
-    this.startWalkAnimation();
+    this.startWalkAnimation(135);
     let completed = 0;
     const finish = () => {
       completed += 1;
@@ -948,14 +951,14 @@ export class MainLobbyScene extends Phaser.Scene {
       x: catTarget.x,
       y: catTarget.y,
       scale: 1,
-      duration: Math.round(duration * 1.04),
-      delay: 120,
+      duration: Math.round(duration * 1.10),
+      delay: 180,
       ease: 'Sine.easeInOut',
       onUpdate: () => { this.cat?.setDepth((this.cat?.y ?? target.y) + 2); },
       onComplete: finish
     });
     if (isMotionEnabled(this.quality)) {
-      const stepCount = Phaser.Math.Clamp(Math.round(duration / 145), 4, 10);
+      const stepCount = Phaser.Math.Clamp(Math.round(duration / 170), 4, 12);
       this.addStepBounce(this.hero, stepCount, 3);
       this.addStepBounce(this.cat, Math.max(3, stepCount - 1), 2);
     }
@@ -970,17 +973,20 @@ export class MainLobbyScene extends Phaser.Scene {
   }
 
   private freeWalkDuration(distance: number, scale: number): number {
-    const naturalSpeed = 145 * scale; // floor-walk-natural-pace-v178: slower than older fixed 430 ms dash.
-    return Phaser.Math.Clamp(Math.round((distance / naturalSpeed) * 1000), 760, 1680);
+    const naturalSpeed = 112 * scale; // floor-walk-comfort-timing-v180: slower, calmer plaza walk.
+    return Phaser.Math.Clamp(Math.round((distance / naturalSpeed) * 1000), 920, 2400);
   }
 
   private trailingCatTarget(targetX: number, targetY: number, scale: number): { x: number; y: number } {
     const heroX = this.hero?.x ?? targetX;
-    const side = targetX >= heroX ? -1 : 1;
+    const heroY = this.hero?.y ?? targetY;
+    const dx = targetX - heroX;
+    const dy = targetY - heroY;
+    const distance = Math.max(1, Math.hypot(dx, dy));
     const l = layout(this);
     return {
-      x: Phaser.Math.Clamp(targetX + side * 28 * scale, l.visibleX + 28, l.visibleX + l.visibleWidth - 28),
-      y: Phaser.Math.Clamp(targetY + 22 * scale, Math.max(l.top + 226, this.vy(232)), Math.min(l.bottom - 84, this.vy(790)))
+      x: Phaser.Math.Clamp(targetX - (dx / distance) * 34 * scale, l.visibleX + 28, l.visibleX + l.visibleWidth - 28),
+      y: Phaser.Math.Clamp(targetY - (dy / distance) * 20 * scale + 20 * scale, Math.max(l.top + 226, this.vy(232)), Math.min(l.bottom - 84, this.vy(790)))
     };
   }
 
@@ -1036,13 +1042,13 @@ export class MainLobbyScene extends Phaser.Scene {
     }
   }
 
-  private startWalkAnimation(): void {
+  private startWalkAnimation(frameDelay = 110): void {
     const heroFrames = ['heroWalk01', 'heroWalk02', 'heroWalk03'];
     const catFrames = ['catWalk01', 'catWalk02'];
     let frame = 0;
     this.walkTimer?.remove(false);
     this.walkTimer = this.time.addEvent({
-      delay: 110,
+      delay: frameDelay,
       loop: true,
       callback: () => {
         if (this.heroImage && this.textures.exists(heroFrames[frame % heroFrames.length])) this.heroImage.setTexture(heroFrames[frame % heroFrames.length]);

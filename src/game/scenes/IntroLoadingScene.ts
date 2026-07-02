@@ -90,7 +90,7 @@ export class IntroLoadingScene extends Phaser.Scene {
       this.tryFinish();
     });
 
-    // 1.0.79: the opening video, preplay shield, and native-control mask are the only startup preparation surfaces.
+    // 1.0.80: the opening video, preplay shield, and native-control mask are the only startup preparation surfaces.
     // No Phaser progress surface is kept alive; legacy-code-revival-guard-v173 prevents old paths from returning.
 
     if (this.load.totalToLoad > 0) this.load.start();

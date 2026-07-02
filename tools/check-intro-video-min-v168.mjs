@@ -31,15 +31,15 @@ const walk = (dir) => {
 };
 
 const pkg = JSON.parse(read('package.json'));
-assert(pkg.version === '1.0.79', `expected package version 1.0.79, got ${pkg.version}`);
+assert(pkg.version === '1.0.80', `expected package version 1.0.80, got ${pkg.version}`);
 assert(pkg.scripts.verify.includes('check:intro-video-min-v168'), 'verify must include check:intro-video-min-v168');
 assert(pkg.scripts['check:intro-video-min-v168'] === 'node tools/check-intro-video-min-v168.mjs', 'check script mismatch');
 assert(exists('public/assets/video/cardville_intro_loading.mp4'), 'intro video asset missing from public/assets/video');
 
 include('index.html', [
-  "window.__CARDVILLE_VERSION__ = '1.0.79'",
+  "window.__CARDVILLE_VERSION__ = '1.0.80'",
   '__CARDVILLE_INTRO_VIDEO_STARTED_AT__',
-  "new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.79', document.baseURI).href",
+  "new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.80', document.baseURI).href",
   'data-cardville-min-intro-ms-v168',
   'data-cardville-video-only-loading-v168',
   "video.style.zIndex = '2147482000'",
@@ -101,10 +101,10 @@ include('src/game/systems/CoachMarkSystem.ts', ['coach-copy-fit-v168', 'applyTig
 include('src/game/systems/RewardPopupSystem.ts', ['popup-copy-room-v168', 'popup-copy-safe-v169', 'popupW, 320', 'noticeText(9)', '128']);
 include('src/game/systems/BackButtonSystem.ts', ['double-back-exit-v168', 'requestKakaoInAppClose', 'BackButtonSystem.requestExit(); // double-back-exit-v168']);
 include('src/game/scenes/BackConfirmScene.ts', ['뒤로가기 한 번 더 또는 나가기 버튼으로 창 닫기를 시도합니다.']);
-include('public/build.json', ['"version": "1.0.79"', 'IntroVideoHardVisible', 'intro-min-3s-video-v168']);
-include('public/health.html', ['version 1.0.79', 'IntroVideoHardVisible', 'intro-min-3s-video-v168']);
-include('README.md', ['# CardVille 1.0.79', '## 1.0.79 업데이트 내역', 'intro-min-3s-video-v168', 'CardVille_v1.0.79_IntroVideoHardVisible_Full.zip']);
-include('AI_HANDOFF_CARDVILLE.md', ['현재 기준 버전은 1.0.79', 'IntroVideoHardVisible', 'MIN_INTRO_VIDEO_MS = 3000', '새 docs 문서 생성 금지']);
+include('public/build.json', ['"version": "1.0.80"', 'IntroVideoHardVisible', 'intro-min-3s-video-v168']);
+include('public/health.html', ['version 1.0.80', 'IntroVideoHardVisible', 'intro-min-3s-video-v168']);
+include('README.md', ['# CardVille 1.0.80', '## 1.0.80 업데이트 내역', 'intro-min-3s-video-v168', 'CardVille_v1.0.80_IntroVideoHardVisible_Full.zip']);
+include('AI_HANDOFF_CARDVILLE.md', ['현재 기준 버전은 1.0.80', 'IntroVideoHardVisible', 'MIN_INTRO_VIDEO_MS = 3000', '새 docs 문서 생성 금지']);
 
 for (const file of walk('src').filter((name) => /\.(ts|tsx|js|mjs)$/.test(name))) {
   const text = read(file);

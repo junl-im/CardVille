@@ -30,6 +30,7 @@ export type LobbyNpc = {
 export const LOBBY_USER_ASSET_NPC_TAG = 'user-lobby-npc-visible-v156' as const;
 export const LOBBY_EDGE_NPC_SPREAD_TAG = 'lobby-edge-npc-spread-v160' as const;
 export const LOBBY_NPC_TAP_SEPARATION_TAG = 'npc-building-touch-separation-v178' as const;
+export const LOBBY_NPC_CLEAR_LANE_TAG = 'npc-clear-building-lane-v180' as const;
 
 export const LOBBY_PROPS: readonly LobbyProp[] = [
   { key: 'propPlazaTile96', x: 195, y: 416, width: 64, height: 44, alpha: 0.26, depth: 382 },
@@ -52,35 +53,35 @@ export const LOBBY_PROPS: readonly LobbyProp[] = [
 
 export const LOBBY_NPCS: readonly LobbyNpc[] = [
   {
-    key: 'npcGuard', x: 286, y: 354, width: 32, height: 46, label: '경비병', delay: 0, touchWidth: 28, touchHeight: 38, animation: 'salute',
+    key: 'npcGuard', x: 318, y: 354, width: 30, height: 43, label: '경비병', delay: 0, touchWidth: 22, touchHeight: 30, animation: 'salute',
     lines: ['카드 성은 왕실 홀 에셋 앞으로 다시 배치했어요.', '위쪽 HUD와 성이 겹치지 않도록 길을 넓혔습니다.']
   },
   {
-    key: 'npcLibrarian', x: 128, y: 512, width: 46, height: 62, label: '마법 사서', delay: 100, touchWidth: 34, touchHeight: 48, animation: 'book',
+    key: 'npcLibrarian', x: 24, y: 512, width: 42, height: 58, label: '마법 사서', delay: 100, touchWidth: 26, touchHeight: 36, animation: 'book',
     lines: ['이번엔 네가 준 마법 학자 NPC를 도서관 안내자로 크게 세웠어요.', '도서관 건물도 새 프리미엄 컷아웃이 바로 보이게 키웠답니다.']
   },
   {
-    key: 'npcWizard', x: 254, y: 512, width: 46, height: 62, label: '연금술사', delay: 200, touchWidth: 34, touchHeight: 48, animation: 'sparkle',
+    key: 'npcWizard', x: 366, y: 512, width: 42, height: 58, label: '연금술사', delay: 200, touchWidth: 26, touchHeight: 36, animation: 'sparkle',
     lines: ['연구소는 새 연금술/천문 연구소 건물과 발명가 NPC를 연결했어요.', '숫자 마법을 시작하려면 오른쪽 연구소를 눌러 보세요.']
   },
   {
-    key: 'npcMerchant', x: 132, y: 646, width: 50, height: 66, label: '상점 주인', delay: 300, touchWidth: 36, touchHeight: 50, animation: 'wave',
+    key: 'npcMerchant', x: 24, y: 646, width: 44, height: 60, label: '상점 주인', delay: 300, touchWidth: 28, touchHeight: 38, animation: 'wave',
     lines: ['새 상점 주인 컷아웃을 더 크게 보이도록 다시 배치했어요.', '상점 건물과 카드팩 버튼 사이도 더 넓혔답니다.']
   },
   {
-    key: 'npcTeacher', x: 260, y: 646, width: 34, height: 48, label: '선생님', delay: 400, touchWidth: 28, touchHeight: 38, animation: 'teach',
+    key: 'npcTeacher', x: 366, y: 646, width: 32, height: 44, label: '선생님', delay: 400, touchWidth: 22, touchHeight: 30, animation: 'teach',
     lines: ['학교는 영어 카드 수업을 준비 중이에요.', '오른쪽 건물 사이 간격을 넓혀 터치가 섞이지 않게 했어요.']
   },
   {
-    key: 'npcForestSagePremium', x: 128, y: 746, width: 46, height: 62, label: '숲지기', delay: 500, touchWidth: 34, touchHeight: 48, animation: 'book',
+    key: 'npcForestSagePremium', x: 24, y: 746, width: 42, height: 58, label: '숲지기', delay: 500, touchWidth: 26, touchHeight: 36, animation: 'book',
     lines: ['기억의 숲 게이트와 숲지기 NPC가 하단 HUD에 가리지 않도록 위로 정리했어요.', '숲의 등불이 켜지면 다음 짝을 찾을 준비가 된 거예요.']
   },
   {
-    key: 'npcCook', x: 270, y: 746, width: 30, height: 42, label: '요리사', delay: 600, touchWidth: 26, touchHeight: 34, animation: 'cook',
+    key: 'npcCook', x: 366, y: 746, width: 28, height: 38, label: '요리사', delay: 600, touchWidth: 22, touchHeight: 28, animation: 'cook',
     lines: ['이벤트 광장에는 오늘의 보상 냄새가 솔솔 나요!', '보상이 준비되면 중앙 이벤트 건물이 먼저 반짝입니다.']
   },
   {
-    key: 'npcChild01', x: 270, y: 536, width: 26, height: 38, label: '아이', delay: 700, touchWidth: 24, touchHeight: 30, animation: 'child',
+    key: 'npcChild01', x: 24, y: 574, width: 24, height: 34, label: '아이', delay: 700, touchWidth: 20, touchHeight: 26, animation: 'child',
     lines: ['광장 주변은 조금 더 여유 있게 비워 두었어요.', '건물 그림이 HUD보다 먼저 눈에 들어오게 정리했답니다.']
   }
 ];
@@ -94,5 +95,6 @@ export const LOBBY_SAFE_RULES = [
   '1.0.56 로비는 상단 HUD, 추천 리본, 하단 힌트가 건물 컷아웃을 덮지 않도록 별도 안전 구역에 배치',
   '사용자 제공 건물 4종과 NPC 4종은 실제 로비 키에 연결되어 크게 보이도록 배치',
   '저품질 임시 그림 금지: 기준 이미지와 같은 따뜻한 판타지 프리미엄 톤 유지',
-  '1.0.79 NPC는 건물 이름표와 건물 터치 박스 앞을 가리지 않도록 별도 보행 동선 옆에 배치'
+  '1.0.80 NPC는 건물 이름표와 건물 터치 박스 앞을 가리지 않도록 좌우 가장자리 보행 동선으로 분리 배치',
+  '1.0.80 NPC 터치 박스는 건물보다 작게 유지하고 중앙 광장/건물 전면 클릭을 방해하지 않음'
 ] as const;

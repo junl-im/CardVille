@@ -1,39 +1,42 @@
-# CardVille 1.0.79
+# CardVille 1.0.80
 
-## 1.0.79 업데이트 내역 - DocsHygieneDeltaPatch
+## 1.0.80 업데이트 내역 - LobbyComfortCleanDelta
 
-- 패치 정보는 README.md와 AI_HANDOFF_CARDVILLE.md에만 남깁니다. 패치 정보 기록 위치를 `README.md`와 `AI_HANDOFF_CARDVILLE.md` 두 파일로만 고정했습니다.
-- `PATCH_NOTES_v*.txt`, `CHANGELOG*`, `RELEASE_NOTES*`, 기타 임시 txt 기록 파일이 남지 않도록 `tools/check-doc-hygiene-v179.mjs`를 추가했습니다.
-- Delta Patch ZIP에는 변경 파일만 담고, `public/assets` 전체와 별도 패치노트 파일을 넣지 않습니다.
-- v1.0.78 통파일 위에 `CardVille_v1.0.79_DocsHygieneDeltaPatch_DeltaPatch.zip`을 덮어쓰면 됩니다.
-- Full ZIP은 깨끗한 전체 교체용입니다.
+- 패치 정보는 README.md와 AI_HANDOFF_CARDVILLE.md에만 남깁니다.
+- **LobbyComfortCleanDelta** 패스입니다. 이전 DocsHygieneDeltaPatch 정책도 계속 유지합니다. 광장 빈 공간 터치 이동 속도를 한 단계 더 낮추고, 대각선 이동 시 고양이가 캐릭터 뒤를 자연스럽게 따라오도록 보강했습니다.
+- `floor-walk-comfort-timing-v180`: 광장 이동 속도를 더 느리고 차분하게 조정했습니다. 거리 기반 이동 시간은 920~2400ms 범위로 계산합니다.
+- `floor-walk-trail-follow-v180`: 고양이는 단순 좌우 오프셋이 아니라 실제 이동 벡터 뒤쪽으로 따라오도록 바꿨습니다.
+- `npc-clear-building-lane-v180`: NPC를 좌우 가장자리 보행 동선으로 더 분리하고 터치 박스를 축소해 건물 이름표/건물 터치 앞을 덜 가리게 했습니다.
+- `tools/check-lobby-comfort-v180.mjs`를 추가해 빠른 430ms 이동, 이전 속도값, side-only 고양이 추적, `PATCH_NOTES*`/CHANGELOG/RELEASE_NOTES 같은 불필요 패치노트 파일, 로딩바 재발을 검증합니다.
+- Delta Patch는 v1.0.79 통파일 위에 덮어쓰는 변경 파일 중심 패치이며, `public/assets` 전체는 포함하지 않습니다.
+- 최종 ZIP 명명 규칙: `CardVille_v1.0.80_LobbyComfortCleanDelta_Full.zip`, `CardVille_v1.0.80_LobbyComfortCleanDelta_DeltaPatch.zip`.
 
-# CardVille 1.0.79
+# CardVille 1.0.80
 
-## 1.0.79 업데이트 내역
+## 1.0.80 업데이트 내역
 
 - **PlazaWalkNpcPolish** 패스입니다. 광장 빈 공간 터치 이동을 고정 430ms 돌진에서 거리 기반 자연 보행으로 바꾸고, 대각선 이동/발자국/고양이 따라오기 타이밍을 정리했습니다.
 - `floor-walk-natural-pace-v178` / `floor-walk-diagonal-v178`: 이동 시간은 거리에 따라 760~1680ms 범위로 계산합니다. x/y를 함께 tween하여 대각선 이동이 자연스럽게 보이도록 했습니다.
 - `npc-building-touch-separation-v178` / `npc-tap-zone-shrink-v178`: NPC 좌표를 건물 이름표와 터치 박스 옆으로 비켜 배치하고, NPC 터치 박스를 시각 몸통 중심으로 줄였습니다. 건물 누름과 NPC 말풍선 오터치가 섞이지 않도록 했습니다.
-- 이번 Delta Patch는 직전 통파일 `CardVille_v1.0.79_RawOffscreenCanvasGuard_Full.zip`에 덮어쓰는 변경 파일 중심 패치입니다. `public/assets` 전체는 포함하지 않습니다.
-- 최종 ZIP 명명 규칙: `CardVille_v1.0.79_PlazaWalkNpcPolish_Full.zip`, `CardVille_v1.0.79_PlazaWalkNpcPolish_DeltaPatch.zip`.
+- 이번 Delta Patch는 직전 통파일 `CardVille_v1.0.80_RawOffscreenCanvasGuard_Full.zip`에 덮어쓰는 변경 파일 중심 패치입니다. `public/assets` 전체는 포함하지 않습니다.
+- 최종 ZIP 명명 규칙: `CardVille_v1.0.80_PlazaWalkNpcPolish_Full.zip`, `CardVille_v1.0.80_PlazaWalkNpcPolish_DeltaPatch.zip`.
 
 
 카드마을 `<CardVille>`은 소년과 검은 고양이가 함께 카드마을을 탐험하며, 카드를 모아 마을을 성장시키는 모바일 우선 카드 퍼즐 게임입니다.
 
-## 1.0.79 업데이트 내역
+## 1.0.80 업데이트 내역
 
 - **RawOffscreenCanvasGuard** 패스입니다. 이번부터 패치 ZIP은 직전 통파일 `CardVille_v1.0.76_DeltaPatchCanvasGuard_Full.zip`에 덮어쓰는 **변경 파일 중심 Delta Patch**로 제공합니다. 통파일은 clean install용으로 유지하고, 덮어쓰기 패치는 변경된 소스/설정/검증 파일만 담아 용량을 줄입니다.
-- `delta-patch-overwrite-v176` / `raw-video-offscreen-v177` / `canvas-frame-preroll-v177`: 패치 제작 기준을 “직전 통파일 대비 변경 파일만 포함”으로 바꿨습니다. 기존 self-contained 패치가 컸던 이유는 `public/assets` 전체를 넣었기 때문이며, v1.0.79 Delta Patch는 변경 없는 assets를 제외합니다.
+- `delta-patch-overwrite-v176` / `raw-video-offscreen-v177` / `canvas-frame-preroll-v177`: 패치 제작 기준을 “직전 통파일 대비 변경 파일만 포함”으로 바꿨습니다. 기존 self-contained 패치가 컸던 이유는 `public/assets` 전체를 넣었기 때문이며, v1.0.80 Delta Patch는 변경 없는 assets를 제외합니다.
 - `intro-canvas-only-video-surface-v176`: 숨겨진 video는 더 멀리 offscreen 처리하고, 실제 표시 표면은 canvas만 유지해 native timeline/progress UI가 다시 보이는 위험을 더 낮췄습니다.
 - `floor-walk-interaction-v176`: 마을 빈 공간 터치 이동은 유지하되, 설정/하단 안내/건물/NPC 터치와 겹치면 바닥 이동이 끼어들지 않게 hit guard를 넓혔습니다.
 - `legacy-loading-ui-deadlock-v176`: 예전 로딩바/진행바/로딩 문구/native controls/디버그 표면이 다시 살아나는지 계속 감시합니다.
 - 검증 추가: `tools/check-delta-patch-v177.mjs`, `tools/check-canvas-hardening-v177.mjs` / `npm run check:delta-patch-v177` / `npm run check:canvas-hardening-v177`.
-- 최종 ZIP 명명 규칙: `CardVille_v1.0.79_RawOffscreenCanvasGuard_Full.zip`, `CardVille_v1.0.79_RawOffscreenCanvasGuard_DeltaPatch.zip`.
-- 검증 호환 앵커: CardVille_v1.0.75_CanvasIntroFloorPolish_Full.zip, CardVille_v1.0.79_DeltaPatchCanvasGuard_DeltaPatch.zip, CardVille_v1.0.79_DeltaPatchCanvasGuard_Full.zip.
+- 최종 ZIP 명명 규칙: `CardVille_v1.0.80_RawOffscreenCanvasGuard_Full.zip`, `CardVille_v1.0.80_RawOffscreenCanvasGuard_DeltaPatch.zip`.
+- 검증 호환 앵커: CardVille_v1.0.75_CanvasIntroFloorPolish_Full.zip, CardVille_v1.0.80_DeltaPatchCanvasGuard_DeltaPatch.zip, CardVille_v1.0.80_DeltaPatchCanvasGuard_Full.zip.
 - ZIP 제외 규칙: `node_modules`, `dist`, `package-lock.json`은 계속 제외합니다. 덮어쓰기용 Delta Patch는 `public/assets` 전체를 넣지 않습니다.
 
-- 검증 호환 앵커: CanvasIntroFloorPolish, IntroMaskFloorMove, LegacyGuardUIPolish, IntroCleanSweep, IntroNoOverlayPolish, IntroVideoHardVisible, IntroVideoMinFit, corner-sweep-v166, safe-area-copy-clamp-v166, intro-hard-visible-v170, intro-min-3s-video-v168, double-back-exit-v168, CardVille_v1.0.79_CanvasIntroFloorPolish_Full.zip, CardVille_v1.0.79_IntroMaskFloorMove_Full.zip, CardVille_v1.0.79_LegacyGuardUIPolish_Full.zip, CardVille_v1.0.79_IntroCleanSweep_Full.zip, CardVille_v1.0.79_IntroNoOverlayPolish_Full.zip, CardVille_v1.0.79_IntroVideoHardVisible_Full.zip.
+- 검증 호환 앵커: CanvasIntroFloorPolish, IntroMaskFloorMove, LegacyGuardUIPolish, IntroCleanSweep, IntroNoOverlayPolish, IntroVideoHardVisible, IntroVideoMinFit, corner-sweep-v166, safe-area-copy-clamp-v166, intro-hard-visible-v170, intro-min-3s-video-v168, double-back-exit-v168, CardVille_v1.0.80_CanvasIntroFloorPolish_Full.zip, CardVille_v1.0.80_IntroMaskFloorMove_Full.zip, CardVille_v1.0.80_LegacyGuardUIPolish_Full.zip, CardVille_v1.0.80_IntroCleanSweep_Full.zip, CardVille_v1.0.80_IntroNoOverlayPolish_Full.zip, CardVille_v1.0.80_IntroVideoHardVisible_Full.zip.
 
 ## 1.0.72 업데이트 내역
 
@@ -1692,4 +1695,4 @@ CardVille_Project_Patch_이전버전_to_새버전.zip
 - 카드게임 엔진 태그 `card-engine-upgrade-v158` 및 `calculateComboScore`/tap guard 기반을 추가했다.
 - `check-screen-playfield` 검증을 추가해 UI 안전 영역, 카드 레이아웃, 터치 타깃, 엔진 태그가 누락되지 않게 했다.
 
-- 추가 검증 호환 ZIP 앵커: CardVille_v1.0.79_IntroGuardUIPolish_Full.zip, CardVille_v1.0.79_IntroGuardUIPolish_Patch.zip, CardVille_v1.0.79_IntroVideoMinFit_Full.zip, CardVille_v1.0.79_CornerSweepStability_Full.zip, CardVille_v1.0.79_FlowFitUIPolish_Full.zip.
+- 추가 검증 호환 ZIP 앵커: CardVille_v1.0.80_IntroGuardUIPolish_Full.zip, CardVille_v1.0.80_IntroGuardUIPolish_Patch.zip, CardVille_v1.0.80_IntroVideoMinFit_Full.zip, CardVille_v1.0.80_CornerSweepStability_Full.zip, CardVille_v1.0.80_FlowFitUIPolish_Full.zip.

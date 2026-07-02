@@ -48,7 +48,7 @@
       }
     </script>
     <script>
-      window.__CARDVILLE_VERSION__ = '1.0.79';
+      window.__CARDVILLE_VERSION__ = '1.0.80';
       window.__CARDVILLE_READY__ = false;
       window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = 0;
       window.__CARDVILLE_INTRO_TOUCH_PRIME_TAG__ = 'intro-touch-prime-v169';
@@ -68,8 +68,8 @@
       window.__CARDVILLE_INTRO_RAW_OFFSCREEN_TAG__ = 'raw-video-offscreen-v177';
       window.__CARDVILLE_CANVAS_PREROLL_TAG__ = 'canvas-frame-preroll-v177';
 
-      function cardvilleIntroSrc(){ return new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.79', document.baseURI).href; }
-      function cardvilleIntroPoster(){ return new URL('./assets/video/cardville_intro_poster.jpg?v=1.0.79', document.baseURI).href; }
+      function cardvilleIntroSrc(){ return new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.80', document.baseURI).href; }
+      function cardvilleIntroPoster(){ return new URL('./assets/video/cardville_intro_poster.jpg?v=1.0.80', document.baseURI).href; }
       function cardvilleEnsureIntroCanvas(){
         var id = 'cardville-intro-video-canvas';
         var canvas = document.getElementById(id);
@@ -394,7 +394,7 @@
         if (el) el.remove();
       };
       // Compatibility anchors: video.style.opacity = '1'; video.style.visibility = 'visible'; old loading bars are quarantined; document.documentElement.classList.add('cardville-intro-hard-visible-v170'); document.documentElement.classList.remove('cardville-intro-hard-visible-v170'); no generic loading copy/bar on boot. no generic loading copy on boot.
-      // 1.0.79: Delta Patch is a changed-file overlay on v1.0.76 full. Raw video is forced offscreen; the visible intro surface is canvas-only with a poster/canvas preroll shield, and empty lobby floor taps use guarded movement.
+      // 1.0.80: Delta Patch is a changed-file overlay on v1.0.76 full. Raw video is forced offscreen; the visible intro surface is canvas-only with a poster/canvas preroll shield, and empty lobby floor taps use guarded movement.
     </script>
     <script type="module" src="/src/main.ts"></script>
   </body>
