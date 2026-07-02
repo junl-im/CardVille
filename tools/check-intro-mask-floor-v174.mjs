@@ -32,14 +32,14 @@ const walk = (dir) => {
 
 const pkg = JSON.parse(read('package.json'));
 const build = JSON.parse(read('public/build.json'));
-assert(pkg.version === '1.0.78', `expected package version 1.0.78, got ${pkg.version}`);
+assert(pkg.version === '1.0.79', `expected package version 1.0.79, got ${pkg.version}`);
 assert(build.version === pkg.version, `build version ${build.version} != package ${pkg.version}`);
 assert(pkg.scripts.verify.includes('check:intro-mask-floor-v174'), 'verify must include check:intro-mask-floor-v174');
 assert(pkg.scripts['check:intro-mask-floor-v174'] === 'node tools/check-intro-mask-floor-v174.mjs', 'check script mismatch');
 
 include('index.html', [
-  "window.__CARDVILLE_VERSION__ = '1.0.78'",
-  "cardville_intro_loading.mp4?v=1.0.78",
+  "window.__CARDVILLE_VERSION__ = '1.0.79'",
+  "cardville_intro_loading.mp4?v=1.0.79",
   'cardville-intro-video-control-mask',
   'intro-native-control-mask-v174',
   'cardvilleEnsureIntroControlMask',
@@ -100,10 +100,10 @@ for (const file of walk('src').filter((name) => /\.(ts|tsx|js|mjs)$/.test(name))
   assert(!text.includes("video.setAttribute('controls'"), `${file} must not enable native video controls`);
 }
 
-include('public/build.json', ['"version": "1.0.78"', 'IntroMaskFloorMove', 'intro-native-control-mask-v174']);
-include('public/health.html', ['version 1.0.78', 'IntroMaskFloorMove', 'intro-native-control-mask-v174']);
-include('README.md', ['# CardVille 1.0.78', '## 1.0.78 업데이트 내역', 'IntroMaskFloorMove', 'CardVille_v1.0.78_IntroMaskFloorMove_Full.zip']);
-include('AI_HANDOFF_CARDVILLE.md', ['현재 기준 버전은 1.0.78', 'IntroMaskFloorMove', 'intro-native-control-mask-v174', 'free-plaza-floor-walk-v174']);
+include('public/build.json', ['"version": "1.0.79"', 'IntroMaskFloorMove', 'intro-native-control-mask-v174']);
+include('public/health.html', ['version 1.0.79', 'IntroMaskFloorMove', 'intro-native-control-mask-v174']);
+include('README.md', ['# CardVille 1.0.79', '## 1.0.79 업데이트 내역', 'IntroMaskFloorMove', 'CardVille_v1.0.79_IntroMaskFloorMove_Full.zip']);
+include('AI_HANDOFF_CARDVILLE.md', ['현재 기준 버전은 1.0.79', 'IntroMaskFloorMove', 'intro-native-control-mask-v174', 'free-plaza-floor-walk-v174']);
 
 const docs = fs.readdirSync(path.join(root, 'docs')).filter((name) => name.endsWith('.md')).sort();
 assert(docs.join('|') === 'CARDVILLE_ART_DIRECTION_BIBLE.md|CARDVILLE_ASSET_PROMPT_PACK.md', `unexpected docs files: ${docs.join(', ')}`);

@@ -23,13 +23,13 @@ function exclude(file, tokens) {
   }
 }
 
-assert(pkg.version === '1.0.78', `expected package version 1.0.78, got ${pkg.version}`);
+assert(pkg.version === '1.0.79', `expected package version 1.0.79, got ${pkg.version}`);
 assert(build.version === pkg.version, `build.json version ${build.version} != package ${pkg.version}`);
 assert(exists('public/assets/video/cardville_intro_loading.mp4'), 'intro video mp4 must be included in public/assets/video');
 
 include('index.html', [
-  "window.__CARDVILLE_VERSION__ = '1.0.78'",
-  "new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.78', document.baseURI).href",
+  "window.__CARDVILLE_VERSION__ = '1.0.79'",
+  "new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.79', document.baseURI).href",
   "window.__CARDVILLE_INTRO_HARD_VISIBLE_TAG__ = 'intro-hard-visible-v170'",
   "video.style.display = 'block'",
   "video.style.visibility = 'visible'",
@@ -95,9 +95,9 @@ include('src/game/ui/TextStyles.ts', [
   'return prefs.largeText ? 1.05 : 0.94',
   'return prefs.largeText ? 0.88 : 0.80'
 ]);
-include('public/build.json', ['"version": "1.0.78"', 'IntroVideoHardVisible', 'intro-hard-visible-v170']);
-include('public/health.html', ['version 1.0.78', 'IntroVideoHardVisible', 'intro-hard-visible-v170']);
-include('AI_HANDOFF_CARDVILLE.md', ['현재 기준 버전은 1.0.78', 'IntroVideoHardVisible', 'intro-hard-visible-v170', 'CardVille_v1.0.78_IntroVideoHardVisible_Full.zip']);
-include('README.md', ['# CardVille 1.0.78', '## 1.0.78 업데이트 내역', 'IntroVideoHardVisible']);
+include('public/build.json', ['"version": "1.0.79"', 'IntroVideoHardVisible', 'intro-hard-visible-v170']);
+include('public/health.html', ['version 1.0.79', 'IntroVideoHardVisible', 'intro-hard-visible-v170']);
+include('AI_HANDOFF_CARDVILLE.md', ['현재 기준 버전은 1.0.79', 'IntroVideoHardVisible', 'intro-hard-visible-v170', 'CardVille_v1.0.79_IntroVideoHardVisible_Full.zip']);
+include('README.md', ['# CardVille 1.0.79', '## 1.0.79 업데이트 내역', 'IntroVideoHardVisible']);
 
-console.log('Intro video hard-visible v1.0.78 check passed: video-only startup, 3s guard, copy fit, nameplate/settings UI sweep verified.');
+console.log('Intro video hard-visible v1.0.79 check passed: video-only startup, 3s guard, copy fit, nameplate/settings UI sweep verified.');

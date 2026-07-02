@@ -7,11 +7,11 @@ const assert = (condition, message) => { if (!condition) { console.error(`[check
 const include = (file, tokens) => { const text = read(file); for (const token of Array.isArray(tokens) ? tokens : [tokens]) assert(text.includes(token), `${file} missing ${token}`); };
 const pkg = JSON.parse(read('package.json'));
 const build = JSON.parse(read('public/build.json'));
-assert(pkg.version === '1.0.78', `expected package version 1.0.78, got ${pkg.version}`);
+assert(pkg.version === '1.0.79', `expected package version 1.0.79, got ${pkg.version}`);
 assert(build.version === pkg.version, `build version ${build.version} != package ${pkg.version}`);
 assert(pkg.scripts.verify.includes('check:plaza-walk-npc-v178'), 'verify must include check:plaza-walk-npc-v178');
 include('src/game/scenes/MainLobbyScene.ts', [
-  "const LOBBY_VERSION = '1.0.78'",
+  "const LOBBY_VERSION = '1.0.79'",
   'floor-walk-natural-pace-v178',
   'floor-walk-diagonal-v178',
   'npc-building-touch-separation-v178',
@@ -36,17 +36,17 @@ include('src/game/data/lobbyEntities.ts', [
 ]);
 include('README.md', [
   'PlazaWalkNpcPolish',
-  'CardVille_v1.0.78_RawOffscreenCanvasGuard_Full.zip',
-  'CardVille_v1.0.78_PlazaWalkNpcPolish_DeltaPatch.zip',
+  'CardVille_v1.0.79_RawOffscreenCanvasGuard_Full.zip',
+  'CardVille_v1.0.79_PlazaWalkNpcPolish_DeltaPatch.zip',
   'public/assets` 전체는 포함하지 않습니다'
 ]);
 include('AI_HANDOFF_CARDVILLE.md', [
-  '1.0.78 PlazaWalkNpcPolish',
+  '1.0.79 PlazaWalkNpcPolish',
   'floor-walk-natural-pace-v178',
   'npc-tap-zone-shrink-v178'
 ]);
 include('public/build.json', ['PlazaWalkNpcPolish', 'floor-walk-natural-pace-v178', 'floor-walk-diagonal-v178', 'npc-building-touch-separation-v178']);
-include('public/health.html', ['version 1.0.78', 'PlazaWalkNpcPolish', 'floor-walk-natural-pace-v178']);
+include('public/health.html', ['version 1.0.79', 'PlazaWalkNpcPolish', 'floor-walk-natural-pace-v178']);
 assert(!read('src/game/scenes/MainLobbyScene.ts').includes('duration: 430'), 'old fixed 430ms floor dash must not remain');
 assert(!read('src/game/scenes/MainLobbyScene.ts').includes('width + 34 * scale, height + 42 * scale'), 'old oversized NPC hit zone must not remain');
 const banned = ['로딩중', '로딩 중', '이동 중...', 'progressBar = this.add'];
