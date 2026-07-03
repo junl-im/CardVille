@@ -1,15 +1,15 @@
 {
   "name": "cardville",
-  "version": "1.0.85",
+  "version": "1.0.86",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.85 stabilizes GitHub Pages deployment diagnostics, removes invalid deploy-pages timeout overrides, and leaves gameplay screens untouched.",
+  "description": "CardVille 1.0.86 cleans up temporary GitHub Pages deployment diagnostics after successful deploy, keeps preflight verification, and leaves gameplay screens untouched.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "check:deploy": "node tools/check-deploy.mjs",
-    "verify": "npm run build && npm run check:doc-hygiene-v179 && npm run check:focused-cleanup-v181 && npm run check:security",
+    "verify": "npm run build && npm run check:deploy && npm run check:doc-hygiene-v179 && npm run check:focused-cleanup-v181 && npm run check:security",
     "check:brand": "node tools/check-brand.mjs",
     "check:ui": "node tools/check-ui.mjs",
     "check:layout": "node tools/check-layout.mjs",

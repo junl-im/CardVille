@@ -24,14 +24,14 @@ const walk = (dir) => {
 
 const pkg = JSON.parse(read('package.json'));
 const build = JSON.parse(read('public/build.json'));
-assert(pkg.version === '1.0.85', `expected package version 1.0.85, got ${pkg.version}`);
+assert(pkg.version === '1.0.86', `expected package version 1.0.86, got ${pkg.version}`);
 assert(build.version === pkg.version, 'build version must match package version');
 assert(build.assetVersion === pkg.version, 'asset version must match package version');
 assert(pkg.scripts.verify.includes('check:focused-cleanup-v181'), 'verify must include focused cleanup check');
 
 const index = read('index.html');
-assert(index.includes("window.__CARDVILLE_VERSION__ = '1.0.85'"), 'index version must be 1.0.85');
-assert(index.includes('cardville_intro_loading.mp4?v=1.0.85'), 'intro video cache key must use current package version');
+assert(index.includes("window.__CARDVILLE_VERSION__ = '1.0.86'"), 'index version must be 1.0.86');
+assert(index.includes('cardville_intro_loading.mp4?v=1.0.86'), 'intro video cache key must use current package version');
 for (const token of [
   '__CARDVILLE_INTRO_TOUCH_PRIME_TAG__',
   '__CARDVILLE_INTRO_HARD_VISIBLE_TAG__',
@@ -65,7 +65,7 @@ assert(text.includes('return prefs.largeText ? 1.08 : 0.97'), 'global text scale
 assert(text.includes('return prefs.largeText ? 0.91 : 0.83'), 'notice text scale must be slightly raised');
 
 const lobby = read('src/game/scenes/MainLobbyScene.ts');
-assert(lobby.includes("const LOBBY_VERSION = '1.0.85'"), 'lobby version must be 1.0.85');
+assert(lobby.includes("const LOBBY_VERSION = '1.0.86'"), 'lobby version must be 1.0.86');
 assert(lobby.includes('floor-walk-smooth-no-container-bounce'), 'smooth walk cleanup tag must be present');
 assert(lobby.includes('const naturalSpeed = 96 * scale'), 'free walk speed must be calmer');
 assert(lobby.includes('this.startWalkAnimation(150)'), 'walk frame timing must be calmer');
@@ -81,16 +81,16 @@ for (const file of ['index.html', 'src/game/scenes/IntroLoadingScene.ts', 'src/g
 const handoff = read('AI_HANDOFF_CARDVILLE.md');
 const readme = read('README.md');
 for (const token of [
-  '## 1.0.85 - PagesDeployDiagnose',
-  '현재 작업 기준: 1.0.85',
+  '## 1.0.86 - PagesDeployClean',
+  '현재 작업 기준: 1.0.86',
   '새 버전 번호가 붙은 install...Pass() / sync...Ui() 함수를 새로 추가하지 않습니다',
   '삭제했다/통합했다',
   'README.md와 AI_HANDOFF_CARDVILLE.md에만 기록을 누적합니다',
-  'CV_v1.0.85_DeployDiagnose_Full.zip',
-  'CV_v1.0.85_DeployDiagnose_Patch.zip'
+  'CV_v1.0.86_DeployClean_Full.zip',
+  'CV_v1.0.86_DeployClean_Patch.zip'
 ]) assert(handoff.includes(token), `AI_HANDOFF_CARDVILLE.md missing ${token}`);
 assert(!handoff.includes('## 현재 작업 기준: 1.0.80'), 'handoff must not keep stale current work baseline 1.0.80');
-for (const token of ['# CardVille 1.0.85', '## 1.0.85 - PagesDeployDiagnose', 'deploy-preflight-v185', 'CV_v1.0.85_DeployDiagnose_Full.zip']) {
+for (const token of ['# CardVille 1.0.86', '## 1.0.86 - PagesDeployClean', 'deploy-preflight-v186', 'CV_v1.0.86_DeployClean_Full.zip']) {
   assert(readme.includes(token), `README.md missing ${token}`);
 }
 

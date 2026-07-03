@@ -1,3 +1,16 @@
+## 1.0.86 - PagesDeployClean
+
+- 작업 범위는 GitHub Pages 배포 정상화 이후 임시 실패 진단 경로 정리, 최소 권한 복구, 배포 검증 체인 보강으로 제한했습니다. 게임 화면/씬 기능 로직은 수정하지 않았습니다.
+- 사용자가 v1.0.85 배포가 정상 동작한다고 확인했습니다. 따라서 실패 당시 관측용으로 넣었던 `Print Pages context`, `Diagnose failed Pages deployment`, `continue-on-error: true`는 더 이상 상시 경로에 둘 필요가 없다고 판단했습니다.
+- 현재 작업 기준은 1.0.86입니다. 1.0.85 통파일 위에 `CV_v1.0.86_DeployClean_Patch.zip`을 덮어쓰거나, 클린 설치는 `CV_v1.0.86_DeployClean_Full.zip`을 사용합니다.
+- 호출 추적 결과: `.github/workflows/deploy.yml`은 GitHub Actions에서만 실행되는 CI/CD 파일이며 런타임 게임 씬에서 import되지 않습니다. `tools/check-deploy.mjs`, `tools/check-doc-hygiene-v179.mjs`, `tools/check-focused-cleanup-v181.mjs`도 npm 검증 스크립트로만 호출됩니다. 따라서 deploy job step/권한/검증 문자열 갱신은 플레이 동작에 영향이 없습니다.
+- `.github/workflows/deploy.yml`에서 임시 진단 step인 `Print Pages context`와 `Diagnose failed Pages deployment`를 삭제했습니다. `deploy-pages@v5` step의 `continue-on-error: true`도 삭제해 실패 시 표준 action 실패가 그대로 workflow 실패가 되도록 통합했습니다.
+- 진단 step 삭제에 맞춰 `permissions`의 `actions: read`, `deployments: read`도 삭제했습니다. 배포에 필요한 `contents: read`, `pages: write`, `id-token: write`만 유지합니다.
+- `package.json`의 `verify` 체인에 `npm run check:deploy`를 추가했습니다. 앞으로 YAML 파싱/액션 버전/Pages artifact 사전검수 규칙이 upload 전 build job에서 같이 검증됩니다.
+- `tools/check-deploy.mjs`는 임시 진단 경로가 다시 남지 않는지, `check:deploy`가 `verify`에 포함되어 있는지, 최소 권한 정책을 지키는지 확인하도록 갱신했습니다.
+- 삭제한 런타임 함수/화면 코드는 없습니다. 새 버전 번호가 붙은 install...Pass() / sync...Ui() 함수도 추가하지 않았습니다. 실제 삭제/통합한 것은 v1.0.85의 임시 deploy 실패 진단 step과 진단 전용 추가 권한입니다.
+- 안전 판단 근거: 수정 파일은 CI/CD와 검증/문서/버전 표기에 한정되며, `src/game/scenes/MainLobbyScene.ts`와 `src/main.ts`는 버전 문자열만 변경했습니다. 화면 배치/입력/인트로/광장 이동 로직은 수정하지 않았습니다.
+
 ## 1.0.85 - PagesDeployDiagnose
 
 - 작업 범위는 GitHub Pages deploy job 안정화와 실패 진단 강화로 제한했습니다. 게임 화면/씬 기능 로직은 수정하지 않았습니다.
@@ -57,9 +70,9 @@
 
 # CardVille AI Handoff
 
-## 현재 작업 기준: 1.0.85
+## 현재 작업 기준: 1.0.86
 
-현재 기준 버전은 1.0.85입니다.
+현재 기준 버전은 1.0.86입니다.
 
 ## 1.0.81 - FocusedCleanupWordTextWalk
 

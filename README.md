@@ -1,3 +1,21 @@
+# CardVille 1.0.86
+
+## 1.0.86 - PagesDeployClean
+
+## 1.0.86 업데이트 내역
+
+- 작업 범위: GitHub Pages 배포 정상화 이후 임시 진단 경로 정리와 배포 검증 체인 보강만 진행했습니다. 게임 화면/씬 기능 로직은 수정하지 않았습니다.
+- 사용자가 v1.0.85 배포가 정상 동작한다고 확인했으므로, 실패 관측용으로 임시 추가했던 `Print Pages context`, `Diagnose failed Pages deployment`, `continue-on-error: true`를 워크플로에서 삭제하고 표준 `deploy-pages@v5` 실패 흐름으로 통합했습니다.
+- `deploy-clean-v186`: 진단 전용 `actions: read`, `deployments: read` 권한을 삭제하고 Pages 배포에 필요한 `contents: read`, `pages: write`, `id-token: write`만 남겼습니다.
+- `deploy-check-in-verify-v186`: `npm run verify`에 `npm run check:deploy`를 포함해 GitHub Actions YAML/Pages artifact preflight 규칙이 배포 직전에 항상 검수되도록 했습니다.
+- `deploy-preflight-v186`: dist 필수 파일, symlink 금지, 1GB 미만, 파일 수 10000개 이하, YAML-safe basename listing 정책은 유지했습니다.
+- 호출 추적 결과 `.github/workflows/deploy.yml`은 GitHub Actions에서만 실행되고 런타임 게임 씬에서 import되지 않습니다. `tools/check-deploy.mjs`, `tools/check-doc-hygiene-v179.mjs`, `tools/check-focused-cleanup-v181.mjs`도 npm 검증 스크립트로만 호출됩니다.
+- 삭제한 런타임 함수나 화면 코드는 없습니다. 새 버전 번호가 붙은 install...Pass() / sync...Ui() 함수도 추가하지 않았습니다.
+- 실제 삭제/통합한 것은 v1.0.85의 임시 deploy 실패 진단 step과 진단 전용 추가 권한입니다. 배포 성공 기준에서는 표준 deploy step 자체의 실패가 곧 workflow 실패로 이어지므로 안전하다고 판단했습니다.
+- 기록은 README.md와 AI_HANDOFF_CARDVILLE.md에만 누적합니다. PATCH_NOTES, CHANGELOG, RELEASE_NOTES, 임시 txt, 새 진행 기록 문서는 만들지 않습니다.
+- 최종 ZIP 명명 규칙: `CV_v1.0.86_DeployClean_Full.zip`, `CV_v1.0.86_DeployClean_Patch.zip`.
+- Patch ZIP은 v1.0.85 통파일 위에 덮어쓰는 변경 파일 전용 패치이며 `public/assets` 전체는 포함하지 않습니다.
+
 # CardVille 1.0.85
 
 ## 1.0.85 - PagesDeployDiagnose

@@ -9,8 +9,6 @@ permissions:
   contents: read
   pages: write
   id-token: write
-  actions: read
-  deployments: read
 
 concurrency:
   group: cardville-pages
@@ -90,36 +88,11 @@ jobs:
     timeout-minutes: 15
     needs: build
     steps:
-      - name: Print Pages context
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          echo "repository: ${GITHUB_REPOSITORY}"
-          echo "sha: ${GITHUB_SHA}"
-          echo "run: ${GITHUB_RUN_ID}"
-          gh api "repos/${GITHUB_REPOSITORY}/pages" --jq '{status,html_url,build_type,source,cname,https_enforced}' || true
-
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
-        continue-on-error: true
         with:
           artifact_name: github-pages
 
-      - name: Diagnose failed Pages deployment
-        if: steps.deployment.outcome != 'success'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          echo "deploy-pages outcome: ${{ steps.deployment.outcome }}"
-          echo 'Pages site:'
-          gh api "repos/${GITHUB_REPOSITORY}/pages" --jq '{status,html_url,build_type,source,cname,https_enforced}' || true
-          echo 'Recent Pages deployments:'
-          gh api "repos/${GITHUB_REPOSITORY}/pages/deployments?per_page=5" --jq '.[] | {id,status,page_url,created_at,updated_at,error}' || true
-          echo 'Recent github-pages environment deployments:'
-          gh api "repos/${GITHUB_REPOSITORY}/deployments?environment=github-pages&per_page=5" --jq '.[] | {id,sha,ref,environment,created_at,updated_at,task}' || true
-          exit 1
-
       - name: Print URL
-        if: steps.deployment.outcome == 'success'
         run: echo "${{ steps.deployment.outputs.page_url }}"
