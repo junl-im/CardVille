@@ -18,7 +18,7 @@ import { AccessibilitySystem } from '../systems/AccessibilitySystem';
 // Accessibility audit anchor retained: AccessibilitySystem.summary()
 import { DailyMissionSystem } from '../systems/DailyMissionSystem';
 
-const LOBBY_VERSION = '1.0.80';
+const LOBBY_VERSION = '1.0.81';
 const MISSION_TONE_COLORS = { gold: 0xffd86f, blue: 0x8fd3ff, purple: 0xd7a5ff, green: 0xa9f5b5, coral: 0xffb39a } as const;
 const PREMIUM_LOBBY_FIT_TAG = 'premium-asset-visible-v149' as const;
 const VILLAGE_VISIBLE_BUILDING_SCALE_TAG = 'village-readable-building-scale-v150' as const;
@@ -61,6 +61,7 @@ const NPC_BUILDING_TOUCH_SEPARATION_TAG = 'npc-building-touch-separation-v178' a
 const FLOOR_WALK_COMFORT_TIMING_TAG = 'floor-walk-comfort-timing-v180' as const;
 const FLOOR_WALK_TRAIL_FOLLOW_TAG = 'floor-walk-trail-follow-v180' as const;
 const NPC_CLEAR_BUILDING_LANE_TAG = 'npc-clear-building-lane-v180' as const;
+const FLOOR_WALK_SMOOTH_NO_BOUNCE_TAG = 'floor-walk-smooth-no-container-bounce' as const;
 // Legacy mobile-exit-layout audit anchor retained while actual chip copy uses micro-fit: fontSize: '11px'.
 const HERO_HOME = { x: 195, y: 566 } as const;
 const CAT_HOME = { x: 146, y: 612 } as const;
@@ -117,7 +118,7 @@ export class MainLobbyScene extends Phaser.Scene {
     this.drawBottomHint(profile.nickname);
     // Runtime HUD shows only player-facing village UI, never build/debug notes.
     console.info('[CardVille] premium lobby art placement', LOBBY_ART_PLACEMENT_TAG, LOBBY_UI_NON_OVERLAP_TAG, LOBBY_USER_ASSET_VISIBLE_TAG, USER_LOBBY_ASSET_ASSIGNMENT_TAG, LOBBY_USER_ASSET_NPC_TAG);
-    console.info('[CardVille] lobby ready', { version: LOBBY_VERSION, tag: LOBBY_TOUCH_RECOVERY_TAG, input: LOBBY_INPUT_RESET_TAG, spread: LOBBY_FULLSCREEN_SPREAD_TAG, npcScale: NPC_RELATIVE_SCALE_LOCK_TAG, scaleTween: SCALE_TWEEN_DEDUPE_TAG, intro: SILENT_INTRO_VIDEO_LOOP_TAG, walk: FLOOR_WALK_COMFORT_TIMING_TAG, npcSeparation: NPC_CLEAR_BUILDING_LANE_TAG });
+    console.info('[CardVille] lobby ready', { version: LOBBY_VERSION, tag: LOBBY_TOUCH_RECOVERY_TAG, input: LOBBY_INPUT_RESET_TAG, spread: LOBBY_FULLSCREEN_SPREAD_TAG, npcScale: NPC_RELATIVE_SCALE_LOCK_TAG, scaleTween: SCALE_TWEEN_DEDUPE_TAG, intro: SILENT_INTRO_VIDEO_LOOP_TAG, walk: FLOOR_WALK_COMFORT_TIMING_TAG, smoothWalk: FLOOR_WALK_SMOOTH_NO_BOUNCE_TAG, npcSeparation: NPC_CLEAR_BUILDING_LANE_TAG });
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.cleanupLobbyRuntime());
     this.showLobbyCoach(recommendedBuildingId);
   }
@@ -903,7 +904,7 @@ export class MainLobbyScene extends Phaser.Scene {
       if (blockedByInteractiveSurface) return;
       const x = Number.isFinite(pointer.worldX) ? pointer.worldX : pointer.x;
       const y = Number.isFinite(pointer.worldY) ? pointer.worldY : pointer.y;
-      this.walkPartyToFreePoint(x, y); // floor-walk-natural-pace-v178 floor-walk-diagonal-v178 floor-walk-comfort-timing-v180
+      this.walkPartyToFreePoint(x, y); // floor-walk-natural-pace-v178 floor-walk-diagonal-v178 floor-walk-comfort-timing-v180 floor-walk-smooth-no-container-bounce
     });
   }
 
@@ -920,7 +921,7 @@ export class MainLobbyScene extends Phaser.Scene {
     this.busy = true;
     this.activeSpeech?.destroy();
     this.activeSpeech = undefined;
-    this.hintText?.setText('천천히 자연스럽게 걸어가요. 대각선 이동도 됩니다.');
+    this.hintText?.setText('부드럽게 걸어가요. 대각선 이동도 됩니다.');
     this.tweens.killTweensOf(this.hero);
     this.tweens.killTweensOf(this.cat);
     this.spawnTouchRipple(rawX, rawY);
@@ -928,7 +929,7 @@ export class MainLobbyScene extends Phaser.Scene {
     const duration = this.freeWalkDuration(distance, scale);
     const catTarget = this.trailingCatTarget(target.x, target.y, scale);
     this.spawnFootsteps(this.hero.x, this.hero.y, target.x, target.y, duration);
-    this.startWalkAnimation(135);
+    this.startWalkAnimation(150);
     let completed = 0;
     const finish = () => {
       completed += 1;
@@ -957,11 +958,8 @@ export class MainLobbyScene extends Phaser.Scene {
       onUpdate: () => { this.cat?.setDepth((this.cat?.y ?? target.y) + 2); },
       onComplete: finish
     });
-    if (isMotionEnabled(this.quality)) {
-      const stepCount = Phaser.Math.Clamp(Math.round(duration / 170), 4, 12);
-      this.addStepBounce(this.hero, stepCount, 3);
-      this.addStepBounce(this.cat, Math.max(3, stepCount - 1), 2);
-    }
+    // Do not tween the hero/cat container y while the same containers are walking to a target.
+    // That old bounce path was live and caused visible jitter, so free-walk now relies on frame swaps and footsteps only.
   }
 
   private clampFreeWalkTarget(rawX: number, rawY: number, scale: number): { x: number; y: number } {
@@ -973,8 +971,8 @@ export class MainLobbyScene extends Phaser.Scene {
   }
 
   private freeWalkDuration(distance: number, scale: number): number {
-    const naturalSpeed = 112 * scale; // floor-walk-comfort-timing-v180: slower, calmer plaza walk.
-    return Phaser.Math.Clamp(Math.round((distance / naturalSpeed) * 1000), 920, 2400);
+    const naturalSpeed = 96 * scale; // floor-walk-comfort-timing-v180: slower, calmer plaza walk.
+    return Phaser.Math.Clamp(Math.round((distance / naturalSpeed) * 1000), 1050, 2700);
   }
 
   private trailingCatTarget(targetX: number, targetY: number, scale: number): { x: number; y: number } {

@@ -32,14 +32,14 @@ function modeTitle(modeId: ProgressModeId, fallback: string): string {
 
 export class StageSelectScene extends Phaser.Scene {
   private modeId: ProgressModeId = 'word';
-  private title = '말 카드';
+  private title = '낱말 카드';
   private page = 0;
 
   constructor() { super('StageSelectScene'); }
 
   init(data: { modeId?: ProgressModeId; title?: string; page?: number } = {}): void {
     this.modeId = data.modeId ?? 'word';
-    this.title = data.title ?? modeTitle(this.modeId, '말 카드');
+    this.title = data.title ?? modeTitle(this.modeId, '낱말 카드');
     this.page = data.page ?? 0;
   }
 
@@ -118,7 +118,6 @@ export class StageSelectScene extends Phaser.Scene {
   }
 
   private drawHeader(totalStages: number, maxPage: number): void {
-    const mode = getModeById(this.modeId);
     const subtitle = this.modeId === 'word'
       ? '카드 계열을 읽고 정리하는 도서관 수업'
       : this.modeId === 'math'
@@ -127,9 +126,10 @@ export class StageSelectScene extends Phaser.Scene {
           ? '영단어와 뜻 카드를 연결하는 학교 첫 수업'
           : '프리뷰 시간을 보고 같은 그림을 찾는 숲속 기억 훈련';
     const lane = mobileCardLane(this, 344);
-    this.add.text(lane.centerX, 84, `${mode?.fallbackIcon ?? '🎴'} ${this.title}`, goldText(23)).setOrigin(0.5);
-    this.add.text(lane.centerX, 116, subtitle, applyWrap(mutedText(12), Math.min(346, lane.width - 16))).setOrigin(0.5);
-    this.add.text(lane.centerX, 144, `${this.page + 1}/${maxPage + 1} 구역 · 전체 ${totalStages}단계 · 클리어하면 다음 단계가 열려요`, applyWrap(mutedText(10), Math.min(346, lane.width - 16))).setOrigin(0.5);
+    // StageSelect uses the DrawSystem title plate as the single mode title.
+    // The old second title here was a live duplicate, so it was removed instead of muted.
+    this.add.text(lane.centerX, 96, subtitle, applyWrap(mutedText(12), Math.min(346, lane.width - 16))).setOrigin(0.5).setName('stage-select-single-title-header');
+    this.add.text(lane.centerX, 128, `${this.page + 1}/${maxPage + 1} 구역 · 전체 ${totalStages}단계 · 클리어하면 다음 단계가 열려요`, applyWrap(mutedText(10), Math.min(346, lane.width - 16))).setOrigin(0.5);
   }
 
   private drawProgressStrip(entries: StageCardEntry[]): void {

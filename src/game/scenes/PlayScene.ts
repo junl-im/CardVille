@@ -103,7 +103,7 @@ export class PlayScene extends Phaser.Scene {
       this.bonusMeter = 0;
     }
 
-    DrawSystem.background(this, `말 카드 · ${this.stage}`, 'library');
+    DrawSystem.background(this, `낱말 카드 · ${this.stage}`, 'library');
     DrawSystem.topHud(this, profile.coins, profile.level);
     this.drawHud();
     this.goalLayer = this.add.container(0, 0);
@@ -206,7 +206,7 @@ export class PlayScene extends Phaser.Scene {
 
     this.hintButton = new GameButton(this, l.visibleX + 146, 742, `힌트${this.hintsLeft}`, 84, 54, 0x8fd3ff).onClick(() => this.useHint());
     this.shuffleButton = new GameButton(this, l.visibleX + 236, 742, `섞기${this.shufflesLeft}`, 84, 54, 0xf0c7ff).onClick(() => this.useShuffle());
-    new GameButton(this, l.visibleX + 326, 742, '나감', 84, 54, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'StageSelectScene', { modeId: this.modeId, title: '말 카드' }));
+    new GameButton(this, l.visibleX + 326, 742, '나감', 84, 54, 0xc9f4ff).onClick(() => NavigationSystem.safeStart(this, 'StageSelectScene', { modeId: this.modeId, title: '낱말 카드' }));
   }
 
   private drawMiniSlot(x: number, y: number, label: string, color: number): void {

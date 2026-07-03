@@ -1,6 +1,16 @@
-# CardVille 1.0.80
+# CardVille 1.0.81
 
-## 1.0.80 업데이트 내역 - LobbyComfortCleanDelta
+
+## 1.0.81 - FocusedCleanupWordTextWalk
+
+- 범위를 인트로 정리, 낱말 카드 스테이지 헤더, 전역 글씨 크기, 광장 빈 공간 이동 떨림 완화로 제한했습니다.
+- 호출 추적 결과 `window.__CARDVILLE_*_TAG__` 전역 문자열은 런타임에서 읽히지 않고 값 대입만 남아 있어 삭제했습니다. 관련 타입 선언도 함께 삭제했습니다.
+- `StageSelectScene`의 하단 모드명은 `DrawSystem.background()`의 상단 제목과 중복되는 살아있는 표시 코드라 삭제하고, 안내 문구와 구역 정보만 남겼습니다.
+- 전역 글씨 배율을 아주 조금 올려 작은 글씨 체감을 줄였습니다.
+- 광장 빈 공간 이동 중 컨테이너 `y` 보행 바운스가 목표 이동 tween과 동시에 작동해 떨림을 만들던 경로를 삭제하고, 프레임 전환과 발자국 연출만 남겼습니다.
+- Delta Patch는 v1.0.80 통파일 위에 덮어쓰는 변경 파일 전용 패치입니다.
+
+## 1.0.81 업데이트 내역 - LobbyComfortCleanDelta
 
 - 패치 정보는 README.md와 AI_HANDOFF_CARDVILLE.md에만 남깁니다.
 - **LobbyComfortCleanDelta** 패스입니다. 이전 DocsHygieneDeltaPatch 정책도 계속 유지합니다. 광장 빈 공간 터치 이동 속도를 한 단계 더 낮추고, 대각선 이동 시 고양이가 캐릭터 뒤를 자연스럽게 따라오도록 보강했습니다.

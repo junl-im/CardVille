@@ -16,13 +16,13 @@ export const CARDVILLE_DEEP_SWEEP_COPY_V170_TAG = 'deep-sweep-copy-fit-v170' as 
 export const CARDVILLE_PREVIOUS_MOBILE_TEXT_TAG = 'mobile-readable-text-v156' as const;
 
 function mobileTextScale(): number {
-  if (typeof window === 'undefined') return 0.98;
+  if (typeof window === 'undefined') return 1.0;
   try {
     const raw = window.localStorage?.getItem('cardville.accessibility.v143');
     const prefs = raw ? JSON.parse(raw) as { largeText?: boolean } : {};
-    return prefs.largeText ? 1.05 : 0.94;
+    return prefs.largeText ? 1.08 : 0.97;
   } catch {
-    return 0.98;
+    return 1.0;
   }
 }
 
@@ -36,9 +36,9 @@ function noticeTextScale(): number {
   try {
     const raw = window.localStorage?.getItem('cardville.accessibility.v143');
     const prefs = raw ? JSON.parse(raw) as { largeText?: boolean } : {};
-    return prefs.largeText ? 0.88 : 0.80;
+    return prefs.largeText ? 0.91 : 0.83;
   } catch {
-    return 0.84;
+    return 0.87;
   }
 }
 

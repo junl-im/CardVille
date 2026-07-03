@@ -1,6 +1,14 @@
+## 1.0.81 - FocusedCleanupWordTextWalk
+
+- 작업 범위는 인트로 코드 정리, 낱말 카드 스테이지 선택 중복 하단 제목, 전역 글씨 크기 미세 확대, 광장 빈 공간 이동 떨림 완화로 제한했습니다.
+- 호출 추적 결과 `window.__CARDVILLE_INTRO_TOUCH_PRIME_TAG__` 등 전역 tag 문자열은 `index.html`에서 대입만 되고 런타임에서 읽히지 않았습니다. 효과 없는 죽은 코드로 판단해 삭제했고, `IntroLoadingScene`의 대응 타입 선언도 삭제했습니다.
+- `StageSelectScene`의 두 번째 모드 제목은 `DrawSystem.background(this, this.title, ...)`가 이미 상단에 제목을 그리고 있어 중복 표시되는 살아있는 UI 코드였습니다. 기존 상단 제목에 통합하고 하단 중복 제목은 삭제했습니다.
+- 광장 빈 공간 이동 떨림은 `this.tweens.add({ targets: this.hero/cat, y: ... })` 이동 중 `addStepBounce(this.hero/cat, ...)`가 같은 컨테이너 `y`를 동시에 흔들어 발생할 수 있음을 확인했습니다. 빈 공간 이동에서 컨테이너 y-bounce 호출을 삭제하고 프레임 전환/발자국 연출만 남겼습니다.
+- 예전 코드는 mute하지 않고 삭제/통합으로 기록했습니다.
+
 ## 1.0.80 - LobbyComfortCleanDelta / DocsHygieneDeltaPatch
 
-- 현재 기준 버전은 1.0.80입니다.
+- 현재 기준 버전은 1.0.81입니다.
 - 이번 패스는 광장 빈 공간 터치 이동의 속도/대각선 추적/NPC 오터치 재발을 줄이는 안정화입니다.
 - `floor-walk-comfort-timing-v180`: 광장 자유 이동은 920~2400ms 범위의 거리 기반 보행으로 느려졌습니다. 이전 `duration: 430`, `naturalSpeed = 145` 경로는 금지합니다.
 - `floor-walk-trail-follow-v180`: 고양이는 `Math.hypot(dx, dy)` 기반으로 이동 벡터 뒤를 따라가므로 대각선 이동에서도 옆으로 튀지 않습니다.
@@ -15,7 +23,7 @@
 
 ## 현재 작업 기준: 1.0.80
 
-현재 기준 버전은 1.0.80입니다.
+현재 기준 버전은 1.0.81입니다.
 
 
 
