@@ -1,9 +1,9 @@
 {
   "name": "cardville",
-  "version": "1.0.82",
+  "version": "1.0.83",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.82 locks the AI handoff rules, syncs current-version records, and restores a focused verification baseline without touching gameplay screens.",
+  "description": "CardVille 1.0.83 stabilizes the GitHub Pages deployment workflow with current Pages artifact/deploy actions, artifact preflight checks, and handoff records without touching gameplay screens.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",

@@ -1,4 +1,21 @@
-# CardVille 1.0.82
+# CardVille 1.0.83
+
+## 1.0.83 - PagesDeploy
+
+## 1.0.83 업데이트 내역
+
+- 작업 범위: GitHub Pages 배포 워크플로 안정화만 진행했습니다. 게임 화면/씬 기능 로직은 수정하지 않았습니다.
+- 실패 로그는 `actions/deploy-pages@v4`가 Pages deployment를 만든 뒤 `syncing_files` 상태에서 실패한 케이스입니다. 빌드 산출물 업로드 자체는 완료된 상태였으므로, 배포 액션/Pages 동기화 경로를 우선 정리했습니다.
+- `pages-artifact-v4`: `actions/upload-pages-artifact@v3`를 `actions/upload-pages-artifact@v4`로 갱신했습니다.
+- `deploy-pages-v5`: `actions/deploy-pages@v4`를 `actions/deploy-pages@v5`로 갱신해 Node 24 전환 구간의 경고/호환성 리스크를 줄였습니다.
+- `deploy-preflight-v183`: upload 전에 `dist/index.html`, `dist/version.json`, `dist/deploy-proof.html` 존재 여부, symlink 금지, dist 1GB 미만을 확인합니다.
+- `pages-concurrency-queue-v183`: Pages 배포 중 새 push가 와도 기존 배포를 중간 취소하지 않고 순차 처리하도록 `cancel-in-progress: false`로 바꿨습니다.
+- 호출 추적 결과 `.github/workflows/deploy.yml`은 GitHub Actions에서만 실행되고 런타임 게임 씬에서 import되지 않습니다. `tools/check-deploy.mjs`, `tools/check-doc-hygiene-v179.mjs`, `tools/check-focused-cleanup-v181.mjs`도 npm 검증 스크립트로만 호출됩니다.
+- 삭제한 런타임 함수나 화면 코드는 없습니다. 새 버전 번호가 붙은 install...Pass() / sync...Ui() 함수도 추가하지 않았습니다.
+- 기록은 README.md와 AI_HANDOFF_CARDVILLE.md에만 누적합니다. PATCH_NOTES, CHANGELOG, RELEASE_NOTES, 임시 txt, 새 진행 기록 문서는 만들지 않습니다.
+- 최종 ZIP 명명 규칙: `CardVille_v1.0.83_PagesDeploy_Full.zip`, `CardVille_v1.0.83_PagesDeploy_Patch.zip`.
+- Patch ZIP은 v1.0.82 통파일 위에 덮어쓰는 변경 파일 전용 패치이며 `public/assets` 전체는 포함하지 않습니다.
+
 
 ## 1.0.82 - HandoffVerify
 

@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: cardville-pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -20,10 +20,10 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22
 
@@ -43,27 +43,54 @@ jobs:
           {"name":"CardVille","version":"${VERSION}","runId":"${GITHUB_RUN_ID}","sha":"${GITHUB_SHA}"}
           JSON
           echo 'dist root:'
-          find dist -maxdepth 1 -type f -printf '%f\n' | sort
+          find dist -maxdepth 1 -type f -printf '%f
+' | sort
           echo 'dist assets:'
-          find dist/assets -maxdepth 1 -type f -printf '%f\n' | sort | head -30
+          find dist/assets -maxdepth 1 -type f -printf '%f
+' | sort | head -30
+
+      - name: Validate Pages artifact input
+        run: |
+          test -f dist/index.html
+          test -f dist/version.json
+          test -f dist/deploy-proof.html
+          if find dist -type l -print -quit | grep -q .; then
+            echo 'Pages artifact must not contain symbolic links.' >&2
+            exit 1
+          fi
+          BYTES=$(du -sb dist | cut -f1)
+          echo "dist bytes: ${BYTES}"
+          if [ "${BYTES}" -ge 1000000000 ]; then
+            echo 'Pages artifact is too large for the supported 1GB deployment target.' >&2
+            exit 1
+          fi
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
         with:
+          name: github-pages
           path: ./dist
+          retention-days: 1
+          include-hidden-files: true
 
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     needs: build
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
+        with:
+          artifact_name: github-pages
+          timeout: 900000
+          reporting_interval: 10000
+          error_count: 20
       - name: Print URL
         run: echo "${{ steps.deployment.outputs.page_url }}"

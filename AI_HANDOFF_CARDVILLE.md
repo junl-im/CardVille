@@ -1,3 +1,16 @@
+## 1.0.83 - PagesDeploy
+
+- 작업 범위는 GitHub Pages 배포 워크플로 안정화, 현재 버전 표기, 활성 검증 기준 정리로 제한했습니다. 게임 화면/씬 기능 로직은 수정하지 않았습니다.
+- 에러 로그에서 빌드/업로드는 지나갔고 `actions/deploy-pages@v4` 배포 생성 후 `syncing_files` 상태에서 `Deployment failed, try again later.`가 발생했습니다. GitHub Pages 서비스 쪽 일시 실패 가능성도 있지만, 현재 워크플로가 `actions/upload-pages-artifact@v3`와 `actions/deploy-pages@v4`를 쓰고 있어 2026년 Node 24 전환 구간의 경고/호환성 리스크가 남아 있음을 확인했습니다.
+- 현재 작업 기준은 1.0.83입니다. 1.0.82 통파일 위에 `CardVille_v1.0.83_PagesDeploy_Patch.zip`을 덮어쓰거나, 클린 설치는 `CardVille_v1.0.83_PagesDeploy_Full.zip`을 사용합니다.
+- 호출 추적 결과: `.github/workflows/deploy.yml`은 GitHub Actions에서만 실행되는 CI/CD 파일이며 런타임 게임 씬에서 import되지 않습니다. `tools/check-deploy.mjs`, `tools/check-doc-hygiene-v179.mjs`, `tools/check-focused-cleanup-v181.mjs`도 `package.json`의 npm 검증 스크립트로만 호출됩니다. 따라서 배포 액션 버전/검증 문자열 갱신은 플레이 동작에 영향이 없습니다.
+- `.github/workflows/deploy.yml`에서 `actions/checkout@v6`, `actions/setup-node@v6`, `actions/upload-pages-artifact@v4`, `actions/deploy-pages@v5`로 갱신했습니다. 앱 빌드 Node는 안정성을 위해 22로 유지했습니다.
+- Pages artifact 입력 검증을 추가했습니다: `dist/index.html`, `dist/version.json`, `dist/deploy-proof.html` 존재 확인, symlink 금지 확인, dist 1GB 미만 확인을 upload 전에 수행합니다.
+- Pages 동시 배포 충돌을 줄이기 위해 `cancel-in-progress: false`로 바꿔 기존 배포를 중간 취소하지 않고 순차 처리하도록 했습니다.
+- 삭제한 런타임 함수/화면 코드는 없습니다. 새 버전 번호가 붙은 install...Pass() / sync...Ui() 함수도 추가하지 않았습니다. 바꾼 것은 배포 워크플로, 현재 버전 표기, 활성 검증 기준, README/AI_HANDOFF 기록뿐입니다.
+- 안전 판단 근거: 수정 파일은 CI/CD와 검증/문서/버전 표기에 한정되며, `src/game/scenes/MainLobbyScene.ts`와 `src/main.ts`는 버전 문자열만 변경했습니다. 화면 배치/입력/인트로 로직은 수정하지 않았습니다.
+- 필수 고정 작업 규칙은 1.0.82에서 추가한 규칙을 계속 유지합니다. 기록은 README.md와 AI_HANDOFF_CARDVILLE.md에만 누적합니다. 새 PATCH_NOTES, CHANGELOG, RELEASE_NOTES, 임시 txt, 별도 진행 기록 문서는 만들지 않습니다.
+
 ## 1.0.82 - HandoffVerify
 
 - 작업 범위는 인수인계 고정 규칙, 현재 버전 표기, 활성 검증 기준 정리로 제한했습니다. 게임 화면/씬 기능 로직은 수정하지 않았습니다.
@@ -17,9 +30,9 @@
 
 # CardVille AI Handoff
 
-## 현재 작업 기준: 1.0.82
+## 현재 작업 기준: 1.0.83
 
-현재 기준 버전은 1.0.82입니다.
+현재 기준 버전은 1.0.83입니다.
 
 ## 1.0.81 - FocusedCleanupWordTextWalk
 
