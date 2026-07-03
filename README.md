@@ -1,3 +1,21 @@
+# CardVille 1.0.85
+
+## 1.0.85 - PagesDeployDiagnose
+
+## 1.0.85 업데이트 내역
+
+- 작업 범위: GitHub Pages deploy job 안정화와 실패 진단 강화만 진행했습니다. 게임 화면/씬 기능 로직은 수정하지 않았습니다.
+- 에러: `actions/deploy-pages@v5`가 artifact를 찾고 deployment를 생성한 뒤 status 조회에서 `Deployment failed, try again later.`를 반환했습니다. 이번에는 YAML 오류가 아니라 Pages backend가 배포 상태를 failed로 돌려준 케이스입니다.
+- 경고 정리: `deploy-pages`의 `timeout: 900000`은 지원 최대값 600000ms를 초과해 경고가 났으므로 삭제하고 action 기본값으로 되돌렸습니다. `reporting_interval`, `error_count` 강제값도 함께 삭제해 변수를 줄였습니다.
+- `deploy-diagnose-v185`: deploy step을 `continue-on-error: true`로 두고 실패 시 별도 진단 step에서 Pages site context, 최근 Pages deployments, 최근 github-pages environment deployments를 출력한 뒤 명시적으로 실패하게 했습니다.
+- `deploy-preflight-v185`: upload 전 dist byte 수와 file count를 함께 출력하고, 파일 수가 비정상적으로 커지는 경우 사전 실패하도록 보강했습니다.
+- 호출 추적 결과 `.github/workflows/deploy.yml`은 GitHub Actions에서만 실행되고 런타임 게임 씬에서 import되지 않습니다. 관련 검증 스크립트도 npm 검증 스크립트로만 호출됩니다.
+- 삭제한 런타임 함수나 화면 코드는 없습니다. 새 버전 번호가 붙은 install...Pass() / sync...Ui() 함수도 추가하지 않았습니다.
+- 실제 삭제/통합한 것은 deploy job의 과도한 `timeout`, `reporting_interval`, `error_count` override입니다. action 기본값과 진단 step으로 통합했습니다.
+- 기록은 README.md와 AI_HANDOFF_CARDVILLE.md에만 누적합니다. PATCH_NOTES, CHANGELOG, RELEASE_NOTES, 임시 txt, 새 진행 기록 문서는 만들지 않습니다.
+- 최종 ZIP 명명 규칙: `CV_v1.0.85_DeployDiagnose_Full.zip`, `CV_v1.0.85_DeployDiagnose_Patch.zip`.
+- Patch ZIP은 v1.0.84 통파일 위에 덮어쓰는 변경 파일 전용 패치이며 `public/assets` 전체는 포함하지 않습니다.
+
 # CardVille 1.0.84
 
 ## 1.0.84 - PagesYamlFix

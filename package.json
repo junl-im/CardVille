@@ -1,9 +1,9 @@
 {
   "name": "cardville",
-  "version": "1.0.84",
+  "version": "1.0.85",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.84 fixes the GitHub Pages workflow YAML parse error at deploy.yml line 47, keeps Pages deploy hardening, and leaves gameplay screens untouched.",
+  "description": "CardVille 1.0.85 stabilizes GitHub Pages deployment diagnostics, removes invalid deploy-pages timeout overrides, and leaves gameplay screens untouched.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",

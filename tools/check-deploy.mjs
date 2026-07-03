@@ -21,11 +21,18 @@ if (!workflow.includes('find dist -maxdepth 1 -type f -exec basename {} \\; | so
 
 if (!workflow.includes('actions/upload-pages-artifact@v4')) throw new Error('deploy workflow must use upload-pages-artifact@v4');
 if (!workflow.includes('actions/deploy-pages@v5')) throw new Error('deploy workflow must use deploy-pages@v5');
+if (workflow.includes('timeout: 900000')) throw new Error('deploy workflow must not set deploy-pages timeout above the supported 600000ms maximum');
+if (workflow.includes('reporting_interval: 10000')) throw new Error('deploy workflow must not override deploy-pages reporting interval while debugging backend failures');
+if (workflow.includes('error_count: 20')) throw new Error('deploy workflow must not override deploy-pages error_count while debugging backend failures');
+if (!workflow.includes('continue-on-error: true')) throw new Error('deploy workflow must keep deploy step observable so diagnostics can run after failure');
+if (!workflow.includes('Diagnose failed Pages deployment')) throw new Error('deploy workflow must print Pages diagnostics when deploy-pages reports failure');
+if (!workflow.includes('gh api "repos/${GITHUB_REPOSITORY}/pages"')) throw new Error('deploy workflow must inspect the current Pages site context');
 if (workflow.includes('actions/upload-pages-artifact@v3')) throw new Error('deploy workflow must not use upload-pages-artifact@v3');
 if (workflow.includes('actions/deploy-pages@v4')) throw new Error('deploy workflow must not use deploy-pages@v4');
 if (!workflow.includes('Validate Pages artifact input')) throw new Error('deploy workflow must validate Pages artifact input before upload');
 if (!workflow.includes('cancel-in-progress: false')) throw new Error('deploy workflow must queue Pages deployments instead of cancelling in-progress deploys');
 if (!workflow.includes('artifact_name: github-pages')) throw new Error('deploy workflow must explicitly deploy the github-pages artifact');
+if (!workflow.includes('dist files:')) throw new Error('deploy workflow must print Pages artifact file count before upload');
 const build = JSON.parse(fs.readFileSync(path.join(root, 'public/build.json'), 'utf8'));
 if (build.version !== pkg.version) throw new Error(`public/build.json version ${build.version} != package ${pkg.version}`);
 console.log(`Deploy source check passed. Version ${pkg.version}.`);

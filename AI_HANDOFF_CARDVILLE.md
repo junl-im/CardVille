@@ -1,3 +1,17 @@
+## 1.0.85 - PagesDeployDiagnose
+
+- 작업 범위는 GitHub Pages deploy job 안정화와 실패 진단 강화로 제한했습니다. 게임 화면/씬 기능 로직은 수정하지 않았습니다.
+- 사용자가 GitHub Pages Source가 GitHub Actions임을 확인했습니다. 따라서 branch deploy로 우회하지 않고 공식 Pages deployment 경로를 유지했습니다.
+- 실패 로그는 `actions/deploy-pages@v5`가 `github-pages` artifact를 찾고 deployment를 생성한 뒤 첫 status 조회에서 `Deployment failed, try again later.`를 받은 케이스입니다. YAML 파싱, build, artifact lookup 단계는 통과했습니다.
+- 현재 작업 기준은 1.0.85입니다. 1.0.84 통파일 위에 `CV_v1.0.85_DeployDiagnose_Patch.zip`을 덮어쓰거나, 클린 설치는 `CV_v1.0.85_DeployDiagnose_Full.zip`을 사용합니다.
+- 호출 추적 결과: `.github/workflows/deploy.yml`은 GitHub Actions에서만 실행되는 CI/CD 파일이며 런타임 게임 씬에서 import되지 않습니다. `tools/check-deploy.mjs`, `tools/check-doc-hygiene-v179.mjs`, `tools/check-focused-cleanup-v181.mjs`도 npm 검증 스크립트로만 호출됩니다. 따라서 deploy job 입력값/진단 출력/검증 문자열 갱신은 플레이 동작에 영향이 없습니다.
+- `.github/workflows/deploy.yml`에서 `deploy-pages`의 과도한 `timeout: 900000` override를 삭제했습니다. `deploy-pages` action의 기본 timeout은 600000ms이고, 로그의 warning도 이 최대값 초과 때문에 발생했습니다.
+- `reporting_interval: 10000`, `error_count: 20` override도 삭제하고 action 기본값으로 통합했습니다. Pages backend가 즉시 failed를 반환하는 상황에서 임의 override가 원인 판단을 흐리지 않게 하기 위함입니다.
+- 실패 시 원인 관측을 위해 `Print Pages context`와 `Diagnose failed Pages deployment` step을 추가했습니다. deploy step은 `continue-on-error: true`로 두어 실패 직후 Pages site/deployments/environment 정보를 출력하고, 진단 step 마지막에서 `exit 1`로 workflow 실패를 유지합니다.
+- artifact 사전 검수는 유지하고 `dist files` count 출력 및 10000개 초과 방어를 추가했습니다. 현재 로컬 빌드 dist는 약 125MB, 400파일 수준입니다.
+- 삭제한 런타임 함수/화면 코드는 없습니다. 새 버전 번호가 붙은 install...Pass() / sync...Ui() 함수도 추가하지 않았습니다. 실제 삭제/통합한 것은 deploy job의 과도한 deploy-pages 입력 override입니다.
+- 안전 판단 근거: 수정 파일은 CI/CD와 검증/문서/버전 표기에 한정되며, `src/game/scenes/MainLobbyScene.ts`와 `src/main.ts`는 버전 문자열만 변경했습니다. 화면 배치/입력/인트로/광장 이동 로직은 수정하지 않았습니다.
+
 ## 1.0.84 - PagesYamlFix
 
 - 작업 범위는 `.github/workflows/deploy.yml`의 GitHub Actions YAML 파싱 에러 수정, 현재 버전 표기, 활성 검증 기준, README/AI_HANDOFF 기록으로 제한했습니다. 게임 화면/씬 기능 로직은 수정하지 않았습니다.
@@ -43,9 +57,9 @@
 
 # CardVille AI Handoff
 
-## 현재 작업 기준: 1.0.84
+## 현재 작업 기준: 1.0.85
 
-현재 기준 버전은 1.0.84입니다.
+현재 기준 버전은 1.0.85입니다.
 
 ## 1.0.81 - FocusedCleanupWordTextWalk
 
