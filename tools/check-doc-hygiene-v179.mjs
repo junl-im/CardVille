@@ -28,17 +28,17 @@ const walk = (dir) => {
 
 const pkg = JSON.parse(read('package.json'));
 const build = JSON.parse(read('public/build.json'));
-assert(pkg.version === '1.0.80', `expected package version 1.0.80, got ${pkg.version}`);
+assert(pkg.version === '1.0.82', `expected package version 1.0.82, got ${pkg.version}`);
 assert(build.version === pkg.version, `build version ${build.version} != package ${pkg.version}`);
 assert(build.assetVersion === pkg.version, `assetVersion ${build.assetVersion} != package ${pkg.version}`);
 assert(pkg.scripts.verify.includes('check:doc-hygiene-v179'), 'verify must include check:doc-hygiene-v179');
 assert(pkg.scripts['check:doc-hygiene-v179'] === 'node tools/check-doc-hygiene-v179.mjs', 'doc hygiene script mismatch');
 
-include('README.md', ['1.0.80', 'DocsHygieneDeltaPatch', 'PATCH_NOTES', '패치 정보는 README.md와 AI_HANDOFF_CARDVILLE.md에만']);
-include('AI_HANDOFF_CARDVILLE.md', ['1.0.80 - DocsHygieneDeltaPatch', 'PATCH_NOTES', 'README.md와 AI_HANDOFF_CARDVILLE.md 외 기록 파일 금지']);
-include('public/build.json', ['DocsHygieneDeltaPatch', 'no-extra-patch-notes-v179', 'README-and-AI_HANDOFF-only-v179']);
-include('public/health.html', ['version 1.0.80', 'DocsHygieneDeltaPatch', 'no-extra-patch-notes-v179']);
-include('index.html', ["window.__CARDVILLE_VERSION__ = '1.0.80'", 'cardville_intro_loading.mp4?v=1.0.80']);
+include('README.md', ['1.0.82', 'HandoffVerify', 'PATCH_NOTES', 'README.md와 AI_HANDOFF_CARDVILLE.md에만']);
+include('AI_HANDOFF_CARDVILLE.md', ['1.0.82 - HandoffVerify', 'PATCH_NOTES', 'README.md와 AI_HANDOFF_CARDVILLE.md 외 기록 파일 금지', '새 버전 번호가 붙은 install...Pass() / sync...Ui() 함수를 새로 추가하지 않습니다']);
+include('public/build.json', ['HandoffVerify', 'handoff-fixed-rules-v182', 'verify-baseline-v182']);
+include('public/health.html', ['version 1.0.82', 'HandoffVerify', 'verify-baseline-v182']);
+include('index.html', ["window.__CARDVILLE_VERSION__ = '1.0.82'", 'cardville_intro_loading.mp4?v=1.0.82']);
 
 const allowedMarkdown = new Set([
   'README.md',

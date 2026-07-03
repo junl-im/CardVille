@@ -1,14 +1,37 @@
+## 1.0.82 - HandoffVerify
+
+- 작업 범위는 인수인계 고정 규칙, 현재 버전 표기, 활성 검증 기준 정리로 제한했습니다. 게임 화면/씬 기능 로직은 수정하지 않았습니다.
+- 현재 작업 기준은 1.0.82입니다. 1.0.81 통파일 위에 `CardVille_v1.0.82_HandoffVerify_Patch.zip`을 덮어쓰거나, 클린 설치는 `CardVille_v1.0.82_HandoffVerify_Full.zip`을 사용합니다.
+- 필수 고정 작업 규칙:
+  - 새 버전 번호가 붙은 install...Pass() / sync...Ui() 함수를 새로 추가하지 않습니다. 기존 로직 수정은 해당 로직이 있는 자리에서 직접 수정합니다.
+  - 이전 버전 코드는 비활성화만 하지 않습니다. 더 이상 쓰이지 않는다고 판단되면 실제 호출 여부와 효과 여부를 코드 추적으로 확인한 뒤 삭제하거나 통합합니다.
+  - 한 번에 여러 화면/기능을 동시에 건드리지 않습니다. 사용자가 지정한 범위만 작업합니다.
+  - 작업 후 무엇을 지웠고/바꿨는지, 왜 안전하다고 판단했는지 요약합니다.
+  - AI_HANDOFF_CARDVILLE.md에 새 버전 기록을 추가할 때는 예전 코드를 삭제했다/통합했다는 표현으로 남깁니다.
+  - 모든 진행 기록은 README.md와 AI_HANDOFF_CARDVILLE.md에만 기록을 누적합니다. 새 PATCH_NOTES, CHANGELOG, RELEASE_NOTES, 임시 txt, 별도 진행 기록 문서는 만들지 않습니다.
+  - 결과물은 버전명이 들어간 통파일 ZIP 1개와 단순 덮어쓰기 패치 ZIP 1개로 냅니다.
+- 호출 추적 결과: `tools/check-doc-hygiene-v179.mjs`와 `tools/check-focused-cleanup-v181.mjs`는 `package.json`의 `check:*` 스크립트로만 호출됩니다. 런타임 import나 게임 씬 호출은 없으므로, 검증 기준 문자열을 1.0.82 현재 기준으로 갱신해도 플레이 동작에는 영향이 없습니다.
+- `package.json`의 `verify` 체인을 `build -> check:doc-hygiene-v179 -> check:focused-cleanup-v181 -> check:security`로 정리했습니다. 오래된 1.0.80 하드코딩 때문에 현재 기준과 충돌하던 문서 검증은 현재 버전/고정 규칙/허용 기록 파일 기준으로 통합했습니다.
+- 버전 표기는 `package.json`, `public/build.json`, `index.html`, `public/health.html`, `public/reset.html`, `src/game/data/assetManifest.ts`, `src/game/scenes/MainLobbyScene.ts`, `src/main.ts`에 1.0.82로 동기화했습니다. 새 화면 로직이나 새 install/sync 함수는 추가하지 않았습니다.
+- 삭제한 런타임 함수/화면 코드는 없습니다. 바꾼 것은 현재 버전 표기, 인수인계 규칙, 활성 검증 기준입니다. 안전 판단 근거는 검증 스크립트가 런타임에서 import되지 않고 npm 스크립트에서만 실행되는 개발 검수 파일이라는 점입니다.
+
+# CardVille AI Handoff
+
+## 현재 작업 기준: 1.0.82
+
+현재 기준 버전은 1.0.82입니다.
+
 ## 1.0.81 - FocusedCleanupWordTextWalk
 
 - 작업 범위는 인트로 코드 정리, 낱말 카드 스테이지 선택 중복 하단 제목, 전역 글씨 크기 미세 확대, 광장 빈 공간 이동 떨림 완화로 제한했습니다.
 - 호출 추적 결과 `window.__CARDVILLE_INTRO_TOUCH_PRIME_TAG__` 등 전역 tag 문자열은 `index.html`에서 대입만 되고 런타임에서 읽히지 않았습니다. 효과 없는 죽은 코드로 판단해 삭제했고, `IntroLoadingScene`의 대응 타입 선언도 삭제했습니다.
 - `StageSelectScene`의 두 번째 모드 제목은 `DrawSystem.background(this, this.title, ...)`가 이미 상단에 제목을 그리고 있어 중복 표시되는 살아있는 UI 코드였습니다. 기존 상단 제목에 통합하고 하단 중복 제목은 삭제했습니다.
 - 광장 빈 공간 이동 떨림은 `this.tweens.add({ targets: this.hero/cat, y: ... })` 이동 중 `addStepBounce(this.hero/cat, ...)`가 같은 컨테이너 `y`를 동시에 흔들어 발생할 수 있음을 확인했습니다. 빈 공간 이동에서 컨테이너 y-bounce 호출을 삭제하고 프레임 전환/발자국 연출만 남겼습니다.
-- 예전 코드는 mute하지 않고 삭제/통합으로 기록했습니다.
+- 예전 코드는 비활성화만 하지 않고 삭제/통합으로 기록했습니다.
 
 ## 1.0.80 - LobbyComfortCleanDelta / DocsHygieneDeltaPatch
 
-- 현재 기준 버전은 1.0.81입니다.
+- 해당 기록 기준 버전은 1.0.81입니다.
 - 이번 패스는 광장 빈 공간 터치 이동의 속도/대각선 추적/NPC 오터치 재발을 줄이는 안정화입니다.
 - `floor-walk-comfort-timing-v180`: 광장 자유 이동은 920~2400ms 범위의 거리 기반 보행으로 느려졌습니다. 이전 `duration: 430`, `naturalSpeed = 145` 경로는 금지합니다.
 - `floor-walk-trail-follow-v180`: 고양이는 `Math.hypot(dx, dy)` 기반으로 이동 벡터 뒤를 따라가므로 대각선 이동에서도 옆으로 튀지 않습니다.
@@ -17,14 +40,6 @@
 - 1.0.80 - DocsHygieneDeltaPatch 정책도 유지합니다.
 - 패치 정보는 `README.md`와 `AI_HANDOFF_CARDVILLE.md`에만 남깁니다. 새 docs 문서와 `PATCH_NOTES*`, `CHANGELOG*`, `RELEASE_NOTES*`, 임시 txt 기록 파일은 금지합니다. README.md와 AI_HANDOFF_CARDVILLE.md 외 기록 파일 금지.
 - Delta Patch는 v1.0.79 통파일 기준 변경 파일만 담는 덮어쓰기용이며 `public/assets` 전체는 포함하지 않습니다.
-
-
-# CardVille AI Handoff
-
-## 현재 작업 기준: 1.0.80
-
-현재 기준 버전은 1.0.81입니다.
-
 
 
 ### 1.0.80 PlazaWalkNpcPolish / 자연스러운 대각선 보행 / NPC 오터치 분리
@@ -112,7 +127,7 @@
 
 ## 1.0.68 - IntroVideoMinFit
 
-- 현재 기준 버전은 1.0.68입니다.
+- 해당 기록 기준 버전은 1.0.68입니다.
 - 목적: 사용자가 지적한 “게임 시작 시 영상이 안 나오고 로딩 멘트만 보임” 문제를 최우선으로 해결하고, 추천 리본/설정/팝업/건물 이름표/뒤로가기/광장 터치까지 한 번에 보강한 패스입니다.
 - 핵심 태그: `intro-min-3s-video-v168`, `video-only-loading-v168`, `lobby-recommend-copy-fit-v168`, `settings-copy-safe-v168`, `building-nameplate-lift-v168`, `popup-copy-room-v168`, `coach-copy-fit-v168`, `ultra-copy-fit-v168`, `double-back-exit-v168`, `plaza-touch-route-expand-v168`.
 - 코드 반영:
@@ -130,7 +145,7 @@
 ## 1.0.66 - CornerSweepStability
 
 - 목적: 사용자가 요청한 “모든 구석구석 꼼꼼하게 체크”를 기준으로, 전 화면 safe-area/텍스트/입력/버튼 선/패널 겹침 위험을 다시 훑은 패스입니다.
-- 현재 기준 버전은 1.0.68입니다.
+- 해당 기록 기준 버전은 1.0.68입니다.
 - 핵심 태그: `corner-sweep-v166`, `holistic-ui-audit-v166`, `safe-area-copy-clamp-v166`, `input-watchdog-v166`, `button-corner-sweep-v166`, `line-free-surface-v166`.
 - 코드 반영:
   - `LayoutSystem.ts`: safe-area clamp와 input watchdog을 추가했습니다. 씬 진입 후 입력이 꺼진 채 남으면 80/260/420ms 복구 타이머가 다시 켭니다.
@@ -149,7 +164,7 @@
 ## 1.0.65 - FlowListInputPolish
 
 - 목적: 사용자가 계속 요청한 전 구간 불안정/겹침/배치/버튼 줄/알림 텍스트 밀림/입력 먹통 위험을 더 줄이는 카드 리스트/입력 복구 중심 패스입니다.
-- 현재 기준 버전은 1.0.68입니다.
+- 해당 기록 기준 버전은 1.0.68입니다.
 - 이번 버전은 1.0.64 FlowFitUIPolish를 기준으로, 모드 선택/스테이지 선택/상점/미션의 카드 리스트와 하단 버튼을 실제 모바일 화면 폭/safe-area에 맞게 정렬하고, 씬 재시작/전환 후 입력 복구 안전장치를 추가했습니다.
 - 핵심 태그: `list-card-fit-v165`, `action-bar-fit-v165`, `copy-box-guard-v165`, `scene-input-recovery-v165`, `restart-input-recovery-v165`, `button-input-recovery-v165`, `button-copy-guard-v165`.
 - 추가 검증: `tools/check-flow-ui-v165.mjs`, `npm run check:flow-ui-v165`.
@@ -166,7 +181,7 @@
 ## 1.0.64 - FlowFitUIPolish
 
 - 목적: 사용자가 계속 요청한 전 구간 불안정/겹침/배치/버튼 줄/알림 텍스트 밀림/로딩 문구 노출 위험을 한 단계 더 줄이는 UI 흐름 안정화 패스입니다.
-- 현재 기준 버전은 1.0.64입니다.
+- 해당 기록 기준 버전은 1.0.64입니다.
 - 이번 버전은 1.0.63 TouchScaleNotice를 기준으로, 말 없는 전환, 인트로 영상 lifecycle cleanup, scale tween 중복 방지, 버튼/패널 줄 완화, 모바일 텍스트 박스 맞춤을 추가했습니다.
 
 # CardVille AI Handoff
@@ -175,9 +190,9 @@
 CardVille 작업을 계속할 때는 먼저 `README.md`와 이 파일을 읽고, 그다음 실제 코드를 확인하세요.
 
 
-## 현재 작업 기준: 1.0.68
+## 이전 작업 기준 기록: 1.0.68
 
-현재 기준 버전은 1.0.66입니다.  
+해당 기록 기준 버전은 1.0.66입니다.  
 핵심 태그는 `corner-sweep-v166`, `holistic-ui-audit-v166`, `safe-area-copy-clamp-v166`, `input-watchdog-v166`, `button-corner-sweep-v166`, `line-free-surface-v166`입니다.
 
 ### 1.0.64 전역 UI 흐름/텍스트/전환 안정화 패스
@@ -1476,7 +1491,7 @@ ZIP 파일
 
 ## 12. 현재 버전 상태
 
-현재 기준 버전은 1.0.40입니다.
+해당 기록 기준 버전은 1.0.40입니다.
 
 1.0.36은 상점 오퍼 추천/무료팩 충전/구매 전환 연출과 도서관 콤보/복구 UX, `BackConfirmScene` 장면 정리 안정성을 보강한 상점 오퍼/콤보 복구 UX 안정화 패스입니다. 1.0.35는 시작 화면 로그인 CTA의 줄처럼 보이는 요소를 제거하고 도서관 낱말 카드 플레이 화면의 목표 체인/카드 보드/품질 게이트를 보강한 시작 화면/도서관 플레이 프리미엄 폴리시 패스입니다. 1.0.34는 상점 건물을 실제 카드팩 상점 허브로 확장하고, 일일 무료팩/코인팩/보석팩, 재화 차감, 상점 구매팩 보상 분기를 추가한 상점 허브/경제 UX 패스입니다. 1.0.33은 연구소/기억의 숲까지 공용 스테이지 선택 화면을 거치게 하고, 카드팩 보상 화면과 카드 앨범 레이아웃을 다듬은 스테이지/카드팩/앨범 폴리시 패스입니다. 1.0.32는 cover 배경, 상태 칩, 품질 모드 게이트, 버튼 중복 터치 방어를 다듬은 디자인/성능/품질 패스입니다. 1.0.31은 로비 터치존 겹침을 정리하고 `cardville.progress.v131` 기반으로 모드별 진행 저장을 확장한 로비 배치/진행 저장 패스입니다. 1.0.30은 프레임형/크롭형 건물 표현을 실제 투명 PNG/WebP 마을 건물 컷아웃으로 교체한 마을 건물 에셋 패스였습니다. 1.0.29는 연구소 연산 미니게임과 기억의 숲 짝찾기 미니게임을 실제 플레이 가능한 1차 콘텐츠로 연결한 콘텐츠 엔진 패스였습니다. 1.0.28은 기준 이미지 톤에 맞춘 프리미엄 에셋 패스와 `check:premium-assets` 검증을 추가한 업데이트였습니다.
 
@@ -1619,7 +1634,7 @@ cards/card_pack_*.png          -> packs/pack_*_closed.png 또는 별도 카드�
 
 ## 15. 1.0.37 콘텐츠 스케일/보상 차등/디자인 에셋 요청 패스
 
-현재 기준 버전은 1.0.37입니다.
+해당 기록 기준 버전은 1.0.37입니다.
 
 ### 핵심 변경
 
@@ -1694,7 +1709,7 @@ cards/card_pack_*.png          -> packs/pack_*_closed.png 또는 별도 카드�
 
 ## 16. 1.0.38 영어 학교 1차 수업/무에셋 콘텐츠 확장 패스
 
-현재 기준 버전은 1.0.38입니다.
+해당 기록 기준 버전은 1.0.38입니다.
 
 ### 핵심 변경
 
@@ -1748,7 +1763,7 @@ cards/card_pack_*.png          -> packs/pack_*_closed.png 또는 별도 카드�
 
 ## 17. 1.0.39 CI 빌드 가드/ModeSelect 패치 표면 완전성 패스
 
-현재 기준 버전은 1.0.39입니다.
+해당 기록 기준 버전은 1.0.39입니다.
 
 ### 빌드 실패 직접 원인
 
@@ -1843,7 +1858,7 @@ cards/card_pack_*.png          -> packs/pack_*_closed.png 또는 별도 카드�
 
 ## 18. 1.0.40 무에셋 고양이 코치/첫 플레이 UX 패스
 
-현재 기준 버전은 1.0.40입니다.
+해당 기록 기준 버전은 1.0.40입니다.
 
 ### 작업 목적
 
@@ -1886,7 +1901,7 @@ cards/card_pack_*.png          -> packs/pack_*_closed.png 또는 별도 카드�
 
 ## 19. 1.0.41 무에셋 일일 미션/출석 보상 루프 패스
 
-현재 기준 버전은 1.0.41입니다.
+해당 기록 기준 버전은 1.0.41입니다.
 
 ### 작업 목적
 
@@ -1935,7 +1950,7 @@ cards/card_pack_*.png          -> packs/pack_*_closed.png 또는 별도 카드�
 
 ## 20. 1.0.42 무에셋 연속 출석/주간 미션 루프 패스
 
-현재 기준 버전은 1.0.42입니다.
+해당 기록 기준 버전은 1.0.42입니다.
 
 ### 작업 목적
 
@@ -1977,7 +1992,7 @@ cards/card_pack_*.png          -> packs/pack_*_closed.png 또는 별도 카드�
 
 ## 21. 1.0.43 무에셋 미션 보상 팝업/접근성 UX 패스
 
-현재 기준 버전은 1.0.43입니다.
+해당 기록 기준 버전은 1.0.43입니다.
 
 ### 작업 목적
 
@@ -2041,7 +2056,7 @@ cards/card_pack_*.png          -> packs/pack_*_closed.png 또는 별도 카드�
 
 ## 22. 1.0.44 아트 디렉션 바이블/프롬프트 락 패스
 
-현재 기준 버전은 1.0.44입니다.
+해당 기록 기준 버전은 1.0.44입니다.
 
 이번 패스의 목적은 이미지를 대량 생성하기 전에 CardVille의 전체 아트 방향을 먼저 고정하는 것입니다. 이제 CardVille의 기준은 단순히 귀여운 이미지가 아니라 **Premium, Elegant, Stylish, Luxury, High-end, Polished, Professional, AAA Quality**입니다.
 

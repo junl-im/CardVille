@@ -1,3 +1,20 @@
+# CardVille 1.0.82
+
+## 1.0.82 - HandoffVerify
+
+## 1.0.82 업데이트 내역
+
+- 작업 범위: 인수인계 고정 규칙, 현재 버전 표기, 활성 검증 기준 정리만 진행했습니다. 게임 화면/씬 기능 로직은 수정하지 않았습니다.
+- `AI_HANDOFF_CARDVILLE.md` 최상단에 앞으로 모든 패치에서 지킬 고정 규칙을 추가했습니다.
+- 현재 기준 표기를 1.0.82로 동기화하고, 오래된 `현재 작업 기준: 1.0.80` 충돌 표기는 삭제했습니다.
+- `verify-baseline-v182`: `npm run verify` 체인을 `build -> check:doc-hygiene-v179 -> check:focused-cleanup-v181 -> check:security`로 정리했습니다.
+- `tools/check-doc-hygiene-v179.mjs`와 `tools/check-focused-cleanup-v181.mjs`는 현재 1.0.82 버전/기록 정책/허용 파일 정책을 검증하도록 통합했습니다.
+- 호출 추적 결과 두 검증 파일은 `package.json`의 npm 스크립트로만 호출되고 런타임 씬에서 import되지 않습니다. 따라서 검증 기준 갱신은 플레이 동작에 영향을 주지 않습니다.
+- 삭제한 런타임 함수나 화면 코드는 없습니다. 새 버전 번호가 붙은 install...Pass() / sync...Ui() 함수도 추가하지 않았습니다.
+- 기록은 README.md와 AI_HANDOFF_CARDVILLE.md에만 누적합니다. PATCH_NOTES, CHANGELOG, RELEASE_NOTES, 임시 txt, 새 진행 기록 문서는 만들지 않습니다.
+- 최종 ZIP 명명 규칙: `CardVille_v1.0.82_HandoffVerify_Full.zip`, `CardVille_v1.0.82_HandoffVerify_Patch.zip`.
+- Patch ZIP은 v1.0.81 통파일 위에 덮어쓰는 변경 파일 전용 패치이며 `public/assets` 전체는 포함하지 않습니다.
+
 # CardVille 1.0.81
 
 
