@@ -1,4 +1,19 @@
-# CardVille 1.0.83
+# CardVille 1.0.84
+
+## 1.0.84 - PagesYamlFix
+
+## 1.0.84 업데이트 내역
+
+- 작업 범위: GitHub Actions workflow YAML 파싱 에러 수정만 진행했습니다. 게임 화면/씬 기능 로직은 수정하지 않았습니다.
+- 에러: `Invalid workflow file: .github/workflows/deploy.yml#L47`.
+- 원인: `Write deploy proof` 단계의 `find ... -printf '%f\n'`가 YAML literal block 안에서 실제 줄바꿈으로 쪼개져 line 46~47에 깨진 shell quote가 생겼습니다.
+- `deploy-preflight-v184`: 기존 Pages artifact 사전 검수는 유지하면서, newline escape가 필요한 `find -printf` 명령을 삭제하고 `find ... -exec basename {} \; | sort` 명령으로 통합했습니다.
+- 재발 방지: `tools/check-deploy.mjs`가 깨진 `find -printf '%f\n'`와 단독 `' | sort` 라인을 금지하고 YAML-safe basename 명령을 확인합니다.
+- 호출 추적 결과 `.github/workflows/deploy.yml`은 GitHub Actions에서만 실행되고 런타임 게임 씬에서 import되지 않습니다. 관련 검증 스크립트도 npm 검증 스크립트로만 호출됩니다.
+- 삭제한 런타임 함수나 화면 코드는 없습니다. 새 버전 번호가 붙은 install...Pass() / sync...Ui() 함수도 추가하지 않았습니다.
+- 기록은 README.md와 AI_HANDOFF_CARDVILLE.md에만 누적합니다. PATCH_NOTES, CHANGELOG, RELEASE_NOTES, 임시 txt, 새 진행 기록 문서는 만들지 않습니다.
+- 최종 ZIP 명명 규칙: `CV_v1.0.84_YamlFix_Full.zip`, `CV_v1.0.84_YamlFix_Patch.zip`.
+- Patch ZIP은 v1.0.83 통파일 위에 덮어쓰는 변경 파일 전용 패치이며 `public/assets` 전체는 포함하지 않습니다.
 
 ## 1.0.83 - PagesDeploy
 

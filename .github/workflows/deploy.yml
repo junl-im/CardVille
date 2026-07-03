@@ -43,11 +43,9 @@ jobs:
           {"name":"CardVille","version":"${VERSION}","runId":"${GITHUB_RUN_ID}","sha":"${GITHUB_SHA}"}
           JSON
           echo 'dist root:'
-          find dist -maxdepth 1 -type f -printf '%f
-' | sort
+          find dist -maxdepth 1 -type f -exec basename {} \; | sort
           echo 'dist assets:'
-          find dist/assets -maxdepth 1 -type f -printf '%f
-' | sort | head -30
+          if [ -d dist/assets ]; then find dist/assets -maxdepth 1 -type f -exec basename {} \; | sort | head -30; fi
 
       - name: Validate Pages artifact input
         run: |

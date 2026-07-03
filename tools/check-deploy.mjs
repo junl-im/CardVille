@@ -15,6 +15,10 @@ const workflow = fs.readFileSync(path.join(root, '.github/workflows/deploy.yml')
 if (!workflow.includes('VERSION=$(node -p')) throw new Error('deploy workflow must write deploy proof from package.json version');
 if (/version:\s*<b>1\.0\.\d+<\/b>/.test(workflow)) throw new Error('deploy workflow contains a hard-coded proof version');
 if (!workflow.includes('dist/version.json')) throw new Error('deploy workflow must write dist/version.json');
+if (workflow.includes("-printf '%f\n'")) throw new Error('deploy workflow must avoid newline-sensitive find -printf in YAML literal blocks');
+if (/^' \| sort$/m.test(workflow)) throw new Error('deploy workflow contains a broken split shell quote near find output listing');
+if (!workflow.includes('find dist -maxdepth 1 -type f -exec basename {} \\; | sort')) throw new Error('deploy workflow must list dist root files with YAML-safe basename -exec');
+
 if (!workflow.includes('actions/upload-pages-artifact@v4')) throw new Error('deploy workflow must use upload-pages-artifact@v4');
 if (!workflow.includes('actions/deploy-pages@v5')) throw new Error('deploy workflow must use deploy-pages@v5');
 if (workflow.includes('actions/upload-pages-artifact@v3')) throw new Error('deploy workflow must not use upload-pages-artifact@v3');

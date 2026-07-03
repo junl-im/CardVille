@@ -1,3 +1,16 @@
+## 1.0.84 - PagesYamlFix
+
+- 작업 범위는 `.github/workflows/deploy.yml`의 GitHub Actions YAML 파싱 에러 수정, 현재 버전 표기, 활성 검증 기준, README/AI_HANDOFF 기록으로 제한했습니다. 게임 화면/씬 기능 로직은 수정하지 않았습니다.
+- 사용자 로그의 `Invalid workflow file: .github/workflows/deploy.yml#L47` 원인은 `Write deploy proof` 단계의 `find ... -printf '%f
+'`가 YAML literal block 안에서 실제 줄바꿈으로 쪼개져 line 46~47에 깨진 shell quote가 생긴 것입니다.
+- 수정: newline escape가 필요한 `find -printf '%f
+'`를 삭제하고 `find ... -exec basename {} \; | sort` 방식으로 통합했습니다. `dist/assets` 목록도 디렉터리가 있을 때만 같은 방식으로 출력합니다.
+- 호출 추적 결과: `.github/workflows/deploy.yml`은 GitHub Actions에서만 실행되는 CI/CD 파일이며 런타임 게임 씬에서 import되지 않습니다. `tools/check-deploy.mjs`, `tools/check-doc-hygiene-v179.mjs`, `tools/check-focused-cleanup-v181.mjs`도 `package.json`의 npm 검증 스크립트로만 호출됩니다. 따라서 YAML 출력 명령/검증 문자열 갱신은 플레이 동작에 영향이 없습니다.
+- `tools/check-deploy.mjs`에 같은 파싱 실수가 재발하지 않도록 `find -printf '%f\n'`와 깨진 `' | sort` 라인을 금지하고, basename 기반 출력 명령을 요구하는 검증을 추가했습니다.
+- 삭제/통합: 워크플로의 깨진 `find -printf` 출력 명령을 삭제하고 basename 기반 출력 명령으로 통합했습니다. 삭제한 런타임 함수/화면 코드는 없습니다. 새 버전 번호가 붙은 install...Pass() / sync...Ui() 함수도 추가하지 않았습니다.
+- 현재 작업 기준은 1.0.84입니다. 1.0.83 통파일 위에 `CV_v1.0.84_YamlFix_Patch.zip`을 덮어쓰거나, 클린 설치는 `CV_v1.0.84_YamlFix_Full.zip`을 사용합니다.
+- 안전 판단 근거: 변경은 CI/CD 워크플로, 검증 파일, 문서, 버전 문자열에 한정됩니다. `src/game/scenes/MainLobbyScene.ts`와 `src/main.ts`는 버전 문자열만 변경했고 화면 배치/입력/인트로/광장 이동 로직은 수정하지 않았습니다.
+
 ## 1.0.83 - PagesDeploy
 
 - 작업 범위는 GitHub Pages 배포 워크플로 안정화, 현재 버전 표기, 활성 검증 기준 정리로 제한했습니다. 게임 화면/씬 기능 로직은 수정하지 않았습니다.
@@ -30,9 +43,9 @@
 
 # CardVille AI Handoff
 
-## 현재 작업 기준: 1.0.83
+## 현재 작업 기준: 1.0.84
 
-현재 기준 버전은 1.0.83입니다.
+현재 기준 버전은 1.0.84입니다.
 
 ## 1.0.81 - FocusedCleanupWordTextWalk
 
