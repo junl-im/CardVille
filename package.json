@@ -1,9 +1,9 @@
 {
   "name": "cardville",
-  "version": "1.0.87",
+  "version": "1.0.88",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.87 improves the library word-card recovery hint flow on PlayScene, preserves hints when no correct TOP card exists, and keeps deployment cleanup checks intact.",
+  "description": "CardVille 1.0.88 adds a one-time GitHub Pages deploy retry for transient syncing_files backend failures, while preserving the v1.0.87 word-card recovery flow.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",

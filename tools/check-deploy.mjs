@@ -24,12 +24,18 @@ if (!workflow.includes('actions/deploy-pages@v5')) throw new Error('deploy workf
 if (workflow.includes('timeout: 900000')) throw new Error('deploy workflow must not set deploy-pages timeout above the supported 600000ms maximum');
 if (workflow.includes('reporting_interval: 10000')) throw new Error('deploy workflow must not override deploy-pages reporting interval after deployment is stable');
 if (workflow.includes('error_count: 20')) throw new Error('deploy workflow must not override deploy-pages error_count after deployment is stable');
-if (workflow.includes('continue-on-error: true')) throw new Error('deploy workflow must not keep temporary deploy failure diagnostics after successful deployment');
 if (workflow.includes('Diagnose failed Pages deployment')) throw new Error('deploy workflow must not keep temporary Pages diagnostics after successful deployment');
 if (workflow.includes('gh api "repos/${GITHUB_REPOSITORY}/pages"')) throw new Error('deploy workflow must not require extra Pages API diagnostics in the clean deploy path');
 if (/^  actions: read$/m.test(workflow) || /^  deployments: read$/m.test(workflow)) throw new Error('deploy workflow must keep least-privilege Pages permissions after diagnostics cleanup');
 if (workflow.includes('actions/upload-pages-artifact@v3')) throw new Error('deploy workflow must not use upload-pages-artifact@v3');
 if (workflow.includes('actions/deploy-pages@v4')) throw new Error('deploy workflow must not use deploy-pages@v4');
+
+if (!workflow.includes('id: deploy_primary')) throw new Error('deploy workflow must use a primary Pages deploy step');
+if (!workflow.includes('continue-on-error: true')) throw new Error('primary Pages deploy must allow one retry for transient syncing_files failures');
+if (!workflow.includes('Wait before retrying Pages deploy')) throw new Error('deploy workflow must wait before retrying Pages backend failures');
+if (!workflow.includes("if: ${{ steps.deploy_primary.outcome == 'failure' }}")) throw new Error('Pages retry must run only after the primary deploy step fails');
+if (!workflow.includes('id: deploy_retry')) throw new Error('deploy workflow must include a retry Pages deploy step');
+if (!workflow.includes('steps.deploy_retry.outputs.page_url || steps.deploy_primary.outputs.page_url')) throw new Error('deploy workflow must print the retry or primary Pages URL');
 if (!workflow.includes('Validate Pages artifact input')) throw new Error('deploy workflow must validate Pages artifact input before upload');
 if (!workflow.includes('cancel-in-progress: false')) throw new Error('deploy workflow must queue Pages deployments instead of cancelling in-progress deploys');
 if (!workflow.includes('artifact_name: github-pages')) throw new Error('deploy workflow must explicitly deploy the github-pages artifact');

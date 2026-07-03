@@ -28,17 +28,17 @@ const walk = (dir) => {
 
 const pkg = JSON.parse(read('package.json'));
 const build = JSON.parse(read('public/build.json'));
-assert(pkg.version === '1.0.87', `expected package version 1.0.87, got ${pkg.version}`);
+assert(pkg.version === '1.0.88', `expected package version 1.0.88, got ${pkg.version}`);
 assert(build.version === pkg.version, `build version ${build.version} != package ${pkg.version}`);
 assert(build.assetVersion === pkg.version, `assetVersion ${build.assetVersion} != package ${pkg.version}`);
 assert(pkg.scripts.verify.includes('check:doc-hygiene-v179'), 'verify must include check:doc-hygiene-v179');
 assert(pkg.scripts['check:doc-hygiene-v179'] === 'node tools/check-doc-hygiene-v179.mjs', 'doc hygiene script mismatch');
 
-include('README.md', ['1.0.87', 'WordRecoveryHint', 'word-recovery-hint-v187', 'PATCH_NOTES', 'README.md와 AI_HANDOFF_CARDVILLE.md에만']);
-include('AI_HANDOFF_CARDVILLE.md', ['1.0.87 - WordRecoveryHint', 'word-recovery-hint-v187', 'PATCH_NOTES', 'README.md와 AI_HANDOFF_CARDVILLE.md 외 기록 파일 금지', '새 버전 번호가 붙은 install...Pass() / sync...Ui() 함수를 새로 추가하지 않습니다']);
-include('public/build.json', ['WordRecoveryHint', 'word-recovery-hint-v187', 'pages-artifact-v4', 'deploy-preflight-v186']);
-include('public/health.html', ['version 1.0.87', 'WordRecoveryHint', 'word-recovery-hint-v187', 'deploy-preflight-v186']);
-include('index.html', ["window.__CARDVILLE_VERSION__ = '1.0.87'", 'cardville_intro_loading.mp4?v=1.0.87']);
+include('README.md', ['1.0.88', 'PagesDeployRetry', 'pages-deploy-retry-v188', 'WordRecoveryHint', 'word-recovery-hint-v187', 'PATCH_NOTES', 'README.md와 AI_HANDOFF_CARDVILLE.md에만']);
+include('AI_HANDOFF_CARDVILLE.md', ['1.0.88 - PagesDeployRetry', 'pages-deploy-retry-v188', '1.0.87 - WordRecoveryHint', 'word-recovery-hint-v187', 'PATCH_NOTES', 'README.md와 AI_HANDOFF_CARDVILLE.md 외 기록 파일 금지', '새 버전 번호가 붙은 install...Pass() / sync...Ui() 함수를 새로 추가하지 않습니다']);
+include('public/build.json', ['PagesDeployRetry', 'pages-deploy-retry-v188', 'WordRecoveryHint', 'word-recovery-hint-v187', 'pages-artifact-v4', 'deploy-preflight-v186']);
+include('public/health.html', ['version 1.0.88', 'PagesDeployRetry', 'pages-deploy-retry-v188', 'WordRecoveryHint', 'word-recovery-hint-v187', 'deploy-preflight-v186']);
+include('index.html', ["window.__CARDVILLE_VERSION__ = '1.0.88'", 'cardville_intro_loading.mp4?v=1.0.88']);
 
 const allowedMarkdown = new Set([
   'README.md',

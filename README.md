@@ -1,3 +1,22 @@
+# CardVille 1.0.88
+
+## 1.0.88 - PagesDeployRetry
+
+## 1.0.88 업데이트 내역
+
+- 작업 범위: GitHub Pages `deploy` job의 반복형 `syncing_files` 실패 대응만 진행했습니다. 게임 화면, `PlayScene`, 로비, 인트로, 입력, 광장 이동 로직은 수정하지 않았습니다.
+- 에러 로그: artifact metadata 조회 성공, artifact 1개 발견, Pages deployment 생성 성공 이후 `Current status: syncing_files`에서 `Deployment failed, try again later.`가 발생했습니다. 즉 빌드/YAML/upload 문제가 아니라 Pages backend 동기화 단계의 일시 실패형 케이스입니다.
+- `pages-deploy-retry-v188`: `Deploy to GitHub Pages` step을 `deploy_primary`로 이름 붙이고 `continue-on-error: true`를 적용해 첫 배포가 `syncing_files`에서 떨어져도 workflow를 즉시 종료하지 않도록 했습니다.
+- `deploy-primary-retry-v188`: 첫 배포 실패 시 45초 대기 후 같은 `github-pages` artifact를 `Retry GitHub Pages deploy` step에서 한 번 더 배포합니다. 두 번째도 실패하면 workflow는 그대로 실패합니다.
+- `deploy-output-fallback-v188`: environment URL과 Print URL은 `deploy_retry.outputs.page_url || deploy_primary.outputs.page_url`를 사용해 재시도 성공/첫 시도 성공 양쪽을 모두 표시합니다.
+- `tools/check-deploy.mjs`에 재발 방지 검증을 추가했습니다. primary deploy, 실패 조건부 대기, retry deploy, fallback URL 출력이 모두 있어야 `check:deploy`가 통과합니다.
+- 호출 추적 결과 `.github/workflows/deploy.yml`은 GitHub Actions에서만 실행되고 런타임 게임 씬에서 import되지 않습니다. `tools/check-deploy.mjs`도 `package.json`의 npm 검증 스크립트로만 호출됩니다. 따라서 이번 수정은 플레이 동작에 영향을 주지 않습니다.
+- 삭제한 런타임 함수/화면 코드는 없습니다. 새 버전 번호가 붙은 install...Pass() / sync...Ui() 함수도 추가하지 않았습니다. 실제 통합한 것은 단일 deploy step의 즉시 실패 흐름을 primary + retry 흐름으로 통합한 것입니다.
+- 안전 판단 근거: GitHub 공식 `deploy-pages` README는 artifact를 별도 job에서 배포하고 `pages: write`, `id-token: write`, `github-pages` environment를 쓰는 구조를 권장합니다. 기존 구조는 유지하면서 status 조회 실패에 대한 한 번의 재시도만 추가했습니다.
+- 기록은 README.md와 AI_HANDOFF_CARDVILLE.md에만 누적합니다. PATCH_NOTES, CHANGELOG, RELEASE_NOTES, 임시 txt, 새 진행 기록 문서는 만들지 않습니다.
+- 최종 ZIP 명명 규칙: `CV_v1.0.88_DeployRetry_Full.zip`, `CV_v1.0.88_DeployRetry_Patch.zip`.
+- Patch ZIP은 v1.0.87 통파일 위에 덮어쓰는 변경 파일 전용 패치이며 `public/assets` 전체는 포함하지 않습니다.
+
 # CardVille 1.0.87
 
 ## 1.0.87 - WordRecoveryHint

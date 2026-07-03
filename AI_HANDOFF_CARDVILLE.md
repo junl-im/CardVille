@@ -1,3 +1,16 @@
+## 1.0.88 - PagesDeployRetry
+
+- 작업 범위는 GitHub Pages `deploy` job의 반복형 `syncing_files` 실패 대응으로 제한했습니다. 게임 화면/기능, `PlayScene`, 인트로, 광장 이동 로직은 수정하지 않았습니다.
+- 현재 작업 기준은 1.0.88입니다. 1.0.87 통파일 위에 `CV_v1.0.88_DeployRetry_Patch.zip`을 덮어쓰거나, 클린 설치는 `CV_v1.0.88_DeployRetry_Full.zip`을 사용합니다.
+- 사용자 로그 기준 원인 분류: YAML parse, build, artifact upload는 통과했습니다. `actions/deploy-pages@v5`가 artifact metadata를 찾고 deployment를 생성한 뒤 Pages backend status가 `syncing_files`에서 `failed`로 바뀐 반복형 배포 동기화 실패입니다.
+- 호출 추적 결과: `.github/workflows/deploy.yml`은 GitHub Actions CI/CD 파일이며 런타임 게임 씬에서 import되지 않습니다. `tools/check-deploy.mjs`는 `package.json`의 `check:deploy` 및 `verify`로만 호출됩니다. 따라서 workflow 재시도 구조 변경은 플레이 동작에 영향이 없습니다.
+- `pages-deploy-retry-v188`: 기존 단일 `Deploy to GitHub Pages` step을 `deploy_primary`로 통합하고 `continue-on-error: true`를 붙였습니다. 실패를 숨기는 목적이 아니라, 같은 job 안에서 한 번 재시도하기 위한 제어 흐름입니다.
+- `deploy-primary-retry-v188`: `steps.deploy_primary.outcome == 'failure'`일 때만 45초 대기 후 `deploy_retry`가 같은 `github-pages` artifact를 다시 배포합니다. retry도 실패하면 job은 실패합니다.
+- `deploy-output-fallback-v188`: environment URL과 Print URL은 `deploy_retry.outputs.page_url || deploy_primary.outputs.page_url`로 통합했습니다. 첫 시도 성공과 재시도 성공 모두 URL을 남깁니다.
+- `tools/check-deploy.mjs`는 primary deploy id, retry 대기 step, failure 조건, retry deploy id, fallback URL 표현식을 필수로 검사합니다. v1.0.85의 API 진단 step은 되살리지 않았습니다.
+- 삭제한 런타임 함수/화면 코드는 없습니다. 새 버전 번호가 붙은 install...Pass() / sync...Ui() 함수도 추가하지 않았습니다. 실제 삭제 없이 단일 deploy step 실패 흐름을 primary+retry 구조로 통합했습니다.
+- 안전 판단 근거: 기존 GitHub Pages 권한(`contents: read`, `pages: write`, `id-token: write`), artifact 이름(`github-pages`), build/upload job 구조는 유지했습니다. 변경은 Pages backend가 `try again later`로 실패하는 경우 한 번 더 배포 요청을 보내는 CI 제어 흐름뿐입니다.
+
 ## 1.0.87 - WordRecoveryHint
 
 - 작업 범위는 도서관 낱말 카드 `PlayScene`의 실패 복구 힌트/문구로 제한했습니다. 다른 화면/기능, GitHub Pages 워크플로, 인트로, 광장 이동 로직은 수정하지 않았습니다.
@@ -83,9 +96,9 @@
 
 # CardVille AI Handoff
 
-## 현재 작업 기준: 1.0.87
+## 현재 작업 기준: 1.0.88
 
-현재 기준 버전은 1.0.87입니다.
+현재 기준 버전은 1.0.88입니다.
 
 ## 1.0.81 - FocusedCleanupWordTextWalk
 
