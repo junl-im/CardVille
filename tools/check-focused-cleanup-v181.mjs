@@ -24,14 +24,14 @@ const walk = (dir) => {
 
 const pkg = JSON.parse(read('package.json'));
 const build = JSON.parse(read('public/build.json'));
-assert(pkg.version === '1.0.86', `expected package version 1.0.86, got ${pkg.version}`);
+assert(pkg.version === '1.0.87', `expected package version 1.0.87, got ${pkg.version}`);
 assert(build.version === pkg.version, 'build version must match package version');
 assert(build.assetVersion === pkg.version, 'asset version must match package version');
 assert(pkg.scripts.verify.includes('check:focused-cleanup-v181'), 'verify must include focused cleanup check');
 
 const index = read('index.html');
-assert(index.includes("window.__CARDVILLE_VERSION__ = '1.0.86'"), 'index version must be 1.0.86');
-assert(index.includes('cardville_intro_loading.mp4?v=1.0.86'), 'intro video cache key must use current package version');
+assert(index.includes("window.__CARDVILLE_VERSION__ = '1.0.87'"), 'index version must be 1.0.87');
+assert(index.includes('cardville_intro_loading.mp4?v=1.0.87'), 'intro video cache key must use current package version');
 for (const token of [
   '__CARDVILLE_INTRO_TOUCH_PRIME_TAG__',
   '__CARDVILLE_INTRO_HARD_VISIBLE_TAG__',
@@ -58,6 +58,11 @@ assert(!stage.includes("`${mode?.fallbackIcon ?? '🎴'} ${this.title}`"), 'dupl
 
 const play = read('src/game/scenes/PlayScene.ts');
 assert(play.includes('낱말 카드'), 'PlayScene word label must use 낱말 카드');
+assert(play.includes('word-recovery-hint-v187'), 'PlayScene must keep word recovery hint audit token');
+assert(play.includes('showRecoveryHint'), 'PlayScene must consolidate recovery hint copy in one helper');
+assert(play.includes('정답 TOP 카드가 없어요. 복구 버튼으로 새 TOP 카드를 열어주세요.'), 'PlayScene must tell player how to recover no-match TOP state');
+assert(play.includes("if (!match) {\n      this.refreshHud();\n      this.showRecoveryHint('hint');"), 'hint must not be consumed when no TOP match exists');
+assert(!play.includes('현재 맨 위 카드에는 정답이 없어요. 셔플을 사용해보세요.'), 'old no-match hint copy must be integrated into recovery guidance');
 assert(!play.includes('DrawSystem.background(this, `말 카드'), 'old word play title must not remain');
 
 const text = read('src/game/ui/TextStyles.ts');
@@ -65,7 +70,7 @@ assert(text.includes('return prefs.largeText ? 1.08 : 0.97'), 'global text scale
 assert(text.includes('return prefs.largeText ? 0.91 : 0.83'), 'notice text scale must be slightly raised');
 
 const lobby = read('src/game/scenes/MainLobbyScene.ts');
-assert(lobby.includes("const LOBBY_VERSION = '1.0.86'"), 'lobby version must be 1.0.86');
+assert(lobby.includes("const LOBBY_VERSION = '1.0.87'"), 'lobby version must be 1.0.87');
 assert(lobby.includes('floor-walk-smooth-no-container-bounce'), 'smooth walk cleanup tag must be present');
 assert(lobby.includes('const naturalSpeed = 96 * scale'), 'free walk speed must be calmer');
 assert(lobby.includes('this.startWalkAnimation(150)'), 'walk frame timing must be calmer');
@@ -81,16 +86,16 @@ for (const file of ['index.html', 'src/game/scenes/IntroLoadingScene.ts', 'src/g
 const handoff = read('AI_HANDOFF_CARDVILLE.md');
 const readme = read('README.md');
 for (const token of [
-  '## 1.0.86 - PagesDeployClean',
-  '현재 작업 기준: 1.0.86',
+  '## 1.0.87 - WordRecoveryHint',
+  '현재 작업 기준: 1.0.87',
   '새 버전 번호가 붙은 install...Pass() / sync...Ui() 함수를 새로 추가하지 않습니다',
   '삭제했다/통합했다',
   'README.md와 AI_HANDOFF_CARDVILLE.md에만 기록을 누적합니다',
-  'CV_v1.0.86_DeployClean_Full.zip',
-  'CV_v1.0.86_DeployClean_Patch.zip'
+  'CV_v1.0.87_WordRecovery_Full.zip',
+  'CV_v1.0.87_WordRecovery_Patch.zip'
 ]) assert(handoff.includes(token), `AI_HANDOFF_CARDVILLE.md missing ${token}`);
 assert(!handoff.includes('## 현재 작업 기준: 1.0.80'), 'handoff must not keep stale current work baseline 1.0.80');
-for (const token of ['# CardVille 1.0.86', '## 1.0.86 - PagesDeployClean', 'deploy-preflight-v186', 'CV_v1.0.86_DeployClean_Full.zip']) {
+for (const token of ['# CardVille 1.0.87', '## 1.0.87 - WordRecoveryHint', 'word-recovery-hint-v187', 'CV_v1.0.87_WordRecovery_Full.zip']) {
   assert(readme.includes(token), `README.md missing ${token}`);
 }
 

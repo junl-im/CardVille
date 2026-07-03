@@ -1,3 +1,21 @@
+# CardVille 1.0.87
+
+## 1.0.87 - WordRecoveryHint
+
+## 1.0.87 업데이트 내역
+
+- 작업 범위: 도서관 낱말 카드 `PlayScene`의 실패 복구 힌트/문구만 진행했습니다. 다른 화면, 배포 워크플로, 로비 이동, 인트로 로직은 수정하지 않았습니다.
+- `word-recovery-hint-v187`: 정답 TOP 카드가 없는 막힘 상태에서 카드 보드 상단 문구를 `복구 필요 · 정답 TOP 없음`으로 바꿔 현재 해야 할 행동을 바로 보이게 했습니다.
+- `word-hint-no-consume-v187`: 정답 TOP 카드가 없을 때 힌트 버튼 경로가 호출돼도 힌트 개수를 소모하지 않고 `복구 추천` 안내와 복구 버튼 강조만 표시하도록 기존 `useHint()` 자리에서 직접 수정했습니다.
+- `recovery-copy-v187`: 오답 뒤 또는 정답 처리 뒤 TOP 정답이 사라진 경우 `showRecoveryHint()` 한 곳에서 복구 안내 문구를 통합해 `복구 버튼으로 새 TOP 카드`를 열라고 안내합니다.
+- `useShuffle()`는 막힘 상태에서 실행됐는지 먼저 확인한 뒤, 섞기 후 목표 계열 TOP 카드가 열렸으면 `복구 완료` 문구를 보여주고, 아직 막혀 있으면 남은 복구를 아껴 쓰라는 안내를 보여줍니다.
+- 호출 추적 결과 `PlayScene`은 낱말 카드 플레이 화면에서만 사용됩니다. 수정한 함수는 `redrawBoard()`, `useHint()`, `useShuffle()`, `afterCorrect()`, `selectCard()`의 복구 문구 경로와 새 공통 헬퍼 `showRecoveryHint()`입니다.
+- 삭제한 런타임 함수/화면 코드는 없습니다. 새 버전 번호가 붙은 install...Pass() / sync...Ui() 함수도 추가하지 않았습니다. 실제 삭제/통합한 것은 오래된 no-match 힌트 문구와 오답 뒤 복구 안내 분산 경로이며, `showRecoveryHint()`로 통합했습니다.
+- 안전 판단 근거: 변경은 도서관 낱말 카드의 막힘 안내와 힌트 소모 조건에 한정됩니다. 카드 제거/점수/목표 진행/결과 전환/셔플 알고리즘은 유지했고, 막힌 상태에서 의미 없는 힌트 소모만 막았습니다. `verify`에는 관련 UX/카드 UI 검증인 `check:ux-safety`와 `check:card-game-ui`를 포함했습니다.
+- 기록은 README.md와 AI_HANDOFF_CARDVILLE.md에만 누적합니다. PATCH_NOTES, CHANGELOG, RELEASE_NOTES, 임시 txt, 새 진행 기록 문서는 만들지 않습니다.
+- 최종 ZIP 명명 규칙: `CV_v1.0.87_WordRecovery_Full.zip`, `CV_v1.0.87_WordRecovery_Patch.zip`.
+- Patch ZIP은 v1.0.86 통파일 위에 덮어쓰는 변경 파일 전용 패치이며 `public/assets` 전체는 포함하지 않습니다.
+
 # CardVille 1.0.86
 
 ## 1.0.86 - PagesDeployClean

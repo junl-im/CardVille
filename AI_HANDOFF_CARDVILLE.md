@@ -1,3 +1,16 @@
+## 1.0.87 - WordRecoveryHint
+
+- 작업 범위는 도서관 낱말 카드 `PlayScene`의 실패 복구 힌트/문구로 제한했습니다. 다른 화면/기능, GitHub Pages 워크플로, 인트로, 광장 이동 로직은 수정하지 않았습니다.
+- 현재 작업 기준은 1.0.87입니다. 1.0.86 통파일 위에 `CV_v1.0.87_WordRecovery_Patch.zip`을 덮어쓰거나, 클린 설치는 `CV_v1.0.87_WordRecovery_Full.zip`을 사용합니다.
+- 호출 추적 결과: `PlayScene`은 `src/main.ts`의 scene 목록에 등록되어 있고, 낱말 카드 StageSelect 흐름으로 진입하는 도서관 플레이 화면입니다. 수정한 `redrawBoard()`, `selectCard()`, `afterCorrect()`, `useHint()`, `useShuffle()`는 모두 이 화면 내부 메서드이며 다른 씬에서 import되지 않습니다.
+- `word-recovery-hint-v187`: `redrawBoard()`에서 현재 TOP 카드 중 목표 계열이 없으면 보드 헤더가 `복구 필요 · 정답 TOP 없음` / `복구 버튼으로 다시 열기`로 바뀌도록 했습니다.
+- `word-hint-no-consume-v187`: `useHint()`는 먼저 `findTopMatch()`를 확인합니다. 정답 TOP 카드가 없으면 힌트 수를 줄이지 않고 `showRecoveryHint('hint')`, `복구 추천` 플로팅 텍스트, 복구 버튼 강조만 실행합니다.
+- `recovery-copy-v187`: 오답 뒤와 정답 처리 뒤의 막힘 상태 안내를 새 공통 헬퍼 `showRecoveryHint()`로 통합했습니다. 예전 no-match 힌트 문구는 삭제하고 복구 안내 문구로 통합했습니다.
+- `useShuffle()`는 막힘 상태에서 들어왔는지 저장한 뒤 섞기 후 `복구 완료 · 목표 계열 TOP 카드가 열렸어요.` 또는 `복구했지만 아직 막혀 있어요.`를 보여줍니다. 셔플 비용, 카드 배열 섞기 방식, 목표/점수 처리 로직은 유지했습니다.
+- 삭제한 런타임 함수/화면 코드는 없습니다. 새 버전 번호가 붙은 install...Pass() / sync...Ui() 함수도 추가하지 않았습니다. 실제 삭제/통합한 것은 오래된 no-match 힌트 문구와 분산된 복구 안내 경로입니다.
+- 안전 판단 근거: 변경은 PlayScene 내부의 안내 문구/힌트 소모 조건/보드 헤더에 한정됩니다. 점수 계산, 카드 pop, 목표 완료, ResultScene 이동, 저장 구조, 배포 워크플로는 수정하지 않았습니다. `verify`에는 관련 UX/카드 UI 검증인 `check:ux-safety`와 `check:card-game-ui`를 포함했습니다.
+- 검증 기준: `npm run verify`, `check:focused-cleanup-v181`, `check:doc-hygiene-v179`, `check:ux-safety`, `check:card-game-ui`, `check:security`, `check:flow-ui-v165`, `check:screen-playfield`를 확인합니다.
+
 ## 1.0.86 - PagesDeployClean
 
 - 작업 범위는 GitHub Pages 배포 정상화 이후 임시 실패 진단 경로 정리, 최소 권한 복구, 배포 검증 체인 보강으로 제한했습니다. 게임 화면/씬 기능 로직은 수정하지 않았습니다.
@@ -70,9 +83,9 @@
 
 # CardVille AI Handoff
 
-## 현재 작업 기준: 1.0.86
+## 현재 작업 기준: 1.0.87
 
-현재 기준 버전은 1.0.86입니다.
+현재 기준 버전은 1.0.87입니다.
 
 ## 1.0.81 - FocusedCleanupWordTextWalk
 

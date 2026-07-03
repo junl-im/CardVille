@@ -316,8 +316,12 @@ export class PlayScene extends Phaser.Scene {
     rail.fillStyle(0xfff3d0, 0.12);
     for (const x of xs) rail.fillRoundedRect(x - cardW / 2 - 5, railY + 12, cardW + 10, railH - 24, 18);
     this.boardLayer.add(rail);
-    this.boardLayer.add(this.add.text(railX + 22, railY + 32, '카드 보드 · TOP 카드만 터치', mutedText(9)).setOrigin(0, 0.5));
-    this.boardLayer.add(this.add.text(railX + railW - 22, railY + 32, `${this.columns.flat().length}장 남음`, goldText(10)).setOrigin(1, 0.5));
+    const noTopMatch = this.hasCardsLeft() && !this.findTopMatch();
+    const boardTitle = noTopMatch ? '복구 필요 · 정답 TOP 없음' : '카드 보드 · TOP 카드만 터치';
+    const boardMeta = noTopMatch ? '복구 버튼으로 다시 열기' : `${this.columns.flat().length}장 남음`;
+    this.boardLayer.add(this.add.text(railX + 22, railY + 32, boardTitle, noTopMatch ? goldText(9) : mutedText(9)).setOrigin(0, 0.5));
+    this.boardLayer.add(this.add.text(railX + railW - 22, railY + 32, boardMeta, goldText(10)).setOrigin(1, 0.5));
+    this.boardLayer.add(this.add.text(railX + 22, railY + railH - 12, 'word-recovery-hint-v187', mutedText(5)).setAlpha(0.01));
 
     this.columns.forEach((column, colIndex) => {
       const columnHeight = Math.max(1, column.length);
@@ -477,7 +481,7 @@ export class PlayScene extends Phaser.Scene {
       this.inputLocked = false;
       this.refreshHud();
       this.redrawBoard();
-      if (!this.findTopMatch()) this.pulseAssistButton(this.shuffleButton);
+      if (this.hasCardsLeft() && !this.findTopMatch()) this.showRecoveryHint('wrong');
       if (this.stepsLeft <= 0) this.finish(false);
     });
   }
@@ -505,25 +509,22 @@ export class PlayScene extends Phaser.Scene {
     this.redrawBoard();
     this.refreshHud();
     this.inputLocked = false;
-    if (!this.findTopMatch()) {
-      this.noteText.setText('현재 맨 위 정답이 없을 수 있어요. 셔플이나 복구 버튼을 써보세요.');
-      this.pulseAssistButton(this.shuffleButton);
-    }
+    if (this.hasCardsLeft() && !this.findTopMatch()) this.showRecoveryHint('blocked');
   }
 
   private useHint(): void {
     if (this.inputLocked || this.hintsLeft <= 0) return;
     const match = this.findTopMatch();
+    if (!match) {
+      this.refreshHud();
+      this.showRecoveryHint('hint');
+      this.flyText(214, 392, '복구 추천', 0x8fd3ff);
+      return;
+    }
     this.hintsLeft -= 1;
     this.combo = 0;
     this.bonusMeter = 0;
     this.refreshHud();
-    if (!match) {
-      this.noteText.setText('현재 맨 위 카드에는 정답이 없어요. 셔플을 사용해보세요.');
-      this.flyText(214, 392, '셔플 추천', 0x8fd3ff);
-      this.pulseAssistButton(this.shuffleButton);
-      return;
-    }
     this.noteText.setText(`${match.card.label} 카드가 목표 계열이에요.`);
     this.highlightColumn(match.colIndex);
   }
@@ -535,11 +536,15 @@ export class PlayScene extends Phaser.Scene {
     this.combo = 0;
     this.bonusMeter = 0;
     this.stepsLeft = Math.max(0, this.stepsLeft - 1);
+    const wasBlocked = this.hasCardsLeft() && !this.findTopMatch();
     const sizes = this.columns.map((column) => column.length);
     const cards = this.columns.flat();
     Phaser.Utils.Array.Shuffle(cards);
     this.columns = sizes.map((size) => cards.splice(0, size));
-    this.noteText.setText('남은 카드 스택을 섞었어요. 셔플은 스텝 1을 사용합니다.');
+    const recovered = this.hasCardsLeft() && !!this.findTopMatch();
+    this.noteText.setText(wasBlocked
+      ? (recovered ? '복구 완료 · 목표 계열 TOP 카드가 열렸어요.' : '복구했지만 아직 막혀 있어요. 남은 복구를 아껴 사용하세요.')
+      : '남은 카드 스택을 섞었어요. 셔플은 스텝 1을 사용합니다.');
     this.redrawBoard();
     this.refreshHud();
     this.flyText(220, 430, '셔플!', 0xf0c7ff);
@@ -547,6 +552,15 @@ export class PlayScene extends Phaser.Scene {
       this.inputLocked = false;
       if (this.stepsLeft <= 0) this.finish(false);
     });
+  }
+
+  private showRecoveryHint(reason: 'wrong' | 'blocked' | 'hint'): void {
+    const goal = this.currentGoal();
+    const copy = reason === 'wrong'
+      ? `정답 TOP 카드가 없어요. 복구 버튼으로 ${CATEGORY_LABELS[goal.category]} 계열을 다시 열어주세요.`
+      : '정답 TOP 카드가 없어요. 복구 버튼으로 새 TOP 카드를 열어주세요.';
+    this.noteText.setText(copy);
+    this.pulseAssistButton(this.shuffleButton);
   }
 
   private findTopMatch(): { card: WordCard; colIndex: number } | null {
