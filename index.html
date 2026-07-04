@@ -48,12 +48,12 @@
       }
     </script>
     <script>
-      window.__CARDVILLE_VERSION__ = '1.0.88';
+      window.__CARDVILLE_VERSION__ = '1.0.89';
       window.__CARDVILLE_READY__ = false;
       window.__CARDVILLE_INTRO_VIDEO_STARTED_AT__ = 0;
 
-      function cardvilleIntroSrc(){ return new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.88', document.baseURI).href; }
-      function cardvilleIntroPoster(){ return new URL('./assets/video/cardville_intro_poster.jpg?v=1.0.88', document.baseURI).href; }
+      function cardvilleIntroSrc(){ return new URL('./assets/video/cardville_intro_loading.mp4?v=1.0.89', document.baseURI).href; }
+      function cardvilleIntroPoster(){ return new URL('./assets/video/cardville_intro_poster.jpg?v=1.0.89', document.baseURI).href; }
       function cardvilleEnsureIntroCanvas(){
         var id = 'cardville-intro-video-canvas';
         var canvas = document.getElementById(id);
@@ -378,7 +378,7 @@
         if (el) el.remove();
       };
       // Compatibility anchors: video.style.opacity = '1'; video.style.visibility = 'visible'; old loading bars are quarantined; document.documentElement.classList.add('cardville-intro-hard-visible-v170'); document.documentElement.classList.remove('cardville-intro-hard-visible-v170'); no generic loading copy/bar on boot. no generic loading copy on boot.
-      // 1.0.88: Pages deploy retry stabilization; 1.0.87 word recovery hint polish remains intact.
+      // 1.0.89: Shared UI text scale nudge; 1.0.88 Pages deploy retry and 1.0.87 word recovery hint remain intact.
     </script>
     <script type="module" src="/src/main.ts"></script>
   </body>

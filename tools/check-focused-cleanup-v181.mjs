@@ -24,14 +24,14 @@ const walk = (dir) => {
 
 const pkg = JSON.parse(read('package.json'));
 const build = JSON.parse(read('public/build.json'));
-assert(pkg.version === '1.0.88', `expected package version 1.0.88, got ${pkg.version}`);
+assert(pkg.version === '1.0.89', `expected package version 1.0.89, got ${pkg.version}`);
 assert(build.version === pkg.version, 'build version must match package version');
 assert(build.assetVersion === pkg.version, 'asset version must match package version');
 assert(pkg.scripts.verify.includes('check:focused-cleanup-v181'), 'verify must include focused cleanup check');
 
 const index = read('index.html');
-assert(index.includes("window.__CARDVILLE_VERSION__ = '1.0.88'"), 'index version must be 1.0.88');
-assert(index.includes('cardville_intro_loading.mp4?v=1.0.88'), 'intro video cache key must use current package version');
+assert(index.includes("window.__CARDVILLE_VERSION__ = '1.0.89'"), 'index version must be 1.0.89');
+assert(index.includes('cardville_intro_loading.mp4?v=1.0.89'), 'intro video cache key must use current package version');
 for (const token of [
   '__CARDVILLE_INTRO_TOUCH_PRIME_TAG__',
   '__CARDVILLE_INTRO_HARD_VISIBLE_TAG__',
@@ -66,11 +66,14 @@ assert(!play.includes('현재 맨 위 카드에는 정답이 없어요. 셔플�
 assert(!play.includes('DrawSystem.background(this, `말 카드'), 'old word play title must not remain');
 
 const text = read('src/game/ui/TextStyles.ts');
-assert(text.includes('return prefs.largeText ? 1.08 : 0.97'), 'global text scale must be slightly raised');
-assert(text.includes('return prefs.largeText ? 0.91 : 0.83'), 'notice text scale must be slightly raised');
+assert(text.includes('global-text-small-plus-v189'), 'global text plus tag must be present');
+assert(text.includes('const GLOBAL_TEXT_PLUS_V189_SCALE = 1.04'), 'global text scale must be nudged to 1.04');
+assert(text.includes('const GLOBAL_NOTICE_TEXT_PLUS_V189_SCALE = 0.88'), 'notice text scale must be nudged to 0.88');
+assert(text.includes('return prefs.largeText ? 1.13 : GLOBAL_TEXT_PLUS_V189_SCALE'), 'large text scale must follow v189 nudge');
+assert(text.includes('return prefs.largeText ? 0.96 : GLOBAL_NOTICE_TEXT_PLUS_V189_SCALE'), 'large notice text scale must follow v189 nudge');
 
 const lobby = read('src/game/scenes/MainLobbyScene.ts');
-assert(lobby.includes("const LOBBY_VERSION = '1.0.88'"), 'lobby version must be 1.0.88');
+assert(lobby.includes("const LOBBY_VERSION = '1.0.89'"), 'lobby version must be 1.0.89');
 assert(lobby.includes('floor-walk-smooth-no-container-bounce'), 'smooth walk cleanup tag must be present');
 assert(lobby.includes('const naturalSpeed = 96 * scale'), 'free walk speed must be calmer');
 assert(lobby.includes('this.startWalkAnimation(150)'), 'walk frame timing must be calmer');
@@ -86,20 +89,25 @@ for (const file of ['index.html', 'src/game/scenes/IntroLoadingScene.ts', 'src/g
 const handoff = read('AI_HANDOFF_CARDVILLE.md');
 const readme = read('README.md');
 for (const token of [
+  '## 1.0.89 - TextPlus',
+  'global-text-small-plus-v189',
+  'text-notice-scale-nudge-v189',
   '## 1.0.88 - PagesDeployRetry',
   'pages-deploy-retry-v188',
   '## 1.0.87 - WordRecoveryHint',
-  '현재 작업 기준: 1.0.88',
+  '현재 작업 기준: 1.0.89',
   '새 버전 번호가 붙은 install...Pass() / sync...Ui() 함수를 새로 추가하지 않습니다',
   '삭제했다/통합했다',
   'README.md와 AI_HANDOFF_CARDVILLE.md에만 기록을 누적합니다',
+  'CV_v1.0.89_TextPlus_Full.zip',
+  'CV_v1.0.89_TextPlus_Patch.zip',
   'CV_v1.0.88_DeployRetry_Full.zip',
   'CV_v1.0.88_DeployRetry_Patch.zip',
   'CV_v1.0.87_WordRecovery_Full.zip',
   'CV_v1.0.87_WordRecovery_Patch.zip'
 ]) assert(handoff.includes(token), `AI_HANDOFF_CARDVILLE.md missing ${token}`);
 assert(!handoff.includes('## 현재 작업 기준: 1.0.80'), 'handoff must not keep stale current work baseline 1.0.80');
-for (const token of ['# CardVille 1.0.88', '## 1.0.88 - PagesDeployRetry', 'pages-deploy-retry-v188', 'CV_v1.0.88_DeployRetry_Full.zip', '## 1.0.87 - WordRecoveryHint', 'word-recovery-hint-v187']) {
+for (const token of ['# CardVille 1.0.89', '## 1.0.89 - TextPlus', 'global-text-small-plus-v189', 'CV_v1.0.89_TextPlus_Full.zip', '## 1.0.88 - PagesDeployRetry', 'pages-deploy-retry-v188', 'CV_v1.0.88_DeployRetry_Full.zip', '## 1.0.87 - WordRecoveryHint', 'word-recovery-hint-v187']) {
   assert(readme.includes(token), `README.md missing ${token}`);
 }
 

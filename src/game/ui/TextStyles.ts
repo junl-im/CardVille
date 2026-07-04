@@ -11,18 +11,21 @@ export const CARDVILLE_MICRO_TEXT_FIT_TAG = 'micro-text-fit-v167' as const;
 export const CARDVILLE_ULTRA_COPY_FIT_TAG = 'ultra-copy-fit-v168' as const;
 export const CARDVILLE_GLOBAL_MICRO_COPY_V169_TAG = 'global-micro-copy-v169' as const;
 export const CARDVILLE_DEEP_SWEEP_COPY_V170_TAG = 'deep-sweep-copy-fit-v170' as const;
+export const CARDVILLE_GLOBAL_TEXT_PLUS_V189_TAG = 'global-text-small-plus-v189' as const;
+const GLOBAL_TEXT_PLUS_V189_SCALE = 1.04;
+const GLOBAL_NOTICE_TEXT_PLUS_V189_SCALE = 0.88;
 // Compatibility audit anchors retained for older checks: size <= 11 ? 12, prefs.largeText ? 1.18 : 1.06, prefs.largeText ? 1.00 : 0.92, prefs.largeText ? 1.08 : 0.98, prefs.largeText ? 0.92 : 0.84.
 // Compatibility audit anchors retained for older checks: size <= 11 ? 12, mobile-readable-text-v157, mobile-readable-text-v156, return prefs.largeText ? 1.40 : 1.20, return prefs.largeText ? 1.34 : 1.17, size <= 9 ? 12, size <= 11 ? 14. Legacy anchors: size <= 9 ? 13, size <= 11 ? 15.
 export const CARDVILLE_PREVIOUS_MOBILE_TEXT_TAG = 'mobile-readable-text-v156' as const;
 
 function mobileTextScale(): number {
-  if (typeof window === 'undefined') return 1.0;
+  if (typeof window === 'undefined') return GLOBAL_TEXT_PLUS_V189_SCALE;
   try {
     const raw = window.localStorage?.getItem('cardville.accessibility.v143');
     const prefs = raw ? JSON.parse(raw) as { largeText?: boolean } : {};
-    return prefs.largeText ? 1.08 : 0.97;
+    return prefs.largeText ? 1.13 : GLOBAL_TEXT_PLUS_V189_SCALE;
   } catch {
-    return 1.0;
+    return GLOBAL_TEXT_PLUS_V189_SCALE;
   }
 }
 
@@ -32,13 +35,13 @@ function readableSize(size: number): number {
 }
 
 function noticeTextScale(): number {
-  if (typeof window === 'undefined') return 1.0;
+  if (typeof window === 'undefined') return GLOBAL_NOTICE_TEXT_PLUS_V189_SCALE;
   try {
     const raw = window.localStorage?.getItem('cardville.accessibility.v143');
     const prefs = raw ? JSON.parse(raw) as { largeText?: boolean } : {};
-    return prefs.largeText ? 0.91 : 0.83;
+    return prefs.largeText ? 0.96 : GLOBAL_NOTICE_TEXT_PLUS_V189_SCALE;
   } catch {
-    return 0.87;
+    return GLOBAL_NOTICE_TEXT_PLUS_V189_SCALE;
   }
 }
 

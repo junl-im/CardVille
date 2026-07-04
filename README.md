@@ -1,4 +1,20 @@
-# CardVille 1.0.88
+# CardVille 1.0.89
+
+## 1.0.89 - TextPlus
+
+## 1.0.89 업데이트 내역
+
+- 작업 범위: 전체적인 글씨 크기를 아주 소폭 키우는 공통 텍스트 가독성 조정만 진행했습니다. 개별 화면 배치, 게임 진행, 카드 로직, 배포 워크플로는 수정하지 않았습니다.
+- `global-text-small-plus-v189`: `src/game/ui/TextStyles.ts`의 공통 `readableSize()` 경로에서 기본 텍스트 스케일을 기존 `0.97`에서 `1.04`로 올렸습니다. 대부분의 로비/상점/스테이지/게임/팝업 텍스트가 이 경로를 공유합니다.
+- `text-notice-scale-nudge-v189`: 박스형 안내/칩 문구에 쓰이는 `noticeText()` 계열은 기존 `0.83`에서 `0.88`로만 올려 작게 읽히던 안내 문구를 조금 키우되, 고정 박스 넘침 위험을 줄였습니다.
+- 접근성의 큰 안내 문구 옵션도 같은 자리에서 `1.08`에서 `1.13`, notice 계열은 `0.91`에서 `0.96`으로 맞춰 일반/큰 글씨 모두 같은 방향으로 정리했습니다.
+- 호출 추적 결과 `TextStyles.ts`는 `LoginScene`, `MainLobbyScene`, `StageSelectScene`, `PlayScene`, `ShopScene`, `RewardPopupSystem`, `GameButton` 등 공통 UI에서 import됩니다. 따라서 화면별 함수를 새로 만들지 않고 공통 스타일 값만 조정했습니다.
+- 삭제한 런타임 함수/화면 코드는 없습니다. 새 버전 번호가 붙은 install...Pass() / sync...Ui() 함수도 추가하지 않았습니다. 실제 통합/변경한 것은 공통 텍스트 스케일 상수와 접근성 검증 체인입니다.
+- 안전 판단 근거: 개별 좌표, 버튼 hit area, 카드 제거/점수/보상/저장/배포 로직은 유지했습니다. `verify`에 `check:accessibility`를 포함하고 관련 검증에서 v1.0.89 텍스트 스케일 토큰을 확인합니다.
+- 기록은 README.md와 AI_HANDOFF_CARDVILLE.md에만 누적합니다. PATCH_NOTES, CHANGELOG, RELEASE_NOTES, 임시 txt, 새 진행 기록 문서는 만들지 않습니다.
+- 최종 ZIP 명명 규칙: `CV_v1.0.89_TextPlus_Full.zip`, `CV_v1.0.89_TextPlus_Patch.zip`.
+- Patch ZIP은 v1.0.88 통파일 위에 덮어쓰는 변경 파일 전용 패치이며 `public/assets` 전체는 포함하지 않습니다.
+
 
 ## 1.0.88 - PagesDeployRetry
 

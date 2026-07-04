@@ -50,6 +50,15 @@ must('src/game/systems/CoachMarkSystem.ts', [
   'titleSize'
 ]);
 
+
+must('src/game/ui/TextStyles.ts', [
+  'global-text-small-plus-v189',
+  'const GLOBAL_TEXT_PLUS_V189_SCALE = 1.04',
+  'const GLOBAL_NOTICE_TEXT_PLUS_V189_SCALE = 0.88',
+  'return prefs.largeText ? 1.13 : GLOBAL_TEXT_PLUS_V189_SCALE',
+  'return prefs.largeText ? 0.96 : GLOBAL_NOTICE_TEXT_PLUS_V189_SCALE'
+]);
+
 const scripts = pkg.scripts ?? {};
 if (scripts['check:accessibility'] !== 'node tools/check-accessibility.mjs') throw new Error('check:accessibility script mismatch');
 if (!scripts.verify?.includes('check:accessibility')) throw new Error('verify must include check:accessibility');

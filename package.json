@@ -1,15 +1,15 @@
 {
   "name": "cardville",
-  "version": "1.0.88",
+  "version": "1.0.89",
   "private": true,
   "type": "module",
-  "description": "CardVille 1.0.88 adds a one-time GitHub Pages deploy retry for transient syncing_files backend failures, while preserving the v1.0.87 word-card recovery flow.",
+  "description": "CardVille 1.0.89 nudges the shared UI text scale slightly upward across the game while preserving the v1.0.88 GitHub Pages deploy retry and v1.0.87 word recovery flow.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "check:deploy": "node tools/check-deploy.mjs",
-    "verify": "npm run build && npm run check:deploy && npm run check:doc-hygiene-v179 && npm run check:focused-cleanup-v181 && npm run check:ux-safety && npm run check:card-game-ui && npm run check:security",
+    "verify": "npm run build && npm run check:deploy && npm run check:doc-hygiene-v179 && npm run check:focused-cleanup-v181 && npm run check:ux-safety && npm run check:card-game-ui && npm run check:accessibility && npm run check:security",
     "check:brand": "node tools/check-brand.mjs",
     "check:ui": "node tools/check-ui.mjs",
     "check:layout": "node tools/check-layout.mjs",
