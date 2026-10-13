@@ -1,8 +1,9 @@
 {
   "name": "카드빌 퍼즐 모험",
-  "version": "0.5.0-beta",
+  "version": "0.6.0-beta",
   "stageCount": 250,
   "language": "ko",
   "primaryInput": "drag-swipe",
-  "build": "2026-10-14"
+  "build": "2026-10-14",
+  "localizationAudit": "all-stages-and-runtime-dialogs"
 }

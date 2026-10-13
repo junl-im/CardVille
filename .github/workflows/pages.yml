@@ -27,6 +27,7 @@ jobs:
           set -e
           node tools/check-release.cjs
           node tools/check-korean-ui.cjs
+          node tools/check-korean-complete.cjs
           test -f web/index.html
           test -f web/LICENSE
           test -f web/sw.js

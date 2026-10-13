@@ -43,7 +43,7 @@ const Multiplayer = (() => {
 
   // ── HOST ─────────────────────────────────────────────────────
   async function createRoom(hostName) {
-    showStatus('Connecting to PeerJS…', '#a78bfa');
+    showStatus('연결을 준비하고 있어요…', '#a78bfa');
     const ok = await loadPeerJS();
     if (!ok) { alert('연결 기능을 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.'); return; }
 
@@ -56,10 +56,10 @@ const Multiplayer = (() => {
       myPlayer = 1; mode = 'host';
       _initState();
       showShareModal(roomCode);
-      showStatus('Room ready! Waiting for friend…', '#22c55e');
+      showStatus('대결방을 만들었어요. 친구를 기다리고 있어요…', '#22c55e');
     });
     peer.on('connection', c => { conn = c; _setupConn(); });
-    peer.on('error', e => showStatus('PeerJS error: ' + e.type, '#ef4444'));
+    peer.on('error', e => showStatus('대결 서버에 연결하지 못했어요. 잠시 후 다시 시도해 주세요.', '#ef4444'));
   }
 
   // ── GUEST ────────────────────────────────────────────────────
@@ -71,7 +71,7 @@ const Multiplayer = (() => {
     code = code.toUpperCase().trim();
     const hostId = localStorage.getItem('scr_peer_' + code);
     if (!hostId) {
-      showStatus('Room not found — ask host to resend the link', '#ef4444');
+      showStatus('대결방을 찾지 못했어요. 친구에게 초대 주소를 다시 받아 주세요.', '#ef4444');
       return;
     }
 
@@ -82,9 +82,9 @@ const Multiplayer = (() => {
       myPlayer = 2; mode = 'guest'; roomCode = code;
       _setupConn();
     });
-    peer.on('error', e => showStatus('Error: ' + e.type, '#ef4444'));
+    peer.on('error', e => showStatus('대결 서버에 연결하지 못했어요. 잠시 후 다시 시도해 주세요.', '#ef4444'));
 
-    setTimeout(() => { if (!active) showStatus('Connection timeout — check room code', '#ef4444'); }, 10000);
+    setTimeout(() => { if (!active) showStatus('연결 시간이 초과됐어요. 초대 코드를 확인해 주세요.', '#ef4444'); }, 10000);
   }
 
   // ── CONNECTION ───────────────────────────────────────────────
@@ -97,7 +97,7 @@ const Multiplayer = (() => {
       renderHUD();
       const shareModal = document.getElementById('mp-share');
       if (shareModal) shareModal.style.display = 'none';
-      showStatus('Connected! Game on 🎮', '#22c55e');
+      showStatus('연결됐어요! 대결을 시작합니다. 🎮', '#22c55e');
     });
 
     conn.on('data', msg => {
@@ -124,9 +124,9 @@ const Multiplayer = (() => {
     });
 
     conn.on('close', () => {
-      if (active) { showStatus('Opponent disconnected 😢', '#ef4444'); active = false; _stopPing(); }
+      if (active) { showStatus('상대방의 연결이 끊어졌어요. 😢', '#ef4444'); active = false; _stopPing(); }
     });
-    conn.on('error', e => showStatus('Connection error: ' + e, '#ef4444'));
+    conn.on('error', e => showStatus('연결이 원활하지 않아요. 인터넷 상태를 확인해 주세요.', '#ef4444'));
   }
 
   function _send(msg) { if (conn && conn.open) try { conn.send(msg); } catch(e) {} }
@@ -160,7 +160,7 @@ const Multiplayer = (() => {
       const other = currentPlayer === 1 ? 2 : 1;
       if (state.movesLeft[other] > 0) {
         currentPlayer = other;
-        showStatus(playerNames[currentPlayer] + "'s turn!", COLORS[currentPlayer]);
+        showStatus(playerNames[currentPlayer] + '님의 차례예요!', COLORS[currentPlayer]);
       } else { endGame(); }
     }
   }
@@ -314,7 +314,7 @@ const Multiplayer = (() => {
           '<h2 style="color:#ec4899;margin:0 0 8px">게임 참가</h2>' +
           '<div style="color:#a78bfa;font-size:2.4rem;font-weight:900;letter-spacing:0.2em;font-family:monospace;margin:10px 0;background:#0a0c14;border-radius:10px;padding:10px">' + roomParam + '</div>' +
           '<input id="mp-guest-name" placeholder="내 이름" maxlength="15" style="width:100%;padding:11px 14px;border-radius:10px;border:1px solid #ec4899;background:#0a0c14;color:#e6edf3;font-size:0.95rem;margin:0 0 14px;box-sizing:border-box;text-align:center">' +
-          '<button onclick="const n=document.getElementById(\'mp-guest-name\').value.trim()||\'Player 2\';document.getElementById(\'mp-setup\').style.display=\'none\';Multiplayer.joinRoom(\'' + roomParam + '\',n);" style="width:100%;background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;border:none;padding:13px;border-radius:12px;font-weight:700;cursor:pointer;font-size:1rem;margin-bottom:10px">🚀 게임 참가!</button>' +
+          '<button onclick="const n=document.getElementById(\'mp-guest-name\').value.trim()||\'2번 플레이어\';document.getElementById(\'mp-setup\').style.display=\'none\';Multiplayer.joinRoom(\'' + roomParam + '\',n);" style="width:100%;background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;border:none;padding:13px;border-radius:12px;font-weight:700;cursor:pointer;font-size:1rem;margin-bottom:10px">🚀 게임 참가!</button>' +
           '<p style="color:#6b7280;font-size:0.75rem">2번 플레이어로 참가합니다</p>' +
         '</div>';
       return;
@@ -327,18 +327,18 @@ const Multiplayer = (() => {
         '<label style="color:#8b949e;font-size:0.75rem;display:block;margin-bottom:4px">내 이름</label>' +
         '<input id="mp-myname" value="' + playerNames[1] + '" maxlength="15" style="width:100%;padding:9px 12px;border-radius:10px;border:1px solid #30363d;background:#0a0c14;color:#e6edf3;font-size:0.92rem;margin-bottom:16px;box-sizing:border-box">' +
         '<div style="background:#0f1117;border-radius:14px;padding:14px;margin-bottom:10px;border:1px solid #1e293b">' +
-          '<div style="color:#22c55e;font-size:0.75rem;font-weight:700;margin-bottom:8px">🌐 다른 기기 대결</div>' +
-          '<button onclick="const n=document.getElementById(\'mp-myname\').value.trim()||\'Player 1\';document.getElementById(\'mp-setup\').style.display=\'none\';Multiplayer.createRoom(n);" style="width:100%;padding:11px;border-radius:12px;background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;border:none;font-weight:700;cursor:pointer;font-size:0.9rem;margin-bottom:8px">🔗 방 만들고 코드 받기</button>' +
+          '<div style="color:#22c55e;font-size:0.75rem;font-weight:700;margin-bottom:8px">🌐 다른 기기 대결 (시험용)</div>' +
+          '<button onclick="const n=document.getElementById(\'mp-myname\').value.trim()||\'1번 플레이어\';document.getElementById(\'mp-setup\').style.display=\'none\';Multiplayer.createRoom(n);" style="width:100%;padding:11px;border-radius:12px;background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;border:none;font-weight:700;cursor:pointer;font-size:0.9rem;margin-bottom:8px">🔗 방 만들고 코드 받기</button>' +
           '<div style="display:flex;gap:8px">' +
-            '<input id="mp-code" placeholder="방 코드 입력 (ABCXYZ)" maxlength="6" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,\'\')" style="flex:1;padding:9px 12px;border-radius:10px;border:1px solid #30363d;background:#0a0c14;color:#e6edf3;font-size:0.85rem;letter-spacing:0.12em;font-family:monospace">' +
-            '<button onclick="const c=document.getElementById(\'mp-code\').value.trim();const n=document.getElementById(\'mp-myname\').value.trim()||\'Player 2\';if(c.length<4){alert(\'올바른 방 코드를 입력하세요\');return;}document.getElementById(\'mp-setup\').style.display=\'none\';Multiplayer.joinRoom(c,n);" style="padding:9px 14px;border-radius:10px;background:#ec4899;color:#fff;border:none;font-weight:700;cursor:pointer">참가</button>' +
+            '<input id="mp-code" placeholder="방 코드 6자리 입력" maxlength="6" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,\'\')" style="flex:1;padding:9px 12px;border-radius:10px;border:1px solid #30363d;background:#0a0c14;color:#e6edf3;font-size:0.85rem;letter-spacing:0.12em;font-family:monospace">' +
+            '<button onclick="const c=document.getElementById(\'mp-code\').value.trim();const n=document.getElementById(\'mp-myname\').value.trim()||\'2번 플레이어\';if(c.length<4){alert(\'올바른 방 코드를 입력하세요\');return;}document.getElementById(\'mp-setup\').style.display=\'none\';Multiplayer.joinRoom(c,n);" style="padding:9px 14px;border-radius:10px;background:#ec4899;color:#fff;border:none;font-weight:700;cursor:pointer">참가</button>' +
           '</div>' +
         '</div>' +
         '<div style="background:#0f1117;border-radius:14px;padding:14px;border:1px solid #1e293b">' +
           '<div style="color:#8b949e;font-size:0.75rem;font-weight:700;margin-bottom:8px">🖥️ 한 기기 대결</div>' +
           '<div style="display:flex;gap:8px">' +
             '<input id="mp-p2" placeholder="친구 이름" maxlength="15" style="flex:1;padding:9px 12px;border-radius:10px;border:1px solid #30363d;background:#0a0c14;color:#e6edf3;font-size:0.85rem">' +
-            '<button onclick="const n1=document.getElementById(\'mp-myname\').value.trim()||\'Player 1\';const n2=document.getElementById(\'mp-p2\').value.trim()||\'Player 2\';document.getElementById(\'mp-setup\').style.display=\'none\';Multiplayer.startLocal(n1,n2);" style="padding:9px 14px;border-radius:10px;background:#7c3aed;color:#fff;border:none;font-weight:700;cursor:pointer">▶ 시작</button>' +
+            '<button onclick="const n1=document.getElementById(\'mp-myname\').value.trim()||\'1번 플레이어\';const n2=document.getElementById(\'mp-p2\').value.trim()||\'2번 플레이어\';document.getElementById(\'mp-setup\').style.display=\'none\';Multiplayer.startLocal(n1,n2);" style="padding:9px 14px;border-radius:10px;background:#7c3aed;color:#fff;border:none;font-weight:700;cursor:pointer">▶ 시작</button>' +
           '</div>' +
         '</div>' +
         '<button onclick="document.getElementById(\'mp-setup\').style.display=\'none\'" style="width:100%;background:transparent;border:none;color:#4b5563;cursor:pointer;padding:12px;margin-top:6px;font-size:0.8rem">취소</button>' +

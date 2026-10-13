@@ -1,0 +1,1502 @@
+[
+  {
+    "level": 1,
+    "original_name": "Sweet Awakening",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 반짝이는 첫걸음"
+  },
+  {
+    "level": 2,
+    "original_name": "First Drop",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 달콤한 길목"
+  },
+  {
+    "level": 3,
+    "original_name": "Candy Meadow",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 숨은 보석 찾기"
+  },
+  {
+    "level": 4,
+    "original_name": "Sugar Trail",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 새로운 갈림길"
+  },
+  {
+    "level": 5,
+    "original_name": "Jelly Steps",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 깜짝 도전"
+  },
+  {
+    "level": 6,
+    "original_name": "Lollipop Lane",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 빛나는 샛길"
+  },
+  {
+    "level": 7,
+    "original_name": "Gummy Path",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 세 갈래 기회"
+  },
+  {
+    "level": 8,
+    "original_name": "Caramel Creek",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 선물 상자"
+  },
+  {
+    "level": 9,
+    "original_name": "Toffee Trail",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 별들의 속삭임"
+  },
+  {
+    "level": 10,
+    "original_name": "Choco Start",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 반짝 폭발"
+  },
+  {
+    "level": 11,
+    "original_name": "Valley Vista",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 수상한 문"
+  },
+  {
+    "level": 12,
+    "original_name": "Sweet Climb",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 뒤섞인 길"
+  },
+  {
+    "level": 13,
+    "original_name": "Candy Crossroads",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 작은 기적"
+  },
+  {
+    "level": 14,
+    "original_name": "Sugar Bridge",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 아슬아슬한 순간"
+  },
+  {
+    "level": 15,
+    "original_name": "Jelly Jump",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 다섯 색의 비밀"
+  },
+  {
+    "level": 16,
+    "original_name": "Rainbow Rim",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 거센 파도"
+  },
+  {
+    "level": 17,
+    "original_name": "Gummy Gorge",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 숨은 문양"
+  },
+  {
+    "level": 18,
+    "original_name": "Caramel Cliff",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 꼬인 퍼즐"
+  },
+  {
+    "level": 19,
+    "original_name": "Toffee Turn",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 빛의 연쇄"
+  },
+  {
+    "level": 20,
+    "original_name": "Crystal Clear",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 순간의 선택"
+  },
+  {
+    "level": 21,
+    "original_name": "Valley Boss",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 마지막 열쇠"
+  },
+  {
+    "level": 22,
+    "original_name": "Sweet Summit",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 거대한 도전"
+  },
+  {
+    "level": 23,
+    "original_name": "Sugar Peak",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 황금빛 실마리"
+  },
+  {
+    "level": 24,
+    "original_name": "Candy Crown",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 최후의 시험"
+  },
+  {
+    "level": 25,
+    "original_name": "Valley Champion",
+    "original_theme": "Candy Valley",
+    "korean_name": "사탕 골짜기 · 전설의 관문"
+  },
+  {
+    "level": 26,
+    "original_name": "Forest Entry",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 반짝이는 첫걸음"
+  },
+  {
+    "level": 27,
+    "original_name": "Lolly Trees",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 달콤한 길목"
+  },
+  {
+    "level": 28,
+    "original_name": "Candy Canopy",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 숨은 보석 찾기"
+  },
+  {
+    "level": 29,
+    "original_name": "Gummy Glades",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 새로운 갈림길"
+  },
+  {
+    "level": 30,
+    "original_name": "Sugar Shrubs",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 깜짝 도전"
+  },
+  {
+    "level": 31,
+    "original_name": "Toffee Thicket",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 빛나는 샛길"
+  },
+  {
+    "level": 32,
+    "original_name": "Choco Clearing",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 세 갈래 기회"
+  },
+  {
+    "level": 33,
+    "original_name": "Jelly Jungle",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 선물 상자"
+  },
+  {
+    "level": 34,
+    "original_name": "Rainbow Roots",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 별들의 속삭임"
+  },
+  {
+    "level": 35,
+    "original_name": "Caramel Copse",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 반짝 폭발"
+  },
+  {
+    "level": 36,
+    "original_name": "Forest Fog",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 수상한 문"
+  },
+  {
+    "level": 37,
+    "original_name": "Lolly Labyrinth",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 뒤섞인 길"
+  },
+  {
+    "level": 38,
+    "original_name": "Candy Caverns",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 작은 기적"
+  },
+  {
+    "level": 39,
+    "original_name": "Sugar Shadows",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 아슬아슬한 순간"
+  },
+  {
+    "level": 40,
+    "original_name": "Gummy Grove",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 다섯 색의 비밀"
+  },
+  {
+    "level": 41,
+    "original_name": "Toffee Tunnel",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 거센 파도"
+  },
+  {
+    "level": 42,
+    "original_name": "Choco Chase",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 숨은 문양"
+  },
+  {
+    "level": 43,
+    "original_name": "Jelly Junction",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 꼬인 퍼즐"
+  },
+  {
+    "level": 44,
+    "original_name": "Rainbow River",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 빛의 연쇄"
+  },
+  {
+    "level": 45,
+    "original_name": "Caramel Cascade",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 순간의 선택"
+  },
+  {
+    "level": 46,
+    "original_name": "Forest Floor",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 마지막 열쇠"
+  },
+  {
+    "level": 47,
+    "original_name": "Lolly Lake",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 거대한 도전"
+  },
+  {
+    "level": 48,
+    "original_name": "Candy Creek",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 황금빛 실마리"
+  },
+  {
+    "level": 49,
+    "original_name": "Sugar Stream",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 최후의 시험"
+  },
+  {
+    "level": 50,
+    "original_name": "Forest Guardian",
+    "original_theme": "Lollipop Forest",
+    "korean_name": "막대사탕 숲 · 전설의 관문"
+  },
+  {
+    "level": 51,
+    "original_name": "Sea Breeze",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 반짝이는 첫걸음"
+  },
+  {
+    "level": 52,
+    "original_name": "Jelly Waves",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 달콤한 길목"
+  },
+  {
+    "level": 53,
+    "original_name": "Candy Coral",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 숨은 보석 찾기"
+  },
+  {
+    "level": 54,
+    "original_name": "Sugar Shore",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 새로운 갈림길"
+  },
+  {
+    "level": 55,
+    "original_name": "Gummy Grotto",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 깜짝 도전"
+  },
+  {
+    "level": 56,
+    "original_name": "Toffee Tide",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 빛나는 샛길"
+  },
+  {
+    "level": 57,
+    "original_name": "Choco Cove",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 세 갈래 기회"
+  },
+  {
+    "level": 58,
+    "original_name": "Lolly Lagoon",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 선물 상자"
+  },
+  {
+    "level": 59,
+    "original_name": "Rainbow Reef",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 별들의 속삭임"
+  },
+  {
+    "level": 60,
+    "original_name": "Caramel Current",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 반짝 폭발"
+  },
+  {
+    "level": 61,
+    "original_name": "Deep Blue",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 수상한 문"
+  },
+  {
+    "level": 62,
+    "original_name": "Jelly Depths",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 뒤섞인 길"
+  },
+  {
+    "level": 63,
+    "original_name": "Candy Cave",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 작은 기적"
+  },
+  {
+    "level": 64,
+    "original_name": "Sugar Submarine",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 아슬아슬한 순간"
+  },
+  {
+    "level": 65,
+    "original_name": "Gummy Gulf",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 다섯 색의 비밀"
+  },
+  {
+    "level": 66,
+    "original_name": "Toffee Trench",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 거센 파도"
+  },
+  {
+    "level": 67,
+    "original_name": "Choco Channel",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 숨은 문양"
+  },
+  {
+    "level": 68,
+    "original_name": "Lolly Ledge",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 꼬인 퍼즐"
+  },
+  {
+    "level": 69,
+    "original_name": "Rainbow Rocks",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 빛의 연쇄"
+  },
+  {
+    "level": 70,
+    "original_name": "Caramel Coast",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 순간의 선택"
+  },
+  {
+    "level": 71,
+    "original_name": "Sea Storm",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 마지막 열쇠"
+  },
+  {
+    "level": 72,
+    "original_name": "Jelly Tempest",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 거대한 도전"
+  },
+  {
+    "level": 73,
+    "original_name": "Candy Whirlpool",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 황금빛 실마리"
+  },
+  {
+    "level": 74,
+    "original_name": "Sugar Surge",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 최후의 시험"
+  },
+  {
+    "level": 75,
+    "original_name": "Sea Serpent",
+    "original_theme": "Jelly Sea",
+    "korean_name": "젤리 바다 · 전설의 관문"
+  },
+  {
+    "level": 76,
+    "original_name": "Mountain Base",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 반짝이는 첫걸음"
+  },
+  {
+    "level": 77,
+    "original_name": "Choco Climb",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 달콤한 길목"
+  },
+  {
+    "level": 78,
+    "original_name": "Candy Crag",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 숨은 보석 찾기"
+  },
+  {
+    "level": 79,
+    "original_name": "Sugar Slope",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 새로운 갈림길"
+  },
+  {
+    "level": 80,
+    "original_name": "Gummy Grade",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 깜짝 도전"
+  },
+  {
+    "level": 81,
+    "original_name": "Toffee Trail",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 빛나는 샛길"
+  },
+  {
+    "level": 82,
+    "original_name": "Lolly Ledge",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 세 갈래 기회"
+  },
+  {
+    "level": 83,
+    "original_name": "Jelly Jut",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 선물 상자"
+  },
+  {
+    "level": 84,
+    "original_name": "Rainbow Ridge",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 별들의 속삭임"
+  },
+  {
+    "level": 85,
+    "original_name": "Caramel Crest",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 반짝 폭발"
+  },
+  {
+    "level": 86,
+    "original_name": "High Altitude",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 수상한 문"
+  },
+  {
+    "level": 87,
+    "original_name": "Choco Cloud",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 뒤섞인 길"
+  },
+  {
+    "level": 88,
+    "original_name": "Candy Crater",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 작은 기적"
+  },
+  {
+    "level": 89,
+    "original_name": "Sugar Summit",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 아슬아슬한 순간"
+  },
+  {
+    "level": 90,
+    "original_name": "Gummy Gap",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 다섯 색의 비밀"
+  },
+  {
+    "level": 91,
+    "original_name": "Toffee Top",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 거센 파도"
+  },
+  {
+    "level": 92,
+    "original_name": "Lolly Lookout",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 숨은 문양"
+  },
+  {
+    "level": 93,
+    "original_name": "Jelly Jump",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 꼬인 퍼즐"
+  },
+  {
+    "level": 94,
+    "original_name": "Rainbow Peak",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 빛의 연쇄"
+  },
+  {
+    "level": 95,
+    "original_name": "Caramel Cap",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 순간의 선택"
+  },
+  {
+    "level": 96,
+    "original_name": "Mountain Storm",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 마지막 열쇠"
+  },
+  {
+    "level": 97,
+    "original_name": "Choco Blizzard",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 거대한 도전"
+  },
+  {
+    "level": 98,
+    "original_name": "Candy Avalanche",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 황금빛 실마리"
+  },
+  {
+    "level": 99,
+    "original_name": "Sugar Slide",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 최후의 시험"
+  },
+  {
+    "level": 100,
+    "original_name": "Mountain King",
+    "original_theme": "Chocolate Mountains",
+    "korean_name": "초콜릿 산맥 · 전설의 관문"
+  },
+  {
+    "level": 101,
+    "original_name": "Sky Entry",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 반짝이는 첫걸음"
+  },
+  {
+    "level": 102,
+    "original_name": "Rainbow Gate",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 달콤한 길목"
+  },
+  {
+    "level": 103,
+    "original_name": "Candy Cloud",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 숨은 보석 찾기"
+  },
+  {
+    "level": 104,
+    "original_name": "Sugar Sunbeam",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 새로운 갈림길"
+  },
+  {
+    "level": 105,
+    "original_name": "Gummy Glow",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 깜짝 도전"
+  },
+  {
+    "level": 106,
+    "original_name": "Toffee Thunder",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 빛나는 샛길"
+  },
+  {
+    "level": 107,
+    "original_name": "Choco Lightning",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 세 갈래 기회"
+  },
+  {
+    "level": 108,
+    "original_name": "Lolly Light",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 선물 상자"
+  },
+  {
+    "level": 109,
+    "original_name": "Jelly Jet",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 별들의 속삭임"
+  },
+  {
+    "level": 110,
+    "original_name": "Caramel Comet",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 반짝 폭발"
+  },
+  {
+    "level": 111,
+    "original_name": "Sky High",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 수상한 문"
+  },
+  {
+    "level": 112,
+    "original_name": "Rainbow Race",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 뒤섞인 길"
+  },
+  {
+    "level": 113,
+    "original_name": "Candy Cyclone",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 작은 기적"
+  },
+  {
+    "level": 114,
+    "original_name": "Sugar Squall",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 아슬아슬한 순간"
+  },
+  {
+    "level": 115,
+    "original_name": "Gummy Gust",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 다섯 색의 비밀"
+  },
+  {
+    "level": 116,
+    "original_name": "Toffee Tornado",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 거센 파도"
+  },
+  {
+    "level": 117,
+    "original_name": "Choco Cyclone",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 숨은 문양"
+  },
+  {
+    "level": 118,
+    "original_name": "Lolly Launch",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 꼬인 퍼즐"
+  },
+  {
+    "level": 119,
+    "original_name": "Jelly Jump Jet",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 빛의 연쇄"
+  },
+  {
+    "level": 120,
+    "original_name": "Caramel Chase",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 순간의 선택"
+  },
+  {
+    "level": 121,
+    "original_name": "Sky Battle",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 마지막 열쇠"
+  },
+  {
+    "level": 122,
+    "original_name": "Rainbow Rush",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 거대한 도전"
+  },
+  {
+    "level": 123,
+    "original_name": "Candy Conquest",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 황금빛 실마리"
+  },
+  {
+    "level": 124,
+    "original_name": "Sugar Storm",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 최후의 시험"
+  },
+  {
+    "level": 125,
+    "original_name": "Sky Dragon",
+    "original_theme": "Rainbow Skies",
+    "korean_name": "무지개 하늘 · 전설의 관문"
+  },
+  {
+    "level": 126,
+    "original_name": "Castle Gates",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 반짝이는 첫걸음"
+  },
+  {
+    "level": 127,
+    "original_name": "Sugar Drawbridge",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 달콤한 길목"
+  },
+  {
+    "level": 128,
+    "original_name": "Candy Courtyard",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 숨은 보석 찾기"
+  },
+  {
+    "level": 129,
+    "original_name": "Jelly Jester",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 새로운 갈림길"
+  },
+  {
+    "level": 130,
+    "original_name": "Gummy Guard",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 깜짝 도전"
+  },
+  {
+    "level": 131,
+    "original_name": "Toffee Tower",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 빛나는 샛길"
+  },
+  {
+    "level": 132,
+    "original_name": "Choco Chamber",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 세 갈래 기회"
+  },
+  {
+    "level": 133,
+    "original_name": "Lolly Library",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 선물 상자"
+  },
+  {
+    "level": 134,
+    "original_name": "Rainbow Room",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 별들의 속삭임"
+  },
+  {
+    "level": 135,
+    "original_name": "Caramel Corridor",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 반짝 폭발"
+  },
+  {
+    "level": 136,
+    "original_name": "Castle Keep",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 수상한 문"
+  },
+  {
+    "level": 137,
+    "original_name": "Sugar Stairway",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 뒤섞인 길"
+  },
+  {
+    "level": 138,
+    "original_name": "Candy Cellar",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 작은 기적"
+  },
+  {
+    "level": 139,
+    "original_name": "Jelly Jail",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 아슬아슬한 순간"
+  },
+  {
+    "level": 140,
+    "original_name": "Gummy Gallery",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 다섯 색의 비밀"
+  },
+  {
+    "level": 141,
+    "original_name": "Toffee Throne",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 거센 파도"
+  },
+  {
+    "level": 142,
+    "original_name": "Choco Chapel",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 숨은 문양"
+  },
+  {
+    "level": 143,
+    "original_name": "Lolly Laboratory",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 꼬인 퍼즐"
+  },
+  {
+    "level": 144,
+    "original_name": "Rainbow Ramparts",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 빛의 연쇄"
+  },
+  {
+    "level": 145,
+    "original_name": "Caramel Crypt",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 순간의 선택"
+  },
+  {
+    "level": 146,
+    "original_name": "Castle Siege",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 마지막 열쇠"
+  },
+  {
+    "level": 147,
+    "original_name": "Sugar Showdown",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 거대한 도전"
+  },
+  {
+    "level": 148,
+    "original_name": "Candy Combat",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 황금빛 실마리"
+  },
+  {
+    "level": 149,
+    "original_name": "Jelly Joust",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 최후의 시험"
+  },
+  {
+    "level": 150,
+    "original_name": "Castle King",
+    "original_theme": "Sugar Castle",
+    "korean_name": "설탕 성 · 전설의 관문"
+  },
+  {
+    "level": 151,
+    "original_name": "Galaxy Launch",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 반짝이는 첫걸음"
+  },
+  {
+    "level": 152,
+    "original_name": "Gummy Orbit",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 달콤한 길목"
+  },
+  {
+    "level": 153,
+    "original_name": "Candy Cosmos",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 숨은 보석 찾기"
+  },
+  {
+    "level": 154,
+    "original_name": "Sugar Star",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 새로운 갈림길"
+  },
+  {
+    "level": 155,
+    "original_name": "Jelly Jupiter",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 깜짝 도전"
+  },
+  {
+    "level": 156,
+    "original_name": "Toffee Titan",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 빛나는 샛길"
+  },
+  {
+    "level": 157,
+    "original_name": "Choco Comet",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 세 갈래 기회"
+  },
+  {
+    "level": 158,
+    "original_name": "Lolly Luna",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 선물 상자"
+  },
+  {
+    "level": 159,
+    "original_name": "Rainbow Nebula",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 별들의 속삭임"
+  },
+  {
+    "level": 160,
+    "original_name": "Caramel Cluster",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 반짝 폭발"
+  },
+  {
+    "level": 161,
+    "original_name": "Deep Space",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 수상한 문"
+  },
+  {
+    "level": 162,
+    "original_name": "Gummy Galaxy",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 뒤섞인 길"
+  },
+  {
+    "level": 163,
+    "original_name": "Candy Constellation",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 작은 기적"
+  },
+  {
+    "level": 164,
+    "original_name": "Sugar Supernova",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 아슬아슬한 순간"
+  },
+  {
+    "level": 165,
+    "original_name": "Jelly Jetstream",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 다섯 색의 비밀"
+  },
+  {
+    "level": 166,
+    "original_name": "Toffee Telescope",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 거센 파도"
+  },
+  {
+    "level": 167,
+    "original_name": "Choco Cluster",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 숨은 문양"
+  },
+  {
+    "level": 168,
+    "original_name": "Lolly Light Year",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 꼬인 퍼즐"
+  },
+  {
+    "level": 169,
+    "original_name": "Rainbow Ring",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 빛의 연쇄"
+  },
+  {
+    "level": 170,
+    "original_name": "Caramel Cosmos",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 순간의 선택"
+  },
+  {
+    "level": 171,
+    "original_name": "Space Battle",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 마지막 열쇠"
+  },
+  {
+    "level": 172,
+    "original_name": "Gummy Guardian",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 거대한 도전"
+  },
+  {
+    "level": 173,
+    "original_name": "Candy Commander",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 황금빛 실마리"
+  },
+  {
+    "level": 174,
+    "original_name": "Sugar Satellite",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 최후의 시험"
+  },
+  {
+    "level": 175,
+    "original_name": "Galaxy Boss",
+    "original_theme": "Gummy Galaxy",
+    "korean_name": "말랑별 은하 · 전설의 관문"
+  },
+  {
+    "level": 176,
+    "original_name": "Canyon Entry",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 반짝이는 첫걸음"
+  },
+  {
+    "level": 177,
+    "original_name": "Caramel Cliff",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 달콤한 길목"
+  },
+  {
+    "level": 178,
+    "original_name": "Candy Crevice",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 숨은 보석 찾기"
+  },
+  {
+    "level": 179,
+    "original_name": "Sugar Ravine",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 새로운 갈림길"
+  },
+  {
+    "level": 180,
+    "original_name": "Gummy Gorge",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 깜짝 도전"
+  },
+  {
+    "level": 181,
+    "original_name": "Toffee Trail",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 빛나는 샛길"
+  },
+  {
+    "level": 182,
+    "original_name": "Choco Chasm",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 세 갈래 기회"
+  },
+  {
+    "level": 183,
+    "original_name": "Lolly Ledge",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 선물 상자"
+  },
+  {
+    "level": 184,
+    "original_name": "Rainbow Rock",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 별들의 속삭임"
+  },
+  {
+    "level": 185,
+    "original_name": "Jelly Jutting",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 반짝 폭발"
+  },
+  {
+    "level": 186,
+    "original_name": "Canyon Deep",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 수상한 문"
+  },
+  {
+    "level": 187,
+    "original_name": "Caramel Current",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 뒤섞인 길"
+  },
+  {
+    "level": 188,
+    "original_name": "Candy Cave",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 작은 기적"
+  },
+  {
+    "level": 189,
+    "original_name": "Sugar Shaft",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 아슬아슬한 순간"
+  },
+  {
+    "level": 190,
+    "original_name": "Gummy Glen",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 다섯 색의 비밀"
+  },
+  {
+    "level": 191,
+    "original_name": "Toffee Tunnel",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 거센 파도"
+  },
+  {
+    "level": 192,
+    "original_name": "Choco Channel",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 숨은 문양"
+  },
+  {
+    "level": 193,
+    "original_name": "Lolly Labyrinth",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 꼬인 퍼즐"
+  },
+  {
+    "level": 194,
+    "original_name": "Rainbow Rift",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 빛의 연쇄"
+  },
+  {
+    "level": 195,
+    "original_name": "Jelly Jam",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 순간의 선택"
+  },
+  {
+    "level": 196,
+    "original_name": "Canyon Storm",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 마지막 열쇠"
+  },
+  {
+    "level": 197,
+    "original_name": "Caramel Cascade",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 거대한 도전"
+  },
+  {
+    "level": 198,
+    "original_name": "Candy Crater",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 황금빛 실마리"
+  },
+  {
+    "level": 199,
+    "original_name": "Sugar Surge",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 최후의 시험"
+  },
+  {
+    "level": 200,
+    "original_name": "Canyon Champion",
+    "original_theme": "Caramel Canyon",
+    "korean_name": "캐러멜 협곡 · 전설의 관문"
+  },
+  {
+    "level": 201,
+    "original_name": "Frozen Entry",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 반짝이는 첫걸음"
+  },
+  {
+    "level": 202,
+    "original_name": "Toffee Tundra",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 달콤한 길목"
+  },
+  {
+    "level": 203,
+    "original_name": "Candy Chill",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 숨은 보석 찾기"
+  },
+  {
+    "level": 204,
+    "original_name": "Sugar Snow",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 새로운 갈림길"
+  },
+  {
+    "level": 205,
+    "original_name": "Gummy Glacier",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 깜짝 도전"
+  },
+  {
+    "level": 206,
+    "original_name": "Jelly Ice",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 빛나는 샛길"
+  },
+  {
+    "level": 207,
+    "original_name": "Choco Freeze",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 세 갈래 기회"
+  },
+  {
+    "level": 208,
+    "original_name": "Lolly Blizzard",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 선물 상자"
+  },
+  {
+    "level": 209,
+    "original_name": "Rainbow Aurora",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 별들의 속삭임"
+  },
+  {
+    "level": 210,
+    "original_name": "Caramel Cold",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 반짝 폭발"
+  },
+  {
+    "level": 211,
+    "original_name": "Ice Age",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 수상한 문"
+  },
+  {
+    "level": 212,
+    "original_name": "Toffee Tempest",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 뒤섞인 길"
+  },
+  {
+    "level": 213,
+    "original_name": "Candy Crystal",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 작은 기적"
+  },
+  {
+    "level": 214,
+    "original_name": "Sugar Sleet",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 아슬아슬한 순간"
+  },
+  {
+    "level": 215,
+    "original_name": "Gummy Gale",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 다섯 색의 비밀"
+  },
+  {
+    "level": 216,
+    "original_name": "Jelly Frost",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 거센 파도"
+  },
+  {
+    "level": 217,
+    "original_name": "Choco Storm",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 숨은 문양"
+  },
+  {
+    "level": 218,
+    "original_name": "Lolly Lake Freeze",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 꼬인 퍼즐"
+  },
+  {
+    "level": 219,
+    "original_name": "Rainbow Ice",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 빛의 연쇄"
+  },
+  {
+    "level": 220,
+    "original_name": "Caramel Crust",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 순간의 선택"
+  },
+  {
+    "level": 221,
+    "original_name": "Tundra Boss",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 마지막 열쇠"
+  },
+  {
+    "level": 222,
+    "original_name": "Toffee Titan",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 거대한 도전"
+  },
+  {
+    "level": 223,
+    "original_name": "Candy Commander",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 황금빛 실마리"
+  },
+  {
+    "level": 224,
+    "original_name": "Sugar Sovereign",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 최후의 시험"
+  },
+  {
+    "level": 225,
+    "original_name": "Tundra Master",
+    "original_theme": "Toffee Tundra",
+    "korean_name": "토피 설원 · 전설의 관문"
+  },
+  {
+    "level": 226,
+    "original_name": "Cave Entry",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 반짝이는 첫걸음"
+  },
+  {
+    "level": 227,
+    "original_name": "Crystal Cavern",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 달콤한 길목"
+  },
+  {
+    "level": 228,
+    "original_name": "Candy Cave",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 숨은 보석 찾기"
+  },
+  {
+    "level": 229,
+    "original_name": "Sugar Stalactite",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 새로운 갈림길"
+  },
+  {
+    "level": 230,
+    "original_name": "Gummy Gem",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 깜짝 도전"
+  },
+  {
+    "level": 231,
+    "original_name": "Toffee Tunnel",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 빛나는 샛길"
+  },
+  {
+    "level": 232,
+    "original_name": "Choco Chamber",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 세 갈래 기회"
+  },
+  {
+    "level": 233,
+    "original_name": "Lolly Lode",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 선물 상자"
+  },
+  {
+    "level": 234,
+    "original_name": "Rainbow Rock",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 별들의 속삭임"
+  },
+  {
+    "level": 235,
+    "original_name": "Jelly Jewel",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 반짝 폭발"
+  },
+  {
+    "level": 236,
+    "original_name": "Deep Crystal",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 수상한 문"
+  },
+  {
+    "level": 237,
+    "original_name": "Cave Complex",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 뒤섞인 길"
+  },
+  {
+    "level": 238,
+    "original_name": "Candy Core",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 작은 기적"
+  },
+  {
+    "level": 239,
+    "original_name": "Sugar Shard",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 아슬아슬한 순간"
+  },
+  {
+    "level": 240,
+    "original_name": "Gummy Grotto",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 다섯 색의 비밀"
+  },
+  {
+    "level": 241,
+    "original_name": "Toffee Temple",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 거센 파도"
+  },
+  {
+    "level": 242,
+    "original_name": "Choco Crypt",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 숨은 문양"
+  },
+  {
+    "level": 243,
+    "original_name": "Lolly Legend",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 꼬인 퍼즐"
+  },
+  {
+    "level": 244,
+    "original_name": "Rainbow Realm",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 빛의 연쇄"
+  },
+  {
+    "level": 245,
+    "original_name": "Jelly Journey",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 순간의 선택"
+  },
+  {
+    "level": 246,
+    "original_name": "Crystal Boss",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 마지막 열쇠"
+  },
+  {
+    "level": 247,
+    "original_name": "Cave Commander",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 거대한 도전"
+  },
+  {
+    "level": 248,
+    "original_name": "Candy Champion",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 황금빛 실마리"
+  },
+  {
+    "level": 249,
+    "original_name": "Sugar Sovereign",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 최후의 시험"
+  },
+  {
+    "level": 250,
+    "original_name": "CRYSTAL KING 👑",
+    "original_theme": "Crystal Caves",
+    "korean_name": "수정 동굴 · 전설의 관문"
+  }
+]

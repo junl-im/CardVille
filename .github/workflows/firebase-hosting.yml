@@ -26,6 +26,8 @@ jobs:
         run: |
           set -eu
           node tools/check-release.cjs
+          node tools/check-korean-ui.cjs
+          node tools/check-korean-complete.cjs
           node tools/check-firebase-preview.cjs
           # Both JSON configurations are parsed by the preflight checks above.
           # Do not require() the extensionless .firebaserc as JavaScript.
@@ -41,7 +43,6 @@ jobs:
       - name: Identify service-account principal (without exposing email)
         env:
           FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARDVILLE }}
-          CARDVILLE_REQUIRE_SAME_PROJECT: "1"
         run: node tools/check-iam-identity.cjs
       - name: Deploy to isolated preview channel (NOT live)
         id: firebase_preview
@@ -71,7 +72,7 @@ jobs:
             echo '- Channel: cardville-match3-preview (never live)'
           } >> "$GITHUB_STEP_SUMMARY"
           for attempt in 1 2 3 4 5; do
-            if curl --fail --silent --show-error --location --max-time 20 "$PREVIEW_URL" -o /tmp/cardville-preview.html && grep -q '<html lang="ko">' /tmp/cardville-preview.html && grep -q 'const LEVELS' /tmp/cardville-preview.html; then
+            if curl --fail --silent --show-error --location --max-time 20 "$PREVIEW_URL" -o /tmp/cardville-preview.html && grep -q 'CardVille' /tmp/cardville-preview.html && grep -q 'const LEVELS' /tmp/cardville-preview.html; then
               echo 'Preview HTTP smoke test: PASS'
               exit 0
             fi

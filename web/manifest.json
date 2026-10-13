@@ -1,7 +1,7 @@
 {
   "name": "카드빌 — 퍼즐 모험",
   "short_name": "카드빌",
-  "description": "드래그로 즐기는 250단계 한글 퍼즐 모험",
+  "description": "한국어로 즐기는 250단계 드래그·스와이프 퍼즐 게임",
   "start_url": "./",
   "display": "fullscreen",
   "orientation": "portrait-primary",

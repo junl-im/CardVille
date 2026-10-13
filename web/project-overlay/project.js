@@ -4,10 +4,8 @@
   // v0.5: 250 Korean stage names without altering level IDs or scoring.
   const cvWorldNames=["사탕 골짜기", "막대사탕 숲", "젤리 바다", "초콜릿 산맥", "무지개 하늘", "설탕 성", "말랑별 은하", "캐러멜 협곡", "토피 설원", "수정 동굴"];
   const cvStageNames=["반짝이는 첫걸음", "달콤한 길목", "숨은 보석 찾기", "새로운 갈림길", "깜짝 도전", "빛나는 샛길", "세 갈래 기회", "선물 상자", "별들의 속삭임", "반짝 폭발", "수상한 문", "뒤섞인 길", "작은 기적", "아슬아슬한 순간", "다섯 색의 비밀", "거센 파도", "숨은 문양", "꼬인 퍼즐", "빛의 연쇄", "순간의 선택", "마지막 열쇠", "거대한 도전", "황금빛 실마리", "최후의 시험", "전설의 관문"];
-  if (typeof LEVELS !== 'undefined') LEVELS.forEach((lv,i)=>{
-    if (!Object.hasOwn(lv,'englishSourceName'))lv.englishSourceName=lv.name;
-    lv.name=`${cvWorldNames[Math.floor(i/25)]} · ${cvStageNames[i%25]}`;
-  });
+  // v0.6: the original 250 stage records are Korean before any module reads them.
+  // The above Korean arrays remain for validation and older saved progress compatibility.
   // Intentional, reproducible beta goal adjustment for 250 original stages.
   if (typeof LEVELS !== 'undefined' && window.CardVilleBalance) {
     const summary = window.CardVilleBalance.apply(LEVELS);
@@ -115,7 +113,7 @@
   if (scores && !scores.previousElementSibling?.classList.contains('cv-local-caption')) {
     const cap = document.createElement('p');
     cap.className = 'cv-local-caption';
-    cap.textContent = '🏆 이 기기의 기록입니다. 온라인 랭킹은 Firebase 연결 후 제공됩니다.';
+    cap.textContent = '🏆 이 기기의 기록입니다. 온라인 순위 기능은 서버 연동 후 제공됩니다.';
     scores.parentNode.insertBefore(cap,scores);
   }
   document.addEventListener('DOMContentLoaded', () => {
