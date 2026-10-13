@@ -59,3 +59,11 @@ GitHub Actions Secret 등록 확인을 받은 뒤, 미리보기 채널만 대상
 
 ## v0.4.5 Secret project preflight
 Secret 키 생성 프로젝트가 `cardville`과 다를 경우 안전하게 배포를 중단합니다. 기존 CardVille IAM 진단 workflow는 키 프로젝트 식별을 위해 별도로 유지합니다. `FIREBASE_SERVICE_ACCOUNT_CARDVILLE`은 반드시 Firebase 프로젝트 `cardville`에서 발급한 서비스 계정 JSON으로 교체하세요. API 비밀키를 코드나 채팅에 게시하지 마세요.
+
+## Firebase 미리보기 배포 검증 (2026-10-14)
+
+- GitHub Actions 실제 성공: https://github.com/junl-im/CardVille/actions/runs/38428451136
+- Firebase 프로젝트: `cardville` — 재등록한 Secret 키의 `project_id` 확인 통과.
+- 미리보기 URL: https://cardville--cardville-match3-preview-ikhmalki.web.app
+- Hosting 임시 채널: `cardville-match3-preview` (14일 만료 설정). 기존 `live` 채널은 미변경.
+- 실행 로그의 `Preview HTTP smoke test: PASS`로 정적 게임 파일의 HTTP 응답 검증. 실제 기기 플레이 수동 확인은 별개.
