@@ -1,6 +1,6 @@
 {
-  "version": "0.7.0-lanypang-start-v1",
-  "request": "Publish Korean-only LanyPang title screen and original cover art to Firebase PREVIEW only",
+  "version": "0.7.1-lanypang-official-korean-name",
+  "request": "Preview publish official title 라니팡 with decorative logo; preserve current live Hosting",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,
@@ -18,5 +18,6 @@
   "buildCommit": "d49f8799ad934fcb14b6ea4292f8596d32f330b3",
   "workflowFixCommit": "da0d2855467cb0394c0ea8aa3a81c0dc526bf831",
   "regressionGuardCommit": "cf830eaccbbf9a154da30c04af9d957383b1e88b",
-  "sourceCommit": "f0bbf979b5331ac30a54c1237e58fcc2fbfac93f"
+  "sourceCommit": "f0bbf979b5331ac30a54c1237e58fcc2fbfac93f",
+  "brandingCommit": "44242d78216406860ea7aed40efd66978417c475"
 }
