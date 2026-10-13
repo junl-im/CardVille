@@ -41,6 +41,7 @@ jobs:
       - name: Identify service-account principal (without exposing email)
         env:
           FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARDVILLE }}
+          CARDVILLE_REQUIRE_SAME_PROJECT: "1"
         run: node tools/check-iam-identity.cjs
       - name: Deploy to isolated preview channel (NOT live)
         id: firebase_preview

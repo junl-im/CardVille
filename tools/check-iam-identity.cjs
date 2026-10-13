@@ -60,7 +60,11 @@ function main() {
       ''
     ].join('\n'));
   }
-  if (!info.keyAndTargetProjectMatch) console.warn('주의: JSON 키의 project_id가 cardville과 다릅니다. 해당 서비스 계정에 cardville IAM 역할이 부여되어야 합니다.');
+  if (!info.keyAndTargetProjectMatch) {
+    console.warn('주의: JSON 키의 project_id가 cardville과 다릅니다. 해당 서비스 계정에 cardville IAM 역할이 부여되어야 합니다.');
+    if (process.env.CARDVILLE_REQUIRE_SAME_PROJECT === '1')
+      throw new Error('배포 중단: GitHub Secret이 cardville이 아닌 다른 프로젝트의 서비스 계정 키입니다. Firebase cardville 프로젝트에서 발급한 키로 FIREBASE_SERVICE_ACCOUNT_CARDVILLE을 교체하세요.');
+  }
 }
 try { main(); }
 catch(err) { console.error('IAM 계정 검사 오류:',err.message); process.exitCode=1; }

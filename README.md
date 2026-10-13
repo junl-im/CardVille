@@ -57,5 +57,5 @@ GitHub Actions Secret 등록 확인을 받은 뒤, 미리보기 채널만 대상
 ## v0.4.4 Firebase IAM 계정 일치 진단
 [3차 재실행도 403 권한 실패](https://github.com/junl-im/CardVille/actions/runs/38419409796). 역할을 부여한 계정과 GitHub Secret 계정이 다른지 확인하도록 비밀키·원문 이메일을 로그에 출력하지 않는 독립 진단 Actions가 추가됐습니다. [진단 가이드](docs/FIREBASE_IAM_IDENTITY_v0.4.4.md). IAM 권한 확인 전 Firebase 배포 자동 재시도는 하지 않습니다.
 
-## v0.4.4 Firebase IAM 계정 일치 진단
-[3차 재실행도 403 권한 실패](https://github.com/junl-im/CardVille/actions/runs/38419409796). 역할을 부여한 계정과 GitHub Secret 계정이 다른지 확인하도록 비밀키·원문 이메일을 로그에 출력하지 않는 독립 진단 Actions가 추가됐습니다. [진단 가이드](docs/FIREBASE_IAM_IDENTITY_v0.4.4.md). IAM 권한 확인 전 Firebase 배포 자동 재시도는 하지 않습니다.
+## v0.4.5 Secret project preflight
+Secret 키 생성 프로젝트가 `cardville`과 다를 경우 안전하게 배포를 중단합니다. 기존 CardVille IAM 진단 workflow는 키 프로젝트 식별을 위해 별도로 유지합니다. `FIREBASE_SERVICE_ACCOUNT_CARDVILLE`은 반드시 Firebase 프로젝트 `cardville`에서 발급한 서비스 계정 JSON으로 교체하세요. API 비밀키를 코드나 채팅에 게시하지 마세요.
