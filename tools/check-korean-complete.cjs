@@ -33,5 +33,8 @@ for (const en of ['Connecting to PeerJS','Room ready!','Room not found','Connect
  assert(!multi.includes(en),`English user-facing text remains: ${en}`);
 }
 assert(sw.includes('cardville-match-v0.6-ko'),'Service worker cache must be bumped');
+const previewWorkflow=fs.readFileSync('.github/workflows/firebase-hosting.yml','utf8');
+assert(!previewWorkflow.includes("grep -q 'CardVille'"),'Legacy English game-name smoke check regressed');
+assert(previewWorkflow.includes("name:'사탕 골짜기 · 반짝이는 첫걸음'"),'Firebase must verify actual Korean stage data');
 assert(overlay.includes('온라인 순위 기능은 서버 연동 후 제공됩니다.'));
 console.log(JSON.stringify({passed:true,language:'ko',stageRecords:250,englishStageFields:0,localizedThemes:10,distinctKoreanNames:250,translatedMultiplayer:true,offlineCache:'v0.6-ko'},null,2));
