@@ -1,6 +1,6 @@
 {
-  "version": "0.8.0-lanypang-world-map-preview",
-  "request": "Preview deploy LanyPang v0.8 world map and 250-stage preparation flow only; never live Hosting",
+  "version": "0.9.0-lanypang-graphics-time-map-preview",
+  "request": "Publish LanyPang v0.9 improved illustrated route map, native cover-image loader, countdown challenge and original gem styling to PREVIEW ONLY",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,
@@ -18,7 +18,7 @@
   "buildCommit": "d49f8799ad934fcb14b6ea4292f8596d32f330b3",
   "workflowFixCommit": "da0d2855467cb0394c0ea8aa3a81c0dc526bf831",
   "regressionGuardCommit": "cf830eaccbbf9a154da30c04af9d957383b1e88b",
-  "sourceCommit": "f0bbf979b5331ac30a54c1237e58fcc2fbfac93f",
+  "sourceCommit": "3e8ea02bdbb02f6586545dbacba91bfeb85e37e1",
   "brandingCommit": "44242d78216406860ea7aed40efd66978417c475",
   "implementationCommit": "edcda1a1271545778df61caa631cb1385b8e9f0e"
 }
