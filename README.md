@@ -53,3 +53,9 @@ GitHub Actions Secret 등록 확인을 받은 뒤, 미리보기 채널만 대상
 - 실제 [2차 실패 로그](https://github.com/junl-im/CardVille/actions/runs/38419409796): Secret JSON 검증 통과, Firebase 호출에서 403 `USER_PROJECT_DENIED` / `serviceusage.services.use` 부족.
 - 원인과 관리자 IAM 조치: [Firebase 권한 수정 가이드](docs/FIREBASE_IAM_FIX_v0.4.3.md).
 - IAM 역할이 부여되기 전에는 재배포를 반복해도 해결되지 않습니다. 서비스 계정 권한 수정 후 기존 미리보기 workflow를 수동 실행합니다. `live`는 미변경.
+
+## v0.4.4 Firebase IAM 계정 일치 진단
+[3차 재실행도 403 권한 실패](https://github.com/junl-im/CardVille/actions/runs/38419409796). 역할을 부여한 계정과 GitHub Secret 계정이 다른지 확인하도록 비밀키·원문 이메일을 로그에 출력하지 않는 독립 진단 Actions가 추가됐습니다. [진단 가이드](docs/FIREBASE_IAM_IDENTITY_v0.4.4.md). IAM 권한 확인 전 Firebase 배포 자동 재시도는 하지 않습니다.
+
+## v0.4.4 Firebase IAM 계정 일치 진단
+[3차 재실행도 403 권한 실패](https://github.com/junl-im/CardVille/actions/runs/38419409796). 역할을 부여한 계정과 GitHub Secret 계정이 다른지 확인하도록 비밀키·원문 이메일을 로그에 출력하지 않는 독립 진단 Actions가 추가됐습니다. [진단 가이드](docs/FIREBASE_IAM_IDENTITY_v0.4.4.md). IAM 권한 확인 전 Firebase 배포 자동 재시도는 하지 않습니다.
