@@ -1,6 +1,6 @@
 {
-  "version": "0.7.1-lanypang-official-korean-name",
-  "request": "Preview publish official title 라니팡 with decorative logo; preserve current live Hosting",
+  "version": "0.8.0-lanypang-world-map-preview",
+  "request": "Preview deploy LanyPang v0.8 world map and 250-stage preparation flow only; never live Hosting",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,
@@ -19,5 +19,6 @@
   "workflowFixCommit": "da0d2855467cb0394c0ea8aa3a81c0dc526bf831",
   "regressionGuardCommit": "cf830eaccbbf9a154da30c04af9d957383b1e88b",
   "sourceCommit": "f0bbf979b5331ac30a54c1237e58fcc2fbfac93f",
-  "brandingCommit": "44242d78216406860ea7aed40efd66978417c475"
+  "brandingCommit": "44242d78216406860ea7aed40efd66978417c475",
+  "implementationCommit": "edcda1a1271545778df61caa631cb1385b8e9f0e"
 }
