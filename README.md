@@ -65,3 +65,10 @@ GitHub 저장소의 과거 CardVille 커밋 기록은 유지됩니다.
 - 기존 localStorage 저장 키 `sc_unlocked`, `sc_best`, `sc_stars`, `cv_last_level` 삭제하지 않음.
 - 코드 변수/프로젝트 ID는 GitHub/Firebase 호환성을 위해 CardVille을 유지하며 게임 내 표기는 라니팡으로 변경.
 - 실제 사이트가 영어로 보이면 미리보기 URL과 운영 live URL을 구분하여 확인해야 함. Firebase live는 계속 배포 대상에서 제외.
+
+## 실제 라니팡! v0.7 접속 주소
+
+- [GitHub Pages — 라니팡 실행](https://junl-im.github.io/CardVille/?v=0.7.0) (HTTP 200 확인)
+- [Firebase 미리보기 — 라니팡 실행](https://cardville--cardville-match3-preview-ikhmalki.web.app/?v=0.7.0) (HTTP 200, 실제 배포/스모크 검사 통과)
+- 기존 Firebase 기본 사이트 `cardville.web.app`과 `cardville.firebaseapp.com`은 검사 당시 HTTP 404입니다. 외부 즐겨찾기/옛 주소와 혼동 주의.
+- [배포 비교 및 실제 검증 로그](docs/DEPLOYMENT_AUDIT_v0.7.md). Firebase live 채널에는 아직 배포하지 않았습니다.
