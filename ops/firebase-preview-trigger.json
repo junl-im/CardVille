@@ -1,13 +1,16 @@
 {
-  "version": "0.4.3-preview-fix1",
-  "request": "Retry only Firebase preview after fixing Node JSON loading failure",
+  "version": "0.4.6-preview-rekey-check-1",
+  "request": "Validate newly re-registered cardville project service account and attempt ONLY preview channel",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,
   "sourceBranch": "main",
-  "requestedAtKST": "2026-10-13",
+  "requestedAtKST": "2026-10-14",
   "secretValueIncluded": false,
   "lastFailureRun": 38417296378,
   "failureStage": "Validate game, project and preview restrictions",
-  "cause": "require() of .firebaserc extensionless JSON"
+  "cause": "require() of .firebaserc extensionless JSON",
+  "identityVerifiedRun": 38426888562,
+  "previousFailureRun": 38419409796,
+  "liveDeploymentForbidden": true
 }
