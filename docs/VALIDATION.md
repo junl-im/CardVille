@@ -1,7 +1,17 @@
-# Validation
-- HTML main classic scripts: Node syntax checked.
-- All locally included JS modules/scripts: Node syntax checked.
-- 250 stages previously static-validated in v0.2; branded v0.3 retains stage data with an added 7th tile type for level colors=7.
-- Touch + mouse browser interaction tests previously passed v0.2; new v0.3 branding changes have not been re-tested on deployed URL.
-- Firebase live connectivity: not tested / not enabled.
-- Github Pages deployment: must check Actions after upload.
+# CardVille v0.4 검증
+
+## 수행 완료
+- Node.js의 모든 게임 JavaScript 문법검사, HTML inline script 구문검사.
+- `tools/check-release.cjs`: 250개 레벨 ID/데이터 형식, 10개 보스, 누락된 GEMS, 누적 목표 수정의 멱등성, PWA·UI 기본 조건.
+- Chromium 개발 환경: 모바일 390×844, PC 1366×768. 인라인 소스 주입 방식으로 `about:blank`에서 검사. 터치/마우스 포인터 드래그, 키보드 방향키/Enter, 250스테이지 이동/이어하기, 화면 렌더 및 JS 예외 0 확인.
+- 목표 보정: 총 222개 스테이지, 250단계 목표는 원본 297,750점에서 베타 3,150점. 별도 플레이 난이도 정식 검증이 아님.
+
+## 수행하지 못한 검증
+- GitHub Pages 및 Firebase Hosting의 공개 실제 URL에서 네트워크 배포 E2E 확인.
+- 250개 레벨 전체에 대한 유저 행동 기반 난이도 통계/실시간 클라우드 랭킹.
+- PeerJS를 통한 서로 다른 기기 간 매칭(현재 코드에서는 호스트 ID 로컬스토리지 공유 제약이 있음).
+- 공식 Kenney CC0 아트 패키지 원본 다운로드/실제 적용.
+
+## 배포 기준
+- GitHub Actions 워크플로 수행 성공과 공개 페이지 수신 확인 이후에만 "배포 완료" 표기.
+- Firebase 프로젝트 ID·사이트·서비스 계정 검증 전 라이브 Hosting 교체 금지.

@@ -765,6 +765,7 @@ for(let i=0;i<50;i++) particles.push({
 function initLevel(lvNum) {
   const lv = LEVELS[lvNum-1];
   state.level = lvNum;
+  try { localStorage.setItem('cv_last_level', String(lvNum)); } catch (_) {}
   state.score = 0;
   state.movesLeft = lv.moves;
   state.selected = null;
@@ -835,7 +836,6 @@ function renderBoard() {
     if(state.hintCell && state.hintCell[0]===r && state.hintCell[1]===c) div.classList.add('hint');
 
     div.addEventListener('click', ()=>onCellClick(r,c));
-    div.addEventListener('touchstart', e=>{e.preventDefault();onCellClick(r,c);},{passive:false});
     board.appendChild(div);
   }
 }
@@ -1267,7 +1267,8 @@ function replayLevel(){
   hideOverlay('overlay-win'); hideOverlay('overlay-lose');
   initGame(state.level);
 }
-function initGame(lv=1){
+function initGame(lv=Number(localStorage.getItem('cv_last_level'))||1){
+  lv = Number.isInteger(lv) && lv>=1 && lv<=LEVELS.length && state.unlockedLevels.includes(lv) ? lv : 1;
   hideOverlay('overlay-win'); hideOverlay('overlay-lose');
   initLevel(lv);
 }
@@ -1353,6 +1354,7 @@ document.getElementById('overlay-tutorial').style.display='flex';
     👥 2 Players
   </button>
 </div>
+<script defer src="./js/cardville-balance.js"></script>
 <script defer src="./project-overlay/project.js"></script>
 </body>
 </html>

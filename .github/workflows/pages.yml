@@ -13,19 +13,23 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - name: Verify static website
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Static game and safety checks
         run: |
+          set -e
+          node tools/check-release.cjs
           test -f web/index.html
-          test -f web/manifest.json
           test -f web/LICENSE
           test -f web/sw.js
-          grep -q 'CardVille' web/index.html
-          ! grep -q 'img.icons8.com' web/manifest.json
+          test -f web/version.json
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

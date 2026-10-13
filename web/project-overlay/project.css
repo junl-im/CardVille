@@ -9,3 +9,31 @@ button:focus-visible, .booster:focus-visible, .level-btn:focus-visible { outline
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .001ms !important; transition-duration: .001ms !important; }
 }
+
+/* v0.4: keep the stage panel readable and keep floating controls off the board. */
+#game-mode-bar { position:relative!important; left:auto!important; bottom:auto!important; transform:none!important; margin:14px auto max(14px, env(safe-area-inset-bottom))!important; width:max-content;max-width:calc(100vw - 24px);flex-wrap:wrap;justify-content:center; }
+.cv-local-caption {text-align:center; font-size:.74rem; color:rgba(255,255,255,.6);padding:4px 12px;max-width:500px;margin:12px auto 0;}
+#leaderboard {width:min(500px,calc(100vw - 24px));margin:8px auto!important;}
+#board {border-color:rgba(255,215,110,.3); box-shadow:0 10px 40px rgba(0,0,0,.25);}
+#board .cell { border:1px solid rgba(255,255,255,.04); text-shadow:0 2px 8px rgba(0,0,0,.2); }
+#board .cell:focus-visible {outline:3px solid #ffd700;outline-offset:-2px;z-index:5;}
+.level-grid {scrollbar-width:thin; scrollbar-color:#c084fc #26113d;}
+@media (max-width:430px) {
+  .header {padding:8px 10px; gap:6px; flex-wrap:wrap;justify-content:center;}
+  .logo {font-size:1rem;}
+  .hud {gap:8px;}
+  .hud-val {font-size:.96rem;}
+  #app {padding:8px 8px max(20px,env(safe-area-inset-bottom));}
+  #board {max-width:calc(100vw - 16px);padding:8px;gap:2px;border-radius:16px;}
+  #board .cell {font-size:clamp(1.25rem, 5.7vw, 1.9rem); border-radius:8px;}
+  .booster {width:54px;height:54px;}
+  .level-info {margin-bottom:8px;}
+  #game-mode-bar {font-size:.8rem;padding:8px!important;}
+}
+
+#app{min-height:auto!important;}
+.cv-action-toolbar{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;margin:18px auto 4px;max-width:500px;width:100%;}
+.cv-secondary-btn{border:1px solid rgba(255,255,255,.15);border-radius:12px;color:#fff;padding:10px 12px;background:linear-gradient(130deg,#b51e81,#6739c1);font-weight:700;cursor:pointer;font-size:.78rem;}
+.cv-secondary-btn:focus-visible{outline:3px solid #ffdd78;outline-offset:2px;}
+.cv-action-toolbar #game-mode-bar{position:static!important;display:flex!important;box-shadow:none!important;background:transparent!important;border:none!important;padding:0!important;margin:0!important;gap:8px!important;width:auto!important;}
+.cv-action-toolbar #game-mode-bar button{padding:10px 12px!important;border-radius:12px!important;font-size:.78rem!important;}

@@ -1,57 +1,51 @@
-// Issue #10: Keyboard navigation and accessibility for Sweet Crush
-(function(){
-  let focusRow = 0, focusCol = 0, selected = null;
+/* CardVille Match-3 keyboard controls and accessibility. */
+(() => {
+  'use strict';
+  let focusRow = 0, focusCol = 0;
   const GRID_SIZE = 8;
-
-  function getCell(r, c) {
-    return document.querySelector(`.game-cell[data-row="${r}"][data-col="${c}"]`);
+  const board = document.getElementById('board');
+  function getCell(r,c) { return board?.querySelector(`.cell[data-r="${r}"][data-c="${c}"]`) || null; }
+  function decorate() {
+    for (const cell of board?.querySelectorAll('.cell') || []) {
+      const r=Number(cell.dataset.r),c=Number(cell.dataset.c);
+      cell.setAttribute('role','button');
+      cell.tabIndex = r===focusRow && c===focusCol ? 0 : -1;
+      cell.setAttribute('aria-label',`퍼즐 ${r+1}행 ${c+1}열: ${cell.textContent || '빈 칸'}${cell.classList.contains('locked')?' 잠김':''}`);
+    }
   }
-
-  function focusCell(r, c) {
+  function focusCell(r,c) {
     if(r<0||r>=GRID_SIZE||c<0||c>=GRID_SIZE) return;
-    const prev = getCell(focusRow, focusCol);
-    if(prev) prev.removeAttribute('data-focused');
-    focusRow=r; focusCol=c;
-    const cell = getCell(r,c);
-    if(cell){
-      cell.setAttribute('data-focused','true');
-      cell.focus();
-    }
+    focusRow=r;focusCol=c;decorate();getCell(r,c)?.focus({preventScroll:true});
   }
-
-  document.addEventListener('keydown', e => {
-    if(!document.querySelector('.game-cell')) return;
-    switch(e.key){
-      case 'ArrowUp':    e.preventDefault(); focusCell(focusRow-1, focusCol); break;
-      case 'ArrowDown':  e.preventDefault(); focusCell(focusRow+1, focusCol); break;
-      case 'ArrowLeft':  e.preventDefault(); focusCell(focusRow,   focusCol-1); break;
-      case 'ArrowRight': e.preventDefault(); focusCell(focusRow,   focusCol+1); break;
-      case 'Enter':
-      case ' ':
-        e.preventDefault();
-        const cell = getCell(focusRow, focusCol);
-        if(cell) cell.click();
-        break;
-    }
+  if (board) {
+    new MutationObserver(decorate).observe(board,{childList:true});
+    decorate();
+  }
+  document.addEventListener('keydown', (e) => {
+    const target=e.target;
+    if (target?.matches?.('input,textarea,select,[contenteditable="true"]')) return;
+    if (document.querySelector('.overlay[style*="flex"]')) return;
+    if (!board || !getCell(0,0)) return;
+    // Keyboard controls only when board has focus; never hijack site-wide arrows.
+    if (!board.contains(document.activeElement)) return;
+    let moved=true;
+    if(e.key==='ArrowUp') focusCell(focusRow-1,focusCol);
+    else if(e.key==='ArrowDown') focusCell(focusRow+1,focusCol);
+    else if(e.key==='ArrowLeft') focusCell(focusRow,focusCol-1);
+    else if(e.key==='ArrowRight') focusCell(focusRow,focusCol+1);
+    else if(e.key==='Enter'||e.key===' ') getCell(focusRow,focusCol)?.click();
+    else moved=false;
+    if(moved) e.preventDefault();
   });
-
-  // High contrast mode
   function toggleHighContrast() {
     document.body.classList.toggle('high-contrast');
-    localStorage.setItem('crushHighContrast', document.body.classList.contains('high-contrast'));
+    localStorage.setItem('crushHighContrast', String(document.body.classList.contains('high-contrast')));
   }
-
-  // Reduced motion
   function toggleReducedMotion() {
     document.body.classList.toggle('reduced-motion');
-    localStorage.setItem('crushReducedMotion', document.body.classList.contains('reduced-motion'));
+    localStorage.setItem('crushReducedMotion', String(document.body.classList.contains('reduced-motion')));
   }
-
-  // Restore preferences
-  window.addEventListener('load', () => {
-    if(localStorage.getItem('crushHighContrast')==='true') document.body.classList.add('high-contrast');
-    if(localStorage.getItem('crushReducedMotion')==='true') document.body.classList.add('reduced-motion');
-  });
-
-  window.A11y = { toggleHighContrast, toggleReducedMotion };
+  if(localStorage.getItem('crushHighContrast')==='true') document.body.classList.add('high-contrast');
+  if(localStorage.getItem('crushReducedMotion')==='true') document.body.classList.add('reduced-motion');
+  window.A11y={toggleHighContrast,toggleReducedMotion};
 })();

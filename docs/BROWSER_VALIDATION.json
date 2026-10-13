@@ -1,0 +1,20 @@
+[
+  {
+    "screen": "mobile",
+    "test": "OK",
+    "stage250": 3150,
+    "old250": 297750,
+    "adjusted": 222,
+    "swap_score": 90,
+    "errors": 0
+  },
+  {
+    "screen": "desktop",
+    "test": "OK",
+    "stage250": 3150,
+    "old250": 297750,
+    "adjusted": 222,
+    "swap_score": 90,
+    "errors": 0
+  }
+]
