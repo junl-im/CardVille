@@ -1,6 +1,6 @@
 {
-  "version": "0.5.1-ko-smoke-2",
-  "request": "Re-run v0.5 Korean drag build after fixing legacy English-title smoke check",
+  "version": "0.6.0-ko-full-audit-preview",
+  "request": "Deploy corrected v0.6 Korean-only stage metadata and multiplayer UI; preview ONLY",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,
@@ -14,5 +14,6 @@
   "previousFailureRun": 38419409796,
   "liveDeploymentForbidden": true,
   "sourceCodeCommit": "5e3373b9caeac00a60675e3929a863b0cf76448a",
-  "smokeFixCommit": "97c27a3143aca818a8d7f4bae93f37de8effdc0a"
+  "smokeFixCommit": "97c27a3143aca818a8d7f4bae93f37de8effdc0a",
+  "buildCommit": "d49f8799ad934fcb14b6ea4292f8596d32f330b3"
 }
