@@ -1,0 +1,32 @@
+[
+  {
+    "device": "mobile",
+    "realAssetRoute": true,
+    "backgroundLoaded": true,
+    "mapNodes": 25,
+    "mapPathSegments": 24,
+    "worldTabsFunctional": true,
+    "stagePrep": true,
+    "timerTick": true,
+    "timerPausedOnMap": true,
+    "classicElapsed": true,
+    "dragPoints": 306,
+    "javascriptErrors": 0,
+    "missingAssets": 0
+  },
+  {
+    "device": "desktop",
+    "realAssetRoute": true,
+    "backgroundLoaded": true,
+    "mapNodes": 25,
+    "mapPathSegments": 24,
+    "worldTabsFunctional": true,
+    "stagePrep": true,
+    "timerTick": true,
+    "timerPausedOnMap": true,
+    "classicElapsed": true,
+    "dragPoints": 612,
+    "javascriptErrors": 0,
+    "missingAssets": 0
+  }
+]

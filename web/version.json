@@ -1,11 +1,15 @@
 {
   "name": "라니팡",
-  "version": "0.8.0-beta",
+  "version": "0.9.0-beta",
   "stageCount": 250,
   "language": "ko",
   "build": "2026-10-14",
   "titleScreen": true,
   "backExitPopup": true,
   "stageMap": true,
-  "stagePreparation": true
+  "stagePreparation": true,
+  "mapPath": true,
+  "clockChallenge": true,
+  "coverImageElement": true,
+  "graphicsUpgrade": true
 }
