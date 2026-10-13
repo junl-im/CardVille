@@ -1,7 +1,7 @@
 # 라니팡! v0.7 — 공식 브랜드, 첫 화면, 뒤로가기, 전체화면
 
 ## 실제 적용 범위
-- 공식 게임명 **라니팡!**. 영문 로마자 표기 LanyPang은 내부 문서·저장 패키지에서만 사용. 기존 Github 저장소 junl-im/CardVille와 Firebase 프로젝트 ID cardville은 유지.
+- 공식 게임명 **라니팡**. 영문 로마자 표기 LanyPang은 내부 문서·저장 패키지에서만 사용. 기존 Github 저장소 junl-im/CardVille와 Firebase 프로젝트 ID cardville은 유지.
 - 원본 AI 제작 3D 동화풍 마을 일러스트를 WebP 768×1152로 압축하여 `web/assets/lanypang-cover.webp`에 저장, CSS로 **진짜 첫 화면 배경**으로 사용. 기존 상용 애니팡 캐릭터·음악·UI 이미지 불포함.
 - 접속 순서: 타이틀(라니팡 로고·게임 시작·게임 방법·전체 화면) → 버튼 클릭시 게임 보드 생성/레벨 이어하기. 최초에는 튜토리얼을 강제로 띄우지 않음.
 - 게임 메뉴 → 계속하기/게임 방법/처음 화면으로/나가기. Android 뒤로가기(history.popstate) → **게임 내 종료 확인창**. Escape도 모바일 뒤로가기 대체 동작. 이 기능은 호스트 브라우저가 history popstate를 보낼 때 작동하며 WebView별로 한계가 있음.

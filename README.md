@@ -72,3 +72,5 @@ GitHub 저장소의 과거 CardVille 커밋 기록은 유지됩니다.
 - [Firebase 미리보기 — 라니팡 실행](https://cardville--cardville-match3-preview-ikhmalki.web.app/?v=0.7.0) (HTTP 200, 실제 배포/스모크 검사 통과)
 - 기존 Firebase 기본 사이트 `cardville.web.app`과 `cardville.firebaseapp.com`은 검사 당시 HTTP 404입니다. 외부 즐겨찾기/옛 주소와 혼동 주의.
 - [배포 비교 및 실제 검증 로그](docs/DEPLOYMENT_AUDIT_v0.7.md). Firebase live 채널에는 아직 배포하지 않았습니다.
+
+- 공식 서비스명은 **라니팡**, 로고의 느낌표는 장식적인 시각 표현으로 사용합니다.
