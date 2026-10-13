@@ -1,6 +1,6 @@
 {
-  "version": "0.5.0-preview-ko-drag-1",
-  "request": "Publish CardVille v0.5 Korean drag/swipe build ONLY to Firebase Hosting preview channel",
+  "version": "0.5.1-ko-smoke-2",
+  "request": "Re-run v0.5 Korean drag build after fixing legacy English-title smoke check",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,
@@ -13,5 +13,6 @@
   "identityVerifiedRun": 38426888562,
   "previousFailureRun": 38419409796,
   "liveDeploymentForbidden": true,
-  "sourceCodeCommit": "5e3373b9caeac00a60675e3929a863b0cf76448a"
+  "sourceCodeCommit": "5e3373b9caeac00a60675e3929a863b0cf76448a",
+  "smokeFixCommit": "97c27a3143aca818a8d7f4bae93f37de8effdc0a"
 }
