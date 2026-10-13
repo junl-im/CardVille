@@ -1,0 +1,42 @@
+name: LanyPang Read-only Deployment Audit
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/lanypang-site-audit.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Compare four public hosting entrypoints (GET only)
+        shell: bash
+        run: |
+          set -uo pipefail
+          echo '## 라니팡 사이트 배포 비교 (읽기 전용)' >> "$GITHUB_STEP_SUMMARY"
+          while IFS='|' read -r label url; do
+            [ -n "$label" ] || continue
+            tmp=$(mktemp)
+            status=$(curl -sS -L --max-time 25 -o "$tmp" -w '%{http_code}' "$url") || status='FETCH_FAILED'
+            NAME="$label" STATUS="$status" URL="$url" F="$tmp" node - <<'NODE'
+          const fs=require('fs');
+          const s=fs.readFileSync(process.env.F,'utf8');
+          const h=s.match(/<title>([^<]{0,250})<\/title>/i);
+          const line={name:process.env.NAME,status:process.env.STATUS,title:h?h[1]:'(none)',hasLanyPang:s.includes('라니팡'),oldEnglishTutorial:s.includes('How to Play CardVille'),has250:s.includes('const LEVELS')};
+          const safe=Object.fromEntries(Object.entries(line).map(([k,v])=>[k,typeof v==='string'?v.replace(/[|\r\n]/g,' ').slice(0,300):v]));
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+            '| '+[safe.name,safe.status,safe.title,safe.hasLanyPang,safe.oldEnglishTutorial,safe.has250].join(' | ')+' |\n');
+          console.log(JSON.stringify(safe));
+          NODE
+            rm -f "$tmp"
+          done <<'URLS'
+          Firebase live|https://cardville.web.app/
+          Firebase legacy live|https://cardville.firebaseapp.com/
+          GitHub Pages|https://junl-im.github.io/CardVille/
+          Firebase preview|https://cardville--cardville-match3-preview-ikhmalki.web.app/
+          URLS
+          echo '' >> "$GITHUB_STEP_SUMMARY"
+          echo '컬럼: 사이트 / HTTP / HTML 제목 / 라니팡 표기 / 구 영문 안내창 / 250단계 데이터' >> "$GITHUB_STEP_SUMMARY"
