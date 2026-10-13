@@ -1,6 +1,6 @@
 {
-  "version": "0.6.0-ko-full-audit-preview",
-  "request": "Deploy corrected v0.6 Korean-only stage metadata and multiplayer UI; preview ONLY",
+  "version": "0.6.1-ko-stage-smoke-fix",
+  "request": "Deploy corrected full-Korean v0.6 stage metadata; validate actual Korean HTML instead of English title",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,
@@ -15,5 +15,7 @@
   "liveDeploymentForbidden": true,
   "sourceCodeCommit": "5e3373b9caeac00a60675e3929a863b0cf76448a",
   "smokeFixCommit": "97c27a3143aca818a8d7f4bae93f37de8effdc0a",
-  "buildCommit": "d49f8799ad934fcb14b6ea4292f8596d32f330b3"
+  "buildCommit": "d49f8799ad934fcb14b6ea4292f8596d32f330b3",
+  "workflowFixCommit": "da0d2855467cb0394c0ea8aa3a81c0dc526bf831",
+  "regressionGuardCommit": "cf830eaccbbf9a154da30c04af9d957383b1e88b"
 }
