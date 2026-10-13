@@ -72,7 +72,7 @@ jobs:
             echo '- Channel: cardville-match3-preview (never live)'
           } >> "$GITHUB_STEP_SUMMARY"
           for attempt in 1 2 3 4 5; do
-            if curl --fail --silent --show-error --location --max-time 20 "$PREVIEW_URL" -o /tmp/cardville-preview.html && grep -q 'CardVille' /tmp/cardville-preview.html && grep -q 'const LEVELS' /tmp/cardville-preview.html; then
+            if curl --fail --silent --show-error --location --max-time 20 "$PREVIEW_URL" -o /tmp/cardville-preview.html && grep -Fq '<html lang="ko">' /tmp/cardville-preview.html && grep -Fq "name:'사탕 골짜기 · 반짝이는 첫걸음'" /tmp/cardville-preview.html && grep -Fq 'const LEVELS' /tmp/cardville-preview.html; then
               echo 'Preview HTTP smoke test: PASS'
               exit 0
             fi
