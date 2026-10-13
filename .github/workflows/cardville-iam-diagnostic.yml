@@ -1,0 +1,28 @@
+name: CardVille IAM Identity Check (no deploy)
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cardville-iam-diagnostic.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check_identity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check diagnostic helper
+        run: node tools/check-iam-identity.cjs --self-test
+      - name: Identify GitHub secret principal without revealing email or key
+        env:
+          FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARDVILLE }}
+        run: node tools/check-iam-identity.cjs
+      - name: Explain next access check
+        run: |
+          echo 'This workflow never connects to Firebase and does not deploy anything.'
+          echo 'Compare the fingerprint against the original service-account JSON on your own PC.'
