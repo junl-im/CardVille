@@ -1,22 +1,44 @@
-name: CardVille Firebase Hosting (manual)
+name: CardVille Firebase Hosting (manual preview)
 on:
   workflow_dispatch:
+
 permissions:
   contents: read
+
+concurrency:
+  group: cardville-firebase-preview
+  cancel-in-progress: false
+
 jobs:
-  deploy:
+  preview:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - name: Verify CardVille Firebase project variable
-        env:
-          FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID_CARDVILLE }}
-        run: |
-          test -n "$FIREBASE_PROJECT_ID" || { echo 'Set FIREBASE_PROJECT_ID_CARDVILLE repo variable with the ACTUAL Firebase project ID' >&2; exit 1; }
-          test -f firebase.json
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - uses: actions/setup-node@v4
         with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          node-version: 22
+      - name: Validate source and exact Firebase project
+        run: |
+          set -e
+          node tools/check-release.cjs
+          node -e 'const a=require("./.firebaserc");if(a.projects.default!=="cardville")process.exit(1)'
+          node -e 'const a=require("./firebase.json");if(a.hosting.public!=="web")process.exit(1)'
+      - name: Verify service account secret exists
+        env:
+          FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARDVILLE }}
+        run: |
+          if [ -z "$FIREBASE_SA" ]; then
+            echo 'Secret FIREBASE_SERVICE_ACCOUNT_CARDVILLE is not configured. No Firebase deployment attempted.' >&2
+            exit 1
+          fi
+      - name: Deploy ONLY to temporary preview channel (never live)
+        id: firebase_preview
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARDVILLE }}
-          projectId: ${{ vars.FIREBASE_PROJECT_ID_CARDVILLE }}
-          channelId: live
+          projectId: cardville
+          channelId: cardville-match3-preview
+          expires: 14d
+      - name: Show preview URL
+        run: echo "Firebase preview URL is in the prior deploy step's outputs"
