@@ -84,3 +84,13 @@ GitHub 저장소의 과거 CardVille 커밋 기록은 유지됩니다.
 - 게임 내 이미지와 마스코트는 자체 제작. 상용 타사 이미지는 직접 복사하지 않음. 지도·준비창 디자인에는 기존 라니팡 배경을 재사용.
 - 추가한 회귀 검사: `node tools/check-world-map.cjs`, `python tests/verify-world-map.py` (격리 Chromium). 문서: [v0.8 지도/준비창](docs/WORLD_MAP_v0.8.md).
 - 실제 안드로이드 물리 뒤로가기·최종 250단계 플레이 난이도 검증은 추가 진행 필요. 기존 Firebase `live` 환경은 배포하지 않음.
+
+## v0.9 — 지도의 실제 길·첫 화면 이미지 안정화·시간 도전
+- [기능 반영 커밋](https://github.com/junl-im/CardVille/commit/3e8ea02bdbb02f6586545dbacba91bfeb85e37e1), [Firebase preview 성공 검증](https://github.com/junl-im/CardVille/actions/runs/38486086563).
+- 지도: 10지역 버튼→각 25개 스테이지를 3열 지그재그 경로와 24개 실제 SVG 연결 선으로 구성. 열린 단계/잠긴 단계 구분·준비창 진입·지도에서 진행 중 게임 복귀.
+- 첫 화면: CSS 배경만 사용하는 방법에서 `<img>` 직접 표시/로딩 감지/로드 실패 대체 배경으로 변경. 이미지 요청 캐시 버전 v0.9.
+- 시간: 시작 준비창에서 시간 도전 ON(1지역 185초, 10지역 122초)/OFF(기본 모드 경과 시간) 선택. 경고 30초/10초, 타이머 일시정지·지도·브라우저 숨김 시 정지, 제한시간 종료 시 실패.
+- 블록 7종은 보석 종류별 고유 광택·색상을 사용. 과도한 랜덤 연쇄는 1회 이동당 8회 상한으로 관리.
+- 검사: Node `check-tempo` 가상 시계/실패 재현, `check-v09`, `verify-v09.py` PC·모바일 자산 URL 경로 시험. [세부 문서](docs/RELEASE_V09.md).
+- 오리지널 장면 그림은 기존 라니팡 제작 이미지를 재사용; 10개 완전 별도 신규 배경 아트·상용급 스프라이트/사운드 팩은 이후 고도화 대상.
+- [Firebase 라니팡 v0.9 미리보기](https://cardville--cardville-match3-preview-ikhmalki.web.app/?v=0.9.0), Firebase live는 변경하지 않음.
