@@ -1,0 +1,35 @@
+{
+  "name": "라니팡",
+  "version": "0.8.0-beta",
+  "firebase_project_id": "cardville",
+  "hosting_channel": "cardville-match3-preview",
+  "live_protected": true,
+  "reuses": {
+    "stages": 250,
+    "regions": 10,
+    "bosses": 10,
+    "local_storage_keys": [
+      "sc_unlocked",
+      "sc_best",
+      "sc_stars",
+      "cv_last_level"
+    ]
+  },
+  "implemented": [
+    "world_map_250_stages",
+    "level_preparation_modal",
+    "locked_stage_blocking",
+    "prep_after_win",
+    "in_progress_board_resume",
+    "Android_back_mapping",
+    "korean_labels",
+    "right_mouse_disabled",
+    "drag_only_swaps"
+  ],
+  "not_implemented": [
+    "cloud_save",
+    "premium_currency",
+    "full_world_art_per_region",
+    "real_android_hardware_back_test"
+  ]
+}

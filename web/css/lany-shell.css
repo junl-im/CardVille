@@ -4,7 +4,7 @@ body.lany-at-title{overflow:hidden}
 body.lany-at-title #app,body.lany-at-title .cv-action-toolbar,body.lany-at-title #game-mode-bar,body.lany-at-title #leaderboard,body.lany-at-title .cv-local-caption{visibility:hidden;pointer-events:none}
 .lany-title{position:fixed;inset:0;z-index:20000;display:flex;justify-content:center;align-items:stretch;background:#67c9ef;color:#fff;overflow:hidden;touch-action:pan-y}
 .lany-title[hidden],.lany-modal-wrap[hidden]{display:none!important}
-.lany-cover{position:absolute;inset:0;background-image:url('./assets/lanypang-cover.webp');background-position:center 53%;background-size:cover;transform:scale(1.025)}
+.lany-cover{position:absolute;inset:0;background-image:url('../assets/lanypang-cover.webp');background-position:center 53%;background-size:cover;transform:scale(1.025)}
 .lany-title-scrim{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(44,78,132,.35) 0%,rgba(43,55,110,.03) 36%,rgba(56,32,75,.05) 56%,rgba(42,28,74,.62) 100%)}
 .lany-title-layout{z-index:1;width:100%;max-width:620px;min-height:100dvh;display:flex;flex-direction:column;justify-content:space-between;padding:max(48px,env(safe-area-inset-top) + 32px) 18px max(24px,env(safe-area-inset-bottom) + 18px);align-items:center;text-align:center}
 .lany-title-top{display:flex;flex-direction:column;align-items:center;gap:5px;text-shadow:0 3px 10px rgba(41,28,72,.64)}
@@ -26,3 +26,32 @@ body.lany-at-title #app,body.lany-at-title .cv-action-toolbar,body.lany-at-title
 @media(prefers-reduced-motion:reduce){.lany-title *,.lany-dialog *{transition:none!important;animation:none!important}}
 /* Help launched from the title must appear above the title illustration. */
 #overlay-tutorial{z-index:23000}
+
+/* 라니팡 v0.8 — 모바일 퍼스트 지역 지도 / 스테이지 준비 화면 */
+.lany-game-screen{position:fixed;inset:0;z-index:21000;display:grid;place-items:center;color:#593f60;overflow:hidden;background:#6dbbdf}
+.lany-game-screen[hidden]{display:none!important}
+.lany-screen-scrim{position:absolute;inset:0;background:linear-gradient(155deg,rgba(84,185,246,.3),rgba(129,80,163,.3)),url('../assets/lanypang-cover.webp') center/cover;filter:blur(5px);transform:scale(1.04)}
+.lany-map-panel{position:relative;width:min(100%,620px);height:min(100dvh,980px);min-height:0;background:linear-gradient(180deg,#effcff 0%,#fff4fc 35%,#fff9ed 100%);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 8px 55px rgba(37,42,79,.35)}
+.lany-map-head{display:flex;align-items:center;gap:12px;padding:max(14px,env(safe-area-inset-top)) 16px 8px;background:linear-gradient(180deg,#b2ebff,#ecfbff);border-bottom:2px solid #b2def1}
+.lany-map-head h2{font-size:clamp(1.1rem,4.6vw,1.6rem);color:#8a4b92;line-height:1.35}
+.lany-map-eyebrow{font-size:.72rem;color:#5589a8;font-weight:800}
+.lany-back,.lany-map-icon{width:42px;height:42px;flex-shrink:0;border:2px solid #fff;border-radius:15px;background:#fa7bb1;color:white;box-shadow:0 3px 0 #c25d8f;font-size:1.8rem;cursor:pointer}
+.lany-map-icon{font-size:1.2rem;margin-left:auto;background:#6fbad7}
+.lany-map-summary{display:flex;justify-content:space-between;gap:10px;padding:9px 18px;font-size:.82rem;font-weight:900;color:#876099}
+.lany-world-tabs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:thin;padding:10px 15px 12px;border-bottom:2px solid #fae5f2;flex-shrink:0;overscroll-behavior-x:contain}
+.lany-world-tab{flex:0 0 auto;width:72px;min-height:64px;border:2px solid #e8c9d6;border-radius:16px;background:#fff8f2;color:#835b8b;cursor:pointer;font-weight:800;font-size:.72rem;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px}
+.lany-world-tab .world-emoji{font-size:1.55rem}.lany-world-tab.active{background:linear-gradient(160deg,#ff93c3,#fb5693);color:white;border-color:#fff;box-shadow:0 4px 0 #bb6299}.lany-world-tab.locked-tab{opacity:.55}
+.lany-map-section{overflow-y:auto;min-height:0;flex:1;padding:13px 16px 26px;overscroll-behavior:contain;scrollbar-color:#ee9dbc #f9edf3;scrollbar-width:thin}
+.lany-world-banner{border:3px solid white;box-shadow:0 4px 0 #f0d2a9,0 6px 18px rgba(116,92,108,.15);border-radius:20px;background:linear-gradient(120deg,#fff1aa,#ffdfe9);padding:15px 18px;display:flex;justify-content:space-between;align-items:center}.lany-world-banner span{font-size:.8rem;font-weight:900;color:#aa7391}.lany-world-banner h3{font-size:1.4rem;color:#96548d}.lany-world-banner #lany-world-icon{font-size:2.6rem}
+.lany-map-levels{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px 8px;margin-top:15px}
+.lany-level{border:2px solid white;border-radius:16px;min-height:68px;background:linear-gradient(#aee4ff,#6cc7eb);box-shadow:0 4px 0 #4597c4;color:#244c79;font-size:1.15rem;font-weight:1000;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px;transition:transform .12s ease}.lany-level small{font-size:.65rem;min-height:15px;white-space:nowrap}.lany-level:active{transform:translateY(3px)}.lany-level.current{background:linear-gradient(#ffd37c,#ffa442);box-shadow:0 4px 0 #c57a31}.lany-level.boss{background:linear-gradient(#ffc7ef,#ff8ac2);box-shadow:0 4px 0 #d36398}.lany-level:disabled{background:linear-gradient(#f2f2f2,#ddd);box-shadow:0 4px 0 #c1c1c1;color:#aaa;cursor:not-allowed}
+.lany-map-bottom{padding:13px max(16px,env(safe-area-inset-left)) max(14px,env(safe-area-inset-bottom));background:rgba(255,255,255,.96);display:flex;gap:10px;border-top:2px solid #f6d2e4}.lany-map-bottom .lany-action{flex:2;min-height:52px;font-size:.95rem}.lany-map-bottom .lany-action.pale{flex:1;font-size:.85rem}
+.lany-prep-card{position:relative;width:min(93vw,430px);max-height:94dvh;overflow-y:auto;display:flex;flex-direction:column;align-items:stretch;padding:22px;gap:13px;background:linear-gradient(#fffdf4,#ffeff6);border-radius:32px;border:5px solid #fff8d4;box-shadow:0 14px 0 rgba(125,67,114,.4),0 19px 45px rgba(37,28,88,.4);text-align:center}
+.lany-prep-back{position:absolute;top:13px;left:13px;z-index:2}.lany-prep-hero{font-size:2.8rem;margin-top:14px}.lany-prep-hero span{font-size:2.1rem}.lany-prep-region{color:#ac7198;font-weight:800}.lany-prep-card h2{font-size:1.6rem;color:#ab4e87}.lany-prep-subtitle{font-size:.9rem;font-weight:700;color:#a1728e}
+.lany-stage-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.lany-stage-stats>div{padding:13px 6px;background:white;border:2px solid #f8d9d5;border-radius:16px;display:flex;flex-direction:column;gap:7px}.lany-stage-stats span{font-size:.85rem;color:#a27785}.lany-stage-stats strong{font-size:1.3rem;color:#ac548a}
+.lany-prep-info{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;font-size:.84rem;color:#85688e;font-weight:700}
+.lany-prep-info span{background:#fff;padding:7px 9px;border:1px solid #ead4ec;border-radius:99px}.lany-prep-boosters{background:#fff9e6;padding:13px;border:2px dashed #f9c680;border-radius:18px;color:#815870;display:flex;flex-direction:column;gap:8px;font-weight:800}.lany-prep-boosters small{font-size:.75rem;font-weight:500;color:#947c76}.lany-prep-play{width:100%;margin-top:4px}.lany-prep-cancel{width:100%}
+@media(max-width:360px){.lany-map-levels{gap:8px 5px}.lany-level{min-height:58px;border-radius:12px}.lany-prep-card{padding:17px 13px}.lany-map-head{padding-left:11px;padding-right:11px}}
+@media(prefers-reduced-motion:reduce){.lany-level{transition:none}}
+
+.lany-map-bottom{flex-wrap:wrap}.lany-map-bottom #lany-map-resume:not([hidden]){flex:1 0 100%;background:linear-gradient(#9ac7ff,#619de9)}

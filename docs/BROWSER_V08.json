@@ -1,0 +1,26 @@
+[
+  {
+    "viewport": "mobile",
+    "regions": 10,
+    "stages": 250,
+    "lockedSelection": true,
+    "prepareBeforePlay": true,
+    "backToMap": true,
+    "dragPoints": 90,
+    "winNextPrepare": true,
+    "exitToTitle": true,
+    "jsErrors": 0
+  },
+  {
+    "viewport": "desktop",
+    "regions": 10,
+    "stages": 250,
+    "lockedSelection": true,
+    "prepareBeforePlay": true,
+    "backToMap": true,
+    "dragPoints": 90,
+    "winNextPrepare": true,
+    "exitToTitle": true,
+    "jsErrors": 0
+  }
+]
