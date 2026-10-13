@@ -1,0 +1,21 @@
+/* CardVille Firebase preview-only CI gate: never ship a live deploy by accident. */
+const fs=require('node:fs');
+const assert=require('node:assert/strict');
+const workflow=fs.readFileSync('.github/workflows/firebase-hosting.yml','utf8');
+const config=JSON.parse(fs.readFileSync('.firebaserc','utf8'));
+const firebase=JSON.parse(fs.readFileSync('firebase.json','utf8'));
+const trigger=JSON.parse(fs.readFileSync('ops/firebase-preview-trigger.json','utf8'));
+assert.equal(config.projects.default,'cardville');
+assert.equal(firebase.hosting.public,'web');
+assert.equal(trigger.neverDeployLive,true);
+assert.equal(trigger.channelId,'cardville-match3-preview');
+assert(workflow.includes('workflow_dispatch:'));
+assert(workflow.includes('push:'));
+assert(workflow.includes('ops/firebase-preview-trigger.json'));
+assert(workflow.includes('projectId: cardville'));
+assert(workflow.includes('channelId: cardville-match3-preview'));
+assert(workflow.includes('secrets.FIREBASE_SERVICE_ACCOUNT_CARDVILLE'));
+assert(!/channelId:\s*live\b/.test(workflow),'A live deploy is forbidden');
+assert(!/force:\s*true/.test(workflow),'Do not use --force');
+assert(workflow.includes('GITHUB_STEP_SUMMARY'));
+console.log('Firebase preview-only deployment validation: PASS');

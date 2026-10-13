@@ -1,4 +1,4 @@
-# CardVille Match-3 — v0.4.1 Beta (Firebase ID 확정)
+# CardVille Match-3 — v0.4.2 Beta (Firebase Preview 배포 트리거)
 
 PC·모바일 웹용 3매치 퍼즐게임. [Sweet Crush](https://github.com/ShaistaShabbir-prog/candy-crush-match3) MIT 소스를 기반으로 변경한 별도 프로젝트입니다. 원본 커밋은 `0ba0fcd4af6c041669ba67dd7f7bb6d9d268e4ec`입니다.
 
@@ -38,3 +38,8 @@ node tools/check-release.cjs
 ## 품질 기록
 
 `docs/VALIDATION.md`와 `docs/BROWSER_VALIDATION.json` 참조. 브라우저 E2E에서 2종 화면·스와이프·키보드·저장·진행을 확인. 공개 사이트 배포 상태는 검증되지 않았음.
+
+## v0.4.2 — Firebase 안전 미리보기 배포 트리거
+
+GitHub Actions Secret 등록 확인을 받은 뒤, 미리보기 채널만 대상으로 자동 **1회 실행 요청**을 푸시합니다. 대상 채널은 `cardville-match3-preview`이고 live는 변경하지 않습니다. 결과 주소와 실제 배포 성공 여부는 GitHub Actions 로그에서 확인해야 합니다.
+상세 내용은 `docs/FIREBASE_PREVIEW_v0.4.2.md` 참조.

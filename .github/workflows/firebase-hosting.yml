@@ -1,6 +1,10 @@
-name: CardVille Firebase Hosting (manual preview)
+name: CardVille Firebase Hosting (preview only)
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ops/firebase-preview-trigger.json
 
 permissions:
   contents: read
@@ -12,27 +16,29 @@ concurrency:
 jobs:
   preview:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Validate source and exact Firebase project
+      - name: Validate game, project and preview restrictions
         run: |
-          set -e
+          set -eu
           node tools/check-release.cjs
-          node -e 'const a=require("./.firebaserc");if(a.projects.default!=="cardville")process.exit(1)'
-          node -e 'const a=require("./firebase.json");if(a.hosting.public!=="web")process.exit(1)'
-      - name: Verify service account secret exists
+          node tools/check-firebase-preview.cjs
+          node -e 'const r=require("./.firebaserc");if(r.projects.default!=="cardville")process.exit(1)'
+          node -e 'const r=require("./firebase.json");if(r.hosting.public!=="web")process.exit(1)'
+      - name: Verify Firebase service account secret is configured
         env:
           FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARDVILLE }}
         run: |
           if [ -z "$FIREBASE_SA" ]; then
-            echo 'Secret FIREBASE_SERVICE_ACCOUNT_CARDVILLE is not configured. No Firebase deployment attempted.' >&2
+            echo 'Missing FIREBASE_SERVICE_ACCOUNT_CARDVILLE in GitHub Actions Secrets.' >&2
             exit 1
           fi
-      - name: Deploy ONLY to temporary preview channel (never live)
+          echo 'Firebase service account input is present (contents not printed).'
+      - name: Deploy to isolated preview channel (NOT live)
         id: firebase_preview
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
@@ -40,5 +46,31 @@ jobs:
           projectId: cardville
           channelId: cardville-match3-preview
           expires: 14d
-      - name: Show preview URL
-        run: echo "Firebase preview URL is in the prior deploy step's outputs"
+      - name: Show preview URL and check uploaded game
+        env:
+          PREVIEW_URL: ${{ steps.firebase_preview.outputs.details_url }}
+          EXPIRE_AT: ${{ steps.firebase_preview.outputs.expire_time }}
+        run: |
+          set -eu
+          if [ -z "$PREVIEW_URL" ]; then
+            echo 'Firebase Action produced no preview URL' >&2
+            exit 1
+          fi
+          case "$PREVIEW_URL" in https://*) ;; *) echo 'Unexpected preview URL format' >&2; exit 1;; esac
+          echo "Preview: $PREVIEW_URL"
+          {
+            echo '## CardVille Match-3 Firebase preview'
+            echo "- Preview URL: $PREVIEW_URL"
+            echo "- Expires at: $EXPIRE_AT"
+            echo '- Firebase project ID: cardville'
+            echo '- Channel: cardville-match3-preview (never live)'
+          } >> "$GITHUB_STEP_SUMMARY"
+          for attempt in 1 2 3 4 5; do
+            if curl --fail --silent --show-error --location --max-time 20 "$PREVIEW_URL" -o /tmp/cardville-preview.html && grep -q 'CardVille' /tmp/cardville-preview.html && grep -q 'const LEVELS' /tmp/cardville-preview.html; then
+              echo 'Preview HTTP smoke test: PASS'
+              exit 0
+            fi
+            sleep 8
+          done
+          echo 'Preview deployment completed but web smoke test did not pass' >&2
+          exit 1

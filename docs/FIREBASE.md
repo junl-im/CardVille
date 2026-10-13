@@ -33,3 +33,6 @@
 5. 사용자가 preview 결과를 확인하고 live 배포에 명시적으로 동의한 경우에만 별도 live workflow 검토.
 
 > 주의: Firebase **preview URL 자체는 공개 URL**이며 실제 동일 프로젝트 백엔드를 이용하므로, Firestore를 연동할 경우 규칙 및 접근 제한도 반드시 검사할 것.
+
+## v0.4.2 trigger
+GitHub Secret 등록을 사용자가 확인함. ops/firebase-preview-trigger.json 변경 시 GitHub Actions 미리보기 채널 배포 시도. Live 변경 금지. 자세한 사항은 FIREBASE_PREVIEW_v0.4.2.md 참조.
