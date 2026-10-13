@@ -43,3 +43,7 @@ node tools/check-release.cjs
 
 GitHub Actions Secret 등록 확인을 받은 뒤, 미리보기 채널만 대상으로 자동 **1회 실행 요청**을 푸시합니다. 대상 채널은 `cardville-match3-preview`이고 live는 변경하지 않습니다. 결과 주소와 실제 배포 성공 여부는 GitHub Actions 로그에서 확인해야 합니다.
 상세 내용은 `docs/FIREBASE_PREVIEW_v0.4.2.md` 참조.
+
+## v0.4.3 GitHub Actions fix
+- [Failed run 38417296378](https://github.com/junl-im/CardVille/actions/runs/38417296378) failed before Firebase deploy, because `require('./.firebaserc')` tried to parse extensionless JSON as JS.
+- Fixed by using the existing JSON.parse-based checks, safe credential shape validation, and one isolated preview-only retry.

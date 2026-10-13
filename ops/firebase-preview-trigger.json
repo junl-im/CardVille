@@ -1,10 +1,13 @@
 {
-  "version": "0.4.2-preview-1",
-  "request": "attempt an isolated Firebase Hosting preview deployment now that the GitHub Actions service account secret is registered",
+  "version": "0.4.3-preview-fix1",
+  "request": "Retry only Firebase preview after fixing Node JSON loading failure",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,
   "sourceBranch": "main",
   "requestedAtKST": "2026-10-13",
-  "secretValueIncluded": false
+  "secretValueIncluded": false,
+  "lastFailureRun": 38417296378,
+  "failureStage": "Validate game, project and preview restrictions",
+  "cause": "require() of .firebaserc extensionless JSON"
 }

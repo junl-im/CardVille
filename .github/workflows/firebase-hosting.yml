@@ -27,8 +27,8 @@ jobs:
           set -eu
           node tools/check-release.cjs
           node tools/check-firebase-preview.cjs
-          node -e 'const r=require("./.firebaserc");if(r.projects.default!=="cardville")process.exit(1)'
-          node -e 'const r=require("./firebase.json");if(r.hosting.public!=="web")process.exit(1)'
+          # Both JSON configurations are parsed by the preflight checks above.
+          # Do not require() the extensionless .firebaserc as JavaScript.
       - name: Verify Firebase service account secret is configured
         env:
           FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARDVILLE }}
@@ -37,7 +37,7 @@ jobs:
             echo 'Missing FIREBASE_SERVICE_ACCOUNT_CARDVILLE in GitHub Actions Secrets.' >&2
             exit 1
           fi
-          echo 'Firebase service account input is present (contents not printed).'
+          node -e 'const s=JSON.parse(process.env.FIREBASE_SA);if(s.type!=="service_account"||!s.client_email||!s.private_key){throw new Error("Expected Firebase service-account JSON")}console.log("Service account JSON structure valid (value hidden)")'
       - name: Deploy to isolated preview channel (NOT live)
         id: firebase_preview
         uses: FirebaseExtended/action-hosting-deploy@v0

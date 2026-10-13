@@ -18,4 +18,7 @@ assert(workflow.includes('secrets.FIREBASE_SERVICE_ACCOUNT_CARDVILLE'));
 assert(!/channelId:\s*live\b/.test(workflow),'A live deploy is forbidden');
 assert(!/force:\s*true/.test(workflow),'Do not use --force');
 assert(workflow.includes('GITHUB_STEP_SUMMARY'));
+assert(!workflow.includes('require("./.firebaserc")'), 'Do not require extensionless JSON');
+assert(workflow.includes('node tools/check-release.cjs'));
+assert(workflow.includes('node tools/check-firebase-preview.cjs'));
 console.log('Firebase preview-only deployment validation: PASS');
