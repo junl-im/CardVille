@@ -21,7 +21,7 @@
     });
   }
 
-  // CardVille v0.5: only left-button drag or one-finger swipe can swap ordinary tiles.
+  // 라니팡 v0.7: only left-button drag or one-finger swipe can swap ordinary tiles.
   // A right click, click-click, long press or accidental tap cannot swap gems.
   const board = document.getElementById('board');
   if (!board) return;
@@ -138,5 +138,5 @@
     if(caption)app.append(caption);
     if(leaderboard)app.append(leaderboard);
   });
-  console.info('[CardVille v0.5] Korean drag-only play ready');
+  console.info('[라니팡 v0.7] Korean drag-only play ready');
 })();

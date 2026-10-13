@@ -35,7 +35,7 @@ for(const [index,match] of embedded.entries())new vm.Script(match[1],{filename:`
 for(const p of [
  'web/js/cardville-balance.js','web/js/a11y.js','web/js/daily-challenge.js',
  'web/js/difficulty.js','web/js/leaderboard.js','web/js/level-editor.js',
- 'web/js/multiplayer.js','web/project-overlay/project.js','web/sw.js']) {
+ 'web/js/multiplayer.js','web/project-overlay/project.js','web/js/lany-shell.js','web/sw.js']) {
  new vm.Script(read(p),{filename:p});
 }
 assert(html.includes('cardville-balance.js'));
@@ -49,7 +49,7 @@ assert(read('web/js/a11y.js').includes('.cell[data-r='),'A11y must select the ac
 assert(read('web/js/leaderboard.js').includes('player.textContent'),'HTML name injection regression');
 assert(read('web/sw.js').includes("url.origin!==self.location.origin"),'SW must avoid cross-origin caching');
 const manifest=JSON.parse(read('web/manifest.json'));
-assert(manifest.name.includes('카드빌'));
+assert(manifest.name.includes('라니팡'));
 assert.equal(fs.existsSync(path.join(root,'web/LICENSE')),true);
 assert.equal(fs.existsSync(path.join(root,'firebase.json')),true);
 assert.equal(JSON.parse(read('.firebaserc')).projects.default,'cardville');

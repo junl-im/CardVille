@@ -288,7 +288,7 @@ const Multiplayer = (() => {
         '</div>' +
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">' +
           '<button onclick="navigator.clipboard.writeText(\'' + encodedLink + '\')" style="padding:11px;border-radius:12px;background:#1e1f2e;color:#e6edf3;border:1px solid #30363d;cursor:pointer;font-weight:600;font-size:0.85rem">📋 주소 복사</button>' +
-          '<button onclick="navigator.share ? navigator.share({title:\'카드빌 대결\',url:\'' + encodedLink + '\'}) : navigator.clipboard.writeText(\'' + encodedLink + '\')" style="padding:11px;border-radius:12px;background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;border:none;cursor:pointer;font-weight:700;font-size:0.85rem">📤 공유</button>' +
+          '<button onclick="navigator.share ? navigator.share({title:\'라니팡 대결\',url:\'' + encodedLink + '\'}) : navigator.clipboard.writeText(\'' + encodedLink + '\')" style="padding:11px;border-radius:12px;background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;border:none;cursor:pointer;font-weight:700;font-size:0.85rem">📤 공유</button>' +
         '</div>' +
         '<div style="color:#6b7280;font-size:0.78rem;margin-bottom:14px">⏳ 친구 기다리는 중… <span id="mp-join-status" style="color:#22c55e"></span></div>' +
         '<button onclick="document.getElementById(\'mp-share\').style.display=\'none\'" style="width:100%;background:rgba(255,255,255,0.06);color:#8b949e;border:1px solid #30363d;padding:10px;border-radius:10px;cursor:pointer">기다리는 동안 게임하기</button>' +

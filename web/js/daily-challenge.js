@@ -34,7 +34,7 @@
   function shareResult(score, stars) {
     const dayNum = getDailyNumber();
     const starEmoji = '⭐'.repeat(stars) + '☆'.repeat(3-stars);
-    const text = `카드빌 오늘의 도전 제${dayNum}\n${starEmoji} ${score.toLocaleString()}점\n`;
+    const text = `라니팡 오늘의 도전 제${dayNum}\n${starEmoji} ${score.toLocaleString()}점\n`;
     navigator.clipboard.writeText(text).then(() => alert('클립보드에 복사했습니다!'));
   }
 

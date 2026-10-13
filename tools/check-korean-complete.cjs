@@ -22,8 +22,8 @@ for (const lv of levels) {
 assert.equal(new Set(levels.map(l=>l.name)).size,250);
 assert.equal(new Set(levels.map(l=>l.theme)).size,10);
 assert(html.includes('<html lang="ko">'));
-assert(manifest.name.includes('카드빌'));
-assert(version.language==='ko'&&version.version==='0.6.0-beta');
+assert(manifest.name.includes('라니팡'));
+assert(version.language==='ko'&&version.version==='0.7.0-beta');
 assert(!overlay.includes('lv.englishSourceName=lv.name'));
 assert(!overlay.includes('lv.name=`'), 'Late DOM-level translation is no longer safe');
 for(const label of ['방을 찾지 못했어요','대결 서버에 연결하지 못했어요','연결 시간이 초과됐어요','상대방의 연결이 끊어졌어요','님의 차례예요!','1번 플레이어','2번 플레이어']){
@@ -32,7 +32,7 @@ for(const label of ['방을 찾지 못했어요','대결 서버에 연결하지 
 for (const en of ['Connecting to PeerJS','Room ready!','Room not found','Connection timeout','Opponent disconnected',"'s turn!",'Player 1','Player 2']){
  assert(!multi.includes(en),`English user-facing text remains: ${en}`);
 }
-assert(sw.includes('cardville-match-v0.6-ko'),'Service worker cache must be bumped');
+assert(sw.includes('lanypang-match-v0.7-ko'),'Service worker cache must be bumped');
 const previewWorkflow=fs.readFileSync('.github/workflows/firebase-hosting.yml','utf8');
 assert(!previewWorkflow.includes("grep -q 'CardVille'"),'Legacy English game-name smoke check regressed');
 assert(previewWorkflow.includes("name:'사탕 골짜기 · 반짝이는 첫걸음'"),'Firebase must verify actual Korean stage data');

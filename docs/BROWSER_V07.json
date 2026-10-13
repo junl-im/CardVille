@@ -1,0 +1,26 @@
+[
+  {
+    "device": "mobile",
+    "title": "라니팡",
+    "splash": true,
+    "tutorial_ko": true,
+    "started": true,
+    "pause": true,
+    "exit_confirm": true,
+    "history_back": true,
+    "returned_home": true,
+    "errors": 0
+  },
+  {
+    "device": "desktop",
+    "title": "라니팡",
+    "splash": true,
+    "tutorial_ko": true,
+    "started": true,
+    "pause": true,
+    "exit_confirm": true,
+    "history_back": true,
+    "returned_home": true,
+    "errors": 0
+  }
+]

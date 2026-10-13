@@ -32,7 +32,7 @@ for kind,w,h,mobile in [('mobile',390,844,True),('desktop',1366,768,False)]:
   assert page.evaluate('typeof CardVilleBalance')=='object'
   report=page.evaluate('''() => ({levels:LEVELS.length,stage250Goal:LEVELS[249].goal,stage250Original:LEVELS[249].originalGoal,calibrated:LEVELS.filter(l=>l.goal!==l.originalGoal).length})''')
   assert report['levels']==250 and 2000<=report['stage250Goal']<=4500,report
-  page.locator('#overlay-tutorial button').click();page.wait_for_timeout(200)
+  page.locator('#lany-start-button').click();page.wait_for_timeout(200)
   assert page.locator('#board .cell').count()==64
   assert page.locator('#board .cell[role="button"]').count()==64
   assert page.locator('.cell').first.get_attribute('aria-label')
@@ -83,9 +83,9 @@ for kind,w,h,mobile in [('mobile',390,844,True),('desktop',1366,768,False)]:
   assert page.evaluate('LEVELS[249].goal')==report['stage250Goal']
   assert page.evaluate("localStorage.getItem('cv_last_level')")=='250'
   saved=page.evaluate('window.__store');page.close();page=ctx.new_page();install_local_storage(page,saved);page.on('pageerror',lambda e: errors.append(str(e)));page.set_content(HTML,wait_until='load');page.wait_for_timeout(350)
-  page.locator('#overlay-tutorial button').click();page.wait_for_timeout(80)
+  page.locator('#lany-start-button').click();page.wait_for_timeout(80)
   assert page.evaluate('state.level')==250,('resume failed',kind)
-  page.screenshot(path=str(root.parent/'docs'/f'cardville_v04_{kind}.png'),full_page=True)
+  page.screenshot(path=str(root.parent/'docs'/f'lany_v07_game_{kind}.png'),full_page=True)
   assert not errors,(kind,errors)
   results.append({'screen':kind,'test':'OK','stage250':report['stage250Goal'],'old250':report['stage250Original'],'adjusted':report['calibrated'],'swap_score':after,'errors':len(errors)})
   browser.close()
