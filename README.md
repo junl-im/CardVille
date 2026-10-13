@@ -47,3 +47,9 @@ GitHub Actions Secret 등록 확인을 받은 뒤, 미리보기 채널만 대상
 ## v0.4.3 GitHub Actions fix
 - [Failed run 38417296378](https://github.com/junl-im/CardVille/actions/runs/38417296378) failed before Firebase deploy, because `require('./.firebaserc')` tried to parse extensionless JSON as JS.
 - Fixed by using the existing JSON.parse-based checks, safe credential shape validation, and one isolated preview-only retry.
+
+## Firebase 배포 실패 — 현재 상태
+
+- 실제 [2차 실패 로그](https://github.com/junl-im/CardVille/actions/runs/38419409796): Secret JSON 검증 통과, Firebase 호출에서 403 `USER_PROJECT_DENIED` / `serviceusage.services.use` 부족.
+- 원인과 관리자 IAM 조치: [Firebase 권한 수정 가이드](docs/FIREBASE_IAM_FIX_v0.4.3.md).
+- IAM 역할이 부여되기 전에는 재배포를 반복해도 해결되지 않습니다. 서비스 계정 권한 수정 후 기존 미리보기 workflow를 수동 실행합니다. `live`는 미변경.
