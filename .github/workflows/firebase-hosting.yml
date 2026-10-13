@@ -1,0 +1,22 @@
+name: CardVille Firebase Hosting (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify CardVille Firebase project variable
+        env:
+          FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID_CARDVILLE }}
+        run: |
+          test -n "$FIREBASE_PROJECT_ID" || { echo 'Set FIREBASE_PROJECT_ID_CARDVILLE repo variable with the ACTUAL Firebase project ID' >&2; exit 1; }
+          test -f firebase.json
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARDVILLE }}
+          projectId: ${{ vars.FIREBASE_PROJECT_ID_CARDVILLE }}
+          channelId: live

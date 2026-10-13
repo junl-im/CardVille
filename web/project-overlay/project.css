@@ -1,0 +1,11 @@
+/* Extra polish applied to the build copy, never to upstream vendor files. */
+:root { color-scheme: dark; }
+button, .booster, .level-btn { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+button, .booster { transition: transform 120ms ease, filter 120ms ease, box-shadow 120ms ease; }
+button:active, .booster:active, .level-btn:active { transform: scale(.94); filter: brightness(1.2); }
+button:focus-visible, .booster:focus-visible, .level-btn:focus-visible { outline: 3px solid #ffdf80; outline-offset: 3px; }
+#app { padding-bottom: max(18px, env(safe-area-inset-bottom)); }
+#board { max-width: min(500px, calc(100vw - 24px)); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}

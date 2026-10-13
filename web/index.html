@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CardVille — Match-3 Puzzle</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #1a0533;
+  --surface: #2d1254;
+  --accent: #ff6bcd;
+  --gold: #ffd700;
+  --cell: 56px;
+}
+body {
+  background: radial-gradient(ellipse at top, #3d1a6e 0%, #1a0533 60%, #0d0222 100%);
+  min-height: 100vh;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* ── Particles background ── */
+#particles { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; }
+
+/* ── Layout ── */
+#app { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; padding:12px; min-height:100vh; }
+
+/* ── Header ── */
+.header {
+  width:100%; max-width:500px;
+  background: linear-gradient(135deg, rgba(255,107,205,.15), rgba(130,80,255,.15));
+  border: 1px solid rgba(255,107,205,.3);
+  border-radius: 20px;
+  padding: 12px 18px;
+  display: flex; align-items:center; justify-content:space-between;
+  margin-bottom: 10px;
+  backdrop-filter: blur(10px);
+}
+.logo { font-size: 1.3rem; font-weight: 900; background: linear-gradient(135deg, #ff6bcd, #ffd700, #00ffcc); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.hud { display:flex; gap:14px; align-items:center; }
+.hud-box { text-align:center; }
+.hud-val { font-size:1.1rem; font-weight:800; color:#ffd700; line-height:1; }
+.hud-lbl { font-size:.6rem; color:rgba(255,255,255,.5); text-transform:uppercase; letter-spacing:.05em; }
+
+/* ── Level bar ── */
+.level-info {
+  width:100%; max-width:500px;
+  background: rgba(255,255,255,.05);
+  border-radius:14px;
+  padding: 10px 16px;
+  margin-bottom: 10px;
+  display:flex; flex-direction:column; gap:6px;
+}
+.level-row { display:flex; justify-content:space-between; align-items:center; font-size:.85rem; }
+.level-title { font-weight:700; color:#c084fc; }
+.level-goal { font-size:.75rem; color:rgba(255,255,255,.5); }
+.progress-bar { height:8px; background:rgba(255,255,255,.1); border-radius:999px; overflow:hidden; }
+.progress-fill { height:100%; border-radius:999px; background:linear-gradient(90deg,#ff6bcd,#ffd700); transition:width .4s ease; }
+
+/* ── Board ── */
+#board-wrap {
+  position:relative;
+  width:100%; max-width:500px;
+}
+#board {
+  display:grid;
+  gap: 4px;
+  padding: 14px;
+  background: linear-gradient(145deg, rgba(255,107,205,.1), rgba(100,50,200,.15));
+  border: 2px solid rgba(255,107,205,.25);
+  border-radius: 24px;
+  backdrop-filter: blur(10px);
+  touch-action: none;
+  user-select: none;
+  width:100%;
+  aspect-ratio: 1;
+}
+.cell {
+  position:relative;
+  border-radius: 12px;
+  cursor: pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-size: 1.6rem;
+  transition: transform .15s ease, filter .15s;
+  aspect-ratio: 1;
+}
+.cell:hover { filter: brightness(1.2); }
+.cell.selected {
+  transform: scale(1.18);
+  filter: brightness(1.3) drop-shadow(0 0 8px #ffd700);
+  z-index:10;
+}
+.cell.matched {
+  animation: popOut .35s ease-out forwards;
+}
+.cell.falling {
+  animation: fallIn .25s ease-out;
+}
+.cell.hint {
+  animation: hintPulse 1s ease-in-out infinite;
+}
+.cell.locked::after {
+  content:'🔒';
+  position:absolute; font-size:.9rem;
+  filter:drop-shadow(0 0 4px rgba(0,0,0,.8));
+}
+.cell.bomb-gem::after {
+  content:'💥';
+  position:absolute; font-size:.65rem; bottom:2px; right:2px;
+}
+.cell.stripe-gem::after {
+  content:'⚡';
+  position:absolute; font-size:.65rem; bottom:2px; right:2px;
+}
+.cell.wrap-gem::after {
+  content:'🌀';
+  position:absolute; font-size:.65rem; bottom:2px; right:2px;
+}
+
+@keyframes popOut {
+  0% { transform:scale(1); opacity:1; }
+  40% { transform:scale(1.3) rotate(10deg); opacity:.8; }
+  100% { transform:scale(0) rotate(20deg); opacity:0; }
+}
+@keyframes fallIn {
+  0% { transform:translateY(-30px) scale(.8); opacity:0; }
+  100% { transform:translateY(0) scale(1); opacity:1; }
+}
+@keyframes hintPulse {
+  0%,100% { transform:scale(1); filter:brightness(1); }
+  50% { transform:scale(1.1); filter:brightness(1.4) drop-shadow(0 0 6px #ffd700); }
+}
+@keyframes scoreFloat {
+  0% { opacity:1; transform:translateY(0) scale(1); }
+  100% { opacity:0; transform:translateY(-60px) scale(.7); }
+}
+
+/* ── Moves left ── */
+.moves-bar {
+  display:flex; gap:5px; margin-top:10px; justify-content:center; flex-wrap:wrap;
+}
+.move-dot {
+  width:18px; height:18px; border-radius:50%;
+  background: linear-gradient(135deg,#ff6bcd,#8250ff);
+  box-shadow:0 0 6px rgba(255,107,205,.5);
+  transition: all .2s;
+}
+.move-dot.used { background:rgba(255,255,255,.1); box-shadow:none; }
+
+/* ── Buttons ── */
+.btn {
+  padding: 10px 22px;
+  border: none; border-radius: 12px;
+  font-weight: 800; font-size: .9rem;
+  cursor: pointer;
+  transition: transform .1s, filter .1s;
+}
+.btn:hover { transform:scale(1.04); filter:brightness(1.1); }
+.btn:active { transform:scale(.97); }
+.btn-primary { background:linear-gradient(135deg,#ff6bcd,#8250ff); color:#fff; }
+.btn-gold    { background:linear-gradient(135deg,#ffd700,#ff9900); color:#1a0533; }
+
+/* ── Boosters ── */
+.boosters {
+  display:flex; gap:8px; margin-top:10px; justify-content:center;
+}
+.booster {
+  width:48px; height:48px; border-radius:14px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  cursor:pointer; font-size:1.3rem;
+  position:relative;
+  transition:all .15s;
+}
+.booster:hover { background:rgba(255,255,255,.15); transform:scale(1.08); }
+.booster.active { border-color:#ffd700; box-shadow:0 0 10px rgba(255,215,0,.4); }
+.booster span { font-size:.55rem; color:rgba(255,255,255,.6); margin-top:1px; }
+.booster .count {
+  position:absolute; top:-5px; right:-5px;
+  background:#ff6bcd; color:#fff;
+  font-size:.6rem; font-weight:800;
+  width:16px; height:16px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+}
+
+/* ── Overlay modals ── */
+.overlay {
+  position:fixed; inset:0; z-index:100;
+  background:rgba(0,0,0,.8);
+  display:flex; align-items:center; justify-content:center;
+  backdrop-filter:blur(4px);
+}
+.modal {
+  background:linear-gradient(145deg,#2d1254,#1a0533);
+  border:2px solid rgba(255,107,205,.4);
+  border-radius:28px;
+  padding:32px 28px;
+  text-align:center;
+  width:min(360px, 90vw);
+  animation:modalIn .3s ease-out;
+}
+@keyframes modalIn {
+  from { transform:scale(.7) translateY(30px); opacity:0; }
+  to   { transform:scale(1) translateY(0); opacity:1; }
+}
+.modal h2 { font-size:2rem; margin-bottom:6px; }
+.modal .stars { font-size:2.2rem; letter-spacing:.2rem; margin:10px 0; }
+.modal p { color:rgba(255,255,255,.7); margin-bottom:16px; font-size:.9rem; }
+.modal-btns { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+
+/* ── Star rating ── */
+.star-item { font-size:2.5rem; filter:grayscale(1); transition:all .3s; }
+.star-item.lit { filter:none; animation:starPop .4s ease-out; }
+@keyframes starPop { 0%{transform:scale(0)}60%{transform:scale(1.4)}100%{transform:scale(1)} }
+
+/* ── Level selector ── */
+.level-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin:12px 0; max-height:300px; overflow-y:auto; padding:4px; }
+.level-btn {
+  aspect-ratio:1; border-radius:12px; border:none;
+  font-weight:800; font-size:.85rem; cursor:pointer;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  transition:all .15s;
+}
+.level-btn.unlocked { background:rgba(255,255,255,.1); color:#fff; }
+.level-btn.unlocked:hover { background:rgba(255,107,205,.3); transform:scale(1.05); }
+.level-btn.current { background:linear-gradient(135deg,#ff6bcd,#8250ff); color:#fff; box-shadow:0 0 12px rgba(255,107,205,.5); }
+.level-btn.locked-lv { background:rgba(255,255,255,.04); color:rgba(255,255,255,.25); cursor:not-allowed; }
+.level-btn .lv-stars { font-size:.55rem; letter-spacing:.05rem; }
+
+/* ── Score float ── */
+.score-float {
+  position:absolute; font-weight:800; font-size:1.2rem;
+  color:#ffd700; text-shadow:0 0 8px rgba(255,215,0,.8);
+  pointer-events:none;
+  animation: scoreFloat .8s ease-out forwards;
+  z-index:50;
+}
+
+/* ── Combo display ── */
+.combo-display {
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  font-size:2rem; font-weight:900; color:#ffd700;
+  text-shadow:0 0 20px rgba(255,215,0,.9);
+  pointer-events:none;
+  animation: comboIn .5s ease-out forwards;
+  z-index:60;
+  white-space:nowrap;
+}
+@keyframes comboIn {
+  0% { transform:translate(-50%,-50%) scale(0.5); opacity:0; }
+  50% { transform:translate(-50%,-50%) scale(1.2); opacity:1; }
+  100% { transform:translate(-50%,-80%) scale(.8); opacity:0; }
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width:4px; } ::-webkit-scrollbar-thumb { background:rgba(255,107,205,.4); border-radius:4px; }
+
+/* ── Responsive ── */
+@media(min-width:500px){ :root{--cell:64px;} .cell{font-size:1.9rem;} }
+</style>
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#E91E63">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="css/a11y.css">
+
+<style>
+/* Boss level pulsing title */
+@keyframes bossGlow {
+  0%,100% { text-shadow: 0 0 8px #fbbf24, 0 0 20px #f59e0b; }
+  50%      { text-shadow: 0 0 20px #fbbf24, 0 0 40px #ef4444; }
+}
+.boss-level #hud-level {
+  animation: bossGlow 1.2s ease-in-out infinite;
+  color: #fbbf24 !important;
+}
+/* Theme color accents */
+.theme-crystal { --accent: #67e8f9; }
+.theme-tundra  { --accent: #93c5fd; }
+.theme-galaxy  { --accent: #c084fc; }
+</style>
+<link rel="stylesheet" href="./project-overlay/project.css">
+</head>
+<body>
+<canvas id="particles"></canvas>
+<div id="app">
+
+  <header class="header">
+    <div class="logo">CardVille Puzzle</div>
+    <div class="hud">
+      <div class="hud-box"><div class="hud-val" id="score-val">0</div><div class="hud-lbl">Score</div></div>
+      <div class="hud-box"><div class="hud-val" id="best-val">0</div><div class="hud-lbl">Best</div></div>
+      <div class="hud-box"><div class="hud-val" id="level-val">1</div><div class="hud-lbl">Level</div></div>
+      <button class="btn btn-primary" onclick="showLevelSelect()" style="padding:6px 12px;font-size:.75rem;">Map</button> <button class="btn btn-primary" onclick="toggleBgMusic()" id="music-btn" style="padding:6px 10px;font-size:.75rem;">🎵</button>
+    </div>
+  </header>
+
+  <div class="level-info">
+    <div class="level-row">
+      <span class="level-title" id="level-name">Sweet Start</span>
+      <span class="level-goal" id="level-goal">Score: 500</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="level-row" style="font-size:.7rem;color:rgba(255,255,255,.4)">
+      <span id="score-label">0 / 500</span>
+      <span id="moves-label">Moves left: 20</span>
+    </div>
+  </div>
+
+  <div id="board-wrap">
+    <div id="board"></div>
+  </div>
+
+  <div class="moves-bar" id="moves-bar"></div>
+
+  <div class="boosters">
+    <div class="booster" id="b-hammer" onclick="activateBooster('hammer')">🔨<span>Hammer</span><div class="count" id="b-hammer-cnt">3</div></div>
+    <div class="booster" id="b-shuffle" onclick="activateBooster('shuffle')">🔀<span>Shuffle</span><div class="count" id="b-shuffle-cnt">2</div></div>
+    <div class="booster" id="b-color" onclick="activateBooster('color')">🌈<span>Color</span><div class="count" id="b-color-cnt">2</div></div>
+    <div class="booster" id="b-time" onclick="activateBooster('time')">⏱️<span>+5 Moves</span><div class="count" id="b-time-cnt">1</div></div>
+  </div>
+
+</div>
+
+<!-- Level select overlay -->
+<div id="overlay-levels" class="overlay" style="display:none">
+  <div class="modal" style="width:min(420px,92vw)">
+    <h2>🗺️ Level Map</h2>
+    <p>Choose your adventure!</p>
+    <div class="level-grid" id="level-grid"></div>
+    <button class="btn btn-primary" onclick="hideOverlay('overlay-levels')">Close</button>
+  </div>
+</div>
+
+<!-- Win overlay -->
+<div id="overlay-win" class="overlay" style="display:none">
+  <div class="modal">
+    <h2>🎉 Level Complete!</h2>
+    <div id="win-stars" class="stars"></div>
+    <p id="win-msg">Amazing job!</p>
+    <div style="font-size:1.4rem;font-weight:800;color:#ffd700;margin:8px 0" id="win-score"></div>
+    <div class="modal-btns">
+      <button class="btn btn-primary" onclick="nextLevel()">Next Level →</button>
+      <button class="btn" style="background:rgba(255,255,255,.1);color:#fff" onclick="replayLevel()">Replay</button>
+    </div>
+  </div>
+</div>
+
+<!-- Lose overlay -->
+<div id="overlay-lose" class="overlay" style="display:none">
+  <div class="modal">
+    <h2>😢 Out of Moves!</h2>
+    <p id="lose-msg">So close! Try again?</p>
+    <div class="modal-btns">
+      <button class="btn btn-gold" onclick="replayLevel()">🔄 Try Again</button>
+      <button class="btn btn-primary" onclick="showLevelSelect()">📺 Level Map</button>
+    </div>
+  </div>
+</div>
+
+<!-- Tutorial overlay -->
+<div id="overlay-tutorial" class="overlay" style="display:none">
+  <div class="modal">
+    <h2>🌟 How to Play CardVille</h2>
+    <p style="text-align:left;line-height:1.8;font-size:.9rem">
+      ✨ <b>Swap</b> adjacent gems to match 3 or more<br>
+      💥 Match 4 → <b>Bomb gem</b> (explodes 3×3)<br>
+      ⚡ Match 5 in a row → <b>Stripe gem</b> (clears row/col)<br>
+      🌀 L-shape match → <b>Wrap gem</b> (double explosion)<br>
+      🎯 Reach the <b>score goal</b> before moves run out!<br>
+      🔨 Use <b>boosters</b> to help in tough spots
+    </p>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="hideOverlay('overlay-tutorial');initGame()">Let's Play!</button>
+  </div>
+</div>
+
+<script>
+
+// ═══════════════════════════════════════════════════════════════
+//  STARBURST SAGA — Sound Engine (Web Audio API)
+// ═══════════════════════════════════════════════════════════════
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let actx = null;
+
+function getCtx() {
+  if (!actx) actx = new AudioCtx();
+  return actx;
+}
+
+// Resume AudioContext on first user interaction (browser policy)
+document.addEventListener('click', () => { if(actx && actx.state==='suspended') actx.resume(); }, {once:true});
+
+function playTone(freq, type='sine', duration=0.1, vol=0.3, delay=0) {
+  try {
+    const ctx = getCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
+    gain.gain.setValueAtTime(vol, ctx.currentTime + delay);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + duration);
+    osc.start(ctx.currentTime + delay);
+    osc.stop(ctx.currentTime + delay + duration + 0.05);
+  } catch(e) {}
+}
+
+function playChord(freqs, duration=0.15, vol=0.25) {
+  freqs.forEach((f,i) => playTone(f,'sine',duration,vol,i*0.03));
+}
+
+// Game sounds
+function snd_select()   { playTone(440,'sine',0.08,0.2); }
+function snd_swap()     { playTone(330,'sine',0.06,0.2); playTone(440,'sine',0.06,0.2,0.06); }
+function snd_match3()   { playChord([523,659,784],0.2,0.3); }
+function snd_match4()   { playChord([523,659,784,1047],0.25,0.35); }
+function snd_match5()   { playChord([523,659,784,1047,1319],0.3,0.4); }
+function snd_cascade()  { [400,500,600,700,800].forEach((f,i) => playTone(f,'sine',0.1,0.25,i*0.05)); }
+function snd_special()  {
+  [800,1000,1200,1000,800].forEach((f,i) => playTone(f,'square',0.08,0.2,i*0.04));
+}
+function snd_win() {
+  const melody = [523,659,784,1047,784,1047,1319];
+  melody.forEach((f,i) => playTone(f,'sine',0.18,0.4,i*0.12));
+}
+function snd_lose() {
+  [400,350,300,250,200].forEach((f,i) => playTone(f,'sawtooth',0.15,0.3,i*0.1));
+}
+function snd_combo(n) {
+  const base = 400 + n*100;
+  [base,base*1.25,base*1.5].forEach((f,i) => playTone(f,'sine',0.1,0.35,i*0.06));
+}
+function snd_bomb() {
+  // Low rumble + crack
+  playTone(60,'sawtooth',0.3,0.6);
+  playTone(120,'square',0.15,0.4,0.05);
+  playTone(200,'sine',0.1,0.3,0.1);
+}
+function snd_stripe() {
+  // Whoosh effect
+  for(let i=0;i<10;i++) playTone(200+i*80,'sine',0.05,0.2,i*0.02);
+}
+function snd_colorBomb() {
+  // Rainbow sound
+  for(let i=0;i<7;i++) playTone(262*Math.pow(1.12,i),'sine',0.15,0.3,i*0.07);
+}
+function snd_booster() {
+  playChord([440,554,659],0.2,0.4);
+}
+function snd_levelUp() {
+  const fanfare=[523,523,523,415,523,659,523,659,784];
+  fanfare.forEach((f,i)=>playTone(f,'sine',0.14,0.45,i*0.1));
+}
+function snd_tick() { playTone(220,'sine',0.04,0.1); }
+
+// ═══════════════════════════════════════════════════════════════
+//  STARBURST SAGA — Match-3 Engine
+// ═══════════════════════════════════════════════════════════════
+
+const GEMS = ['🍭','🍬','🍦','🧁','🍰','🎂','🍫'];
+const SPECIAL_NONE=0, SPECIAL_BOMB=1, SPECIAL_STRIPE_H=2, SPECIAL_STRIPE_V=3, SPECIAL_WRAP=4, SPECIAL_COLOR=5;
+const COLS = 8, ROWS = 8;
+
+// 250 level definitions
+const LEVELS = [
+  {l:1,name:'Sweet Awakening',theme:'Candy Valley',goal:400,moves:30,colors:3,hasLocked:false,lockedCount:0,hasBombs:false,isBoss:false},
+  {l:2,name:'First Drop',theme:'Candy Valley',goal:500,moves:30,colors:3,hasLocked:false,lockedCount:0,hasBombs:false,isBoss:false},
+  {l:3,name:'Candy Meadow',theme:'Candy Valley',goal:600,moves:30,colors:3,hasLocked:false,lockedCount:0,hasBombs:false,isBoss:false},
+  {l:4,name:'Sugar Trail',theme:'Candy Valley',goal:700,moves:30,colors:3,hasLocked:false,lockedCount:0,hasBombs:false,isBoss:false},
+  {l:5,name:'Jelly Steps',theme:'Candy Valley',goal:800,moves:30,colors:3,hasLocked:false,lockedCount:0,hasBombs:true,isBoss:false},
+  {l:6,name:'Lollipop Lane',theme:'Candy Valley',goal:900,moves:30,colors:3,hasLocked:false,lockedCount:0,hasBombs:true,isBoss:false},
+  {l:7,name:'Gummy Path',theme:'Candy Valley',goal:1000,moves:30,colors:3,hasLocked:false,lockedCount:0,hasBombs:true,isBoss:false},
+  {l:8,name:'Caramel Creek',theme:'Candy Valley',goal:1100,moves:30,colors:3,hasLocked:false,lockedCount:0,hasBombs:true,isBoss:false},
+  {l:9,name:'Toffee Trail',theme:'Candy Valley',goal:1200,moves:30,colors:3,hasLocked:true,lockedCount:0,hasBombs:true,isBoss:false},
+  {l:10,name:'Choco Start',theme:'Candy Valley',goal:1300,moves:30,colors:3,hasLocked:true,lockedCount:0,hasBombs:true,isBoss:false},
+  {l:11,name:'Valley Vista',theme:'Candy Valley',goal:1200,moves:30,colors:4,hasLocked:true,lockedCount:1,hasBombs:true,isBoss:false},
+  {l:12,name:'Sweet Climb',theme:'Candy Valley',goal:1400,moves:30,colors:4,hasLocked:true,lockedCount:1,hasBombs:true,isBoss:false},
+  {l:13,name:'Candy Crossroads',theme:'Candy Valley',goal:1600,moves:30,colors:4,hasLocked:true,lockedCount:1,hasBombs:true,isBoss:false},
+  {l:14,name:'Sugar Bridge',theme:'Candy Valley',goal:1800,moves:30,colors:4,hasLocked:true,lockedCount:2,hasBombs:true,isBoss:false},
+  {l:15,name:'Jelly Jump',theme:'Candy Valley',goal:2000,moves:30,colors:4,hasLocked:true,lockedCount:2,hasBombs:true,isBoss:false},
+  {l:16,name:'Rainbow Rim',theme:'Candy Valley',goal:2200,moves:28,colors:4,hasLocked:true,lockedCount:2,hasBombs:true,isBoss:false},
+  {l:17,name:'Gummy Gorge',theme:'Candy Valley',goal:2400,moves:28,colors:4,hasLocked:true,lockedCount:3,hasBombs:true,isBoss:false},
+  {l:18,name:'Caramel Cliff',theme:'Candy Valley',goal:2600,moves:28,colors:4,hasLocked:true,lockedCount:3,hasBombs:true,isBoss:false},
+  {l:19,name:'Toffee Turn',theme:'Candy Valley',goal:2800,moves:28,colors:4,hasLocked:true,lockedCount:3,hasBombs:true,isBoss:false},
+  {l:20,name:'Crystal Clear',theme:'Candy Valley',goal:3000,moves:28,colors:4,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:false},
+  {l:21,name:'Valley Boss',theme:'Candy Valley',goal:3200,moves:28,colors:4,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:false},
+  {l:22,name:'Sweet Summit',theme:'Candy Valley',goal:3400,moves:28,colors:4,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:false},
+  {l:23,name:'Sugar Peak',theme:'Candy Valley',goal:3600,moves:28,colors:4,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:false},
+  {l:24,name:'Candy Crown',theme:'Candy Valley',goal:3800,moves:28,colors:4,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:false},
+  {l:25,name:'Valley Champion',theme:'Candy Valley',goal:4000,moves:33,colors:4,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:true},
+  {l:26,name:'Forest Entry',theme:'Lollipop Forest',goal:4350,moves:28,colors:5,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:false},
+  {l:27,name:'Lolly Trees',theme:'Lollipop Forest',goal:4700,moves:28,colors:5,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:false},
+  {l:28,name:'Candy Canopy',theme:'Lollipop Forest',goal:5050,moves:28,colors:5,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:false},
+  {l:29,name:'Gummy Glades',theme:'Lollipop Forest',goal:5400,moves:28,colors:5,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:false},
+  {l:30,name:'Sugar Shrubs',theme:'Lollipop Forest',goal:5750,moves:28,colors:5,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:false},
+  {l:31,name:'Toffee Thicket',theme:'Lollipop Forest',goal:6100,moves:25,colors:5,hasLocked:true,lockedCount:5,hasBombs:true,isBoss:false},
+  {l:32,name:'Choco Clearing',theme:'Lollipop Forest',goal:6450,moves:25,colors:5,hasLocked:true,lockedCount:5,hasBombs:true,isBoss:false},
+  {l:33,name:'Jelly Jungle',theme:'Lollipop Forest',goal:6800,moves:25,colors:5,hasLocked:true,lockedCount:5,hasBombs:true,isBoss:false},
+  {l:34,name:'Rainbow Roots',theme:'Lollipop Forest',goal:7150,moves:25,colors:5,hasLocked:true,lockedCount:5,hasBombs:true,isBoss:false},
+  {l:35,name:'Caramel Copse',theme:'Lollipop Forest',goal:7500,moves:25,colors:5,hasLocked:true,lockedCount:5,hasBombs:true,isBoss:false},
+  {l:36,name:'Forest Fog',theme:'Lollipop Forest',goal:7850,moves:25,colors:5,hasLocked:true,lockedCount:5,hasBombs:true,isBoss:false},
+  {l:37,name:'Lolly Labyrinth',theme:'Lollipop Forest',goal:8200,moves:25,colors:5,hasLocked:true,lockedCount:6,hasBombs:true,isBoss:false},
+  {l:38,name:'Candy Caverns',theme:'Lollipop Forest',goal:8550,moves:25,colors:5,hasLocked:true,lockedCount:6,hasBombs:true,isBoss:false},
+  {l:39,name:'Sugar Shadows',theme:'Lollipop Forest',goal:8900,moves:25,colors:5,hasLocked:true,lockedCount:6,hasBombs:true,isBoss:false},
+  {l:40,name:'Gummy Grove',theme:'Lollipop Forest',goal:9250,moves:25,colors:5,hasLocked:true,lockedCount:6,hasBombs:true,isBoss:false},
+  {l:41,name:'Toffee Tunnel',theme:'Lollipop Forest',goal:9600,moves:25,colors:5,hasLocked:true,lockedCount:6,hasBombs:true,isBoss:false},
+  {l:42,name:'Choco Chase',theme:'Lollipop Forest',goal:9950,moves:25,colors:5,hasLocked:true,lockedCount:6,hasBombs:true,isBoss:false},
+  {l:43,name:'Jelly Junction',theme:'Lollipop Forest',goal:10300,moves:25,colors:5,hasLocked:true,lockedCount:7,hasBombs:true,isBoss:false},
+  {l:44,name:'Rainbow River',theme:'Lollipop Forest',goal:10650,moves:25,colors:5,hasLocked:true,lockedCount:7,hasBombs:true,isBoss:false},
+  {l:45,name:'Caramel Cascade',theme:'Lollipop Forest',goal:11000,moves:25,colors:5,hasLocked:true,lockedCount:7,hasBombs:true,isBoss:false},
+  {l:46,name:'Forest Floor',theme:'Lollipop Forest',goal:11350,moves:25,colors:5,hasLocked:true,lockedCount:7,hasBombs:true,isBoss:false},
+  {l:47,name:'Lolly Lake',theme:'Lollipop Forest',goal:11700,moves:25,colors:5,hasLocked:true,lockedCount:7,hasBombs:true,isBoss:false},
+  {l:48,name:'Candy Creek',theme:'Lollipop Forest',goal:12050,moves:25,colors:5,hasLocked:true,lockedCount:7,hasBombs:true,isBoss:false},
+  {l:49,name:'Sugar Stream',theme:'Lollipop Forest',goal:12400,moves:25,colors:5,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:50,name:'Forest Guardian',theme:'Lollipop Forest',goal:12750,moves:30,colors:5,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:true},
+  {l:51,name:'Sea Breeze',theme:'Jelly Sea',goal:13250,moves:22,colors:5,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:52,name:'Jelly Waves',theme:'Jelly Sea',goal:13750,moves:22,colors:5,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:53,name:'Candy Coral',theme:'Jelly Sea',goal:14250,moves:22,colors:5,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:54,name:'Sugar Shore',theme:'Jelly Sea',goal:14750,moves:22,colors:5,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:55,name:'Gummy Grotto',theme:'Jelly Sea',goal:15250,moves:22,colors:5,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:56,name:'Toffee Tide',theme:'Jelly Sea',goal:15750,moves:22,colors:5,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:57,name:'Choco Cove',theme:'Jelly Sea',goal:16250,moves:22,colors:5,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:58,name:'Lolly Lagoon',theme:'Jelly Sea',goal:16750,moves:22,colors:5,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:59,name:'Rainbow Reef',theme:'Jelly Sea',goal:17250,moves:22,colors:5,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:60,name:'Caramel Current',theme:'Jelly Sea',goal:17750,moves:22,colors:5,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:61,name:'Deep Blue',theme:'Jelly Sea',goal:18250,moves:22,colors:6,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:62,name:'Jelly Depths',theme:'Jelly Sea',goal:18750,moves:22,colors:6,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:63,name:'Candy Cave',theme:'Jelly Sea',goal:19250,moves:22,colors:6,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:64,name:'Sugar Submarine',theme:'Jelly Sea',goal:19750,moves:22,colors:6,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:65,name:'Gummy Gulf',theme:'Jelly Sea',goal:20250,moves:22,colors:6,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:66,name:'Toffee Trench',theme:'Jelly Sea',goal:20750,moves:22,colors:6,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:67,name:'Choco Channel',theme:'Jelly Sea',goal:21250,moves:22,colors:6,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:68,name:'Lolly Ledge',theme:'Jelly Sea',goal:21750,moves:22,colors:6,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:69,name:'Rainbow Rocks',theme:'Jelly Sea',goal:22250,moves:22,colors:6,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:70,name:'Caramel Coast',theme:'Jelly Sea',goal:22750,moves:22,colors:6,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:71,name:'Sea Storm',theme:'Jelly Sea',goal:23250,moves:22,colors:6,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:72,name:'Jelly Tempest',theme:'Jelly Sea',goal:23750,moves:22,colors:6,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:73,name:'Candy Whirlpool',theme:'Jelly Sea',goal:24250,moves:22,colors:6,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:74,name:'Sugar Surge',theme:'Jelly Sea',goal:24750,moves:22,colors:6,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:75,name:'Sea Serpent',theme:'Jelly Sea',goal:25250,moves:27,colors:6,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:true},
+  {l:76,name:'Mountain Base',theme:'Chocolate Mountains',goal:25950,moves:20,colors:6,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:77,name:'Choco Climb',theme:'Chocolate Mountains',goal:26650,moves:20,colors:6,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:78,name:'Candy Crag',theme:'Chocolate Mountains',goal:27350,moves:20,colors:6,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:79,name:'Sugar Slope',theme:'Chocolate Mountains',goal:28050,moves:20,colors:6,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:80,name:'Gummy Grade',theme:'Chocolate Mountains',goal:28750,moves:20,colors:6,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:81,name:'Toffee Trail',theme:'Chocolate Mountains',goal:29450,moves:20,colors:6,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:82,name:'Lolly Ledge',theme:'Chocolate Mountains',goal:30150,moves:20,colors:6,hasLocked:true,lockedCount:8,hasBombs:true,isBoss:false},
+  {l:83,name:'Jelly Jut',theme:'Chocolate Mountains',goal:30850,moves:20,colors:6,hasLocked:true,lockedCount:9,hasBombs:true,isBoss:false},
+  {l:84,name:'Rainbow Ridge',theme:'Chocolate Mountains',goal:31550,moves:20,colors:6,hasLocked:true,lockedCount:9,hasBombs:true,isBoss:false},
+  {l:85,name:'Caramel Crest',theme:'Chocolate Mountains',goal:32250,moves:20,colors:6,hasLocked:true,lockedCount:9,hasBombs:true,isBoss:false},
+  {l:86,name:'High Altitude',theme:'Chocolate Mountains',goal:32950,moves:20,colors:6,hasLocked:true,lockedCount:9,hasBombs:true,isBoss:false},
+  {l:87,name:'Choco Cloud',theme:'Chocolate Mountains',goal:33650,moves:20,colors:6,hasLocked:true,lockedCount:9,hasBombs:true,isBoss:false},
+  {l:88,name:'Candy Crater',theme:'Chocolate Mountains',goal:34350,moves:20,colors:6,hasLocked:true,lockedCount:9,hasBombs:true,isBoss:false},
+  {l:89,name:'Sugar Summit',theme:'Chocolate Mountains',goal:35050,moves:20,colors:6,hasLocked:true,lockedCount:9,hasBombs:true,isBoss:false},
+  {l:90,name:'Gummy Gap',theme:'Chocolate Mountains',goal:35750,moves:20,colors:6,hasLocked:true,lockedCount:9,hasBombs:true,isBoss:false},
+  {l:91,name:'Toffee Top',theme:'Chocolate Mountains',goal:36450,moves:20,colors:6,hasLocked:true,lockedCount:10,hasBombs:true,isBoss:false},
+  {l:92,name:'Lolly Lookout',theme:'Chocolate Mountains',goal:37150,moves:20,colors:6,hasLocked:true,lockedCount:10,hasBombs:true,isBoss:false},
+  {l:93,name:'Jelly Jump',theme:'Chocolate Mountains',goal:37850,moves:20,colors:6,hasLocked:true,lockedCount:10,hasBombs:true,isBoss:false},
+  {l:94,name:'Rainbow Peak',theme:'Chocolate Mountains',goal:38550,moves:20,colors:6,hasLocked:true,lockedCount:10,hasBombs:true,isBoss:false},
+  {l:95,name:'Caramel Cap',theme:'Chocolate Mountains',goal:39250,moves:20,colors:6,hasLocked:true,lockedCount:10,hasBombs:true,isBoss:false},
+  {l:96,name:'Mountain Storm',theme:'Chocolate Mountains',goal:39950,moves:20,colors:6,hasLocked:true,lockedCount:10,hasBombs:true,isBoss:false},
+  {l:97,name:'Choco Blizzard',theme:'Chocolate Mountains',goal:40650,moves:20,colors:6,hasLocked:true,lockedCount:10,hasBombs:true,isBoss:false},
+  {l:98,name:'Candy Avalanche',theme:'Chocolate Mountains',goal:41350,moves:20,colors:6,hasLocked:true,lockedCount:10,hasBombs:true,isBoss:false},
+  {l:99,name:'Sugar Slide',theme:'Chocolate Mountains',goal:42050,moves:20,colors:6,hasLocked:true,lockedCount:11,hasBombs:true,isBoss:false},
+  {l:100,name:'Mountain King',theme:'Chocolate Mountains',goal:42750,moves:25,colors:6,hasLocked:true,lockedCount:11,hasBombs:true,isBoss:true},
+  {l:101,name:'Sky Entry',theme:'Rainbow Skies',goal:43650,moves:18,colors:6,hasLocked:true,lockedCount:11,hasBombs:true,isBoss:false},
+  {l:102,name:'Rainbow Gate',theme:'Rainbow Skies',goal:44550,moves:18,colors:6,hasLocked:true,lockedCount:11,hasBombs:true,isBoss:false},
+  {l:103,name:'Candy Cloud',theme:'Rainbow Skies',goal:45450,moves:18,colors:6,hasLocked:true,lockedCount:11,hasBombs:true,isBoss:false},
+  {l:104,name:'Sugar Sunbeam',theme:'Rainbow Skies',goal:46350,moves:18,colors:6,hasLocked:true,lockedCount:11,hasBombs:true,isBoss:false},
+  {l:105,name:'Gummy Glow',theme:'Rainbow Skies',goal:47250,moves:18,colors:6,hasLocked:true,lockedCount:11,hasBombs:true,isBoss:false},
+  {l:106,name:'Toffee Thunder',theme:'Rainbow Skies',goal:48150,moves:18,colors:6,hasLocked:true,lockedCount:11,hasBombs:true,isBoss:false},
+  {l:107,name:'Choco Lightning',theme:'Rainbow Skies',goal:49050,moves:18,colors:6,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:108,name:'Lolly Light',theme:'Rainbow Skies',goal:49950,moves:18,colors:6,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:109,name:'Jelly Jet',theme:'Rainbow Skies',goal:50850,moves:18,colors:6,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:110,name:'Caramel Comet',theme:'Rainbow Skies',goal:51750,moves:18,colors:6,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:111,name:'Sky High',theme:'Rainbow Skies',goal:52650,moves:18,colors:6,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:112,name:'Rainbow Race',theme:'Rainbow Skies',goal:53550,moves:18,colors:6,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:113,name:'Candy Cyclone',theme:'Rainbow Skies',goal:54450,moves:18,colors:6,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:114,name:'Sugar Squall',theme:'Rainbow Skies',goal:55350,moves:18,colors:6,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:115,name:'Gummy Gust',theme:'Rainbow Skies',goal:56250,moves:18,colors:6,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:116,name:'Toffee Tornado',theme:'Rainbow Skies',goal:57150,moves:18,colors:6,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:117,name:'Choco Cyclone',theme:'Rainbow Skies',goal:58050,moves:18,colors:6,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:118,name:'Lolly Launch',theme:'Rainbow Skies',goal:58950,moves:18,colors:6,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:119,name:'Jelly Jump Jet',theme:'Rainbow Skies',goal:59850,moves:18,colors:6,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:120,name:'Caramel Chase',theme:'Rainbow Skies',goal:60750,moves:18,colors:6,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:121,name:'Sky Battle',theme:'Rainbow Skies',goal:61650,moves:18,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:122,name:'Rainbow Rush',theme:'Rainbow Skies',goal:62550,moves:18,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:123,name:'Candy Conquest',theme:'Rainbow Skies',goal:63450,moves:18,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:124,name:'Sugar Storm',theme:'Rainbow Skies',goal:64350,moves:18,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:125,name:'Sky Dragon',theme:'Rainbow Skies',goal:65250,moves:23,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:true},
+  {l:126,name:'Castle Gates',theme:'Sugar Castle',goal:66350,moves:16,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:127,name:'Sugar Drawbridge',theme:'Sugar Castle',goal:67450,moves:16,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:128,name:'Candy Courtyard',theme:'Sugar Castle',goal:68550,moves:16,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:129,name:'Jelly Jester',theme:'Sugar Castle',goal:69650,moves:16,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:130,name:'Gummy Guard',theme:'Sugar Castle',goal:70750,moves:16,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:131,name:'Toffee Tower',theme:'Sugar Castle',goal:71850,moves:16,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:132,name:'Choco Chamber',theme:'Sugar Castle',goal:72950,moves:16,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:133,name:'Lolly Library',theme:'Sugar Castle',goal:74050,moves:16,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:134,name:'Rainbow Room',theme:'Sugar Castle',goal:75150,moves:16,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:135,name:'Caramel Corridor',theme:'Sugar Castle',goal:76250,moves:16,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:136,name:'Castle Keep',theme:'Sugar Castle',goal:77350,moves:16,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:137,name:'Sugar Stairway',theme:'Sugar Castle',goal:78450,moves:16,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:138,name:'Candy Cellar',theme:'Sugar Castle',goal:79550,moves:16,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:139,name:'Jelly Jail',theme:'Sugar Castle',goal:80650,moves:16,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:140,name:'Gummy Gallery',theme:'Sugar Castle',goal:81750,moves:16,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:141,name:'Toffee Throne',theme:'Sugar Castle',goal:82850,moves:16,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:142,name:'Choco Chapel',theme:'Sugar Castle',goal:83950,moves:16,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:143,name:'Lolly Laboratory',theme:'Sugar Castle',goal:85050,moves:16,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:144,name:'Rainbow Ramparts',theme:'Sugar Castle',goal:86150,moves:16,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:145,name:'Caramel Crypt',theme:'Sugar Castle',goal:87250,moves:16,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:146,name:'Castle Siege',theme:'Sugar Castle',goal:88350,moves:16,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:147,name:'Sugar Showdown',theme:'Sugar Castle',goal:89450,moves:16,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:148,name:'Candy Combat',theme:'Sugar Castle',goal:90550,moves:16,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:149,name:'Jelly Joust',theme:'Sugar Castle',goal:91650,moves:16,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:150,name:'Castle King',theme:'Sugar Castle',goal:92750,moves:21,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:true},
+  {l:151,name:'Galaxy Launch',theme:'Gummy Galaxy',goal:94150,moves:14,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:152,name:'Gummy Orbit',theme:'Gummy Galaxy',goal:95550,moves:14,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:153,name:'Candy Cosmos',theme:'Gummy Galaxy',goal:96950,moves:14,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:154,name:'Sugar Star',theme:'Gummy Galaxy',goal:98350,moves:14,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:155,name:'Jelly Jupiter',theme:'Gummy Galaxy',goal:99750,moves:14,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:156,name:'Toffee Titan',theme:'Gummy Galaxy',goal:101150,moves:14,colors:7,hasLocked:true,lockedCount:12,hasBombs:true,isBoss:false},
+  {l:157,name:'Choco Comet',theme:'Gummy Galaxy',goal:102550,moves:14,colors:7,hasLocked:true,lockedCount:13,hasBombs:true,isBoss:false},
+  {l:158,name:'Lolly Luna',theme:'Gummy Galaxy',goal:103950,moves:14,colors:7,hasLocked:true,lockedCount:13,hasBombs:true,isBoss:false},
+  {l:159,name:'Rainbow Nebula',theme:'Gummy Galaxy',goal:105350,moves:14,colors:7,hasLocked:true,lockedCount:13,hasBombs:true,isBoss:false},
+  {l:160,name:'Caramel Cluster',theme:'Gummy Galaxy',goal:106750,moves:14,colors:7,hasLocked:true,lockedCount:13,hasBombs:true,isBoss:false},
+  {l:161,name:'Deep Space',theme:'Gummy Galaxy',goal:108150,moves:14,colors:7,hasLocked:true,lockedCount:13,hasBombs:true,isBoss:false},
+  {l:162,name:'Gummy Galaxy',theme:'Gummy Galaxy',goal:109550,moves:14,colors:7,hasLocked:true,lockedCount:13,hasBombs:true,isBoss:false},
+  {l:163,name:'Candy Constellation',theme:'Gummy Galaxy',goal:110950,moves:14,colors:7,hasLocked:true,lockedCount:13,hasBombs:true,isBoss:false},
+  {l:164,name:'Sugar Supernova',theme:'Gummy Galaxy',goal:112350,moves:14,colors:7,hasLocked:true,lockedCount:14,hasBombs:true,isBoss:false},
+  {l:165,name:'Jelly Jetstream',theme:'Gummy Galaxy',goal:113750,moves:14,colors:7,hasLocked:true,lockedCount:14,hasBombs:true,isBoss:false},
+  {l:166,name:'Toffee Telescope',theme:'Gummy Galaxy',goal:115150,moves:14,colors:7,hasLocked:true,lockedCount:14,hasBombs:true,isBoss:false},
+  {l:167,name:'Choco Cluster',theme:'Gummy Galaxy',goal:116550,moves:14,colors:7,hasLocked:true,lockedCount:14,hasBombs:true,isBoss:false},
+  {l:168,name:'Lolly Light Year',theme:'Gummy Galaxy',goal:117950,moves:14,colors:7,hasLocked:true,lockedCount:14,hasBombs:true,isBoss:false},
+  {l:169,name:'Rainbow Ring',theme:'Gummy Galaxy',goal:119350,moves:14,colors:7,hasLocked:true,lockedCount:14,hasBombs:true,isBoss:false},
+  {l:170,name:'Caramel Cosmos',theme:'Gummy Galaxy',goal:120750,moves:14,colors:7,hasLocked:true,lockedCount:14,hasBombs:true,isBoss:false},
+  {l:171,name:'Space Battle',theme:'Gummy Galaxy',goal:122150,moves:14,colors:7,hasLocked:true,lockedCount:15,hasBombs:true,isBoss:false},
+  {l:172,name:'Gummy Guardian',theme:'Gummy Galaxy',goal:123550,moves:14,colors:7,hasLocked:true,lockedCount:15,hasBombs:true,isBoss:false},
+  {l:173,name:'Candy Commander',theme:'Gummy Galaxy',goal:124950,moves:14,colors:7,hasLocked:true,lockedCount:15,hasBombs:true,isBoss:false},
+  {l:174,name:'Sugar Satellite',theme:'Gummy Galaxy',goal:126350,moves:14,colors:7,hasLocked:true,lockedCount:15,hasBombs:true,isBoss:false},
+  {l:175,name:'Galaxy Boss',theme:'Gummy Galaxy',goal:127750,moves:19,colors:7,hasLocked:true,lockedCount:15,hasBombs:true,isBoss:true},
+  {l:176,name:'Canyon Entry',theme:'Caramel Canyon',goal:129550,moves:12,colors:7,hasLocked:true,lockedCount:15,hasBombs:true,isBoss:false},
+  {l:177,name:'Caramel Cliff',theme:'Caramel Canyon',goal:131350,moves:12,colors:7,hasLocked:true,lockedCount:15,hasBombs:true,isBoss:false},
+  {l:178,name:'Candy Crevice',theme:'Caramel Canyon',goal:133150,moves:12,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:179,name:'Sugar Ravine',theme:'Caramel Canyon',goal:134950,moves:12,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:180,name:'Gummy Gorge',theme:'Caramel Canyon',goal:136750,moves:12,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:181,name:'Toffee Trail',theme:'Caramel Canyon',goal:138550,moves:12,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:182,name:'Choco Chasm',theme:'Caramel Canyon',goal:140350,moves:12,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:183,name:'Lolly Ledge',theme:'Caramel Canyon',goal:142150,moves:12,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:184,name:'Rainbow Rock',theme:'Caramel Canyon',goal:143950,moves:12,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:185,name:'Jelly Jutting',theme:'Caramel Canyon',goal:145750,moves:12,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:186,name:'Canyon Deep',theme:'Caramel Canyon',goal:147550,moves:12,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:187,name:'Caramel Current',theme:'Caramel Canyon',goal:149350,moves:12,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:188,name:'Candy Cave',theme:'Caramel Canyon',goal:151150,moves:12,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:189,name:'Sugar Shaft',theme:'Caramel Canyon',goal:152950,moves:12,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:190,name:'Gummy Glen',theme:'Caramel Canyon',goal:154750,moves:12,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:191,name:'Toffee Tunnel',theme:'Caramel Canyon',goal:156550,moves:12,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:192,name:'Choco Channel',theme:'Caramel Canyon',goal:158350,moves:12,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:193,name:'Lolly Labyrinth',theme:'Caramel Canyon',goal:160150,moves:12,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:194,name:'Rainbow Rift',theme:'Caramel Canyon',goal:161950,moves:12,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:195,name:'Jelly Jam',theme:'Caramel Canyon',goal:163750,moves:12,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:196,name:'Canyon Storm',theme:'Caramel Canyon',goal:165550,moves:12,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:197,name:'Caramel Cascade',theme:'Caramel Canyon',goal:167350,moves:12,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:198,name:'Candy Crater',theme:'Caramel Canyon',goal:169150,moves:12,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:199,name:'Sugar Surge',theme:'Caramel Canyon',goal:170950,moves:12,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:200,name:'Canyon Champion',theme:'Caramel Canyon',goal:172750,moves:17,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:true},
+  {l:201,name:'Frozen Entry',theme:'Toffee Tundra',goal:174950,moves:10,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:202,name:'Toffee Tundra',theme:'Toffee Tundra',goal:177150,moves:10,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:203,name:'Candy Chill',theme:'Toffee Tundra',goal:179350,moves:10,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:204,name:'Sugar Snow',theme:'Toffee Tundra',goal:181550,moves:10,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:205,name:'Gummy Glacier',theme:'Toffee Tundra',goal:183750,moves:10,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:206,name:'Jelly Ice',theme:'Toffee Tundra',goal:185950,moves:10,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:207,name:'Choco Freeze',theme:'Toffee Tundra',goal:188150,moves:10,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:208,name:'Lolly Blizzard',theme:'Toffee Tundra',goal:190350,moves:10,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:209,name:'Rainbow Aurora',theme:'Toffee Tundra',goal:192550,moves:10,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:210,name:'Caramel Cold',theme:'Toffee Tundra',goal:194750,moves:10,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:211,name:'Ice Age',theme:'Toffee Tundra',goal:196950,moves:10,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:212,name:'Toffee Tempest',theme:'Toffee Tundra',goal:199150,moves:10,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:213,name:'Candy Crystal',theme:'Toffee Tundra',goal:201350,moves:10,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:214,name:'Sugar Sleet',theme:'Toffee Tundra',goal:203550,moves:10,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:215,name:'Gummy Gale',theme:'Toffee Tundra',goal:205750,moves:10,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:216,name:'Jelly Frost',theme:'Toffee Tundra',goal:207950,moves:10,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:217,name:'Choco Storm',theme:'Toffee Tundra',goal:210150,moves:10,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:218,name:'Lolly Lake Freeze',theme:'Toffee Tundra',goal:212350,moves:10,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:219,name:'Rainbow Ice',theme:'Toffee Tundra',goal:214550,moves:10,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:220,name:'Caramel Crust',theme:'Toffee Tundra',goal:216750,moves:10,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:221,name:'Tundra Boss',theme:'Toffee Tundra',goal:218950,moves:10,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:222,name:'Toffee Titan',theme:'Toffee Tundra',goal:221150,moves:10,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:223,name:'Candy Commander',theme:'Toffee Tundra',goal:223350,moves:10,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:224,name:'Sugar Sovereign',theme:'Toffee Tundra',goal:225550,moves:10,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:225,name:'Tundra Master',theme:'Toffee Tundra',goal:227750,moves:15,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:true},
+  {l:226,name:'Cave Entry',theme:'Crystal Caves',goal:230550,moves:9,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:227,name:'Crystal Cavern',theme:'Crystal Caves',goal:233350,moves:9,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:228,name:'Candy Cave',theme:'Crystal Caves',goal:236150,moves:9,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:229,name:'Sugar Stalactite',theme:'Crystal Caves',goal:238950,moves:9,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:230,name:'Gummy Gem',theme:'Crystal Caves',goal:241750,moves:9,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:231,name:'Toffee Tunnel',theme:'Crystal Caves',goal:244550,moves:9,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:232,name:'Choco Chamber',theme:'Crystal Caves',goal:247350,moves:9,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:233,name:'Lolly Lode',theme:'Crystal Caves',goal:250150,moves:9,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:234,name:'Rainbow Rock',theme:'Crystal Caves',goal:252950,moves:9,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:235,name:'Jelly Jewel',theme:'Crystal Caves',goal:255750,moves:9,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:236,name:'Deep Crystal',theme:'Crystal Caves',goal:258550,moves:9,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:237,name:'Cave Complex',theme:'Crystal Caves',goal:261350,moves:9,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:238,name:'Candy Core',theme:'Crystal Caves',goal:264150,moves:9,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:239,name:'Sugar Shard',theme:'Crystal Caves',goal:266950,moves:9,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:240,name:'Gummy Grotto',theme:'Crystal Caves',goal:269750,moves:9,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:241,name:'Toffee Temple',theme:'Crystal Caves',goal:272550,moves:9,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:242,name:'Choco Crypt',theme:'Crystal Caves',goal:275350,moves:9,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:243,name:'Lolly Legend',theme:'Crystal Caves',goal:278150,moves:9,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:244,name:'Rainbow Realm',theme:'Crystal Caves',goal:280950,moves:9,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:245,name:'Jelly Journey',theme:'Crystal Caves',goal:283750,moves:9,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:246,name:'Crystal Boss',theme:'Crystal Caves',goal:286550,moves:9,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:247,name:'Cave Commander',theme:'Crystal Caves',goal:289350,moves:9,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:248,name:'Candy Champion',theme:'Crystal Caves',goal:292150,moves:9,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:249,name:'Sugar Sovereign',theme:'Crystal Caves',goal:294950,moves:9,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:false},
+  {l:250,name:'CRYSTAL KING 👑',theme:'Crystal Caves',goal:297750,moves:14,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:true}
+];
+
+let state = {
+  board: [], specials: [], locked: [],
+  score: 0, level: 1, movesLeft: 20,
+  selected: null, animating: false,
+  activeBooster: null,
+  boosters: { hammer:3, shuffle:2, color:2, time:1 },
+  bestScores: JSON.parse(localStorage.getItem('sc_best')||'{}'),
+  unlockedLevels: JSON.parse(localStorage.getItem('sc_unlocked')||'[1]'),
+  levelStars: JSON.parse(localStorage.getItem('sc_stars')||'{}'),
+  combo: 0,
+  hintTimer: null, hintCell: null,
+};
+
+function gemAt(r,c) { return state.board[r*COLS+c]; }
+function setGem(r,c,g) { state.board[r*COLS+c]=g; }
+function specAt(r,c) { return state.specials[r*COLS+c]; }
+function setSpec(r,c,s) { state.specials[r*COLS+c]=s; }
+function lockedAt(r,c) { return state.locked[r*COLS+c]; }
+
+// ── Particle system ──────────────────────────────────────────
+const canvas = document.getElementById('particles');
+const pCtx = canvas.getContext('2d');
+const particles = [];
+function resizeCanvas() { canvas.width=innerWidth; canvas.height=innerHeight; }
+resizeCanvas(); window.addEventListener('resize',resizeCanvas);
+for(let i=0;i<50;i++) particles.push({
+  x:Math.random()*innerWidth, y:Math.random()*innerHeight,
+  r:Math.random()*2+1, vy:-Math.random()*.4-.1,
+  vx:(Math.random()-.5)*.2,
+  op:Math.random()*.5+.1,
+  col:`hsl(${Math.random()*60+280},80%,70%)`
+});
+(function animPart(){
+  pCtx.clearRect(0,0,canvas.width,canvas.height);
+  for(const p of particles){
+    pCtx.beginPath(); pCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    pCtx.fillStyle=p.col; pCtx.globalAlpha=p.op; pCtx.fill();
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.y<-5){p.y=canvas.height+5;p.x=Math.random()*canvas.width;}
+  }
+  pCtx.globalAlpha=1; requestAnimationFrame(animPart);
+})();
+
+// ── Board init ───────────────────────────────────────────────
+function initLevel(lvNum) {
+  const lv = LEVELS[lvNum-1];
+  state.level = lvNum;
+  state.score = 0;
+  state.movesLeft = lv.moves;
+  state.selected = null;
+  state.animating = false;
+  state.activeBooster = null;
+  state.combo = 0;
+  clearHint();
+
+  const gemTypes = GEMS.slice(0, lv.colors);
+  state.board = [];
+  state.specials = new Array(ROWS*COLS).fill(SPECIAL_NONE);
+  state.locked  = new Array(ROWS*COLS).fill(false);
+
+  // Place locked cells
+  let lockPositions = new Set();
+  for(let i=0;i<lv.lockedCount;i++){
+    let pos; do { pos = Math.floor(Math.random()*ROWS*COLS); } while(lockPositions.has(pos));
+    lockPositions.add(pos);
+  }
+  for(let i=0;i<ROWS*COLS;i++) state.locked[i] = lockPositions.has(i);
+
+  // Fill board (no initial matches)
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+    let gem;
+    do {
+      gem = gemTypes[Math.floor(Math.random()*gemTypes.length)];
+    } while(
+      (c>=2 && gemAt(r,c-1)===gem && gemAt(r,c-2)===gem) ||
+      (r>=2 && gemAt(r-1,c)===gem && gemAt(r-2,c)===gem)
+    );
+    setGem(r,c,gem);
+  }
+
+  if(!hasLegalSwap()) shuffleBoard();
+  updateHUD();
+  renderBoard();
+  scheduleHint();
+}
+
+// ── Render ───────────────────────────────────────────────────
+function renderBoard() {
+  const board = document.getElementById('board');
+  const lv = LEVELS[state.level-1];
+  board.style.gridTemplateColumns = `repeat(${COLS},1fr)`;
+  board.innerHTML='';
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+    const idx=r*COLS+c;
+    const div=document.createElement('div');
+    div.className='cell';
+    div.dataset.r=r; div.dataset.c=c;
+    div.textContent=state.board[idx]||'';
+
+    const bgs=[
+      'rgba(255,107,205,.08)','rgba(130,80,255,.08)','rgba(100,200,255,.08)',
+      'rgba(255,220,80,.08)','rgba(80,255,180,.08)','rgba(255,130,80,.08)',
+      'rgba(200,80,255,.08)','rgba(80,255,80,.08)',
+    ];
+    div.style.background = bgs[(r+c)%bgs.length];
+
+    if(state.selected && state.selected[0]===r && state.selected[1]===c) div.classList.add('selected');
+    if(state.locked[idx]) div.classList.add('locked');
+
+    const sp = state.specials[idx];
+    if(sp===SPECIAL_BOMB) div.classList.add('bomb-gem');
+    else if(sp===SPECIAL_STRIPE_H||sp===SPECIAL_STRIPE_V) div.classList.add('stripe-gem');
+    else if(sp===SPECIAL_WRAP) div.classList.add('wrap-gem');
+
+    if(state.hintCell && state.hintCell[0]===r && state.hintCell[1]===c) div.classList.add('hint');
+
+    div.addEventListener('click', ()=>onCellClick(r,c));
+    div.addEventListener('touchstart', e=>{e.preventDefault();onCellClick(r,c);},{passive:false});
+    board.appendChild(div);
+  }
+}
+
+function getCellEl(r,c){
+  return document.querySelector(`[data-r="${r}"][data-c="${c}"]`);
+}
+
+// ── HUD ──────────────────────────────────────────────────────
+function getThemeEmoji(theme) {
+  const map = {
+    'Candy Valley':'🍭','Lollipop Forest':'🌳','Jelly Sea':'🌊',
+    'Chocolate Mountains':'🏔️','Rainbow Skies':'🌈','Sugar Castle':'🏰',
+    'Gummy Galaxy':'🌌','Caramel Canyon':'🏜️','Toffee Tundra':'❄️','Crystal Caves':'💎'
+  };
+  return map[theme] || '🍬';
+}
+function updateHUD(){
+  const lv=LEVELS[state.level-1];
+  document.getElementById('score-val').textContent=state.score.toLocaleString();
+  document.getElementById('level-val').textContent=state.level;
+  const best=state.bestScores[state.level]||0;
+  document.getElementById('best-val').textContent=best>0?best.toLocaleString():'—';
+  document.getElementById('level-name').textContent=lv.name;
+  document.getElementById('level-goal').textContent=`Goal: ${lv.goal.toLocaleString()}`;
+  document.getElementById('score-label').textContent=`${state.score.toLocaleString()} / ${lv.goal.toLocaleString()}`;
+  document.getElementById('moves-label').textContent=`Moves: ${state.movesLeft}`;
+  const pct=Math.min(100,(state.score/lv.goal)*100);
+  document.getElementById('progress-fill').style.width=pct+'%';
+
+  // Moves dots
+  const bar=document.getElementById('moves-bar'); bar.innerHTML='';
+  for(let i=0;i<lv.moves;i++){
+    const dot=document.createElement('div');
+    dot.className='move-dot'+(i>=state.movesLeft?' used':'');
+    bar.appendChild(dot);
+  }
+
+  // Booster counts
+  Object.entries(state.boosters).forEach(([k,v])=>{
+    const el=document.getElementById(`b-${k}-cnt`);
+    if(el) el.textContent=v;
+  });
+}
+
+// ── Click / swap logic ───────────────────────────────────────
+function onCellClick(r,c){
+  if(state.animating) return;
+  if(state.locked[r*COLS+c]) return;
+
+  // Booster mode
+  if(state.activeBooster){
+    applyBooster(r,c); return;
+  }
+
+  if(!state.selected){
+    state.selected=[r,c]; clearHint(); snd_select();
+    renderBoard(); return;
+  }
+  const [sr,sc]=state.selected;
+  if(sr===r && sc===c){ state.selected=null; renderBoard(); return; }
+  if(isAdjacent(sr,sc,r,c)){
+    state.selected=null; snd_swap();
+    trySwap(sr,sc,r,c);
+  } else {
+    state.selected=[r,c]; renderBoard();
+  }
+}
+
+function isAdjacent(r1,c1,r2,c2){
+  return (Math.abs(r1-r2)===1&&c1===c2)||(Math.abs(c1-c2)===1&&r1===r2);
+}
+
+async function trySwap(r1,c1,r2,c2){
+  state.animating=true;
+  doSwap(r1,c1,r2,c2);
+  renderBoard();
+  await sleep(120);
+  const matches=findMatches();
+  if(matches.length>0){
+    state.movesLeft--;
+    state.combo=0;
+    await resolveMatches(matches);
+    checkEnd();
+  } else {
+    doSwap(r1,c1,r2,c2); // swap back
+    renderBoard();
+  }
+  state.animating=false;
+  scheduleHint();
+  updateHUD();
+}
+
+function doSwap(r1,c1,r2,c2){
+  const i1=r1*COLS+c1, i2=r2*COLS+c2;
+  [state.board[i1],state.board[i2]]=[state.board[i2],state.board[i1]];
+  [state.specials[i1],state.specials[i2]]=[state.specials[i2],state.specials[i1]];
+}
+
+// ── Match finding ────────────────────────────────────────────
+function findMatches(){
+  const matched=new Set();
+  const matchGroups=[];
+
+  // Horizontal
+  for(let r=0;r<ROWS;r++){
+    let run=1;
+    for(let c=1;c<COLS;c++){
+      if(gemAt(r,c)===gemAt(r,c-1) && gemAt(r,c)){
+        run++;
+      } else {
+        if(run>=3){
+          const grp={cells:[],gem:gemAt(r,c-1),run,dir:'h'};
+          for(let k=0;k<run;k++) grp.cells.push([r,c-1-k]);
+          matchGroups.push(grp);
+          grp.cells.forEach(([mr,mc])=>matched.add(mr*COLS+mc));
+        }
+        run=1;
+      }
+    }
+    if(run>=3){
+      const grp={cells:[],gem:gemAt(r,COLS-1),run,dir:'h'};
+      for(let k=0;k<run;k++) grp.cells.push([r,COLS-1-k]);
+      matchGroups.push(grp);
+      grp.cells.forEach(([mr,mc])=>matched.add(mr*COLS+mc));
+    }
+  }
+
+  // Vertical
+  for(let c=0;c<COLS;c++){
+    let run=1;
+    for(let r=1;r<ROWS;r++){
+      if(gemAt(r,c)===gemAt(r-1,c) && gemAt(r,c)){
+        run++;
+      } else {
+        if(run>=3){
+          const grp={cells:[],gem:gemAt(r-1,c),run,dir:'v'};
+          for(let k=0;k<run;k++) grp.cells.push([r-1-k,c]);
+          matchGroups.push(grp);
+          grp.cells.forEach(([mr,mc])=>matched.add(mr*COLS+mc));
+        }
+        run=1;
+      }
+    }
+    if(run>=3){
+      const grp={cells:[],gem:gemAt(ROWS-1,c),run,dir:'v'};
+      for(let k=0;k<run;k++) grp.cells.push([ROWS-1-k,c]);
+      matchGroups.push(grp);
+      grp.cells.forEach(([mr,mc])=>matched.add(mr*COLS+mc));
+    }
+  }
+
+  return matchGroups;
+}
+
+// ── Resolve matches ──────────────────────────────────────────
+async function resolveMatches(matchGroups){
+  state.combo++;
+  if(state.combo>2) snd_combo(state.combo);
+  const allCells=new Set();
+  matchGroups.forEach(g=>g.cells.forEach(([r,c])=>allCells.add(r*COLS+c)));
+
+  // Determine specials to create
+  const toCreate=[];
+  for(const g of matchGroups){
+    const n=g.cells.length;
+    const pivot=g.cells[Math.floor(g.cells.length/2)];
+    if(n>=5){ snd_colorBomb(); toCreate.push({r:pivot[0],c:pivot[1],s:SPECIAL_COLOR}); }
+    else if(n===4){ snd_stripe(); toCreate.push({r:pivot[0],c:pivot[1],s:g.dir==='h'?SPECIAL_STRIPE_H:SPECIAL_STRIPE_V}); }
+    else if(n>=3 && matchGroups.filter(g2=>g2.cells.some(([r,c])=>g.cells.some(([r2,c2])=>r===r2&&c===c2))).length>1){
+      toCreate.push({r:pivot[0],c:pivot[1],s:SPECIAL_BOMB});
+    }
+  }
+
+  // Sound per match size
+  const ms=allCells.size; if(ms>=5)snd_match5(); else if(ms>=4)snd_match4(); else snd_match3();
+  // Animate matched cells out
+  allCells.forEach(idx=>{
+    const r=Math.floor(idx/COLS), c=idx%COLS;
+    const el=getCellEl(r,c);
+    if(el) el.classList.add('matched');
+  });
+  await sleep(350);
+
+  // Score
+  let pts = allCells.size * 30 * state.combo;
+  if(state.combo>1) pts = Math.round(pts*1.2);
+  state.score += pts;
+  showScoreFloat(pts);
+  if(state.combo>2) showCombo(state.combo);
+
+  // Clear matched cells
+  allCells.forEach(idx=>{
+    if(!state.locked[idx]){
+      state.board[idx]=null;
+      state.specials[idx]=SPECIAL_NONE;
+    } else {
+      state.locked[idx]=false; // unlock
+    }
+  });
+
+  // Create specials
+  toCreate.forEach(({r,c,s})=>{ setSpec(r,c,s); });
+
+  // Gravity
+  await applyGravity();
+
+  // Chain
+  const next=findMatches();
+  if(next.length>0){
+    await sleep(100);
+    await resolveMatches(next);
+  } else {
+    state.combo=0;
+    renderBoard();
+  }
+  updateHUD();
+}
+
+async function applyGravity(){
+  let fell=false;
+  for(let c=0;c<COLS;c++){
+    let writeR=ROWS-1;
+    for(let r=ROWS-1;r>=0;r--){
+      if(state.board[r*COLS+c]!==null){
+        if(r!==writeR) fell=true;
+        state.board[writeR*COLS+c]=state.board[r*COLS+c];
+        state.specials[writeR*COLS+c]=state.specials[r*COLS+c];
+        if(r!==writeR){ state.board[r*COLS+c]=null; state.specials[r*COLS+c]=SPECIAL_NONE; }
+        writeR--;
+      }
+    }
+    // Fill nulls
+    const lv=LEVELS[state.level-1];
+    const gemTypes=GEMS.slice(0,lv.colors);
+    for(let r=writeR;r>=0;r--){
+      state.board[r*COLS+c]=gemTypes[Math.floor(Math.random()*gemTypes.length)];
+      state.specials[r*COLS+c]=SPECIAL_NONE;
+      fell=true;
+    }
+  }
+  renderBoard();
+  if(fell) await sleep(250);
+}
+
+// ── Score float / combo display ──────────────────────────────
+function showScoreFloat(pts){
+  const wrap=document.getElementById('board-wrap');
+  const el=document.createElement('div');
+  el.className='score-float';
+  el.textContent=`+${pts}`;
+  el.style.left=`${20+Math.random()*60}%`;
+  el.style.top=`${30+Math.random()*40}%`;
+  wrap.appendChild(el);
+  setTimeout(()=>el.remove(),800);
+}
+function showCombo(n){
+  const wrap=document.getElementById('board-wrap');
+  const el=document.createElement('div');
+  el.className='combo-display';
+  el.textContent=`${n}× COMBO! 🔥`;
+  wrap.appendChild(el);
+  setTimeout(()=>el.remove(),1000);
+}
+
+// ── Hint system ──────────────────────────────────────────────
+function scheduleHint(){
+  clearHint();
+  state.hintTimer=setTimeout(()=>{ showHint(); },4000);
+}
+function clearHint(){
+  if(state.hintTimer) clearTimeout(state.hintTimer);
+  state.hintCell=null;
+}
+function showHint(){
+  // Find first valid swap
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+    if(state.locked[r*COLS+c]) continue;
+    if(c<COLS-1 && !state.locked[r*COLS+c+1]){
+      doSwap(r,c,r,c+1);
+      const m=findMatches();
+      doSwap(r,c,r,c+1);
+      if(m.length>0){ state.hintCell=[r,c]; renderBoard(); return; }
+    }
+    if(r<ROWS-1 && !state.locked[(r+1)*COLS+c]){
+      doSwap(r,c,r+1,c);
+      const m=findMatches();
+      doSwap(r,c,r+1,c);
+      if(m.length>0){ state.hintCell=[r,c]; renderBoard(); return; }
+    }
+  }
+  // No moves — shuffle
+  shuffleBoard();
+}
+
+// ── Boosters ─────────────────────────────────────────────────
+function activateBooster(type){
+  if(state.boosters[type]<=0) return;
+  if(state.activeBooster===type){ state.activeBooster=null; }
+  else { state.activeBooster=type; }
+  document.querySelectorAll('.booster').forEach(b=>b.classList.remove('active'));
+  if(state.activeBooster) document.getElementById(`b-${type}`)?.classList.add('active');
+  if(type==='shuffle'&&state.activeBooster){
+    state.boosters.shuffle--;
+    state.activeBooster=null;
+    shuffleBoard();
+  }
+}
+function applyBooster(r,c){
+  snd_booster();
+  const type=state.activeBooster;
+  if(type==='hammer'){
+    state.boosters.hammer--; snd_bomb();
+    const idx=r*COLS+c;
+    state.board[idx]=null; state.specials[idx]=SPECIAL_NONE; state.locked[idx]=false;
+    state.score+=50;
+    state.animating=true;
+    applyGravity().then(async()=>{
+      const m=findMatches();
+      if(m.length>0) await resolveMatches(m);
+      state.animating=false; checkEnd(); updateHUD();
+    });
+  } else if(type==='color'){
+    state.boosters.color--;
+    const gem=gemAt(r,c);
+    let count=0;
+    for(let i=0;i<ROWS*COLS;i++){ if(state.board[i]===gem){ state.board[i]=null; count++; } }
+    state.score+=count*60;
+    state.animating=true;
+    applyGravity().then(async()=>{
+      const m=findMatches();
+      if(m.length>0) await resolveMatches(m);
+      state.animating=false; checkEnd(); updateHUD();
+    });
+  } else if(type==='time'){
+    state.boosters.time--;
+    state.movesLeft+=5;
+    updateHUD();
+  }
+  state.activeBooster=null;
+  document.querySelectorAll('.booster').forEach(b=>b.classList.remove('active'));
+}
+
+function hasLegalSwap(){
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) {
+    if(state.locked[r*COLS+c]) continue;
+    for(const [nr,nc] of [[r,c+1],[r+1,c]]) {
+      if(nr>=ROWS || nc>=COLS || state.locked[nr*COLS+nc]) continue;
+      doSwap(r,c,nr,nc);
+      const valid=findMatches().length>0;
+      doSwap(r,c,nr,nc);
+      if(valid) return true;
+    }
+  }
+  return false;
+}
+
+function shuffleBoard(){
+  const lv=LEVELS[state.level-1];
+  const gemTypes=GEMS.slice(0,lv.colors);
+  let valid=false;
+  for(let attempt=0;attempt<256;attempt++){
+    for(let i=0;i<ROWS*COLS;i++){
+      state.board[i]=gemTypes[Math.floor(Math.random()*gemTypes.length)];
+      state.specials[i]=SPECIAL_NONE;
+    }
+    if(findMatches().length===0 && hasLegalSwap()) { valid=true;break; }
+  }
+  if(!valid) console.warn('[PROJECT MATCH] No playable random shuffle found within 256 attempts');
+  renderBoard();
+  scheduleHint();
+}
+
+// ── End conditions ───────────────────────────────────────────
+function checkEnd(){
+  const lv=LEVELS[state.level-1];
+  if(state.score>=lv.goal){
+    const stars = state.score>=lv.goal*2?3:state.score>=lv.goal*1.4?2:1;
+    // Update best
+    if(!state.bestScores[state.level]||state.score>state.bestScores[state.level]){
+      state.bestScores[state.level]=state.score;
+      localStorage.setItem('sc_best',JSON.stringify(state.bestScores));
+    }
+    // Unlock next
+    const unlocked=state.unlockedLevels;
+    if(state.level<LEVELS.length && !unlocked.includes(state.level+1)){
+      unlocked.push(state.level+1);
+      localStorage.setItem('sc_unlocked',JSON.stringify(unlocked));
+    }
+    state.levelStars[state.level]=Math.max(state.levelStars[state.level]||0,stars);
+    localStorage.setItem('sc_stars',JSON.stringify(state.levelStars));
+    showWin(stars); return;
+  }
+  if(state.movesLeft<=0){
+    showLose(); return;
+  }
+}
+
+// ── Overlays ─────────────────────────────────────────────────
+function showWin(stars){
+  const msgs=['Well done! ⭐','Excellent! ⭐⭐','PERFECT! ⭐⭐⭐'];
+  document.getElementById('win-msg').textContent=msgs[stars-1];
+  document.getElementById('win-score').textContent='Score: '+state.score.toLocaleString();
+  const starsEl=document.getElementById('win-stars');
+  starsEl.innerHTML='';
+  for(let i=0;i<3;i++){
+    const s=document.createElement('span');
+    s.className='star-item';
+    s.textContent='⭐';
+    starsEl.appendChild(s);
+    if(i<stars) setTimeout(()=>s.classList.add('lit'),(i+1)*300);
+  }
+  snd_win(); snd_levelUp(); document.getElementById('overlay-win').style.display='flex';
+}
+function showLose(){
+  const lv=LEVELS[state.level-1];
+  document.getElementById('lose-msg').textContent=
+    `You scored ${state.score.toLocaleString()} but needed ${lv.goal.toLocaleString()}. Don't give up!`;
+  snd_lose(); document.getElementById('overlay-lose').style.display='flex';
+}
+function hideOverlay(id){ document.getElementById(id).style.display='none'; }
+
+function nextLevel(){
+  hideOverlay('overlay-win');
+  if(state.level<250) { initGame(state.level+1); }
+  else { alert('🎉 You completed ALL 250 levels! You are the Crystal King! 👑'); initGame(1); }
+}
+function replayLevel(){
+  hideOverlay('overlay-win'); hideOverlay('overlay-lose');
+  initGame(state.level);
+}
+function initGame(lv=1){
+  hideOverlay('overlay-win'); hideOverlay('overlay-lose');
+  initLevel(lv);
+}
+
+// ── Level select ─────────────────────────────────────────────
+function showLevelSelect(){
+  const grid=document.getElementById('level-grid');
+  grid.innerHTML='';
+  // Group by theme (every 25 levels)
+  const themes = ['🍭 Candy Valley','🌳 Lollipop Forest','🌊 Jelly Sea','🏔️ Choco Mountains',
+    '🌈 Rainbow Skies','🏰 Sugar Castle','🌌 Gummy Galaxy','🏜️ Caramel Canyon',
+    '❄️ Toffee Tundra','💎 Crystal Caves'];
+  for(let t=0;t<10;t++){
+    const header=document.createElement('div');
+    header.style.cssText='grid-column:1/-1;color:#a78bfa;font-weight:700;font-size:0.8rem;padding:8px 0 4px;border-bottom:1px solid #30363d;margin-top:8px';
+    header.textContent=`World ${t+1} — ${themes[t]}`;
+    grid.appendChild(header);
+    for(let i=t*25+1;i<=t*25+25;i++){
+    const btn=document.createElement('button');
+    const isUnlocked=state.unlockedLevels.includes(i);
+    const isCurrent=state.level===i;
+    btn.className='level-btn '+(isCurrent?'current':isUnlocked?'unlocked':'locked-lv');
+    const stars=state.levelStars[i]||0;
+    btn.innerHTML=`<span>${i}</span><span class="lv-stars">${'⭐'.repeat(stars)}</span>`;
+    if(isUnlocked||isCurrent) btn.onclick=()=>{ hideOverlay('overlay-levels'); initGame(i); };
+    grid.appendChild(btn);
+  }
+  } // close the outer 10-world loop (upstream syntax fix)
+  document.getElementById('overlay-levels').style.display='flex';
+}
+
+// ── Utils ────────────────────────────────────────────────────
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+
+// Background music (subtle arpeggio)
+let bgMusicOn = false;
+let bgMusicTimer = null;
+const BG_NOTES = [261,329,392,329,261,329,392,440,392,329];
+let bgNote = 0;
+
+function toggleBgMusic() {
+  bgMusicOn = !bgMusicOn;
+  document.getElementById('music-btn').textContent = bgMusicOn ? '🔇' : '🎵';
+  if(bgMusicOn) startBgMusic();
+  else if(bgMusicTimer) clearInterval(bgMusicTimer);
+}
+
+function startBgMusic() {
+  if(bgMusicTimer) clearInterval(bgMusicTimer);
+  bgMusicTimer = setInterval(() => {
+    if(!bgMusicOn) return;
+    const f = BG_NOTES[bgNote % BG_NOTES.length];
+    playTone(f, 'sine', 0.3, 0.08);
+    bgNote++;
+  }, 400);
+}
+
+// ── Start ────────────────────────────────────────────────────
+document.getElementById('overlay-tutorial').style.display='flex';
+</script>
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');</script>
+<script src="js/level-editor.js"></script>
+<script src="js/daily-challenge.js"></script>
+<script src="js/a11y.js"></script>
+<div id="leaderboard" style="max-width:400px;margin:1rem auto;background:#161b22;border-radius:8px;padding:1rem;border:1px solid #30363d"></div>
+<script src="js/leaderboard.js"></script>
+<script src="js/difficulty.js"></script>
+<script src="js/multiplayer.js"></script>
+
+<!-- Multiplayer & Difficulty buttons — injected by js/multiplayer.js and js/difficulty.js -->
+<div id="game-mode-bar" style="position:fixed;bottom:16px;left:50%;transform:translateX(-50%);
+  display:flex;gap:10px;z-index:9980;background:rgba(13,17,23,0.92);
+  border-radius:30px;padding:8px 16px;border:1px solid #30363d;box-shadow:0 4px 20px rgba(0,0,0,0.5)">
+  <button onclick="Difficulty.showModal()"
+    style="background:linear-gradient(135deg,#3b82f6,#7c3aed);color:#fff;border:none;
+      padding:8px 16px;border-radius:20px;font-weight:700;cursor:pointer;font-size:0.82rem">
+    ⚙️ Difficulty
+  </button>
+  <button onclick="Multiplayer.showSetupModal()"
+    style="background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;border:none;
+      padding:8px 16px;border-radius:20px;font-weight:700;cursor:pointer;font-size:0.82rem">
+    👥 2 Players
+  </button>
+</div>
+<script defer src="./project-overlay/project.js"></script>
+</body>
+</html>

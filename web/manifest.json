@@ -1,0 +1,15 @@
+{
+  "name": "CardVille — Match-3 Puzzle",
+  "short_name": "CardVille",
+  "description": "250-stage match-3 puzzle beta with combos, boosters and worlds.",
+  "start_url": "./",
+  "display": "fullscreen",
+  "orientation": "portrait-primary",
+  "background_color": "#1a0a2e",
+  "theme_color": "#E91E63",
+  "icons": [],
+  "categories": [
+    "games",
+    "entertainment"
+  ]
+}
