@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
 <meta charset="utf-8">
+<meta name="description" content="카드빌 — 250단계 드래그 퍼즐 모험">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CardVille — Match-3 Puzzle</title>
+<title>카드빌 — 퍼즐 모험</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -288,38 +289,39 @@ body {
 <div id="app">
 
   <header class="header">
-    <div class="logo">CardVille Puzzle</div>
+    <div class="logo">카드빌 퍼즐 모험</div>
     <div class="hud">
-      <div class="hud-box"><div class="hud-val" id="score-val">0</div><div class="hud-lbl">Score</div></div>
-      <div class="hud-box"><div class="hud-val" id="best-val">0</div><div class="hud-lbl">Best</div></div>
-      <div class="hud-box"><div class="hud-val" id="level-val">1</div><div class="hud-lbl">Level</div></div>
-      <button class="btn btn-primary" onclick="showLevelSelect()" style="padding:6px 12px;font-size:.75rem;">Map</button> <button class="btn btn-primary" onclick="toggleBgMusic()" id="music-btn" style="padding:6px 10px;font-size:.75rem;">🎵</button>
+      <div class="hud-box"><div class="hud-val" id="score-val">0</div><div class="hud-lbl">점수</div></div>
+      <div class="hud-box"><div class="hud-val" id="best-val">0</div><div class="hud-lbl">최고 점수</div></div>
+      <div class="hud-box"><div class="hud-val" id="level-val">1</div><div class="hud-lbl">단계</div></div>
+      <button class="btn btn-primary" onclick="showLevelSelect()" style="padding:6px 12px;font-size:.75rem;">지도</button> <button class="btn btn-primary" onclick="toggleBgMusic()" id="music-btn" style="padding:6px 10px;font-size:.75rem;">🎵</button>
     </div>
   </header>
 
   <div class="level-info">
     <div class="level-row">
-      <span class="level-title" id="level-name">Sweet Start</span>
-      <span class="level-goal" id="level-goal">Score: 500</span>
+      <span class="level-title" id="level-name">달콤한 시작</span>
+      <span class="level-goal" id="level-goal">목표 점수: 500</span>
     </div>
     <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
     <div class="level-row" style="font-size:.7rem;color:rgba(255,255,255,.4)">
       <span id="score-label">0 / 500</span>
-      <span id="moves-label">Moves left: 20</span>
+      <span id="moves-label">남은 이동: 20</span>
     </div>
   </div>
 
   <div id="board-wrap">
-    <div id="board"></div>
+    <div id="board" aria-label="드래그로 블록을 교환하는 퍼즐판"></div>
   </div>
 
+  <div class="cv-controls-hint" role="note">👆 블록을 누른 채 옆으로 밀어 보세요. 우클릭은 사용할 수 없습니다.</div>
   <div class="moves-bar" id="moves-bar"></div>
 
   <div class="boosters">
-    <div class="booster" id="b-hammer" onclick="activateBooster('hammer')">🔨<span>Hammer</span><div class="count" id="b-hammer-cnt">3</div></div>
-    <div class="booster" id="b-shuffle" onclick="activateBooster('shuffle')">🔀<span>Shuffle</span><div class="count" id="b-shuffle-cnt">2</div></div>
-    <div class="booster" id="b-color" onclick="activateBooster('color')">🌈<span>Color</span><div class="count" id="b-color-cnt">2</div></div>
-    <div class="booster" id="b-time" onclick="activateBooster('time')">⏱️<span>+5 Moves</span><div class="count" id="b-time-cnt">1</div></div>
+    <div class="booster" id="b-hammer" onclick="activateBooster('hammer')">🔨<span>망치</span><div class="count" id="b-hammer-cnt">3</div></div>
+    <div class="booster" id="b-shuffle" onclick="activateBooster('shuffle')">🔀<span>섞기</span><div class="count" id="b-shuffle-cnt">2</div></div>
+    <div class="booster" id="b-color" onclick="activateBooster('color')">🌈<span>색상 제거</span><div class="count" id="b-color-cnt">2</div></div>
+    <div class="booster" id="b-time" onclick="activateBooster('time')">⏱️<span>이동 +5회</span><div class="count" id="b-time-cnt">1</div></div>
   </div>
 
 </div>
@@ -327,23 +329,23 @@ body {
 <!-- Level select overlay -->
 <div id="overlay-levels" class="overlay" style="display:none">
   <div class="modal" style="width:min(420px,92vw)">
-    <h2>🗺️ Level Map</h2>
-    <p>Choose your adventure!</p>
+    <h2>🗺️ 단계 지도</h2>
+    <p>원하는 단계를 선택하세요!</p>
     <div class="level-grid" id="level-grid"></div>
-    <button class="btn btn-primary" onclick="hideOverlay('overlay-levels')">Close</button>
+    <button class="btn btn-primary" onclick="hideOverlay('overlay-levels')">닫기</button>
   </div>
 </div>
 
 <!-- Win overlay -->
 <div id="overlay-win" class="overlay" style="display:none">
   <div class="modal">
-    <h2>🎉 Level Complete!</h2>
+    <h2>🎉 단계 완료!</h2>
     <div id="win-stars" class="stars"></div>
-    <p id="win-msg">Amazing job!</p>
+    <p id="win-msg">정말 잘했어요!</p>
     <div style="font-size:1.4rem;font-weight:800;color:#ffd700;margin:8px 0" id="win-score"></div>
     <div class="modal-btns">
-      <button class="btn btn-primary" onclick="nextLevel()">Next Level →</button>
-      <button class="btn" style="background:rgba(255,255,255,.1);color:#fff" onclick="replayLevel()">Replay</button>
+      <button class="btn btn-primary" onclick="nextLevel()">다음 단계 →</button>
+      <button class="btn" style="background:rgba(255,255,255,.1);color:#fff" onclick="replayLevel()">다시 도전</button>
     </div>
   </div>
 </div>
@@ -351,11 +353,11 @@ body {
 <!-- Lose overlay -->
 <div id="overlay-lose" class="overlay" style="display:none">
   <div class="modal">
-    <h2>😢 Out of Moves!</h2>
-    <p id="lose-msg">So close! Try again?</p>
+    <h2>😢 이동 횟수를 모두 사용했어요!</h2>
+    <p id="lose-msg">아쉬워요! 다시 도전할까요?</p>
     <div class="modal-btns">
-      <button class="btn btn-gold" onclick="replayLevel()">🔄 Try Again</button>
-      <button class="btn btn-primary" onclick="showLevelSelect()">📺 Level Map</button>
+      <button class="btn btn-gold" onclick="replayLevel()">🔄 다시 도전</button>
+      <button class="btn btn-primary" onclick="showLevelSelect()">🗺️ 단계 지도</button>
     </div>
   </div>
 </div>
@@ -363,16 +365,16 @@ body {
 <!-- Tutorial overlay -->
 <div id="overlay-tutorial" class="overlay" style="display:none">
   <div class="modal">
-    <h2>🌟 How to Play CardVille</h2>
+    <h2>🌟 카드빌 게임 방법</h2>
     <p style="text-align:left;line-height:1.8;font-size:.9rem">
-      ✨ <b>Swap</b> adjacent gems to match 3 or more<br>
-      💥 Match 4 → <b>Bomb gem</b> (explodes 3×3)<br>
-      ⚡ Match 5 in a row → <b>Stripe gem</b> (clears row/col)<br>
-      🌀 L-shape match → <b>Wrap gem</b> (double explosion)<br>
-      🎯 Reach the <b>score goal</b> before moves run out!<br>
-      🔨 Use <b>boosters</b> to help in tough spots
+      ✨ <b>마우스 왼쪽 버튼을 누른 채 드래그</b>하거나 손가락으로 밀어 같은 모양 3개 이상 연결<br>
+      💥 4개 연결 → <b>폭탄 블록</b> (주변 3×3 폭발)<br>
+      ⚡ 5개 연결 → <b>줄무늬 블록</b> (가로·세로 제거)<br>
+      🌀 ㄱ자 연결 → <b>회오리 블록</b> (연속 폭발)<br>
+      🎯 이동 횟수가 끝나기 전에 <b>목표 점수</b> 달성!<br>
+      🔨 어려울 때는 <b>도움 아이템</b>을 사용하세요
     </p>
-    <button class="btn btn-primary" style="margin-top:12px" onclick="hideOverlay('overlay-tutorial');initGame()">Let's Play!</button>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="hideOverlay('overlay-tutorial');initGame()">게임 시작!</button>
   </div>
 </div>
 
@@ -860,9 +862,9 @@ function updateHUD(){
   const best=state.bestScores[state.level]||0;
   document.getElementById('best-val').textContent=best>0?best.toLocaleString():'—';
   document.getElementById('level-name').textContent=lv.name;
-  document.getElementById('level-goal').textContent=`Goal: ${lv.goal.toLocaleString()}`;
+  document.getElementById('level-goal').textContent=`목표 점수: ${lv.goal.toLocaleString()}`;
   document.getElementById('score-label').textContent=`${state.score.toLocaleString()} / ${lv.goal.toLocaleString()}`;
-  document.getElementById('moves-label').textContent=`Moves: ${state.movesLeft}`;
+  document.getElementById('moves-label').textContent=`남은 이동: ${state.movesLeft}회`;
   const pct=Math.min(100,(state.score/lv.goal)*100);
   document.getElementById('progress-fill').style.width=pct+'%';
 
@@ -883,26 +885,19 @@ function updateHUD(){
 
 // ── Click / swap logic ───────────────────────────────────────
 function onCellClick(r,c){
-  if(state.animating) return;
-  if(state.locked[r*COLS+c]) return;
-
-  // Booster mode
-  if(state.activeBooster){
-    applyBooster(r,c); return;
-  }
-
-  if(!state.selected){
-    state.selected=[r,c]; clearHint(); snd_select();
-    renderBoard(); return;
-  }
+  // Pointer tap is never a selection or a swap. Targeted boosters remain tappable.
+  if(state.animating || state.locked[r*COLS+c]) return;
+  if(state.activeBooster) applyBooster(r,c);
+}
+// Explicit keyboard-only alternative (Enter/Space), not a second pointer control scheme.
+function cvKeyboardSelect(r,c){
+  if(state.animating || state.activeBooster || state.locked[r*COLS+c]) return;
+  if(!state.selected){state.selected=[r,c]; clearHint(); snd_select(); renderBoard(); return;}
   const [sr,sc]=state.selected;
-  if(sr===r && sc===c){ state.selected=null; renderBoard(); return; }
-  if(isAdjacent(sr,sc,r,c)){
-    state.selected=null; snd_swap();
-    trySwap(sr,sc,r,c);
-  } else {
-    state.selected=[r,c]; renderBoard();
-  }
+  state.selected=null;
+  if(sr===r && sc===c){renderBoard();return;}
+  if(isAdjacent(sr,sc,r,c) && !state.locked[sr*COLS+sc]){snd_swap();void trySwap(sr,sc,r,c);}
+  else {state.selected=[r,c];renderBoard();}
 }
 
 function isAdjacent(r1,c1,r2,c2){
@@ -1096,7 +1091,7 @@ function showCombo(n){
   const wrap=document.getElementById('board-wrap');
   const el=document.createElement('div');
   el.className='combo-display';
-  el.textContent=`${n}× COMBO! 🔥`;
+  el.textContent=`${n}연속 성공! 🔥`;
   wrap.appendChild(el);
   setTimeout(()=>el.remove(),1000);
 }
@@ -1236,9 +1231,9 @@ function checkEnd(){
 
 // ── Overlays ─────────────────────────────────────────────────
 function showWin(stars){
-  const msgs=['Well done! ⭐','Excellent! ⭐⭐','PERFECT! ⭐⭐⭐'];
+  const msgs=['잘했어요! ⭐','훌륭해요! ⭐⭐','완벽한 성공! ⭐⭐⭐'];
   document.getElementById('win-msg').textContent=msgs[stars-1];
-  document.getElementById('win-score').textContent='Score: '+state.score.toLocaleString();
+  document.getElementById('win-score').textContent='획득 점수: '+state.score.toLocaleString();
   const starsEl=document.getElementById('win-stars');
   starsEl.innerHTML='';
   for(let i=0;i<3;i++){
@@ -1253,7 +1248,7 @@ function showWin(stars){
 function showLose(){
   const lv=LEVELS[state.level-1];
   document.getElementById('lose-msg').textContent=
-    `You scored ${state.score.toLocaleString()} but needed ${lv.goal.toLocaleString()}. Don't give up!`;
+    `획득 점수 ${state.score.toLocaleString()}점, 목표 ${lv.goal.toLocaleString()}점. 다시 도전해 보세요!`;
   snd_lose(); document.getElementById('overlay-lose').style.display='flex';
 }
 function hideOverlay(id){ document.getElementById(id).style.display='none'; }
@@ -1261,7 +1256,7 @@ function hideOverlay(id){ document.getElementById(id).style.display='none'; }
 function nextLevel(){
   hideOverlay('overlay-win');
   if(state.level<250) { initGame(state.level+1); }
-  else { alert('🎉 You completed ALL 250 levels! You are the Crystal King! 👑'); initGame(1); }
+  else { alert('🎉 축하합니다! 250개 단계를 모두 완료했습니다! 👑'); initGame(1); }
 }
 function replayLevel(){
   hideOverlay('overlay-win'); hideOverlay('overlay-lose');
@@ -1278,13 +1273,13 @@ function showLevelSelect(){
   const grid=document.getElementById('level-grid');
   grid.innerHTML='';
   // Group by theme (every 25 levels)
-  const themes = ['🍭 Candy Valley','🌳 Lollipop Forest','🌊 Jelly Sea','🏔️ Choco Mountains',
-    '🌈 Rainbow Skies','🏰 Sugar Castle','🌌 Gummy Galaxy','🏜️ Caramel Canyon',
-    '❄️ Toffee Tundra','💎 Crystal Caves'];
+  const themes = ['🍭 사탕 골짜기','🌳 막대사탕 숲','🌊 젤리 바다','🏔️ 초콜릿 산맥',
+    '🌈 무지개 하늘','🏰 설탕 성','🌌 말랑별 은하','🏜️ 캐러멜 협곡',
+    '❄️ 토피 설원','💎 수정 동굴'];
   for(let t=0;t<10;t++){
     const header=document.createElement('div');
     header.style.cssText='grid-column:1/-1;color:#a78bfa;font-weight:700;font-size:0.8rem;padding:8px 0 4px;border-bottom:1px solid #30363d;margin-top:8px';
-    header.textContent=`World ${t+1} — ${themes[t]}`;
+    header.textContent=`제${t+1}지역 — ${themes[t]}`;
     grid.appendChild(header);
     for(let i=t*25+1;i<=t*25+25;i++){
     const btn=document.createElement('button');
@@ -1346,12 +1341,12 @@ document.getElementById('overlay-tutorial').style.display='flex';
   <button onclick="Difficulty.showModal()"
     style="background:linear-gradient(135deg,#3b82f6,#7c3aed);color:#fff;border:none;
       padding:8px 16px;border-radius:20px;font-weight:700;cursor:pointer;font-size:0.82rem">
-    ⚙️ Difficulty
+    ⚙️ 난이도 (시험용)
   </button>
   <button onclick="Multiplayer.showSetupModal()"
     style="background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;border:none;
       padding:8px 16px;border-radius:20px;font-weight:700;cursor:pointer;font-size:0.82rem">
-    👥 2 Players
+    👥 2인 대전 (시험용)
   </button>
 </div>
 <script defer src="./js/cardville-balance.js"></script>

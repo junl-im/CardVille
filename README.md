@@ -1,69 +1,48 @@
-# CardVille Match-3 — v0.4.2 Beta (Firebase Preview 배포 트리거)
+# 카드빌 — 250단계 한국어 드래그 퍼즐 (v0.5)
 
-PC·모바일 웹용 3매치 퍼즐게임. [Sweet Crush](https://github.com/ShaistaShabbir-prog/candy-crush-match3) MIT 소스를 기반으로 변경한 별도 프로젝트입니다. 원본 커밋은 `0ba0fcd4af6c041669ba67dd7f7bb6d9d268e4ec`입니다.
+기존 CardVille의 PC·모바일 웹용 3매치 퍼즐 프로젝트입니다. 상용 게임의 재미 요소를 분석하되, 저작권이 있는 그래픽이나 소스는 무단 복제하지 않습니다.
 
-## 현재 구현 및 검사
+## 현재 구현
 
-- 250개 스테이지/10개 월드/10개 보스, 스테이지별 원본 점수 목표 데이터 보존.
-- v0.4 임시 난이도 상한: 222개 스테이지 목표 조정, 마지막 250레벨 원본 목표 297,750점 → 현재 3,150점. **플레이 밸런스가 최종 검증된 수치가 아닙니다.**
-- 터치/마우스 **스와이프 교환**, 키보드 방향키 이동·Enter 선택, 250레벨 이어하기, PC·모바일 반응형 버튼 정렬.
-- 로컬 랭킹 닉네임 HTML 주입 방지, Service Worker 동일 출처 GET 캐싱 제한.
-- 브라우저 동작 검증은 개발 환경 별도 브라우저 테스트 결과이며, 공개 URL 실서비스는 별도 검증이 필요합니다.
+- 기본 게임 언어 **한국어**: 타이틀·버튼·HUD·튜토리얼·10개 지역·250개 스테이지 이름·결과·난이도·일일/편집 메뉴 문구.
+- **게임 블록은 PC 왼쪽 드래그 / 모바일 손가락 스와이프로만 교환.** 기존 일반 클릭 2번 교환은 제거. 키보드 방향키+Enter 대체 지원.
+- 우클릭 메뉴·우클릭 드래그·브라우저 기본 HTML 드래그·선택 동작은 게임 사이트 화면에서 차단. 입력칸 문자 선택은 허용.
+- 클릭 이동과 달리 블록을 누르고 미는 동안 시각 피드백이 따라 움직이며, 인접한 잠금되지 않은 칸으로만 교환.
+- 기존 250단계/10개 지역/10개 보스·임시 점수 밸런스 유지. 게임 진행 및 최고점 저장은 여전히 같은 로컬 저장 키 사용.
+- 실험 단계: 난이도 변경·일일 도전·레벨 편집·P2P 원격 대전. UI는 한국어로 바뀌었으나 완성된 온라인 서비스라고 주장하지 않음.
 
-## 실행
-
-정적 웹호스팅 혹은 로컬 정적 서버에서 `web/index.html`을 서비스합니다.
+## 실행·검증
 
 ```bash
 python -m http.server 8000 --directory web
-# 브라우저에서 http://localhost:8000
 node tools/check-release.cjs
+node tools/check-korean-ui.cjs
 ```
+
+Chrome 기반 PC 1366×768 및 모바일 390×844의 별도 자동 렌더링 검사: 유효 드래그 시 점수·이동수 변화, 일반 클릭 2번 교환 금지, 우클릭 컨텍스트 메뉴 차단, 한국어 지도/난이도, 오류 0건. 브라우저는 로컬 HTTP 원본 대신 인라인 테스트 자원을 사용하는 격리된 검증 방식이므로 실제 Firebase 배포 주소에서 플레이 검증은 별개입니다.
 
 ## 배포
 
-- `.github/workflows/pages.yml`: main 갱신 시 Node.js 정적 품질 검사 후 GitHub Pages 게시 시도.
-- `firebase.json`: 기존 Firebase Hosting의 public 디렉터리를 `web`으로 지정.
-- `.firebaserc`: 사용자가 확인한 Firebase 프로젝트 ID **`cardville`**로 매핑.
-- `.github/workflows/firebase-hosting.yml`: **수동 프리뷰 전용**. `cardville-match3-preview` 채널에만 배포하도록 설정. 기존 live 사이트를 덮어쓰지 않음. GitHub Secret `FIREBASE_SERVICE_ACCOUNT_CARDVILLE`과 실제 사이트 권한 확인 전까지 배포 불가. Firebase 실제 서비스는 아직 변경하지 않았음.
-- 작업 중 GitHub 원격 브랜치의 현재 파일만 새 게임으로 교체됐습니다. 과거 CardVille 커밋/배포 기록은 남아 있습니다.
+- GitHub Pages: `.github/workflows/pages.yml` — `node` 검증 후 `web` 배포.
+- Firebase 프로젝트: `cardville`, 미리보기 Hosting 채널: `cardville-match3-preview`, 14일 만료. 실제 운영 `live` 채널은 변경하지 않음.
+- Firebase 배포 트리거는 `ops/firebase-preview-trigger.json` 수정 시 실행됩니다. 새 릴리스를 미리보기로 확인한 다음 운영 반영 여부를 결정합니다.
 
-## 외부 저작권 및 제한
+## 소스 및 에셋 라이선스
 
-- 게임 원형: © 2026 Shaista Shabbir, MIT License, `web/LICENSE` 보존.
-- Kenney 공식 Match-3 Starter Kit 에셋(CC0) 통합은 다음 단계 예정이며, **이 릴리스에는 아직 포함되지 않습니다.** `docs/LICENSE_NOTICE.md` 참고.
-- 원격 2인 대전·글로벌 랭킹은 실서비스로 제공하지 않습니다. 해당 UI에 실험 기능 또는 로컬 기록 표시.
-- 이용자 계정/Firestore/Cloud Functions의 실연동 및 기존 Firebase 배포는 미완료.
+- 원본 게임 코드: [Shaista Shabbir / Sweet Crush](https://github.com/ShaistaShabbir-prog/candy-crush-match3), MIT (원 저작권 표시와 `web/LICENSE` 유지).
+- 라이선스가 확인된 활용 후보: Kenney Starter Kit(MIT 코드+CC0 에셋), Kenney Puzzle Pack 2 / UI Pack / Interface Sounds(CC0), MIT match3-board(타 엔진 설계 참고).
+- **v0.5에는 새 그래픽·음원 팩의 실제 리소스 파일을 아직 도입하지 않았습니다.** 검증된 후보와 우선순위는 `docs/COMMERCIAL_OPEN_SOURCE_RESEARCH_v0.5.md`에 기록했습니다.
+- 타 프로젝트의 소스코드 라이선스가 MIT여도 이미지와 음원이 다른 조건일 수 있으므로 출처별로 확인합니다.
 
-## 품질 기록
+## 개발 문서
 
-`docs/VALIDATION.md`와 `docs/BROWSER_VALIDATION.json` 참조. 브라우저 E2E에서 2종 화면·스와이프·키보드·저장·진행을 확인. 공개 사이트 배포 상태는 검증되지 않았음.
+- `docs/KOREAN_DRAG_v0.5.md`: 한글화와 새 조작 규칙.
+- `docs/COMMERCIAL_OPEN_SOURCE_RESEARCH_v0.5.md`: 상용게임 벤치마크, 오픈소스/CC0 이식 후보, 로드맵.
+- `docs/BROWSER_V05.json`: PC·모바일 격리 브라우저 자동검사 결과.
 
-## v0.4.2 — Firebase 안전 미리보기 배포 트리거
+GitHub 저장소의 과거 CardVille 커밋 기록은 유지됩니다.
 
-GitHub Actions Secret 등록 확인을 받은 뒤, 미리보기 채널만 대상으로 자동 **1회 실행 요청**을 푸시합니다. 대상 채널은 `cardville-match3-preview`이고 live는 변경하지 않습니다. 결과 주소와 실제 배포 성공 여부는 GitHub Actions 로그에서 확인해야 합니다.
-상세 내용은 `docs/FIREBASE_PREVIEW_v0.4.2.md` 참조.
+## 현재 확인된 Firebase 미리보기
 
-## v0.4.3 GitHub Actions fix
-- [Failed run 38417296378](https://github.com/junl-im/CardVille/actions/runs/38417296378) failed before Firebase deploy, because `require('./.firebaserc')` tried to parse extensionless JSON as JS.
-- Fixed by using the existing JSON.parse-based checks, safe credential shape validation, and one isolated preview-only retry.
-
-## Firebase 배포 실패 — 현재 상태
-
-- 실제 [2차 실패 로그](https://github.com/junl-im/CardVille/actions/runs/38419409796): Secret JSON 검증 통과, Firebase 호출에서 403 `USER_PROJECT_DENIED` / `serviceusage.services.use` 부족.
-- 원인과 관리자 IAM 조치: [Firebase 권한 수정 가이드](docs/FIREBASE_IAM_FIX_v0.4.3.md).
-- IAM 역할이 부여되기 전에는 재배포를 반복해도 해결되지 않습니다. 서비스 계정 권한 수정 후 기존 미리보기 workflow를 수동 실행합니다. `live`는 미변경.
-
-## v0.4.4 Firebase IAM 계정 일치 진단
-[3차 재실행도 403 권한 실패](https://github.com/junl-im/CardVille/actions/runs/38419409796). 역할을 부여한 계정과 GitHub Secret 계정이 다른지 확인하도록 비밀키·원문 이메일을 로그에 출력하지 않는 독립 진단 Actions가 추가됐습니다. [진단 가이드](docs/FIREBASE_IAM_IDENTITY_v0.4.4.md). IAM 권한 확인 전 Firebase 배포 자동 재시도는 하지 않습니다.
-
-## v0.4.5 Secret project preflight
-Secret 키 생성 프로젝트가 `cardville`과 다를 경우 안전하게 배포를 중단합니다. 기존 CardVille IAM 진단 workflow는 키 프로젝트 식별을 위해 별도로 유지합니다. `FIREBASE_SERVICE_ACCOUNT_CARDVILLE`은 반드시 Firebase 프로젝트 `cardville`에서 발급한 서비스 계정 JSON으로 교체하세요. API 비밀키를 코드나 채팅에 게시하지 마세요.
-
-## Firebase 미리보기 배포 검증 (2026-10-14)
-
-- GitHub Actions 실제 성공: https://github.com/junl-im/CardVille/actions/runs/38428451136
-- Firebase 프로젝트: `cardville` — 재등록한 Secret 키의 `project_id` 확인 통과.
-- 미리보기 URL: https://cardville--cardville-match3-preview-ikhmalki.web.app
-- Hosting 임시 채널: `cardville-match3-preview` (14일 만료 설정). 기존 `live` 채널은 미변경.
-- 실행 로그의 `Preview HTTP smoke test: PASS`로 정적 게임 파일의 HTTP 응답 검증. 실제 기기 플레이 수동 확인은 별개.
+- [2026-10-14 Firebase 배포 성공 기록](https://github.com/junl-im/CardVille/actions/runs/38428451136) (v0.4.6).
+- [기존 미리보기 사이트](https://cardville--cardville-match3-preview-ikhmalki.web.app); v0.5 배포 성공은 후속 실행 결과로 별도 확인.

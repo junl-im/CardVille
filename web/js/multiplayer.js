@@ -21,7 +21,7 @@ const Multiplayer = (() => {
   let currentPlayer = 1; // for local mode
 
   const state = { scores:{1:0,2:0}, movesLeft:{1:WIN_MOVES,2:WIN_MOVES} };
-  const playerNames = { 1:'Player 1', 2:'Player 2' };
+  const playerNames = { 1:'1번 플레이어', 2:'2번 플레이어' };
 
   // ── Load PeerJS from CDN lazily ──────────────────────────────
   function loadPeerJS() {
@@ -45,14 +45,14 @@ const Multiplayer = (() => {
   async function createRoom(hostName) {
     showStatus('Connecting to PeerJS…', '#a78bfa');
     const ok = await loadPeerJS();
-    if (!ok) { alert('Could not load PeerJS — check internet connection.'); return; }
+    if (!ok) { alert('연결 기능을 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.'); return; }
 
     peer = new Peer({ debug: 0 });
     peer.on('open', id => {
       roomCode = makeCode(id);
       // Store host peer ID so guests can look it up by room code
       localStorage.setItem('scr_peer_' + roomCode, id);
-      playerNames[1] = hostName || 'Player 1';
+      playerNames[1] = hostName || '1번 플레이어';
       myPlayer = 1; mode = 'host';
       _initState();
       showShareModal(roomCode);
@@ -64,9 +64,9 @@ const Multiplayer = (() => {
 
   // ── GUEST ────────────────────────────────────────────────────
   async function joinRoom(code, guestName) {
-    showStatus('Joining room ' + code + '…', '#a78bfa');
+    showStatus('방에 참가하는 중 ' + code + '…', '#a78bfa');
     const ok = await loadPeerJS();
-    if (!ok) { alert('Could not load PeerJS — check internet connection.'); return; }
+    if (!ok) { alert('연결 기능을 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.'); return; }
 
     code = code.toUpperCase().trim();
     const hostId = localStorage.getItem('scr_peer_' + code);
@@ -78,7 +78,7 @@ const Multiplayer = (() => {
     peer = new Peer({ debug: 0 });
     peer.on('open', () => {
       conn = peer.connect(hostId, { reliable: true });
-      playerNames[2] = guestName || 'Player 2';
+      playerNames[2] = guestName || '2번 플레이어';
       myPlayer = 2; mode = 'guest'; roomCode = code;
       _setupConn();
     });
@@ -103,13 +103,13 @@ const Multiplayer = (() => {
     conn.on('data', msg => {
       if (msg.type === 'host_hello') {
         playerNames[1] = msg.name; updateHUD();
-        showStatus('Connected to ' + msg.name, COLORS[1]);
+        showStatus('연결됐습니다: ' + msg.name, COLORS[1]);
       } else if (msg.type === 'guest_hello') {
         playerNames[2] = msg.name; updateHUD();
-        showStatus(msg.name + ' joined! 🎮', COLORS[2]);
+        showStatus(msg.name + ' 참가했습니다! 🎮', COLORS[2]);
         // Update share modal status
         const statusEl = document.getElementById('mp-join-status');
-        if (statusEl) statusEl.textContent = ' ' + msg.name + ' joined!';
+        if (statusEl) statusEl.textContent = ' ' + msg.name + ' 참가했습니다!';
       } else if (msg.type === 'move') {
         state.scores[msg.player]    = msg.totalScore;
         state.movesLeft[msg.player] = msg.movesLeft;
@@ -117,7 +117,7 @@ const Multiplayer = (() => {
         if (state.movesLeft[1] <= 0 && state.movesLeft[2] <= 0) endGame();
       } else if (msg.type === 'rematch') {
         _initState(); active = true; updateHUD();
-        showStatus('Rematch! 🔄', '#a78bfa');
+        showStatus('다시 대결! 🔄', '#a78bfa');
       } else if (msg.type === 'ping') {
         _send({ type: 'pong' });
       }
@@ -170,13 +170,13 @@ const Multiplayer = (() => {
     _send({ type:'game_over', scores:state.scores });
     const w = state.scores[1] > state.scores[2] ? 1 : state.scores[2] > state.scores[1] ? 2 : 0;
     const msg = w === 0
-      ? 'It\'s a Tie! ' + state.scores[1].toLocaleString() + ' — ' + state.scores[2].toLocaleString()
-      : playerNames[w] + ' Wins! ' + state.scores[w].toLocaleString();
+      ? '무승부! ' + state.scores[1].toLocaleString() + ' — ' + state.scores[2].toLocaleString()
+      : playerNames[w] + ' 승리! ' + state.scores[w].toLocaleString();
     const hud = document.getElementById('mp-hud');
     if (hud) hud.innerHTML = '<div style="width:100%;text-align:center">' +
       '<span style="color:#fbbf24;font-weight:700">🏆 ' + msg + '</span>' +
-      '<button onclick="Multiplayer.rematch()" style="margin-left:10px;background:#7c3aed;color:#fff;border:none;padding:4px 12px;border-radius:8px;cursor:pointer;font-size:0.8rem">🔄 Rematch</button>' +
-      '<button onclick="Multiplayer.stop()" style="margin-left:6px;background:rgba(255,255,255,0.1);color:#fff;border:none;padding:4px 10px;border-radius:8px;cursor:pointer;font-size:0.8rem">Exit</button>' +
+      '<button onclick="Multiplayer.rematch()" style="margin-left:10px;background:#7c3aed;color:#fff;border:none;padding:4px 12px;border-radius:8px;cursor:pointer;font-size:0.8rem">🔄 다시 대결</button>' +
+      '<button onclick="Multiplayer.stop()" style="margin-left:6px;background:rgba(255,255,255,0.1);color:#fff;border:none;padding:4px 10px;border-radius:8px;cursor:pointer;font-size:0.8rem">나가기</button>' +
       '</div>';
     if (typeof saveScore === 'function') saveScore(Math.max(state.scores[1], state.scores[2]), 0);
     if (typeof renderLeaderboard === 'function') renderLeaderboard();
@@ -185,7 +185,7 @@ const Multiplayer = (() => {
   function rematch() {
     _initState(); active = true;
     _send({ type:'rematch' }); updateHUD();
-    showStatus('Rematch! 🔄', '#a78bfa');
+    showStatus('다시 대결! 🔄', '#a78bfa');
   }
 
   // ── KEEPALIVE ─────────────────────────────────────────────────
@@ -195,10 +195,10 @@ const Multiplayer = (() => {
   // ── LOCAL 2-PLAYER ────────────────────────────────────────────
   function startLocal(n1, n2) {
     mode = 'local'; active = true; myPlayer = 1;
-    playerNames[1] = n1 || 'Player 1';
-    playerNames[2] = n2 || 'Player 2';
+    playerNames[1] = n1 || '1번 플레이어';
+    playerNames[2] = n2 || '2번 플레이어';
     _initState(); renderHUD();
-    showStatus(playerNames[1] + ' goes first! 🎮', COLORS[1]);
+    showStatus(playerNames[1] + '님부터 시작해요! 🎮', COLORS[1]);
   }
 
   // ── STOP ──────────────────────────────────────────────────────
@@ -251,16 +251,16 @@ const Multiplayer = (() => {
       '<div style="flex:1;text-align:left;opacity:' + (state.movesLeft[1]>0?1:0.4) + ';transition:opacity 0.3s">' +
         '<div style="color:' + COLORS[1] + ';font-weight:700;font-size:0.8rem">' + (myPlayer===1?'👤 ':'') + playerNames[1] + '</div>' +
         '<div style="color:#e6edf3;font-size:1.1rem;font-weight:800">' + state.scores[1].toLocaleString() + '</div>' +
-        '<div style="color:#8b949e;font-size:0.7rem">' + state.movesLeft[1] + ' moves</div>' +
+        '<div style="color:#8b949e;font-size:0.7rem">' + state.movesLeft[1] + '회 남음</div>' +
       '</div>' +
       '<div style="text-align:center;min-width:56px">' +
         '<div style="color:#8b949e;font-size:0.68rem">' + modeIcon + rc + '</div>' +
-        '<div style="color:#6b7280;font-size:0.72rem">VS</div>' +
+        '<div style="color:#6b7280;font-size:0.72rem">대결</div>' +
       '</div>' +
       '<div style="flex:1;text-align:right;opacity:' + (state.movesLeft[2]>0?1:0.4) + ';transition:opacity 0.3s">' +
         '<div style="color:' + COLORS[2] + ';font-weight:700;font-size:0.8rem">' + playerNames[2] + (myPlayer===2?' 👤':'') + '</div>' +
         '<div style="color:#e6edf3;font-size:1.1rem;font-weight:800">' + state.scores[2].toLocaleString() + '</div>' +
-        '<div style="color:#8b949e;font-size:0.7rem">' + state.movesLeft[2] + ' moves</div>' +
+        '<div style="color:#8b949e;font-size:0.7rem">' + state.movesLeft[2] + '회 남음</div>' +
       '</div>' +
       '<button onclick="Multiplayer.stop()" style="background:rgba(255,255,255,0.08);border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:4px 8px;cursor:pointer;font-size:0.72rem;margin-left:8px">✕</button>';
   }
@@ -279,19 +279,19 @@ const Multiplayer = (() => {
     m.innerHTML =
       '<div style="background:#13151f;border-radius:24px;padding:28px;max-width:380px;width:100%;text-align:center;border:1px solid #30363d">' +
         '<div style="font-size:2rem;margin-bottom:6px">🔗</div>' +
-        '<h2 style="color:#a78bfa;margin:0 0 4px;font-size:1.3rem">Invite Friend</h2>' +
-        '<p style="color:#6b7280;font-size:0.82rem;margin:0 0 16px">Share code or link — they open it and join instantly</p>' +
+        '<h2 style="color:#a78bfa;margin:0 0 4px;font-size:1.3rem">친구 초대</h2>' +
+        '<p style="color:#6b7280;font-size:0.82rem;margin:0 0 16px">초대 코드나 주소를 보내면 친구가 참가할 수 있어요</p>' +
         '<div style="background:#0a0c14;border:2px solid #7c3aed;border-radius:14px;padding:16px;margin-bottom:14px;cursor:pointer" onclick="navigator.clipboard.writeText(\'' + code + '\')">' +
-          '<div style="color:#6b7280;font-size:0.7rem;margin-bottom:4px">ROOM CODE</div>' +
+          '<div style="color:#6b7280;font-size:0.7rem;margin-bottom:4px">방 코드</div>' +
           '<div style="color:#a78bfa;font-size:2.8rem;font-weight:900;letter-spacing:0.25em;font-family:monospace">' + code + '</div>' +
-          '<div style="color:#6b7280;font-size:0.72rem;margin-top:4px">Tap to copy</div>' +
+          '<div style="color:#6b7280;font-size:0.72rem;margin-top:4px">눌러서 복사</div>' +
         '</div>' +
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">' +
-          '<button onclick="navigator.clipboard.writeText(\'' + encodedLink + '\')" style="padding:11px;border-radius:12px;background:#1e1f2e;color:#e6edf3;border:1px solid #30363d;cursor:pointer;font-weight:600;font-size:0.85rem">📋 Copy Link</button>' +
-          '<button onclick="navigator.share ? navigator.share({title:\'Sweet Crush Battle\',url:\'' + encodedLink + '\'}) : navigator.clipboard.writeText(\'' + encodedLink + '\')" style="padding:11px;border-radius:12px;background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;border:none;cursor:pointer;font-weight:700;font-size:0.85rem">📤 Share</button>' +
+          '<button onclick="navigator.clipboard.writeText(\'' + encodedLink + '\')" style="padding:11px;border-radius:12px;background:#1e1f2e;color:#e6edf3;border:1px solid #30363d;cursor:pointer;font-weight:600;font-size:0.85rem">📋 주소 복사</button>' +
+          '<button onclick="navigator.share ? navigator.share({title:\'카드빌 대결\',url:\'' + encodedLink + '\'}) : navigator.clipboard.writeText(\'' + encodedLink + '\')" style="padding:11px;border-radius:12px;background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;border:none;cursor:pointer;font-weight:700;font-size:0.85rem">📤 공유</button>' +
         '</div>' +
-        '<div style="color:#6b7280;font-size:0.78rem;margin-bottom:14px">⏳ Waiting… <span id="mp-join-status" style="color:#22c55e"></span></div>' +
-        '<button onclick="document.getElementById(\'mp-share\').style.display=\'none\'" style="width:100%;background:rgba(255,255,255,0.06);color:#8b949e;border:1px solid #30363d;padding:10px;border-radius:10px;cursor:pointer">Play while waiting</button>' +
+        '<div style="color:#6b7280;font-size:0.78rem;margin-bottom:14px">⏳ 친구 기다리는 중… <span id="mp-join-status" style="color:#22c55e"></span></div>' +
+        '<button onclick="document.getElementById(\'mp-share\').style.display=\'none\'" style="width:100%;background:rgba(255,255,255,0.06);color:#8b949e;border:1px solid #30363d;padding:10px;border-radius:10px;cursor:pointer">기다리는 동안 게임하기</button>' +
       '</div>';
   }
 
@@ -311,37 +311,37 @@ const Multiplayer = (() => {
       m.innerHTML =
         '<div style="background:#13151f;border-radius:24px;padding:28px;max-width:340px;width:100%;text-align:center;border:2px solid #ec4899">' +
           '<div style="font-size:2rem;margin-bottom:6px">🎮</div>' +
-          '<h2 style="color:#ec4899;margin:0 0 8px">Join Game</h2>' +
+          '<h2 style="color:#ec4899;margin:0 0 8px">게임 참가</h2>' +
           '<div style="color:#a78bfa;font-size:2.4rem;font-weight:900;letter-spacing:0.2em;font-family:monospace;margin:10px 0;background:#0a0c14;border-radius:10px;padding:10px">' + roomParam + '</div>' +
-          '<input id="mp-guest-name" placeholder="Your name" maxlength="15" style="width:100%;padding:11px 14px;border-radius:10px;border:1px solid #ec4899;background:#0a0c14;color:#e6edf3;font-size:0.95rem;margin:0 0 14px;box-sizing:border-box;text-align:center">' +
-          '<button onclick="const n=document.getElementById(\'mp-guest-name\').value.trim()||\'Player 2\';document.getElementById(\'mp-setup\').style.display=\'none\';Multiplayer.joinRoom(\'' + roomParam + '\',n);" style="width:100%;background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;border:none;padding:13px;border-radius:12px;font-weight:700;cursor:pointer;font-size:1rem;margin-bottom:10px">🚀 Join Game!</button>' +
-          '<p style="color:#6b7280;font-size:0.75rem">You\'ll play as Player 2</p>' +
+          '<input id="mp-guest-name" placeholder="내 이름" maxlength="15" style="width:100%;padding:11px 14px;border-radius:10px;border:1px solid #ec4899;background:#0a0c14;color:#e6edf3;font-size:0.95rem;margin:0 0 14px;box-sizing:border-box;text-align:center">' +
+          '<button onclick="const n=document.getElementById(\'mp-guest-name\').value.trim()||\'Player 2\';document.getElementById(\'mp-setup\').style.display=\'none\';Multiplayer.joinRoom(\'' + roomParam + '\',n);" style="width:100%;background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;border:none;padding:13px;border-radius:12px;font-weight:700;cursor:pointer;font-size:1rem;margin-bottom:10px">🚀 게임 참가!</button>' +
+          '<p style="color:#6b7280;font-size:0.75rem">2번 플레이어로 참가합니다</p>' +
         '</div>';
       return;
     }
 
     m.innerHTML =
       '<div style="background:#13151f;border-radius:24px;padding:26px;max-width:380px;width:100%;border:1px solid #30363d">' +
-        '<h2 style="color:#a78bfa;text-align:center;margin:0 0 6px;font-size:1.3rem">👥 Multiplayer</h2>' +
-        '<p style="color:#6b7280;font-size:0.8rem;text-align:center;margin:0 0 18px">Same device or different phones</p>' +
-        '<label style="color:#8b949e;font-size:0.75rem;display:block;margin-bottom:4px">Your name</label>' +
+        '<h2 style="color:#a78bfa;text-align:center;margin:0 0 6px;font-size:1.3rem">👥 2인 대전</h2>' +
+        '<p style="color:#6b7280;font-size:0.8rem;text-align:center;margin:0 0 18px">한 기기 또는 다른 기기에서 대결</p>' +
+        '<label style="color:#8b949e;font-size:0.75rem;display:block;margin-bottom:4px">내 이름</label>' +
         '<input id="mp-myname" value="' + playerNames[1] + '" maxlength="15" style="width:100%;padding:9px 12px;border-radius:10px;border:1px solid #30363d;background:#0a0c14;color:#e6edf3;font-size:0.92rem;margin-bottom:16px;box-sizing:border-box">' +
         '<div style="background:#0f1117;border-radius:14px;padding:14px;margin-bottom:10px;border:1px solid #1e293b">' +
-          '<div style="color:#22c55e;font-size:0.75rem;font-weight:700;margin-bottom:8px">🌐 DIFFERENT DEVICES</div>' +
-          '<button onclick="const n=document.getElementById(\'mp-myname\').value.trim()||\'Player 1\';document.getElementById(\'mp-setup\').style.display=\'none\';Multiplayer.createRoom(n);" style="width:100%;padding:11px;border-radius:12px;background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;border:none;font-weight:700;cursor:pointer;font-size:0.9rem;margin-bottom:8px">🔗 Create Room → Get Code</button>' +
+          '<div style="color:#22c55e;font-size:0.75rem;font-weight:700;margin-bottom:8px">🌐 다른 기기 대결</div>' +
+          '<button onclick="const n=document.getElementById(\'mp-myname\').value.trim()||\'Player 1\';document.getElementById(\'mp-setup\').style.display=\'none\';Multiplayer.createRoom(n);" style="width:100%;padding:11px;border-radius:12px;background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;border:none;font-weight:700;cursor:pointer;font-size:0.9rem;margin-bottom:8px">🔗 방 만들고 코드 받기</button>' +
           '<div style="display:flex;gap:8px">' +
-            '<input id="mp-code" placeholder="Enter code (ABCXYZ)" maxlength="6" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,\'\')" style="flex:1;padding:9px 12px;border-radius:10px;border:1px solid #30363d;background:#0a0c14;color:#e6edf3;font-size:0.85rem;letter-spacing:0.12em;font-family:monospace">' +
-            '<button onclick="const c=document.getElementById(\'mp-code\').value.trim();const n=document.getElementById(\'mp-myname\').value.trim()||\'Player 2\';if(c.length<4){alert(\'Enter a valid room code\');return;}document.getElementById(\'mp-setup\').style.display=\'none\';Multiplayer.joinRoom(c,n);" style="padding:9px 14px;border-radius:10px;background:#ec4899;color:#fff;border:none;font-weight:700;cursor:pointer">Join</button>' +
+            '<input id="mp-code" placeholder="방 코드 입력 (ABCXYZ)" maxlength="6" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,\'\')" style="flex:1;padding:9px 12px;border-radius:10px;border:1px solid #30363d;background:#0a0c14;color:#e6edf3;font-size:0.85rem;letter-spacing:0.12em;font-family:monospace">' +
+            '<button onclick="const c=document.getElementById(\'mp-code\').value.trim();const n=document.getElementById(\'mp-myname\').value.trim()||\'Player 2\';if(c.length<4){alert(\'올바른 방 코드를 입력하세요\');return;}document.getElementById(\'mp-setup\').style.display=\'none\';Multiplayer.joinRoom(c,n);" style="padding:9px 14px;border-radius:10px;background:#ec4899;color:#fff;border:none;font-weight:700;cursor:pointer">참가</button>' +
           '</div>' +
         '</div>' +
         '<div style="background:#0f1117;border-radius:14px;padding:14px;border:1px solid #1e293b">' +
-          '<div style="color:#8b949e;font-size:0.75rem;font-weight:700;margin-bottom:8px">🖥️ SAME DEVICE</div>' +
+          '<div style="color:#8b949e;font-size:0.75rem;font-weight:700;margin-bottom:8px">🖥️ 한 기기 대결</div>' +
           '<div style="display:flex;gap:8px">' +
-            '<input id="mp-p2" placeholder="Friend\'s name" maxlength="15" style="flex:1;padding:9px 12px;border-radius:10px;border:1px solid #30363d;background:#0a0c14;color:#e6edf3;font-size:0.85rem">' +
-            '<button onclick="const n1=document.getElementById(\'mp-myname\').value.trim()||\'Player 1\';const n2=document.getElementById(\'mp-p2\').value.trim()||\'Player 2\';document.getElementById(\'mp-setup\').style.display=\'none\';Multiplayer.startLocal(n1,n2);" style="padding:9px 14px;border-radius:10px;background:#7c3aed;color:#fff;border:none;font-weight:700;cursor:pointer">▶ Play</button>' +
+            '<input id="mp-p2" placeholder="친구 이름" maxlength="15" style="flex:1;padding:9px 12px;border-radius:10px;border:1px solid #30363d;background:#0a0c14;color:#e6edf3;font-size:0.85rem">' +
+            '<button onclick="const n1=document.getElementById(\'mp-myname\').value.trim()||\'Player 1\';const n2=document.getElementById(\'mp-p2\').value.trim()||\'Player 2\';document.getElementById(\'mp-setup\').style.display=\'none\';Multiplayer.startLocal(n1,n2);" style="padding:9px 14px;border-radius:10px;background:#7c3aed;color:#fff;border:none;font-weight:700;cursor:pointer">▶ 시작</button>' +
           '</div>' +
         '</div>' +
-        '<button onclick="document.getElementById(\'mp-setup\').style.display=\'none\'" style="width:100%;background:transparent;border:none;color:#4b5563;cursor:pointer;padding:12px;margin-top:6px;font-size:0.8rem">Cancel</button>' +
+        '<button onclick="document.getElementById(\'mp-setup\').style.display=\'none\'" style="width:100%;background:transparent;border:none;color:#4b5563;cursor:pointer;padding:12px;margin-top:6px;font-size:0.8rem">취소</button>' +
       '</div>';
   }
 

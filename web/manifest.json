@@ -1,7 +1,7 @@
 {
-  "name": "CardVille — Match-3 Puzzle",
-  "short_name": "CardVille",
-  "description": "250-stage match-3 puzzle beta with combos, boosters and worlds.",
+  "name": "카드빌 — 퍼즐 모험",
+  "short_name": "카드빌",
+  "description": "드래그로 즐기는 250단계 한글 퍼즐 모험",
   "start_url": "./",
   "display": "fullscreen",
   "orientation": "portrait-primary",

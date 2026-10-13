@@ -7,7 +7,7 @@ function getLeaderboard() {
 function saveScore(score, level) {
   if(!Number.isFinite(score)||!Number.isFinite(level))return;
   const lb=getLeaderboard();
-  const name=(localStorage.getItem('ccm3_playerName')||'Player').slice(0,20);
+  const name=(localStorage.getItem('ccm3_playerName')||'플레이어').slice(0,20);
   lb.push({name,score,level,date:new Date().toISOString()});
   lb.sort((a,b)=>(Number(b.score)||0)-(Number(a.score)||0));
   lb.splice(10);
@@ -25,13 +25,13 @@ function renderLeaderboard() {
   lb.slice(0,10).forEach((item,i)=>{
     const row=document.createElement('div');row.style.cssText='display:flex;justify-content:space-between;gap:8px;padding:.3rem 0;border-bottom:1px solid #30363d';
     const player=document.createElement('span'),points=document.createElement('span');
-    player.textContent=`${i===0?'🥇':i===1?'🥈':i===2?'🥉':''} ${String(item.name||'Player').slice(0,20)}`;
-    points.textContent=`${Number(item.score||0).toLocaleString()} (L${Number(item.level||1)})`;
+    player.textContent=`${i===0?'🥇':i===1?'🥈':i===2?'🥉':''} ${String(item.name||'플레이어').slice(0,20)}`;
+    points.textContent=`${Number(item.score||0).toLocaleString()} (${Number(item.level||1)}단계)`;
     points.style.color='#a78bfa';row.append(player,points);el.append(row);
   });
 }
 function setPlayerName() {
-  const name=prompt('닉네임을 입력하세요:',localStorage.getItem('ccm3_playerName')||'Player');
+  const name=prompt('닉네임을 입력하세요:',localStorage.getItem('ccm3_playerName')||'플레이어');
   if(name) localStorage.setItem('ccm3_playerName',name.slice(0,20));
 }
 document.addEventListener('DOMContentLoaded',renderLeaderboard);

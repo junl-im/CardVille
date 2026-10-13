@@ -39,12 +39,17 @@ for(const p of [
  new vm.Script(read(p),{filename:p});
 }
 assert(html.includes('cardville-balance.js'));
+assert(html.includes('<html lang="ko">'));
+assert(html.includes('function cvKeyboardSelect(r,c)'));
+assert(!/function onCellClick\(r,c\)\s*\{[^}]*state\.selected\s*=/.test(html),'No click-click swapping');
+assert(read('web/project-overlay/project.js').includes('board.setPointerCapture'),'Pointer capture needed');
+assert(read('web/project-overlay/project.js').includes("addEventListener('contextmenu'"),'No right click menu');
 assert(!html.includes("div.addEventListener('touchstart'"),'Avoid duplicate touch event handling');
 assert(read('web/js/a11y.js').includes('.cell[data-r='),'A11y must select the actual game cells');
 assert(read('web/js/leaderboard.js').includes('player.textContent'),'HTML name injection regression');
 assert(read('web/sw.js').includes("url.origin!==self.location.origin"),'SW must avoid cross-origin caching');
 const manifest=JSON.parse(read('web/manifest.json'));
-assert(manifest.name.includes('CardVille'));
+assert(manifest.name.includes('카드빌'));
 assert.equal(fs.existsSync(path.join(root,'web/LICENSE')),true);
 assert.equal(fs.existsSync(path.join(root,'firebase.json')),true);
 assert.equal(JSON.parse(read('.firebaserc')).projects.default,'cardville');

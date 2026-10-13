@@ -4,43 +4,43 @@
 const Difficulty = (function() {
   const LEVELS = {
     easy: {
-      label: '😊 Easy',
+      label: '😊 쉬움',
       color: '#22c55e',
       gridSize: 6,
       candyTypes: 4,
       movesPerLevel: 30,
       targetMultiplier: 0.7,
-      description: '6×6 board · 4 candy types · 30 moves',
+      description: '6×6 판 · 블록 4종 · 30회 이동',
       timeLimit: null,
     },
     normal: {
-      label: '😐 Normal',
+      label: '😐 보통',
       color: '#3b82f6',
       gridSize: 8,
       candyTypes: 5,
       movesPerLevel: 20,
       targetMultiplier: 1.0,
-      description: '8×8 board · 5 candy types · 20 moves',
+      description: '8×8 판 · 블록 5종 · 20회 이동',
       timeLimit: null,
     },
     hard: {
-      label: '😤 Hard',
+      label: '😤 어려움',
       color: '#f59e0b',
       gridSize: 8,
       candyTypes: 6,
       movesPerLevel: 15,
       targetMultiplier: 1.4,
-      description: '8×8 board · 6 candy types · 15 moves · harder targets',
+      description: '8×8 판 · 블록 6종 · 15회 이동 · 높은 목표',
       timeLimit: null,
     },
     expert: {
-      label: '💀 Expert',
+      label: '💀 전문가',
       color: '#ef4444',
       gridSize: 9,
       candyTypes: 7,
       movesPerLevel: 12,
       targetMultiplier: 2.0,
-      description: '9×9 board · 7 candy types · 12 moves · 60s time limit',
+      description: '9×9 판 · 블록 7종 · 12회 이동 · 60초 제한',
       timeLimit: 60,
     },
   };
@@ -66,7 +66,7 @@ const Difficulty = (function() {
     t.style.cssText = `position:fixed;top:120px;left:50%;transform:translateX(-50%);
       background:${d.color};color:#fff;padding:10px 24px;border-radius:20px;
       font-weight:700;z-index:9999;pointer-events:none;transition:opacity 0.4s`;
-    t.textContent = `${d.label} mode activated!`;
+    t.textContent = `${d.label} 난이도가 선택됐습니다!`;
     document.body.appendChild(t);
     setTimeout(() => { t.style.opacity='0'; setTimeout(()=>t.remove(),400); }, 1800);
   }
@@ -83,18 +83,18 @@ const Difficulty = (function() {
     modal.style.display = 'flex';
     modal.innerHTML = `
       <div style="background:#1a1f2e;border-radius:20px;padding:28px;max-width:360px;width:92%;border:1px solid #30363d">
-        <h2 style="color:#a78bfa;text-align:center;margin:0 0 20px">⚙️ Difficulty</h2>
+        <h2 style="color:#a78bfa;text-align:center;margin:0 0 20px">⚙️ 난이도</h2>
         ${Object.entries(LEVELS).map(([key, d]) => `
           <div onclick="Difficulty.set('${key}');document.getElementById('difficulty-modal').style.display='none';"
             style="border:2px solid ${current===key?d.color:'#30363d'};border-radius:12px;padding:12px 16px;
               margin-bottom:10px;cursor:pointer;transition:border-color 0.2s;background:${current===key?d.color+'22':'transparent'}">
             <div style="font-weight:700;color:${d.color};font-size:1rem">${d.label}</div>
             <div style="color:#8b949e;font-size:0.8rem;margin-top:2px">${d.description}</div>
-            ${d.timeLimit?`<div style="color:#ef4444;font-size:0.75rem;margin-top:2px">⏱ ${d.timeLimit}s time limit</div>`:''}
+            ${d.timeLimit?`<div style="color:#ef4444;font-size:0.75rem;margin-top:2px">⏱ ${d.timeLimit}초 제한</div>`:''}
           </div>`).join('')}
         <button onclick="document.getElementById('difficulty-modal').style.display='none'"
           style="width:100%;background:rgba(255,255,255,0.1);color:#fff;border:none;
-            padding:10px;border-radius:10px;cursor:pointer;margin-top:4px">Close</button>
+            padding:10px;border-radius:10px;cursor:pointer;margin-top:4px">닫기</button>
       </div>`;
   }
 

@@ -2,6 +2,7 @@
 (() => {
   'use strict';
   let focusRow = 0, focusCol = 0;
+  let keyboardMode = false;
   const GRID_SIZE = 8;
   const board = document.getElementById('board');
   function getCell(r,c) { return board?.querySelector(`.cell[data-r="${r}"][data-c="${c}"]`) || null; }
@@ -13,12 +14,15 @@
       cell.setAttribute('aria-label',`퍼즐 ${r+1}행 ${c+1}열: ${cell.textContent || '빈 칸'}${cell.classList.contains('locked')?' 잠김':''}`);
     }
   }
+  document.addEventListener('focusin',e=>{keyboardMode=!!(board && board.contains(e.target));});
   function focusCell(r,c) {
     if(r<0||r>=GRID_SIZE||c<0||c>=GRID_SIZE) return;
     focusRow=r;focusCol=c;decorate();getCell(r,c)?.focus({preventScroll:true});
   }
   if (board) {
-    new MutationObserver(decorate).observe(board,{childList:true});
+    new MutationObserver(()=>{decorate();
+      if(keyboardMode && !board.contains(document.activeElement)) getCell(focusRow,focusCol)?.focus({preventScroll:true});
+    }).observe(board,{childList:true});
     decorate();
   }
   document.addEventListener('keydown', (e) => {
@@ -33,7 +37,13 @@
     else if(e.key==='ArrowDown') focusCell(focusRow+1,focusCol);
     else if(e.key==='ArrowLeft') focusCell(focusRow,focusCol-1);
     else if(e.key==='ArrowRight') focusCell(focusRow,focusCol+1);
-    else if(e.key==='Enter'||e.key===' ') getCell(focusRow,focusCol)?.click();
+    else if(e.key==='Enter'||e.key===' ') {
+      if (typeof cvKeyboardSelect === 'function') {
+        keyboardMode=true; cvKeyboardSelect(focusRow,focusCol);
+        queueMicrotask(()=>getCell(focusRow,focusCol)?.focus({preventScroll:true}));
+      }
+      else if (typeof state !== 'undefined' && state.activeBooster) getCell(focusRow,focusCol)?.click();
+    }
     else moved=false;
     if(moved) e.preventDefault();
   });
