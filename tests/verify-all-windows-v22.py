@@ -101,6 +101,12 @@ with sync_playwright() as playwright:
         document.getElementById('overlay-lose').style.display=kind==='lose'?'flex':'none'}""",kind)
       page.wait_for_timeout(380)  # animated entry transforms should settle before geometry audit
       assert viewport_fit('#overlay-'+kind+' .modal'),(tag,kind,'result panel clipped')
+      # Visual-regression guard: the official game button cutouts must be visible.
+      button_art={'win':{'next':'skin-green.webp','map':'skin-blue.webp','retry':'skin-gold.webp'},
+                  'lose':{'retry':'skin-gold.webp','map':'skin-blue.webp'}}[kind]
+      for action,filename in button_art.items():
+        value=page.locator('#overlay-'+kind+' button[data-lany-art="'+action+'"]').evaluate('e=>getComputedStyle(e).backgroundImage')
+        assert filename in value,(tag,kind,action,'missing approved raster skin',value)
       shot('result-'+kind,'#overlay-'+kind)
     page.evaluate("document.getElementById('overlay-lose').style.display='none'")
     page.evaluate('Difficulty.showModal()')
