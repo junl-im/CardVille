@@ -50,6 +50,10 @@ with sync_playwright() as playwright:
     page.evaluate('LanyShell.closeTutorial()')
     page.locator('.lany-art-friends').click()
     assert viewport_fit('.lany-friends-panel'),(tag,'friends card clipped')
+    assert page.locator('.lany-friends-panel footer button[data-lany-art="close"]').evaluate("""e=>{
+      const rect=e.getBoundingClientRect();const c=getComputedStyle(e);
+      return rect.width>=75 && rect.height>=35 && c.whiteSpace==='nowrap' && e.scrollWidth<=e.clientWidth+1;
+    }"""),(tag,'gallery close button wraps/clips on mobile')
     # Inspect every page, not only the first: no white/broken animal slots.
     friend_pages=0
     while True:

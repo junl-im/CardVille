@@ -367,3 +367,15 @@
     #lany-world-prev,#lany-world-next):focus-visible{
  outline:3px solid #6e377d!important;outline-offset:2px!important;
 }
+
+/* Manual 320×440 screenshot review: prevent vertical/wrapped gallery footer label. */
+.lany-friends-panel footer{gap:4px!important;flex-wrap:nowrap!important;align-items:center!important}
+.lany-friends-panel footer>span{flex:1 1 auto;min-width:0!important;line-height:1.2!important;font-size:clamp(.6rem,2.25vw,.73rem)!important}
+.lany-friends-panel footer button[data-lany-art="close"]{
+ box-sizing:border-box!important;flex:0 0 auto!important;
+ width:clamp(76px,25vw,108px)!important;min-width:76px!important;
+ min-height:40px!important;padding:5px 8px!important;
+ font-size:clamp(.77rem,2.9vw,.94rem)!important;line-height:1.12!important;
+ white-space:nowrap!important;word-break:keep-all!important;
+}
+.lany-friends-panel footer button[data-lany-art="close"]::before{display:none!important}

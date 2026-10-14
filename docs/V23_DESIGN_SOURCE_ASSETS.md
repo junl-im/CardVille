@@ -44,3 +44,5 @@
 - 일반 버튼의 라벨은 HTML 글씨로 유지하며 원본 시트의 인쇄된 텍스트는 사용하지 않는다.
 - 보조 WebP 백업: https://drive.google.com/file/d/1SZDzH4fKpF1m9PegBGV4RU9i6dhkYqls/view
 - 전체 원본 ZIP: https://drive.google.com/file/d/1ihGv6HohBBVJDUUdwBFqmMXKaeFIWmcI/view
+
+- 실측 320×440 QA 이미지에서 동물 도감 하단 닫기 버튼의 세로 글자 꺾임을 발견해 최소 너비, 줄바꿈 금지, 중복 장식 아이콘 제거를 적용했다.
