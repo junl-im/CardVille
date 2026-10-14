@@ -34,6 +34,7 @@ jobs:
           node tools/check-map-touch.cjs
           node tools/check-friends-mobile.cjs
           node tools/check-polish.cjs
+          node tools/check-gameplay-v12.cjs
           node tools/check-tempo.cjs
           node tools/check-firebase-preview.cjs
           # Both JSON configurations are parsed by the preflight checks above.
