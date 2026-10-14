@@ -36,3 +36,11 @@
 - 최종 WebP Drive 백업: https://drive.google.com/file/d/1kj6G0-OmksqtysgTRoO7HsP95rIguHz9/view
 - 합성 원화의 별도 레이블은 잘라내고 화면의 기존 텍스트만 남겼다. 기존 캐릭터/팝업/기록은 그대로 유지.
 - 현 월드와 새 원화 콘셉트의 배경이 완전히 일치하지 않는 구역은 실제 QA 스크린샷을 기준으로 추가 아트 조정 필요.
+
+## 게임 아이콘 버튼 적용
+
+- 버튼·글씨 시트에서 텍스트가 없는 기능 아이콘 7종만 정밀 추출. WebP 아틀라스(web/assets/v23/buttons/utility-atlas.webp)로 별도 보유.
+- 실제 적용: 월드맵 뒤로가기/도움말, 단계 준비 뒤로가기, 지역 탭 이전/다음, 설치 및 도감 닫기.
+- 일반 버튼의 라벨은 HTML 글씨로 유지하며 원본 시트의 인쇄된 텍스트는 사용하지 않는다.
+- 보조 WebP 백업: https://drive.google.com/file/d/1SZDzH4fKpF1m9PegBGV4RU9i6dhkYqls/view
+- 전체 원본 ZIP: https://drive.google.com/file/d/1ihGv6HohBBVJDUUdwBFqmMXKaeFIWmcI/view

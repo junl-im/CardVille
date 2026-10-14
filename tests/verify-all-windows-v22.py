@@ -39,6 +39,7 @@ with sync_playwright() as playwright:
     page.locator('#lany-install-button').click()
     assert viewport_fit('.lany-install-card'),(tag,'install panel clipped')
     assert 'install-ornament.webp' in page.locator('#lany-install-guide-title').evaluate("e=>getComputedStyle(e,'::before').backgroundImage"),(tag,'install ornament not applied')
+    assert 'utility-atlas.webp' in page.locator('.lany-install-close').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'new close art not applied')
     shot('install','.lany-install-card')
     page.locator('.lany-install-close').click()
     page.locator('.lany-art-help').click()
@@ -59,6 +60,7 @@ with sync_playwright() as playwright:
       assert page.locator('#lany-friends-grid img[loading="eager"]').count()==page.locator('#lany-friends-grid img').count(),(tag,'gallery must eagerly load visible art')
       friend_pages+=1
       assert 'friends-ornament.webp' in page.locator('#lany-friends-heading').evaluate("e=>getComputedStyle(e,'::before').backgroundImage"),(tag,'friends ornament not applied')
+      assert 'utility-atlas.webp' in page.locator('.lany-friends-close').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'gallery close art not applied')
       shot('friends-'+str(friend_pages),'.lany-friends-panel')
       if page.locator('#lany-friends-next').is_disabled():break
       page.evaluate('LanyFriends.page(1)')
@@ -80,6 +82,8 @@ with sync_playwright() as playwright:
       page.locator('#lany-update-banner').wait_for(state='hidden',timeout=3000)
     page.locator('#lany-start-button').click()
     assert page.locator('#lany-world-map').is_visible()
+    for selector in ('.lany-map-head .lany-back','.lany-map-head .lany-map-icon:not(.lany-mobile-fullscreen)','#lany-world-prev','#lany-world-next'):
+      assert 'utility-atlas.webp' in page.locator(selector).evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,selector,'new utility raster not applied')
     shot('map','#lany-world-map')
     assert page.locator('.lany-map-levels canvas.lany-route').count()==1
     assert 'world-map.webp' in page.locator('.lany-map-levels').evaluate('e=>getComputedStyle(e).backgroundImage')

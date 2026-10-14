@@ -322,3 +322,42 @@
  background-position:100% 100%,center center!important;
  background-repeat:no-repeat,no-repeat!important;
 }
+
+/* v2.3 source-board utility cutouts: 7 accessible icon-only raster buttons.
+   The native <button> nodes and aria-labels remain unchanged. */
+:root{--lp23-utility-icons:url('../assets/v23/buttons/utility-atlas.webp')}
+.lany-map-head .lany-back,.lany-prep-card .lany-prep-back,
+.lany-map-head .lany-map-icon:not(.lany-mobile-fullscreen),
+#lany-install-modal .lany-install-close,.lany-friends-panel .lany-friends-close,
+#lany-world-prev,#lany-world-next{
+  background-image:var(--lp23-utility-icons)!important;
+  background-size:400% 200%!important;
+  background-repeat:no-repeat!important;
+  border:0!important;box-shadow:none!important;
+  color:transparent!important;text-shadow:none!important;
+  font-size:0!important;line-height:0!important;
+  padding:0!important;
+}
+.lany-map-head .lany-back,.lany-prep-card .lany-prep-back{
+ background-position:0% 0%!important;
+}
+.lany-map-head .lany-map-icon:not(.lany-mobile-fullscreen){
+ background-position:33.333% 0%!important;
+}
+#lany-install-modal .lany-install-close,.lany-friends-panel .lany-friends-close{
+ background-position:66.666% 0%!important;
+}
+#lany-world-prev{background-position:100% 0%!important}
+#lany-world-next{background-position:0% 100%!important}
+:is(.lany-map-head .lany-back,.lany-prep-card .lany-prep-back,
+    .lany-map-head .lany-map-icon:not(.lany-mobile-fullscreen),
+    #lany-install-modal .lany-install-close,.lany-friends-panel .lany-friends-close,
+    #lany-world-prev,#lany-world-next):not(:disabled):active{
+ transform:translateY(2px) scale(.94)!important;filter:brightness(.94)!important;
+}
+:is(.lany-map-head .lany-back,.lany-prep-card .lany-prep-back,
+    .lany-map-head .lany-map-icon:not(.lany-mobile-fullscreen),
+    #lany-install-modal .lany-install-close,.lany-friends-panel .lany-friends-close,
+    #lany-world-prev,#lany-world-next):focus-visible{
+ outline:3px solid #6e377d!important;outline-offset:2px!important;
+}
