@@ -348,7 +348,13 @@
  background-position:66.666% 0%!important;
 }
 #lany-world-prev{background-position:100% 0%!important}
-#lany-world-next{background-position:0% 100%!important}
+/* Earlier v2.2 rule .lany-world-switcher #lany-world-next has stronger specificity. */
+.lany-world-switcher #lany-world-next{
+ background-image:var(--lp23-utility-icons)!important;
+ background-size:400% 200%!important;
+ background-position:0% 100%!important;
+ background-repeat:no-repeat!important;
+}
 :is(.lany-map-head .lany-back,.lany-prep-card .lany-prep-back,
     .lany-map-head .lany-map-icon:not(.lany-mobile-fullscreen),
     #lany-install-modal .lany-install-close,.lany-friends-panel .lany-friends-close,
