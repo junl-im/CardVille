@@ -1,7 +1,7 @@
 /* 라니팡 v1.7 — cohesive illustrated title composition, not boxed web buttons.
-   Forest and characters are original SVG game assets; accessible actions stay real buttons. */
+   The original approved WebP cover remains authoritative; accessible actions stay real buttons. */
 body.lany-at-title .lany-title{
-  background:#7bd3fb url('../assets/title/title-forest-v17.svg') center center/cover no-repeat!important;
+  background:#7bd3fb url('../assets/lanypang-cover.webp') center center/cover no-repeat!important;
 }
 .lany-title .lany-cover{opacity:0!important;visibility:hidden}
 .lany-title .lany-title-scrim{

@@ -1,5 +1,5 @@
 /* 라니팡 v2.1 — premium independent raster art kit.
- * Every button, popup, HUD, map and booster background is WebP, not hand-built SVG.
+ * Every button, popup, HUD, map and booster background is WebP, not generic vector placeholders.
  * Real <button> elements keep text, keyboard focus, pointer and existing JS behaviour.
  */
 :root{--lany-21-pink:url('../assets/ui/v21/buttons/skin-pink.webp');--lany-21-blue:url('../assets/ui/v21/buttons/skin-blue.webp');--lany-21-green:url('../assets/ui/v21/buttons/skin-green.webp');--lany-21-gold:url('../assets/ui/v21/buttons/skin-gold.webp');--lany-21-wood:url('../assets/ui/v21/buttons/skin-wood.webp');--lany-21-red:url('../assets/ui/v21/buttons/skin-red.webp')}
@@ -62,7 +62,7 @@ button[data-lany-art="retry"],button[data-lany-art="exit"],button[data-lany-art=
 button[data-lany-art="map"],button[data-lany-art="home"],button[data-lany-art="back"]{background-image:var(--lany-21-blue)!important}
 button[data-lany-art="help"],button[data-lany-art="friends"]{background-image:var(--lany-21-gold)!important}
 button[data-lany-art="pause"]{background-image:var(--lany-21-wood)!important}
-/* Functional button icon artwork is now raster as well, not SVG CSS badges. */
+/* Functional button icon artwork is now raster as well, not generic vector CSS badges. */
 button[data-lany-art]::before{background-image:var(--lany-action-image)!important;filter:none!important}
 button[data-lany-art="play"]{--lany-action-image:url('../assets/ui/v21/buttons/action-play.webp')}
 button[data-lany-art="resume"]{--lany-action-image:url('../assets/ui/v21/buttons/action-resume.webp')}

@@ -1,0 +1,203 @@
+/* 라니팡 v2.2 - unified raster-only HUD, map and candy button polish.
+   After legacy styles: intentionally resets conflicting button and map layers. */
+:root{
+ --cv-cream:#fff8e9;
+ --cv-berry:#88466c;
+ --cv-skin-blue:url('../assets/ui/v21/buttons/skin-blue.webp');
+ --cv-skin-pink:url('../assets/ui/v21/buttons/skin-pink.webp');
+ --cv-skin-gold:url('../assets/ui/v21/buttons/skin-gold.webp');
+ --cv-skin-green:url('../assets/ui/v21/buttons/skin-green.webp');
+}
+#app>.header .logo{display:none!important}
+#app>.header{
+ box-sizing:border-box!important;width:min(100%,560px)!important;max-width:560px!important;
+ border:4px solid #fff9dc!important;border-radius:26px!important;
+ background:linear-gradient(180deg,#fffefa,#ffe9ee)!important;
+ box-shadow:0 5px 0 #d9a0aa,0 11px 17px #6a45704d!important;
+ padding:8px 10px!important;margin:0 auto 9px!important;
+ backdrop-filter:none!important;min-height:73px!important;
+}
+#app>.header .hud{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:clamp(4px,.9vw,9px)!important;width:100%;min-width:0}
+#app>.header .hud-box:nth-child(2),#app>.header .hud-box:nth-child(3){display:none!important}
+#app>.header .hud-box{flex:1 1 0;min-width:0!important;max-width:150px;min-height:54px!important;box-sizing:border-box!important;padding:7px 6px 6px!important;background-size:100% 100%!important}
+#app>.header .hud-box.lany-moves-hud{background-image:url('../assets/ui/v21/hud/panel-moves.webp')!important}
+#app>.header .hud-box .hud-lbl{font-size:clamp(.62rem,1.8vw,.74rem)!important;font-weight:1000!important;color:#7b4f69!important}
+#app>.header .hud-box .hud-val{font-size:clamp(1.12rem,3.3vw,1.45rem)!important;letter-spacing:-.03em;line-height:1.1!important;color:#603a60!important}
+#app>.header .hud button{
+ flex:0 0 clamp(38px,8.6vw,49px)!important;width:clamp(38px,8.6vw,49px)!important;
+ height:clamp(40px,9vw,52px)!important;min-height:40px!important;
+ padding:3px!important;border:0!important;min-width:0!important;
+ background-image:var(--cv-skin-blue)!important;
+ background-size:100% 100%!important;background-position:center!important;
+ box-shadow:none!important;font-size:0!important;line-height:0!important;
+ color:transparent!important;text-shadow:none!important;
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+}
+#app>.header .hud button[data-lany-art="pause"]{background-image:var(--cv-skin-gold)!important}
+#app>.header .hud button[data-lany-art]::before{--lany-action-size:clamp(23px,5.5vw,30px);width:var(--lany-action-size)!important;height:var(--lany-action-size)!important;flex:0 0 var(--lany-action-size)!important}
+#app>.header .hud #music-btn{font-size:clamp(1rem,3vw,1.2rem)!important;line-height:1!important;color:#fff!important}
+#app>.header .hud button:active,#app>.header .hud button.lany-pressed{transform:translateY(3px) scale(.94)!important}
+#app>.level-info{
+ box-sizing:border-box!important;width:min(100%,560px)!important;max-width:560px!important;
+ margin:0 auto 10px!important;padding:10px 14px 13px!important;
+ background:linear-gradient(#fff9e9,#ffe4ed)!important;
+ border:3px solid #fff6d5!important;border-radius:19px!important;
+ box-shadow:0 4px 0 #d59caf,0 7px 10px #633d6e42!important;
+ gap:7px!important;color:#79455f!important;
+}
+#app>.level-info .level-title{color:#8a446b!important;font-size:clamp(.77rem,2.8vw,1rem)!important;font-weight:1000!important}
+#app>.level-info .level-goal{color:#945d71!important;font-size:clamp(.72rem,2.4vw,.87rem)!important;font-weight:950!important}
+#app>.level-info .level-row:last-child{color:#8b5978!important;opacity:1!important;font-size:.76rem!important;font-weight:850!important}
+.lany-score-progress{height:34px;position:relative;display:block;margin:1px 10px 4px 3px}
+.lany-score-progress .progress-bar{
+ box-sizing:border-box!important;position:absolute;left:0;right:0;top:9px;
+ height:17px!important;background:#416671!important;border:3px solid #ecfaff!important;
+ box-shadow:inset 0 2px 4px #183d4e88,0 3px 0 #a0b6be!important;
+ border-radius:999px!important;overflow:hidden!important;
+}
+.lany-score-progress .progress-fill{
+ height:100%!important;background:linear-gradient(180deg,#fff58b,#ffd532 54%,#f5a615)!important;
+ box-shadow:inset 0 3px 2px #fffdda!important;transition:width .3s ease!important
+}
+.lany-score-progress .lany-star-checkpoint{
+ position:absolute;top:0;transform:translateX(-50%);z-index:3;
+ font-size:clamp(1.3rem,4.5vw,1.85rem);line-height:1;
+ -webkit-text-stroke:1.5px #c28f4b;color:#fff2c0;
+ text-shadow:0 2px 0 #976a45,0 3px 4px #69476688;
+ transition:transform .17s ease,color .17s ease;
+ pointer-events:none;
+}
+.lany-score-progress .lany-star-checkpoint.earned{
+ color:#ffcc24;text-shadow:0 0 8px #ffe976,0 2px 0 #b57935;
+ transform:translateX(-50%) scale(1.12);
+}
+#board-wrap{width:min(100%,560px)!important;max-width:560px!important}
+#board{
+ background:linear-gradient(160deg,#fff3b8,#ffd0e6 58%,#c9dffc)!important;
+ border:5px solid #fff6d3!important;
+ box-shadow:0 6px 0 #d59cae,0 10px 16px #683f674d,inset 0 0 0 3px #f9d1df!important;
+ padding:clamp(5px,1.3vw,12px)!important;
+ gap:clamp(2px,.8vw,5px)!important;
+}
+#board .cell{border-radius:clamp(8px,2.8vw,14px)!important;background-color:#fffdf57a}
+#board .cell.locked{background-color:#bdc4d8aa}
+#app .moves-bar{display:none!important}
+#app .boosters{
+ box-sizing:border-box;width:min(100%,560px)!important;display:grid!important;
+ grid-template-columns:repeat(4,minmax(0,1fr))!important;
+ gap:clamp(5px,1.9vw,11px)!important;margin:9px auto 0!important;
+ padding:6px 8px 8px!important;border:3px solid #fff4cc!important;
+ border-radius:19px!important;background:linear-gradient(#fff8e9,#fce6eb)!important;
+ box-shadow:0 4px 0 #d5a1b3,0 8px 12px #653e6844!important;
+}
+#app .boosters .booster{
+ width:100%!important;max-width:114px!important;height:clamp(64px,14vw,90px)!important;
+ margin:0 auto!important;box-sizing:border-box!important;background-size:100% 100%!important;
+ overflow:visible!important;flex-shrink:1!important;transition:transform .12s,filter .12s!important;
+}
+#app .boosters .booster .count{
+ top:-3px!important;right:-2px!important;width:clamp(19px,4.9vw,25px)!important;height:clamp(19px,4.9vw,25px)!important;
+ font-size:clamp(.65rem,2.3vw,.8rem)!important;border:2px solid #fff7d6!important;
+ border-radius:50%!important;box-shadow:0 2px 0 #aa5685!important;
+}
+#app .boosters .booster span{
+ bottom:2px!important;left:5px!important;right:5px!important;max-width:none!important;
+ padding:3px 2px!important;border-radius:9px!important;background:#fff8e9ed!important;
+ font-size:clamp(.58rem,1.8vw,.76rem)!important;line-height:1.1!important;
+}
+#app .boosters .booster.active{outline:4px solid #ffde64!important;filter:brightness(1.1)}
+@media(hover:hover) and (pointer:fine){#app .boosters .booster:hover{transform:translateY(-3px) scale(1.025)!important;filter:brightness(1.06)!important}}
+#app .boosters .booster:active{transform:translateY(3px) scale(.96)!important}
+#app .lany-game-nav{box-sizing:border-box;width:min(100%,560px)!important;gap:5px!important}
+#app .lany-game-nav button{font-size:clamp(.7rem,2.4vw,.88rem)!important;min-height:43px!important;padding:5px!important}
+#app .cv-controls-hint{font-size:clamp(.63rem,2vw,.73rem)!important;margin-top:4px!important;color:#fff8e9!important}
+.lany-map-panel{background:#fff9ee!important}
+.lany-map-head{
+ min-height:57px;box-sizing:border-box;flex-shrink:0;
+ background:linear-gradient(#fffdf3,#d8f3f9)!important;
+ border-bottom:3px solid #fff1b9!important;
+}
+.lany-map-head h2{color:#80506f!important;font-weight:1000!important}
+.lany-map-summary{color:#8a5a70!important;background:#fff9e9!important}
+.lany-world-switcher{background:#fdf2e6!important;border-bottom:2px solid #f6d7c1!important}
+.lany-world-tab{background-image:var(--cv-skin-blue)!important;color:#fff!important;text-shadow:0 1px 1px #49718b!important}
+.lany-world-tab.active{background-image:var(--cv-skin-gold)!important;color:#80495b!important;text-shadow:0 1px 1px #fff4cc!important;filter:none!important}
+.lany-world-tab.locked-tab{opacity:.7!important}
+.lany-map-section{
+ box-sizing:border-box!important;
+ background:linear-gradient(#f3f9ee,#fff4e5)!important;
+ gap:clamp(3px,.8dvh,8px)!important;
+}
+.lany-map-section .lany-world-banner{
+ flex-shrink:0!important;min-height:clamp(48px,8dvh,75px)!important;
+ border-radius:21px!important;padding:clamp(6px,1.4dvh,12px) 15px!important;
+ background-image:url('../assets/ui/v21/map/chapter.webp')!important;
+ box-shadow:none!important;color:#834e62!important;
+}
+.lany-map-section .lany-world-banner h3{font-size:clamp(1rem,3.7vw,1.35rem)!important}
+.lany-map-section .lany-map-levels{
+ overflow:hidden!important;
+ border:4px solid #fff6cc!important;
+ border-radius:25px!important;
+ box-shadow:0 4px 0 #d3a7a5,inset 0 0 0 3px #f9eddb!important;
+ padding:6px!important;margin:0!important;
+ grid-template-rows:repeat(var(--lany-map-rows,3),clamp(52px,8dvh,70px))!important;
+}
+.lany-map-section .lany-map-levels .lany-route{
+ position:absolute!important;inset:0!important;width:100%!important;height:100%!important;
+ pointer-events:none!important;z-index:0!important;display:block!important;
+}
+.lany-map-section .lany-map-levels .lany-level{
+ background-image:url('../assets/map/stage-ordinary-v20.webp')!important;
+ width:clamp(49px,14vw,70px)!important;height:clamp(48px,7.7dvh,68px)!important;
+ min-height:0!important;padding:4px 2px!important;
+ border:0!important;box-shadow:none!important;
+ color:#54446d!important;font-weight:1000!important;
+ font-variant-numeric:tabular-nums!important;
+ text-shadow:0 1px 1px #fff!important;transition:transform .12s ease!important;
+}
+.lany-map-section .lany-map-levels .lany-level.current{background-image:url('../assets/map/stage-current-v20.webp')!important}
+.lany-map-section .lany-map-levels .lany-level.boss{background-image:url('../assets/map/stage-boss-v20.webp')!important}
+.lany-map-section .lany-map-levels .lany-level:disabled{background-image:url('../assets/map/stage-locked-v20.webp')!important;opacity:.9!important}
+.lany-map-section .lany-map-levels .lany-level small{font-size:.59rem!important;white-space:nowrap!important}
+.lany-map-section .lany-map-levels .lany-level:not(:disabled):active{transform:translateY(3px) scale(.94)!important}
+.lany-map-section .lany-game-pager{min-height:clamp(36px,5.3dvh,47px)!important;margin:0!important}
+.lany-map-section .lany-page-arrow,.lany-world-switcher .lany-page-arrow{
+ background-image:var(--cv-skin-blue)!important;background-size:100% 100%!important;
+ color:#fff!important;border:0!important;box-shadow:none!important;min-height:37px!important;
+}
+.lany-map-section #lany-map-next,.lany-world-switcher #lany-world-next{background-image:var(--cv-skin-gold)!important;color:#7c4b52!important}
+.lany-map-bottom{background:linear-gradient(#fff8ec,#ffe6ed)!important;border-top:3px solid #fff1c3!important;flex-shrink:0!important}
+.lany-map-bottom .lany-action{min-height:clamp(42px,6dvh,54px)!important;line-height:1.15!important}
+.lany-map-tip{background:#fff7d9!important;color:#8a5a77!important;line-height:1.3!important}
+@media(max-width:380px){
+ #app{padding:5px!important}
+ #app>.header{padding:5px!important;min-height:65px!important;border-width:3px!important}
+ #app>.header .hud{gap:2px!important}
+ #app>.header .hud-box{min-height:45px!important;padding:5px 2px!important}
+ #app>.header .hud button{width:34px!important;flex-basis:34px!important;height:37px!important;min-height:37px!important}
+ #app>.header .hud button[data-lany-art]::before{--lany-action-size:21px}
+ #app>.level-info{padding:7px 9px 11px!important}
+ .lany-score-progress{margin-right:7px;height:30px}
+ .lany-map-section .lany-map-levels .lany-level{width:46px!important;height:44px!important}
+ #app .boosters{gap:3px!important;padding:5px!important}
+ #app .boosters .booster{height:clamp(60px,18vw,72px)!important}
+ .lany-map-bottom{padding:6px 5px max(6px,env(safe-area-inset-bottom))!important}
+}
+@media(max-height:680px){
+ #app>.header{margin-bottom:5px!important;min-height:63px!important}
+ #app>.level-info{margin-bottom:6px!important;padding-top:6px!important;padding-bottom:7px!important;gap:4px!important}
+ .lany-score-progress{height:28px;margin-bottom:1px}.lany-score-progress .progress-bar{top:7px}
+ .lany-map-section .lany-world-banner{min-height:45px!important;padding:5px 11px!important}
+ .lany-map-section .lany-map-levels{grid-template-rows:repeat(var(--lany-map-rows,2),clamp(45px,9dvh,58px))!important;padding:3px!important}
+ .lany-map-section .lany-map-levels .lany-level{height:clamp(43px,8.6dvh,56px)!important}
+ #app .boosters .booster{height:clamp(56px,13vw,74px)!important}
+}
+@media(max-height:480px){
+ .lany-map-section .lany-world-banner{display:none!important}
+ .lany-map-section .lany-map-levels{grid-template-rows:repeat(var(--lany-map-rows,1),47px)!important}
+ .lany-map-section .lany-map-levels .lany-level{height:45px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .lany-score-progress .progress-fill,.lany-star-checkpoint,#app .boosters .booster{transition:none!important}
+}
