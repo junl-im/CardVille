@@ -50,9 +50,12 @@
    }
  }
  function onCombo(count){
+   // Combo animation remains, but chains no longer replenish the timer.
+   if(count<2 || document.hidden || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return;
    const board=$('board-wrap');if(!board)return;
-   board.classList.remove('lany-impact');void board.offsetWidth;board.classList.add('lany-impact');
-   if(count>=2&&enabled&&!expired){remaining=Math.min(durationFor(currentStage),remaining+Math.min(3,count));render()}
+   board.classList.remove('lany-impact');
+   if(typeof requestAnimationFrame==='function')requestAnimationFrame(()=>{if(board.isConnected)board.classList.add('lany-impact')});
+   else board.classList.add('lany-impact');
  }
  // Single timer loop: do not allocate a new interval on every stage start or view change.
  setInterval(update,200);
