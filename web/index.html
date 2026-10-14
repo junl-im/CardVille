@@ -995,6 +995,7 @@ async function trySwap(r1,c1,r2,c2){
   state.animating=true;
   doSwap(r1,c1,r2,c2);
   renderBoard();
+  window.LanyPolish?.onSwap(r1,c1,r2,c2);
   await sleep(120);
   const matches=findMatches();
   if(matches.length>0){
@@ -1102,7 +1103,7 @@ async function resolveMatches(matchGroups){
     const el=getCellEl(r,c);
     if(el) el.classList.add('matched');
   });
-  window.LanyPolish?.onMatch(allCells);
+  window.LanyPolish?.onMatch(allCells,state.combo);
   await sleep(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 120 : 290);
 
   // Score
