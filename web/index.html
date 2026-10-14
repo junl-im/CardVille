@@ -295,7 +295,7 @@ body {
     <div class="lany-title-top"><span class="lany-ribbon">반짝반짝 사탕마을에 오신 걸 환영해요</span><h1 class="lany-logo">라니<span>팡!</span></h1><p class="lany-subtitle">쓱 밀고, 팡! 터지는 퍼즐 세상</p></div>
     <div class="lany-title-bottom"><button id="lany-start-button" class="lany-cta" type="button">▶ 게임 시작</button>
       <button class="lany-secondary" type="button" onclick="LanyShell.openHelp()">❔ 게임 방법</button>
-      <button class="lany-secondary" type="button" onclick="LanyShell.toggleFullscreen()">⛶ 전체 화면</button>
+      <button class="lany-secondary lany-mobile-fullscreen" type="button" onclick="LanyShell.toggleFullscreen()">⛶ 전체 화면</button>
       <button class="lany-secondary" type="button" onclick="LanyFriends.open()">🐰 동물 친구들</button>
       <div class="lany-version">라니팡 v1.1.0 · 250단계 · 한국어 전용</div></div>
   </div>
@@ -537,34 +537,39 @@ const LANY_FACE_IDS=['rabbit','bear','chick','puppy','cat','fox','wolf'];
 const LANY_FACE_KO=['토끼','곰','병아리','강아지','고양이','여우','늑대'];
 const SPECIAL_NONE=0, SPECIAL_BOMB=1, SPECIAL_STRIPE_H=2, SPECIAL_STRIPE_V=3, SPECIAL_WRAP=4, SPECIAL_COLOR=5;
 const COLS = 8, ROWS = 8;
+// A skillful chain is rewarding without yielding unlimited points per move.
+function comboPoints(matched,chain){
+  const factor=chain<=1?1:chain===2?1.35:chain===3?1.65:2;
+  return Math.round(Math.max(0,matched)*30*factor);
+}
 
 // 250개 단계: 게임 화면에서 사용할 한국어 이름·지역을 직접 저장
 const LEVELS = [
-  {l:1,name:'사탕 골짜기 · 반짝이는 첫걸음',theme:'사탕 골짜기',goal:400,moves:30,colors:3,hasLocked:false,lockedCount:0,hasBombs:false,isBoss:false},
-  {l:2,name:'사탕 골짜기 · 달콤한 길목',theme:'사탕 골짜기',goal:500,moves:30,colors:3,hasLocked:false,lockedCount:0,hasBombs:false,isBoss:false},
-  {l:3,name:'사탕 골짜기 · 숨은 보석 찾기',theme:'사탕 골짜기',goal:600,moves:30,colors:3,hasLocked:false,lockedCount:0,hasBombs:false,isBoss:false},
-  {l:4,name:'사탕 골짜기 · 새로운 갈림길',theme:'사탕 골짜기',goal:700,moves:30,colors:3,hasLocked:false,lockedCount:0,hasBombs:false,isBoss:false},
-  {l:5,name:'사탕 골짜기 · 깜짝 도전',theme:'사탕 골짜기',goal:800,moves:30,colors:3,hasLocked:false,lockedCount:0,hasBombs:true,isBoss:false},
-  {l:6,name:'사탕 골짜기 · 빛나는 샛길',theme:'사탕 골짜기',goal:900,moves:30,colors:3,hasLocked:false,lockedCount:0,hasBombs:true,isBoss:false},
-  {l:7,name:'사탕 골짜기 · 세 갈래 기회',theme:'사탕 골짜기',goal:1000,moves:30,colors:3,hasLocked:false,lockedCount:0,hasBombs:true,isBoss:false},
-  {l:8,name:'사탕 골짜기 · 선물 상자',theme:'사탕 골짜기',goal:1100,moves:30,colors:3,hasLocked:false,lockedCount:0,hasBombs:true,isBoss:false},
-  {l:9,name:'사탕 골짜기 · 별들의 속삭임',theme:'사탕 골짜기',goal:1200,moves:30,colors:3,hasLocked:true,lockedCount:0,hasBombs:true,isBoss:false},
-  {l:10,name:'사탕 골짜기 · 반짝 폭발',theme:'사탕 골짜기',goal:1300,moves:30,colors:3,hasLocked:true,lockedCount:0,hasBombs:true,isBoss:false},
-  {l:11,name:'사탕 골짜기 · 수상한 문',theme:'사탕 골짜기',goal:1200,moves:30,colors:4,hasLocked:true,lockedCount:1,hasBombs:true,isBoss:false},
-  {l:12,name:'사탕 골짜기 · 뒤섞인 길',theme:'사탕 골짜기',goal:1400,moves:30,colors:4,hasLocked:true,lockedCount:1,hasBombs:true,isBoss:false},
-  {l:13,name:'사탕 골짜기 · 작은 기적',theme:'사탕 골짜기',goal:1600,moves:30,colors:4,hasLocked:true,lockedCount:1,hasBombs:true,isBoss:false},
-  {l:14,name:'사탕 골짜기 · 아슬아슬한 순간',theme:'사탕 골짜기',goal:1800,moves:30,colors:4,hasLocked:true,lockedCount:2,hasBombs:true,isBoss:false},
-  {l:15,name:'사탕 골짜기 · 다섯 색의 비밀',theme:'사탕 골짜기',goal:2000,moves:30,colors:4,hasLocked:true,lockedCount:2,hasBombs:true,isBoss:false},
-  {l:16,name:'사탕 골짜기 · 거센 파도',theme:'사탕 골짜기',goal:2200,moves:28,colors:4,hasLocked:true,lockedCount:2,hasBombs:true,isBoss:false},
-  {l:17,name:'사탕 골짜기 · 숨은 문양',theme:'사탕 골짜기',goal:2400,moves:28,colors:4,hasLocked:true,lockedCount:3,hasBombs:true,isBoss:false},
-  {l:18,name:'사탕 골짜기 · 꼬인 퍼즐',theme:'사탕 골짜기',goal:2600,moves:28,colors:4,hasLocked:true,lockedCount:3,hasBombs:true,isBoss:false},
-  {l:19,name:'사탕 골짜기 · 빛의 연쇄',theme:'사탕 골짜기',goal:2800,moves:28,colors:4,hasLocked:true,lockedCount:3,hasBombs:true,isBoss:false},
-  {l:20,name:'사탕 골짜기 · 순간의 선택',theme:'사탕 골짜기',goal:3000,moves:28,colors:4,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:false},
-  {l:21,name:'사탕 골짜기 · 마지막 열쇠',theme:'사탕 골짜기',goal:3200,moves:28,colors:4,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:false},
-  {l:22,name:'사탕 골짜기 · 거대한 도전',theme:'사탕 골짜기',goal:3400,moves:28,colors:4,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:false},
-  {l:23,name:'사탕 골짜기 · 황금빛 실마리',theme:'사탕 골짜기',goal:3600,moves:28,colors:4,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:false},
-  {l:24,name:'사탕 골짜기 · 최후의 시험',theme:'사탕 골짜기',goal:3800,moves:28,colors:4,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:false},
-  {l:25,name:'사탕 골짜기 · 전설의 관문',theme:'사탕 골짜기',goal:4000,moves:33,colors:4,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:true},
+  {l:1,name:'사탕 골짜기 · 반짝이는 첫걸음',theme:'사탕 골짜기',goal:650,moves:18,colors:4,hasLocked:false,lockedCount:0,hasBombs:false,isBoss:false},
+  {l:2,name:'사탕 골짜기 · 달콤한 길목',theme:'사탕 골짜기',goal:850,moves:18,colors:4,hasLocked:false,lockedCount:0,hasBombs:false,isBoss:false},
+  {l:3,name:'사탕 골짜기 · 숨은 보석 찾기',theme:'사탕 골짜기',goal:1100,moves:18,colors:4,hasLocked:false,lockedCount:0,hasBombs:false,isBoss:false},
+  {l:4,name:'사탕 골짜기 · 새로운 갈림길',theme:'사탕 골짜기',goal:1350,moves:18,colors:5,hasLocked:false,lockedCount:0,hasBombs:false,isBoss:false},
+  {l:5,name:'사탕 골짜기 · 깜짝 도전',theme:'사탕 골짜기',goal:1550,moves:18,colors:5,hasLocked:false,lockedCount:0,hasBombs:true,isBoss:false},
+  {l:6,name:'사탕 골짜기 · 빛나는 샛길',theme:'사탕 골짜기',goal:1750,moves:18,colors:5,hasLocked:false,lockedCount:0,hasBombs:true,isBoss:false},
+  {l:7,name:'사탕 골짜기 · 세 갈래 기회',theme:'사탕 골짜기',goal:1950,moves:18,colors:5,hasLocked:false,lockedCount:0,hasBombs:true,isBoss:false},
+  {l:8,name:'사탕 골짜기 · 선물 상자',theme:'사탕 골짜기',goal:2200,moves:18,colors:5,hasLocked:false,lockedCount:0,hasBombs:true,isBoss:false},
+  {l:9,name:'사탕 골짜기 · 별들의 속삭임',theme:'사탕 골짜기',goal:2450,moves:18,colors:5,hasLocked:true,lockedCount:1,hasBombs:true,isBoss:false},
+  {l:10,name:'사탕 골짜기 · 반짝 폭발',theme:'사탕 골짜기',goal:2700,moves:18,colors:5,hasLocked:true,lockedCount:2,hasBombs:true,isBoss:false},
+  {l:11,name:'사탕 골짜기 · 수상한 문',theme:'사탕 골짜기',goal:2850,moves:19,colors:5,hasLocked:true,lockedCount:1,hasBombs:true,isBoss:false},
+  {l:12,name:'사탕 골짜기 · 뒤섞인 길',theme:'사탕 골짜기',goal:2950,moves:19,colors:5,hasLocked:true,lockedCount:1,hasBombs:true,isBoss:false},
+  {l:13,name:'사탕 골짜기 · 작은 기적',theme:'사탕 골짜기',goal:3050,moves:19,colors:5,hasLocked:true,lockedCount:1,hasBombs:true,isBoss:false},
+  {l:14,name:'사탕 골짜기 · 아슬아슬한 순간',theme:'사탕 골짜기',goal:3200,moves:19,colors:5,hasLocked:true,lockedCount:2,hasBombs:true,isBoss:false},
+  {l:15,name:'사탕 골짜기 · 다섯 색의 비밀',theme:'사탕 골짜기',goal:3300,moves:19,colors:5,hasLocked:true,lockedCount:2,hasBombs:true,isBoss:false},
+  {l:16,name:'사탕 골짜기 · 거센 파도',theme:'사탕 골짜기',goal:3420,moves:18,colors:5,hasLocked:true,lockedCount:2,hasBombs:true,isBoss:false},
+  {l:17,name:'사탕 골짜기 · 숨은 문양',theme:'사탕 골짜기',goal:3540,moves:18,colors:5,hasLocked:true,lockedCount:3,hasBombs:true,isBoss:false},
+  {l:18,name:'사탕 골짜기 · 꼬인 퍼즐',theme:'사탕 골짜기',goal:3660,moves:18,colors:5,hasLocked:true,lockedCount:3,hasBombs:true,isBoss:false},
+  {l:19,name:'사탕 골짜기 · 빛의 연쇄',theme:'사탕 골짜기',goal:3780,moves:18,colors:5,hasLocked:true,lockedCount:3,hasBombs:true,isBoss:false},
+  {l:20,name:'사탕 골짜기 · 순간의 선택',theme:'사탕 골짜기',goal:3920,moves:18,colors:5,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:false},
+  {l:21,name:'사탕 골짜기 · 마지막 열쇠',theme:'사탕 골짜기',goal:4050,moves:18,colors:5,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:false},
+  {l:22,name:'사탕 골짜기 · 거대한 도전',theme:'사탕 골짜기',goal:4180,moves:18,colors:5,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:false},
+  {l:23,name:'사탕 골짜기 · 황금빛 실마리',theme:'사탕 골짜기',goal:4300,moves:18,colors:5,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:false},
+  {l:24,name:'사탕 골짜기 · 최후의 시험',theme:'사탕 골짜기',goal:4450,moves:18,colors:5,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:false},
+  {l:25,name:'사탕 골짜기 · 전설의 관문',theme:'사탕 골짜기',goal:4650,moves:22,colors:5,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:true},
   {l:26,name:'막대사탕 숲 · 반짝이는 첫걸음',theme:'막대사탕 숲',goal:4350,moves:28,colors:5,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:false},
   {l:27,name:'막대사탕 숲 · 달콤한 길목',theme:'막대사탕 숲',goal:4700,moves:28,colors:5,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:false},
   {l:28,name:'막대사탕 숲 · 숨은 보석 찾기',theme:'막대사탕 숲',goal:5050,moves:28,colors:5,hasLocked:true,lockedCount:4,hasBombs:true,isBoss:false},
@@ -1000,6 +1005,7 @@ async function trySwap(r1,c1,r2,c2){
   } else {
     doSwap(r1,c1,r2,c2); // swap back
     renderBoard();
+    window.LanyPolish?.invalidSwap(r1,c1,r2,c2);
   }
   state.animating=false;
   scheduleHint();
@@ -1097,11 +1103,10 @@ async function resolveMatches(matchGroups){
     if(el) el.classList.add('matched');
   });
   window.LanyPolish?.onMatch(allCells);
-  await sleep(350);
+  await sleep(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 120 : 290);
 
   // Score
-  let pts = allCells.size * 30 * state.combo;
-  if(state.combo>1) pts = Math.round(pts*1.2);
+  const pts = comboPoints(allCells.size,state.combo);
   state.score += pts;
   showScoreFloat(pts);
   if(state.combo>2) showCombo(state.combo);
@@ -1141,11 +1146,12 @@ async function resolveMatches(matchGroups){
 
 async function applyGravity(){
   let fell=false;
+  const dropped=[];
   for(let c=0;c<COLS;c++){
     let writeR=ROWS-1;
     for(let r=ROWS-1;r>=0;r--){
       if(state.board[r*COLS+c]!==null){
-        if(r!==writeR) fell=true;
+        if(r!==writeR){fell=true;dropped.push(writeR*COLS+c);}
         state.board[writeR*COLS+c]=state.board[r*COLS+c];
         state.specials[writeR*COLS+c]=state.specials[r*COLS+c];
         if(r!==writeR){ state.board[r*COLS+c]=null; state.specials[r*COLS+c]=SPECIAL_NONE; }
@@ -1157,12 +1163,14 @@ async function applyGravity(){
     const gemTypes=GEMS.slice(0,lv.colors);
     for(let r=writeR;r>=0;r--){
       state.board[r*COLS+c]=gemTypes[Math.floor(Math.random()*gemTypes.length)];
+      dropped.push(r*COLS+c);
       state.specials[r*COLS+c]=SPECIAL_NONE;
       fell=true;
     }
   }
   renderBoard();
-  if(fell) await sleep(250);
+  window.LanyPolish?.onFall(dropped);
+  if(fell) await sleep(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 80 : 210);
 }
 
 // ── Score float / combo display ──────────────────────────────
