@@ -33,6 +33,7 @@ jobs:
           node tools/check-art-buttons-v15.cjs
           node tools/check-action-art-v16.cjs
           node tools/check-title-stage-v17.cjs
+          node tools/check-visual-perf-v18.cjs
 
   browser-pages:
     needs: regression
@@ -49,6 +50,11 @@ jobs:
           python -m playwright install --with-deps chromium
           python -m pip install --quiet CairoSVG==2.7.1
           python tools/build-pwa-icons.py
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          python -m pip install --quiet Pillow==11.3.0
+          python tools/build-visual-v18.py
+          node tools/check-visual-perf-v18.cjs --raster
           node tools/check-pwa-v14.cjs --raster
       - name: Validate actual mobile and desktop page navigation
         run: |
@@ -60,14 +66,16 @@ jobs:
           python tests/verify-art-buttons-v15.py
           python tests/verify-action-art-v16.py
           python tests/verify-title-stage-v17.py
+          python tests/verify-v18-perf.py
       - name: Preserve comparison screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: lanypang-v17-title-and-gameplay-qa
+          name: lanypang-v18-raster-and-40-game-soak
           path: |
             docs/paging-v13/*.png
             docs/art-buttons-v15/*.png
             docs/action-art-v16/*.png
             docs/title-stage-v17/*.png
+            docs/v18-perf/*.png
           if-no-files-found: ignore
