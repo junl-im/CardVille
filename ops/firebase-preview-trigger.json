@@ -1,6 +1,6 @@
 {
-  "version": "0.9.0-lanypang-graphics-time-map-preview",
-  "request": "Publish LanyPang v0.9 improved illustrated route map, native cover-image loader, countdown challenge and original gem styling to PREVIEW ONLY",
+  "version": "0.9.1-lanypang-mobile-map-tap-fix",
+  "request": "Deploy LanyPang v0.9.1 Android stable map taps and new visible lower map button to Firebase preview ONLY",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,
@@ -20,5 +20,5 @@
   "regressionGuardCommit": "cf830eaccbbf9a154da30c04af9d957383b1e88b",
   "sourceCommit": "3e8ea02bdbb02f6586545dbacba91bfeb85e37e1",
   "brandingCommit": "44242d78216406860ea7aed40efd66978417c475",
-  "implementationCommit": "edcda1a1271545778df61caa631cb1385b8e9f0e"
+  "implementationCommit": "3d6380fc27addf732b40454d5bbff6f8bee78935"
 }
