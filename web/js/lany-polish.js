@@ -21,14 +21,20 @@ function burst(rect,type='burst-star'){
 }
 let pressed=null;
 function down(e){if(e.button!==0)return;const tile=e.target.closest?.('#board .cell');
- if(tile&&!tile.classList.contains('locked')){pressed=tile;tile.classList.add('lany-tap');face(tile,'wink');return;}
+ if(tile&&!tile.classList.contains('locked')){pressed=tile;tile.classList.add('lany-tap');return;}
  const button=e.target.closest?.('button,.booster');if(!button||button.disabled)return;
  button.classList.add('lany-tactile-down');setTimeout(()=>button.classList.remove('lany-tactile-down'),220);
 }
-function up(){if(pressed){const old=pressed;pressed=null;old.classList.remove('lany-tap');if(!old.classList.contains('matched'))face(old,'normal');}}
+function up(){if(pressed){const old=pressed;pressed=null;old.classList.remove('lany-tap');}}
 function onMatch(indices,chain=1){const cells=[];
   for(const idx of indices){let el=document.querySelector(`#board .cell[data-r="${Math.floor(idx/8)}"][data-c="${idx%8}"]`);if(el)cells.push(el)}
-  cells.forEach((el,i)=>{el.classList.add('lany-match-pop');face(el,(i+chain)%4===0?'wink':'cheer');el.style.setProperty('--lany-delay',Math.min(i,9)*16+'ms')});
+  const tiny=window.matchMedia?.('(max-width: 520px) and (pointer: coarse)').matches;
+  // Limit expensive WebP expression swaps. Every tile still gets the CSS match animation.
+  cells.forEach((el,i)=>{
+    el.classList.add('lany-match-pop');
+    if(i<(tiny?2:4))face(el,(i+chain)%4===0?'wink':'cheer');
+    el.style.setProperty('--lany-delay',Math.min(i,9)*16+'ms');
+  });
   if(cells.length){const a=cells[Math.floor(cells.length/2)],rect=a.getBoundingClientRect();burst(rect,cells.length>=5||chain>=3?'burst-star':'burst-heart');if(chain>=3)burst(rect,'combo')}
 }
 function onFall(indices){if(reduced())return;const tiles=document.getElementById('board')?.children;if(!tiles)return;indices.slice(0,24).forEach((idx,i)=>{const el=tiles[idx];if(el){el.classList.add('lany-fall-in');el.style.setProperty('--lany-delay',(i%8)*22+'ms')}})}
