@@ -36,7 +36,7 @@ with sync_playwright() as pw:
   page.locator('#lany-start-button').click()
   assert page.locator('#lany-world-map').is_visible(),name
   bg('#lany-world-map .lany-world-banner','chapter.webp')
-  bg('#lany-world-map .lany-map-bottom .lany-action','skin-green.webp')
+  bg('#lany-map-continue','skin-green.webp')
   page.screenshot(path=str(out/(name+'-map.png')))
   page.locator('#lany-map-continue').click()
   assert page.locator('#lany-stage-prep').is_visible(),name
