@@ -1,0 +1,100 @@
+/* 라니팡 v2.2 — one coherent raster UI: no vector images or vector DOM.
+   Existing live game controls remain semantic buttons; images supply the toy surfaces. */
+:root{--lany-v22-ink:#79465a;--lany-v22-cream:#fff8dc}
+/* GAME: one white illustrated status tray, not mismatched translucent boxes. */
+#app{background:linear-gradient(180deg,#ffe1ec 0%,#fff7ee 56%,#f7ddf6 100%)!important;color:var(--lany-v22-ink)!important;padding:clamp(4px,1.1vh,10px)!important}
+#app>.header.lany-v22-header{max-width:510px;width:100%;border:0!important;border-radius:22px!important;box-shadow:0 5px 0 #dfa8be,0 8px 18px #9c68964d!important;backdrop-filter:none!important;background:linear-gradient(165deg,#fffdf6,#fff3f3)!important;min-height:72px;padding:clamp(5px,1.2vw,10px)!important;margin:2px auto 7px!important}
+.lany-v22-header>.logo{display:none!important}
+.lany-v22-header>.hud{width:100%;display:grid;grid-template-columns:minmax(58px,.9fr) minmax(65px,1.15fr) minmax(52px,.9fr) minmax(42px,.7fr) minmax(42px,.78fr);gap:clamp(3px,1vw,7px);align-items:stretch}
+.lany-v22-header .lany-v22-moves-panel,.lany-v22-header .hud-box{border:0!important;border-radius:15px!important;min-width:0;min-height:62px;margin:0!important;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:2px;box-shadow:none!important;padding:7px 2px!important;white-space:nowrap;background-color:transparent!important;background-position:center!important;background-size:100% 100%!important;background-repeat:no-repeat!important}
+.lany-v22-header .lany-v22-moves-panel{background-image:url('../assets/ui/v21/hud/panel-moves.webp')!important}
+.lany-v22-header .hud-box.lany-v22-score-panel{background-image:url('../assets/ui/v21/hud/panel-score.webp')!important}
+.lany-v22-header .hud-box.lany-v22-best-panel{background-image:url('../assets/ui/v21/hud/panel-best.webp')!important}
+.lany-v22-header .hud-box.lany-v22-level-panel{background-image:url('../assets/ui/v21/hud/panel-stage.webp')!important}
+.lany-v22-header .lany-v22-moves-panel span,.lany-v22-header .hud-box .hud-lbl{font-size:clamp(.57rem,1.8vw,.72rem)!important;font-weight:950;color:#946177!important;letter-spacing:-.045em!important;text-shadow:0 1px #fff!important;line-height:1.15;order:0}
+.lany-v22-header .lany-v22-moves-panel strong{font-size:clamp(1.2rem,4.4vw,2rem);line-height:1.05;color:#b35a36;text-shadow:0 2px #fff9e0}
+.lany-v22-header .hud-box .hud-val{font-size:clamp(.89rem,3vw,1.4rem)!important;color:#6b4264!important;white-space:nowrap;text-shadow:0 2px #fff9e0!important;line-height:1.08}
+.lany-v22-top-controls{display:flex;flex-direction:column;gap:3px;min-width:0;justify-content:center}
+.lany-v22-top-controls button{display:flex!important;width:100%;min-width:0!important;min-height:26px!important;max-height:31px;padding:2px!important;border-radius:11px!important;white-space:nowrap;line-height:1.05;font-size:clamp(.6rem,1.8vw,.7rem)!important}
+.lany-v22-top-controls button::before{display:none!important}
+.lany-v22-top-controls #lany-header-map-button,.lany-v22-top-controls #music-btn{display:none!important}
+/* Goals: one textured trophy track + visible star milestones. */
+#app>.level-info{width:100%;max-width:510px;margin:0 auto 6px!important;background:linear-gradient(180deg,#fffdf7,#fff3df)!important;border:3px solid #ffe1b9!important;box-shadow:0 4px 0 #deb5a9!important;border-radius:18px!important;padding:8px 12px 10px!important;gap:7px!important}
+#app>.level-info .level-row{font-size:clamp(.68rem,2.4vw,.9rem)!important;gap:5px;line-height:1.3}
+#app>.level-info #level-name{color:#b44f83!important;font-weight:950}
+#app>.level-info #level-goal{color:#825c6e!important;font-size:clamp(.66rem,2.2vw,.79rem)!important;font-weight:900}
+#app>.level-info #score-label,#app>.level-info #moves-label{color:#80566e!important;font-size:clamp(.6rem,2.15vw,.79rem)!important;font-weight:850}
+.lany-v22-goal-track{position:relative;padding:4px 10px 14px!important}
+.lany-v22-goal-track .progress-bar{height:clamp(18px,4vh,28px)!important;overflow:hidden!important;border-radius:999px!important;background:#8b647c url('../assets/ui/v21/hud/progress-track.webp') center/100% 100% no-repeat!important;border:3px solid #fff2bd!important;box-shadow:0 3px 0 #b788a2,0 3px 6px #67526869,inset 0 2px 4px #69406678!important}
+.lany-v22-goal-track .progress-fill{height:100%!important;background:#ffd74b url('../assets/ui/v21/hud/progress-fill.webp') left center/auto 100% repeat-x!important;border-radius:999px!important;box-shadow:inset 0 3px 4px #fff8b2b7,0 0 12px #ffe768aa!important;transition:width .35s ease}
+.lany-v22-star-marker{position:absolute;top:17px;z-index:2;line-height:1;font-size:clamp(19px,4.6vw,26px);color:#d3bdc8;-webkit-text-stroke:1px #8e6478;text-shadow:0 2px #875a6e,0 3px 3px #774e72;transform:translateX(-50%) scale(.9)}
+.lany-v22-star-marker.star-one{left:30%}.lany-v22-star-marker.star-two{left:65%}.lany-v22-star-marker.star-three{left:97%}
+.lany-v22-star-marker.earned{color:#ffe253;-webkit-text-stroke:1px #c88c25;text-shadow:0 2px 0 #c18a30,0 0 8px #ffcf58;transform:translateX(-50%) scale(1.1)}
+/* Main board framed with the same ivory / glossy family; preserve 8x8 tile targets. */
+#board-wrap{max-width:min(500px,calc(100vw - 12px),calc(100dvh - 272px))!important}
+#board{background:#f2c5a4 url('../assets/polish/game-meadow.webp') center/cover no-repeat!important;border:clamp(5px,1.5vw,9px) solid #ffe0ad!important;box-shadow:0 5px 0 #c47782,0 8px 19px #804e7173,inset 0 0 0 3px #fff7d6!important;border-radius:23px!important;gap:clamp(2px,.8vw,4px)!important;padding:clamp(4px,1vw,9px)!important}
+#board .cell{border:1px solid #fff6dfbe!important;background:#fffbf230!important;border-radius:clamp(7px,2.6vw,13px)!important}
+/* Compact HUD: remove developer-only hint/dot debris in favour of clear progress and moves count. */
+#app>.moves-bar{display:none!important}
+#app>.cv-controls-hint{font-size:clamp(.56rem,1.9vw,.68rem)!important;color:#875b7b!important;margin:3px auto!important;line-height:1.25!important}
+#app>.lany-clock{max-width:510px;width:100%;background:transparent url('../assets/ui/v21/hud/panel-clock.webp') center/100% 100% no-repeat!important;padding:7px 15px!important;border:0!important;box-shadow:none!important;margin:0 auto 4px!important}
+#app>.boosters{width:min(100%,430px);display:flex;align-items:center;justify-content:space-evenly;gap:clamp(4px,2vw,12px)!important;margin:5px auto 4px!important}
+#app>.boosters .booster{width:clamp(52px,15vw,73px)!important;height:clamp(50px,14vw,70px)!important;filter:drop-shadow(0 3px 2px #8b607e66);touch-action:manipulation;transition:transform .14s ease,filter .14s ease!important}
+#app>.boosters .booster span{font-size:clamp(.52rem,1.9vw,.65rem)!important}
+#app>.boosters .booster:not(.active):hover{transform:translateY(-3px) scale(1.04)!important;filter:brightness(1.06) drop-shadow(0 4px 3px #704b65b3)!important}
+#app>.boosters .booster.active{transform:translateY(2px) scale(.96)!important;outline:3px solid #ffc934!important}
+#app>.lany-game-nav{max-width:510px;background:transparent!important;border:0!important;box-shadow:none!important;gap:7px;margin:4px auto 2px!important}
+/* MAP: avoid the legacy repeated gradient/SVG collage. The actual raster scene is visible. */
+#lany-world-map .lany-map-panel{background:#fff3df!important}
+#lany-world-map .lany-map-head{border:0!important;background:#a9e6fb url('../assets/ui/v21/map/world.webp') center/100% 100% no-repeat!important;min-height:68px}
+#lany-world-map .lany-map-head h2{color:#7d4b74!important;font-size:clamp(1rem,4.3vw,1.4rem)!important;text-shadow:0 1px #fff2ca}
+#lany-world-map .lany-map-summary{background:#fff9e8!important;color:#785a73!important}
+#lany-world-map .lany-world-switcher{background:#fff3db!important;border-bottom:2px solid #f7d9c6!important}
+#lany-world-map .lany-world-tab{background-image:url('../assets/ui/v21/buttons/skin-blue.webp')!important;box-shadow:none!important;border:0!important;color:#fffdf4!important;line-height:1.15}
+#lany-world-map .lany-world-tab.active{background-image:url('../assets/ui/v21/buttons/skin-gold.webp')!important}
+#lany-world-map .lany-world-tab.locked-tab{filter:grayscale(.75);opacity:.7}
+#lany-world-map .lany-world-banner{min-height:72px!important;padding:clamp(8px,2vh,17px)!important;background:transparent url('../assets/ui/v21/map/chapter.webp') center/100% 100% no-repeat!important}
+#lany-world-map .lany-world-banner h3{color:#854d5b!important;font-size:clamp(1.03rem,4vw,1.28rem)!important}
+#lany-world-map .lany-map-section{background:linear-gradient(180deg,#fffae9,#ffebec)!important}
+#lany-world-map .lany-map-levels{background-image:linear-gradient(180deg,#ffe2ce24,#ffe1bd28),url('../assets/polish/world-map.webp')!important;background-size:cover!important;background-position:center!important;border:5px solid #ffe2ba!important;border-radius:21px!important;box-shadow:0 4px 0 #d8a58f,0 7px 15px #966a8480!important;isolation:isolate}
+#lany-world-map .lany-map-levels .lany-level{border:0!important;border-radius:50%!important;box-shadow:none!important;filter:drop-shadow(0 3px 2px #73596d77)!important;z-index:2}
+#lany-world-map .lany-map-levels .lany-level:disabled{filter:grayscale(.28) drop-shadow(0 2px 2px #73596d66)!important}
+#lany-world-map .lany-map-levels .lany-level span{font-size:clamp(.9rem,3.4vw,1.3rem);font-weight:1000;color:#62435d;text-shadow:0 1px 0 #fff9e8,0 0 4px #fff!important}
+#lany-world-map .lany-map-levels .lany-level small{font-size:clamp(.57rem,1.7vw,.71rem);color:#774e5c!important;text-shadow:0 1px #fff8e8!important}
+#lany-world-map .lany-map-levels .lany-route{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:visible}
+#lany-world-map .lany-map-levels .lany-route-strip{display:block;position:absolute;height:12px;background:repeating-linear-gradient(90deg,#fff6bf 0px,#fff6bf 10px,transparent 10px,transparent 20px);border-radius:20px;transform-origin:left center;box-shadow:0 2px 0 #986b6388}
+#lany-world-map .lany-map-bottom{background:#fff8e9!important;border-top:3px solid #f7d6aa!important}
+#lany-world-map .lany-game-pager>span{color:#8c596b!important}
+/* All active commands share consistent press/hover motion. */
+:is(.lany-page-arrow,.lany-world-tab,.lany-level,.lany-action,.lany-game-nav button,.lany-v22-top-controls button,.overlay button):focus-visible{outline:3px solid #8cd9fa!important;outline-offset:2px!important}
+@media(hover:hover) and (pointer:fine){
+ :is(.lany-page-arrow,.lany-world-tab,.lany-level,.lany-action,.lany-game-nav button,.lany-v22-top-controls button):not(:disabled):hover{transform:translateY(-3px) scale(1.035)!important;filter:brightness(1.08) drop-shadow(0 4px 3px #73526a66)!important}
+}
+:is(.lany-page-arrow,.lany-world-tab,.lany-level,.lany-action,.lany-game-nav button,.lany-v22-top-controls button):not(:disabled):active,
+:is(.lany-page-arrow,.lany-world-tab,.lany-level,.lany-action,.lany-game-nav button,.lany-v22-top-controls button).lany-pressed{transform:translateY(3px) scale(.963)!important;filter:brightness(.94)!important}
+/* 320px and short phone portrait must retain a visible playable board. */
+@media(max-width:420px){
+ .lany-v22-header>.hud{grid-template-columns:minmax(47px,.9fr) minmax(58px,1.15fr) minmax(48px,.9fr) minmax(39px,.7fr) 35px;gap:2px}
+ .lany-v22-header .hud-box,.lany-v22-header .lany-v22-moves-panel{min-height:54px;padding:5px 1px!important;border-radius:12px!important}
+ #app>.level-info{padding:6px 8px 9px!important;gap:5px!important}
+ #app>.boosters .booster{height:clamp(47px,13vw,60px)!important;width:clamp(47px,13vw,60px)!important}
+ #lany-world-map .lany-world-banner{min-height:58px!important}
+ #lany-world-map .lany-map-levels .lany-route-strip{height:8px}
+}
+@media(max-height:650px){
+ #app>.header.lany-v22-header{min-height:54px!important;margin:0 auto 3px!important}
+ .lany-v22-header .hud-box,.lany-v22-header .lany-v22-moves-panel{min-height:48px!important}
+ #app>.level-info{margin-bottom:4px!important;padding:5px 9px 7px!important;gap:4px!important}
+ .lany-v22-goal-track{padding:0 6px 8px!important}
+ .lany-v22-goal-track .progress-bar{height:15px!important}
+ .lany-v22-star-marker{top:11px!important;font-size:17px!important}
+ #app>.lany-clock{padding:4px 10px!important;margin-bottom:2px!important}
+ #board-wrap{max-width:min(500px,calc(100vw - 12px),calc(100dvh - 231px))!important}
+ #app>.boosters{margin:1px auto!important}
+ #app>.boosters .booster{height:43px!important;width:43px!important}
+ #app>.lany-game-nav button{min-height:36px!important}
+ #lany-world-map .lany-map-head{min-height:49px!important}
+ #lany-world-map .lany-world-banner{min-height:46px!important}
+}
+@media(max-height:470px){#app>.cv-controls-hint{display:none!important}#board-wrap{max-width:min(500px,calc(100vw - 12px),calc(100dvh - 195px))!important}}
+@media(prefers-reduced-motion:reduce){.lany-v22-goal-track .progress-fill,.lany-route-strip{transition:none!important}}
