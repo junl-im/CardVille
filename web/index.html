@@ -262,8 +262,14 @@ body {
 /* ── Responsive ── */
 @media(min-width:500px){ :root{--cell:64px;} .cell{font-size:1.9rem;} }
 </style>
-  <link rel="manifest" href="./manifest.json">
-  <meta name="theme-color" content="#E91E63">
+  <link rel="manifest" href="./manifest.json?v=1.4.0">
+  <link rel="icon" type="image/svg+xml" href="./assets/lanypang-brand.svg?v=1.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/lanypang-favicon-32.png?v=1.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/lanypang-apple-touch-180.png?v=1.4.0">
+  <meta name="apple-mobile-web-app-title" content="라니팡">
+  <meta name="application-name" content="라니팡">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#ff75af">
   <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="stylesheet" href="css/a11y.css">
 
@@ -283,24 +289,36 @@ body {
 .theme-galaxy  { --accent: #c084fc; }
 </style>
 <link rel="stylesheet" href="./project-overlay/project.css">
-<link rel="stylesheet" href="./css/lany-shell.css?v=1.3.0">
-<link rel="stylesheet" href="./css/lany-mobile-friends.css?v=1.3.0">
-<link rel="stylesheet" href="./css/lany-polish.css?v=1.3.0">
-<link rel="stylesheet" href="./css/lany-paging.css?v=1.3.0">
+<link rel="stylesheet" href="./css/lany-shell.css?v=1.4.0">
+<link rel="stylesheet" href="./css/lany-mobile-friends.css?v=1.4.0">
+<link rel="stylesheet" href="./css/lany-polish.css?v=1.4.0">
+<link rel="stylesheet" href="./css/lany-paging.css?v=1.4.0">
+<link rel="stylesheet" href="./css/lany-install.css?v=1.4.0">
 </head>
 <body class="lany-at-title">
 <main id="lany-title" class="lany-title" role="main" aria-label="라니팡 시작 화면">
-  <img id="lany-cover-image" class="lany-cover" src="./assets/lanypang-cover.webp?v=1.3.0" alt="" fetchpriority="high" decoding="async" aria-hidden="true">
+  <img id="lany-cover-image" class="lany-cover" src="./assets/lanypang-cover.webp?v=1.4.0" alt="" fetchpriority="high" decoding="async" aria-hidden="true">
   <div class="lany-title-scrim" aria-hidden="true"></div>
   <div class="lany-title-layout">
     <div class="lany-title-top"><span class="lany-ribbon">반짝반짝 사탕마을에 오신 걸 환영해요</span><h1 class="lany-logo">라니<span>팡!</span></h1><p class="lany-subtitle">쓱 밀고, 팡! 터지는 퍼즐 세상</p></div>
     <div class="lany-title-bottom"><button id="lany-start-button" class="lany-cta" type="button">▶ 게임 시작</button>
+      <button id="lany-install-button" class="lany-install-cta" type="button"><img src="./assets/lanypang-brand.svg?v=1.4.0" alt="" aria-hidden="true"> 📲 라니팡 앱 설치하기</button>
       <button class="lany-secondary" type="button" onclick="LanyShell.openHelp()">❔ 게임 방법</button>
       <button class="lany-secondary lany-mobile-fullscreen" type="button" onclick="LanyShell.toggleFullscreen()">⛶ 전체 화면</button>
       <button class="lany-secondary" type="button" onclick="LanyFriends.open()">🐰 동물 친구들</button>
-      <div class="lany-version">라니팡 v1.3.0 · 250단계 · 한국어 전용</div></div>
+      <div class="lany-version">라니팡 v1.4.0 · 250단계 · 한국어 전용</div></div>
   </div>
 </main>
+<section id="lany-install-modal" class="lany-install-modal" role="dialog" aria-modal="true" aria-labelledby="lany-install-guide-title" hidden>
+ <div class="lany-install-card">
+  <button type="button" class="lany-install-close" aria-label="설치 안내 닫기">×</button>
+  <img class="lany-install-icon" src="./assets/lanypang-brand.svg?v=1.4.0" alt="라니팡 게임 아이콘">
+  <h2 id="lany-install-guide-title">라니팡 앱 설치</h2>
+  <ol id="lany-install-guide-steps"></ol>
+  <p id="lany-install-guide-hint"></p>
+  <button type="button" class="lany-install-done">알겠어요</button>
+ </div>
+</section>
 <!-- 라니팡 월드맵: 단계 선택은 지도에서, 실제 보드는 준비창에서만 생성합니다. -->
 <section id="lany-world-map" class="lany-game-screen" role="dialog" aria-modal="true" aria-labelledby="lany-map-heading" hidden>
  <div class="lany-screen-scrim" aria-hidden="true"></div>
@@ -1448,9 +1466,10 @@ function startBgMusic() {
 </div>
 <script defer src="./js/cardville-balance.js"></script>
 <script defer src="./project-overlay/project.js"></script>
-<script defer src="./js/lany-friends.js?v=1.3.0"></script>
-<script defer src="./js/lany-tempo.js?v=1.3.0"></script>
-<script defer src="./js/lany-shell.js?v=1.3.0"></script>
-<script defer src="./js/lany-polish.js?v=1.3.0"></script>
+<script defer src="./js/lany-friends.js?v=1.4.0"></script>
+<script defer src="./js/lany-tempo.js?v=1.4.0"></script>
+<script defer src="./js/lany-shell.js?v=1.4.0"></script>
+<script defer src="./js/lany-polish.js?v=1.4.0"></script>
+<script defer src="./js/lany-install.js?v=1.4.0"></script>
 </body>
 </html>
