@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="description" content="라니팡 — 250단계 드래그 퍼즐 모험">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="lany-build-version" content="2.2.0-beta">
 <title>라니팡 — 사탕마을 퍼즐 여행</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -320,6 +321,7 @@ body {
         <span class="lany-button-word">게임 시작</span>
       </button>
       </div>
+      <div id="lany-update-banner" class="lany-update-banner" hidden role="status"><span id="lany-update-msg">새 버전이 나왔어요!</span><button id="lany-update-now" type="button">업데이트</button></div>
       <div class="lany-title-shortcuts" aria-label="라니팡 추가 메뉴">
         <button id="lany-install-button" class="lany-art-button lany-art-small lany-art-install" type="button" aria-label="라니팡 앱 설치">
           <img class="lany-button-picture" src="./assets/ui/v21/title/install.webp?v=2.2.0" alt="" draggable="false">
@@ -335,7 +337,6 @@ body {
         </button>
       </div>
       <div class="lany-version">라니팡 v2.2.0 · 250단계 · 한국어 전용</div>
-      <div id="lany-update-banner" class="lany-update-banner" hidden role="status"><span id="lany-update-msg">새 버전이 나왔어요!</span><button id="lany-update-now" type="button">업데이트</button></div>
     </div>
   </div>
 </main>
@@ -400,6 +401,11 @@ body {
  </div>
 </section>
 
+<section id="lany-go-intro" class="lany-go-intro" hidden aria-live="off" aria-label="퍼즐 게임 시작">
+  <div class="lany-go-mascots" aria-hidden="true"><img src="./assets/polish/rabbit-cheer.webp?v=2.2.0" alt="" draggable="false"><img src="./assets/polish/bear-cheer.webp?v=2.2.0" alt="" draggable="false"></div>
+  <strong class="lany-go-number" id="lany-go-number" aria-hidden="true">3</strong>
+  <span class="lany-go-caption">라니팡! 시작!</span>
+</section>
 <canvas id="particles"></canvas>
 <div id="app">
 
