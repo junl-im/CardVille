@@ -29,7 +29,7 @@ jobs:
           const v=JSON.parse(fs.readFileSync('web/version.json','utf8'));
           assert.equal(r.projectId,'cardville');
           assert.equal(r.channelId,'live');
-          assert.equal(r.release,'2.1.0-beta');
+          assert.equal(r.release,'2.2.0-beta');
           assert.equal(v.version,r.release);
           assert.equal(f.projects.default,'cardville');
           assert.equal(r.site,'cardville');
@@ -89,27 +89,27 @@ jobs:
           set -euo pipefail
           url='https://cardville.web.app'
           for attempt in $(seq 1 8); do
-            if curl --fail --silent --show-error --location --max-time 25 "$url/?v=2.1.0" -o /tmp/lany-live.html && \
+            if curl --fail --silent --show-error --location --max-time 25 "$url/?v=2.2.0" -o /tmp/lany-live.html && \
               grep -Fq '<html lang="ko">' /tmp/lany-live.html && \
               grep -Fq '라니팡!' /tmp/lany-live.html && \
-              grep -Fq 'lany-polish.js?v=2.1.0' /tmp/lany-live.html && \
-              grep -Fq 'lany-polish.css?v=2.1.0' /tmp/lany-live.html && \
-              grep -Fq 'lany-install.js?v=2.1.0' /tmp/lany-live.html && \
-              grep -Fq 'lany-art-buttons.css?v=2.1.0' /tmp/lany-live.html && \
-              grep -Fq 'lany-action-art-v16.css?v=2.1.0' /tmp/lany-live.html && \
-              grep -Fq 'lany-title-stage-v17.css?v=2.1.0' /tmp/lany-live.html && \
-              grep -Fq 'lany-raster-v18.css?v=2.1.0' /tmp/lany-live.html && \
-              grep -Fq 'lany-result-v19.css?v=2.1.0' /tmp/lany-live.html && \
-              grep -Fq 'lany-worlds-v20.css?v=2.1.0' /tmp/lany-live.html && \
-              grep -Fq 'lany-ui-v21.css?v=2.1.0' /tmp/lany-live.html && \
+              grep -Fq 'lany-polish.js?v=2.2.0' /tmp/lany-live.html && \
+              grep -Fq 'lany-polish.css?v=2.2.0' /tmp/lany-live.html && \
+              grep -Fq 'lany-install.js?v=2.2.0' /tmp/lany-live.html && \
+              grep -Fq 'lany-art-buttons.css?v=2.2.0' /tmp/lany-live.html && \
+              grep -Fq 'lany-action-art-v16.css?v=2.2.0' /tmp/lany-live.html && \
+              grep -Fq 'lany-title-stage-v17.css?v=2.2.0' /tmp/lany-live.html && \
+              grep -Fq 'lany-raster-v18.css?v=2.2.0' /tmp/lany-live.html && \
+              grep -Fq 'lany-result-v19.css?v=2.2.0' /tmp/lany-live.html && \
+              grep -Fq 'lany-worlds-v20.css?v=2.2.0' /tmp/lany-live.html && \
+              grep -Fq 'lany-ui-v21.css?v=2.2.0' /tmp/lany-live.html && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/ui/v21/buttons/skin-green.webp" -o /tmp/lany-v21-skin.webp && test "$(wc -c </tmp/lany-v21-skin.webp)" -gt 500 && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/map/stage-current-v20.webp" -o /tmp/lany-map-current-v20.webp && test "$(wc -c </tmp/lany-map-current-v20.webp)" -gt 700 && \
-              grep -Fq 'lany-perf-v19.js?v=2.1.0' /tmp/lany-live.html && \
+              grep -Fq 'lany-perf-v19.js?v=2.2.0' /tmp/lany-live.html && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/ui/v21/title/play.webp" -o /tmp/btn-play-v21.webp && test "$(wc -c </tmp/btn-play-v21.webp)" -gt 1000 && \
-              grep -Fq 'lany-update-v17.js?v=2.1.0' /tmp/lany-live.html && \
+              grep -Fq 'lany-update-v17.js?v=2.2.0' /tmp/lany-live.html && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/ui/v21/title/logo.webp" -o /tmp/lany-raster-check-title-forest-v17.webp && test "$(wc -c </tmp/lany-raster-check-title-forest-v17.webp)" -gt 500 && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/ui/v21/buttons/action-resume.webp" -o /tmp/lany-raster-check-action-resume.webp && test "$(wc -c </tmp/lany-raster-check-action-resume.webp)" -gt 500 && \
-              grep -Fq 'ui/v21/title/play.webp?v=2.1.0' /tmp/lany-live.html && \
+              grep -Fq 'ui/v21/title/play.webp?v=2.2.0' /tmp/lany-live.html && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/ui/v21/title/play.webp" -o /tmp/lany-raster-check-title-play.webp && test "$(wc -c </tmp/lany-raster-check-title-play.webp)" -gt 500 && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/lanypang-icon-512.png" -o /tmp/lany-launch.png && \
               test "$(wc -c </tmp/lany-launch.png)" -gt 1000 && \
@@ -118,7 +118,7 @@ jobs:
               curl --fail --silent --show-error --location --max-time 25 "$url/js/lany-polish.js" -o /tmp/lany-polish-source.js && grep -Fq 'LanyPolish' /tmp/lany-polish-source.js; then
               echo '라니팡 Firebase LIVE HTTP/asset test: PASS'
               echo '## 라니팡 실제 Firebase 정식 게임 배포 성공' >> "$GITHUB_STEP_SUMMARY"
-              echo '- 정식 게임 URL: https://cardville.web.app/?v=2.1.0' >> "$GITHUB_STEP_SUMMARY"
+              echo '- 정식 게임 URL: https://cardville.web.app/?v=2.2.0' >> "$GITHUB_STEP_SUMMARY"
               echo '- 원본 데이터 및 Firestore/Auth 변경 없음' >> "$GITHUB_STEP_SUMMARY"
               exit 0
             fi
