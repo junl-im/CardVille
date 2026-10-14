@@ -109,6 +109,19 @@ with sync_playwright() as playwright:
         assert filename in value,(tag,kind,action,'missing approved raster skin',value)
       shot('result-'+kind,'#overlay-'+kind)
     page.evaluate("document.getElementById('overlay-lose').style.display='none'")
+    # Actual successful progression, not only forcibly displaying a result dialog.
+    page.evaluate("""() => {state.score=LEVELS[state.level-1].goal*2;checkEnd()}""")
+    assert page.locator('#overlay-win').is_visible(),(tag,'real win unavailable')
+    page.wait_for_timeout(1060) # all three animated reward stars appear
+    assert page.locator('#overlay-win .star-item.lit').count()==3,(tag,'real 3-star reward missing')
+    shot('real-win','#overlay-win')
+    page.evaluate('nextLevel()')
+    assert page.locator('#lany-stage-prep').is_visible(),(tag,'next stage transition failed')
+    assert '2단계' in page.locator('#lany-prep-heading').inner_text(),(tag,'next stage number incorrect')
+    shot('next-stage-ready','#lany-stage-prep')
+    page.evaluate('LanyShell.playPrepared()')
+    page.wait_for_function("document.getElementById('lany-go-intro').hidden",timeout=5000)
+    assert page.locator('#board .cell').count()==64
     page.evaluate('Difficulty.showModal()')
     shot('difficulty','#difficulty-modal')
     assert viewport_fit('.lany-difficulty-card'),(tag,'difficulty clipped')
