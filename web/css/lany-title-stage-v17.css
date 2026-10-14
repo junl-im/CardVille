@@ -157,7 +157,7 @@ body.lany-at-title .lany-title{
   .lany-title .lany-subtitle{display:none}
   .lany-title-play-scene .lany-art-play{width:min(80%,215px)!important}
   .lany-title-play-scene .lany-title-cast{width:min(122vw,370px);bottom:-24%}
-  .lany-title .lany-title-shortcuts{margin-top:1px!important}
+  .lany-title .lany-title-shortcuts{margin-top:3px!important}
   .lany-title .lany-title-shortcuts .lany-art-small{max-width:83px}
   .lany-title .lany-title-shortcuts .lany-button-word{font-size:clamp(.63rem,2vw,.78rem)}
   .lany-title .lany-version{display:none}
