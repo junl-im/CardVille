@@ -104,11 +104,11 @@ jobs:
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/ui/v21/buttons/skin-green.webp" -o /tmp/lany-v21-skin.webp && test "$(wc -c </tmp/lany-v21-skin.webp)" -gt 500 && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/map/stage-current-v20.webp" -o /tmp/lany-map-current-v20.webp && test "$(wc -c </tmp/lany-map-current-v20.webp)" -gt 700 && \
               grep -Fq 'lany-perf-v19.js?v=2.1.0' /tmp/lany-live.html && \
-              curl --fail --silent --show-error --location --max-time 25 "$url/assets/title/btn-play-v18.webp" -o /tmp/btn-play-v18.webp && test "$(wc -c </tmp/btn-play-v18.webp)" -gt 1000 && \
+              curl --fail --silent --show-error --location --max-time 25 "$url/assets/ui/v21/title/play.webp" -o /tmp/btn-play-v21.webp && test "$(wc -c </tmp/btn-play-v21.webp)" -gt 1000 && \
               grep -Fq 'lany-update-v17.js?v=2.1.0' /tmp/lany-live.html && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/title/title-forest-v17.svg" -o /tmp/lany-title-forest.svg && grep -Fq '<svg' /tmp/lany-title-forest.svg && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/buttons/action-resume.svg" -o /tmp/lany-resume.svg && grep -Fq '<svg' /tmp/lany-resume.svg && \
-              grep -Fq 'btn-play-v18.webp?v=2.1.0' /tmp/lany-live.html && \
+              grep -Fq 'ui/v21/title/play.webp?v=2.1.0' /tmp/lany-live.html && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/buttons/title-play.svg" -o /tmp/lany-old-title-play.svg && grep -Fq '<svg' /tmp/lany-old-title-play.svg && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/lanypang-icon-512.png" -o /tmp/lany-launch.png && \
               test "$(wc -c </tmp/lany-launch.png)" -gt 1000 && \
