@@ -94,3 +94,33 @@ button[data-lany-art]:focus-visible{outline:3px solid #ffef97!important;outline-
 @media(prefers-reduced-motion:reduce){
   button[data-lany-art]::before{transition:none!important;animation:none!important}
 }
+
+/* One cohesive illustrated map-node set: default, next stage, boss, and locked. */
+.lany-map-section .lany-map-levels .lany-level{
+ background-image:url('../assets/buttons/stage-ordinary.svg')!important;
+ background-size:100% 100%!important;
+ background-position:center!important;
+ background-repeat:no-repeat!important;
+ background-color:transparent!important;
+ border:0!important;
+ border-radius:50%!important;
+ box-shadow:none!important;
+ color:#284f78!important;
+ text-shadow:0 1px 1px #fff8e3;
+}
+.lany-map-section .lany-map-levels .lany-level.current{
+ background-image:url('../assets/buttons/stage-current.svg')!important;
+ color:#763e34!important;
+}
+.lany-map-section .lany-map-levels .lany-level.boss{
+ background-image:url('../assets/buttons/stage-boss.svg')!important;
+ color:#8b3c79!important;
+}
+.lany-map-section .lany-map-levels .lany-level:disabled{
+ background-image:url('../assets/buttons/stage-locked.svg')!important;
+ color:#687184!important;
+ opacity:.88;
+}
+.lany-map-section .lany-map-levels .lany-level small{font-size:clamp(.59rem,1.7vw,.66rem);color:inherit;text-shadow:0 1px 1px #fff9e7}
+.lany-map-section .lany-map-levels .lany-level:not(:disabled):hover{filter:brightness(1.1) drop-shadow(0 4px 4px #ffcb4d89)}
+.lany-map-section .lany-map-levels .lany-level:focus-visible{outline:3px solid #fff4a7;outline-offset:1px}
