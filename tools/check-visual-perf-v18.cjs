@@ -17,7 +17,8 @@ for(const key of ['title-logo-v18.webp','btn-play-v18.webp','btn-install-v18.web
  assert(html.includes('./assets/title/'+key+'?v=1.8.0'),key);
  assert(sw.includes('./assets/title/'+key),key+' precache');
 }
-for(const key of ['friends','polish'])assert(py.includes("'"+key+"/cat")||py.includes("f'"+key+"/cat"),key);
+assert(py.includes("A/'friends'/'cat.webp'"),'generated black cat portrait');
+assert(py.includes("f'polish/cat-{expression}.webp'"),'generated black cat expressions');
 for(const file of ['web/assets/lanypang-cover.webp','web/assets/polish/rabbit-cheer.webp','web/assets/polish/bear-cheer.webp','web/assets/polish/chick-cheer.webp'])assert(fs.statSync(file).size>1500,file);
 assert(sw.includes('lanypang-match-v1.8.0-ko'));
 assert(read('.github/workflows/firebase-hosting.yml').includes('tools/build-visual-v18.py'));
