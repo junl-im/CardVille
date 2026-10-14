@@ -43,6 +43,7 @@ jobs:
           node tools/check-visual-perf-v18.cjs
           node tools/check-longplay-v19.cjs
           node tools/check-v20-cache-map.cjs
+          node tools/check-ui-v21.cjs
           node tools/check-tempo.cjs
           test -f web/index.html
           test -f web/LICENSE
@@ -58,6 +59,7 @@ jobs:
           python tools/build-visual-v18.py
           node tools/check-visual-perf-v18.cjs --raster
           node tools/check-v20-cache-map.cjs --raster
+          node tools/check-ui-v21.cjs --raster
           node tools/check-pwa-v14.cjs --raster
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
