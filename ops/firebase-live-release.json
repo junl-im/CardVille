@@ -1,10 +1,10 @@
 {
-  "release": "1.3.0-beta",
+  "release": "1.4.0-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "4c6544490148fb2406fc48cac297c75319ff8703",
-  "requestedFor": "라니팡 v1.3 게임형 지도·지역·도감·팝업 페이지 전환 및 모바일 화면 넘침 방지 적용",
+  "sourceCommit": "dc53fead3d0c2e80f277f5e226fd6d0b14e43d35",
+  "requestedFor": "라니팡 v1.4 PWA 앱 설치 버튼, 자체 대표 아이콘·파비콘, iOS 홈 화면 지원, 오프라인 앱 시작 최적화",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true
 }
