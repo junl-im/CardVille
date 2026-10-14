@@ -61,3 +61,7 @@
  .lany-title-art-actions .lany-version{display:none}
 }
 @media(prefers-reduced-motion:reduce){.lany-art-button,.lany-art-spark{transition:none!important;animation:none!important}.lany-art-spark{display:none!important}}
+
+/* Installed PWA has 2 quick shortcuts, never a blank install slot. */
+.lany-title-shortcuts:has(#lany-install-button[hidden]){grid-template-columns:repeat(2,minmax(0,1fr));width:min(76%,290px)}
+.lany-world-tab.active{background-image:url('../assets/buttons/skin-green.svg')!important;color:#fff!important;text-shadow:0 1px 3px #347345!important}
