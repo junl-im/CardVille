@@ -12,7 +12,7 @@ assert(h.includes('lany-paging.css?v=2.2.0'));
 assert(sw.includes('lanypang-match-v2.2.0-ko')&&sw.includes('./css/lany-paging.css'));
 assert(!shell.includes("?.scrollTo("),'Map should not use scrollTo');
 for(const mark of ['function mapPage(delta)','function worldPage(delta)','function renderMap()','function renderPrepPage()','function renderHelpPage()','nav.mapPageSize=size','grid.dataset.page','renderId!==mapRenderId','nav.mapPage=0;nav.worldTabPage','enabled=unlocked.has(i)'])assert(shell.includes(mark),mark);
-for(const mark of ['function page(delta)','roster.slice(start,start+size)','grid.replaceChildren()','img.loading=\'lazy\'','window.LanyFriends={roster,open,close,page'])assert(friends.includes(mark),mark);
+for(const mark of ['function page(delta)','roster.slice(start,start+size)','grid.replaceChildren()','img.loading=\'eager\'','window.LanyFriends={roster,open,close,page'])assert(friends.includes(mark),mark);
 assert(!friends.includes('if(!grid.childElementCount)'), 'Gallery should not append all thirty at once');
 for(const mark of ['.lany-map-section{display:flex!important','.lany-map-section .lany-map-levels','.lany-game-pager','.lany-world-switcher .lany-world-tabs{display:grid','.lany-friends-grid{overflow:hidden!important','#overlay-tutorial .modal','#ng-level-editor','prefers-reduced-motion'])assert(css.includes(mark),mark);
 assert(diff.includes("entries.slice(currentPage*2,currentPage*2+2)")&&diff.includes('renderModal()'));

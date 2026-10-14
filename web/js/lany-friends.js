@@ -17,7 +17,7 @@ function render(){
  for(const a of roster.slice(start,start+size)){
    const card=document.createElement('article');card.className='lany-friend-card'+(a.main?' main-friend':'');
    const img=document.createElement('img');img.src=imageRoot+a.id+'.webp';
-   img.loading='lazy';img.decoding='async';img.alt=a.name+' 동물 얼굴';img.draggable=false;
+   img.loading='eager';img.decoding='async';img.alt=a.name+' 동물 얼굴';img.draggable=false;
    const label=document.createElement('span');label.textContent=a.name;card.append(img,label);grid.appendChild(card);
  }
  $('lany-friends-status').textContent=(currentPage+1)+' / '+pages+' · '+(start+1)+'~'+Math.min(start+size,roster.length)+'종';

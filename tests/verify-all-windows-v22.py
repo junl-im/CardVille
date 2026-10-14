@@ -48,9 +48,19 @@ with sync_playwright() as playwright:
     page.evaluate('LanyShell.closeTutorial()')
     page.locator('.lany-art-friends').click()
     assert viewport_fit('.lany-friends-panel'),(tag,'friends card clipped')
-    shot('friends-1','.lany-friends-panel')
-    page.evaluate('LanyFriends.page(1)')
-    shot('friends-2','.lany-friends-panel')
+    # Inspect every page, not only the first: no white/broken animal slots.
+    friend_pages=0
+    while True:
+      page.wait_for_function("""() => {
+        const icons=[...document.querySelectorAll('#lany-friends-grid img')];
+        return icons.length>0 && icons.every(i=>i.complete && i.naturalWidth>0);
+      }""",timeout=7000)
+      assert page.locator('#lany-friends-grid img[loading="eager"]').count()==page.locator('#lany-friends-grid img').count(),(tag,'gallery must eagerly load visible art')
+      friend_pages+=1
+      shot('friends-'+str(friend_pages),'.lany-friends-panel')
+      if page.locator('#lany-friends-next').is_disabled():break
+      page.evaluate('LanyFriends.page(1)')
+    assert page.evaluate('LanyFriends.roster.length')==30,(tag,'30 friend portraits should be retained')
     page.locator('.lany-friends-close').click()
     if tag=='phone':
       page.route('**/version.json?*',lambda route:route.fulfill(status=200,content_type='application/json',body='{"version":"2.3.0-beta"}'))
