@@ -28,18 +28,18 @@ button[data-lany-art]::before{
   filter:drop-shadow(0 2px 1px #4a316449);
   transition:transform .16s cubic-bezier(.2,1.5,.3,1),filter .14s ease;
 }
-button[data-lany-art="play"]{--lany-action-image:url('../assets/buttons/action-play.svg')}
-button[data-lany-art="map"]{--lany-action-image:url('../assets/buttons/action-map.svg')}
-button[data-lany-art="resume"]{--lany-action-image:url('../assets/buttons/action-resume.svg')}
-button[data-lany-art="retry"]{--lany-action-image:url('../assets/buttons/action-retry.svg')}
-button[data-lany-art="next"]{--lany-action-image:url('../assets/buttons/action-next.svg')}
-button[data-lany-art="home"]{--lany-action-image:url('../assets/buttons/action-home.svg')}
-button[data-lany-art="help"]{--lany-action-image:url('../assets/buttons/action-help.svg')}
-button[data-lany-art="pause"]{--lany-action-image:url('../assets/buttons/action-pause.svg')}
-button[data-lany-art="exit"]{--lany-action-image:url('../assets/buttons/action-exit.svg')}
-button[data-lany-art="back"]{--lany-action-image:url('../assets/buttons/action-back.svg')}
-button[data-lany-art="friends"]{--lany-action-image:url('../assets/buttons/action-friends.svg')}
-button[data-lany-art="close"]{--lany-action-image:url('../assets/buttons/action-close.svg')}
+button[data-lany-art="play"]{--lany-action-image:url('../assets/ui/v21/buttons/action-play.webp')}
+button[data-lany-art="map"]{--lany-action-image:url('../assets/ui/v21/buttons/action-map.webp')}
+button[data-lany-art="resume"]{--lany-action-image:url('../assets/ui/v21/buttons/action-resume.webp')}
+button[data-lany-art="retry"]{--lany-action-image:url('../assets/ui/v21/buttons/action-retry.webp')}
+button[data-lany-art="next"]{--lany-action-image:url('../assets/ui/v21/buttons/action-next.webp')}
+button[data-lany-art="home"]{--lany-action-image:url('../assets/ui/v21/buttons/action-home.webp')}
+button[data-lany-art="help"]{--lany-action-image:url('../assets/ui/v21/buttons/action-help.webp')}
+button[data-lany-art="pause"]{--lany-action-image:url('../assets/ui/v21/buttons/action-pause.webp')}
+button[data-lany-art="exit"]{--lany-action-image:url('../assets/ui/v21/buttons/action-exit.webp')}
+button[data-lany-art="back"]{--lany-action-image:url('../assets/ui/v21/buttons/action-back.webp')}
+button[data-lany-art="friends"]{--lany-action-image:url('../assets/ui/v21/buttons/action-friends.webp')}
+button[data-lany-art="close"]{--lany-action-image:url('../assets/ui/v21/buttons/action-close.webp')}
 @media(hover:hover) and (pointer:fine){
   button[data-lany-art]:not(:disabled):hover::before{
     transform:translateY(-2px) rotate(-7deg) scale(1.12);
@@ -97,7 +97,7 @@ button[data-lany-art]:focus-visible{outline:3px solid #ffef97!important;outline-
 
 /* One cohesive illustrated map-node set: default, next stage, boss, and locked. */
 .lany-map-section .lany-map-levels .lany-level{
- background-image:url('../assets/buttons/stage-ordinary.svg')!important;
+ background-image:url('../assets/map/stage-ordinary-v20.webp')!important;
  background-size:100% 100%!important;
  background-position:center!important;
  background-repeat:no-repeat!important;
@@ -109,15 +109,15 @@ button[data-lany-art]:focus-visible{outline:3px solid #ffef97!important;outline-
  text-shadow:0 1px 1px #fff8e3;
 }
 .lany-map-section .lany-map-levels .lany-level.current{
- background-image:url('../assets/buttons/stage-current.svg')!important;
+ background-image:url('../assets/map/stage-current-v20.webp')!important;
  color:#763e34!important;
 }
 .lany-map-section .lany-map-levels .lany-level.boss{
- background-image:url('../assets/buttons/stage-boss.svg')!important;
+ background-image:url('../assets/map/stage-boss-v20.webp')!important;
  color:#8b3c79!important;
 }
 .lany-map-section .lany-map-levels .lany-level:disabled{
- background-image:url('../assets/buttons/stage-locked.svg')!important;
+ background-image:url('../assets/map/stage-locked-v20.webp')!important;
  color:#687184!important;
  opacity:.88;
 }
