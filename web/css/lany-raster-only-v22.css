@@ -201,3 +201,283 @@
 @media(prefers-reduced-motion:reduce){
  .lany-score-progress .progress-fill,.lany-star-checkpoint,#app .boosters .booster{transition:none!important}
 }
+
+
+/* Real-device QA hotfix from Oct 14 screenshots. Preserve approved WebP art.
+   No SVG, no separate emoji/synthetic buttons and no gameplay changes. */
+.lany-title #lany-install-button{
+  background:transparent!important; position:relative!important;
+  overflow:visible; isolation:isolate;
+}
+.lany-title #lany-install-button img.lany-button-picture{
+  width:100%!important;height:100%!important;object-fit:fill!important;
+  content:url('../assets/ui/v21/buttons/skin-blue.webp')!important;
+  filter:drop-shadow(0 3px 2px #70456a78)!important;
+}
+.lany-title #lany-install-button::before{
+  content:"";position:absolute;z-index:1;top:4%;left:50%;
+  transform:translateX(-50%);width:36%;height:48%;
+  background:url('../assets/lanypang-icon-192.png') center/contain no-repeat;
+  filter:drop-shadow(0 2px 2px #6b446588);
+}
+.lany-title #lany-install-button .lany-button-word{
+  display:block!important;top:75%!important;left:50%!important;
+  transform:translate(-50%,-50%);font-size:clamp(.77rem,2.8vw,1.02rem)!important;
+  color:#fff8d8!important;letter-spacing:-.02em!important;
+  -webkit-text-stroke:.4px #67436c!important;text-shadow:0 2px 1px #744c77!important;
+}
+.lany-title .lany-title-shortcuts{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  align-items:center!important;gap:clamp(6px,2vw,14px)!important;
+}
+.lany-title .lany-title-shortcuts .lany-art-small{
+  width:100%!important;min-width:0!important;
+  height:clamp(72px,23vw,115px)!important;
+}
+.lany-title .lany-title-shortcuts .lany-art-small img.lany-button-picture{
+  width:100%!important;height:100%!important;object-fit:contain!important;
+}
+.lany-title .lany-title-shortcuts .lany-art-small[hidden]{display:none!important}
+.lany-title .lany-title-shortcuts:has(#lany-install-button[hidden]){
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;width:min(78%,320px)!important;
+}
+/* Update notice lives directly beneath the start artwork rather than at page bottom. */
+.lany-title #lany-update-banner{
+ order:0;width:min(100%,395px);box-sizing:border-box;
+ padding:9px 12px;margin:8px auto 4px!important;min-height:51px;
+ border-radius:20px;color:#754162;background:#fff9db;
+ border:3px solid #fff1b0;box-shadow:0 4px 0 #b97993,0 6px 10px #6b466655;
+ font-size:clamp(.73rem,2.3vw,.92rem);text-align:center;line-height:1.2;
+}
+.lany-title #lany-update-now{
+ flex:0 0 auto;min-width:80px;min-height:38px;
+ color:#fffaf3;background:var(--cv-skin-pink) center/100% 100% no-repeat;
+ border:0;border-radius:20px;padding:4px 13px;filter:drop-shadow(0 3px 1px #a55c86);
+}
+.lany-title #lany-update-banner[hidden]{display:none!important}
+/* Map already has approved world-map.webp. Show more of it instead of an
+   unnaturally small middle card and a blank lower third on tall devices. */
+.lany-map-section .lany-map-levels{
+ background-image:var(--world-tint),url('../assets/polish/world-map.webp')!important;
+ background-repeat:no-repeat!important;background-size:cover!important;
+ background-position:center center!important;
+ border:5px solid #ffeaba!important;border-radius:27px!important;
+}
+.lany-map-section .lany-map-levels .lany-level{
+ background-size:100% 100%!important;background-repeat:no-repeat!important;
+ background-position:center!important;
+ filter:drop-shadow(0 4px 3px rgba(112,68,76,.22));
+}
+.lany-map-section .lany-map-levels .lany-level.current{
+ filter:drop-shadow(0 2px 5px #fff9b8) drop-shadow(0 4px 4px #ac5b86);
+}
+.lany-map-section .lany-map-levels .lany-level span{font-size:clamp(1rem,3.7vw,1.26rem)!important}
+.lany-map-section .lany-map-levels .lany-level small{font-size:clamp(.54rem,1.85vw,.68rem)!important}
+@media(min-height:730px){
+ .lany-map-section{display:flex!important;flex-direction:column!important}
+ .lany-map-section .lany-map-levels{
+   flex:1 1 auto!important;min-height:clamp(295px,45dvh,680px)!important;
+   grid-template-rows:repeat(var(--lany-map-rows,3),minmax(65px,1fr))!important;
+ }
+ .lany-map-section .lany-map-levels .lany-level{
+   width:clamp(55px,14vw,78px)!important;
+   height:clamp(51px,8dvh,75px)!important;
+ }
+}
+@media(max-width:380px){.lany-title .lany-title-shortcuts{gap:3px!important}}
+/* The old action WebP stamps display as empty silver pills over button
+   labels on real Samsung browser. Keep the actual WebP button skins, hide
+   only the ornamental pseudo-layer, preserve real text and click handling. */
+:is(.lany-dialog,.overlay .modal,.lany-map-bottom,.lany-game-nav)
+ button[data-lany-art]::before{display:none!important;content:none!important}
+.lany-dialog button[data-lany-art],.overlay .modal button[data-lany-art]{
+ justify-content:center!important;text-align:center!important;
+ width:100%;min-height:clamp(51px,7dvh,65px)!important;
+ padding:9px 16px!important;column-gap:0!important;
+ font-size:clamp(.95rem,3.8vw,1.22rem)!important;
+ font-weight:1000!important;line-height:1.15!important;
+ text-shadow:0 2px 1px #815079!important;
+}
+.lany-dialog button[data-lany-art]{flex:none!important}
+.lany-dialog{gap:clamp(9px,1.5dvh,14px)!important}
+.lany-map-bottom button[data-lany-art]{justify-content:center!important}
+.lany-dialog-emoji{min-height:clamp(54px,10dvh,95px)}
+/* Intro is an isolated, non-SVG overlay using approved mascots. */
+.lany-go-intro[hidden]{display:none!important}
+.lany-go-intro{
+ position:fixed;inset:0;z-index:25000;pointer-events:none;
+ display:flex;align-items:center;justify-content:center;flex-direction:column;
+ background:radial-gradient(ellipse at center,rgba(255,248,196,.34),rgba(80,29,82,.36) 70%);
+ backdrop-filter:blur(2px);
+}
+.lany-go-intro .lany-go-mascots{
+ display:flex;justify-content:center;align-items:flex-end;gap:clamp(4px,4vw,25px);
+ height:clamp(95px,21dvh,175px);
+ filter:drop-shadow(0 8px 7px #482c6688);
+}
+.lany-go-intro .lany-go-mascots img{
+ width:clamp(86px,20vw,140px);height:100%;object-fit:contain;user-select:none;
+}
+.lany-go-intro .lany-go-number{
+ display:block;font-family:'Noto Sans KR','Apple SD Gothic Neo',sans-serif;
+ font-size:clamp(100px,31vw,185px);line-height:1.05;
+ font-weight:1000;color:#fff394;-webkit-text-stroke:5px #b53a79;
+ text-shadow:0 6px 0 #783268,0 13px 20px #422e7499;
+ animation:lanyGoPop .45s cubic-bezier(.15,1.7,.32,1) both;
+}
+.lany-go-intro .lany-go-number.go{font-size:clamp(100px,28vw,180px);color:#ffe965}
+.lany-go-intro .lany-go-caption{
+ margin-top:7px;padding:9px 22px;border:3px solid #fff7ca;border-radius:20px;
+ background:#fc70b6;color:#fffaf0;font-size:clamp(16px,4.5vw,24px);
+ font-weight:1000;text-shadow:0 2px #9d4575;
+}
+@keyframes lanyGoPop{
+ 0%{opacity:.1;transform:translateY(25px) scale(.55) rotate(-7deg)}
+ 58%{opacity:1;transform:translateY(-5px) scale(1.15) rotate(3deg)}
+ 100%{opacity:1;transform:translateY(0) scale(1) rotate(0)}
+}
+@media(prefers-reduced-motion:reduce){
+ .lany-go-intro .lany-go-number{animation:none!important}
+ .lany-go-intro{backdrop-filter:none}
+}
+
+
+/* Complete UI-window visual audit: same approved raster panels for auxiliary,
+   settings, challenge, share and editor screens; interaction JS remains intact. */
+:is(#difficulty-modal .lany-difficulty-card,#daily-modal>div,#ng-level-editor>div,
+#mp-setup>div,#mp-share>div){
+ box-sizing:border-box!important;width:min(94vw,470px)!important;
+ max-height:calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;
+ margin:auto!important;overflow-x:hidden!important;overflow-y:auto!important;
+ background:#fff7e8 url('../assets/ui/v21/popup/panel-settings.webp') center/100% 100% no-repeat!important;
+ border:0!important;border-radius:28px!important;
+ box-shadow:0 9px 0 #c77997,0 14px 20px #4e376d78!important;
+ padding:clamp(16px,4vw,27px)!important;
+ color:#81526a!important;
+ scrollbar-width:thin;scrollbar-color:#e58faf #fff6dd;
+}
+:is(#daily-modal,#ng-level-editor,#mp-setup,#mp-share,#difficulty-modal){
+ background:rgba(78,34,87,.69)!important;
+ backdrop-filter:blur(3px)!important;
+}
+:is(#daily-modal,#ng-level-editor,#mp-setup,#mp-share) :is(h2,h3){
+ color:#ab427d!important;text-shadow:0 2px 0 #fff8e9!important;
+ line-height:1.3!important;
+}
+:is(#daily-modal,#ng-level-editor,#mp-setup,#mp-share) :is(p,label){
+ color:#835872!important;line-height:1.45!important;
+}
+:is(#mp-setup,#mp-share) div[style*="background:#0"],
+#mp-share div[style*="background:#0a"]{
+ background:#fff5e2!important;border-color:#f4c5cd!important;
+ color:#7d4976!important;
+}
+:is(#mp-setup,#mp-share) div[style*="color:#a78bfa"],
+#mp-setup div[style*="color:#22c55e"]{color:#a04d81!important}
+:is(#mp-setup,#mp-share,#ng-level-editor) input{
+ box-sizing:border-box!important;min-width:0!important;
+ background:#fffaf1!important;border:2px solid #e5abc4!important;
+ border-radius:12px!important;color:#6d405e!important;
+ padding:8px 10px!important;max-width:100%;
+}
+:is(#daily-modal,#ng-level-editor,#mp-setup,#mp-share) button:not([data-type]){
+ background:var(--cv-skin-blue) center/100% 100% no-repeat!important;
+ border:0!important;color:#fff9dc!important;
+ text-shadow:0 1px 2px #784565!important;font-weight:950!important;
+ min-height:44px!important;border-radius:14px!important;
+ padding:8px 12px!important;touch-action:manipulation;
+}
+:is(#daily-modal,#ng-level-editor,#mp-setup,#mp-share) button:first-of-type:not([data-type]){
+ background-image:var(--cv-skin-green)!important;
+}
+:is(#daily-modal,#ng-level-editor,#mp-setup,#mp-share) button:active{
+ transform:translateY(2px) scale(.97)!important;
+}
+#ng-level-editor #editor-grid button{
+ padding:0!important;border:2px solid #fff2ca!important;
+ background:#fae3ef!important;min-height:0!important;
+ font-size:clamp(.73rem,3vw,1.1rem)!important;
+}
+#ng-level-editor button[data-type]{background:#f8d7e3!important;color:#a0497c!important}
+#mp-setup>div>div[style*="background"],#mp-share>div>div[style*="background"]{
+ background:#fff8e9!important;border-color:#ecc8d2!important;
+}
+#mp-share>div>div[style*="background"] div[style*="color"]{color:#a04d80!important}
+#difficulty-modal .lany-difficulty-option{
+ background:url('../assets/ui/v21/hud/panel-goal.webp') center/100% 100% no-repeat!important;
+ border:0!important;color:#7e4e74!important;
+}
+#difficulty-modal .lany-difficulty-close{background:var(--cv-skin-pink) center/100% 100% no-repeat!important;color:#fff!important}
+@media(max-height:600px){
+ :is(#daily-modal>div,#ng-level-editor>div,#mp-setup>div,#mp-share>div){
+  padding:10px!important;
+ }
+}
+
+
+/* Audit repair: compact 320x440 and 320x568 screens clip the original result panel.
+   Reduce decorative height but keep all controls reachable, no internal game changes. */
+@media(max-height:680px){
+ #overlay-win .modal,#overlay-lose .modal{
+   box-sizing:border-box!important;
+   width:min(94vw,400px)!important;
+   height:auto!important;
+   max-height:calc(100dvh - 16px)!important;
+   overflow-x:hidden!important;overflow-y:auto!important;
+   padding:7px 11px 8px!important;
+   margin:auto!important;
+   animation:none!important;transform:none!important;
+ }
+ #overlay-win .modal:before,#overlay-lose .modal:before{
+   width:48px!important;height:37px!important;
+   margin:0 auto 2px!important;
+ }
+ #overlay-win .modal:after,#overlay-lose .modal:after{display:none!important}
+ #overlay-win .modal h2,#overlay-lose .modal h2{
+   padding:5px 7px!important;
+   margin:2px auto!important;
+   font-size:clamp(.91rem,3.8vw,1.1rem)!important;
+   line-height:1.15!important;
+ }
+ #overlay-win .stars{min-height:25px!important;margin:1px auto!important;gap:3px!important}
+ #overlay-win .stars .star-item{font-size:1.22rem!important}
+ #overlay-win #win-msg,#overlay-lose #lose-msg{
+   font-size:clamp(.7rem,3.2vw,.85rem)!important;
+   line-height:1.2!important;margin:1px auto 2px!important;
+ }
+ #overlay-win #win-score{font-size:1rem!important;margin:1px auto 4px!important;padding:2px!important}
+ #overlay-win .modal-btns,#overlay-lose .modal-btns{gap:3px!important}
+ #overlay-win .modal-btns button[data-lany-art],
+ #overlay-lose .modal-btns button[data-lany-art]{
+   min-height:35px!important;height:37px!important;
+   padding:3px 9px!important;font-size:.87rem!important;
+ }
+}
+
+
+/* Raster artwork regression found by reviewing the complete 390px screenshot.
+   A legacy .overlay .btn:not(...) background shorthand erased the WebP skin
+   on the victory's map/replay actions. Enforce each approved button asset. */
+#overlay-win .modal button[data-lany-art="next"]{
+ background:var(--cv-skin-green) center/100% 100% no-repeat!important;
+}
+#overlay-win .modal button[data-lany-art="map"],
+#overlay-lose .modal button[data-lany-art="map"]{
+ background:var(--cv-skin-blue) center/100% 100% no-repeat!important;
+}
+#overlay-win .modal button[data-lany-art="retry"],
+#overlay-lose .modal button[data-lany-art="retry"]{
+ background:var(--cv-skin-gold) center/100% 100% no-repeat!important;
+}
+#overlay-tutorial .modal button[data-lany-art="play"]{
+ background:var(--cv-skin-green) center/100% 100% no-repeat!important;
+}
+#overlay-win .modal button[data-lany-art],
+#overlay-lose .modal button[data-lany-art]{
+ border:0!important;border-radius:27px!important;
+ color:#fff9e4!important;box-shadow:none!important;
+ text-shadow:0 2px 2px #88557a!important;
+}
+#overlay-win .modal:after,#overlay-lose .modal:after{
+ content:none!important;display:none!important;
+}
