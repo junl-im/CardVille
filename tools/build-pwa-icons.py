@@ -1,25 +1,34 @@
-"""Render canonical LanyPang mascot SVG into PNG icons for web + installed apps.
-Run before static hosting deployment: python tools/build-pwa-icons.py
-Dependencies: CairoSVG 2.7.1 (build-time only, never shipped to players).
+"""Generate all shortcut and installable app PNG icons from the canonical 512px PNG.
+No vector source, vector rendering library or vector file is used.
 """
 from pathlib import Path
+from PIL import Image, ImageDraw
 import struct
-import cairosvg
 
 root=Path(__file__).resolve().parents[1]
 assets=root/'web'/'assets'
-sources={
-    'lanypang-brand.svg':[(16,'lanypang-favicon-16.png'),(32,'lanypang-favicon-32.png'),(48,'lanypang-favicon-48.png'),(180,'lanypang-apple-touch-180.png'),(192,'lanypang-icon-192.png'),(512,'lanypang-icon-512.png')],
-    'lanypang-maskable.svg':[(192,'lanypang-maskable-192.png'),(512,'lanypang-maskable-512.png')],
-}
-for src,targets in sources.items():
-    original=assets/src
-    if not original.is_file():raise SystemExit(f'Missing icon source: {original}')
-    for size,dst in targets:
-        target=assets/dst
-        cairosvg.svg2png(url=str(original),write_to=str(target),output_width=size,output_height=size)
-        data=target.read_bytes()
-        assert data[:8]==b'\x89PNG\r\n\x1a\n',f'Invalid PNG: {target}'
-        assert struct.unpack('>II',data[16:24])==(size,size),f'Bad PNG dimensions: {dst}'
-        assert len(data)>150,f'PNG empty: {dst}'
-        print(f'{dst}: {size}x{size}, {len(data)} bytes')
+source=assets/'lanypang-icon-512.png'
+if not source.is_file():raise SystemExit(f'Missing master PNG: {source}')
+master=Image.open(source).convert('RGBA')
+if master.size!=(512,512):raise SystemExit('Expected 512x512 master PNG')
+resample=Image.Resampling.LANCZOS
+
+def save(name,size,image):
+    target=assets/name
+    image.resize((size,size),resample).save(target,'PNG',optimize=True)
+    data=target.read_bytes()
+    assert data[:8]==b'\x89PNG\r\n\x1a\n'
+    assert struct.unpack('>II',data[16:24])==(size,size)
+    assert len(data)>150
+    print(f'{name}: {size}x{size}, {len(data)} bytes')
+
+for size,label in [(16,'lanypang-favicon-16.png'),(32,'lanypang-favicon-32.png'),(48,'lanypang-favicon-48.png'),(180,'lanypang-apple-touch-180.png'),(192,'lanypang-icon-192.png')]:
+    save(label,size,master)
+
+# Keep a 12% margin for circular Android adaptive launchers.
+mask=Image.new('RGBA',(512,512),(120,202,238,255))
+small=master.resize((390,390),resample)
+mask.alpha_composite(small,((512-390)//2,(512-390)//2))
+save('lanypang-maskable-192.png',192,mask)
+save('lanypang-maskable-512.png',512,mask)
+# The canonical 512px input is retained byte-for-byte.

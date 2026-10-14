@@ -312,6 +312,23 @@ def build_ui_v21():
     # Game HUD widgets: actually separate image files for level, goal, moves, score & bonuses.
     for key,color in [('stage','wood'),('goal','pink'),('moves','gold'),('score','blue'),('best','green'),('booster','green'),('clock','red')]:
         save(base/'hud'/f'panel-{key}.webp',panel(key,color,(340,158),38))
+    # Dedicated candy-gauge textures: opaque raster track and richly embossed golden fill.
+    track=Image.new('RGBA',(840,72),(0,0,0,0))
+    td=ImageDraw.Draw(track)
+    td.rounded_rectangle((0,0,839,71),radius=35,fill='#664f72',outline='#ffe5a9',width=8)
+    td.rounded_rectangle((12,12,827,59),radius=23,fill='#785b81')
+    for px in range(18,826,34):
+        td.rounded_rectangle((px,24,px+12,48),radius=6,fill='#8b6b98')
+    save(base/'hud'/'progress-track.webp',track)
+    fill=Image.new('RGBA',(160,72),(0,0,0,0))
+    fd=ImageDraw.Draw(fill)
+    fd.rectangle((0,0,159,71),fill='#ffaa34')
+    fd.rectangle((0,7,159,55),fill='#ffc637')
+    fd.rectangle((0,13,159,32),fill='#fff18c')
+    fd.rectangle((0,51,159,62),fill='#ef982b')
+    for x in range(12,160,42):
+        fd.ellipse((x,18,x+10,29),fill='#fffbd0')
+    save(base/'hud'/'progress-fill.webp',fill)
     # Map chapter labels + navigation buttons
     for key,color in [('world','wood'),('chapter','gold'),('prev','blue'),('next','green')]:
         save(base/'map'/f'{key}.webp',panel(key,color,(500,150),50))
@@ -358,7 +375,7 @@ def build_ui_v21():
     for kind in groups:
         stock[kind]=sorted(x.name for x in (base/kind).glob('*.webp'))
     (base/'manifest.json').write_text(json.dumps({
-       'release':'2.1.0-beta','style':'LanyPang approved WebP studio',
+       'release':'2.2.0-beta','style':'LanyPang approved WebP studio',
        'roles':stock,'generation':'tools/build-visual-v18.py',
        'source':['web/assets/friends','web/assets/polish'],'userArtSource':'web/assets/ui/v21/source-original-kit.zip','userArtSHA256':source_sha256
     },ensure_ascii=False,indent=2),encoding='utf-8')
