@@ -22,7 +22,7 @@ for(const source of ['/','/index.html','/version.json','/sw.js']){
  assert(h&&h.headers.some(v=>v.key==='Cache-Control'&&v.value.includes('no-store')),source);
 }
 for(const value of ['lany-title-stage-v17.css?v=1.7.0','lany-update-v17.js?v=1.7.0','title-mascots-v17.svg?v=1.7.0','lany-title-play-scene','lany-title-woodsign','id="lany-update-now"','id="lany-update-banner"','v1.7.0'])assert(html.includes(value),value);
-for(const value of ['title-forest-v17.svg','title-mascots-v17.svg','.lany-title-cast','.lany-title-woodsign','.lany-title-play-scene','prefers-reduced-motion','max-height:480px','.lany-title-shortcuts'])assert(css.includes(value),value);
+for(const value of ['title-forest-v17.svg','.lany-title-cast','.lany-title-woodsign','.lany-title-play-scene','prefers-reduced-motion','max-height:480px','.lany-title-shortcuts'])assert(css.includes(value),value);
 for(const name of ['title-forest-v17.svg','title-mascots-v17.svg']){
  const img=read('web/assets/title/'+name);
  assert(img.includes('<svg')&&img.includes('</svg>')&&img.length>2500,name);
