@@ -361,7 +361,7 @@ def build_ui_v21():
        'release':'2.1.0-beta','style':'LanyPang approved WebP studio',
        'roles':stock,'generation':'tools/build-visual-v18.py',
        'source':['web/assets/friends','web/assets/polish'],'userArtSource':'web/assets/ui/v21/source-original-kit.zip','userArtSHA256':source_sha256
-    },ensure_ascii=False,indent=2)+'\\n',encoding='utf-8')
+    },ensure_ascii=False,indent=2),encoding='utf-8')
     assert len(list(base.rglob('*.webp')))>=44
     print('OK v2.1 UI kit',sum(len(x) for x in stock.values()),'individual WebP assets')
 
