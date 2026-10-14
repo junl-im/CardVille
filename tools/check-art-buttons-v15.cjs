@@ -10,15 +10,11 @@ for(const x of ['lany-title-shortcuts','id="lany-start-button"','id="lany-instal
 assert.equal((h.match(/class="lany-art-button lany-art-small/g)||[]).length,3,'exactly three small buttons');
 const bitmapCss=read('web/css/lany-ui-v21.css');
 for(const color of ['blue','green','gold','pink'])assert(bitmapCss.includes('skin-'+color+'.webp'),color+' latest picture skin');
-for(const color of ['blue','green','gold','pink'])assert(!css.includes('background-image:url(\'../assets/buttons/skin-'+color+'.svg\')!important'),color+' stale picture override');
 for(const x of ['.lany-title-shortcuts{display:grid;grid-template-columns:repeat(3','grid-template-columns:repeat(2','.lany-art-play',':focus-visible','@media(hover:hover)','prefers-reduced-motion', 'lany-pressed'])assert(css.includes(x),x);
 for(const x of ['pointerdown','pointerup','pointercancel','keydown','keyup','navigator.vibrate','lany-art-spark'])assert(js.includes(x),x);
-for(const file of ['skin-pink','skin-blue','skin-gold','skin-green']){
- const path='web/assets/buttons/'+file+'.svg',source=read(path);
- assert(source.includes('<svg')&&source.includes('viewBox='),path);
- assert(source.includes('</svg>')&&!source.includes('<script'),path);
- assert(source.length>450,path);
- assert(sw.includes('./assets/buttons/'+file+'.svg'),path+' offline cache');
+for(const color of ['blue','green','gold','pink']){
+ assert(bitmapCss.includes('skin-'+color+'.webp'),color+' image in active stylesheet');
+ assert(sw.includes('./assets/ui/v21/buttons/skin-'+color+'.webp'),color+' included offline');
 }
 assert(sw.includes('lanypang-match-v2.1.0-ko'));
 new vm.Script(js,{filename:'lany-art-buttons.js'});
