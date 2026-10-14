@@ -26,7 +26,7 @@ assert.equal(manifest.icons.length,4);
 assert(manifest.icons.every(x=>x.type==='image/png'));
 for(const id of ['lany-hud-moves-value','progress-fill','score-val','best-val','level-val','lany-map-levels'])assert(html.includes('id="'+id+'"'),id);
 for(const fragment of ["progress-track.webp","progress-fill.webp","panel-moves.webp","panel-score.webp","stage-current-v20.webp","lany-route-strip"]){
- assert(css.includes(fragment)||shell.includes(fragment),fragment);
+ assert(css.includes(fragment)||shell.includes(fragment)||source('web/css/lany-worlds-v20.css').includes(fragment),fragment);
 }
 assert(!shell.includes('createElementNS'),'No vector route construction');
 assert(shell.includes("document.createElement('i')"),'HTML/CSS route strips must be constructed');
