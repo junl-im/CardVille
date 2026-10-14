@@ -72,10 +72,11 @@
    const grid=$('lany-map-levels');grid.replaceChildren();
    grid.dataset.world=String(n);grid.dataset.page=String(nav.mapPage);
    grid.style.setProperty('--lany-map-rows',String(Math.ceil((end-start)/3)));
-   const route=document.createElementNS('http://www.w3.org/2000/svg','svg');
-   route.setAttribute('class','lany-route');route.setAttribute('aria-hidden','true');
-   const routePath=document.createElementNS('http://www.w3.org/2000/svg','path');
-   routePath.setAttribute('class','lany-route-ink');route.appendChild(routePath);grid.appendChild(route);
+   // One light-weight Canvas layer for the route: no vector DOM and no separate image downloads.
+   const route=document.createElement('canvas');
+   route.className='lany-route';
+   route.setAttribute('aria-hidden','true');
+   grid.appendChild(route);
    const nodes=[],renderId=++mapRenderId;
    for(let offset=start;offset<end;offset++){
      const i=n*25+offset+1,enabled=unlocked.has(i),boss=LEVELS[i-1].isBoss,index=offset-start;
@@ -94,11 +95,24 @@
      if(nav.screen!=='map'||nav.world!==n||renderId!==mapRenderId)return;
      const width=grid.clientWidth,height=grid.clientHeight;
      if(!width||!height)return;
-     route.setAttribute('viewBox',`0 0 ${width} ${height}`);
-     routePath.setAttribute('d',nodes.map((el,i)=>{
-       const p=[el.offsetLeft+el.offsetWidth/2,el.offsetTop+el.offsetHeight/2];
-       return (i?'L ':'M ')+p[0]+' '+p[1];
-     }).join(' '));
+     const scale=Math.min(window.devicePixelRatio||1,2);
+     route.width=Math.max(1,Math.round(width*scale));
+     route.height=Math.max(1,Math.round(height*scale));
+     const ctx=route.getContext('2d');if(!ctx)return;
+     ctx.scale(scale,scale);
+     const pts=nodes.map(el=>[el.offsetLeft+el.offsetWidth/2,el.offsetTop+el.offsetHeight/2]);
+     if(pts.length<2)return;
+     const draw=()=>{
+       ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);
+       for(let i=1;i<pts.length;i++){
+         const p=pts[i-1],q=pts[i];
+         ctx.quadraticCurveTo(p[0],(p[1]+q[1])/2,q[0],q[1]);
+       }
+     };
+     ctx.lineCap='round';ctx.lineJoin='round';
+     draw();ctx.setLineDash([]);ctx.strokeStyle='rgba(100,59,75,.40)';ctx.lineWidth=13;ctx.stroke();
+     draw();ctx.strokeStyle='#fff8d2';ctx.lineWidth=9;ctx.stroke();
+     draw();ctx.setLineDash([2,13]);ctx.lineDashOffset=-4;ctx.strokeStyle='#f7b54e';ctx.lineWidth=4;ctx.stroke();
    });
    $('lany-map-tip').textContent=last<n*25+1?'🔒 이 지역은 아직 잠겨 있어요. 앞 지역의 단계를 완료해 주세요.':'✨ 숫자를 선택해 도전하세요. ◀ ▶ 버튼으로 같은 지역의 다음 구간을 넘길 수 있어요.';
  }
