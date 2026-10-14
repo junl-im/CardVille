@@ -72,10 +72,9 @@
    const grid=$('lany-map-levels');grid.replaceChildren();
    grid.dataset.world=String(n);grid.dataset.page=String(nav.mapPage);
    grid.style.setProperty('--lany-map-rows',String(Math.ceil((end-start)/3)));
-   const route=document.createElementNS('http://www.w3.org/2000/svg','svg');
-   route.setAttribute('class','lany-route');route.setAttribute('aria-hidden','true');
-   const routePath=document.createElementNS('http://www.w3.org/2000/svg','path');
-   routePath.setAttribute('class','lany-route-ink');route.appendChild(routePath);grid.appendChild(route);
+   // Pure HTML/CSS candy trail: no vector DOM or vector assets.
+   const route=document.createElement('div');
+   route.className='lany-route';route.setAttribute('aria-hidden','true');grid.appendChild(route);
    const nodes=[],renderId=++mapRenderId;
    for(let offset=start;offset<end;offset++){
      const i=n*25+offset+1,enabled=unlocked.has(i),boss=LEVELS[i-1].isBoss,index=offset-start;
@@ -94,11 +93,19 @@
      if(nav.screen!=='map'||nav.world!==n||renderId!==mapRenderId)return;
      const width=grid.clientWidth,height=grid.clientHeight;
      if(!width||!height)return;
-     route.setAttribute('viewBox',`0 0 ${width} ${height}`);
-     routePath.setAttribute('d',nodes.map((el,i)=>{
-       const p=[el.offsetLeft+el.offsetWidth/2,el.offsetTop+el.offsetHeight/2];
-       return (i?'L ':'M ')+p[0]+' '+p[1];
-     }).join(' '));
+     route.replaceChildren();
+     for(let i=1;i<nodes.length;i++){
+       const a=nodes[i-1],b=nodes[i];
+       const ax=a.offsetLeft+a.offsetWidth/2,ay=a.offsetTop+a.offsetHeight/2;
+       const bx=b.offsetLeft+b.offsetWidth/2,by=b.offsetTop+b.offsetHeight/2;
+       const distance=Math.hypot(bx-ax,by-ay);
+       const strip=document.createElement('i');
+       strip.className='lany-route-strip';
+       strip.style.left=ax+'px';strip.style.top=ay+'px';
+       strip.style.width=distance+'px';
+       strip.style.transform='translateY(-50%) rotate('+Math.atan2(by-ay,bx-ax)+'rad)';
+       route.appendChild(strip);
+     }
    });
    $('lany-map-tip').textContent=last<n*25+1?'🔒 이 지역은 아직 잠겨 있어요. 앞 지역의 단계를 완료해 주세요.':'✨ 숫자를 선택해 도전하세요. ◀ ▶ 버튼으로 같은 지역의 다음 구간을 넘길 수 있어요.';
  }
