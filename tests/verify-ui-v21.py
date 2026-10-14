@@ -43,7 +43,10 @@ with sync_playwright() as pw:
   bg('.lany-prep-card','panel-help.webp')
   page.locator('#lany-prep-play').click()
   assert page.locator('#board .cell').count()==64,name
-  bg('#app>.header .hud-box','panel-score.webp')
+  # v2.2 adds a dedicated moves panel ahead of the existing score HUD.
+  # Check the semantic panel, not the former first-child position.
+  bg('#app>.header .lany-v22-score-panel','panel-score.webp')
+  bg('#app>.header .lany-v22-moves-panel','panel-moves.webp')
   for kind in ('hammer','shuffle','color','time'):
    bg('#b-'+kind,'badge-'+kind+'.webp')
   page.screenshot(path=str(out/(name+'-game.png')))
