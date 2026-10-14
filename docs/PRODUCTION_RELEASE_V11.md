@@ -7,3 +7,9 @@
 - Hosting 정적 파일만 업로드. Firestore/Authentication/Storage/Cloud Functions와 기존 사용자 데이터는 변경하지 않음.
 - 11종 품질 게이트, GitHub Secret 서비스 계정 프로젝트 확인, 정식 웹게임 HTML/CSS/JS/WebP HTTP 검사 이후 배포 성공 표시.
 - 혹시 기능 문제가 생기면 GitHub Actions의 Firebase Hosting 이전 릴리스로 복구하거나 해당 배포 커밋을 revert한 뒤 재배포; 서비스워커 저장소 삭제는 플레이 기록을 지울 수 있어 금지.
+
+## 실제 배포 최종 확인 (2026-10-14)
+- Firebase Hosting live 작업: [38498380720](https://github.com/junl-im/CardVille/actions/runs/38498380720), 결론 **success**, 실제 로그에 `라니팡 Firebase LIVE HTTP/asset test: PASS` 표시.
+- **정식 게임 주소:** https://cardville.web.app/?v=1.1.0
+- 검증한 공개 리소스: 한국어 HTML, lany-polish.css, lany-polish.js, rabbit-wink.webp. 로그인/Firestore/Storage 데이터 변경 없음.
+- GitHub Pages 정식 게임: https://junl-im.github.io/CardVille/?v=1.1.0

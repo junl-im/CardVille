@@ -94,3 +94,10 @@ GitHub 저장소의 과거 CardVille 커밋 기록은 유지됩니다.
 - 검사: Node `check-tempo` 가상 시계/실패 재현, `check-v09`, `verify-v09.py` PC·모바일 자산 URL 경로 시험. [세부 문서](docs/RELEASE_V09.md).
 - 오리지널 장면 그림은 기존 라니팡 제작 이미지를 재사용; 10개 완전 별도 신규 배경 아트·상용급 스프라이트/사운드 팩은 이후 고도화 대상.
 - [Firebase 라니팡 v0.9 미리보기](https://cardville--cardville-match3-preview-ikhmalki.web.app/?v=0.9.0), Firebase live는 변경하지 않음.
+
+## 라니팡 v1.1 — 실제 정식 사이트
+
+- **[라니팡 Firebase 정식 게임 실행](https://cardville.web.app/?v=1.1.0)** · [GitHub Pages 실제 게임](https://junl-im.github.io/CardVille/?v=1.1.0)
+- [Firebase 정식 live 배포 및 HTML/CSS/JS/WebP 검사 PASS](https://github.com/junl-im/CardVille/actions/runs/38498380720) · [게임 아트/액션 소스 커밋](https://github.com/junl-im/CardVille/commit/cc9e4ef5373da68cd1d0752f79e10db7f9c2b863).
+- 실제 게임에 캐릭터 표정 전환, 젤리 버튼 눌림, 동물 승리/실패·일시정지 팝업, 새 지도 및 플레이 배경, 매치 반짝임 적용. 기존 250단계와 로컬 진행 기록 보존.
+- 원본 고해상도 동물/버튼/팝업/배경 시트는 별도 Google Drive 원본 IP 보관본으로 유지. Firebase preview와 live는 분리.
