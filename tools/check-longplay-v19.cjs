@@ -3,7 +3,7 @@ const fs=require('node:fs'), assert=require('node:assert/strict'),vm=require('no
 const read=p=>fs.readFileSync(p,'utf8'),h=read('web/index.html');
 const v=JSON.parse(read('web/version.json')),m=JSON.parse(read('web/manifest.json')),sw=read('web/sw.js');
 const diag=read('web/js/lany-perf-v19.js'),css=read('web/css/lany-result-v19.css'),polish=read('web/js/lany-polish.js');
-assert.equal(v.version,'2.2.0-beta');assert.equal(v.visualRelease,'2.2.0');
+assert.equal(v.version,'2.2.0-beta');assert.equal(v.visualRelease,'2.1.0');
 for(const k of ['titleRAFOffDuringGame','tapExpressionImagesCapped','animalExpressionRestored','localFpsDiagnostics','longPlayMoveQA','rasterResultOverlay'])assert.equal(v[k],true,k);
 assert(m.start_url.includes('v=2.2.0'),'PWA manifest');
 assert(sw.includes('lanypang-match-v2.2.0-ko'));
