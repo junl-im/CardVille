@@ -1,4 +1,4 @@
-/* 라니팡 v1.5: original SVG illustrated button system. All visual borders are in image assets. */
+/* 라니팡 v1.5: original legacy vector illustrated button system. All visual borders are in image assets. */
 .lany-illustrated-logo{display:block;width:min(100%,550px);margin:0;line-height:0;font-size:0;padding:0;filter:drop-shadow(0 9px 14px #55316b66)}
 .lany-illustrated-logo img{width:100%;height:auto;display:block;max-height:clamp(115px,29dvh,235px);object-fit:contain;pointer-events:none;user-select:none}
 .lany-title-top{width:100%;max-width:550px}
@@ -22,7 +22,7 @@
 .lany-art-button.lany-pressed .lany-button-picture,.lany-art-button:active .lany-button-picture{filter:drop-shadow(0 0 1px #5c2d71a0)!important}
 .lany-art-button.lany-pressed .lany-button-word{transform:translate(-50%,-44%) scale(.97)}
 /* Legacy v1.5 button layout and tactile behaviour preserved. v2.1 owns all background images;
-   do not reintroduce high-specificity !important SVG skins here. */
+   do not reintroduce high-specificity !important legacy vector skins here. */
 :is(.lany-action,.lany-secondary,.lany-page-arrow,.overlay .btn,.lany-game-nav button,#game-mode-bar button,.lany-difficulty-close,.lany-install-done,.lany-world-tab,.lany-back,.lany-map-icon){background-repeat:no-repeat!important;background-position:center!important;background-size:100% 100%!important;background-color:transparent!important;border-color:transparent!important;box-shadow:none!important;filter:drop-shadow(0 3px 2px #633d6677);text-shadow:0 1px 2px #65375ca0;transition:transform .12s ease,filter .12s ease!important;touch-action:manipulation}
 :is(.lany-secondary,.lany-action.pale,.lany-game-nav .lany-game-map-button,.lany-map-icon,.lany-back){color:#fff!important}
 :is(.lany-page-arrow,.lany-world-tab,.lany-difficulty-close){color:#864b27!important;text-shadow:0 1px 1px #fffcc8!important}
