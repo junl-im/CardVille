@@ -415,9 +415,9 @@
 }
 
 
-/* Audit repair: on 320x440 devices the original victory modal was visually
-   clipped because mascot, title, stars, score and three tall CTAs stacked up. */
-@media(max-height:520px){
+/* Audit repair: compact 320x440 and 320x568 screens clip the original result panel.
+   Reduce decorative height but keep all controls reachable, no internal game changes. */
+@media(max-height:680px){
  #overlay-win .modal,#overlay-lose .modal{
    box-sizing:border-box!important;
    width:min(94vw,400px)!important;
