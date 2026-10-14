@@ -2,7 +2,7 @@
    No storage deletes, no forced refresh, and no polling or timers. */
 (()=>{
  'use strict';
- const LOCAL='2.1.0-beta';
+ const LOCAL=document.querySelector('meta[name="lany-build-version"]')?.content || '2.2.0-beta';
  const $=id=>document.getElementById(id);
  let available=null;
  let waitingSW=false;
@@ -26,6 +26,7 @@
      const data=await response.json();
      if(typeof data.version!=='string')return;
      if(isNewer(data.version,LOCAL)){available=data.version;show();}
+     else { available=null; const banner=$('lany-update-banner'); if(banner)banner.hidden=true; }
    }catch(_){/* Offline gameplay is more important than update notifications. */}
  }
  async function refresh(){
@@ -49,7 +50,7 @@
    window.addEventListener('online',check,{passive:true});
    if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('controllerchange',()=>{
      if(waitingSW)return;
-     waitingSW=true;show();
+     waitingSW=true;check();
    });
  }
  window.LanyUpdate={check,refresh,localVersion:LOCAL};
