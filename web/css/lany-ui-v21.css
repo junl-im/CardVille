@@ -140,3 +140,21 @@ button[data-lany-art="close"]{--lany-action-image:url('../assets/ui/v21/buttons/
 }
 @media(max-height:600px){.overlay .modal,.lany-dialog,.lany-prep-card{padding:11px!important}}
 @media(prefers-reduced-motion:reduce){.booster,.lany-game-nav button{transition:none!important}}
+
+/* The approved illustration sheet already contains complete Korean labels.
+   Do not print another HTML label over the illustration; aria-label still names the button. */
+.lany-title .lany-art-play .lany-button-word,
+.lany-title .lany-art-help .lany-button-word,
+.lany-title .lany-art-friends .lany-button-word{display:none!important}
+.lany-title .lany-title-play-scene .lany-art-play{width:min(80%,362px)!important}
+.lany-title .lany-art-play img.lany-button-picture{height:auto!important;object-fit:contain!important}
+.lany-title .lany-title-shortcuts{gap:clamp(1px,1vw,7px)!important}
+.lany-title .lany-title-shortcuts .lany-art-small{max-width:150px!important}
+@media(max-height:700px){
+ .lany-title .lany-title-play-scene .lany-art-play{width:min(69%,275px)!important}
+ .lany-title .lany-title-shortcuts .lany-art-small{max-width:112px!important}
+}
+@media(max-height:480px){
+ .lany-title .lany-title-play-scene .lany-art-play{width:min(66%,180px)!important}
+ .lany-title .lany-title-shortcuts .lany-art-small{max-width:80px!important}
+}
