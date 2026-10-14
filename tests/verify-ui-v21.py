@@ -35,7 +35,7 @@ with sync_playwright() as pw:
   page.locator('.lany-friends-close').click()
   page.locator('#lany-start-button').click()
   assert page.locator('#lany-world-map').is_visible(),name
-  bg('#lany-world-map .lany-world-banner','chapter.webp')
+  bg('#lany-world-map .lany-world-banner','region-header.webp')  # v2.3 text-free art replaces word-baked chapter
   bg('#lany-map-continue','skin-green.webp')
   page.screenshot(path=str(out/(name+'-map.png')))
   page.locator('#lany-map-continue').click()
