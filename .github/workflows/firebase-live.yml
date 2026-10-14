@@ -46,6 +46,7 @@ jobs:
           node tools/check-tempo.cjs
           node tools/check-polish.cjs
           node tools/check-gameplay-v12.cjs
+          node tools/check-pages-v13.cjs
           node tools/check-firebase-preview.cjs
       - name: Confirm matching project service-account ID (no secret output)
         env:
