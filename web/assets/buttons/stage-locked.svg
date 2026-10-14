@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" aria-label="라니팡 locked 단계 표식">
-<defs><linearGradient id="g" x1="0" y1="0" x2=".3" y2="1"><stop stop-color="#f4f4fc"/><stop offset=".48" stop-color="#aeb5c9"/><stop offset="1" stop-color="#8590a6"/></linearGradient></defs>
-<path d="M50 4C61 4 63 11 72 14C83 16 91 23 91 34C97 45 98 54 91 65C91 75 84 85 72 87C62 97 38 97 28 87C15 84 7 75 9 64C1 52 3 43 9 34C8 23 17 16 29 14C37 9 41 4 50 4Z" fill="#8590a6" stroke="#fffbe5" stroke-width="5"/>
-<circle cx="50" cy="48" r="37" fill="url(#g)" stroke="#fff8d6" stroke-width="4"/>
-<path d="M24 36Q34 21 55 20" fill="none" stroke="white" stroke-opacity=".67" stroke-width="7" stroke-linecap="round"/>
-<rect x="40" y="72" width="23" height="18" rx="4" fill="#fff2bb" stroke="#7b8094" stroke-width="3"/><path d="M45 74v-7q0 -7 7 -7t7 7v7" fill="none" stroke="#7b8094" stroke-width="4"/></svg>
