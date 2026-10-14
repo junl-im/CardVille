@@ -19,7 +19,12 @@
    document.body.classList.remove('lany-at-title');
    const desired=Number.isInteger(worldIndex)?worldIndex:nav.world;
    nav.world=Math.max(0,Math.min(9,desired));$('lany-world-map').hidden=false;
-   renderMap();$('lany-map-continue').focus();
+   document.querySelector('.lany-map-section')?.scrollTo(0,0);
+   try {renderMap();$('lany-map-continue').focus();} catch(error) {
+     console.error('[라니팡] 지도 화면 열기 실패',error);
+     $('lany-map-tip').textContent='지도 화면에 문제가 발생했어요. 잠시 후 다시 시도해 주세요.';
+     $('lany-map-continue').onclick=()=>continueStage();
+   }
  }
  function renderMap(){
    const unlocked=new Set(state.unlockedLevels),n=nav.world;
@@ -34,7 +39,7 @@
      const btn=document.createElement('button');btn.type='button';btn.className='lany-world-tab'+(i===n?' active':'')+(last<i*25+1?' locked-tab':'');
      btn.setAttribute('aria-label',`제${i+1}지역 ${worlds[i][1]}`);
      btn.setAttribute('aria-pressed',String(i===n));btn.innerHTML=`<span class="world-emoji">${worlds[i][0]}</span><span>${i+1}지역</span>`;
-     btn.addEventListener('click',()=>{nav.world=i;renderMap();$('lany-map-section')?.scrollTo({top:0,behavior:'instant'});});tabs.appendChild(btn);
+     btn.addEventListener('click',()=>{nav.world=i;renderMap();document.querySelector('.lany-map-section')?.scrollTo({top:0,behavior:'instant'});});tabs.appendChild(btn);
    }
    $('lany-world-no').textContent=`제${n+1}지역 · ${(n*25)+1}~${(n+1)*25}단계`;
    $('lany-world-title').textContent=worlds[n][1];$('lany-world-icon').textContent=worlds[n][0];

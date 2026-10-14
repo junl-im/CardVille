@@ -31,6 +31,7 @@ jobs:
           node tools/check-lany-shell.cjs
           node tools/check-world-map.cjs
           node tools/check-v09.cjs
+          node tools/check-map-touch.cjs
           node tools/check-tempo.cjs
           test -f web/index.html
           test -f web/LICENSE
