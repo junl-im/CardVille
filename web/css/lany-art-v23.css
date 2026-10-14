@@ -260,3 +260,65 @@
   }
   #lany-install-guide-steps li{line-height:1.35!important}
 }
+
+/* Region-specific v2.3 atlas: independent artwork for all ten canonical game worlds. */
+.lany-map-section .lany-map-levels[data-world="0"]{
+ background-image:url('../assets/v23/regions/world-01.webp'),url('../assets/v23/regions/world-atlas.webp'),url('../assets/polish/world-map.webp')!important;
+ background-size:100% auto,500% 200%,cover!important;
+ background-position:center top,0% 0%,center center!important;
+ background-repeat:no-repeat,no-repeat,no-repeat!important;
+}
+.lany-map-section .lany-map-levels[data-world="1"]{
+ background-image:url('../assets/v23/regions/world-atlas.webp'),url('../assets/polish/world-map.webp')!important;
+ background-size:500% 200%,cover!important;
+ background-position:25% 0%,center center!important;
+ background-repeat:no-repeat,no-repeat!important;
+}
+.lany-map-section .lany-map-levels[data-world="2"]{
+ background-image:url('../assets/v23/regions/world-03.webp'),url('../assets/v23/regions/world-atlas.webp'),url('../assets/polish/world-map.webp')!important;
+ background-size:100% auto,500% 200%,cover!important;
+ background-position:center top,50% 0%,center center!important;
+ background-repeat:no-repeat,no-repeat,no-repeat!important;
+}
+.lany-map-section .lany-map-levels[data-world="3"]{
+ background-image:url('../assets/v23/regions/world-atlas.webp'),url('../assets/polish/world-map.webp')!important;
+ background-size:500% 200%,cover!important;
+ background-position:75% 0%,center center!important;
+ background-repeat:no-repeat,no-repeat!important;
+}
+.lany-map-section .lany-map-levels[data-world="4"]{
+ background-image:url('../assets/v23/regions/world-05.webp'),url('../assets/v23/regions/world-atlas.webp'),url('../assets/polish/world-map.webp')!important;
+ background-size:100% auto,500% 200%,cover!important;
+ background-position:center top,100% 0%,center center!important;
+ background-repeat:no-repeat,no-repeat,no-repeat!important;
+}
+.lany-map-section .lany-map-levels[data-world="5"]{
+ background-image:url('../assets/v23/regions/world-atlas.webp'),url('../assets/polish/world-map.webp')!important;
+ background-size:500% 200%,cover!important;
+ background-position:0% 100%,center center!important;
+ background-repeat:no-repeat,no-repeat!important;
+}
+.lany-map-section .lany-map-levels[data-world="6"]{
+ background-image:url('../assets/v23/regions/world-atlas.webp'),url('../assets/polish/world-map.webp')!important;
+ background-size:500% 200%,cover!important;
+ background-position:25% 100%,center center!important;
+ background-repeat:no-repeat,no-repeat!important;
+}
+.lany-map-section .lany-map-levels[data-world="7"]{
+ background-image:url('../assets/v23/regions/world-atlas.webp'),url('../assets/polish/world-map.webp')!important;
+ background-size:500% 200%,cover!important;
+ background-position:50% 100%,center center!important;
+ background-repeat:no-repeat,no-repeat!important;
+}
+.lany-map-section .lany-map-levels[data-world="8"]{
+ background-image:url('../assets/v23/regions/world-atlas.webp'),url('../assets/polish/world-map.webp')!important;
+ background-size:500% 200%,cover!important;
+ background-position:75% 100%,center center!important;
+ background-repeat:no-repeat,no-repeat!important;
+}
+.lany-map-section .lany-map-levels[data-world="9"]{
+ background-image:url('../assets/v23/regions/world-atlas.webp'),url('../assets/polish/world-map.webp')!important;
+ background-size:500% 200%,cover!important;
+ background-position:100% 100%,center center!important;
+ background-repeat:no-repeat,no-repeat!important;
+}

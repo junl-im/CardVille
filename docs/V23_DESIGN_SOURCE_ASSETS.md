@@ -24,5 +24,15 @@
 - 기존 main에는 지도 월드 1·3·5의 WebP 원화, 지역 헤더, 도전·대전·초대·편집기 장식이 먼저 반영돼 있다. 중복 생성하지 않는다.
 - 후속 패치: 기보유 install-ornament.webp와 friends-ornament.webp를 실제 설치·도감 제목에 연결하며 글씨색·포커스·비활성 상태를 통일한다.
 - QA: 320×440, 320×568, 390×844, 1366×768에서 computed background 자산을 확인한다.
-- 지도 원본 시트의 나머지 7개 지역은 아직 GitHub 개별 아트로 적용되지 않았다. 시트 명칭이 확정 250단계 월드 구조와 달라 이름과 스테이지 구조는 변경하지 않는다.
+- 지도 원본 시트 10종을 라벨 없는 풍경으로 추출하여 5×2 WebP 아틀라스(world-atlas.webp)로 통합했다. 실제 게임 월드 10개 모두 아틀라스 내 독립 풍경을 사용하며 기존 지역 1·3·5의 개별 고화질 컷을 상단에 함께 유지한다. 그림의 테마를 기존 250단계 월드명에 맞춰 재배열했으며 지역명, 단계 번호, 경로 좌표는 변경하지 않았다.
 - 기존 승인된 51개 WebP UI, 검은 고양이 및 동물 얼굴 30종, 저장 키를 유지한다. Firebase LIVE 배포는 하지 않는다.
+
+
+## 통합 지도 아틀라스 및 원본 보관
+
+- 파일: web/assets/v23/regions/world-atlas.webp (1900×564, 10개 구역, 약 140KB)
+- 이미지 SHA-256: d995fcc2af1436b9feed6513c9be9fb288d1cf0650a5f837a44bf97628cc2dba
+- 원본 Drive 지도 시트: https://drive.google.com/file/d/16950YaVlrDneUXhTKJXCc2X2wgY1YlUq/view
+- 최종 WebP Drive 백업: https://drive.google.com/file/d/1kj6G0-OmksqtysgTRoO7HsP95rIguHz9/view
+- 합성 원화의 별도 레이블은 잘라내고 화면의 기존 텍스트만 남겼다. 기존 캐릭터/팝업/기록은 그대로 유지.
+- 현 월드와 새 원화 콘셉트의 배경이 완전히 일치하지 않는 구역은 실제 QA 스크린샷을 기준으로 추가 아트 조정 필요.
