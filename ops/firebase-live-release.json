@@ -1,10 +1,10 @@
 {
-  "release": "1.9.0-beta",
+  "release": "2.0.0-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "6e3533f1bb7b120db37066747fb6069338d90c06",
-  "requestedFor": "라니팡 v1.9 실제 연속 매칭·장시간 성능 개선, WebAudio 연결 해제 및 동시재생 상한, 첫 화면 파티클 중단, 모바일 로컬 FPS 진단, 검은 고양이 WebP 결과 연출 · Firebase Hosting 업로드 성공 이후 curl broken pipe HTTP 검증 수정 재실행",
+  "sourceCommit": "253e609aa23db255f942ec72a73b779bda5a54e6",
+  "requestedFor": "라니팡 v2.0 PWA 캐시 무한 누적 방지, 오프라인 동물 30종, WebP 지도 메달 4종과 10지역 색상, 게임 플레이에서만 시계 구동, 모바일 프레임 안정화",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true
 }
