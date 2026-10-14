@@ -244,7 +244,7 @@ if __name__=='__main__':
 def build_ui_v21():
     from PIL import ImageDraw, ImageColor, ImageFilter
     base=A/'ui'/'v21'
-    groups=['buttons','hud','popup','map','booster','icons']
+    groups=['title','buttons','hud','popup','map','booster','icons']
     for group in groups:(base/group).mkdir(parents=True,exist_ok=True)
     schemes={
         'pink':('#ffe8f3','#ff76b4','#de377f','#833757'),
@@ -289,6 +289,13 @@ def build_ui_v21():
         with Image.open(target) as im:
             assert im.format=='WEBP'
         print('OK UI',target.relative_to(A),target.stat().st_size)
+    # Title visuals preserve real approved character silhouettes, not substitute vector mascots.
+    for key,source in [('logo','title-logo-v18.webp'),('play','btn-play-v18.webp'),
+                       ('install','btn-install-v18.webp'),('help','btn-help-v18.webp'),
+                       ('friends','btn-friends-v18.webp')]:
+        original=Image.open(T/source).convert('RGBA')
+        # Re-export each role in a clearly versioned standalone asset.
+        save(base/'title'/f'{key}.webp',original)
     # 6 independent full-width image skins; labels remain native accessible HTML.
     for color in schemes:
         save(base/'buttons'/f'skin-{color}.webp',panel('skin',color,(560,146),64))
