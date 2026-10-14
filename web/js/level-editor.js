@@ -4,6 +4,7 @@
   let editGrid = Array.from({length:8}, () => Array(8).fill(0));
   let editTarget = 1000;
   let editMoves  = 20;
+  let editorPage=0;
 
   function encodeLevel() {
     const flat = editGrid.flat().join('');
@@ -43,7 +44,7 @@
         </div>
         <div id="editor-grid" style="display:grid;grid-template-columns:repeat(8,1fr);gap:3px;margin-bottom:14px"></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
-          ${CANDY_TYPES.map((c,i)=>`<button onclick="selectedType=${i}" data-type="${i}"
+          ${CANDY_TYPES.map((c,i)=>`<button type="button" data-type="${i}"
             style="font-size:1.4rem;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);
             border-radius:8px;width:40px;height:40px;cursor:pointer">${c}</button>`).join('')}
         </div>
@@ -55,11 +56,44 @@
       </div>`;
 
     document.body.appendChild(div);
-    renderEditorGrid();
+    const panel=div.firstElementChild;
+    const blocks=Array.from(panel.children);
+    if(blocks.length>=6){
+      const settings=blocks[1],grid=blocks[2],palette=blocks[3],actions=blocks[4],msg=blocks[5];
+      const editPage=document.createElement('section');editPage.className='lany-editor-page';editPage.dataset.editorPage='0';
+      const settingPage=document.createElement('section');settingPage.className='lany-editor-page';settingPage.dataset.editorPage='1';
+      const shareButton=actions.querySelector('button:first-child');
+      if(shareButton){shareButton.removeAttribute('onclick');shareButton.addEventListener('click',shareLevel);}
+      const randomButton=actions.querySelector('button:last-child');
+      if(randomButton){randomButton.removeAttribute('onclick');randomButton.addEventListener('click',randomFill);}
+      for(const btn of palette.querySelectorAll('[data-type]')){
+        btn.addEventListener('click',()=>{selectedType=Number(btn.dataset.type);palette.querySelectorAll('[data-type]').forEach(x=>x.setAttribute('aria-pressed',String(x===btn)));});
+      }
+      palette.querySelector('[data-type="0"]')?.setAttribute('aria-pressed','true');
+      editPage.append(grid,palette);
+      if(randomButton)editPage.append(randomButton);
+      settingPage.append(settings,actions,msg);
+      const pager=document.createElement('nav');pager.className='lany-game-pager lany-editor-pager';
+      pager.setAttribute('aria-label','단계 편집기 페이지');
+      const prev=document.createElement('button');prev.type='button';prev.className='lany-page-arrow';prev.id='lany-editor-prev';prev.textContent='◀ 편집';prev.addEventListener('click',()=>showEditorPage(0));
+      const status=document.createElement('span');status.id='lany-editor-status';status.setAttribute('role','status');
+      const next=document.createElement('button');next.type='button';next.className='lany-page-arrow';next.id='lany-editor-next';next.textContent='설정 ▶';next.addEventListener('click',()=>showEditorPage(1));
+      pager.append(prev,status,next);
+      panel.append(editPage,settingPage,pager);
+    }
+    renderEditorGrid();showEditorPage(0);
     return div;
   }
 
   let selectedType = 0;
+  function showEditorPage(n){
+    editorPage=Math.max(0,Math.min(1,n));
+    const root=document.getElementById('ng-level-editor');if(!root)return;
+    for(const section of root.querySelectorAll('[data-editor-page]'))section.hidden=Number(section.dataset.editorPage)!==editorPage;
+    const prev=root.querySelector('#lany-editor-prev'),next=root.querySelector('#lany-editor-next'),status=root.querySelector('#lany-editor-status');
+    if(prev)prev.disabled=editorPage===0;if(next)next.disabled=editorPage===1;
+    if(status)status.textContent=(editorPage+1)+' / 2';
+  }
 
   function renderEditorGrid() {
     const grid = document.getElementById('editor-grid');
@@ -109,5 +143,5 @@
     document.body.appendChild(btn);
   });
 
-  window.LevelEditor = {openEditor: ()=>{const ed=document.getElementById('ng-level-editor');if(ed)ed.style.display='block';}, encodeLevel, decodeLevel, randomFill};
+  window.LevelEditor = {openEditor: ()=>{const ed=document.getElementById('ng-level-editor');if(ed){ed.style.display='block';showEditorPage(0);}}, encodeLevel, decodeLevel, randomFill, shareLevel, showPage:showEditorPage};
 })();
