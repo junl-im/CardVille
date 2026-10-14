@@ -99,6 +99,7 @@ with sync_playwright() as playwright:
     for kind in ('win','lose'):
       page.evaluate("""kind=>{document.getElementById('overlay-win').style.display=kind==='win'?'flex':'none';
         document.getElementById('overlay-lose').style.display=kind==='lose'?'flex':'none'}""",kind)
+      page.wait_for_timeout(380)  # animated entry transforms should settle before geometry audit
       assert viewport_fit('#overlay-'+kind+' .modal'),(tag,kind,'result panel clipped')
       shot('result-'+kind,'#overlay-'+kind)
     page.evaluate("document.getElementById('overlay-lose').style.display='none'")
