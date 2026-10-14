@@ -1,0 +1,86 @@
+name: 라니팡 Firebase 정식 사이트 배포
+on:
+  push:
+    branches: [main]
+    paths:
+      - ops/firebase-live-release.json
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: lanypang-cardville-firebase-live
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate exact production release request
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const fs=require('fs'),assert=require('assert');
+          const r=JSON.parse(fs.readFileSync('ops/firebase-live-release.json','utf8'));
+          const f=JSON.parse(fs.readFileSync('.firebaserc','utf8'));
+          const v=JSON.parse(fs.readFileSync('web/version.json','utf8'));
+          assert.equal(r.projectId,'cardville');
+          assert.equal(r.channelId,'live');
+          assert.equal(r.release,'1.1.0-beta');
+          assert.equal(v.version,r.release);
+          assert.equal(f.projects.default,'cardville');
+          assert.equal(r.site,'cardville');
+          console.log('정식 배포 승인 설정 검사: PASS');
+          NODE
+          node tools/check-release.cjs
+          node tools/check-korean-ui.cjs
+          node tools/check-korean-complete.cjs
+          node tools/check-lany-shell.cjs
+          node tools/check-world-map.cjs
+          node tools/check-v09.cjs
+          node tools/check-map-touch.cjs
+          node tools/check-friends-mobile.cjs
+          node tools/check-tempo.cjs
+          node tools/check-polish.cjs
+          node tools/check-firebase-preview.cjs
+      - name: Confirm matching project service-account ID (no secret output)
+        env:
+          FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARDVILLE }}
+          CARDVILLE_REQUIRE_SAME_PROJECT: '1'
+        run: |
+          test -n "$FIREBASE_SA" || { echo 'Firebase Secret이 필요합니다'; exit 1; }
+          node tools/check-iam-identity.cjs
+      - name: Deploy actual Firebase Hosting live site
+        id: live
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARDVILLE }}
+          projectId: cardville
+          channelId: live
+      - name: HTTP checks for actual public game
+        shell: bash
+        run: |
+          set -euo pipefail
+          url='https://cardville.web.app'
+          for attempt in $(seq 1 8); do
+            if curl --fail --silent --show-error --location --max-time 25 "$url/?v=1.1.0" -o /tmp/lany-live.html && \
+              grep -Fq '<html lang="ko">' /tmp/lany-live.html && \
+              grep -Fq '라니팡!' /tmp/lany-live.html && \
+              grep -Fq 'lany-polish.js?v=1.1.0' /tmp/lany-live.html && \
+              grep -Fq 'lany-polish.css?v=1.1.0' /tmp/lany-live.html && \
+              curl --fail --silent --show-error --location --max-time 25 "$url/assets/polish/rabbit-wink.webp" -o /tmp/lany-wink.webp && \
+              test "$(wc -c </tmp/lany-wink.webp)" -gt 1000 && \
+              curl --fail --silent --show-error --location --max-time 25 "$url/js/lany-polish.js" | grep -Fq 'LanyPolish'; then
+              echo '라니팡 Firebase LIVE HTTP/asset test: PASS'
+              echo '## 라니팡 실제 Firebase 정식 게임 배포 성공' >> "$GITHUB_STEP_SUMMARY"
+              echo '- 정식 게임 URL: https://cardville.web.app/?v=1.1.0' >> "$GITHUB_STEP_SUMMARY"
+              echo '- 원본 데이터 및 Firestore/Auth 변경 없음' >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            sleep 8
+          done
+          echo 'LIVE deployment attempted but site HTTP test did not pass' >&2
+          exit 1

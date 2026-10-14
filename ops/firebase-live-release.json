@@ -1,0 +1,10 @@
+{
+  "release": "1.1.0-beta",
+  "projectId": "cardville",
+  "site": "cardville",
+  "channelId": "live",
+  "sourceCommit": "cc9e4ef5373da68cd1d0752f79e10db7f9c2b863",
+  "requestedFor": "실제 라니팡 플레이 게임에 아트·표정·버튼·팝업을 전체 적용",
+  "onlyHosting": true,
+  "noFirestoreOrAuthChanges": true
+}
