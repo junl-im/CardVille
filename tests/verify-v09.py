@@ -36,8 +36,8 @@ for label,w,h,mobile in [('mobile',390,844,True),('desktop',1366,768,False)]:
   assert page.locator('#lany-world-map').is_visible()
   assert page.locator('#lany-map-levels .lany-level').count()==25
   assert page.locator('#lany-map-levels .lany-level:disabled').count()==24
-  routecount=page.locator('svg.lany-route path.lany-route-ink').count();assert routecount==1
-  pathstr=page.locator('svg.lany-route path').get_attribute('d');assert pathstr and 'L' in pathstr and pathstr.count('L')==24, pathstr
+  routecount=page.locator('canvas.lany-route').count();assert routecount==1
+  route=page.locator('canvas.lany-route');assert route.evaluate('(canvas) => canvas.width > 0 && canvas.height > 0')
   page.screenshot(path=str(root/'docs'/f'v09_{label}_map.png'))
   # Make sure map works even through click, and second world is clickable (but locked)
   page.locator('.lany-world-tab').nth(1).click()

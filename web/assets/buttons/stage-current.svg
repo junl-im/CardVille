@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" aria-label="라니팡 current 단계 표식">
-<defs><linearGradient id="g" x1="0" y1="0" x2=".3" y2="1"><stop stop-color="#fff3a1"/><stop offset=".48" stop-color="#ffad47"/><stop offset="1" stop-color="#bf6f30"/></linearGradient></defs>
-<path d="M50 4C61 4 63 11 72 14C83 16 91 23 91 34C97 45 98 54 91 65C91 75 84 85 72 87C62 97 38 97 28 87C15 84 7 75 9 64C1 52 3 43 9 34C8 23 17 16 29 14C37 9 41 4 50 4Z" fill="#bf6f30" stroke="#fffbe5" stroke-width="5"/>
-<circle cx="50" cy="48" r="37" fill="url(#g)" stroke="#fff8d6" stroke-width="4"/>
-<path d="M24 36Q34 21 55 20" fill="none" stroke="white" stroke-opacity=".67" stroke-width="7" stroke-linecap="round"/>
-<path d="M50 5l4 9 10 1-8 7 2 10-8-5-9 5 2-10-8-7 11-1z" fill="#fff9d2" stroke="#e49b39" stroke-width="3"/></svg>

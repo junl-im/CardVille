@@ -1,0 +1,330 @@
+{
+  "project": "라니팡 / CardVille",
+  "as_of": "2026-10-14",
+  "asset_source": "Prior conversation image designs and versioned PWA icon derivations",
+  "original_png_count": 20,
+  "already_saved_individually_on_google_drive": 7,
+  "new_png_originals_archived": 13,
+  "pwa_icon_variants": 24,
+  "individual_cutouts_zip": "LanyPang_v2_1_Original_Art_Kit.zip",
+  "design_art_is_not_identical_to_all_current_game_ui": "Original concept artwork is archived; game-v2.1 runtime uses 51 built WebP assets as documented in GitHub.",
+  "folder": "PROJECT MATCH — 애니팡형 웹게임",
+  "github": "https://github.com/junl-im/CardVille",
+  "files": [
+    {
+      "path": "01_original_artwork/라니팡_귀여운_게임_ui_버튼_세트.png",
+      "filename": "라니팡_귀여운_게임_ui_버튼_세트.png",
+      "group": "previously_saved",
+      "bytes": 2336548,
+      "sha256": "18a498153459152341fb889b056f9772eca729889b230c339886a8b5dd511c02"
+    },
+    {
+      "path": "01_original_artwork/라니팡_귀여운_퍼즐_ui_키트.png",
+      "filename": "라니팡_귀여운_퍼즐_ui_키트.png",
+      "group": "previously_saved",
+      "bytes": 2469913,
+      "sha256": "5df57dceed61fa4c4646d7f86117c9c6db67b81685d6bce65ca37eb3d96bc764"
+    },
+    {
+      "path": "01_original_artwork/라니팡_귀여운_퍼즐_ui_아틀라스.png",
+      "filename": "라니팡_귀여운_퍼즐_ui_아틀라스.png",
+      "group": "previously_saved",
+      "bytes": 2326198,
+      "sha256": "bacd39102f4684157e5eb0bd02934d09fa2bc398742f93e2fad1cfef06e58bc9"
+    },
+    {
+      "path": "01_original_artwork/라니팡_반짝이는_게임_ui_스티커팩.png",
+      "filename": "라니팡_반짝이는_게임_ui_스티커팩.png",
+      "group": "previously_saved",
+      "bytes": 2364510,
+      "sha256": "298ad1571050e87acbbe8985b751aeacdd800c59467c6e6dcf2c32853473d2bd"
+    },
+    {
+      "path": "01_original_artwork/알록달록_라니팡_게임_ui_스프라이트_시트.png",
+      "filename": "알록달록_라니팡_게임_ui_스프라이트_시트.png",
+      "group": "previously_saved",
+      "bytes": 2682022,
+      "sha256": "3930fc35ef9350287262cfe47fe344c3be82aea9b52b8844421d58c367fefcd7"
+    },
+    {
+      "path": "01_original_artwork/알록달록_숲마을_퍼즐_ui_스프라이트.png",
+      "filename": "알록달록_숲마을_퍼즐_ui_스프라이트.png",
+      "group": "previously_saved",
+      "bytes": 2557972,
+      "sha256": "2126d5f56f8aedfa176f877fd40417a1be04f639a16a536b1b03b901e6116faf"
+    },
+    {
+      "path": "01_original_artwork/사랑스러운_캔디풍_게임_ui_버튼_시트.png",
+      "filename": "사랑스러운_캔디풍_게임_ui_버튼_시트.png",
+      "group": "previously_saved",
+      "bytes": 2443863,
+      "sha256": "72ebc1d04bc0b163a14697b236e917cb11a0b3b58d5975cfbf1bf9a05ae1e54e"
+    },
+    {
+      "path": "01_original_artwork/라니팡_귀여운_퍼즐_게임_타이틀_화면.png",
+      "filename": "라니팡_귀여운_퍼즐_게임_타이틀_화면.png",
+      "group": "newly_archived",
+      "bytes": 2373338,
+      "sha256": "4248e2b54181cf40f8850a00a9cbc0026b5f5ae208fd1848e918f593c0010130"
+    },
+    {
+      "path": "01_original_artwork/귀여운_봄정원_퍼즐_게임_ui.png",
+      "filename": "귀여운_봄정원_퍼즐_게임_ui.png",
+      "group": "newly_archived",
+      "bytes": 2553494,
+      "sha256": "39069d79b7b8b960ea6ef729b15bb413b096438b22b40696a5e90035137af25c"
+    },
+    {
+      "path": "01_original_artwork/라니팡_로고_변형_컬렉션.png",
+      "filename": "라니팡_로고_변형_컬렉션.png",
+      "group": "newly_archived",
+      "bytes": 2061129,
+      "sha256": "71d47a028878f27aaba7411b8e967dc81611f54f72f709308efaa57c7e65b541"
+    },
+    {
+      "path": "01_original_artwork/화려한_퍼즐게임_숫자_ui_가이드.png",
+      "filename": "화려한_퍼즐게임_숫자_ui_가이드.png",
+      "group": "newly_archived",
+      "bytes": 2170222,
+      "sha256": "6fa5dcb42a625810c6145f6a45e881d2d8444e1d1f14f850102d7e7a8010b38a"
+    },
+    {
+      "path": "01_original_artwork/알록달록_숲속_퍼즐_ui_프레임_시트.png",
+      "filename": "알록달록_숲속_퍼즐_ui_프레임_시트.png",
+      "group": "newly_archived",
+      "bytes": 2011171,
+      "sha256": "88923f70b00556d00cb4a95a202619526c73b300c3dc96ffae606ad0e3c712c1"
+    },
+    {
+      "path": "01_original_artwork/반짝이는_별_테마_결과_ui_에셋_시트.png",
+      "filename": "반짝이는_별_테마_결과_ui_에셋_시트.png",
+      "group": "newly_archived",
+      "bytes": 2191502,
+      "sha256": "8f63aecfe0bc443e3f9d2862f261260218c1cb3cb1154063e327ea44659edede"
+    },
+    {
+      "path": "01_original_artwork/귀여운_게임_배경과_패턴_이미지_아틀라스.png",
+      "filename": "귀여운_게임_배경과_패턴_이미지_아틀라스.png",
+      "group": "newly_archived",
+      "bytes": 2391782,
+      "sha256": "16c0637f2392ef5e204f77af2f81d39c548e6ce96a1c60e348f9d9bf4447ad07"
+    },
+    {
+      "path": "01_original_artwork/알록달록_숲속_매치3_퍼즐_화면.png",
+      "filename": "알록달록_숲속_매치3_퍼즐_화면.png",
+      "group": "newly_archived",
+      "bytes": 2519917,
+      "sha256": "4a428952c9b059f46e1fb0e4bd7cffa80fcc83e7684e8083c9977bace6de326a"
+    },
+    {
+      "path": "01_original_artwork/라니팡_판타지_게임_시작_화면.png",
+      "filename": "라니팡_판타지_게임_시작_화면.png",
+      "group": "newly_archived",
+      "bytes": 2057580,
+      "sha256": "c12249057d87d5df69cd2d6809a50b60bc038a37b19b31039a1638d969e45cf8"
+    },
+    {
+      "path": "01_original_artwork/a_bright_colorful_cute_cartoon_game_title_screen.png",
+      "filename": "a_bright_colorful_cute_cartoon_game_title_screen.png",
+      "group": "newly_archived",
+      "bytes": 2588622,
+      "sha256": "c0c75d676006f4156bf933afc1007579a14c1eb1fd6d860fc06fe949510a5d3a"
+    },
+    {
+      "path": "01_original_artwork/a_vibrant_high_quality_colorful_cartoon_3d_cute.png",
+      "filename": "a_vibrant_high_quality_colorful_cartoon_3d_cute.png",
+      "group": "newly_archived",
+      "bytes": 2684360,
+      "sha256": "36b88754557a247ed6c5747f505769732c42045d92afb1810c37e35e2c3402cb"
+    },
+    {
+      "path": "01_original_artwork/a_polished_infographic_promotional_poster_layout.png",
+      "filename": "a_polished_infographic_promotional_poster_layout.png",
+      "group": "newly_archived",
+      "bytes": 1872474,
+      "sha256": "8aaf9750faa790278192dcdc8c734ba4b0f9e654f8c3463e4202d3a364f0be90"
+    },
+    {
+      "path": "01_original_artwork/lanypang_asset_contact.png",
+      "filename": "lanypang_asset_contact.png",
+      "group": "newly_archived",
+      "bytes": 1181686,
+      "sha256": "d783243065fe8a250c4d13b2b59e8e4028436d43d92e62cdd53e4ec9937ebd6f"
+    },
+    {
+      "path": "02_pwa_icons/lanypang-16-24.png",
+      "filename": "lanypang-16-24.png",
+      "group": "pwa_icons",
+      "bytes": 321,
+      "sha256": "c95031b9e7e41f736f8878b5270740290161d6a8962f0b1a2fae06b5920a8170"
+    },
+    {
+      "path": "02_pwa_icons/lanypang-16-48.png",
+      "filename": "lanypang-16-48.png",
+      "group": "pwa_icons",
+      "bytes": 430,
+      "sha256": "8fb93cac256939c575bd28c6c1308f2db5a6c58b15dcb516964ca0e9535d34f5"
+    },
+    {
+      "path": "02_pwa_icons/lanypang-16-64.png",
+      "filename": "lanypang-16-64.png",
+      "group": "pwa_icons",
+      "bytes": 495,
+      "sha256": "69857b95ba2918cc1c8c65e0b23fca04dbe1589b0fbcd86ea1fdfc0607b693bc"
+    },
+    {
+      "path": "02_pwa_icons/lanypang-16-96.png",
+      "filename": "lanypang-16-96.png",
+      "group": "pwa_icons",
+      "bytes": 617,
+      "sha256": "a81edf63c8c1d908ad49179cbbfdb37fc91e626464b9ef58b04e98978cb82245"
+    },
+    {
+      "path": "02_pwa_icons/lanypang-180-24.png",
+      "filename": "lanypang-180-24.png",
+      "group": "pwa_icons",
+      "bytes": 7062,
+      "sha256": "4609bae94168c351a3d58cc005d6019e303cd0b64c84c571f311c2f755bf0a02"
+    },
+    {
+      "path": "02_pwa_icons/lanypang-180-48.png",
+      "filename": "lanypang-180-48.png",
+      "group": "pwa_icons",
+      "bytes": 10345,
+      "sha256": "73bd7e7237d00ea3dfbf3bcfc9583d74f516ca132c7e44a0e0bef1ed7bc3c17f"
+    },
+    {
+      "path": "02_pwa_icons/lanypang-180-64.png",
+      "filename": "lanypang-180-64.png",
+      "group": "pwa_icons",
+      "bytes": 11541,
+      "sha256": "f91b7dce3c1a6df289a6b9ae624247cbb7fb284ac389991ed6caf69da862e208"
+    },
+    {
+      "path": "02_pwa_icons/lanypang-180-96.png",
+      "filename": "lanypang-180-96.png",
+      "group": "pwa_icons",
+      "bytes": 13707,
+      "sha256": "2b4f2c84f6d90c2979ef483f1a62d57ccf009301ec477c27e6e0481b4b40b68a"
+    },
+    {
+      "path": "02_pwa_icons/lanypang-192-24.png",
+      "filename": "lanypang-192-24.png",
+      "group": "pwa_icons",
+      "bytes": 8263,
+      "sha256": "584c51a21d3a6645b610bf78977925803b9da9edb58e1c4bed1669b97580f6ca"
+    },
+    {
+      "path": "02_pwa_icons/lanypang-192-48.png",
+      "filename": "lanypang-192-48.png",
+      "group": "pwa_icons",
+      "bytes": 11324,
+      "sha256": "47f4e5a61e733916f83b2ea1d14a3eab9ab0b8124e4b8c8d4560d917f6b7e9c4"
+    },
+    {
+      "path": "02_pwa_icons/lanypang-192-64.png",
+      "filename": "lanypang-192-64.png",
+      "group": "pwa_icons",
+      "bytes": 12931,
+      "sha256": "79ee03fed6d3e9e35857d621aeea6f16000bac2d4fada926864c5fd4f3f7ae7e"
+    },
+    {
+      "path": "02_pwa_icons/lanypang-192-96.png",
+      "filename": "lanypang-192-96.png",
+      "group": "pwa_icons",
+      "bytes": 15309,
+      "sha256": "7c0f884256fc8d2bfbfb307a6e3b889eca220e8309f26c3ff53f7122e92218e1"
+    },
+    {
+      "path": "02_pwa_icons/lanypang-32-24.png",
+      "filename": "lanypang-32-24.png",
+      "group": "pwa_icons",
+      "bytes": 687,
+      "sha256": "43e5042d3d1f3939297752bb2bc81cfbdce56e03316d6a5942c19cc9272dca48"
+    },
+    {
+      "path": "02_pwa_icons/lanypang-32-48.png",
+      "filename": "lanypang-32-48.png",
+      "group": "pwa_icons",
+      "bytes": 911,
+      "sha256": "9837384f392689a480c234416cda3cefa1824ace11a29771aa63ac646e9acf2c"
+    },
+    {
+      "path": "02_pwa_icons/lanypang-32-64.png",
+      "filename": "lanypang-32-64.png",
+      "group": "pwa_icons",
+      "bytes": 1020,
+      "sha256": "a1d736f80a577a7aac744ceabda47a4b2c73c7527676b8f03b1760ff28e8e4d3"
+    },
+    {
+      "path": "02_pwa_icons/lanypang-32-96.png",
+      "filename": "lanypang-32-96.png",
+      "group": "pwa_icons",
+      "bytes": 1211,
+      "sha256": "b7e34fc8c9c34fa26b3cfec54b15dd1c2e8b85c2dca0c484a73e1666d8eff15d"
+    },
+    {
+      "path": "02_pwa_icons/lanypang-48-24.png",
+      "filename": "lanypang-48-24.png",
+      "group": "pwa_icons",
+      "bytes": 1178,
+      "sha256": "72cc7a50eeff15ccbd0b4ac6229b5d8c3de4a6fd4df3085e7e5141aa76fed91a"
+    },
+    {
+      "path": "02_pwa_icons/lanypang-48-48.png",
+      "filename": "lanypang-48-48.png",
+      "group": "pwa_icons",
+      "bytes": 1560,
+      "sha256": "9c5927591c448c699156e49a047f17645a69a91b85bf67b5e31762f060e14957"
+    },
+    {
+      "path": "02_pwa_icons/lanypang-48-64.png",
+      "filename": "lanypang-48-64.png",
+      "group": "pwa_icons",
+      "bytes": 1772,
+      "sha256": "005e64399f0c64dc52c3b848934d970e8bb62f3fce63f0a987ac2e42f0cc78b1"
+    },
+    {
+      "path": "02_pwa_icons/lanypang-48-96.png",
+      "filename": "lanypang-48-96.png",
+      "group": "pwa_icons",
+      "bytes": 2081,
+      "sha256": "c1148f0ab8b7944fad043f1aca4ed5bac2fbbbd1c2b8c7f01fd1d9e17f77a919"
+    },
+    {
+      "path": "02_pwa_icons/lanypang-512-24.png",
+      "filename": "lanypang-512-24.png",
+      "group": "pwa_icons",
+      "bytes": 28528,
+      "sha256": "d3b55de12a2d7cd1db933e2eff7d2bbc0fb7c3e6c634f6c1c2dd146b37facdf4"
+    },
+    {
+      "path": "02_pwa_icons/lanypang-512-48.png",
+      "filename": "lanypang-512-48.png",
+      "group": "pwa_icons",
+      "bytes": 42031,
+      "sha256": "0422d47983f0caba98ab597b6797cc0d4b55c4ebee3473639a318fe9257946c2"
+    },
+    {
+      "path": "02_pwa_icons/lanypang-512-64.png",
+      "filename": "lanypang-512-64.png",
+      "group": "pwa_icons",
+      "bytes": 49172,
+      "sha256": "d81f496d8ff4a800bae447dd1b3da51a6ff1ebb313ae75a49036062b4103ae8e"
+    },
+    {
+      "path": "02_pwa_icons/lanypang-512-96.png",
+      "filename": "lanypang-512-96.png",
+      "group": "pwa_icons",
+      "bytes": 59879,
+      "sha256": "df95d86bb086f7585784d8896055a85183610f31a5f4dc559e438a559c292927"
+    },
+    {
+      "path": "03_individual_slices/LanyPang_v2_1_Original_Art_Kit.zip",
+      "filename": "LanyPang_v2_1_Original_Art_Kit.zip",
+      "group": "cutouts",
+      "bytes": 568429,
+      "sha256": "8c5298686a2814d6709b26b1af13b715f1955cbd9b3bd3596988604f6060e28d"
+    }
+  ]
+}

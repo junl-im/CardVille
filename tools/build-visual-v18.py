@@ -135,6 +135,8 @@ def badge(name,color,mascot,size,kind):
 
 def font(size):
     candidates=[
+       'C:/Windows/Fonts/malgunbd.ttf',
+       'C:/Windows/Fonts/malgun.ttf',
        '/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc',
        '/usr/share/fonts/truetype/noto/NotoSansCJK-Bold.ttc',
        '/usr/share/fonts/truetype/nanum/NanumGothicBold.ttf',
@@ -367,3 +369,7 @@ def build_ui_v21():
 
 if __name__=='__main__':
     build_ui_v21()
+    import runpy
+    runpy.run_path(str(R/'tools'/'build-ui-v22.py'),run_name='__main__')
+    runpy.run_path(str(R/'tools'/'build-ui-v22-sheets.py'),run_name='__main__')
+    runpy.run_path(str(R/'tools'/'build-ui-v22-individual.py'),run_name='__main__')

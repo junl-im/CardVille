@@ -262,10 +262,10 @@ body {
 /* ── Responsive ── */
 @media(min-width:500px){ :root{--cell:64px;} .cell{font-size:1.9rem;} }
 </style>
-  <link rel="manifest" href="./manifest.json?v=2.1.0">
-  <link rel="icon" type="image/svg+xml" href="./assets/lanypang-brand.svg?v=2.1.0">
-  <link rel="icon" type="image/png" sizes="32x32" href="./assets/lanypang-favicon-32.png?v=2.1.0">
-  <link rel="apple-touch-icon" sizes="180x180" href="./assets/lanypang-apple-touch-180.png?v=2.1.0">
+  <link rel="manifest" href="./manifest.json?v=2.2.0">
+  <link rel="icon" type="image/png" href="./assets/lanypang-favicon-32.png?v=2.2.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/lanypang-favicon-32.png?v=2.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/lanypang-apple-touch-180.png?v=2.2.0">
   <meta name="apple-mobile-web-app-title" content="라니팡">
   <meta name="application-name" content="라니팡">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -289,60 +289,72 @@ body {
 .theme-galaxy  { --accent: #c084fc; }
 </style>
 <link rel="stylesheet" href="./project-overlay/project.css">
-<link rel="stylesheet" href="./css/lany-shell.css?v=2.1.0">
-<link rel="stylesheet" href="./css/lany-mobile-friends.css?v=2.1.0">
-<link rel="stylesheet" href="./css/lany-polish.css?v=2.1.0">
-<link rel="stylesheet" href="./css/lany-paging.css?v=2.1.0">
-<link rel="stylesheet" href="./css/lany-install.css?v=2.1.0">
-<link rel="stylesheet" href="./css/lany-art-buttons.css?v=2.1.0">
-<link rel="stylesheet" href="./css/lany-action-art-v16.css?v=2.1.0">
-<link rel="stylesheet" href="./css/lany-title-stage-v17.css?v=2.1.0">
-<link rel="stylesheet" href="./css/lany-raster-v18.css?v=2.1.0">
-<link rel="stylesheet" href="./css/lany-result-v19.css?v=2.1.0">
-<link rel="stylesheet" href="./css/lany-worlds-v20.css?v=2.1.0">
-<link rel="stylesheet" href="./css/lany-ui-v21.css?v=2.1.0">
+<link rel="stylesheet" href="./css/lany-shell.css?v=2.2.0">
+<link rel="stylesheet" href="./css/lany-mobile-friends.css?v=2.2.0">
+<link rel="stylesheet" href="./css/lany-polish.css?v=2.2.0">
+<link rel="stylesheet" href="./css/lany-paging.css?v=2.2.0">
+<link rel="stylesheet" href="./css/lany-install.css?v=2.2.0">
+<link rel="stylesheet" href="./css/lany-art-buttons.css?v=2.2.0">
+<link rel="stylesheet" href="./css/lany-action-art-v16.css?v=2.2.0">
+<link rel="stylesheet" href="./css/lany-title-stage-v17.css?v=2.2.0">
+<link rel="stylesheet" href="./css/lany-raster-v18.css?v=2.2.0">
+<link rel="stylesheet" href="./css/lany-result-v19.css?v=2.2.0">
+<link rel="stylesheet" href="./css/lany-worlds-v20.css?v=2.2.0">
+<link rel="stylesheet" href="./css/lany-ui-v21.css?v=2.2.0">
+<link rel="stylesheet" href="./css/lany-ui-v22.css?v=2.2.0">
 </head>
 <body class="lany-at-title">
 <main id="lany-title" class="lany-title" role="main" aria-label="라니팡 시작 화면">
-  <img id="lany-cover-image" class="lany-cover" src="./assets/lanypang-cover.webp?v=2.1.0" alt="" fetchpriority="high" decoding="async" aria-hidden="true">
+  <nav class="lany-title-tools" aria-label="시작 화면 설정">
+    <button type="button" aria-label="설정" onclick="LanyUi22.openSettings()"><img src="./assets/ui/v22/icons/btn-settings.webp" alt=""></button>
+    <button id="lany-title-sound" type="button" aria-label="배경 음악 켜기" aria-pressed="false" onclick="LanyUi22.toggleSound()"><img src="./assets/ui/v22/icons/btn-sound-off.webp" alt=""></button>
+    <button type="button" aria-label="공지" onclick="LanyUi22.openNotice()"><img src="./assets/ui/v22/icons/btn-notice.webp" alt=""></button>
+  </nav>
+  <img id="lany-cover-image" class="lany-cover" src="./assets/lanypang-cover.webp?v=2.2.0" alt="" fetchpriority="high" decoding="async" aria-hidden="true">
   <div class="lany-title-scrim" aria-hidden="true"></div>
   <div class="lany-title-decor" aria-hidden="true">
     <span class="lany-title-woodsign">🍭 귀여운 퍼즐로 행복한 시간!</span>
     <span class="lany-title-bubble bubble-one"></span><span class="lany-title-bubble bubble-two"></span>
   </div>
   <div class="lany-title-layout">
-    <div class="lany-title-top"><span class="lany-ribbon">반짝반짝 사탕마을에 오신 걸 환영해요</span><h1 class="lany-logo lany-illustrated-logo"><img src="./assets/ui/v21/title/logo.webp?v=2.1.0" alt="라니팡!" decoding="async"></h1><p class="lany-subtitle">쓱 밀고, 팡! 터지는 퍼즐 세상</p></div>
+    <div class="lany-title-top"><span class="lany-ribbon">반짝반짝 사탕마을에 오신 걸 환영해요</span><h1 class="lany-logo lany-illustrated-logo"><img src="./assets/ui/v22/title/logo-main.webp?v=2.2.0" alt="라니팡!" decoding="async"></h1><p class="lany-subtitle">쓱 밀고, 팡! 터지는 퍼즐 세상</p></div>
     <div class="lany-title-bottom lany-title-art-actions">
       <div class="lany-title-play-scene">
-        <img class="lany-title-cast" src="./assets/polish/cat-cheer.webp?v=2.1.0" alt="" draggable="false" aria-hidden="true">
+        <img class="lany-title-cast" src="./assets/polish/cat-cheer.webp?v=2.2.0" alt="" draggable="false" aria-hidden="true">
       <button id="lany-start-button" class="lany-art-button lany-art-play" type="button" aria-label="게임 시작">
-        <img class="lany-button-picture" src="./assets/ui/v21/title/play.webp?v=2.1.0" alt="" draggable="false">
+        <img class="lany-button-picture" src="./assets/ui/v22/buttons/btn-start.webp?v=2.2.0" alt="" draggable="false">
         <span class="lany-button-word">게임 시작</span>
       </button>
       </div>
       <div class="lany-title-shortcuts" aria-label="라니팡 추가 메뉴">
         <button id="lany-install-button" class="lany-art-button lany-art-small lany-art-install" type="button" aria-label="라니팡 앱 설치">
-          <img class="lany-button-picture" src="./assets/ui/v21/title/install.webp?v=2.1.0" alt="" draggable="false">
+          <img class="lany-button-picture" src="./assets/ui/v22/buttons/btn-install.webp?v=2.2.0" alt="" draggable="false">
           <span class="lany-button-word">앱 설치</span>
         </button>
         <button class="lany-art-button lany-art-small lany-art-help" type="button" aria-label="게임 방법" onclick="LanyShell.openHelp()">
-          <img class="lany-button-picture" src="./assets/ui/v21/title/help.webp?v=2.1.0" alt="" draggable="false">
+          <img class="lany-button-picture" src="./assets/ui/v22/buttons/btn-help.webp?v=2.2.0" alt="" draggable="false">
           <span class="lany-button-word">게임 방법</span>
         </button>
         <button class="lany-art-button lany-art-small lany-art-friends" type="button" aria-label="동물 친구 도감" onclick="LanyFriends.open()">
-          <img class="lany-button-picture" src="./assets/ui/v21/title/friends.webp?v=2.1.0" alt="" draggable="false">
+          <img class="lany-button-picture" src="./assets/ui/v22/buttons/btn-friends.webp?v=2.2.0" alt="" draggable="false">
           <span class="lany-button-word">친구 도감</span>
         </button>
       </div>
-      <div class="lany-version">라니팡 v2.1.0 · 250단계 · 한국어 전용</div>
+      <div class="lany-version">라니팡 v2.2.0 · 250단계 · 한국어 전용</div>
       <div id="lany-update-banner" class="lany-update-banner" hidden role="status"><span id="lany-update-msg">새 버전이 나왔어요!</span><button id="lany-update-now" type="button">업데이트</button></div>
     </div>
   </div>
 </main>
+<section id="lany-settings-v22" class="lany-modal-wrap lany-v22-dialog" role="dialog" aria-modal="true" aria-label="설정" hidden>
+  <div class="lany-dialog"><button type="button" class="lany-v22-close" aria-label="설정 닫기" onclick="LanyUi22.closeSettings()">×</button><h2>설정</h2><button id="lany-setting-sound" type="button" class="lany-action" onclick="LanyUi22.toggleSound()">배경 음악 켜기</button><button type="button" class="lany-action pale" onclick="LanyUi22.closeSettings();LanyShell.openHelp()">게임 방법</button></div>
+</section>
+<section id="lany-notice-v22" class="lany-modal-wrap lany-v22-dialog" role="dialog" aria-modal="true" aria-label="공지" hidden>
+  <div class="lany-dialog"><button type="button" class="lany-v22-close" aria-label="공지 닫기" onclick="LanyUi22.closeNotice()">×</button><h2>라니팡 소식</h2><p>v2.2.0: 숫자·결과 별·배경·프레임 아트를 새롭게 정리했어요.</p><button type="button" class="lany-action" onclick="LanyUi22.closeNotice()">확인</button></div>
+</section>
 <section id="lany-install-modal" class="lany-install-modal" role="dialog" aria-modal="true" aria-labelledby="lany-install-guide-title" hidden>
  <div class="lany-install-card">
   <button type="button" class="lany-install-close" aria-label="설치 안내 닫기">×</button>
-  <img class="lany-install-icon" src="./assets/lanypang-brand.svg?v=2.1.0" alt="라니팡 게임 아이콘">
+  <img class="lany-install-icon" src="./assets/lanypang-icon-192.png?v=2.2.0" alt="라니팡 게임 아이콘">
   <h2 id="lany-install-guide-title">라니팡 앱 설치</h2>
   <ol id="lany-install-guide-steps"></ol>
   <p id="lany-install-guide-hint"></p>
@@ -457,10 +469,11 @@ body {
 <!-- Win overlay -->
 <div id="overlay-win" class="overlay" style="display:none">
   <div class="modal">
-    <h2>🎉 단계 완료!</h2>
+    <h2 class="lany-v22-clear-title">단계 완료!</h2>
     <div id="win-stars" class="stars"></div>
     <p id="win-msg">정말 잘했어요!</p>
-    <div style="font-size:1.4rem;font-weight:800;color:#ffd700;margin:8px 0" id="win-score"></div>
+    <div id="win-score" class="lany-v22-result-score"></div>
+    <div id="win-best" class="lany-v22-result-best"></div>
     <div class="modal-btns">
       <button class="btn btn-primary" onclick="nextLevel()" data-lany-art="next">다음 단계 준비</button>
       <button class="btn" style="background:rgba(255,255,255,.1);color:#fff" onclick="LanyShell.openMap()" data-lany-art="map">모험 지도</button>
@@ -472,7 +485,8 @@ body {
 <!-- Lose overlay -->
 <div id="overlay-lose" class="overlay" style="display:none">
   <div class="modal">
-    <h2>😢 이동 횟수를 모두 사용했어요!</h2>
+    <h2>이동 횟수를 모두 사용했어요!</h2>
+    <img class="lany-v22-empty-star" src="./assets/ui/v22/result/star-empty.webp" alt="" aria-hidden="true">
     <p id="lose-msg">아쉬워요! 다시 도전할까요?</p>
     <div class="modal-btns">
       <button class="btn btn-gold" onclick="replayLevel()" data-lany-art="retry">다시 도전</button>
@@ -1063,14 +1077,14 @@ function getThemeEmoji(theme) {
 }
 function updateHUD(){
   const lv=LEVELS[state.level-1];
-  document.getElementById('score-val').textContent=state.score.toLocaleString();
-  document.getElementById('level-val').textContent=state.level;
+  window.LanyNumbers22?.renderScoreNumber('score-val',state.score);
+  window.LanyNumbers22?.renderStageNumber('level-val',state.level);
   const best=state.bestScores[state.level]||0;
-  document.getElementById('best-val').textContent=best>0?best.toLocaleString():'—';
+  window.LanyNumbers22?.renderScoreNumber('best-val',best);
   document.getElementById('level-name').textContent=lv.name;
   document.getElementById('level-goal').textContent=`목표 점수: ${lv.goal.toLocaleString()}`;
   document.getElementById('score-label').textContent=`${state.score.toLocaleString()} / ${lv.goal.toLocaleString()}`;
-  document.getElementById('moves-label').textContent=`남은 이동: ${state.movesLeft}회`;
+  window.LanyNumbers22?.renderMovesNumber('moves-label',state.movesLeft,'회');
   const pct=Math.min(100,(state.score/lv.goal)*100);
   document.getElementById('progress-fill').style.width=pct+'%';
 
@@ -1472,16 +1486,14 @@ function showWin(stars){
   clearHint();
   const msgs=['잘했어요! ⭐','훌륭해요! ⭐⭐','완벽한 성공! ⭐⭐⭐'];
   document.getElementById('win-msg').textContent=msgs[stars-1];
-  document.getElementById('win-score').textContent='획득 점수: '+state.score.toLocaleString();
+  window.LanyNumbers22?.renderScoreNumber('win-score',state.score,'점');
+  window.LanyNumbers22?.renderScoreNumber('win-best',Math.max(state.bestScores[state.level]||0,state.score),'점');
   const starsEl=document.getElementById('win-stars');
-  starsEl.innerHTML='';
-  for(let i=0;i<3;i++){
-    const s=document.createElement('span');
-    s.className='star-item';
-    s.textContent='⭐';
-    starsEl.appendChild(s);
-    if(i<stars) setTimeout(()=>s.classList.add('lit'),(i+1)*300);
-  }
+  const starsImage=document.createElement('img');
+  starsImage.src=`./assets/ui/v22/result/star-${Math.max(1,Math.min(3,stars))}.webp`;
+  starsImage.alt=`별 ${stars}개 획득`;
+  starsImage.decoding='async';
+  starsEl.replaceChildren(starsImage);
   window.LanyTempo?.stop('win');
   snd_win(); snd_levelUp(); document.getElementById('overlay-win').style.display='flex'; window.LanyPolish?.dialog('win');
 }
@@ -1532,6 +1544,7 @@ let bgNote = 0;
 function toggleBgMusic() {
   bgMusicOn = !bgMusicOn;
   document.getElementById('music-btn').textContent = bgMusicOn ? '🔇' : '🎵';
+  window.LanyUi22?.syncSound();
   if(bgMusicOn) startBgMusic();
   else if(bgMusicTimer) clearInterval(bgMusicTimer);
 }
@@ -1575,13 +1588,15 @@ function startBgMusic() {
 </div>
 <script defer src="./js/cardville-balance.js"></script>
 <script defer src="./project-overlay/project.js"></script>
-<script defer src="./js/lany-friends.js?v=2.1.0"></script>
-<script defer src="./js/lany-tempo.js?v=2.1.0"></script>
-<script defer src="./js/lany-shell.js?v=2.1.0"></script>
-<script defer src="./js/lany-polish.js?v=2.1.0"></script>
-<script defer src="./js/lany-install.js?v=2.1.0"></script>
-<script defer src="./js/lany-art-buttons.js?v=2.1.0"></script>
-<script defer src="./js/lany-update-v17.js?v=2.1.0"></script>
-<script defer src="./js/lany-perf-v19.js?v=2.1.0"></script>
+<script defer src="./js/lany-friends.js?v=2.2.0"></script>
+<script defer src="./js/lany-tempo.js?v=2.2.0"></script>
+<script defer src="./js/lany-numbers-v22.js?v=2.2.0"></script>
+<script defer src="./js/lany-shell.js?v=2.2.0"></script>
+<script defer src="./js/lany-ui-v22.js?v=2.2.0"></script>
+<script defer src="./js/lany-polish.js?v=2.2.0"></script>
+<script defer src="./js/lany-install.js?v=2.2.0"></script>
+<script defer src="./js/lany-art-buttons.js?v=2.2.0"></script>
+<script defer src="./js/lany-update-v17.js?v=2.2.0"></script>
+<script defer src="./js/lany-perf-v19.js?v=2.2.0"></script>
 </body>
 </html>

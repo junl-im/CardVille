@@ -3,11 +3,11 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
 const read=p=>fs.readFileSync(p,'utf8');
 const h=read('web/index.html'),css=read('web/css/lany-ui-v21.css'),builder=read('tools/build-visual-v18.py'),
   sw=read('web/sw.js'),v=JSON.parse(read('web/version.json')),m=JSON.parse(read('web/manifest.json'));
-assert.equal(v.version,'2.1.0-beta');assert.equal(v.visualRelease,'2.1.0');
+assert.equal(v.version,'2.2.0-beta');assert.equal(v.visualRelease,'2.2.0');
 for(const flag of ['premiumIndependentArtKit','allScreenRasterUi','artKitWebpOnly','sourceUiFromApprovedStudio'])assert.equal(v[flag],true,flag);
-assert.equal(v.artKitAssets,51);assert(m.start_url.includes('v=2.1.0'));
-assert(sw.includes("lanypang-match-v2.1.0-ko"));
-assert(h.includes('lany-ui-v21.css?v=2.1.0'));
+assert.equal(v.artKitAssets,51);assert(m.start_url.includes('v=2.2.0'));
+assert(sw.includes("lanypang-match-v2.2.0-ko"));
+assert(h.includes('lany-ui-v21.css?v=2.2.0'));
 const kit={
  title:['logo','play','install','help','friends'],
  buttons:[...['pink','blue','gold','green','wood','red'].map(x=>'skin-'+x),
@@ -38,12 +38,12 @@ assert(builder.includes("('play','start_main.webp')")&&builder.includes("('help'
 assert(builder.includes('build_ui_v21()'),'Generator is not invoked');
 assert(builder.includes('source'), 'Missing art source');
 assert(!css.includes('url(\'../assets/ui/v21/title/logo.svg\')'),'Vector UI regression');
-for(const [role,file] of Object.entries({logo:'logo',play:'play',install:'install',help:'help',friends:'friends'}))
- assert(h.includes('./assets/ui/v21/title/'+file+'.webp?v=2.1.0'),role);
+for(const [role,file] of Object.entries({logo:'title/logo-main',play:'buttons/btn-start',install:'buttons/btn-install',help:'buttons/btn-help',friends:'buttons/btn-friends'}))
+ assert(h.includes('./assets/ui/v22/'+file+'.webp?v=2.2.0'),role);
 if(process.argv.includes('--raster')){
  const p='web/assets/ui/v21/manifest.json';
  const manifest=JSON.parse(read(p));
- assert.equal(manifest.release,v.version);
+ assert.equal(manifest.release,'2.1.0-beta');
  assert.equal(manifest.userArtSource,'web/assets/ui/v21/source-original-kit.zip');
  assert(/^[0-9a-f]{64}$/.test(manifest.userArtSHA256));
  let total=0;for(const [group,names] of Object.entries(kit))for(const name of names){

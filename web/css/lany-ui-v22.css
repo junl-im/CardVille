@@ -1,0 +1,88 @@
+/* v2.2 asset roles. Decorative art lives in WebP files; controls stay native. */
+body.lany-at-title .lany-title{background:#9fddc2 url('../assets/ui/v22/backgrounds/title-garden.webp') center/cover no-repeat!important}
+.lany-title .lany-cover{display:none!important}
+.lany-title .lany-title-scrim{background:linear-gradient(180deg,#fff8e8a6 0%,#ffffff12 42%,#51654566 100%)!important}
+.lany-title .lany-title-play-scene .lany-title-cast{display:none!important}
+.lany-title .lany-subtitle{display:inline-block;background:#542f487d;border-radius:999px;padding:3px 12px;color:#fff9dc!important;text-shadow:0 1px 2px #493045!important}
+.lany-title .lany-illustrated-logo img{content:url('../assets/ui/v22/title/logo-main.webp')!important}
+.lany-title #lany-start-button .lany-button-picture{content:url('../assets/ui/v22/buttons/btn-start.webp')!important}
+.lany-title #lany-install-button .lany-button-picture{content:url('../assets/ui/v22/buttons/btn-install.webp')!important}
+.lany-title .lany-art-help .lany-button-picture{content:url('../assets/ui/v22/buttons/btn-help.webp')!important}
+.lany-title .lany-art-friends .lany-button-picture{content:url('../assets/ui/v22/buttons/btn-friends.webp')!important}
+.lany-title-tools{position:absolute;z-index:12;top:max(8px,env(safe-area-inset-top));right:max(9px,env(safe-area-inset-right));display:flex;gap:5px}
+.lany-title-tools button{appearance:none;border:0;background:transparent;padding:0;width:clamp(35px,9vw,50px);aspect-ratio:1;cursor:pointer;touch-action:manipulation;transition:transform .12s}
+.lany-title-tools button img{display:block;width:100%;height:100%;object-fit:contain}
+.lany-title-tools button:active{transform:translateY(2px) scale(.95)}
+.lany-title-tools button:focus-visible{outline:3px solid #fff08b;border-radius:16px}
+.lany-title .lany-title-shortcuts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;width:min(100%,470px)!important}
+.lany-title .lany-title-shortcuts .lany-art-small{min-width:0!important;width:100%!important}
+.lany-title .lany-title-shortcuts .lany-art-small[hidden],.lany-v22-dialog[hidden]{display:none!important}
+.lany-v22-dialog .lany-dialog{position:relative;background-image:url('../assets/ui/v22/popup/panel-dialog.webp')!important}
+.lany-v22-dialog .lany-v22-close{position:absolute;right:13px;top:10px;border:0;background:transparent;color:#8b5370;font-size:1.7rem;cursor:pointer}
+
+#lany-world-map{background:#a9d9bc url('../assets/ui/v22/backgrounds/map-village.webp') center/cover no-repeat!important}
+
+body:not(.lany-at-title) #app{background:#8bdbc0 url('../assets/ui/v22/backgrounds/game-garden.webp') center/cover fixed no-repeat!important}
+
+.lany-image-number{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;position:relative;white-space:nowrap;line-height:1;gap:0}
+.lany-image-number img{display:block;width:auto;height:1.25em;max-width:1em;object-fit:contain}
+.lany-image-number img[src$="comma.webp"]{max-width:.45em}
+.lany-number-fallback{position:absolute;inset:0;opacity:0;pointer-events:none;white-space:nowrap}
+#app>.header .hud-val{min-width:1.5em;font-size:clamp(.95rem,2vw,1.18rem)!important}
+#moves-label{font-size:clamp(.85rem,2.5vw,1rem);min-width:2em}
+#lany-prep-goal,#lany-prep-moves{font-size:clamp(1.05rem,4vw,1.5rem);min-width:3em}
+
+#overlay-win,#overlay-lose{background-position:center;background-size:cover}
+#overlay-win{background-image:url('../assets/ui/v22/backgrounds/result-clear.webp')}
+#overlay-lose{background-image:url('../assets/ui/v22/backgrounds/result-fail.webp')}
+#overlay-win .modal,#overlay-lose .modal{background:#fff9e9 url('../assets/ui/v21/popup/panel-clear.webp') center/100% 100% no-repeat!important;border:0!important;border-radius:24px!important;padding:20px 24px 24px!important;max-height:94vh;overflow:auto}
+#overlay-lose .modal{background-image:url('../assets/ui/v21/popup/panel-fail.webp')!important}
+#overlay-win .modal:before,#overlay-win .modal:after,#overlay-lose .modal:before,#overlay-lose .modal:after{display:none!important}
+#overlay-win .modal h2,#overlay-lose .modal h2{font-size:clamp(1.1rem,4vw,1.6rem)!important;min-height:65px;height:auto;border:0!important;box-shadow:none!important;background-color:transparent!important;background-repeat:no-repeat!important;background-position:center!important;background-size:100% 100%!important;color:#fff9e3!important;text-shadow:0 2px 2px #8b2f4c,0 0 4px #6d2b43!important;padding:13px 20px 19px!important}
+#overlay-win .modal h2{background-image:url('../assets/ui/v22/result/clear-banner.webp')!important}
+#overlay-lose .modal h2{background-image:url('../assets/ui/v22/result/fail-banner.webp')!important}
+#overlay-win .stars img{display:block;width:min(60vw,240px);height:auto;object-fit:contain}
+#overlay-win .stars{min-height:80px}
+#overlay-win #win-msg{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important}
+.lany-v22-empty-star{width:54px;height:57px;object-fit:contain;margin:auto;display:block}
+#overlay-win #win-score,#overlay-win #win-best{display:flex;align-items:center;justify-content:center;min-height:42px;margin:4px auto!important;background:#fff5d8!important;border:2px solid #edbc7e!important;box-shadow:0 3px 0 #ca8a80!important;border-radius:14px!important;padding:4px 8px!important}
+#overlay-win #win-score::before,#overlay-win #win-best::before{content:"점수";font-size:.8rem;font-weight:900;color:#844f56;margin-right:8px}
+#overlay-win #win-best::before{content:"최고"}
+#overlay-win .lany-image-number img{height:clamp(24px,5vw,38px)}
+#overlay-win .modal-btns,#overlay-lose .modal-btns{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+#overlay-win .modal-btns button:first-child{grid-column:1/-1}
+#overlay-win .modal-btns button,#overlay-lose .modal-btns button{min-height:42px!important;width:100%!important;margin:0!important;padding:5px 6px!important;font-size:clamp(.72rem,2.7vw,.9rem)!important;color:#553c5a!important;--lany-action-size:20px}
+#overlay-win .modal-btns button[data-lany-art]::before,#overlay-lose .modal-btns button[data-lany-art]::before{width:20px;height:20px;flex-basis:20px}
+
+@media(max-width:380px){
+  .lany-title-tools{gap:0;top:max(3px,env(safe-area-inset-top))}
+  .lany-title-tools button{width:35px}
+  .lany-title .lany-title-shortcuts{gap:2px!important}
+  #app>.header .hud-val{font-size:.88rem!important}
+  .lany-image-number img{height:1.14em}
+  #overlay-win #win-score,#overlay-win #win-best{min-height:43px}
+}
+@media(prefers-reduced-motion:reduce){.lany-title-tools button{transition:none}}
+
+/* Individually generated gameplay frame and controls. The labels remain live text. */
+#app>.header{display:block!important;position:relative!important;padding:7px 9px 8px!important;background:#fff8ee!important;border:2px solid #ffbad5!important;border-radius:24px!important;box-shadow:0 4px 0 #cd87a9,0 8px 18px #3e245b55!important;backdrop-filter:none!important}
+#app>.header .logo{display:block;text-align:center;font-size:1.05rem!important;line-height:1.15;margin:0 auto 4px;-webkit-text-fill-color:#e7569c;color:#e7569c;text-shadow:0 1px 0 #fff!important}
+#app>.header .hud{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-template-rows:repeat(2,minmax(46px,auto));gap:0!important;width:100%;aspect-ratio:3.35/1;background:url('../assets/ui/v22/individual/hud-frame.webp') center/100% 100% no-repeat!important;padding:8px 12px 11px!important;box-sizing:border-box}
+#app>.header .hud-box{grid-column:auto!important;align-self:center;min-width:0;text-align:center;background:none!important;padding:0!important;min-height:0!important}
+#app>.header .hud-box:nth-child(2),#app>.header .hud-box:nth-child(3){background-image:none!important}
+#app>.header .hud-val{color:#a45a2e!important;text-shadow:0 1px 0 #fff8e4!important;font-size:clamp(.95rem,3.2vw,1.2rem)!important;min-width:0!important}
+#app>.header .hud-lbl{color:#8f5871!important;font-size:clamp(.56rem,1.8vw,.7rem)!important;letter-spacing:0;font-weight:900}
+#app>.header .hud>button{grid-column:auto!important;width:100%;height:42px;min-height:0!important;align-self:center;justify-self:center;background:center/100% 100% no-repeat!important;background-image:url('../assets/ui/v22/individual/button-blue.webp')!important;border:0!important;border-radius:30px!important;box-shadow:none!important;color:#fff!important;text-shadow:0 1px 2px #28619b!important;font-size:clamp(.72rem,2.5vw,.92rem)!important;font-weight:900!important;padding:0 7px!important;white-space:nowrap!important}
+#app>.header .hud>button:nth-of-type(2){background-image:url('../assets/ui/v22/individual/button-green.webp')!important;text-shadow:0 1px 2px #237546!important}
+#app>.header .hud>button:nth-of-type(3){background-image:url('../assets/ui/v22/individual/button-pink.webp')!important;text-shadow:0 1px 2px #9e306d!important}
+#app>.header .hud>button[data-lany-art]::before{width:17px;height:17px;flex-basis:17px}
+.lany-game-nav button{background:center/100% 100% no-repeat!important;background-image:url('../assets/ui/v22/individual/button-blue.webp')!important;border:0!important;border-radius:32px!important;box-shadow:none!important;color:#fff!important;text-shadow:0 1px 2px #30558e!important;font-weight:900!important;min-height:50px!important}
+.lany-game-nav .lany-game-friends-button{background-image:url('../assets/ui/v22/individual/button-green.webp')!important;text-shadow:0 1px 2px #25734b!important}
+.lany-game-nav .lany-game-pause-button{background-image:url('../assets/ui/v22/individual/button-pink.webp')!important;text-shadow:0 1px 2px #a32d72!important}
+.lany-game-nav button[data-lany-art="pause"]{background-image:url('../assets/ui/v22/individual/button-pink.webp')!important}
+.lany-map-bottom .lany-action{background-image:url('../assets/ui/v22/individual/button-green.webp')!important;border:0!important;box-shadow:none!important;text-shadow:0 1px 2px #23744c!important}
+.lany-map-bottom .lany-action.pale{background-image:url('../assets/ui/v22/individual/button-blue.webp')!important;text-shadow:0 1px 2px #2b6090!important}
+.lany-map-bottom .lany-action[data-lany-art="exit"]{background-image:url('../assets/ui/v22/individual/button-pink.webp')!important;text-shadow:0 1px 2px #9b326e!important}
+#overlay-win .modal-btns .btn,#overlay-lose .modal-btns .btn{background-image:url('../assets/ui/v22/individual/button-blue.webp')!important;color:#fff!important;text-shadow:0 1px 2px #2b6090!important}
+#overlay-win .modal-btns .btn-primary,#overlay-lose .modal-btns .btn-primary{background-image:url('../assets/ui/v22/individual/button-green.webp')!important;text-shadow:0 1px 2px #23744c!important}
+@media(max-width:380px){#app>.header .hud{padding:6px 9px 8px!important;grid-template-rows:repeat(2,minmax(40px,auto))}#app>.header .hud>button{height:38px!important;font-size:.72rem!important}#app>.header .hud>button[data-lany-art]::before{width:13px;height:13px;flex-basis:13px}}
