@@ -1,0 +1,38 @@
+[
+  {
+    "viewport": "320x480",
+    "popups": [
+      "난이도",
+      "2인 대전",
+      "단계 편집기"
+    ],
+    "overflow": false
+  },
+  {
+    "viewport": "320x568",
+    "popups": [
+      "난이도",
+      "2인 대전",
+      "단계 편집기"
+    ],
+    "overflow": false
+  },
+  {
+    "viewport": "360x780",
+    "popups": [
+      "난이도",
+      "2인 대전",
+      "단계 편집기"
+    ],
+    "overflow": false
+  },
+  {
+    "viewport": "390x844",
+    "popups": [
+      "난이도",
+      "2인 대전",
+      "단계 편집기"
+    ],
+    "overflow": false
+  }
+]

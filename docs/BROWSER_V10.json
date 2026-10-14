@@ -6,7 +6,7 @@
     "roster": 30,
     "popupHeight": 218,
     "boardWidth": 302,
-    "dragScore": 90,
+    "dragScore": 522,
     "javascriptErrors": 0,
     "missingAssets": 0,
     "horizontalOverflow": false
@@ -18,7 +18,7 @@
     "roster": 30,
     "popupHeight": 220,
     "boardWidth": 344,
-    "dragScore": 180,
+    "dragScore": 90,
     "javascriptErrors": 0,
     "missingAssets": 0,
     "horizontalOverflow": false
@@ -30,7 +30,7 @@
     "roster": 30,
     "popupHeight": 222,
     "boardWidth": 374,
-    "dragScore": 306,
+    "dragScore": 396,
     "javascriptErrors": 0,
     "missingAssets": 0,
     "horizontalOverflow": false
@@ -42,7 +42,7 @@
     "roster": 30,
     "popupHeight": 225,
     "boardWidth": 414,
-    "dragScore": 306,
+    "dragScore": 90,
     "javascriptErrors": 0,
     "missingAssets": 0,
     "horizontalOverflow": false
@@ -54,7 +54,7 @@
     "roster": 30,
     "popupHeight": 246,
     "boardWidth": 500,
-    "dragScore": 306,
+    "dragScore": 90,
     "javascriptErrors": 0,
     "missingAssets": 0,
     "horizontalOverflow": false

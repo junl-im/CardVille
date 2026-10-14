@@ -88,3 +88,10 @@
 .lany-game-nav{flex-wrap:nowrap;gap:5px;margin-top:5px}
 .lany-game-nav button,.lany-game-nav .lany-game-friends-button,.lany-game-nav .lany-game-pause-button{flex:1 1 0;min-width:0;min-height:43px;max-width:none;padding:5px 2px;font-size:clamp(.72rem,2.8vw,.95rem)}
 @media(max-width:350px){.lany-game-nav button,.lany-game-nav .lany-game-friends-button{font-size:.7rem}}
+
+/* Correct IDs used by the injected legacy dialogs (verified from their source). */
+#ng-level-editor,#mp-setup,#mp-share{box-sizing:border-box;padding:calc(8px + var(--lany-safe-top)) 9px calc(8px + var(--lany-safe-bottom))!important;overflow-x:hidden;overflow-y:auto;align-items:safe center;justify-content:center;max-width:100vw;max-height:100dvh}
+#ng-level-editor>div,#mp-setup>div,#mp-share>div{box-sizing:border-box!important;width:min(100%,470px)!important;max-width:min(94vw,470px)!important;max-height:calc(100dvh - 24px - var(--lany-safe-top) - var(--lany-safe-bottom))!important;overflow-x:hidden!important;overflow-y:auto!important;margin:auto!important;padding:clamp(9px,3vw,25px)!important}
+#ng-level-editor button,#mp-setup button,#mp-share button{min-height:42px}
+#ng-level-editor #editor-grid{min-width:0;max-width:100%}
+#mp-setup input,#mp-share input{min-width:0;max-width:100%}

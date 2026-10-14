@@ -10,6 +10,7 @@ for(const x of roster){const p='web/assets/friends/'+x.id+'.webp';assert(fs.stat
 assert(html.includes('id="lany-friends-modal"')&&html.includes('lany-animal-face'));
 assert(html.includes('LanyFriends.open()')&&html.includes('LANY_FACE_IDS'));
 for(const s of ['max-height:calc(100dvh','env(safe-area-inset-bottom','max-width:min(94vw','max-width:min(96vw','height:100dvh','.lany-animal-face','grid-template-columns:repeat(3'])assert(css.includes(s),s);
-for(const s of ['#daily-modal','#level-editor-modal','#difficulty-modal','#multiplayer-setup-modal'])assert(css.includes(s));
+for(const s of ['#daily-modal','#ng-level-editor','#difficulty-modal','#mp-setup'])assert(css.includes(s));
+assert(css.includes('#mp-share>div')&&css.includes('#ng-level-editor>div'));
 assert(friends.includes('LanyFriends=')&&!html.includes('How to Play CardVille'));
 console.log(JSON.stringify({ok:true,friends:30,animalTiles:7,mobileModalSizing:true,dynamicPopups:true}));
