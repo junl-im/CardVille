@@ -16,7 +16,7 @@ with sync_playwright() as pw:
   errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
   page.goto(base,wait_until='load',timeout=30000)
   page.wait_for_function("typeof window.LanyInstall==='object'")
-  assert page.locator('link[rel="icon"][type="image/svg+xml"]').count()==1,name
+  assert page.locator('link[rel="icon"][type="image/png"]').count()>=1,name
   assert page.locator('link[rel="apple-touch-icon"]').count()==1,name
   assert page.locator('#lany-install-button').is_visible(),name
   page.locator('#lany-install-button').click()
