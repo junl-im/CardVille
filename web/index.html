@@ -820,16 +820,22 @@ function lockedAt(r,c) { return state.locked[r*COLS+c]; }
 const canvas = document.getElementById('particles');
 const pCtx = canvas.getContext('2d');
 const particles = [];
+const particleReduced=Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+const particleCount=particleReduced?0:(window.matchMedia?.('(max-width: 520px)').matches?15:32);
+let particleLastFrame=0;
 function resizeCanvas() { canvas.width=innerWidth; canvas.height=innerHeight; }
-resizeCanvas(); window.addEventListener('resize',resizeCanvas);
-for(let i=0;i<50;i++) particles.push({
+resizeCanvas(); window.addEventListener('resize',resizeCanvas,{passive:true});
+for(let i=0;i<particleCount;i++) particles.push({
   x:Math.random()*innerWidth, y:Math.random()*innerHeight,
   r:Math.random()*2+1, vy:-Math.random()*.4-.1,
   vx:(Math.random()-.5)*.2,
   op:Math.random()*.5+.1,
   col:`hsl(${Math.random()*60+280},80%,70%)`
 });
-(function animPart(){
+(function animPart(now=0){
+  requestAnimationFrame(animPart);
+  if(document.hidden || particleReduced || now-particleLastFrame<33) return;
+  particleLastFrame=now;
   pCtx.clearRect(0,0,canvas.width,canvas.height);
   for(const p of particles){
     pCtx.beginPath(); pCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
@@ -837,7 +843,7 @@ for(let i=0;i<50;i++) particles.push({
     p.x+=p.vx; p.y+=p.vy;
     if(p.y<-5){p.y=canvas.height+5;p.x=Math.random()*canvas.width;}
   }
-  pCtx.globalAlpha=1; requestAnimationFrame(animPart);
+  pCtx.globalAlpha=1;
 })();
 
 // ── Board init ───────────────────────────────────────────────
@@ -928,7 +934,7 @@ function renderBoard() {
 }
 
 function getCellEl(r,c){
-  return document.querySelector(`[data-r="${r}"][data-c="${c}"]`);
+  return document.getElementById('board')?.children?.[r*COLS+c] || null;
 }
 
 // ── HUD ──────────────────────────────────────────────────────
@@ -954,13 +960,14 @@ function updateHUD(){
   const pct=Math.min(100,(state.score/lv.goal)*100);
   document.getElementById('progress-fill').style.width=pct+'%';
 
-  // Moves dots
-  const bar=document.getElementById('moves-bar'); bar.innerHTML='';
-  for(let i=0;i<lv.moves;i++){
-    const dot=document.createElement('div');
-    dot.className='move-dot'+(i>=state.movesLeft?' used':'');
-    bar.appendChild(dot);
+  // Reuse existing move markers; cascades should not rebuild the HUD.
+  const bar=document.getElementById('moves-bar');
+  if(bar.children.length!==lv.moves){
+    const frag=document.createDocumentFragment();
+    for(let i=0;i<lv.moves;i++){const dot=document.createElement('div');dot.className='move-dot';frag.appendChild(dot);}
+    bar.replaceChildren(frag);
   }
+  for(let i=0;i<bar.children.length;i++)bar.children[i].classList.toggle('used',i>=state.movesLeft);
 
   // Booster counts
   Object.entries(state.boosters).forEach(([k,v])=>{
