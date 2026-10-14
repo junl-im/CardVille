@@ -49,6 +49,7 @@ jobs:
           node tools/check-pages-v13.cjs
           node tools/check-pwa-v14.cjs
           node tools/check-art-buttons-v15.cjs
+          node tools/check-action-art-v16.cjs
           node tools/check-firebase-preview.cjs
       - name: Confirm matching project service-account ID (no secret output)
         env:
@@ -82,6 +83,8 @@ jobs:
               grep -Fq 'lany-polish.css?v=1.6.0' /tmp/lany-live.html && \
               grep -Fq 'lany-install.js?v=1.6.0' /tmp/lany-live.html && \
               grep -Fq 'lany-art-buttons.css?v=1.6.0' /tmp/lany-live.html && \
+              grep -Fq 'lany-action-art-v16.css?v=1.6.0' /tmp/lany-live.html && \
+              curl --fail --silent --show-error --location --max-time 25 "$url/assets/buttons/action-resume.svg" | grep -Fq '<svg' && \
               grep -Fq 'title-play.svg?v=1.6.0' /tmp/lany-live.html && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/buttons/title-play.svg" | grep -Fq '<svg' && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/lanypang-icon-512.png" -o /tmp/lany-launch.png && \
