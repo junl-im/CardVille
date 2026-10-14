@@ -420,7 +420,7 @@ body {
       <span class="level-title" id="level-name">달콤한 시작</span>
       <span class="level-goal" id="level-goal">목표 점수: 500</span>
     </div>
-    <div class="lany-v22-goal-track"><span class="lany-v22-star-marker star-one" aria-hidden="true">★</span><span class="lany-v22-star-marker star-two" aria-hidden="true">★</span><span class="lany-v22-star-marker star-three" aria-hidden="true">★</span><div class="progress-bar" role="progressbar" aria-label="목표 점수 진행률" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div></div>
+    <div class="lany-v22-goal-track"><span class="lany-v22-star-marker star-one" aria-hidden="true">★</span><span class="lany-v22-star-marker star-two" aria-hidden="true">★</span><span class="lany-v22-star-marker star-three" aria-hidden="true">★</span><div class="progress-bar" role="progressbar" aria-label="별 3개 획득까지의 점수 진행률" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div></div>
     <div class="level-row" style="font-size:.7rem;color:rgba(255,255,255,.4)">
       <span id="score-label">0 / 500</span>
       <span id="moves-label">남은 이동: 20</span>
@@ -1074,10 +1074,11 @@ function updateHUD(){
   document.getElementById('score-label').textContent=`${state.score.toLocaleString()} / ${lv.goal.toLocaleString()}`;
   document.getElementById('moves-label').textContent=`남은 이동: ${state.movesLeft}회`;
   document.getElementById('lany-hud-moves-value').textContent=state.movesLeft;
-  const pct=Math.min(100,(state.score/lv.goal)*100);
+  // The three stars must match the actual award thresholds: 100%, 140%, 200% of goal.
+  const pct=Math.min(100,(state.score/(lv.goal*2))*100);
   document.getElementById('progress-fill').style.width=pct+'%';
   document.querySelector('.lany-v22-goal-track .progress-bar')?.setAttribute('aria-valuenow',String(Math.round(pct)));
-  document.querySelectorAll('.lany-v22-star-marker').forEach((star,i)=>star.classList.toggle('earned',pct>=([30,65,100][i])));
+  document.querySelectorAll('.lany-v22-star-marker').forEach((star,i)=>star.classList.toggle('earned',state.score>=lv.goal*([1,1.4,2][i])));
 
   // Reuse existing move markers; cascades should not rebuild the HUD.
   const bar=document.getElementById('moves-bar');
