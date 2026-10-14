@@ -833,8 +833,9 @@ for(let i=0;i<particleCount;i++) particles.push({
   col:`hsl(${Math.random()*60+280},80%,70%)`
 });
 (function animPart(now=0){
+  if(particleReduced)return;
   requestAnimationFrame(animPart);
-  if(document.hidden || particleReduced || now-particleLastFrame<33) return;
+  if(document.hidden || now-particleLastFrame<33) return;
   particleLastFrame=now;
   pCtx.clearRect(0,0,canvas.width,canvas.height);
   for(const p of particles){
