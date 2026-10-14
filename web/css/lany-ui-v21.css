@@ -158,3 +158,27 @@ button[data-lany-art="close"]{--lany-action-image:url('../assets/ui/v21/buttons/
  .lany-title .lany-title-play-scene .lany-art-play{width:min(66%,180px)!important}
  .lany-title .lany-title-shortcuts .lany-art-small{max-width:80px!important}
 }
+
+/* Different art-sheet cutouts have different intrinsic ratios.
+   Give all 3 quick actions identical visual slots, never stretch artwork. */
+.lany-title .lany-title-shortcuts{align-items:start!important}
+.lany-title .lany-title-shortcuts .lany-art-small{
+ height:clamp(72px,22vw,116px)!important;
+ max-height:116px!important;
+ display:block!important;
+ position:relative!important;
+ align-self:start!important;
+}
+.lany-title .lany-title-shortcuts .lany-art-small img.lany-button-picture{
+ display:block!important;
+ width:100%!important;
+ height:100%!important;
+ object-fit:contain!important;
+ object-position:center center!important;
+}
+@media(max-height:700px){
+ .lany-title .lany-title-shortcuts .lany-art-small{height:clamp(57px,17vw,87px)!important}
+}
+@media(max-height:480px){
+ .lany-title .lany-title-shortcuts .lany-art-small{height:clamp(47px,15vw,62px)!important}
+}
