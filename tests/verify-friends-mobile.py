@@ -24,7 +24,14 @@ for device,w,h,is_mobile in [('mini',320,568,True),('galaxy',360,780,True),('sta
   assert pg.locator('#lany-cover-image').evaluate('(x)=>x.naturalWidth>0'),device
   pg.locator('button:has-text("동물 친구들")').first.click()
   assert pg.locator('#lany-friends-modal').is_visible(),device
-  assert pg.locator('#lany-friends-grid .lany-friend-card').count()==30,(device,'roster')
+  assert pg.locator('#lany-friends-grid .lany-friend-card').count()==(6 if h<650 else 9 if h<950 else 12),(device,'paged roster')
+  names=[]
+  while True:
+   names.extend(pg.locator('#lany-friends-grid .lany-friend-card span').all_text_contents())
+   if pg.locator('#lany-friends-next').is_disabled():break
+   pg.locator('#lany-friends-next').click()
+  assert len(names)==30 and len(set(names))==30,(device,'complete gallery',len(names))
+  pg.evaluate('LanyFriends.page(-100)')
   img=pg.locator('#lany-friends-grid img').first
   img.scroll_into_view_if_needed();assert img.evaluate('(x)=>x.complete && x.naturalWidth>0'),(device,'first img')
   dims=pg.evaluate('''()=>{let q=document.querySelector('.lany-friends-panel').getBoundingClientRect();return {height:q.height,top:q.top,bottom:q.bottom,viewport:innerHeight,scroll:document.querySelector('.lany-friends-grid').scrollHeight,client:document.querySelector('.lany-friends-grid').clientHeight}}''')
@@ -50,7 +57,7 @@ for device,w,h,is_mobile in [('mini',320,568,True),('galaxy',360,780,True),('sta
   popup=pg.locator('#overlay-tutorial .modal').bounding_box()
   assert popup['height']<=h+1,(device,popup)
   assert popup['x']>=-2 and popup['x']+popup['width']<=w+2,(device,popup)
-  pg.locator('#overlay-tutorial button').click()
+  pg.locator('#overlay-tutorial .btn.btn-primary').click()
   # test exit modal dimensions and return to game
   pg.evaluate('LanyShell.openPause()')
   pp=pg.locator('#lany-pause .lany-dialog').bounding_box()
