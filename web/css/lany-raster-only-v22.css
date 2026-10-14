@@ -340,3 +340,76 @@
  .lany-go-intro .lany-go-number{animation:none!important}
  .lany-go-intro{backdrop-filter:none}
 }
+
+
+/* Complete UI-window visual audit: same approved raster panels for auxiliary,
+   settings, challenge, share and editor screens; interaction JS remains intact. */
+:is(#difficulty-modal .lany-difficulty-card,#daily-modal>div,#ng-level-editor>div,
+#mp-setup>div,#mp-share>div){
+ box-sizing:border-box!important;width:min(94vw,470px)!important;
+ max-height:calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;
+ margin:auto!important;overflow-x:hidden!important;overflow-y:auto!important;
+ background:#fff7e8 url('../assets/ui/v21/popup/panel-settings.webp') center/100% 100% no-repeat!important;
+ border:0!important;border-radius:28px!important;
+ box-shadow:0 9px 0 #c77997,0 14px 20px #4e376d78!important;
+ padding:clamp(16px,4vw,27px)!important;
+ color:#81526a!important;
+ scrollbar-width:thin;scrollbar-color:#e58faf #fff6dd;
+}
+:is(#daily-modal,#ng-level-editor,#mp-setup,#mp-share,#difficulty-modal){
+ background:rgba(78,34,87,.69)!important;
+ backdrop-filter:blur(3px)!important;
+}
+:is(#daily-modal,#ng-level-editor,#mp-setup,#mp-share) :is(h2,h3){
+ color:#ab427d!important;text-shadow:0 2px 0 #fff8e9!important;
+ line-height:1.3!important;
+}
+:is(#daily-modal,#ng-level-editor,#mp-setup,#mp-share) :is(p,label){
+ color:#835872!important;line-height:1.45!important;
+}
+:is(#mp-setup,#mp-share) div[style*="background:#0"],
+#mp-share div[style*="background:#0a"]{
+ background:#fff5e2!important;border-color:#f4c5cd!important;
+ color:#7d4976!important;
+}
+:is(#mp-setup,#mp-share) div[style*="color:#a78bfa"],
+#mp-setup div[style*="color:#22c55e"]{color:#a04d81!important}
+:is(#mp-setup,#mp-share,#ng-level-editor) input{
+ box-sizing:border-box!important;min-width:0!important;
+ background:#fffaf1!important;border:2px solid #e5abc4!important;
+ border-radius:12px!important;color:#6d405e!important;
+ padding:8px 10px!important;max-width:100%;
+}
+:is(#daily-modal,#ng-level-editor,#mp-setup,#mp-share) button:not([data-type]){
+ background:var(--cv-skin-blue) center/100% 100% no-repeat!important;
+ border:0!important;color:#fff9dc!important;
+ text-shadow:0 1px 2px #784565!important;font-weight:950!important;
+ min-height:44px!important;border-radius:14px!important;
+ padding:8px 12px!important;touch-action:manipulation;
+}
+:is(#daily-modal,#ng-level-editor,#mp-setup,#mp-share) button:first-of-type:not([data-type]){
+ background-image:var(--cv-skin-green)!important;
+}
+:is(#daily-modal,#ng-level-editor,#mp-setup,#mp-share) button:active{
+ transform:translateY(2px) scale(.97)!important;
+}
+#ng-level-editor #editor-grid button{
+ padding:0!important;border:2px solid #fff2ca!important;
+ background:#fae3ef!important;min-height:0!important;
+ font-size:clamp(.73rem,3vw,1.1rem)!important;
+}
+#ng-level-editor button[data-type]{background:#f8d7e3!important;color:#a0497c!important}
+#mp-setup>div>div[style*="background"],#mp-share>div>div[style*="background"]{
+ background:#fff8e9!important;border-color:#ecc8d2!important;
+}
+#mp-share>div>div[style*="background"] div[style*="color"]{color:#a04d80!important}
+#difficulty-modal .lany-difficulty-option{
+ background:url('../assets/ui/v21/hud/panel-goal.webp') center/100% 100% no-repeat!important;
+ border:0!important;color:#7e4e74!important;
+}
+#difficulty-modal .lany-difficulty-close{background:var(--cv-skin-pink) center/100% 100% no-repeat!important;color:#fff!important}
+@media(max-height:600px){
+ :is(#daily-modal>div,#ng-level-editor>div,#mp-setup>div,#mp-share>div){
+  padding:10px!important;
+ }
+}
