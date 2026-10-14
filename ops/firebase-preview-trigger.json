@@ -1,6 +1,6 @@
 {
-  "version": "1.8.0-beta",
-  "request": "Restore original raster studio assets, black cat and accumulated-play performance fix v1.8",
+  "version": "1.9.0-beta",
+  "request": "라니팡 v1.9 장시간 실제 매칭 성능·모바일 진단 HUD·WebP 캐릭터 팝업 강화, cached CSS fix",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,
