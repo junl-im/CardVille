@@ -1,10 +1,10 @@
 {
-  "release": "1.1.0-beta",
+  "release": "1.2.0-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "cc9e4ef5373da68cd1d0752f79e10db7f9c2b863",
-  "requestedFor": "실제 라니팡 플레이 게임에 아트·표정·버튼·팝업을 전체 적용",
+  "sourceCommit": "5b83205732a603af57acf1f79c0ae1e6dbc3b015",
+  "requestedFor": "라니팡 실제 게임 v1.2 캐릭터 모션, 초반 밸런스, 모바일 최적화와 PC 전체화면 정책 반영",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true
 }
