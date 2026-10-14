@@ -213,3 +213,50 @@
 :is(#daily-modal,#mp-setup,#mp-share,#ng-level-editor) button:not([data-type]):disabled{
   color:#655d64!important;
 }
+
+/* v2.3 auxiliary ornament completion: preserve real DOM labels. */
+#lany-install-guide-title::before{
+  content:"";display:inline-block;vertical-align:middle;
+  width:clamp(39px,10vw,57px);height:clamp(30px,8vw,46px);
+  margin-right:5px;flex:0 0 auto;
+  background:url('../assets/v23/decor/install-ornament.webp') center/contain no-repeat;
+  pointer-events:none;
+}
+#lany-friends-heading::before{
+  content:"";display:inline-block;vertical-align:middle;
+  width:clamp(42px,11vw,61px);height:clamp(30px,8vw,46px);
+  margin-right:5px;flex:0 0 auto;
+  background:url('../assets/v23/decor/friends-ornament.webp') center/contain no-repeat;
+  pointer-events:none;
+}
+#lany-install-guide-title,#lany-friends-heading{
+  color:#743658!important;text-shadow:0 1px 0 #fffdf1!important;overflow-wrap:anywhere;
+}
+#lany-install-guide-steps li{
+  background-color:#fffaf0!important;color:#543852!important;
+  font-size:clamp(.8rem,2.75vw,.96rem)!important;
+}
+#lany-install-guide-hint{color:#543852!important}
+.lany-friends-heading p,.lany-friends-panel .lany-friend-card span{
+  color:#624561!important;text-shadow:none!important;
+}
+/* Existing raster button skins and functional, accessible HTML labels are preserved. */
+#lany-install-modal .lany-install-done,.lany-install-close,
+.lany-friends-close,#difficulty-modal .lany-difficulty-close{
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+}
+:is(#daily-modal,#difficulty-modal,#ng-level-editor,#mp-setup,#mp-share)
+ :is(button,input,textarea,select):focus-visible,
+:is(.lany-install-card,.lany-friends-panel) button:focus-visible{
+  outline:3px solid #6d3571!important;outline-offset:2px!important;
+}
+:is(#daily-modal,#difficulty-modal,#ng-level-editor,#mp-setup,#mp-share)
+ button:disabled{filter:grayscale(.65)!important;opacity:.58!important}
+:is(#daily-modal,#difficulty-modal,#ng-level-editor,#mp-setup,#mp-share)
+ :is(input,textarea,select){color:#523a53!important;caret-color:#65366e!important}
+@media(max-width:380px),(max-height:540px){
+  #lany-install-guide-title::before,#lany-friends-heading::before{
+    width:31px;height:29px;margin-right:3px;
+  }
+  #lany-install-guide-steps li{line-height:1.35!important}
+}

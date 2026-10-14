@@ -38,6 +38,7 @@ with sync_playwright() as playwright:
     shot('title','#lany-title')
     page.locator('#lany-install-button').click()
     assert viewport_fit('.lany-install-card'),(tag,'install panel clipped')
+    assert 'install-ornament.webp' in page.locator('#lany-install-guide-title').evaluate("e=>getComputedStyle(e,'::before').backgroundImage"),(tag,'install ornament not applied')
     shot('install','.lany-install-card')
     page.locator('.lany-install-close').click()
     page.locator('.lany-art-help').click()
@@ -57,6 +58,7 @@ with sync_playwright() as playwright:
       }""",timeout=7000)
       assert page.locator('#lany-friends-grid img[loading="eager"]').count()==page.locator('#lany-friends-grid img').count(),(tag,'gallery must eagerly load visible art')
       friend_pages+=1
+      assert 'friends-ornament.webp' in page.locator('#lany-friends-heading').evaluate("e=>getComputedStyle(e,'::before').backgroundImage"),(tag,'friends ornament not applied')
       shot('friends-'+str(friend_pages),'.lany-friends-panel')
       if page.locator('#lany-friends-next').is_disabled():break
       page.evaluate('LanyFriends.page(1)')
