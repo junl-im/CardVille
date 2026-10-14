@@ -98,15 +98,15 @@ jobs:
               grep -Fq 'lany-perf-v19.js?v=1.9.0' /tmp/lany-live.html && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/title/btn-play-v18.webp" -o /tmp/btn-play-v18.webp && test "$(wc -c </tmp/btn-play-v18.webp)" -gt 1000 && \
               grep -Fq 'lany-update-v17.js?v=1.9.0' /tmp/lany-live.html && \
-              curl --fail --silent --show-error --location --max-time 25 "$url/assets/title/title-forest-v17.svg" | grep -Fq '<svg' && \
-              curl --fail --silent --show-error --location --max-time 25 "$url/assets/buttons/action-resume.svg" | grep -Fq '<svg' && \
+              curl --fail --silent --show-error --location --max-time 25 "$url/assets/title/title-forest-v17.svg" -o /tmp/lany-title-forest.svg && grep -Fq '<svg' /tmp/lany-title-forest.svg && \
+              curl --fail --silent --show-error --location --max-time 25 "$url/assets/buttons/action-resume.svg" -o /tmp/lany-resume.svg && grep -Fq '<svg' /tmp/lany-resume.svg && \
               grep -Fq 'btn-play-v18.webp?v=1.9.0' /tmp/lany-live.html && \
-              curl --fail --silent --show-error --location --max-time 25 "$url/assets/buttons/title-play.svg" | grep -Fq '<svg' && \
+              curl --fail --silent --show-error --location --max-time 25 "$url/assets/buttons/title-play.svg" -o /tmp/lany-old-title-play.svg && grep -Fq '<svg' /tmp/lany-old-title-play.svg && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/lanypang-icon-512.png" -o /tmp/lany-launch.png && \
               test "$(wc -c </tmp/lany-launch.png)" -gt 1000 && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/polish/rabbit-wink.webp" -o /tmp/lany-wink.webp && \
               test "$(wc -c </tmp/lany-wink.webp)" -gt 1000 && \
-              curl --fail --silent --show-error --location --max-time 25 "$url/js/lany-polish.js" | grep -Fq 'LanyPolish'; then
+              curl --fail --silent --show-error --location --max-time 25 "$url/js/lany-polish.js" -o /tmp/lany-polish-source.js && grep -Fq 'LanyPolish' /tmp/lany-polish-source.js; then
               echo '라니팡 Firebase LIVE HTTP/asset test: PASS'
               echo '## 라니팡 실제 Firebase 정식 게임 배포 성공' >> "$GITHUB_STEP_SUMMARY"
               echo '- 정식 게임 URL: https://cardville.web.app/?v=1.9.0' >> "$GITHUB_STEP_SUMMARY"
