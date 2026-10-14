@@ -185,3 +185,25 @@ button[data-lany-art="close"]{--lany-action-image:url('../assets/ui/v21/buttons/
 
 /* Installed native PWA must hide its installation shortcut; never override hidden with display. */
 .lany-title .lany-title-shortcuts .lany-art-small[hidden]{display:none!important}
+
+/* Each booster actually uses its own approved animal-derived asset, not a shared button skin.
+   The former emoji glyph is only a legacy fallback: retain the native text labels/counts. */
+#b-hammer{background-image:url('../assets/ui/v21/booster/badge-hammer.webp')!important}
+#b-shuffle{background-image:url('../assets/ui/v21/booster/badge-shuffle.webp')!important}
+#b-color{background-image:url('../assets/ui/v21/booster/badge-color.webp')!important}
+#b-time{background-image:url('../assets/ui/v21/booster/badge-time.webp')!important}
+.boosters .booster{font-size:0!important}
+.boosters .booster span{
+ font-size:clamp(.53rem,2vw,.65rem)!important;
+ font-weight:950!important;
+ color:#75445d!important;
+ text-shadow:0 1px 0 #fff!important;
+ background:#fff9e4d9;
+ border-radius:5px;
+ padding:1px 2px;
+ position:absolute;
+ bottom:1px;
+ max-width:100%;
+ white-space:nowrap;
+}
+.boosters .booster .count{font-size:.6rem!important;bottom:auto;background:#ff68b7!important;color:white!important}
