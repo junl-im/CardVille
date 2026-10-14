@@ -48,6 +48,7 @@ jobs:
           node tools/check-longplay-v19.cjs
           node tools/check-v20-cache-map.cjs
           node tools/check-ui-v21.cjs
+          node tools/check-raster-only-v22.cjs
           node tools/check-tempo.cjs
           node tools/check-firebase-preview.cjs
           # Both JSON configurations are parsed by the preflight checks above.
@@ -67,7 +68,7 @@ jobs:
         run: node tools/check-iam-identity.cjs
       - name: Render matching favicon, home-screen and maskable app icons
         run: |
-          python -m pip install --quiet CairoSVG==2.7.1
+          python -m pip install --quiet Pillow==11.3.0
           python tools/build-pwa-icons.py
           sudo apt-get update -qq
           sudo apt-get install -y -qq fonts-noto-cjk
