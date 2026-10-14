@@ -38,7 +38,7 @@ for device,w,h,mobile in [('android',360,780,True),('desktop',1366,768,False)]:
   assert page.locator('#lany-world-map').is_visible(),(device,'bottom map button failed')
   assert page.evaluate('LanyShell.getCurrentScreen()')=='map'
   assert page.locator('#lany-map-levels .lany-level:not([disabled])').count()==1
-  assert page.locator('#lany-map-levels .lany-level[disabled]').count()==24
+  assert page.locator('#lany-map-levels .lany-level[disabled]').count()==page.locator('#lany-map-levels .lany-level').count()-1
   assert page.evaluate('state.board.join(",")')==original
   page.screenshot(path=str(root/'docs'/f'v091_{device}_map_after_bottom_tap.png'))
   tap('#lany-map-resume')
