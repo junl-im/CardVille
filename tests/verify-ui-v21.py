@@ -44,7 +44,8 @@ with sync_playwright() as pw:
   page.locator('#lany-prep-play').click()
   assert page.locator('#board .cell').count()==64,name
   bg('#app>.header .hud-box','panel-score.webp')
-  bg('.booster','panel-booster.webp')
+  for kind in ('hammer','shuffle','color','time'):
+   bg('#b-'+kind,'badge-'+kind+'.webp')
   page.screenshot(path=str(out/(name+'-game.png')))
   page.locator('#lany-quick-pause').click()
   assert page.locator('#lany-pause').is_visible(),name
