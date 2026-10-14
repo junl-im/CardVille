@@ -1340,9 +1340,12 @@ function applyBooster(r,c){
     state.board[idx]=null; state.specials[idx]=SPECIAL_NONE; state.locked[idx]=false;
     state.score+=50;
     state.animating=true;
-    applyGravity().then(async()=>{
+    const epoch=state.playEpoch;
+    applyGravity(epoch).then(async()=>{
+      if(epoch!==state.playEpoch)return;
       const m=findMatches();
-      if(m.length>0) await resolveMatches(m);
+      if(m.length>0) await resolveMatches(m,epoch);
+      if(epoch!==state.playEpoch)return;
       state.animating=false; checkEnd(); updateHUD();
     });
   } else if(type==='color'){
@@ -1352,9 +1355,12 @@ function applyBooster(r,c){
     for(let i=0;i<ROWS*COLS;i++){ if(state.board[i]===gem){ state.board[i]=null; count++; } }
     state.score+=count*60;
     state.animating=true;
-    applyGravity().then(async()=>{
+    const epoch=state.playEpoch;
+    applyGravity(epoch).then(async()=>{
+      if(epoch!==state.playEpoch)return;
       const m=findMatches();
-      if(m.length>0) await resolveMatches(m);
+      if(m.length>0) await resolveMatches(m,epoch);
+      if(epoch!==state.playEpoch)return;
       state.animating=false; checkEnd(); updateHUD();
     });
   } else if(type==='time'){
