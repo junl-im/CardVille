@@ -13,6 +13,7 @@ for(const p of ['web/js/lany-perf-v19.js','web/css/lany-result-v19.css','web/css
  assert(h.includes('./'+p.slice(4)+'?v=1.9.0'),p+' HTML');
 }
 assert(h.includes('function syncTitleParticles()'), 'title particles lifecycle');
+assert(h.includes('const LANY_MAX_AUDIO_VOICES=24')&&h.includes('osc.onended=')&&h.includes('osc.disconnect();gain.disconnect();'),'Audio voice cap and node release');
 assert(h.includes('cancelAnimationFrame(lanyTitleParticleFrame)'), 'rAF cancel');
 assert(h.includes("titleVisibilityObserver.observe(document.body"),'title enter/leave');
 assert(h.includes("if(face.dataset.gem!==expectedName || face.dataset.lanyOriginal"),'restore expression sprite');
