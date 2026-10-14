@@ -1,4 +1,4 @@
-"""Run real browser smoke and screen-layout tests for SVG title art and tactile controls."""
+"""Run real browser smoke and screen-layout tests for raster title art and tactile controls."""
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 import os,json
