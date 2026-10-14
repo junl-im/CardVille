@@ -337,6 +337,21 @@ def build_ui_v21():
             fg.thumbnail((66,66),RES)
             badge.alpha_composite(fg,(30,19))
         save(base/'buttons'/f'action-{key}.webp',badge)
+    # Use the user's actual glossy illustrated sprite-sheet cutouts for the
+    # title's primary game / book / collection actions. Keep the previously
+    # approved black-cat INSTALL illustration (not the older white bunny).
+    import zipfile,io,hashlib
+    archive=base/'source-original-kit.zip'
+    assert archive.is_file(), 'Original user-approved v2.1 sprite kit missing'
+    with zipfile.ZipFile(archive,'r') as source:
+        for role,source_name in [('play','start_main.webp'),('help','help.webp'),
+                                 ('friends','friends.webp')]:
+            src=Image.open(io.BytesIO(source.read(source_name))).convert('RGBA')
+            save(base/'title'/f'{role}.webp',src)
+        original_data=source.read('MANIFEST.json')
+        original_manifest=json.loads(original_data.decode('utf-8')) if 'json' in globals() else __import__('json').loads(original_data)
+        assert all(n in original_manifest['files'] for n in ['start_main.webp','help.webp','friends.webp'])
+    source_sha256=hashlib.sha256(archive.read_bytes()).hexdigest()
     # A lightweight consolidated inventory for CI and future replacement of each independent image.
     import json
     stock={}
@@ -345,7 +360,7 @@ def build_ui_v21():
     (base/'manifest.json').write_text(json.dumps({
        'release':'2.1.0-beta','style':'LanyPang approved WebP studio',
        'roles':stock,'generation':'tools/build-visual-v18.py',
-       'source':['web/assets/friends','web/assets/polish']
+       'source':['web/assets/friends','web/assets/polish'],'userArtSource':'web/assets/ui/v21/source-original-kit.zip','userArtSHA256':source_sha256
     },ensure_ascii=False,indent=2)+'\\n',encoding='utf-8')
     assert len(list(base.rglob('*.webp')))>=44
     print('OK v2.1 UI kit',sum(len(x) for x in stock.values()),'individual WebP assets')
