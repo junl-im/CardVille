@@ -201,3 +201,142 @@
 @media(prefers-reduced-motion:reduce){
  .lany-score-progress .progress-fill,.lany-star-checkpoint,#app .boosters .booster{transition:none!important}
 }
+
+
+/* Real-device QA hotfix from Oct 14 screenshots. Preserve approved WebP art.
+   No SVG, no separate emoji/synthetic buttons and no gameplay changes. */
+.lany-title #lany-install-button{
+  background:transparent!important; position:relative!important;
+  overflow:visible; isolation:isolate;
+}
+.lany-title #lany-install-button img.lany-button-picture{
+  width:100%!important;height:100%!important;object-fit:fill!important;
+  content:url('../assets/ui/v21/buttons/skin-blue.webp')!important;
+  filter:drop-shadow(0 3px 2px #70456a78)!important;
+}
+.lany-title #lany-install-button::before{
+  content:"";position:absolute;z-index:1;top:4%;left:50%;
+  transform:translateX(-50%);width:36%;height:48%;
+  background:url('../assets/lanypang-icon-192.png') center/contain no-repeat;
+  filter:drop-shadow(0 2px 2px #6b446588);
+}
+.lany-title #lany-install-button .lany-button-word{
+  display:block!important;top:75%!important;left:50%!important;
+  transform:translate(-50%,-50%);font-size:clamp(.77rem,2.8vw,1.02rem)!important;
+  color:#fff8d8!important;letter-spacing:-.02em!important;
+  -webkit-text-stroke:.4px #67436c!important;text-shadow:0 2px 1px #744c77!important;
+}
+.lany-title .lany-title-shortcuts{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  align-items:center!important;gap:clamp(6px,2vw,14px)!important;
+}
+.lany-title .lany-title-shortcuts .lany-art-small{
+  width:100%!important;min-width:0!important;
+  height:clamp(72px,23vw,115px)!important;
+}
+.lany-title .lany-title-shortcuts .lany-art-small img.lany-button-picture{
+  width:100%!important;height:100%!important;object-fit:contain!important;
+}
+.lany-title .lany-title-shortcuts .lany-art-small[hidden]{display:none!important}
+.lany-title .lany-title-shortcuts:has(#lany-install-button[hidden]){
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;width:min(78%,320px)!important;
+}
+/* Update notice lives directly beneath the start artwork rather than at page bottom. */
+.lany-title #lany-update-banner{
+ order:0;width:min(100%,395px);box-sizing:border-box;
+ padding:9px 12px;margin:8px auto 4px!important;min-height:51px;
+ border-radius:20px;color:#754162;background:#fff9db;
+ border:3px solid #fff1b0;box-shadow:0 4px 0 #b97993,0 6px 10px #6b466655;
+ font-size:clamp(.73rem,2.3vw,.92rem);text-align:center;line-height:1.2;
+}
+.lany-title #lany-update-now{
+ flex:0 0 auto;min-width:80px;min-height:38px;
+ color:#fffaf3;background:var(--cv-skin-pink) center/100% 100% no-repeat;
+ border:0;border-radius:20px;padding:4px 13px;filter:drop-shadow(0 3px 1px #a55c86);
+}
+.lany-title #lany-update-banner[hidden]{display:none!important}
+/* Map already has approved world-map.webp. Show more of it instead of an
+   unnaturally small middle card and a blank lower third on tall devices. */
+.lany-map-section .lany-map-levels{
+ background-image:var(--world-tint),url('../assets/polish/world-map.webp')!important;
+ background-repeat:no-repeat!important;background-size:cover!important;
+ background-position:center center!important;
+ border:5px solid #ffeaba!important;border-radius:27px!important;
+}
+.lany-map-section .lany-map-levels .lany-level{
+ background-size:100% 100%!important;background-repeat:no-repeat!important;
+ background-position:center!important;
+ filter:drop-shadow(0 4px 3px rgba(112,68,76,.22));
+}
+.lany-map-section .lany-map-levels .lany-level.current{
+ filter:drop-shadow(0 2px 5px #fff9b8) drop-shadow(0 4px 4px #ac5b86);
+}
+.lany-map-section .lany-map-levels .lany-level span{font-size:clamp(1rem,3.7vw,1.26rem)!important}
+.lany-map-section .lany-map-levels .lany-level small{font-size:clamp(.54rem,1.85vw,.68rem)!important}
+@media(min-height:730px){
+ .lany-map-section{display:flex!important;flex-direction:column!important}
+ .lany-map-section .lany-map-levels{
+   flex:1 1 auto!important;min-height:clamp(295px,45dvh,680px)!important;
+   grid-template-rows:repeat(var(--lany-map-rows,3),minmax(65px,1fr))!important;
+ }
+ .lany-map-section .lany-map-levels .lany-level{
+   width:clamp(55px,14vw,78px)!important;
+   height:clamp(51px,8dvh,75px)!important;
+ }
+}
+@media(max-width:380px){.lany-title .lany-title-shortcuts{gap:3px!important}}
+/* The old action WebP stamps display as empty silver pills over button
+   labels on real Samsung browser. Keep the actual WebP button skins, hide
+   only the ornamental pseudo-layer, preserve real text and click handling. */
+:is(.lany-dialog,.overlay .modal,.lany-map-bottom,.lany-game-nav)
+ button[data-lany-art]::before{display:none!important;content:none!important}
+.lany-dialog button[data-lany-art],.overlay .modal button[data-lany-art]{
+ justify-content:center!important;text-align:center!important;
+ width:100%;min-height:clamp(51px,7dvh,65px)!important;
+ padding:9px 16px!important;column-gap:0!important;
+ font-size:clamp(.95rem,3.8vw,1.22rem)!important;
+ font-weight:1000!important;line-height:1.15!important;
+ text-shadow:0 2px 1px #815079!important;
+}
+.lany-dialog button[data-lany-art]{flex:none!important}
+.lany-dialog{gap:clamp(9px,1.5dvh,14px)!important}
+.lany-map-bottom button[data-lany-art]{justify-content:center!important}
+.lany-dialog-emoji{min-height:clamp(54px,10dvh,95px)}
+/* Intro is an isolated, non-SVG overlay using approved mascots. */
+.lany-go-intro[hidden]{display:none!important}
+.lany-go-intro{
+ position:fixed;inset:0;z-index:25000;pointer-events:none;
+ display:flex;align-items:center;justify-content:center;flex-direction:column;
+ background:radial-gradient(ellipse at center,rgba(255,248,196,.34),rgba(80,29,82,.36) 70%);
+ backdrop-filter:blur(2px);
+}
+.lany-go-intro .lany-go-mascots{
+ display:flex;justify-content:center;align-items:flex-end;gap:clamp(4px,4vw,25px);
+ height:clamp(95px,21dvh,175px);
+ filter:drop-shadow(0 8px 7px #482c6688);
+}
+.lany-go-intro .lany-go-mascots img{
+ width:clamp(86px,20vw,140px);height:100%;object-fit:contain;user-select:none;
+}
+.lany-go-intro .lany-go-number{
+ display:block;font-family:'Noto Sans KR','Apple SD Gothic Neo',sans-serif;
+ font-size:clamp(100px,31vw,185px);line-height:1.05;
+ font-weight:1000;color:#fff394;-webkit-text-stroke:5px #b53a79;
+ text-shadow:0 6px 0 #783268,0 13px 20px #422e7499;
+ animation:lanyGoPop .45s cubic-bezier(.15,1.7,.32,1) both;
+}
+.lany-go-intro .lany-go-number.go{font-size:clamp(100px,28vw,180px);color:#ffe965}
+.lany-go-intro .lany-go-caption{
+ margin-top:7px;padding:9px 22px;border:3px solid #fff7ca;border-radius:20px;
+ background:#fc70b6;color:#fffaf0;font-size:clamp(16px,4.5vw,24px);
+ font-weight:1000;text-shadow:0 2px #9d4575;
+}
+@keyframes lanyGoPop{
+ 0%{opacity:.1;transform:translateY(25px) scale(.55) rotate(-7deg)}
+ 58%{opacity:1;transform:translateY(-5px) scale(1.15) rotate(3deg)}
+ 100%{opacity:1;transform:translateY(0) scale(1) rotate(0)}
+}
+@media(prefers-reduced-motion:reduce){
+ .lany-go-intro .lany-go-number{animation:none!important}
+ .lany-go-intro{backdrop-filter:none}
+}
