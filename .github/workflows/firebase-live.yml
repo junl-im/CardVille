@@ -29,7 +29,7 @@ jobs:
           const v=JSON.parse(fs.readFileSync('web/version.json','utf8'));
           assert.equal(r.projectId,'cardville');
           assert.equal(r.channelId,'live');
-          assert.equal(r.release,'1.2.0-beta');
+          assert.equal(r.release,'1.3.0-beta');
           assert.equal(v.version,r.release);
           assert.equal(f.projects.default,'cardville');
           assert.equal(r.site,'cardville');
@@ -46,6 +46,7 @@ jobs:
           node tools/check-tempo.cjs
           node tools/check-polish.cjs
           node tools/check-gameplay-v12.cjs
+          node tools/check-pages-v13.cjs
           node tools/check-firebase-preview.cjs
       - name: Confirm matching project service-account ID (no secret output)
         env:
@@ -67,17 +68,17 @@ jobs:
           set -euo pipefail
           url='https://cardville.web.app'
           for attempt in $(seq 1 8); do
-            if curl --fail --silent --show-error --location --max-time 25 "$url/?v=1.2.0" -o /tmp/lany-live.html && \
+            if curl --fail --silent --show-error --location --max-time 25 "$url/?v=1.3.0" -o /tmp/lany-live.html && \
               grep -Fq '<html lang="ko">' /tmp/lany-live.html && \
               grep -Fq '라니팡!' /tmp/lany-live.html && \
-              grep -Fq 'lany-polish.js?v=1.2.0' /tmp/lany-live.html && \
-              grep -Fq 'lany-polish.css?v=1.2.0' /tmp/lany-live.html && \
+              grep -Fq 'lany-polish.js?v=1.3.0' /tmp/lany-live.html && \
+              grep -Fq 'lany-polish.css?v=1.3.0' /tmp/lany-live.html && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/polish/rabbit-wink.webp" -o /tmp/lany-wink.webp && \
               test "$(wc -c </tmp/lany-wink.webp)" -gt 1000 && \
               curl --fail --silent --show-error --location --max-time 25 "$url/js/lany-polish.js" | grep -Fq 'LanyPolish'; then
               echo '라니팡 Firebase LIVE HTTP/asset test: PASS'
               echo '## 라니팡 실제 Firebase 정식 게임 배포 성공' >> "$GITHUB_STEP_SUMMARY"
-              echo '- 정식 게임 URL: https://cardville.web.app/?v=1.2.0' >> "$GITHUB_STEP_SUMMARY"
+              echo '- 정식 게임 URL: https://cardville.web.app/?v=1.3.0' >> "$GITHUB_STEP_SUMMARY"
               echo '- 원본 데이터 및 Firestore/Auth 변경 없음' >> "$GITHUB_STEP_SUMMARY"
               exit 0
             fi

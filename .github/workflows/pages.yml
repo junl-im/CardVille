@@ -35,6 +35,7 @@ jobs:
           node tools/check-friends-mobile.cjs
           node tools/check-polish.cjs
           node tools/check-gameplay-v12.cjs
+          node tools/check-pages-v13.cjs
           node tools/check-tempo.cjs
           test -f web/index.html
           test -f web/LICENSE

@@ -71,32 +71,45 @@ const Difficulty = (function() {
     setTimeout(() => { t.style.opacity='0'; setTimeout(()=>t.remove(),400); }, 1800);
   }
 
-  function showModal() {
-    let modal = document.getElementById('difficulty-modal');
-    if (!modal) {
-      modal = document.createElement('div');
-      modal.id = 'difficulty-modal';
-      modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:10000;' +
-        'display:flex;align-items:center;justify-content:center';
-      document.body.appendChild(modal);
+  let currentPage=0;
+  function renderModal(){
+    const modal=document.getElementById('difficulty-modal');if(!modal)return;
+    modal.replaceChildren();
+    const card=document.createElement('div');card.className='lany-difficulty-card';card.setAttribute('role','dialog');
+    card.setAttribute('aria-label','시험용 난이도 선택');card.setAttribute('aria-modal','true');
+    const title=document.createElement('h2');title.textContent='⚙️ 난이도 선택 (시험용)';
+    const note=document.createElement('p');note.className='lany-difficulty-note';
+    note.textContent='이 메뉴는 시험용이며 실제 모험 지도 250단계 난이도에는 적용되지 않아요.';
+    const options=document.createElement('div');options.className='lany-difficulty-options';
+    const entries=Object.entries(LEVELS),pages=Math.ceil(entries.length/2);
+    for(const [key,d] of entries.slice(currentPage*2,currentPage*2+2)){
+      const btn=document.createElement('button');btn.type='button';btn.className='lany-difficulty-option';
+      btn.style.setProperty('--diff-color',d.color);btn.setAttribute('aria-pressed',String(current===key));
+      const name=document.createElement('b');name.textContent=d.label;
+      const description=document.createElement('span');description.textContent=d.description;
+      btn.append(name,description);btn.addEventListener('click',()=>choose(key));options.append(btn);
     }
-    modal.style.display = 'flex';
-    modal.innerHTML = `
-      <div style="background:#1a1f2e;border-radius:20px;padding:28px;max-width:360px;width:92%;border:1px solid #30363d">
-        <h2 style="color:#a78bfa;text-align:center;margin:0 0 20px">⚙️ 난이도</h2>
-        ${Object.entries(LEVELS).map(([key, d]) => `
-          <div onclick="Difficulty.set('${key}');document.getElementById('difficulty-modal').style.display='none';"
-            style="border:2px solid ${current===key?d.color:'#30363d'};border-radius:12px;padding:12px 16px;
-              margin-bottom:10px;cursor:pointer;transition:border-color 0.2s;background:${current===key?d.color+'22':'transparent'}">
-            <div style="font-weight:700;color:${d.color};font-size:1rem">${d.label}</div>
-            <div style="color:#8b949e;font-size:0.8rem;margin-top:2px">${d.description}</div>
-            ${d.timeLimit?`<div style="color:#ef4444;font-size:0.75rem;margin-top:2px">⏱ ${d.timeLimit}초 제한</div>`:''}
-          </div>`).join('')}
-        <button onclick="document.getElementById('difficulty-modal').style.display='none'"
-          style="width:100%;background:rgba(255,255,255,0.1);color:#fff;border:none;
-            padding:10px;border-radius:10px;cursor:pointer;margin-top:4px">닫기</button>
-      </div>`;
+    const pager=document.createElement('nav');pager.className='lany-game-pager';
+    pager.setAttribute('aria-label','난이도 페이지');
+    const prev=document.createElement('button');prev.type='button';prev.className='lany-page-arrow';
+    prev.textContent='◀ 이전';prev.disabled=currentPage===0;prev.addEventListener('click',()=>page(-1));
+    const status=document.createElement('span');status.setAttribute('role','status');
+    status.textContent=(currentPage+1)+' / '+pages;
+    const next=document.createElement('button');next.type='button';next.className='lany-page-arrow';
+    next.textContent='다음 ▶';next.disabled=currentPage>=pages-1;next.addEventListener('click',()=>page(1));
+    pager.append(prev,status,next);
+    const closeButton=document.createElement('button');closeButton.type='button';
+    closeButton.className='lany-difficulty-close';closeButton.textContent='닫기';closeButton.addEventListener('click',close);
+    card.append(title,note,options,pager,closeButton);modal.append(card);
   }
+  function showModal(){
+    let modal=document.getElementById('difficulty-modal');
+    if(!modal){modal=document.createElement('div');modal.id='difficulty-modal';document.body.appendChild(modal);}
+    currentPage=0;modal.style.display='flex';renderModal();modal.querySelector('.lany-difficulty-option')?.focus();
+  }
+  function page(delta){const m=document.getElementById('difficulty-modal');if(!m||m.style.display==='none')return;currentPage=Math.max(0,Math.min(1,currentPage+delta));renderModal();}
+  function choose(key){set(key);close();}
+  function close(){const m=document.getElementById('difficulty-modal');if(m)m.style.display='none';}
 
   // Init
   window.DIFFICULTY_CONFIG = LEVELS[current];
@@ -107,7 +120,7 @@ const Difficulty = (function() {
       border-radius:20px;padding:2px 8px;font-size:0.7rem;font-weight:700">${d.label}</span>`;
   }
 
-  return { get, getKey, set, showModal, getBadge, LEVELS };
+  return { get, getKey, set, showModal, page, choose, close, getBadge, LEVELS };
 })();
 
 window.Difficulty = Difficulty;
