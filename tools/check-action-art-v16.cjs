@@ -12,6 +12,12 @@ assert(version.actionSpecificButtonArt===true);
 assert(manifest.start_url.includes('v=1.6.0'));
 assert.equal((html.match(/data-lany-art="/g)||[]).length,26);
 assert(html.includes('lany-action-art-v16.css?v=1.6.0'));
+for(const state of ['ordinary','current','boss','locked']){
+ const path='web/assets/buttons/stage-'+state+'.svg',image=read(path);
+ assert(image.includes('<svg')&&image.includes('</svg>'),path);
+ assert(sw.includes('./assets/buttons/stage-'+state+'.svg'),path+' offline cache');
+ assert(css.includes('stage-'+state+'.svg'),path+' applied in CSS');
+}
 assert(sw.includes('lanypang-match-v1.6.0-ko')&&sw.includes('./css/lany-action-art-v16.css'));
 for(const key of actionNames){
  const path='web/assets/buttons/action-'+key+'.svg';
