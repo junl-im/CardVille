@@ -38,6 +38,8 @@ with sync_playwright() as playwright:
     shot('title','#lany-title')
     page.locator('#lany-install-button').click()
     assert viewport_fit('.lany-install-card'),(tag,'install panel clipped')
+    assert 'install-ornament.webp' in page.locator('#lany-install-guide-title').evaluate("e=>getComputedStyle(e,'::before').backgroundImage"),(tag,'install ornament not applied')
+    assert 'buttons/close.webp' in page.locator('.lany-install-close').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'new close art not applied')
     shot('install','.lany-install-card')
     page.locator('.lany-install-close').click()
     page.locator('.lany-art-help').click()
@@ -48,6 +50,10 @@ with sync_playwright() as playwright:
     page.evaluate('LanyShell.closeTutorial()')
     page.locator('.lany-art-friends').click()
     assert viewport_fit('.lany-friends-panel'),(tag,'friends card clipped')
+    assert page.locator('.lany-friends-panel footer button[data-lany-art="close"]').evaluate("""e=>{
+      const rect=e.getBoundingClientRect();const c=getComputedStyle(e);
+      return rect.width>=75 && rect.height>=35 && c.whiteSpace==='nowrap' && e.scrollWidth<=e.clientWidth+1;
+    }"""),(tag,'gallery close button wraps/clips on mobile')
     # Inspect every page, not only the first: no white/broken animal slots.
     friend_pages=0
     while True:
@@ -57,6 +63,8 @@ with sync_playwright() as playwright:
       }""",timeout=7000)
       assert page.locator('#lany-friends-grid img[loading="eager"]').count()==page.locator('#lany-friends-grid img').count(),(tag,'gallery must eagerly load visible art')
       friend_pages+=1
+      assert 'friends-ornament.webp' in page.locator('#lany-friends-heading').evaluate("e=>getComputedStyle(e,'::before').backgroundImage"),(tag,'friends ornament not applied')
+      assert 'buttons/close.webp' in page.locator('.lany-friends-close').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'gallery close art not applied')
       shot('friends-'+str(friend_pages),'.lany-friends-panel')
       if page.locator('#lany-friends-next').is_disabled():break
       page.evaluate('LanyFriends.page(1)')
@@ -78,12 +86,19 @@ with sync_playwright() as playwright:
       page.locator('#lany-update-banner').wait_for(state='hidden',timeout=3000)
     page.locator('#lany-start-button').click()
     assert page.locator('#lany-world-map').is_visible()
+    for selector,asset in (('.lany-map-head .lany-back','back.webp'),('.lany-map-head .lany-map-icon:not(.lany-mobile-fullscreen)','help.webp'),('#lany-world-prev','prev.webp'),('#lany-world-next','next.webp')):
+      assert 'buttons/'+asset in page.locator(selector).evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,selector,'new independent utility raster not applied')
     shot('map','#lany-world-map')
     assert page.locator('.lany-map-levels canvas.lany-route').count()==1
     assert 'world-map.webp' in page.locator('.lany-map-levels').evaluate('e=>getComputedStyle(e).backgroundImage')
     # v2.3 check: actual independent art, dynamic region title and original fallback coexist.
     assert 'world-01.webp' in page.locator('.lany-map-levels').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'first map art missing')
     assert 'region-header.webp' in page.locator('.lany-world-banner').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'text-free world banner missing')
+    # All 10 original landscape slices must render and keep the canonical world titles intact.
+    for world_index in range(10):
+      page.locator('.lany-map-levels').evaluate('(e,k)=>e.dataset.world=k',str(world_index))
+      bg=page.locator('.lany-map-levels').evaluate('e=>getComputedStyle(e).backgroundImage')
+      assert 'world-atlas.webp' in bg and 'world-map.webp' in bg,(tag,world_index,'independent raster map/fallback missing')
     for world_index,art in [('2','world-03.webp'),('4','world-05.webp')]:
       page.locator('.lany-map-levels').evaluate('(e,k)=>e.dataset.world=k',world_index)
       assert art in page.locator('.lany-map-levels').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'world art '+art)

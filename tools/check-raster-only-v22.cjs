@@ -26,4 +26,9 @@ for(const workflow of ['pages.yml','firebase-hosting.yml','firebase-live.yml','l
  assert(s.includes('node tools/check-raster-only-v22.cjs'),workflow+' missing anti-vector gate');
  assert(!s.includes('CairoSVG'),'No vector build dependencies allowed');
 }
+const art=fs.readFileSync('web/css/lany-art-v23.css','utf8');
+const atlas=fs.readFileSync('web/assets/v23/regions/world-atlas.webp');
+assert(atlas.subarray(0,4).toString()==='RIFF'&&atlas.subarray(8,12).toString()==='WEBP'&&atlas.length>60000,'10 region raster atlas missing or corrupt');
+for(let i=0;i<10;i++)assert(art.includes('.lany-map-section .lany-map-levels[data-world="'+i+'"]'),'Missing regional background mapping '+i);
+assert(fs.readFileSync('web/sw.js','utf8').includes("'./assets/v23/regions/world-atlas.webp'"),'Atlas must be available in offline PWA');
 console.log(JSON.stringify({pass:true,webFiles:files.length,vectorFiles:0,vectorReferences:0,canvasMap:true,pwaPngOnly:true}));
