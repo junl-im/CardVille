@@ -5,28 +5,24 @@ const read=p=>fs.readFileSync(p,'utf8');
 const html=read('web/index.html'),css=read('web/css/lany-action-art-v16.css');
 const manifest=JSON.parse(read('web/manifest.json')),version=JSON.parse(read('web/version.json')),sw=read('web/sw.js');
 const actionNames=['play','map','resume','retry','next','home','help','pause','exit','back','friends','close'];
-assert.equal(version.version,'2.1.0-beta');
+assert.equal(version.version,'2.2.0-beta');
 assert.equal(version.illustratedActionBadges,12);
 assert.equal(version.illustratedGameplayButtons,26);
 assert(version.actionSpecificButtonArt===true);
-assert(manifest.start_url.includes('v=2.1.0'));
+assert(manifest.start_url.includes('v=2.2.0'));
 assert.equal((html.match(/data-lany-art="/g)||[]).length,26);
-assert(html.includes('lany-action-art-v16.css?v=2.1.0'));
+assert(html.includes('lany-action-art-v16.css?v=2.2.0'));
 for(const state of ['ordinary','current','boss','locked']){
- const path='web/assets/buttons/stage-'+state+'.svg',image=read(path);
- assert(image.includes('<svg')&&image.includes('</svg>'),path);
- assert(sw.includes('./assets/buttons/stage-'+state+'.svg'),path+' offline cache');
- assert(css.includes('stage-'+state+'.svg'),path+' applied in CSS');
+ const art='./assets/map/stage-'+state+'-v20.webp';
+ assert(sw.includes("'"+art+"'"),art+' offline');
+ assert(css.includes('stage-'+state+'-v20.webp'),art+' native image');
 }
-assert(sw.includes('lanypang-match-v2.1.0-ko')&&sw.includes('./css/lany-action-art-v16.css'));
+assert(sw.includes('lanypang-match-v2.2.0-ko')&&sw.includes('./css/lany-action-art-v16.css'));
 for(const key of actionNames){
- const path='web/assets/buttons/action-'+key+'.svg';
- const image=read(path);
- assert(image.includes('<svg')&&image.includes('</svg>'),path);
- assert(image.length>400,path);
- assert(!image.includes('<script')&&!image.includes('<foreignObject'),path);
- assert(sw.includes('./assets/buttons/action-'+key+'.svg'),path);
+ const art='./assets/ui/v21/buttons/action-'+key+'.webp';
+ assert(sw.includes("'"+art+"'"),art+' offline');
  assert(css.includes('[data-lany-art="'+key+'"]'),key+' CSS binding');
+ assert(css.includes('action-'+key+'.webp'),art+' native image binding');
 }
 for(const phrase of ['[data-lany-art]::before','pointer:fine',':focus-visible','prefers-reduced-motion','#overlay-win .modal-btns','#overlay-lose .modal-btns','.lany-game-nav button[data-lany-art]'])assert(css.includes(phrase),phrase);
 for(const required of ['data-lany-art="next"','data-lany-art="retry"','data-lany-art="play"','data-lany-art="pause"','data-lany-art="exit"','data-lany-art="home"'])assert(html.includes(required),required);
