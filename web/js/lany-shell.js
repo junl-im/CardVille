@@ -4,6 +4,7 @@
  const $=id=>document.getElementById(id);
  const worlds=[['🍭','사탕 골짜기'],['🌳','막대사탕 숲'],['🌊','젤리 바다'],['🏔️','초콜릿 산맥'],['🌈','무지개 하늘'],['🏰','설탕 성'],['🌌','말랑별 은하'],['🏜️','캐러멜 협곡'],['❄️','토피 설원'],['💎','수정 동굴']];
  const nav={started:false,screen:'title',overlay:null,wasHelpFrom:null,world:0,selectedLevel:1,previousScreen:null,returnToGame:false};
+ const mobileFullscreen=()=>Boolean(window.matchMedia?.('(max-width: 900px) and (pointer: coarse)').matches);
  const overlayIds=['overlay-win','overlay-lose','overlay-levels','overlay-tutorial'];
  const stageColumn=i=>Math.floor(i/3)%2===0?i%3:2-(i%3);
  const savedStage=()=>{let n=Number(localStorage.getItem('cv_last_level'));return Number.isInteger(n)&&n>0&&n<=250&&state.unlockedLevels.includes(n)?n:1};
@@ -98,7 +99,7 @@
  function begin(){
    if(nav.started){if(nav.screen==='game')return;openMap();return}
    nav.started=true;nav.world=Math.floor((savedStage()-1)/25);openMap(nav.world);
-   try{if(document.documentElement.requestFullscreen&&!document.fullscreenElement)Promise.resolve(document.documentElement.requestFullscreen({navigationUI:'hide'})).catch(()=>{})}catch(_){/* browser permission */}
+   try{if(mobileFullscreen()&&document.documentElement.requestFullscreen&&!document.fullscreenElement)Promise.resolve(document.documentElement.requestFullscreen({navigationUI:'hide'})).catch(()=>{})}catch(_){/* browser permission */}
  }
  function openPause(){if(nav.screen!=='game'){openExit();return}window.LanyTempo?.pause();hide();nav.overlay='pause';$('lany-pause').hidden=false;$('lany-pause').querySelector('button').focus()}
  function openExit(){window.LanyTempo?.pause();hide();nav.previousScreen=nav.screen;nav.overlay='exit';$('lany-exit').hidden=false;$('lany-exit').querySelector('button').focus()}
@@ -107,7 +108,7 @@
  function exitGame(){showHome()}
  function openHelp(){window.LanyTempo?.pause();nav.wasHelpFrom=nav.overlay||nav.screen;hide();$('overlay-tutorial').style.display='flex';$('overlay-tutorial').querySelector('h2').textContent='🌟 라니팡 게임 방법';$('overlay-tutorial').querySelector('button').textContent='알겠어요'}
  function closeTutorial(){$('overlay-tutorial').style.display='none';const from=nav.wasHelpFrom;nav.wasHelpFrom=null;if(from==='pause')openPause();else if(from==='exit')openExit();else if(from==='title')showHome();else if(from==='map')openMap();else if(from==='prep')openPrep(nav.selectedLevel);else if(from==='game')window.LanyTempo?.resume()}
- function toggleFullscreen(){const el=document.documentElement;try{if(document.fullscreenElement)Promise.resolve(document.exitFullscreen()).catch(()=>{});else if(el.requestFullscreen)Promise.resolve(el.requestFullscreen({navigationUI:'hide'})).catch(()=>{})}catch(_){}}
+ function toggleFullscreen(){if(!mobileFullscreen())return;const el=document.documentElement;try{if(document.fullscreenElement)Promise.resolve(document.exitFullscreen()).catch(()=>{});else if(el.requestFullscreen)Promise.resolve(el.requestFullscreen({navigationUI:'hide'})).catch(()=>{})}catch(_){}}
  function handleBack(){if(window.LanyFriends?.isOpen?.()){window.LanyFriends.close();return}if($('overlay-tutorial').style.display==='flex'){closeTutorial();return}if(nav.overlay==='exit'){resume();return}if(nav.overlay==='pause'){openExit();return}if(nav.screen==='prep'){openMap();return}if(nav.screen==='map'){openExit();return}if(nav.screen==='game'){openPause();return}openExit()}
  function pushGuard(){try{history.pushState({lanyShell:true},'',location.href)}catch(_){}}
  if(history&&'pushState'in history)pushGuard();
