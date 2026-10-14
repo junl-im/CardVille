@@ -1,10 +1,10 @@
 {
-  "release": "1.7.0-beta",
+  "release": "1.8.0-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "bba0935f5292d154ebda876de0addae8a1769e1c",
-  "requestedFor": "라니팡 v1.7 동화 숲 캐릭터 시작 화면, 모바일 미리보기 배포 자동 동기화, 브라우저 캐시 갱신 안내, PWA 버전 검사",
+  "sourceCommit": "5edf3ad5bb62d759b790e648f04e8beb9970167d",
+  "requestedFor": "라니팡 v1.8 기존 고품질 WebP 캐릭터·배경 복구, 검은 고양이 캐릭터, 실제 WebP 이미지 버튼, 퍼즐 DOM 재사용 및 비동기 레벨 갱신 렉 안정화",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true
 }
