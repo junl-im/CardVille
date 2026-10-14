@@ -36,6 +36,13 @@ with sync_playwright() as pw:
   assert page.locator('.lany-v22-goal-track').is_visible(),name
   assert page.locator('.lany-v22-star-marker').count()==3,name
   assert page.locator('.lany-v22-goal-track .progress-bar').get_attribute('role')=='progressbar',name
+  # Visual star achievements must match the actual 1x/1.4x/2x game reward boundaries.
+  for multiplier,lit in [(0.75,0),(1.0,1),(1.4,2),(2.0,3)]:
+   page.evaluate("(m)=>{state.score=Math.round(LEVELS[state.level-1].goal*m);updateHUD()}",multiplier)
+   assert page.locator('.lany-v22-star-marker.earned').count()==lit,(name,multiplier,'star consistency')
+  assert abs(page.locator('#progress-fill').evaluate('e=>parseFloat(e.style.width)')-100)<.01,name
+  page.evaluate("()=>{state.score=0;updateHUD()}")
+
   for selector,needle in [('.lany-v22-moves-panel','panel-moves.webp'),('.lany-v22-score-panel','panel-score.webp'),('.lany-v22-goal-track .progress-bar','progress-track.webp'),('.lany-v22-goal-track .progress-fill','progress-fill.webp'),('#b-hammer','badge-hammer.webp'),('#b-shuffle','badge-shuffle.webp')]:
    bg=page.locator(selector).first.evaluate('e=>getComputedStyle(e).backgroundImage')
    assert needle in bg,(name,selector,bg)
