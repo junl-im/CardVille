@@ -63,7 +63,7 @@
  window.matchMedia?.('(display-mode: standalone)')?.addEventListener?.('change',update);
  function init(){
    $('lany-install-button')?.addEventListener('click',install);
-   $('lany-install-close')?.addEventListener('click',close);
+   document.querySelectorAll('.lany-install-close,.lany-install-done').forEach(button=>button.addEventListener('click',close));
    $('lany-install-modal')?.addEventListener('click',e=>{if(e.target.id==='lany-install-modal')close();});
    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&opening){e.stopImmediatePropagation();close();}},true);
    update();
