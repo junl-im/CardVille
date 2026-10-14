@@ -165,7 +165,7 @@ button[data-lany-art="close"]{--lany-action-image:url('../assets/ui/v21/buttons/
 .lany-title .lany-title-shortcuts .lany-art-small{
  height:clamp(72px,22vw,116px)!important;
  max-height:116px!important;
- display:block!important;
+ display:block;
  position:relative!important;
  align-self:start!important;
 }
@@ -182,3 +182,6 @@ button[data-lany-art="close"]{--lany-action-image:url('../assets/ui/v21/buttons/
 @media(max-height:480px){
  .lany-title .lany-title-shortcuts .lany-art-small{height:clamp(47px,15vw,62px)!important}
 }
+
+/* Installed native PWA must hide its installation shortcut; never override hidden with display. */
+.lany-title .lany-title-shortcuts .lany-art-small[hidden]{display:none!important}
