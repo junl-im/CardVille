@@ -55,6 +55,7 @@ jobs:
           node tools/check-longplay-v19.cjs
           node tools/check-v20-cache-map.cjs
           node tools/check-ui-v21.cjs
+          node tools/check-raster-only-v22.cjs
           node tools/check-firebase-preview.cjs
       - name: Confirm matching project service-account ID (no secret output)
         env:
@@ -65,7 +66,7 @@ jobs:
           node tools/check-iam-identity.cjs
       - name: Render matching favicon, home-screen and maskable app icons
         run: |
-          python -m pip install --quiet CairoSVG==2.7.1
+          python -m pip install --quiet Pillow==11.3.0
           python tools/build-pwa-icons.py
           sudo apt-get update -qq
           sudo apt-get install -y -qq fonts-noto-cjk
@@ -106,10 +107,10 @@ jobs:
               grep -Fq 'lany-perf-v19.js?v=2.1.0' /tmp/lany-live.html && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/ui/v21/title/play.webp" -o /tmp/btn-play-v21.webp && test "$(wc -c </tmp/btn-play-v21.webp)" -gt 1000 && \
               grep -Fq 'lany-update-v17.js?v=2.1.0' /tmp/lany-live.html && \
-              curl --fail --silent --show-error --location --max-time 25 "$url/assets/title/title-forest-v17.svg" -o /tmp/lany-title-forest.svg && grep -Fq '<svg' /tmp/lany-title-forest.svg && \
-              curl --fail --silent --show-error --location --max-time 25 "$url/assets/buttons/action-resume.svg" -o /tmp/lany-resume.svg && grep -Fq '<svg' /tmp/lany-resume.svg && \
+              curl --fail --silent --show-error --location --max-time 25 "$url/assets/ui/v21/title/logo.webp" -o /tmp/lany-raster-check-title-forest-v17.webp && test "$(wc -c </tmp/lany-raster-check-title-forest-v17.webp)" -gt 500 && \
+              curl --fail --silent --show-error --location --max-time 25 "$url/assets/ui/v21/buttons/action-resume.webp" -o /tmp/lany-raster-check-action-resume.webp && test "$(wc -c </tmp/lany-raster-check-action-resume.webp)" -gt 500 && \
               grep -Fq 'ui/v21/title/play.webp?v=2.1.0' /tmp/lany-live.html && \
-              curl --fail --silent --show-error --location --max-time 25 "$url/assets/buttons/title-play.svg" -o /tmp/lany-old-title-play.svg && grep -Fq '<svg' /tmp/lany-old-title-play.svg && \
+              curl --fail --silent --show-error --location --max-time 25 "$url/assets/ui/v21/title/play.webp" -o /tmp/lany-raster-check-title-play.webp && test "$(wc -c </tmp/lany-raster-check-title-play.webp)" -gt 500 && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/lanypang-icon-512.png" -o /tmp/lany-launch.png && \
               test "$(wc -c </tmp/lany-launch.png)" -gt 1000 && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/polish/rabbit-wink.webp" -o /tmp/lany-wink.webp && \
