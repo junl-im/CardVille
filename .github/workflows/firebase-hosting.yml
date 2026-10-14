@@ -37,6 +37,7 @@ jobs:
           node tools/check-gameplay-v12.cjs
           node tools/check-pages-v13.cjs
           node tools/check-pwa-v14.cjs
+          node tools/check-art-buttons-v15.cjs
           node tools/check-tempo.cjs
           node tools/check-firebase-preview.cjs
           # Both JSON configurations are parsed by the preflight checks above.

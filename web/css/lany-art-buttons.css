@@ -1,0 +1,67 @@
+/* 라니팡 v1.5: original SVG illustrated button system. All visual borders are in image assets. */
+.lany-illustrated-logo{display:block;width:min(100%,550px);margin:0;line-height:0;font-size:0;padding:0;filter:drop-shadow(0 9px 14px #55316b66)}
+.lany-illustrated-logo img{width:100%;height:auto;display:block;max-height:clamp(115px,29dvh,235px);object-fit:contain;pointer-events:none;user-select:none}
+.lany-title-top{width:100%;max-width:550px}
+.lany-title-bottom.lany-title-art-actions{display:flex;flex-direction:column;align-items:center;gap:3px;width:min(100%,470px);max-width:100%;padding:0}
+.lany-title-art-actions .lany-art-button{position:relative;isolation:isolate;appearance:none;display:block;border:0!important;outline-offset:1px;margin:0;padding:0!important;box-shadow:none!important;background:transparent!important;min-width:0;min-height:0;line-height:1;cursor:pointer;touch-action:manipulation;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;transform-origin:50% 70%;transition:transform 140ms cubic-bezier(.3,1.4,.37,1),filter 140ms ease!important}
+.lany-art-button[hidden]{display:none!important}
+.lany-art-button img.lany-button-picture{display:block;width:100%;height:auto;object-fit:contain;pointer-events:none;user-select:none;-webkit-user-drag:none;filter:drop-shadow(0 2px 4px rgba(72,36,84,.28))}
+.lany-art-button .lany-button-word{position:absolute;z-index:1;left:50%;top:70%;transform:translate(-50%,-50%);width:78%;white-space:nowrap;font-weight:1000;font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;color:#fff9c8;-webkit-text-stroke:.8px #7b3158;text-shadow:0 2px #8b305e,0 4px 1px #673253,0 -1px #fffcf1;text-align:center;line-height:1.1;pointer-events:none;font-variant-numeric:tabular-nums}
+.lany-art-play{width:min(100%,375px)}
+.lany-art-play .lany-button-word{top:61%;left:53%;font-size:clamp(1.5rem,6.4vw,2.1rem);letter-spacing:-.04em;-webkit-text-stroke:1.3px #7c2655}
+.lany-title-shortcuts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:clamp(2px,1.35vw,9px);width:100%;margin-top:clamp(7px,1.9vh,16px)}
+.lany-title-shortcuts .lany-art-small{width:100%;max-width:155px;justify-self:center}
+.lany-title-shortcuts .lany-button-word{top:79%;font-size:clamp(.69rem,2.75vw,1.12rem);letter-spacing:-.065em;-webkit-text-stroke:.35px #754364;text-shadow:0 1px #98485a,0 2px #744256}
+.lany-title-shortcuts .lany-art-install .lany-button-word{left:51%}
+.lany-title-art-actions .lany-version{margin-top:3px;font-size:clamp(.6rem,1.9vw,.74rem);padding:2px 0}
+.lany-art-button:focus-visible{outline:4px solid #fff2a1!important;outline-offset:1px;border-radius:24px}
+@media(hover:hover) and (pointer:fine){
+ .lany-art-button:not(:disabled):hover{transform:translateY(-4px) scale(1.04)!important;filter:brightness(1.1) saturate(1.08) drop-shadow(0 0 8px #fff3d680)!important}
+}
+.lany-art-button.lany-pressed,.lany-art-button:active{transform:translateY(6px) scale(.955)!important;filter:brightness(.89) saturate(1.09)!important;transition-duration:70ms!important}
+.lany-art-button.lany-pressed .lany-button-picture,.lany-art-button:active .lany-button-picture{filter:drop-shadow(0 0 1px #5c2d71a0)!important}
+.lany-art-button.lany-pressed .lany-button-word{transform:translate(-50%,-44%) scale(.97)}
+/* Reusable imagery from one art system: varied purpose-specific candy colors. */
+:is(.lany-action,.lany-secondary,.lany-page-arrow,.overlay .btn,.lany-game-nav button,#game-mode-bar button,.lany-difficulty-close,.lany-install-done,.lany-world-tab,.lany-back,.lany-map-icon){background-image:url('../assets/buttons/skin-pink.svg')!important;background-repeat:no-repeat!important;background-position:center!important;background-size:100% 100%!important;background-color:transparent!important;border-color:transparent!important;box-shadow:none!important;filter:drop-shadow(0 3px 2px #633d6677);text-shadow:0 1px 2px #65375ca0;transition:transform .12s ease,filter .12s ease!important;touch-action:manipulation}
+:is(.lany-secondary,.lany-action.pale,.lany-game-nav .lany-game-map-button,.lany-map-icon,.lany-back){background-image:url('../assets/buttons/skin-blue.svg')!important;color:#fff!important}
+:is(.lany-page-arrow,.lany-world-tab,.lany-difficulty-close){background-image:url('../assets/buttons/skin-gold.svg')!important;color:#864b27!important;text-shadow:0 1px 1px #fffcc8!important}
+:is(.lany-game-nav .lany-game-pause-button,.lany-action:not(.pale):not(.quiet),#lany-prep-play){background-image:url('../assets/buttons/skin-green.svg')!important;color:#fff!important;text-shadow:0 2px 2px #3b6a40!important}
+.lany-action.quiet{background-image:url('../assets/buttons/skin-blue.svg')!important;color:#fff!important}
+.lany-page-arrow:disabled,.lany-world-tab:disabled{filter:grayscale(.75) brightness(.8);opacity:.45}
+@media(hover:hover) and (pointer:fine){
+ :is(.lany-action,.lany-secondary,.lany-page-arrow,.overlay .btn,.lany-game-nav button,#game-mode-bar button,.lany-difficulty-close,.lany-install-done,.lany-world-tab,.lany-back,.lany-map-icon):not(:disabled):hover{transform:translateY(-2px) scale(1.027)!important;filter:brightness(1.08) drop-shadow(0 4px 4px #603a6870)!important}
+}
+:is(.lany-action,.lany-secondary,.lany-page-arrow,.overlay .btn,.lany-game-nav button,#game-mode-bar button,.lany-difficulty-close,.lany-install-done,.lany-world-tab,.lany-back,.lany-map-icon).lany-pressed,
+:is(.lany-action,.lany-secondary,.lany-page-arrow,.overlay .btn,.lany-game-nav button,#game-mode-bar button,.lany-difficulty-close,.lany-install-done,.lany-world-tab,.lany-back,.lany-map-icon):active{transform:translateY(3px) scale(.963)!important;filter:brightness(.88)!important}
+.lany-art-spark{position:fixed;z-index:39000;pointer-events:none;font-size:15px;animation:lanySparkPop .42s ease-out forwards;text-shadow:0 1px 6px #fff4b8}
+@keyframes lanySparkPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.4) rotate(-12deg)}35%{opacity:1;transform:translate(-50%,-115%) scale(1.25) rotate(12deg)}100%{opacity:0;transform:translate(-50%,-210%) scale(.65) rotate(28deg)}}
+@media(max-width:360px){
+ .lany-title-bottom.lany-title-art-actions{width:min(100%,345px)}
+ .lany-art-play{width:min(100%,320px)}
+ .lany-title-shortcuts{margin-top:6px;gap:2px}
+ .lany-title-shortcuts .lany-button-word{font-size:clamp(.62rem,2.7vw,.79rem);top:79%}
+}
+@media(max-height:660px){
+ .lany-title-layout{padding-top:4px;padding-bottom:4px}
+ .lany-illustrated-logo img{max-height:clamp(85px,24dvh,155px)}
+ .lany-title-art-actions .lany-art-play{width:min(100%,320px)}
+ .lany-title-shortcuts{margin-top:2px}
+ .lany-title-shortcuts .lany-art-small{max-width:118px}
+ .lany-title-shortcuts .lany-button-word{font-size:clamp(.66rem,2.6vw,.85rem)}
+ .lany-title-art-actions .lany-version{font-size:.6rem}
+}
+@media(max-height:485px){
+ .lany-title-layout{padding:3px 8px}
+ .lany-title-top .lany-ribbon,.lany-title-top .lany-subtitle{display:none}
+ .lany-illustrated-logo img{max-height:24dvh}
+ .lany-art-play{width:min(100%,220px)!important}
+ .lany-title-shortcuts .lany-art-small{max-width:84px}
+ .lany-title-shortcuts{gap:2px;margin-top:0}
+ .lany-title-shortcuts .lany-button-word{font-size:.65rem}
+ .lany-title-art-actions .lany-version{display:none}
+}
+@media(prefers-reduced-motion:reduce){.lany-art-button,.lany-art-spark{transition:none!important;animation:none!important}.lany-art-spark{display:none!important}}
+
+/* Installed PWA has 2 quick shortcuts, never a blank install slot. */
+.lany-title-shortcuts:has(#lany-install-button[hidden]){grid-template-columns:repeat(2,minmax(0,1fr));width:min(76%,290px)}
+.lany-world-tab.active{background-image:url('../assets/buttons/skin-green.svg')!important;color:#fff!important;text-shadow:0 1px 3px #347345!important}
