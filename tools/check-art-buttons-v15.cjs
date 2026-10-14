@@ -8,7 +8,10 @@ for(const flag of ['illustratedTitleButtons','oneRowTitleShortcuts','titleMascot
 assert(m.start_url.includes('v=2.1.0'),'PWA install must launch the current release');
 for(const x of ['lany-title-shortcuts','id="lany-start-button"','id="lany-install-button"','logo.webp','play.webp','install.webp','help.webp','friends.webp','class="lany-art-button lany-art-small','lany-art-buttons.css?v=2.1.0','lany-art-buttons.js?v=2.1.0','aria-label="동물 친구 도감"'])assert(h.includes(x),x);
 assert.equal((h.match(/class="lany-art-button lany-art-small/g)||[]).length,3,'exactly three small buttons');
-for(const x of ['.lany-title-shortcuts{display:grid;grid-template-columns:repeat(3','grid-template-columns:repeat(2','.lany-art-play','skin-blue.svg','skin-green.svg','skin-gold.svg','skin-pink.svg',':focus-visible','@media(hover:hover)','prefers-reduced-motion', 'lany-pressed'])assert(css.includes(x),x);
+const bitmapCss=read('web/css/lany-ui-v21.css');
+for(const color of ['blue','green','gold','pink'])assert(bitmapCss.includes('skin-'+color+'.webp'),color+' latest picture skin');
+for(const color of ['blue','green','gold','pink'])assert(!css.includes('background-image:url(\'../assets/buttons/skin-'+color+'.svg\')!important'),color+' stale picture override');
+for(const x of ['.lany-title-shortcuts{display:grid;grid-template-columns:repeat(3','grid-template-columns:repeat(2','.lany-art-play',':focus-visible','@media(hover:hover)','prefers-reduced-motion', 'lany-pressed'])assert(css.includes(x),x);
 for(const x of ['pointerdown','pointerup','pointercancel','keydown','keyup','navigator.vibrate','lany-art-spark'])assert(js.includes(x),x);
 for(const file of ['skin-pink','skin-blue','skin-gold','skin-green']){
  const path='web/assets/buttons/'+file+'.svg',source=read(path);
