@@ -31,6 +31,12 @@ with sync_playwright() as pw:
    assert item['icon']!='none' and 'action-'+item['action']+'.svg' in item['icon'],(name,item)
    assert item['left']>=-2 and item['right']<=w+2,(name,'map button cropped',item)
    assert item['scroll']<=item['inner']+3,(name,'map button contents clipped',item)
+  # Every currently visible stage is rendered from state-specific candy-medallion art.
+  current=page.locator('#lany-map-levels .lany-level.current').first
+  assert current.count()==1,(name,'current stage')
+  assert 'stage-current.svg' in current.evaluate("e=>getComputedStyle(e).backgroundImage"),name
+  locked=page.locator('#lany-map-levels .lany-level:disabled').first
+  assert 'stage-locked.svg' in locked.evaluate("e=>getComputedStyle(e).backgroundImage"),name
   page.screenshot(path=str(out/(name+'-map.png')))
   page.locator('#lany-map-continue').click()
   assert page.locator('#lany-stage-prep').is_visible(),name
