@@ -119,6 +119,15 @@ with sync_playwright() as playwright:
         document.getElementById('overlay-lose').style.display=kind==='lose'?'flex':'none'}""",kind)
       page.wait_for_timeout(380)  # animated entry transforms should settle before geometry audit
       assert viewport_fit('#overlay-'+kind+' .modal'),(tag,kind,'result panel clipped')
+      # Check each actionable button, not only the outer card boundary.
+      buttons=page.locator('#overlay-'+kind+' .modal-btns button')
+      for i in range(buttons.count()):
+        fits=buttons.nth(i).evaluate("""e=>{
+          const r=e.getBoundingClientRect();
+          return r.width>48 && r.height>=35 && r.left>=-4 && r.right<=innerWidth+4 &&
+            r.top>=-4 && r.bottom<=innerHeight+4;
+        }""")
+        assert fits,(tag,kind,i,'all result buttons must fit the screen')
       # Visual-regression guard: the official game button cutouts must be visible.
       button_art={'win':{'next':'skin-green.webp','map':'skin-blue.webp','retry':'skin-gold.webp'},
                   'lose':{'retry':'skin-gold.webp','map':'skin-blue.webp'}}[kind]

@@ -157,3 +157,59 @@
   :is(.lany-dialog,.overlay .modal,.lany-map-bottom,.lany-game-nav,#lany-stage-prep)
     button[data-lany-art]{transition:none!important}
 }
+
+/* Screenshot QA: 320x440 winner had its third action below the viewport.
+   Use a compact 2-row grid only on very short devices; all actions stay tappable. */
+@media(max-height:500px){
+  #overlay-win .modal,#overlay-lose .modal{
+    box-sizing:border-box!important;
+    display:flex!important;flex-direction:column!important;align-items:stretch!important;
+    gap:3px!important;
+    padding:6px 9px 8px!important;
+    max-height:calc(100dvh - 12px)!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+  }
+  #overlay-win .modal:before,#overlay-lose .modal:before{
+    height:28px!important;width:45px!important;margin:0 auto!important;
+    flex:0 0 auto!important;
+  }
+  #overlay-win .modal h2,#overlay-lose .modal h2{
+    font-size:clamp(.82rem,3.5vw,1rem)!important;
+    padding:4px 6px!important;
+    margin:1px 0!important;
+    line-height:1.14!important;
+  }
+  #overlay-win .stars{min-height:20px!important;margin:0!important}
+  #overlay-win #win-msg,#overlay-lose #lose-msg{margin:0!important}
+  #overlay-win #win-score{margin:0!important;padding:2px!important}
+  #overlay-win .modal-btns,#overlay-lose .modal-btns{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:5px!important;
+    width:100%!important;
+    align-items:stretch!important;
+  }
+  #overlay-win .modal-btns button[data-lany-art],
+  #overlay-lose .modal-btns button[data-lany-art]{
+    box-sizing:border-box!important;
+    height:47px!important;min-height:47px!important;max-height:47px!important;
+    margin:0!important;
+    padding:5px 4px!important;
+    border:0!important;
+    line-height:1.13!important;
+    font-size:clamp(.76rem,3vw,.9rem)!important;
+    white-space:normal!important;
+    overflow:visible!important;
+  }
+  #overlay-win .modal-btns button[data-lany-art="next"]{grid-column:span 2}
+}
+/* Cream and pastel buttons need a genuinely dark readable foreground. */
+:is(#daily-modal,#mp-setup,#mp-share,#ng-level-editor) button:not([data-type]){
+  color:#25435c!important;
+  text-shadow:0 1px 0 #fff9ea!important;
+  -webkit-text-stroke:.2px #234157;
+}
+:is(#daily-modal,#mp-setup,#mp-share,#ng-level-editor) button:not([data-type]):disabled{
+  color:#655d64!important;
+}
