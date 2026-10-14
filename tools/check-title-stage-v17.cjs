@@ -22,13 +22,8 @@ for(const source of ['/','/index.html','/version.json','/sw.js']){
  assert(h&&h.headers.some(v=>v.key==='Cache-Control'&&v.value.includes('no-store')),source);
 }
 for(const value of ['lany-title-stage-v17.css?v=2.1.0','lany-update-v17.js?v=2.1.0','play.webp?v=2.1.0','lany-title-play-scene','lany-title-woodsign','id="lany-update-now"','id="lany-update-banner"','v2.1.0'])assert(html.includes(value),value);
-for(const value of ['title-forest-v17.svg','.lany-title-cast','.lany-title-woodsign','.lany-title-play-scene','prefers-reduced-motion','max-height:480px','.lany-title-shortcuts'])assert(css.includes(value),value);
-for(const name of ['title-forest-v17.svg','title-mascots-v17.svg']){
- const img=read('web/assets/title/'+name);
- assert(img.includes('<svg')&&img.includes('</svg>')&&img.length>2500,name);
- assert(!/<script|foreignObject/i.test(img),name);
- // Legacy SVG files remain for source provenance, but are no longer PWA-preloaded.
-}
+for(const value of ['lanypang-cover.webp','.lany-title-cast','.lany-title-woodsign','.lany-title-play-scene','prefers-reduced-motion','max-height:480px','.lany-title-shortcuts'])assert(css.includes(value),value);
+assert(fs.existsSync('web/assets/lanypang-cover.webp'),'Approved raster cover must exist');
 assert(sw.includes('lanypang-match-v2.1.0-ko'));
 assert(sw.includes('./js/lany-update-v17.js'));
 assert(sw.includes('./css/lany-title-stage-v17.css'));
@@ -36,4 +31,4 @@ assert(manifest.start_url.includes('v=2.1.0'));
 for(const mark of ['cache:\'no-store\'','response.json()','version.json?_fresh=','navigator.serviceWorker','window.location.replace','LanyUpdate','pageshow'])assert(js.includes(mark),mark);
 for(const mark of ['sc_unlocked','sc_best','sc_stars'])assert(html.includes(mark),'Preserve '+mark);
 new vm.Script(js);
-console.log(JSON.stringify({pass:true,version:version.version,previewAutoSync:true,rootNoCache:true,forestScene:true,titleCast:true,installedPwaUpgrade:true,saveKeysPreserved:true}));
+console.log(JSON.stringify({pass:true,version:version.version,previewAutoSync:true,rootNoCache:true,approvedCover:true,titleCast:true,installedPwaUpgrade:true,saveKeysPreserved:true}));
