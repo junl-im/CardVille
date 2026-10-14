@@ -283,18 +283,20 @@ body {
 .theme-galaxy  { --accent: #c084fc; }
 </style>
 <link rel="stylesheet" href="./project-overlay/project.css">
-<link rel="stylesheet" href="./css/lany-shell.css?v=0.9.1">
+<link rel="stylesheet" href="./css/lany-shell.css?v=1.0.0">
+<link rel="stylesheet" href="./css/lany-mobile-friends.css?v=1.0.0">
 </head>
 <body class="lany-at-title">
 <main id="lany-title" class="lany-title" role="main" aria-label="라니팡 시작 화면">
-  <img id="lany-cover-image" class="lany-cover" src="./assets/lanypang-cover.webp?v=0.9.1" alt="" fetchpriority="high" decoding="async" aria-hidden="true">
+  <img id="lany-cover-image" class="lany-cover" src="./assets/lanypang-cover.webp?v=1.0.0" alt="" fetchpriority="high" decoding="async" aria-hidden="true">
   <div class="lany-title-scrim" aria-hidden="true"></div>
   <div class="lany-title-layout">
     <div class="lany-title-top"><span class="lany-ribbon">반짝반짝 사탕마을에 오신 걸 환영해요</span><h1 class="lany-logo">라니<span>팡!</span></h1><p class="lany-subtitle">쓱 밀고, 팡! 터지는 퍼즐 세상</p></div>
     <div class="lany-title-bottom"><button id="lany-start-button" class="lany-cta" type="button">▶ 게임 시작</button>
       <button class="lany-secondary" type="button" onclick="LanyShell.openHelp()">❔ 게임 방법</button>
       <button class="lany-secondary" type="button" onclick="LanyShell.toggleFullscreen()">⛶ 전체 화면</button>
-      <div class="lany-version">라니팡 v0.9.1 · 250단계 · 한국어 전용</div></div>
+      <button class="lany-secondary" type="button" onclick="LanyFriends.open()">🐰 동물 친구들</button>
+      <div class="lany-version">라니팡 v1.0.0 · 250단계 · 한국어 전용</div></div>
   </div>
 </main>
 <!-- 라니팡 월드맵: 단계 선택은 지도에서, 실제 보드는 준비창에서만 생성합니다. -->
@@ -324,6 +326,11 @@ body {
   <button id="lany-prep-play" class="lany-cta lany-prep-play" type="button" onclick="LanyShell.playPrepared()">▶ 이 단계 시작</button>
   <button class="lany-secondary lany-prep-cancel" type="button" onclick="LanyShell.openMap()">← 지도 돌아가기</button>
  </div>
+</section>
+<section id="lany-friends-modal" class="lany-modal-wrap lany-friends-screen" role="dialog" aria-modal="true" aria-labelledby="lany-friends-heading" hidden>
+ <div class="lany-friends-panel"><header class="lany-friends-heading"><div><span class="lany-friends-kicker">🍬 라니팡 사탕마을</span><h2 id="lany-friends-heading">동물 친구 도감</h2><p>머리만 쏙! 귀여운 동물 친구 30종을 만나 보세요.</p></div><button class="lany-friends-close" type="button" onclick="LanyFriends.close()" aria-label="도감 닫기">×</button></header>
+ <div id="lany-friends-grid" class="lany-friends-grid" aria-label="동물 친구 30종 목록"></div>
+ <footer><span>⭐ 기본 퍼즐 친구 7종 · 전체 30종</span><button type="button" class="lany-action" onclick="LanyFriends.close()">닫기</button></footer></div>
 </section>
 <section id="lany-pause" class="lany-modal-wrap" role="dialog" aria-modal="true" aria-labelledby="lany-pause-title" hidden>
  <div class="lany-dialog"><div class="lany-dialog-emoji">🐰</div><h2 id="lany-pause-title">잠시 쉬어 갈까요?</h2><p>진행한 단계 기록은 이 기기에 저장돼요.</p>
@@ -372,7 +379,8 @@ body {
     <div id="board" aria-label="드래그로 블록을 교환하는 퍼즐판"></div>
   </div>
 
-  <nav class="lany-game-nav" aria-label="게임 화면 이동"><button id="lany-quick-map" class="lany-game-map-button" type="button" onclick="LanyShell.openMap()">🗺️ 모험 지도 열기</button><button id="lany-quick-pause" class="lany-game-pause-button" type="button" onclick="LanyShell.openPause()">⏸ 잠시 쉬기</button></nav>
+  <nav class="lany-game-nav" aria-label="게임 화면 이동"><button id="lany-quick-map" class="lany-game-map-button" type="button" onclick="LanyShell.openMap()">🗺️ 모험 지도</button>
+  <button class="lany-game-friends-button" type="button" onclick="LanyFriends.open()">🐰 동물 친구</button><button id="lany-quick-pause" class="lany-game-pause-button" type="button" onclick="LanyShell.openPause()">⏸ 쉬기</button></nav>
   <div class="cv-controls-hint" role="note">👆 블록을 누른 채 옆으로 밀어 보세요. 우클릭은 사용할 수 없습니다.</div>
   <div class="moves-bar" id="moves-bar"></div>
 
@@ -523,6 +531,9 @@ function snd_tick() { playTone(220,'sine',0.04,0.1); }
 // ═══════════════════════════════════════════════════════════════
 
 const GEMS = ['🍭','🍬','🍦','🧁','🍰','🎂','🍫'];
+// 7가지 게임 보석은 동일한 동물 친구 얼굴로 표시하며, 기존 퍼즐 판정 데이터는 변경하지 않습니다.
+const LANY_FACE_IDS=['rabbit','bear','chick','puppy','cat','fox','wolf'];
+const LANY_FACE_KO=['토끼','곰','병아리','강아지','고양이','여우','늑대'];
 const SPECIAL_NONE=0, SPECIAL_BOMB=1, SPECIAL_STRIPE_H=2, SPECIAL_STRIPE_V=3, SPECIAL_WRAP=4, SPECIAL_COLOR=5;
 const COLS = 8, ROWS = 8;
 
@@ -878,8 +889,14 @@ function renderBoard() {
     const div=document.createElement('div');
     div.className='cell';
     div.dataset.r=r; div.dataset.c=c;
-    div.textContent=state.board[idx]||'';
     const gemKind=GEMS.indexOf(state.board[idx]);
+    if(gemKind>=0){
+      const face=document.createElement('img');face.className='lany-animal-face';
+      face.src='./assets/friends/'+LANY_FACE_IDS[gemKind]+'.webp';
+      face.alt=LANY_FACE_KO[gemKind];face.draggable=false;face.decoding='async';
+      div.setAttribute('aria-label',LANY_FACE_KO[gemKind]+' 블록');div.appendChild(face);
+    } else {div.textContent=state.board[idx]||'';}
+
     if(gemKind>=0) div.classList.add('gem-'+gemKind);
 
     const bgs=[
@@ -1405,7 +1422,8 @@ function startBgMusic() {
 </div>
 <script defer src="./js/cardville-balance.js"></script>
 <script defer src="./project-overlay/project.js"></script>
-<script defer src="./js/lany-tempo.js?v=0.9.1"></script>
-<script defer src="./js/lany-shell.js?v=0.9.1"></script>
+<script defer src="./js/lany-friends.js?v=1.0.0"></script>
+<script defer src="./js/lany-tempo.js?v=1.0.0"></script>
+<script defer src="./js/lany-shell.js?v=1.0.0"></script>
 </body>
 </html>

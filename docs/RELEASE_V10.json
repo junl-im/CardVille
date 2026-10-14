@@ -1,0 +1,16 @@
+{
+  "project": "라니팡",
+  "release": "1.0.0-beta",
+  "base_commit": "cc565f6b79ea321992a61acb7f4ea5ed48a8ed51",
+  "animalFriends": 30,
+  "tileCharacters": 7,
+  "viewportTests": [
+    "320x568",
+    "360x780",
+    "390x844",
+    "430x932",
+    "1366x768"
+  ],
+  "license": "New original generated image characters; original MIT game code remains licensed under included LICENSE",
+  "existingProgressPreserved": true
+}

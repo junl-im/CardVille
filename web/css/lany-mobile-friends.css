@@ -1,0 +1,90 @@
+/* 라니팡 v1.0 — 동물 얼굴 퍼즐 및 작은 휴대전화 팝업 접근성 */
+:root{--lany-safe-top:env(safe-area-inset-top,0px);--lany-safe-bottom:env(safe-area-inset-bottom,0px)}
+.lany-animal-face{display:block;width:96%;height:96%;object-fit:contain;object-position:center;pointer-events:none;user-select:none;-webkit-user-drag:none;filter:drop-shadow(0 2px 2px rgba(56,34,72,.2))}
+#board .cell{overflow:visible;font-size:0!important;padding:1px;display:flex;align-items:center;justify-content:center}
+#board .cell .lany-animal-face{border-radius:38%;max-width:100%;max-height:100%}
+#board .cell.locked::after,#board .cell.bomb-gem::after,#board .cell.stripe-gem::after,#board .cell.wrap-gem::after{z-index:2}
+/* Screen-height-aware board: keep game objectives, remaining time and board visible together. */
+#board-wrap{max-width:min(500px,calc(100vw - 16px),calc(100dvh - 264px));margin-inline:auto}
+#board{width:100%;height:auto;aspect-ratio:1;max-width:100%}
+#app>.header{margin-bottom:5px}
+#app>.level-info{padding:7px 11px;gap:4px;margin-bottom:5px}
+#app>.lany-clock{margin-bottom:5px;padding:5px 9px}
+.moves-bar{margin:6px auto;max-width:min(480px,calc(100vw - 26px));width:100%;display:flex;flex-wrap:nowrap;gap:2px;overflow:hidden}
+.moves-bar .move-dot{flex:1;min-width:0;height:6px;border-radius:20px}
+.boosters{gap:clamp(4px,1.7vw,9px);margin-top:5px}.booster{width:clamp(45px,13vw,61px);height:clamp(45px,13vw,61px);flex-shrink:0}
+.cv-controls-hint{margin:5px auto 1px;font-size:.72rem}
+.lany-game-nav{margin-top:6px;flex-wrap:wrap}
+.lany-game-nav button{min-height:46px}
+.lany-game-friends-button{flex:1 0 100%;background:linear-gradient(180deg,#e9dbff,#bfa4ff)}
+/* All primary dialogs fit within safe-area viewport, scroll internally if needed. */
+.overlay,.lany-modal-wrap,#daily-modal,#level-editor-modal,#difficulty-modal,#multiplayer-setup-modal,#multiplayer-share-modal{
+ box-sizing:border-box;padding:calc(8px + var(--lany-safe-top)) 10px calc(8px + var(--lany-safe-bottom))!important;
+ overscroll-behavior:contain;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;
+ align-items:safe center;justify-content:center;
+}
+.overlay .modal,.lany-dialog,.lany-prep-card,.lany-friends-panel{
+ box-sizing:border-box;max-width:min(94vw,430px);width:100%;max-height:calc(100dvh - 18px - var(--lany-safe-top) - var(--lany-safe-bottom));
+ overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+}
+.overlay .modal{padding:clamp(11px,3.5vw,26px) clamp(12px,4vw,26px);border-radius:24px;margin:auto}
+.overlay .modal h2{font-size:clamp(1.3rem,5.5vw,1.85rem);line-height:1.2}
+.overlay .modal p{font-size:clamp(.82rem,3.8vw,.96rem);line-height:1.65}
+.overlay .modal button,.lany-dialog button{min-height:44px}
+.lany-prep-card{max-height:calc(100dvh - 20px - var(--lany-safe-top) - var(--lany-safe-bottom));padding:clamp(11px,3.5vw,22px);gap:clamp(6px,1.5vh,13px)}
+.lany-prep-card .lany-prep-hero{font-size:clamp(1.5rem,4vh,2.8rem);margin-top:0}
+.lany-prep-card .lany-cta{min-height:52px;font-size:1.1rem}
+.lany-map-panel{height:100dvh;max-height:100dvh}
+.lany-map-bottom{padding-bottom:max(8px, var(--lany-safe-bottom))}
+/* Animal friend collection */
+.lany-friends-screen{z-index:27000}
+.lany-friends-panel{max-width:560px;background:linear-gradient(#fffefb,#fff0f7);color:#653a65;border:4px solid #ffdf9d;border-radius:24px;box-shadow:0 12px 40px #23092d8a;display:flex;flex-direction:column;overflow:hidden}
+.lany-friends-heading{display:flex;align-items:flex-start;justify-content:space-between;padding:15px 14px 8px;gap:8px;flex:0 0 auto}
+.lany-friends-heading h2{font-size:clamp(1.15rem,5vw,1.65rem);color:#a33578}
+.lany-friends-heading p{color:#8c6384;font-size:.78rem;line-height:1.4;margin-top:5px}
+.lany-friends-kicker{font-size:.72rem;font-weight:900;color:#d86495}
+.lany-friends-close{border:0;background:#f15b98;border-radius:50%;font-size:1.4rem;color:white;width:44px;height:44px;min-width:44px;min-height:44px;cursor:pointer}
+.lany-friends-grid{overflow:auto;min-height:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:7px 12px 12px}
+.lany-friend-card{min-width:0;background:#fff9f3;border:2px solid #f7d9e5;border-radius:16px;display:flex;align-items:center;flex-direction:column;padding:6px 4px;color:#725273;font-weight:850;font-size:.85rem}
+.lany-friend-card img{width:clamp(65px,21vw,110px);aspect-ratio:1;object-fit:contain;pointer-events:none;display:block}
+.lany-friend-card.main-friend{border-color:#ffc36c;background:#fff7e3}
+.lany-friends-panel footer{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px 13px;box-shadow:0 -3px 9px #dbc3cd55;font-size:.72rem;font-weight:850;flex:0 0 auto}
+.lany-friends-panel footer .lany-action{min-height:42px;font-size:.95rem;padding:4px 14px;box-shadow:none}
+/* Dynamic feature modals: some upstream scripts inject inline styles. */
+#daily-modal>div,#level-editor-modal>div,#difficulty-modal>div,#multiplayer-setup-modal>div,#multiplayer-share-modal>div{
+ box-sizing:border-box!important;max-width:min(96vw,470px)!important;max-height:calc(100dvh - 30px - var(--lany-safe-top) - var(--lany-safe-bottom))!important;overflow-y:auto!important;overflow-x:hidden!important;margin:auto!important;
+}
+#daily-modal button,#level-editor-modal button,#difficulty-modal button,#multiplayer-setup-modal button,#multiplayer-share-modal button{min-height:42px}
+#game-mode-bar{max-width:calc(100vw - 18px)!important}
+@media(max-width:375px){
+ #app{padding-left:5px;padding-right:5px}
+ .header{padding:6px 7px!important;gap:4px!important}
+ .header .logo{font-size:.86rem}
+ .hud{gap:4px!important}
+ .header .hud-box .hud-val{font-size:.83rem}
+ .header .hud-box .hud-lbl{font-size:.55rem}
+ .header .hud button{font-size:.68rem!important;padding:5px!important;min-height:35px}
+ .lany-map-head{padding-left:9px;padding-right:9px}
+ .lany-world-tabs{padding:5px 10px;gap:5px}
+ .lany-world-tab{width:62px;min-height:53px}
+ .lany-map-summary{padding:6px 10px}
+ .lany-prep-card{max-width:96vw}
+}
+@media(max-height:660px){
+ #board-wrap{max-width:min(450px,calc(100vw - 18px),calc(100dvh - 235px))}
+ #app>.header{padding-top:5px;padding-bottom:5px}
+ #app>.level-info{padding:5px 9px}
+ .lany-clock-track{height:8px}
+ .lany-dialog{padding:12px;gap:6px}
+ .lany-dialog-emoji{font-size:2.2rem}
+ .lany-dialog h2{font-size:1.25rem}
+ .lany-prep-hero{display:none}
+ .lany-stage-stats>div{padding:7px 4px;gap:2px}
+}
+@media(max-width:350px){.lany-friends-grid{gap:5px;padding:5px}.lany-friend-card{font-size:.72rem;padding:3px}.lany-friend-card img{width:90%}}
+@media(prefers-reduced-motion:reduce){.lany-animal-face{transition:none!important}}
+
+/* Put game navigation on one reachable row on narrow screens. */
+.lany-game-nav{flex-wrap:nowrap;gap:5px;margin-top:5px}
+.lany-game-nav button,.lany-game-nav .lany-game-friends-button,.lany-game-nav .lany-game-pause-button{flex:1 1 0;min-width:0;min-height:43px;max-width:none;padding:5px 2px;font-size:clamp(.72rem,2.8vw,.95rem)}
+@media(max-width:350px){.lany-game-nav button,.lany-game-nav .lany-game-friends-button{font-size:.7rem}}
