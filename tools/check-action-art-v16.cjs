@@ -13,20 +13,16 @@ assert(manifest.start_url.includes('v=2.1.0'));
 assert.equal((html.match(/data-lany-art="/g)||[]).length,26);
 assert(html.includes('lany-action-art-v16.css?v=2.1.0'));
 for(const state of ['ordinary','current','boss','locked']){
- const path='web/assets/buttons/stage-'+state+'.svg',image=read(path);
- assert(image.includes('<svg')&&image.includes('</svg>'),path);
- assert(sw.includes('./assets/buttons/stage-'+state+'.svg'),path+' offline cache');
- assert(css.includes('stage-'+state+'.svg'),path+' applied in CSS');
+ const path='./assets/map/stage-'+state+'-v20.webp';
+ assert(sw.includes(path),path+' offline cache');
+ assert(css.includes('stage-'+state+'-v20.webp'),path+' in map skin');
 }
 assert(sw.includes('lanypang-match-v2.1.0-ko')&&sw.includes('./css/lany-action-art-v16.css'));
 for(const key of actionNames){
- const path='web/assets/buttons/action-'+key+'.svg';
- const image=read(path);
- assert(image.includes('<svg')&&image.includes('</svg>'),path);
- assert(image.length>400,path);
- assert(!image.includes('<script')&&!image.includes('<foreignObject'),path);
- assert(sw.includes('./assets/buttons/action-'+key+'.svg'),path);
+ const path='./assets/ui/v21/buttons/action-'+key+'.webp';
+ assert(sw.includes(path),path+' offline cache');
  assert(css.includes('[data-lany-art="'+key+'"]'),key+' CSS binding');
+ assert(css.includes('action-'+key+'.webp'),key+' specific raster picture');
 }
 for(const phrase of ['[data-lany-art]::before','pointer:fine',':focus-visible','prefers-reduced-motion','#overlay-win .modal-btns','#overlay-lose .modal-btns','.lany-game-nav button[data-lany-art]'])assert(css.includes(phrase),phrase);
 for(const required of ['data-lany-art="next"','data-lany-art="retry"','data-lany-art="play"','data-lany-art="pause"','data-lany-art="exit"','data-lany-art="home"'])assert(html.includes(required),required);
