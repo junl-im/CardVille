@@ -1,10 +1,10 @@
 {
-  "release": "2.0.0-beta",
+  "release": "2.1.0-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "253e609aa23db255f942ec72a73b779bda5a54e6",
-  "requestedFor": "라니팡 v2.0 PWA 캐시 무한 누적 방지, 오프라인 동물 30종, WebP 지도 메달 4종과 10지역 색상, 게임 플레이에서만 시계 구동, 모바일 프레임 안정화",
+  "sourceCommit": "18c43c0c5b3ac9a07950808c816ec76bc079808e",
+  "requestedFor": "라니팡 v2.1 승인 원본 디자인 시트 WebP 버튼 3종, 51개 독립 게임 UI WebP, 지도·HUD·결과·도감·PWA 이미지 버튼, 검은 고양이 설치 아이콘, 모바일 320px 정렬 및 PWA 설치 숨김 수정",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true
 }
