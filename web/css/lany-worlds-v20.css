@@ -22,7 +22,7 @@
   text-shadow:0 2px 0 #fffcdd,0 0 5px #fff;
 }
 /* Each region keeps the same original illustrated map WebP underneath:
-   world palette changes, not a mismatched or generated SVG landscape. */
+   world palette changes, not a mismatched or generated legacy vector landscape. */
 .lany-map-levels{
   --world-tint:linear-gradient(155deg,rgba(255,249,225,.12),rgba(253,156,194,.11));
   background-image:var(--world-tint),url('../assets/polish/world-map.webp')!important;
