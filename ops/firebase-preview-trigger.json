@@ -1,6 +1,6 @@
 {
-  "version": "2.1.0-beta",
-  "request": "라니팡 v2.1 화면 전체 전용 WebP UI 키트: 타이틀·버튼·HUD·부스터·지도·팝업; 원본 동물 WebP 화풍 유지",
+  "version": "2.2.0-beta",
+  "request": "라니팡 v2.2 재사용 WebP UI 키트: 타이틀·숫자·결과 별·배경·프레임·패턴",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,

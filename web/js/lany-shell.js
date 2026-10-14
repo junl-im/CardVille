@@ -72,10 +72,8 @@
    const grid=$('lany-map-levels');grid.replaceChildren();
    grid.dataset.world=String(n);grid.dataset.page=String(nav.mapPage);
    grid.style.setProperty('--lany-map-rows',String(Math.ceil((end-start)/3)));
-   const route=document.createElementNS('http://www.w3.org/2000/svg','svg');
-   route.setAttribute('class','lany-route');route.setAttribute('aria-hidden','true');
-   const routePath=document.createElementNS('http://www.w3.org/2000/svg','path');
-   routePath.setAttribute('class','lany-route-ink');route.appendChild(routePath);grid.appendChild(route);
+   const route=document.createElement('canvas');
+   route.className='lany-route';route.setAttribute('aria-hidden','true');grid.appendChild(route);
    const nodes=[],renderId=++mapRenderId;
    for(let offset=start;offset<end;offset++){
      const i=n*25+offset+1,enabled=unlocked.has(i),boss=LEVELS[i-1].isBoss,index=offset-start;
@@ -94,11 +92,15 @@
      if(nav.screen!=='map'||nav.world!==n||renderId!==mapRenderId)return;
      const width=grid.clientWidth,height=grid.clientHeight;
      if(!width||!height)return;
-     route.setAttribute('viewBox',`0 0 ${width} ${height}`);
-     routePath.setAttribute('d',nodes.map((el,i)=>{
-       const p=[el.offsetLeft+el.offsetWidth/2,el.offsetTop+el.offsetHeight/2];
-       return (i?'L ':'M ')+p[0]+' '+p[1];
-     }).join(' '));
+     const ratio=Math.min(window.devicePixelRatio||1,2);
+     route.width=Math.round(width*ratio);route.height=Math.round(height*ratio);
+     const ink=route.getContext('2d');ink.scale(ratio,ratio);
+     ink.beginPath();nodes.forEach((el,i)=>{
+       const x=el.offsetLeft+el.offsetWidth/2,y=el.offsetTop+el.offsetHeight/2;
+       if(i)ink.lineTo(x,y);else ink.moveTo(x,y);
+     });
+     ink.strokeStyle='#fff6bb';ink.lineWidth=13;ink.lineCap='round';ink.lineJoin='round';
+     ink.setLineDash([4,14]);ink.shadowColor='rgba(74,48,69,.4)';ink.shadowBlur=4;ink.shadowOffsetY=4;ink.stroke();
    });
    $('lany-map-tip').textContent=last<n*25+1?'🔒 이 지역은 아직 잠겨 있어요. 앞 지역의 단계를 완료해 주세요.':'✨ 숫자를 선택해 도전하세요. ◀ ▶ 버튼으로 같은 지역의 다음 구간을 넘길 수 있어요.';
  }
@@ -123,7 +125,8 @@
    $('lany-title').hidden=true;document.body.classList.remove('lany-at-title');$('lany-stage-prep').hidden=false;
    const lv=LEVELS[n-1];$('lany-prep-region').textContent=`제${nav.world+1}지역 · ${lv.theme}`;
    $('lany-prep-heading').textContent=`${n}단계 준비`;$('lany-prep-subtitle').textContent=lv.name;
-   $('lany-prep-goal').textContent=lv.goal.toLocaleString()+'점';$('lany-prep-moves').textContent=lv.moves+'회';
+   window.LanyNumbers22?.renderScoreNumber('lany-prep-goal',lv.goal,'점');
+   window.LanyNumbers22?.renderMovesNumber('lany-prep-moves',lv.moves,'회');
    $('lany-prep-locks').textContent=lv.lockedCount?'🔒 잠금 블록 '+lv.lockedCount+'개':'🔓 잠금 블록 없음';
    const best=state.bestScores[n]||0;
    $('lany-prep-record').textContent=best?`⭐ 최고 점수 ${best.toLocaleString()}점`:'⭐ 최고 기록 없음';

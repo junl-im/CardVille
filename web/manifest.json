@@ -2,7 +2,7 @@
   "name": "라니팡 — 사탕마을 퍼즐 여행",
   "short_name": "라니팡",
   "description": "아기자기한 250단계 한국어 드래그 퍼즐",
-  "start_url": "./?v=2.1.0&source=pwa",
+  "start_url": "./?v=2.2.0&source=pwa",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#79cbeb",
@@ -30,18 +30,6 @@
       "src": "./assets/lanypang-maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "./assets/lanypang-brand.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
-    {
-      "src": "./assets/lanypang-maskable.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
       "purpose": "maskable"
     }
   ],

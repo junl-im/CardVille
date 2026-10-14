@@ -48,6 +48,7 @@ jobs:
           node tools/check-longplay-v19.cjs
           node tools/check-v20-cache-map.cjs
           node tools/check-ui-v21.cjs
+          node tools/check-ui-v22.cjs
           node tools/check-tempo.cjs
           node tools/check-firebase-preview.cjs
           # Both JSON configurations are parsed by the preflight checks above.
@@ -67,15 +68,15 @@ jobs:
         run: node tools/check-iam-identity.cjs
       - name: Render matching favicon, home-screen and maskable app icons
         run: |
-          python -m pip install --quiet CairoSVG==2.7.1
+          python -m pip install --quiet Pillow==11.3.0
           python tools/build-pwa-icons.py
           sudo apt-get update -qq
           sudo apt-get install -y -qq fonts-noto-cjk
-          python -m pip install --quiet Pillow==11.3.0
           python tools/build-visual-v18.py
           node tools/check-visual-perf-v18.cjs --raster
           node tools/check-v20-cache-map.cjs --raster
           node tools/check-ui-v21.cjs --raster
+          node tools/check-ui-v22.cjs --raster
           node tools/check-pwa-v14.cjs --raster
       - name: Deploy to isolated preview channel (NOT live)
         id: firebase_preview
@@ -107,7 +108,7 @@ jobs:
           expected_version="$(node -p "require('./web/version.json').version")"
           echo "Expected preview version: $expected_version"
           for attempt in 1 2 3 4 5; do
-            if curl --fail --silent --show-error --location --max-time 20 "$PREVIEW_URL" -o /tmp/cardville-preview.html && grep -Fq '<html lang="ko">' /tmp/cardville-preview.html && grep -Fq 'lany-title-stage-v17.css?v=2.1.0' /tmp/cardville-preview.html && grep -Fq 'lany-raster-v18.css?v=2.1.0' /tmp/cardville-preview.html && grep -Fq 'lany-result-v19.css?v=2.1.0' /tmp/cardville-preview.html && grep -Fq 'lany-worlds-v20.css?v=2.1.0' /tmp/cardville-preview.html && grep -Fq 'lany-ui-v21.css?v=2.1.0' /tmp/cardville-preview.html && grep -Fq 'lany-perf-v19.js?v=2.1.0' /tmp/cardville-preview.html && grep -Fq 'ui/v21/title/play.webp?v=2.1.0' /tmp/cardville-preview.html && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/assets/ui/v21/title/install.webp" -o /tmp/lany-install-v21.webp && test $(wc -c </tmp/lany-install-v21.webp) -ge 1000 && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/assets/map/stage-current-v20.webp" -o /tmp/lany-map-current-v20.webp && test "$(wc -c </tmp/lany-map-current-v20.webp)" -gt 700 && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/version.json" -o /tmp/lany-preview-version.json && node -e "const fs=require('fs');const v=JSON.parse(fs.readFileSync('/tmp/lany-preview-version.json','utf8'));if(v.version!==process.argv[1])process.exit(1)" "$expected_version" && grep -Fq '라니팡!' /tmp/cardville-preview.html && grep -Fq 'id="lany-cover-image"' /tmp/cardville-preview.html && grep -Fq 'id="lany-clock"' /tmp/cardville-preview.html && grep -Fq 'id="lany-map-levels"' /tmp/cardville-preview.html && grep -Fq 'id="lany-quick-map"' /tmp/cardville-preview.html && grep -Fq "name:'사탕 골짜기 · 반짝이는 첫걸음'" /tmp/cardville-preview.html && grep -Fq 'const LEVELS' /tmp/cardville-preview.html && grep -Fq 'id="lany-world-map"' /tmp/cardville-preview.html && grep -Fq 'id="lany-stage-prep"' /tmp/cardville-preview.html && grep -Fq 'id="lany-friends-modal"' /tmp/cardville-preview.html && grep -Fq 'lany-mobile-friends.css' /tmp/cardville-preview.html && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/assets/lanypang-cover.webp" -o /tmp/lanypang-cover.webp && test $(wc -c </tmp/lanypang-cover.webp) -ge 15000 && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/js/lany-tempo.js" | grep -Fq "LanyTempo" && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/js/lany-shell.js" | grep -Fq "document.querySelector('.lany-map-section')" && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/js/lany-polish.js" | grep -Fq 'LanyPolish' && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/css/lany-polish.css" | grep -Fq 'lany-popup-mascot' && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/assets/polish/rabbit-wink.webp" -o /tmp/lany-rabbit-wink.webp && test $(wc -c </tmp/lany-rabbit-wink.webp) -ge 1000; then
+            if curl --fail --silent --show-error --location --max-time 20 "$PREVIEW_URL" -o /tmp/cardville-preview.html && grep -Fq '<html lang="ko">' /tmp/cardville-preview.html && grep -Fq 'lany-title-stage-v17.css?v=2.2.0' /tmp/cardville-preview.html && grep -Fq 'lany-raster-v18.css?v=2.2.0' /tmp/cardville-preview.html && grep -Fq 'lany-result-v19.css?v=2.2.0' /tmp/cardville-preview.html && grep -Fq 'lany-worlds-v20.css?v=2.2.0' /tmp/cardville-preview.html && grep -Fq 'lany-ui-v21.css?v=2.2.0' /tmp/cardville-preview.html && grep -Fq 'lany-perf-v19.js?v=2.2.0' /tmp/cardville-preview.html && grep -Fq 'ui/v22/buttons/btn-start.webp?v=2.2.0' /tmp/cardville-preview.html && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/assets/ui/v21/title/install.webp" -o /tmp/lany-install-v21.webp && test $(wc -c </tmp/lany-install-v21.webp) -ge 1000 && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/assets/map/stage-current-v20.webp" -o /tmp/lany-map-current-v20.webp && test "$(wc -c </tmp/lany-map-current-v20.webp)" -gt 700 && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/version.json" -o /tmp/lany-preview-version.json && node -e "const fs=require('fs');const v=JSON.parse(fs.readFileSync('/tmp/lany-preview-version.json','utf8'));if(v.version!==process.argv[1])process.exit(1)" "$expected_version" && grep -Fq '라니팡!' /tmp/cardville-preview.html && grep -Fq 'id="lany-cover-image"' /tmp/cardville-preview.html && grep -Fq 'id="lany-clock"' /tmp/cardville-preview.html && grep -Fq 'id="lany-map-levels"' /tmp/cardville-preview.html && grep -Fq 'id="lany-quick-map"' /tmp/cardville-preview.html && grep -Fq "name:'사탕 골짜기 · 반짝이는 첫걸음'" /tmp/cardville-preview.html && grep -Fq 'const LEVELS' /tmp/cardville-preview.html && grep -Fq 'id="lany-world-map"' /tmp/cardville-preview.html && grep -Fq 'id="lany-stage-prep"' /tmp/cardville-preview.html && grep -Fq 'id="lany-friends-modal"' /tmp/cardville-preview.html && grep -Fq 'lany-mobile-friends.css' /tmp/cardville-preview.html && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/assets/lanypang-cover.webp" -o /tmp/lanypang-cover.webp && test $(wc -c </tmp/lanypang-cover.webp) -ge 15000 && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/js/lany-tempo.js" | grep -Fq "LanyTempo" && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/js/lany-shell.js" | grep -Fq "document.querySelector('.lany-map-section')" && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/js/lany-polish.js" | grep -Fq 'LanyPolish' && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/css/lany-polish.css" | grep -Fq 'lany-popup-mascot' && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/assets/polish/rabbit-wink.webp" -o /tmp/lany-rabbit-wink.webp && test $(wc -c </tmp/lany-rabbit-wink.webp) -ge 1000; then
               echo 'Preview HTTP smoke test: PASS'
               exit 0
             fi
@@ -115,3 +116,4 @@ jobs:
           done
           echo 'Preview deployment completed but web smoke test did not pass' >&2
           exit 1
+
