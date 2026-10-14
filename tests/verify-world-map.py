@@ -30,15 +30,15 @@ for device,width,height in [('mobile',390,844),('desktop',1366,768)]:
   page.locator('#lany-start-button').click()
   assert page.locator('#lany-world-map').is_visible(),'Start should show map'
   assert page.locator('#board .cell').count()==0,'No board before prep'
-  assert page.locator('#lany-world-tabs button').count()==10
-  assert page.locator('#lany-map-levels button').count()==25
-  assert page.locator('#lany-map-levels button:disabled').count()==24
+  assert page.locator('#lany-world-tabs button').count()==(3 if width<500 else 4 if width<850 else 5)
+  assert page.locator('#lany-map-levels button').count()==(3 if height<470 else 6 if height<650 else 9 if height<900 else 12)
+  assert page.locator('#lany-map-levels button:disabled').count()==page.locator('#lany-map-levels button').count()-1
   assert page.locator('#lany-map-levels button:not([disabled])').count()==1
   page.screenshot(path=str(root/'docs'/f'v08_{device}_map.png'))
   page.locator('#lany-map-levels button:not([disabled])').first.click()
   assert page.locator('#lany-stage-prep').is_visible()
   assert '1단계' in page.locator('#lany-prep-heading').inner_text()
-  assert '400점' in page.locator('#lany-prep-goal').inner_text()
+  assert '650점' in page.locator('#lany-prep-goal').inner_text()
   assert page.locator('#board .cell').count()==0
   page.screenshot(path=str(root/'docs'/f'v08_{device}_prepare.png'))
   # prep back and phone back open map, not app exit
@@ -81,7 +81,8 @@ for device,width,height in [('mobile',390,844),('desktop',1366,768)]:
   page.evaluate("state.unlockedLevels=[...Array(250)].map((_,i)=>i+1);state.levelStars[1]=3;state.bestScores[1]=800;localStorage.setItem('sc_unlocked',JSON.stringify(state.unlockedLevels))")
   page.evaluate('LanyShell.openMap(9)')
   assert '수정 동굴' in page.locator('#lany-world-title').inner_text()
-  assert page.locator('#lany-map-levels button:not([disabled])').count()==25
+  page.evaluate('LanyShell.mapPage(999)')
+  assert page.locator('#lany-map-next').is_disabled()
   page.locator('#lany-map-levels button').last.click()
   assert page.locator('#lany-stage-prep').is_visible()
   assert '250단계' in page.locator('#lany-prep-heading').inner_text()
