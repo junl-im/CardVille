@@ -22,25 +22,28 @@
 /* Keep original approved world-map as a graceful fallback and offline-safe layer.
    Only three themes have suitable candidate art; other seven retain v2.2 art. */
 .lany-map-section .lany-map-levels[data-world="0"]{
-  background-image:linear-gradient(180deg,#fff9ef0e,#fff9ef39),
-    url('../assets/v23/regions/world-01.webp'),
+  /* Keep the illustration at natural landscape proportions; fade to the approved map. */
+  background-image:url('../assets/v23/regions/world-01.webp'),
     url('../assets/polish/world-map.webp')!important;
-  background-position:center,center,center!important;
-  background-size:cover,cover,cover!important;
+  background-position:center top,center center!important;
+  background-size:100% auto,cover!important;
+  background-repeat:no-repeat,no-repeat!important;
 }
 .lany-map-section .lany-map-levels[data-world="2"]{
-  background-image:linear-gradient(180deg,#fff9ef1b,#fff9ef4a),
-    url('../assets/v23/regions/world-03.webp'),
+  /* Keep the illustration at natural landscape proportions; fade to the approved map. */
+  background-image:url('../assets/v23/regions/world-03.webp'),
     url('../assets/polish/world-map.webp')!important;
-  background-position:center,center,center!important;
-  background-size:cover,cover,cover!important;
+  background-position:center top,center center!important;
+  background-size:100% auto,cover!important;
+  background-repeat:no-repeat,no-repeat!important;
 }
 .lany-map-section .lany-map-levels[data-world="4"]{
-  background-image:linear-gradient(180deg,#fff9ef11,#fff9ef4c),
-    url('../assets/v23/regions/world-05.webp'),
+  /* Keep the illustration at natural landscape proportions; fade to the approved map. */
+  background-image:url('../assets/v23/regions/world-05.webp'),
     url('../assets/polish/world-map.webp')!important;
-  background-position:center,center,center!important;
-  background-size:cover,cover,cover!important;
+  background-position:center top,center center!important;
+  background-size:100% auto,cover!important;
+  background-repeat:no-repeat,no-repeat!important;
 }
 /* All headings and supporting text must remain readable against cream artwork. */
 :is(.lany-world-banner,.lany-prep-card,.lany-dialog,.lany-friends-panel,

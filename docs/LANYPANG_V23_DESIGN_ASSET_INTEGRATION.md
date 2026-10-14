@@ -2,7 +2,7 @@
 
 ## 원본 보존
 - 2026-10-15 신규 PNG 원본 3종, 슬라이스 후보 35종, 생산용 WebP 10종을 별도 보존.
-- Google Drive 원본과 manifest: https://drive.google.com/file/d/1yYnLBqN5hJcn8_DZ79KUP6U53WOhdIGE/view
+- Google Drive 원본과 manifest: https://drive.google.com/file/d/1504xX74fWi6L5udg8Gj7ugxNAZJBxOcs/view
 - 기존 v2.1 승인 이미지, 250단계, 월드 이름, 저장 키, 입력 로직 변경 금지. Figma 필요 없음.
 
 ## 적용 범위
@@ -17,3 +17,8 @@
 - 10종 WebP 실재/형식, 신규 CSS, 지도 fallback, 원래 지역 10개, 오프라인 정적 리소스 검증.
 - 기존 Chromium 4뷰포트 전체창 스크린샷 QA 이후 육안 재점검. Android Samsung Internet 설치 및 업데이트 실기기 체크 필요.
 - 통과 전 PR Draft 유지.
+
+## 육안 QA 후 화질 조정
+- 기존 2×5 지도 원본의 1개 컷은 약 700×200px이므로 전체 모바일 지도에 cover로 확대하면 배경 흐림이 발생함.
+- 실사용 컷은 텍스트/테두리를 제외한 투명 하단 페이드 WebP로 다시 추출하고, 새 지역 풍경을 지도 상단의 원래 가로세로 비율(100% auto)로만 표시함. 나머지 지도 부분은 기존 승인된 world-map.webp 사용.
+- 10개 월드 전체를 별도 고해상도 배경으로 교체하는 작업은 아직 완료되지 않았으며, 후보 시트는 원본 ZIP으로 보관. 화면상 선명도 검증 없이 확대 적용하지 않음.
