@@ -1,0 +1,196 @@
+{
+  "release": "1.1.0-beta",
+  "origin": "User-approved, newly generated original LanyPang sheets 2026-10-14",
+  "files": [
+    {
+      "file": "assets/polish/bear-cheer.webp",
+      "bytes": 10756,
+      "sha256": "07293d0e0c90ade0753a93d3911b06d8305a74e59d28cfb084bc8852efa8c593"
+    },
+    {
+      "file": "assets/polish/bear-normal.webp",
+      "bytes": 4618,
+      "sha256": "fb395342aae4b254b4d89eedd042d604af85c519532097f6a7c478ee3c868c02"
+    },
+    {
+      "file": "assets/polish/bear-surprise.webp",
+      "bytes": 9220,
+      "sha256": "b13816923b340dde09f1c242d54d58844f52c2296a93a59af04565b55c373ff7"
+    },
+    {
+      "file": "assets/polish/bear-wink.webp",
+      "bytes": 9470,
+      "sha256": "886f779641f6f85a8b0dc9c5a57792c349e0b13dfe14126ab2611159d70c5001"
+    },
+    {
+      "file": "assets/polish/burst-heart.webp",
+      "bytes": 26678,
+      "sha256": "af22abc1ee32924f282df0f2db24b61db162c4928299c6f8a62bc05acb3d6c1f"
+    },
+    {
+      "file": "assets/polish/burst-star.webp",
+      "bytes": 23642,
+      "sha256": "2c5b236f328fa5ae4d14f9773abaab5805ef9f081c212dc2eb1feea40a9a5317"
+    },
+    {
+      "file": "assets/polish/cat-cheer.webp",
+      "bytes": 7672,
+      "sha256": "ccdfd56026c511bf175012b2e4b1fa3d396d29db1f969d6d2e3b437a4b131656"
+    },
+    {
+      "file": "assets/polish/cat-normal.webp",
+      "bytes": 4008,
+      "sha256": "9a2f6d6a4cfe236d7f11bed6a7dfa31ce4b743105acacd5351d1e6c3ed61d5b0"
+    },
+    {
+      "file": "assets/polish/cat-surprise.webp",
+      "bytes": 7004,
+      "sha256": "7a5d6fdf5f1b52efdfaebb97c7247f3d7ac060549ae704d02f9230bdddc568e4"
+    },
+    {
+      "file": "assets/polish/cat-wink.webp",
+      "bytes": 7190,
+      "sha256": "4a00550e49c29c80db2c03942253abd0859d008f708103ecafe30a12168cf182"
+    },
+    {
+      "file": "assets/polish/chick-cheer.webp",
+      "bytes": 9300,
+      "sha256": "f53872e19330648bdccfb636875162983eda01fbd5e618e26b311b988433bbf6"
+    },
+    {
+      "file": "assets/polish/chick-normal.webp",
+      "bytes": 3974,
+      "sha256": "07b07b0a5f14c63521b8edc37f26d1df5106e1cd7d1cc801810ebced5a809036"
+    },
+    {
+      "file": "assets/polish/chick-surprise.webp",
+      "bytes": 7326,
+      "sha256": "19979a5ed3591d48aae21dc6c4ea884594081ad3ba69e844784f8cb127b6e6c3"
+    },
+    {
+      "file": "assets/polish/chick-wink.webp",
+      "bytes": 8188,
+      "sha256": "e122f7e7d2e40151c3af1a795944530fec18170edb28380b0e64a3588724dd60"
+    },
+    {
+      "file": "assets/polish/combo.webp",
+      "bytes": 30700,
+      "sha256": "fa130c1c0732e1b43b9374df783417a83279e4df4406b069f4c8a7a16f5cf7fe"
+    },
+    {
+      "file": "assets/polish/fox-cheer.webp",
+      "bytes": 9606,
+      "sha256": "d0bf752d118b1e7b3dae4af3cda2268f63a778d9854c4a0d1d8b8879cd3fb24b"
+    },
+    {
+      "file": "assets/polish/fox-normal.webp",
+      "bytes": 5016,
+      "sha256": "845fb8557f1d40286dd38a4e70d0aca726b8b9336239954c257a345ce25eaf5e"
+    },
+    {
+      "file": "assets/polish/fox-surprise.webp",
+      "bytes": 8294,
+      "sha256": "1f7ee820c774ca1fc2559306b8f64bf855c1be1f87de84422fe478a4c9435501"
+    },
+    {
+      "file": "assets/polish/fox-wink.webp",
+      "bytes": 9230,
+      "sha256": "29c7628e6b692d79e6ded746574eb5fb9c63f6d7f3c23709ae4eb5ea3706c5a8"
+    },
+    {
+      "file": "assets/polish/game-meadow.webp",
+      "bytes": 85322,
+      "sha256": "2b9d015aca122b79157a59825c30b568063826a03936af79a1ee10ebc0a44438"
+    },
+    {
+      "file": "assets/polish/panda-cheer.webp",
+      "bytes": 7336,
+      "sha256": "0b0ed40ee4241261b59585da7c1d36b77ee3ad2c8ad8c4809264e5de5b88671c"
+    },
+    {
+      "file": "assets/polish/panda-normal.webp",
+      "bytes": 4494,
+      "sha256": "1a8954d8d97a000b33655a93278d45a7264e915deca42b7dd07a33e8870aee0b"
+    },
+    {
+      "file": "assets/polish/panda-surprise.webp",
+      "bytes": 6062,
+      "sha256": "7470468dc271dbdfbafa071baa44ff46bc01dca765d1303daed86f2bdd1f3209"
+    },
+    {
+      "file": "assets/polish/panda-wink.webp",
+      "bytes": 8196,
+      "sha256": "2caf747a2ca7dcc024e39d75a6349eb944760664dd406433018a8d452604fe7d"
+    },
+    {
+      "file": "assets/polish/puppy-cheer.webp",
+      "bytes": 9598,
+      "sha256": "800eac9cd4d30b04cc2321b3463e45ffeaf47c52ee6bf9a70e9a96bc7e7ece5a"
+    },
+    {
+      "file": "assets/polish/puppy-normal.webp",
+      "bytes": 4416,
+      "sha256": "f192c69a35da7948872a431e2ab73c9374d6f5f2d3c3d9941886eb01ec74119c"
+    },
+    {
+      "file": "assets/polish/puppy-surprise.webp",
+      "bytes": 8072,
+      "sha256": "91598999ed658cdc952e6af7a79151a0b407591455535e5a1687683d52dd9b25"
+    },
+    {
+      "file": "assets/polish/puppy-wink.webp",
+      "bytes": 9842,
+      "sha256": "8430af980be312931d17fe07b35ee4d4d0b136e8ce86e4822813a8827bf08769"
+    },
+    {
+      "file": "assets/polish/rabbit-cheer.webp",
+      "bytes": 11416,
+      "sha256": "7e7f7e0c3b3a48a93d5855a82112b39621adab21729165f4b641e72541ffec0f"
+    },
+    {
+      "file": "assets/polish/rabbit-normal.webp",
+      "bytes": 4190,
+      "sha256": "a0af113655b8a0b069058b93bc1aa885d935a2eedb162355e86d055e46976209"
+    },
+    {
+      "file": "assets/polish/rabbit-surprise.webp",
+      "bytes": 9570,
+      "sha256": "1df23ed20a6c9dbdbd2e81ddee2dea8f1fe6b71f8d07a64b1b8e2362494b721b"
+    },
+    {
+      "file": "assets/polish/rabbit-wink.webp",
+      "bytes": 12422,
+      "sha256": "274ea69706f13b7c5c788f7b41d7d11ba3180da80b3360b6101758eaa0d8c931"
+    },
+    {
+      "file": "assets/polish/rainbow.webp",
+      "bytes": 22080,
+      "sha256": "71bb09a3c74b3927280bdbae70aefee4ed8d711be118e14c76421942c880cec6"
+    },
+    {
+      "file": "assets/polish/wolf-cheer.webp",
+      "bytes": 7166,
+      "sha256": "1e0a9db176a051f7e86e5be58c569db83b7560ffc1864cbce1fb487720403a6f"
+    },
+    {
+      "file": "assets/polish/wolf-normal.webp",
+      "bytes": 4240,
+      "sha256": "55c0ec434fa8ba7181a495463fbb2e8a0b8e252e25ebc2177874d8026b8b51f9"
+    },
+    {
+      "file": "assets/polish/wolf-surprise.webp",
+      "bytes": 8154,
+      "sha256": "5a983a09ddd806e5e4cfa06527cc56e89b58c571a421f3a8cbd0d5e4ff85496e"
+    },
+    {
+      "file": "assets/polish/wolf-wink.webp",
+      "bytes": 8656,
+      "sha256": "791b559d7a242ba2ddfd055298549886b0f90469d54d6482ebddcf561e28ba47"
+    },
+    {
+      "file": "assets/polish/world-map.webp",
+      "bytes": 150722,
+      "sha256": "0b766c4b17cba7c03078b223892ac201fe5f97ab30ff5f88ffd77d350ad552e1"
+    }
+  ]
+}

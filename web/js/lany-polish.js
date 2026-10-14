@@ -1,0 +1,42 @@
+/* v1.1: approved artwork in actual puzzle interactions; zero persistent changes. */
+(()=>{'use strict';
+const variants=['normal','wink','cheer','surprise'];
+const root='./assets/polish/';let layer;
+const reduced=()=>window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+const getLayer=()=>{if(!layer){layer=document.createElement('div');layer.className='lany-vfx-layer';layer.setAttribute('aria-hidden','true');document.body.appendChild(layer)}return layer};
+const face=(el,variant)=>{
+  if(!el)return;const img=el.querySelector('.lany-animal-face');if(!img)return;
+  const name=(img.dataset.lanyOriginal||img.src).split('/').pop().split('.')[0];
+  if(!['rabbit','bear','chick','puppy','fox','cat','wolf','panda'].includes(name))return;
+  const key=variants.includes(variant)?variant:'normal';
+  if(key==='normal'){if(img.dataset.lanyOriginal){img.src=img.dataset.lanyOriginal;delete img.dataset.lanyOriginal;}return;}
+  if(!img.dataset.lanyOriginal)img.dataset.lanyOriginal=img.src;
+  img.src=root+name+'-'+key+'.webp';
+};
+function burst(rect,type='burst-star'){
+  if(reduced()||!rect||!document.body)return;
+  const v=document.createElement('img');v.className='lany-vfx-pop';v.src=root+type+'.webp';v.alt='';v.draggable=false;
+  v.style.left=(rect.left+rect.width/2)+'px';v.style.top=(rect.top+rect.height/2)+'px';
+  getLayer().appendChild(v);setTimeout(()=>v.remove(),650);
+}
+let pressed=null;
+function down(e){if(e.button!==0)return;const tile=e.target.closest?.('#board .cell');
+ if(tile&&!tile.classList.contains('locked')){pressed=tile;tile.classList.add('lany-tap');face(tile,'wink');return;}
+ const button=e.target.closest?.('button,.booster');if(!button||button.disabled)return;
+ button.classList.add('lany-tactile-down');setTimeout(()=>button.classList.remove('lany-tactile-down'),220);
+}
+function up(){if(pressed){const old=pressed;pressed=null;old.classList.remove('lany-tap');if(!old.classList.contains('matched'))face(old,'normal');}}
+function onMatch(indices){const cells=[];
+  for(const idx of indices){let el=document.querySelector(`#board .cell[data-r="${Math.floor(idx/8)}"][data-c="${idx%8}"]`);if(el)cells.push(el)}
+  cells.forEach((el,i)=>{el.classList.add('lany-match-pop');face(el,i%3===0?'cheer':'wink')});
+  if(cells.length){const a=cells[Math.floor(cells.length/2)];burst(a.getBoundingClientRect(),cells.length>=5?'burst-star':'burst-heart')}
+}
+function promoteDialog(){document.querySelectorAll('#lany-pause .lany-dialog-emoji,#lany-exit .lany-dialog-emoji').forEach((el,i)=>{
+ if(el.querySelector('img'))return;
+ el.textContent='';const img=document.createElement('img');img.className='lany-popup-mascot';img.src=root+(i===0?'rabbit-wink.webp':'bear-surprise.webp');img.alt='';img.draggable=false;el.append(img)
+ });}
+function dialog(type){promoteDialog();const sel=type==='win'?'#overlay-win .modal':'#overlay-lose .modal';const el=document.querySelector(sel);if(el)burst(el.getBoundingClientRect(),type==='win'?'burst-star':'burst-heart');}
+function init(){promoteDialog();document.addEventListener('pointerdown',down,{capture:true,passive:true});document.addEventListener('pointerup',up,{capture:true,passive:true});document.addEventListener('pointercancel',up,{capture:true,passive:true});}
+window.LanyPolish={onMatch,dialog,burst,face};
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();

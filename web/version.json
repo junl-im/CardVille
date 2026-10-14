@@ -1,6 +1,6 @@
 {
   "name": "라니팡",
-  "version": "1.0.1-beta",
+  "version": "1.1.0-beta",
   "stageCount": 250,
   "language": "ko",
   "build": "2026-10-14",
@@ -16,5 +16,10 @@
   "stickyMapAction": true,
   "animalFriends": 30,
   "animalTiles": 7,
-  "mobilePopupFit": true
+  "mobilePopupFit": true,
+  "visualRelease": "1.1.0",
+  "approvedOriginalAssets": true,
+  "expressionVariants": 4,
+  "newPopupButtons": true,
+  "newBackgrounds": true
 }

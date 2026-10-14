@@ -1,0 +1,82 @@
+/* 라니팡 v1.1 실제 플레이 화면 — 오리지널 IP 젤리 UI, 팝업, 반응형 아트. */
+:root{--lany-cream:#fff9ee;--lany-rose:#ff4d96;--lany-green:#53d94d;--lany-cocoa:#733956;--lany-cardedge:#ffc9dd}
+body:not(.lany-at-title){background:linear-gradient(180deg,rgba(255,244,252,.76),rgba(233,190,244,.48)),url('../assets/polish/game-meadow.webp') center top/cover fixed; color:#773b64}
+body:not(.lany-at-title) #app{background:linear-gradient(180deg,rgba(255,249,252,.18),rgba(255,222,237,.23));}
+#app>.header{color:#783a61;border:3px solid #fff2cd;border-radius:24px;background:linear-gradient(180deg,#fffdf4,#ffe6ef)!important;box-shadow:0 5px 0 #eaa2bd,0 12px 22px #a9548c44;backdrop-filter:blur(4px)}
+#app>.header .hud-val{color:#d93d80;text-shadow:0 1px 0 #fff}
+#app>.header .hud-lbl{color:#9c6e89;opacity:1}
+#app>.header .logo{background:none;-webkit-text-fill-color:#ff4da4;color:#ff4da4;-webkit-text-stroke:.8px #fff;text-shadow:0 2px 0 #bf598b}
+#app>.level-info{background:linear-gradient(#fffdf4,#fff3dd);border:3px solid #fff1ca;box-shadow:0 4px 0 #eaa5ae;border-radius:20px;color:#744061}
+#app .level-info .level-title{color:#d64893}
+#app .level-info .level-goal,#app .level-info #score-label,#app .level-info #moves-label{color:#8d5a77!important}
+#app .progress-bar{background:#f8cee2}
+#app .progress-fill{background:linear-gradient(90deg,#ff66b4,#ffdb4a)}
+#board{background:linear-gradient(145deg,#ffb9dd,#e7bcff 42%,#b786d3)!important;border:4px solid #fff2df!important;box-shadow:0 6px 0 #c66ea1,0 10px 25px #805b8d66,inset 0 0 0 3px #fda4c4;border-radius:27px}
+#board .cell{border:1px solid #fff5ee55;border-radius:13px;background:linear-gradient(150deg,#7a52a2b8,#4a2f75c9)!important;box-shadow:inset 0 2px 3px #fff1,inset 0 -2px 4px #2f155b4d}
+#board .cell:not(.locked):hover{filter:brightness(1.08)}
+#board .cell .lany-animal-face{width:98%;height:98%;object-fit:contain;filter:drop-shadow(0 2px 2px #381f4d77);pointer-events:none;transition:transform .12s ease}
+#board .cell.lany-tap .lany-animal-face{transform:scale(.82,.92) translateY(4px)}
+#board .cell.lany-match-pop .lany-animal-face{animation:lanyFaceCelebrate .33s ease-out both}
+#board .cell.cv-dragging .lany-animal-face{transform:scale(1.08) rotate(-5deg)}
+@keyframes lanyFaceCelebrate{0%{transform:scale(1)}45%{transform:scale(1.17) rotate(8deg)}100%{transform:scale(.78)}}
+#board .cell.selected{box-shadow:inset 0 0 0 3px #fff7ac,0 0 15px #ffec9c}
+.lany-game-nav{background:#fff5efbd;border:2px solid #fff;border-radius:20px;padding:7px;max-width:500px;width:100%;box-shadow:0 4px 0 #e4a3c6}
+.lany-game-nav button{color:#fff!important;text-shadow:0 2px 1px #7e426c!important;border:2px solid #fff9d6!important;border-radius:16px!important;background:linear-gradient(180deg,#ffa2ce 0%,#fb4b99 58%,#e82f87 100%)!important;box-shadow:0 4px 0 #bf4a87!important}
+.lany-game-nav .lany-game-map-button{background:linear-gradient(#82d6ff,#248ddc)!important;box-shadow:0 4px 0 #2377b6!important}
+.lany-game-nav .lany-game-pause-button{background:linear-gradient(#9af38c,#38c355)!important;box-shadow:0 4px 0 #2a9c45!important}
+.cv-controls-hint{color:#94567b!important;text-shadow:0 1px 0 #fff;background:#fff9e9c7;border-radius:9px;padding:6px}
+.boosters{border-radius:20px;background:#fff0f7a6;padding:7px 4px;max-width:500px;width:100%}
+.booster{border:2px solid #fff6d9!important;background:linear-gradient(#fffdf1,#ffdfef)!important;box-shadow:0 4px 0 #dba0c7,0 7px 10px #75376c38!important;color:#ba487f!important;border-radius:16px!important}
+.booster span{color:#81476c!important;text-shadow:none!important}
+/* Real text/button hit areas, never image-only button sheets with fake lettering. */
+.lany-cta,.lany-action,.lany-secondary,.overlay .btn,.cv-secondary-btn,#game-mode-bar button,.lany-game-nav button,.lany-back,.lany-map-icon,.booster{touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:transform 115ms ease,filter 115ms ease,box-shadow 115ms ease;cursor:pointer}
+.lany-cta,.lany-action,.overlay .btn.btn-primary{color:#fff!important;background:linear-gradient(180deg,#c0f884 0%,#62df43 35%,#22bb46 100%)!important;border:3px solid #faffd9!important;border-radius:22px;box-shadow:0 5px 0 #278d36,0 9px 14px #4a8d4355!important;text-shadow:0 2px 2px #27813d!important;font-weight:950}
+.lany-action.pale,.overlay .btn:not(.btn-primary):not(.btn-gold){background:linear-gradient(#9fe6ff,#349edf)!important;color:#fff!important;border:2px solid #f8feff!important;box-shadow:0 4px 0 #297cbe!important;text-shadow:0 1px 2px #28699b!important}
+.lany-action.quiet,.overlay .btn.btn-gold{background:linear-gradient(#ffaccc,#ff4d9b)!important;color:#fff!important;border-color:#fff0df!important;box-shadow:0 4px 0 #ba4485!important}
+.lany-secondary{color:#aa457c!important;background:linear-gradient(#fffdf6,#ffe1ee)!important;border:2px solid #fff!important;box-shadow:0 4px 0 #e7a1c0!important;text-shadow:none!important}
+.lany-cta:active,.lany-action:active,.lany-secondary:active,.overlay .btn:active,.cv-secondary-btn:active,#game-mode-bar button:active,.lany-game-nav button:active,.booster:active,.lany-tactile-down{transform:translateY(3px) scale(.965)!important;filter:brightness(1.07);box-shadow:0 1px 0 #ad6796!important}
+:where(button,.booster):focus-visible{outline:3px solid #42a7ec!important;outline-offset:3px!important}
+:where(button,.booster):disabled{filter:grayscale(.7);opacity:.6;cursor:not-allowed}
+/* Fully usable mobile popups, decorative ribbon but live HTML content. */
+.overlay,.lany-modal-wrap{background:rgba(75,26,84,.66)!important;backdrop-filter:blur(5px)}
+.overlay .modal,.lany-dialog,.lany-prep-card,.lany-friends-panel{background:linear-gradient(180deg,#fffef4,#fff2ec 56%,#ffe3f0)!important;border:5px solid #ffd9af!important;box-shadow:inset 0 0 0 3px white,0 7px 0 #d76f9f,0 18px 28px #813d7555!important;border-radius:30px!important;color:#78415b!important}
+.overlay .modal h2,.lany-dialog h2,.lany-prep-card h2,.lany-friends-heading h2{background:linear-gradient(#ffa5d1,#f94991 75%,#e83181);color:#fff!important;text-shadow:0 2px 2px #a92e75!important;border:3px solid #fff0da;border-radius:99px;padding:9px 16px;box-shadow:0 4px 0 #cf598b;font-weight:1000!important;line-height:1.2}
+.overlay .modal p,.lany-dialog p{color:#84576c!important}
+.overlay .modal-btns{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.overlay .modal-btns .btn{min-height:48px;flex:1 1 125px}
+.lany-dialog-emoji{font-size:0;display:flex;justify-content:center;align-items:center;min-height:91px;line-height:1}
+.lany-popup-mascot{width:116px;height:91px;object-fit:contain;filter:drop-shadow(0 5px 5px #f073b666);animation:lanyPopMascot .4s cubic-bezier(.25,1.4,.4,1) both}
+@keyframes lanyPopMascot{0%{transform:scale(.3) rotate(-18deg);opacity:0}65%{transform:scale(1.13) rotate(4deg)}100%{transform:scale(1);opacity:1}}
+#overlay-win .modal:before,#overlay-lose .modal:before{content:'';display:block;width:110px;height:92px;margin:0 auto 5px;background:url('../assets/polish/rabbit-cheer.webp') center/contain no-repeat;animation:lanyPopMascot .4s both}
+#overlay-lose .modal:before{background-image:url('../assets/polish/bear-surprise.webp')}
+.lany-prep-hero{font-size:0!important;min-height:88px;background:url('../assets/polish/rabbit-wink.webp') center/contain no-repeat}
+.lany-prep-hero span{display:none}
+.lany-map-levels{background-image:linear-gradient(160deg,#ffffff88,#ffdced57),url('../assets/polish/world-map.webp')!important;background-size:cover!important;background-position:center center!important}
+.lany-map-panel{background:linear-gradient(#fff7ec,#ffe2f0)!important}
+.lany-map-head{background:linear-gradient(#e2f8ff,#ffe9f4)!important}
+.lany-friends-panel .lany-friend-card{background:linear-gradient(#fffefa,#ffecf4)!important}
+.lany-vfx-layer{position:fixed;inset:0;z-index:29000;pointer-events:none;overflow:hidden;contain:layout style paint}
+.lany-vfx-pop{position:absolute;object-fit:contain;transform:translate(-50%,-50%);width:clamp(72px,21vw,150px);animation:lanyBurst .57s ease-out forwards}
+@keyframes lanyBurst{0%{opacity:0;transform:translate(-50%,-50%) scale(.3) rotate(-12deg)}35%{opacity:1;transform:translate(-50%,-50%) scale(1.25) rotate(7deg)}100%{opacity:0;transform:translate(-50%,-77%) scale(1.65) rotate(12deg)}}
+/* Protect the 320px short viewport: popups scroll internally, never clip CTA. */
+@media(max-width:520px){
+ .overlay .modal,.lany-dialog,.lany-prep-card{max-width:min(95vw,430px)!important;max-height:calc(100dvh - 20px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;overflow-y:auto!important;padding:clamp(9px,3vw,18px)!important}
+ .overlay .modal h2,.lany-dialog h2,.lany-prep-card h2{font-size:clamp(1.05rem,4.5vw,1.35rem)!important}
+ .lany-dialog{gap:8px!important}
+ #app>.header{padding:7px 8px!important}
+ .lany-game-nav button{font-size:clamp(.7rem,2.8vw,.91rem)}
+ .lany-title-bottom{gap:7px}
+ .lany-vfx-pop{width:93px}
+}
+@media(max-height:600px){.lany-dialog-emoji{min-height:50px}.lany-popup-mascot{height:50px;width:75px}.overlay .modal:before{height:50px!important}.lany-prep-hero{min-height:48px}}
+@media(prefers-reduced-motion:reduce){.lany-vfx-layer{display:none}.lany-popup-mascot,.lany-vfx-pop,#board .cell .lany-animal-face{animation:none!important;transition:none!important}}
+/* v1.1 mobile HUD audit: do not compress Korean labels into illegibility. */
+@media(max-width:520px){
+ #app>.header{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:7px!important;padding:8px 10px!important}
+ #app>.header .logo{text-align:center;font-size:1.18rem!important;line-height:1.25}
+ #app>.header .hud{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:5px!important;width:100%;align-items:center}
+ #app>.header .hud-box{grid-column:span 2;min-width:0}
+ #app>.header .hud-val{font-size:1rem!important}
+ #app>.header .hud-lbl{font-size:.65rem!important;letter-spacing:0}
+ #app>.header .hud button{grid-column:span 2;min-width:0;min-height:39px;font-size:.84rem!important;padding:6px 3px!important;white-space:nowrap}
+}
