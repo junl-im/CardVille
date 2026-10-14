@@ -34,6 +34,7 @@ jobs:
           node tools/check-action-art-v16.cjs
           node tools/check-title-stage-v17.cjs
           node tools/check-visual-perf-v18.cjs
+          node tools/check-longplay-v19.cjs
 
   browser-pages:
     needs: regression
@@ -67,15 +68,17 @@ jobs:
           python tests/verify-action-art-v16.py
           python tests/verify-title-stage-v17.py
           python tests/verify-v18-perf.py
+          python tests/verify-longplay-v19.py
       - name: Preserve comparison screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: lanypang-v18-raster-and-40-game-soak
+          name: lanypang-v19-actual-gameplay-performance
           path: |
             docs/paging-v13/*.png
             docs/art-buttons-v15/*.png
             docs/action-art-v16/*.png
             docs/title-stage-v17/*.png
             docs/v18-perf/*.png
+            docs/longplay-v19/*.png
           if-no-files-found: ignore
