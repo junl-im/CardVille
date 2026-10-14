@@ -453,3 +453,31 @@
    padding:3px 9px!important;font-size:.87rem!important;
  }
 }
+
+
+/* Raster artwork regression found by reviewing the complete 390px screenshot.
+   A legacy .overlay .btn:not(...) background shorthand erased the WebP skin
+   on the victory's map/replay actions. Enforce each approved button asset. */
+#overlay-win .modal button[data-lany-art="next"]{
+ background:var(--cv-skin-green) center/100% 100% no-repeat!important;
+}
+#overlay-win .modal button[data-lany-art="map"],
+#overlay-lose .modal button[data-lany-art="map"]{
+ background:var(--cv-skin-blue) center/100% 100% no-repeat!important;
+}
+#overlay-win .modal button[data-lany-art="retry"],
+#overlay-lose .modal button[data-lany-art="retry"]{
+ background:var(--cv-skin-gold) center/100% 100% no-repeat!important;
+}
+#overlay-tutorial .modal button[data-lany-art="play"]{
+ background:var(--cv-skin-green) center/100% 100% no-repeat!important;
+}
+#overlay-win .modal button[data-lany-art],
+#overlay-lose .modal button[data-lany-art]{
+ border:0!important;border-radius:27px!important;
+ color:#fff9e4!important;box-shadow:none!important;
+ text-shadow:0 2px 2px #88557a!important;
+}
+#overlay-win .modal:after,#overlay-lose .modal:after{
+ content:none!important;display:none!important;
+}
