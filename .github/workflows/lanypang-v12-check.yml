@@ -30,6 +30,7 @@ jobs:
           node tools/check-gameplay-v12.cjs
           node tools/check-pages-v13.cjs
           node tools/check-pwa-v14.cjs
+          node tools/check-art-buttons-v15.cjs
 
   browser-pages:
     needs: regression
@@ -54,10 +55,13 @@ jobs:
           sleep 2
           python tests/verify-paging-v13.py
           python tests/verify-pwa-v14.py
+          python tests/verify-art-buttons-v15.py
       - name: Preserve comparison screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: lanypang-v13-paging-screenshots
-          path: docs/paging-v13/*.png
+          name: lanypang-v15-illustrated-title-screenshots
+          path: |
+            docs/paging-v13/*.png
+            docs/art-buttons-v15/*.png
           if-no-files-found: ignore
