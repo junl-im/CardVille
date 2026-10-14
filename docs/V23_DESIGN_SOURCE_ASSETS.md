@@ -46,3 +46,10 @@
 - 전체 원본 ZIP: https://drive.google.com/file/d/1ihGv6HohBBVJDUUdwBFqmMXKaeFIWmcI/view
 
 - 실측 320×440 QA 이미지에서 동물 도감 하단 닫기 버튼의 세로 글자 꺾임을 발견해 최소 너비, 줄바꿈 금지, 중복 장식 아이콘 제거를 적용했다.
+
+## 개별 버튼 이미지 적용 (스프라이트 우선순위 충돌 보정)
+
+- 모바일 전체 화면 스크린샷에서 스프라이트 배경이 여러 아이콘을 한 버튼에 표시하는 결함을 확인했다. 한 이미지의 백그라운드 위치 이동 방식은 폐기하고 실제 개별 WebP 버튼 7종을 분리해서 연결했다.
+- web/assets/v23/buttons/ 폴더의 back,help,close,prev,next,settings,music.webp 자산을 확보하고 오프라인 프리캐시했다. 현재 적용된 버튼은 뒤로, 도움말, 닫기, 이전/다음이며 설정·음악 그림은 향후 접근성 검수 후 사용한다.
+- 기존 utility-atlas.webp는 화면 참조에서는 제외했으나 보존한다.
+- Google Drive 개별 컷 7개 ZIP: https://drive.google.com/file/d/1vcwxAk-Z_KY9Wo7aEIxBTSFMjTr5egSN/view

@@ -323,48 +323,54 @@
  background-repeat:no-repeat,no-repeat!important;
 }
 
-/* v2.3 source-board utility cutouts: 7 accessible icon-only raster buttons.
-   The native <button> nodes and aria-labels remain unchanged. */
-:root{--lp23-utility-icons:url('../assets/v23/buttons/utility-atlas.webp')}
-.lany-map-head .lany-back,.lany-prep-card .lany-prep-back,
-.lany-map-head .lany-map-icon:not(.lany-mobile-fullscreen),
-#lany-install-modal .lany-install-close,.lany-friends-panel .lany-friends-close,
-#lany-world-prev,#lany-world-next{
-  background-image:var(--lp23-utility-icons)!important;
-  background-size:400% 200%!important;
-  background-repeat:no-repeat!important;
-  border:0!important;box-shadow:none!important;
-  color:transparent!important;text-shadow:none!important;
-  font-size:0!important;line-height:0!important;
-  padding:0!important;
+
+/* Individually sliced v2.3 UI controls. The original sprite background was
+   distorted by inherited background-size; use isolated assets instead. */
+#lany-world-map .lany-map-head button.lany-back,
+#lany-stage-prep .lany-prep-card button.lany-prep-back{
+ background-image:url('../assets/v23/buttons/back.webp')!important;
 }
-.lany-map-head .lany-back,.lany-prep-card .lany-prep-back{
- background-position:0% 0%!important;
+#lany-world-map .lany-map-head button.lany-map-icon:not(.lany-mobile-fullscreen){
+ background-image:url('../assets/v23/buttons/help.webp')!important;
 }
-.lany-map-head .lany-map-icon:not(.lany-mobile-fullscreen){
- background-position:33.333% 0%!important;
+#lany-install-modal .lany-install-card button.lany-install-close,
+#lany-friends-modal .lany-friends-panel button.lany-friends-close{
+ background-image:url('../assets/v23/buttons/close.webp')!important;
 }
-#lany-install-modal .lany-install-close,.lany-friends-panel .lany-friends-close{
- background-position:66.666% 0%!important;
+.lany-world-switcher #lany-world-prev{
+ background-image:url('../assets/v23/buttons/prev.webp')!important;
 }
-#lany-world-prev{background-position:100% 0%!important}
-/* Earlier v2.2 rule .lany-world-switcher #lany-world-next has stronger specificity. */
 .lany-world-switcher #lany-world-next{
- background-image:var(--lp23-utility-icons)!important;
- background-size:400% 200%!important;
- background-position:0% 100%!important;
- background-repeat:no-repeat!important;
+ background-image:url('../assets/v23/buttons/next.webp')!important;
 }
-:is(.lany-map-head .lany-back,.lany-prep-card .lany-prep-back,
-    .lany-map-head .lany-map-icon:not(.lany-mobile-fullscreen),
-    #lany-install-modal .lany-install-close,.lany-friends-panel .lany-friends-close,
-    #lany-world-prev,#lany-world-next):not(:disabled):active{
+:is(#lany-world-map .lany-map-head button.lany-back,
+    #lany-stage-prep .lany-prep-card button.lany-prep-back,
+    #lany-world-map .lany-map-head button.lany-map-icon:not(.lany-mobile-fullscreen),
+    #lany-install-modal .lany-install-card button.lany-install-close,
+    #lany-friends-modal .lany-friends-panel button.lany-friends-close,
+    .lany-world-switcher #lany-world-prev,.lany-world-switcher #lany-world-next){
+ background-color:transparent!important;
+ background-repeat:no-repeat!important;
+ background-position:center!important;
+ background-size:100% 100%!important;
+ border:0!important;box-shadow:none!important;
+ color:transparent!important;text-shadow:none!important;
+ font-size:0!important;line-height:0!important;padding:0!important;
+}
+:is(#lany-world-map .lany-map-head button.lany-back,
+    #lany-stage-prep .lany-prep-card button.lany-prep-back,
+    #lany-world-map .lany-map-head button.lany-map-icon:not(.lany-mobile-fullscreen),
+    #lany-install-modal .lany-install-card button.lany-install-close,
+    #lany-friends-modal .lany-friends-panel button.lany-friends-close,
+    .lany-world-switcher #lany-world-prev,.lany-world-switcher #lany-world-next):not(:disabled):active{
  transform:translateY(2px) scale(.94)!important;filter:brightness(.94)!important;
 }
-:is(.lany-map-head .lany-back,.lany-prep-card .lany-prep-back,
-    .lany-map-head .lany-map-icon:not(.lany-mobile-fullscreen),
-    #lany-install-modal .lany-install-close,.lany-friends-panel .lany-friends-close,
-    #lany-world-prev,#lany-world-next):focus-visible{
+:is(#lany-world-map .lany-map-head button.lany-back,
+    #lany-stage-prep .lany-prep-card button.lany-prep-back,
+    #lany-world-map .lany-map-head button.lany-map-icon:not(.lany-mobile-fullscreen),
+    #lany-install-modal .lany-install-card button.lany-install-close,
+    #lany-friends-modal .lany-friends-panel button.lany-friends-close,
+    .lany-world-switcher #lany-world-prev,.lany-world-switcher #lany-world-next):focus-visible{
  outline:3px solid #6e377d!important;outline-offset:2px!important;
 }
 
