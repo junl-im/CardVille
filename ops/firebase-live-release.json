@@ -1,10 +1,10 @@
 {
-  "release": "1.4.0-beta",
+  "release": "1.5.0-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "dc53fead3d0c2e80f277f5e226fd6d0b14e43d35",
-  "requestedFor": "라니팡 v1.4 PWA 앱 설치 버튼, 자체 대표 아이콘·파비콘, iOS 홈 화면 지원, 오프라인 앱 시작 최적화",
+  "sourceCommit": "fdc062982fd95f5b0d329c0304c7958c5e6f9eb1",
+  "requestedFor": "라니팡 v1.5 캐릭터 로고와 전용 이미지형 게임 시작/앱 설치/게임 방법/동물 도감 버튼, 1+3 배치, 터치 피드백, 공통 게임 젤리 버튼 이미지 스킨",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true
 }
