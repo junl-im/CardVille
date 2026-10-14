@@ -49,7 +49,7 @@ with sync_playwright() as pw:
  context=browser.new_context(viewport={'width':390,'height':844},is_mobile=True,has_touch=True,service_workers='allow')
  page=context.new_page()
  page.goto(base+'?v=1.4.0&source=pwa',wait_until='load',timeout=30000)
- page.wait_for_function("navigator.serviceWorker?.controller != null",{},{'timeout':30000}) if False else page.wait_for_function("navigator.serviceWorker && navigator.serviceWorker.controller!==null",timeout=30000)
+ page.wait_for_function("navigator.serviceWorker && navigator.serviceWorker.controller!==null",timeout=30000)
  page.wait_for_function("typeof LanyShell==='object'")
  # Cold app reload with network blocked must still load versioned JS from Cache Storage.
  context.set_offline(True)
