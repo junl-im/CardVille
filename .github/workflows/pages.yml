@@ -39,6 +39,7 @@ jobs:
           node tools/check-pwa-v14.cjs
           node tools/check-art-buttons-v15.cjs
           node tools/check-action-art-v16.cjs
+          node tools/check-title-stage-v17.cjs
           node tools/check-tempo.cjs
           test -f web/index.html
           test -f web/LICENSE

@@ -1,0 +1,166 @@
+/* 라니팡 v1.7 — cohesive illustrated title composition, not boxed web buttons.
+   Forest and characters are original SVG game assets; accessible actions stay real buttons. */
+body.lany-at-title .lany-title{
+  background:#7bd3fb url('../assets/title/title-forest-v17.svg') center center/cover no-repeat!important;
+}
+.lany-title .lany-cover{opacity:0!important;visibility:hidden}
+.lany-title .lany-title-scrim{
+  background:linear-gradient(to bottom,rgba(46,115,174,.05) 0%,rgba(71,115,92,0) 34%,rgba(42,85,50,.10) 64%,rgba(50,49,55,.32) 100%)!important;
+  pointer-events:none;
+}
+.lany-title .lany-title-layout{
+  width:100%!important;
+  max-width:760px!important;
+  position:relative;
+  z-index:2;
+  background:none!important;
+  justify-content:space-between;
+  padding:clamp(13px,3.5dvh,36px) clamp(11px,3.2vw,30px) max(12px,env(safe-area-inset-bottom) + 10px);
+}
+.lany-title .lany-title-top{width:min(100%,620px);max-width:620px;gap:0;position:relative;z-index:3}
+.lany-title .lany-ribbon{display:none!important}
+.lany-title .lany-illustrated-logo{
+  width:min(100%,540px)!important;
+  max-width:540px;
+  margin:0 auto;
+  filter:drop-shadow(0 8px 1px #774b7c7c) drop-shadow(0 13px 10px #38285588)!important;
+}
+.lany-title .lany-illustrated-logo img{
+  width:100%;
+  height:auto;
+  max-height:clamp(138px,29dvh,250px);
+  object-fit:contain;
+}
+.lany-title .lany-subtitle{
+  margin-top:-3px;
+  color:#fffbe7;
+  text-shadow:0 2px 0 #6b4264,0 3px 8px #40263e;
+  font-size:clamp(.82rem,2.9vw,1.11rem);
+  font-weight:950;
+}
+.lany-title .lany-title-bottom{
+  width:min(100%,520px)!important;
+  gap:0!important;
+  margin:0 auto;
+  position:relative;
+  z-index:2;
+}
+.lany-title-play-scene{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  isolation:isolate;
+  z-index:1;
+}
+.lany-title-play-scene .lany-title-cast{
+  pointer-events:none;
+  position:absolute;
+  width:min(165vw,670px);
+  height:auto;
+  max-width:none;
+  left:50%;
+  bottom:-22%;
+  transform:translateX(-50%);
+  z-index:-1;
+  filter:drop-shadow(0 11px 9px #69474666);
+  user-select:none;
+  -webkit-user-drag:none;
+}
+.lany-title-play-scene .lany-art-play{
+  width:min(86%,420px)!important;
+  z-index:1;
+  filter:drop-shadow(0 7px 10px #55285291);
+}
+.lany-title .lany-art-play .lany-button-word{
+  top:62%;
+  font-size:clamp(1.36rem,6vw,2.45rem);
+  text-shadow:0 3px 0 #af4057,0 4px 2px #713653,0 -1px 1px #fff3cb;
+  -webkit-text-stroke:1.1px #7b3a46;
+}
+.lany-title .lany-title-shortcuts{
+  width:100%;
+  margin-top:clamp(17px,4dvh,46px)!important;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(2px,1.4vw,9px);
+}
+.lany-title .lany-title-shortcuts .lany-art-small{max-width:166px;width:100%}
+.lany-title .lany-title-shortcuts .lany-button-word{
+  top:79%;
+  font-size:clamp(.73rem,2.6vw,1.18rem);
+  -webkit-text-stroke:.5px #79425c;
+  text-shadow:0 2px 1px #b45e68,0 4px 1px #835364;
+  color:#fff5c2;
+}
+.lany-title .lany-version{margin:4px auto 0!important;color:#fffdf5;font-weight:950;text-shadow:0 2px 2px #40333d,0 3px 7px #443746;font-size:clamp(.68rem,1.9vw,.81rem)}
+.lany-title-decor{position:absolute;inset:0;z-index:1;pointer-events:none}
+.lany-title-woodsign{
+  position:absolute;
+  left:clamp(8px,3vw,38px);
+  top:clamp(12px,3dvh,29px);
+  width:min(30vw,225px);
+  padding:18px 9px 16px;
+  border:5px solid #72472c;
+  border-radius:19px 12px 22px 14px;
+  background:repeating-linear-gradient(0deg,#ad7048 0 7px,#c68b58 9px 24px,#dfa16d 27px 34px);
+  box-shadow:0 8px 0 #633a2e,0 11px 17px #4b3f3866,inset 0 3px 0 #ffe0a1;
+  color:#70452d;
+  font-size:clamp(.71rem,1.6vw,1.05rem);
+  font-weight:1000;
+  text-align:center;
+  line-height:1.45;
+  transform:rotate(-5deg);
+  text-shadow:0 1px 0 #ffe0aa;
+}
+.lany-title-woodsign:before,.lany-title-woodsign:after{
+  content:"";position:absolute;top:-30px;width:5px;height:28px;border-radius:5px;
+  background:#a57b49;box-shadow:1px 0 2px #5b422b;
+}
+.lany-title-woodsign:before{left:18%}.lany-title-woodsign:after{right:18%}
+.lany-title-bubble{display:block;position:absolute;pointer-events:none;
+  width:clamp(34px,7vw,76px);aspect-ratio:1;border-radius:55% 55% 47% 47%;
+  background:radial-gradient(circle at 33% 25%,#fff8cd 0 9%,#f99fc1 27%,#ed528e 75%,#b92e7b);
+  box-shadow:inset -5px -7px 0 #e25e974a,0 5px 13px #5c2d5d44;
+  opacity:.85;
+  animation:lanyBubbleFloat 4.2s ease-in-out infinite;
+}
+.lany-title-bubble.bubble-one{left:3%;top:47%}
+.lany-title-bubble.bubble-two{right:3%;top:59%;background:radial-gradient(circle at 32% 25%,#fff 0 8%,#a0e7ff 28%,#4bbdf2 79%,#3078d3);animation-delay:-2s}
+@keyframes lanyBubbleFloat{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-11px) rotate(7deg)}}
+.lany-title .lany-art-button:focus-visible{outline:4px solid #fff39b!important;outline-offset:1px}
+.lany-update-banner[hidden]{display:none!important}
+.lany-update-banner{position:relative;z-index:6;display:flex;align-items:center;justify-content:center;gap:8px;
+  margin:5px auto 0;padding:7px 10px;color:#693f56;background:#fff6ca;border:2px solid #fff;
+  border-radius:17px;box-shadow:0 3px 0 #a96b78;font-size:.8rem;font-weight:950}
+.lany-update-banner button{background:#f65797;color:#fff;border:2px solid #fff8e6;border-radius:12px;padding:7px 12px;font-weight:900;cursor:pointer;min-height:36px}
+.lany-update-banner button:active{transform:translateY(2px) scale(.97)}
+@media(max-width:700px){
+  .lany-title-woodsign{display:none}
+  .lany-title .lany-title-layout{max-width:560px!important}
+  .lany-title .lany-title-bottom{max-width:430px}
+  .lany-title .lany-title-shortcuts{margin-top:clamp(12px,2.7dvh,28px)!important}
+  .lany-title-play-scene .lany-title-cast{width:min(170vw,610px);bottom:-24%}
+}
+@media(max-height:700px){
+  .lany-title .lany-title-layout{padding-top:4px;padding-bottom:5px}
+  .lany-title .lany-illustrated-logo img{max-height:clamp(105px,22dvh,170px)}
+  .lany-title .lany-subtitle{font-size:clamp(.72rem,2.4vw,.95rem)}
+  .lany-title .lany-title-shortcuts{margin-top:8px!important}
+  .lany-title-play-scene .lany-art-play{width:min(80%,320px)!important}
+  .lany-title-play-scene .lany-title-cast{width:min(135vw,530px)}
+  .lany-title .lany-version{font-size:.65rem}
+}
+@media(max-height:480px){
+  .lany-title .lany-title-layout{justify-content:space-between;padding:3px 6px}
+  .lany-title .lany-illustrated-logo img{max-height:clamp(74px,20dvh,112px)}
+  .lany-title .lany-subtitle{display:none}
+  .lany-title-play-scene .lany-art-play{width:min(80%,215px)!important}
+  .lany-title-play-scene .lany-title-cast{width:min(122vw,370px);bottom:-24%}
+  .lany-title .lany-title-shortcuts{margin-top:3px!important}
+  .lany-title .lany-title-shortcuts .lany-art-small{max-width:83px}
+  .lany-title .lany-title-shortcuts .lany-button-word{font-size:clamp(.63rem,2vw,.78rem)}
+  .lany-title .lany-version{display:none}
+  .lany-title-woodsign{display:none}
+}
+@media(prefers-reduced-motion:reduce){.lany-title-bubble{animation:none!important}}

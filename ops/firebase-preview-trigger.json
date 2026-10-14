@@ -1,24 +1,11 @@
 {
-  "version": "1.0.1-lanypang-friends-mobile-popup-hotfix",
-  "request": "Re-deploy LanyPang 1.0.1 with true modal IDs ng-level-editor/mp-setup/mp-share and 30 animal friend assets; preview only",
+  "version": "1.7.0-beta",
+  "request": "Keep named Firebase preview channel automatically synchronized to validated main updates; full illustrated title and cache refresh",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,
   "sourceBranch": "main",
   "requestedAtKST": "2026-10-14",
   "secretValueIncluded": false,
-  "lastFailureRun": 38417296378,
-  "failureStage": "Validate game, project and preview restrictions",
-  "cause": "require() of .firebaserc extensionless JSON",
-  "identityVerifiedRun": 38426888562,
-  "previousFailureRun": 38419409796,
-  "liveDeploymentForbidden": true,
-  "sourceCodeCommit": "5e3373b9caeac00a60675e3929a863b0cf76448a",
-  "smokeFixCommit": "97c27a3143aca818a8d7f4bae93f37de8effdc0a",
-  "buildCommit": "d49f8799ad934fcb14b6ea4292f8596d32f330b3",
-  "workflowFixCommit": "da0d2855467cb0394c0ea8aa3a81c0dc526bf831",
-  "regressionGuardCommit": "cf830eaccbbf9a154da30c04af9d957383b1e88b",
-  "sourceCommit": "d523cc155d451b3ec88b9d298895306b04149f0f",
-  "brandingCommit": "44242d78216406860ea7aed40efd66978417c475",
-  "implementationCommit": "0494feb4765a3b1021b88d1d71695bad0997e61a"
+  "sourceOfTruth": "web/version.json"
 }
