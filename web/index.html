@@ -885,21 +885,44 @@ for(let i=0;i<particleCount;i++) particles.push({
   op:Math.random()*.5+.1,
   col:`hsl(${Math.random()*60+280},80%,70%)`
 });
-(function animPart(now=0){
-  if(particleReduced)return;
-  requestAnimationFrame(animPart);
-  if(document.hidden || now-particleLastFrame<33) return;
+// Run background sparkles only while the title is visible. Gameplay has zero particle RAFs.
+let lanyTitleParticleFrame=0;
+let lanyTitleParticleRunning=false;
+let lanyParticleFrames=0;
+function paintTitleParticles(now){
+  if(!lanyTitleParticleRunning)return;
+  lanyTitleParticleFrame=requestAnimationFrame(paintTitleParticles);
+  if(now-particleLastFrame<50)return; // 20 FPS is ample for decorative dust.
   particleLastFrame=now;
-  if(!document.body.classList.contains('lany-at-title'))return;
+  lanyParticleFrames++;
   pCtx.clearRect(0,0,canvas.width,canvas.height);
   for(const p of particles){
-    pCtx.beginPath(); pCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    pCtx.fillStyle=p.col; pCtx.globalAlpha=p.op; pCtx.fill();
-    p.x+=p.vx; p.y+=p.vy;
+    pCtx.beginPath();pCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    pCtx.fillStyle=p.col;pCtx.globalAlpha=p.op;pCtx.fill();
+    p.x+=p.vx;p.y+=p.vy;
     if(p.y<-5){p.y=canvas.height+5;p.x=Math.random()*canvas.width;}
   }
   pCtx.globalAlpha=1;
-})();
+}
+function syncTitleParticles(){
+  const active=!particleReduced&&!document.hidden
+    &&document.body.classList.contains('lany-at-title')
+    &&!document.getElementById('lany-title')?.hidden;
+  if(active===lanyTitleParticleRunning)return;
+  lanyTitleParticleRunning=active;
+  if(active){particleLastFrame=0;lanyTitleParticleFrame=requestAnimationFrame(paintTitleParticles);}
+  else {
+    if(lanyTitleParticleFrame)cancelAnimationFrame(lanyTitleParticleFrame);
+    lanyTitleParticleFrame=0;
+    pCtx.clearRect(0,0,canvas.width,canvas.height);
+  }
+}
+const titleVisibilityObserver=new MutationObserver(syncTitleParticles);
+titleVisibilityObserver.observe(document.body,{attributes:true,attributeFilter:['class']});
+titleVisibilityObserver.observe(document.getElementById('lany-title'),{attributes:true,attributeFilter:['hidden']});
+document.addEventListener('visibilitychange',syncTitleParticles,{passive:true});
+syncTitleParticles();
+window.LanyTitleParticles={isRunning:()=>lanyTitleParticleRunning,frames:()=>lanyParticleFrames};
 
 // ── Board init ───────────────────────────────────────────────
 function initLevel(lvNum) {
@@ -986,9 +1009,10 @@ function renderBoard() {
        face.className='lany-animal-face';face.draggable=false;face.decoding='async';
        div.replaceChildren(face);
      }
-     if(face.dataset.gem!==expectedName){
+     if(face.dataset.gem!==expectedName || face.dataset.lanyOriginal || !face.getAttribute('src')?.endsWith('/'+expectedName+'.webp')){
        face.src='./assets/friends/'+expectedName+'.webp';
        face.dataset.gem=expectedName;
+       delete face.dataset.lanyOriginal;
      }
      face.alt=LANY_FACE_KO[gemKind];
      div.setAttribute('aria-label',LANY_FACE_KO[gemKind]+' 블록');
