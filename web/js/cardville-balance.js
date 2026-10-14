@@ -13,6 +13,8 @@
     if (!lv || !Number.isFinite(lv.goal) || !Number.isFinite(lv.moves)) throw new TypeError('Invalid level');
     const baseline = SCORE_PER_MOVE[lv.colors];
     if (!baseline || lv.moves < 1 || lv.moves > 100 || lv.goal < 1) throw new RangeError('Invalid level values');
+    // First 25 authored challenges must never be lowered by the legacy beta cap.
+    if (Number.isInteger(lv.l) && lv.l >= 1 && lv.l <= 25) return lv.goal;
     const locks = Math.max(0, Math.min(64, Number(lv.lockedCount) || 0));
     const cap = Math.round(lv.moves * baseline * (1 + locks / 64) * (lv.isBoss ? 1.2 : 1));
     return Math.min(lv.goal, Math.max(250, cap));

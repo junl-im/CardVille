@@ -80,3 +80,31 @@ body:not(.lany-at-title) #app{background:linear-gradient(180deg,rgba(255,249,252
  #app>.header .hud-lbl{font-size:.65rem!important;letter-spacing:0}
  #app>.header .hud button{grid-column:span 2;min-width:0;min-height:39px;font-size:.84rem!important;padding:6px 3px!important;white-space:nowrap}
 }
+
+/* v1.2 tactile motion: transform/opacity animations avoid expensive board-wide repaint. */
+.lany-mobile-fullscreen{display:none!important}
+@media (max-width:900px) and (pointer:coarse){.lany-mobile-fullscreen{display:inline-flex!important;align-items:center;justify-content:center}}
+#board .cell{contain:layout style paint;will-change:auto}
+#board .cell .lany-animal-face{transform-origin:50% 62%;backface-visibility:hidden}
+#board .cell.lany-tap .lany-animal-face{transform:translateY(3px) scale(.87,.94) rotate(-3deg)}
+#board .cell.lany-swap-land .lany-animal-face{animation:lanyLand .18s cubic-bezier(.22,1.4,.48,1)}
+#board .cell.lany-swap-reject .lany-animal-face{animation:lanyReject .22s ease-out}
+#board .cell.lany-fall-in .lany-animal-face{animation:lanyFall .28s cubic-bezier(.2,.86,.28,1.15) both;animation-delay:var(--lany-delay,0ms)}
+#board .cell.lany-match-pop .lany-animal-face{animation:lanyFaceCelebrate .31s cubic-bezier(.18,.9,.3,1.2) both;animation-delay:var(--lany-delay,0ms)}
+#board .cell.cv-drag-target:after{content:'';position:absolute;inset:2px;border-radius:12px;border:2px solid #ffef89;pointer-events:none}
+@keyframes lanyLand{0%{transform:scale(.91)}55%{transform:scale(1.09, .92)}100%{transform:scale(1)}}
+@keyframes lanyReject{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}65%{transform:translateX(3px)}}
+@keyframes lanyFall{0%{opacity:.6;transform:translateY(-32px) scale(.92,1.08)}70%{opacity:1;transform:translateY(3px) scale(1.07,.92)}100%{transform:translateY(0) scale(1)}}
+.overlay[style*="flex"] .modal,#lany-pause:not([hidden]) .lany-dialog,#lany-exit:not([hidden]) .lany-dialog,.lany-stage-prep:not([hidden]) .lany-prep-card,#lany-stage-prep:not([hidden]) .lany-prep-card{animation:lanyDialogSpring .33s cubic-bezier(.2,1.1,.29,1) both;transform-origin:50% 75%}
+@keyframes lanyDialogSpring{0%{opacity:0;transform:translateY(28px) scale(.93)}68%{opacity:1;transform:translateY(-3px) scale(1.015)}100%{opacity:1;transform:translateY(0) scale(1)}}
+.lany-vfx-pop{width:clamp(72px,20vw,138px);animation-duration:.53s}
+@media(max-width:520px){
+ body:not(.lany-at-title){background-attachment:scroll}
+ .overlay,.lany-modal-wrap{backdrop-filter:none!important}
+ .lany-vfx-pop{width:86px}
+ .overlay .modal-btns .btn{min-height:48px}
+}
+@media(prefers-reduced-motion:reduce){
+ #board .cell.lany-swap-land .lany-animal-face,#board .cell.lany-swap-reject .lany-animal-face,#board .cell.lany-fall-in .lany-animal-face,#board .cell.lany-match-pop .lany-animal-face,
+ .overlay[style*="flex"] .modal,#lany-pause:not([hidden]) .lany-dialog,#lany-exit:not([hidden]) .lany-dialog,#lany-stage-prep:not([hidden]) .lany-prep-card{animation:none!important;transition:none!important}
+}

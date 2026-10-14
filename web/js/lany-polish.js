@@ -17,7 +17,7 @@ function burst(rect,type='burst-star'){
   if(reduced()||!rect||!document.body)return;
   const v=document.createElement('img');v.className='lany-vfx-pop';v.src=root+type+'.webp';v.alt='';v.draggable=false;
   v.style.left=(rect.left+rect.width/2)+'px';v.style.top=(rect.top+rect.height/2)+'px';
-  getLayer().appendChild(v);setTimeout(()=>v.remove(),650);
+  const parent=getLayer();while(parent.children.length>=8)parent.firstElementChild?.remove();parent.appendChild(v);setTimeout(()=>v.remove(),650);
 }
 let pressed=null;
 function down(e){if(e.button!==0)return;const tile=e.target.closest?.('#board .cell');
@@ -26,17 +26,20 @@ function down(e){if(e.button!==0)return;const tile=e.target.closest?.('#board .c
  button.classList.add('lany-tactile-down');setTimeout(()=>button.classList.remove('lany-tactile-down'),220);
 }
 function up(){if(pressed){const old=pressed;pressed=null;old.classList.remove('lany-tap');if(!old.classList.contains('matched'))face(old,'normal');}}
-function onMatch(indices){const cells=[];
+function onMatch(indices,chain=1){const cells=[];
   for(const idx of indices){let el=document.querySelector(`#board .cell[data-r="${Math.floor(idx/8)}"][data-c="${idx%8}"]`);if(el)cells.push(el)}
-  cells.forEach((el,i)=>{el.classList.add('lany-match-pop');face(el,i%3===0?'cheer':'wink')});
-  if(cells.length){const a=cells[Math.floor(cells.length/2)];burst(a.getBoundingClientRect(),cells.length>=5?'burst-star':'burst-heart')}
+  cells.forEach((el,i)=>{el.classList.add('lany-match-pop');face(el,(i+chain)%4===0?'wink':'cheer');el.style.setProperty('--lany-delay',Math.min(i,9)*16+'ms')});
+  if(cells.length){const a=cells[Math.floor(cells.length/2)],rect=a.getBoundingClientRect();burst(rect,cells.length>=5||chain>=3?'burst-star':'burst-heart');if(chain>=3)burst(rect,'combo')}
 }
+function onFall(indices){if(reduced())return;const tiles=document.getElementById('board')?.children;if(!tiles)return;indices.slice(0,24).forEach((idx,i)=>{const el=tiles[idx];if(el){el.classList.add('lany-fall-in');el.style.setProperty('--lany-delay',(i%8)*22+'ms')}})}
+function invalidSwap(r1,c1,r2,c2){if(reduced())return;const tiles=document.getElementById('board')?.children;if(!tiles)return;for(const idx of [r1*8+c1,r2*8+c2]){const el=tiles[idx];if(el){el.classList.add('lany-swap-reject');setTimeout(()=>el.classList.remove('lany-swap-reject'),250)}}}
+function onSwap(r1,c1,r2,c2){if(reduced())return;const tiles=document.getElementById('board')?.children;if(!tiles)return;for(const idx of [r1*8+c1,r2*8+c2])tiles[idx]?.classList.add('lany-swap-land')}
 function promoteDialog(){document.querySelectorAll('#lany-pause .lany-dialog-emoji,#lany-exit .lany-dialog-emoji').forEach((el,i)=>{
  if(el.querySelector('img'))return;
  el.textContent='';const img=document.createElement('img');img.className='lany-popup-mascot';img.src=root+(i===0?'rabbit-wink.webp':'bear-surprise.webp');img.alt='';img.draggable=false;el.append(img)
  });}
 function dialog(type){promoteDialog();const sel=type==='win'?'#overlay-win .modal':'#overlay-lose .modal';const el=document.querySelector(sel);if(el)burst(el.getBoundingClientRect(),type==='win'?'burst-star':'burst-heart');}
 function init(){promoteDialog();document.addEventListener('pointerdown',down,{capture:true,passive:true});document.addEventListener('pointerup',up,{capture:true,passive:true});document.addEventListener('pointercancel',up,{capture:true,passive:true});}
-window.LanyPolish={onMatch,dialog,burst,face};
+window.LanyPolish={onMatch,onFall,invalidSwap,onSwap,dialog,burst,face};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();

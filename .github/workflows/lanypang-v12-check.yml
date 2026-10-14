@@ -1,0 +1,30 @@
+name: LanyPang Gameplay and Mobile QA
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate game logic, visuals, mobile and saved progress
+        run: |
+          set -euo pipefail
+          node tools/check-release.cjs
+          node tools/check-korean-ui.cjs
+          node tools/check-korean-complete.cjs
+          node tools/check-lany-shell.cjs
+          node tools/check-world-map.cjs
+          node tools/check-v09.cjs
+          node tools/check-map-touch.cjs
+          node tools/check-friends-mobile.cjs
+          node tools/check-polish.cjs
+          node tools/check-tempo.cjs
+          node tools/check-gameplay-v12.cjs
