@@ -81,6 +81,14 @@ with sync_playwright() as playwright:
     shot('map','#lany-world-map')
     assert page.locator('.lany-map-levels canvas.lany-route').count()==1
     assert 'world-map.webp' in page.locator('.lany-map-levels').evaluate('e=>getComputedStyle(e).backgroundImage')
+    # v2.3 check: actual independent art, dynamic region title and original fallback coexist.
+    assert 'world-01.webp' in page.locator('.lany-map-levels').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'first map art missing')
+    assert 'region-header.webp' in page.locator('.lany-world-banner').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'text-free world banner missing')
+    for world_index,art in [('2','world-03.webp'),('4','world-05.webp')]:
+      page.locator('.lany-map-levels').evaluate('(e,k)=>e.dataset.world=k',world_index)
+      assert art in page.locator('.lany-map-levels').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'world art '+art)
+    page.locator('.lany-map-levels').evaluate("e=>e.dataset.world='0'")
+    assert page.locator('#lany-world-title').inner_text()=='사탕 골짜기',(tag,'canonical title changed')
     page.evaluate('LanyShell.mapPage(1)')
     shot('map-next-page','#lany-world-map')
     page.evaluate('LanyShell.mapPage(-1)')
