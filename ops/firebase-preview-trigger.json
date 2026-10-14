@@ -1,6 +1,6 @@
 {
-  "version": "1.7.0-beta",
-  "request": "Keep named Firebase preview channel automatically synchronized to validated main updates; full illustrated title and cache refresh",
+  "version": "1.8.0-beta",
+  "request": "Restore original raster studio assets, black cat and accumulated-play performance fix v1.8",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,
