@@ -1,0 +1,49 @@
+/* 라니팡 v2.0 — approved studio WebP map art, four high-res raster candy medallions. */
+.lany-map-section .lany-map-levels .lany-level{
+  background-image:url('../assets/map/stage-ordinary-v20.webp')!important;
+  background-size:100% 100%!important;
+  image-rendering:auto;
+}
+.lany-map-section .lany-map-levels .lany-level.current{
+  background-image:url('../assets/map/stage-current-v20.webp')!important;
+}
+.lany-map-section .lany-map-levels .lany-level.boss{
+  background-image:url('../assets/map/stage-boss-v20.webp')!important;
+}
+.lany-map-section .lany-map-levels .lany-level:disabled{
+  background-image:url('../assets/map/stage-locked-v20.webp')!important;
+}
+.lany-map-levels .lany-level span,.lany-map-levels .lany-level small{
+  z-index:2;
+  position:relative;
+  text-shadow:0 2px 1px #fff9d9,0 0 4px #fff;
+}
+.lany-map-levels .lany-level.boss span,.lany-map-levels .lany-level.current span{
+  text-shadow:0 2px 0 #fffcdd,0 0 5px #fff;
+}
+/* Each region keeps the same original illustrated map WebP underneath:
+   world palette changes, not a mismatched or generated SVG landscape. */
+.lany-map-levels{
+  --world-tint:linear-gradient(155deg,rgba(255,249,225,.12),rgba(253,156,194,.11));
+  background-image:var(--world-tint),url('../assets/polish/world-map.webp')!important;
+  background-size:cover!important;background-position:center center!important;
+}
+.lany-map-levels[data-world="0"]{--world-tint:linear-gradient(155deg,#fff3bf55,#ff99cb35)}
+.lany-map-levels[data-world="1"]{--world-tint:linear-gradient(155deg,#d7fac164,#60ac6266)}
+.lany-map-levels[data-world="2"]{--world-tint:linear-gradient(155deg,#bbf2ff65,#7de6e86b)}
+.lany-map-levels[data-world="3"]{--world-tint:linear-gradient(155deg,#ffca9a69,#ba806d79)}
+.lany-map-levels[data-world="4"]{--world-tint:linear-gradient(155deg,#f8b1ff5c,#b0edff53)}
+.lany-map-levels[data-world="5"]{--world-tint:linear-gradient(155deg,#fff6c065,#efc5f85b)}
+.lany-map-levels[data-world="6"]{--world-tint:linear-gradient(155deg,#c6b4ff88,#6682cb5e)}
+.lany-map-levels[data-world="7"]{--world-tint:linear-gradient(155deg,#ffe5a377,#cf936962)}
+.lany-map-levels[data-world="8"]{--world-tint:linear-gradient(155deg,#e5fbff8a,#9fd7fc69)}
+.lany-map-levels[data-world="9"]{--world-tint:linear-gradient(155deg,#d5f4ff84,#b3a6ec85)}
+/* Avoid per-tile dropshadow filters on narrow/mobile game devices. */
+@media(max-width:520px),(pointer:coarse){
+  #board .cell .lany-animal-face{filter:none!important}
+  .lany-map-levels .lany-level{filter:none}
+  .lany-map-section .lany-map-levels .lany-level:not(:disabled):hover{filter:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .lany-map-levels .lany-level{transition:none!important}
+}

@@ -35,6 +35,7 @@ jobs:
           node tools/check-title-stage-v17.cjs
           node tools/check-visual-perf-v18.cjs
           node tools/check-longplay-v19.cjs
+          node tools/check-v20-cache-map.cjs
 
   browser-pages:
     needs: regression
@@ -56,6 +57,7 @@ jobs:
           python -m pip install --quiet Pillow==11.3.0
           python tools/build-visual-v18.py
           node tools/check-visual-perf-v18.cjs --raster
+          node tools/check-v20-cache-map.cjs --raster
           node tools/check-pwa-v14.cjs --raster
       - name: Validate actual mobile and desktop page navigation
         run: |
@@ -69,11 +71,12 @@ jobs:
           python tests/verify-title-stage-v17.py
           python tests/verify-v18-perf.py
           python tests/verify-longplay-v19.py
+          python tests/verify-v20-offline-map.py
       - name: Preserve comparison screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: lanypang-v19-actual-gameplay-performance
+          name: lanypang-v20-cache-and-raster-map
           path: |
             docs/paging-v13/*.png
             docs/art-buttons-v15/*.png
@@ -81,4 +84,5 @@ jobs:
             docs/title-stage-v17/*.png
             docs/v18-perf/*.png
             docs/longplay-v19/*.png
+            docs/v20-offline-map/*.png
           if-no-files-found: ignore

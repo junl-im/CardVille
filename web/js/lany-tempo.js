@@ -7,6 +7,9 @@
  try{enabled=localStorage.getItem(KEY)!=='off';}catch(_){}
  let active=false,paused=true,expired=false,remaining=0,deadline=0,seconds=0;
  let currentStage=1, lastSecond=-1,lastTickAlert=-1;
+ let ticker=null;
+ const runClock=()=>{if(ticker===null)ticker=setInterval(update,250)};
+ const stopClock=()=>{if(ticker!==null){clearInterval(ticker);ticker=null;}};
  const durationFor=level=>Math.max(115,185-(Math.floor((level-1)/25)*7));
  const getRemaining=()=>Math.max(0,remaining);
  const format=t=>`${String(Math.floor(t/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}`;
@@ -21,12 +24,12 @@
  }
  function start(stage){
    currentStage=stage||1;active=true;paused=false;expired=false;remaining=durationFor(currentStage);seconds=0;
-   deadline=performance.now()+1000;lastSecond=-1;lastTickAlert=-1;render();
+   deadline=performance.now()+1000;lastSecond=-1;lastTickAlert=-1;render();runClock();
  }
  function setEnabled(value){enabled=Boolean(value);try{localStorage.setItem(KEY,enabled?'on':'off');}catch(_){}render()}
- function pause(){if(!active||paused)return;update();paused=true;render()}
- function resume(){if(!active||!paused||expired)return;paused=false;deadline=performance.now()+1000;render()}
- function stop(){active=false;paused=true;render()}
+ function pause(){if(!active||paused)return;update();paused=true;stopClock();render()}
+ function resume(){if(!active||!paused||expired)return;paused=false;deadline=performance.now()+1000;runClock();render()}
+ function stop(){active=false;paused=true;stopClock();render()}
  function isExpired(){return active&&expired}
  function update(){
    if(!active||paused||expired)return;
@@ -40,7 +43,7 @@
    }
    render();
    if(enabled&&remaining===0 && !state.animating){
-     expired=true;paused=true;
+     expired=true;paused=true;stopClock();
      if(state.score>=LEVELS[state.level-1].goal){window.checkEnd?.();return;}
      if(typeof window.showLose==='function'){
        $('lose-msg').textContent=`⏰ 시간이 끝났어요! ${seconds}초 동안 ${state.score.toLocaleString()}점을 획득했어요. 다시 도전해 보세요!`;
@@ -57,8 +60,8 @@
    if(typeof requestAnimationFrame==='function')requestAnimationFrame(()=>{if(board.isConnected)board.classList.add('lany-impact')});
    else board.classList.add('lany-impact');
  }
- // Single timer loop: do not allocate a new interval on every stage start or view change.
- setInterval(update,200);
+ // No timer while at the title, map, pause, or with the app hidden.
+ // Exactly one ticker is allocated while active, and cancelled on pause/stop.
  document.addEventListener('visibilitychange',()=>{if(document.hidden)pause()});
  window.LanyTempo={start,pause,resume,stop,enabled:()=>enabled,setEnabled,durationFor,isExpired,onCombo,getRemaining,isRunning:()=>active&&!paused,getElapsed:()=>seconds};
  render();

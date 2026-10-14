@@ -1,6 +1,6 @@
 {
-  "version": "1.9.0-beta",
-  "request": "라니팡 v1.9 장시간 실제 매칭 성능·모바일 진단 HUD·WebP 캐릭터 팝업 강화, cached CSS fix",
+  "version": "2.0.0-beta",
+  "request": "라니팡 v2.0 정적 PWA 캐시 상한·버전 체크 누적 방지, 전체 동물 아트 오프라인, 4종 WebP 지도 메달·10지역 분위기, 게임 중에만 시계",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,

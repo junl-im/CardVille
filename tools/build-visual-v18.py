@@ -186,3 +186,55 @@ if __name__=='__main__':
             assert im.format=='WEBP' and im.size[0]>=390 and im.size[1]>=200
             print(f'OK {filename} {im.size}: {target.stat().st_size}B')
     print('OK existing WebP cover, game cats, and existing animal studio assets retained')
+
+# v2.0: real raster map medallions built from the same approved WebP mascot studio.
+# The web game displays these 256px WebP sprites, not CSS-drawn SVG stage discs.
+def build_stage_medallions():
+    from PIL import ImageDraw,ImageFilter
+    target=A/'map'
+    target.mkdir(parents=True,exist_ok=True)
+    styles={
+      'ordinary':('#b5f7ff','#398ee4','#1f629b',None),
+      'current':('#fffad1','#ffa739','#c17c22','rabbit'),
+      'boss':('#ffdeea','#f474b8','#9e4b84','bear'),
+      'locked':('#f0f0f9','#abb0c0','#7c849c',None)
+    }
+    for name,(hi,lo,border,character) in styles.items():
+        size=256
+        art=Image.new('RGBA',(size,size),(0,0,0,0))
+        shadow=Image.new('RGBA',(size,size),(0,0,0,0))
+        d=ImageDraw.Draw(shadow)
+        d.ellipse((26,30,232,237),fill=(54,30,60,130))
+        art.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(12)))
+        d=ImageDraw.Draw(art)
+        d.ellipse((12,12,244,244),fill=border,width=1)
+        d.ellipse((20,17,237,233),fill='#fff8e1')
+        for y in range(23,228):
+            t=(y-23)/205
+            # Draw 1px color bands inside the circular jewel via mask.
+            from PIL import ImageColor
+            rgb1=ImageColor.getrgb(hi);rgb2=ImageColor.getrgb(lo)
+            color=tuple(int(x*(1-t)+z*t) for x,z in zip(rgb1,rgb2))
+            half=int((101**2-(y-125)**2)**.5) if abs(y-125)<=100 else 0
+            if half:
+                d.line((128-half,y,128+half,y),fill=(*color,255),width=1)
+        d.ellipse((27,25,229,227),outline='#fffbea',width=9)
+        d.arc((45,39,210,183),195,308,fill=(255,255,255,165),width=12)
+        if character:
+            mascot=image('polish/'+character+'-cheer.webp')
+            mascot.thumbnail((118,118),RES)
+            art.alpha_composite(mascot,(int((256-mascot.width)/2),20))
+        if name=='locked':
+            # Simple locked state drawn as raster hardware, not an emoji font.
+            d.rounded_rectangle((93,92,164,158),radius=12,fill='#8291a7',outline='#f8f5e7',width=7)
+            d.arc((100,70,157,131),180,359,fill='#66738c',width=11)
+            d.ellipse((123,113,136,126),fill='#fff6d6')
+        d.ellipse((73,176,87,190),fill=(255,255,247,155))
+        filename=target/f'stage-{name}-v20.webp'
+        art.save(filename,'WEBP',quality=91,method=6)
+        with Image.open(filename) as output:
+            assert output.format=='WEBP' and output.size==(256,256)
+        print('OK stage medallion',name,filename.stat().st_size)
+
+if __name__=='__main__':
+    build_stage_medallions()
