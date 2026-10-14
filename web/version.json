@@ -1,6 +1,6 @@
 {
   "name": "라니팡",
-  "version": "1.4.0-beta",
+  "version": "1.5.0-beta",
   "stageCount": 250,
   "language": "ko",
   "build": "2026-10-14",
@@ -17,7 +17,7 @@
   "animalFriends": 30,
   "animalTiles": 7,
   "mobilePopupFit": true,
-  "visualRelease": "1.4.0",
+  "visualRelease": "1.5.0",
   "approvedOriginalAssets": true,
   "expressionVariants": 4,
   "newPopupButtons": true,
@@ -37,5 +37,10 @@
   "pwaIOSManualGuide": true,
   "brandedFavicon": true,
   "maskableGameIcon": true,
-  "offlinePwaStartFallback": true
+  "offlinePwaStartFallback": true,
+  "illustratedTitleButtons": true,
+  "oneRowTitleShortcuts": true,
+  "titleMascotLogo": true,
+  "sharedImageButtonSkins": true,
+  "pressHoverTouchFeedback": true
 }
