@@ -1,10 +1,10 @@
 {
-  "release": "1.2.0-beta",
+  "release": "1.3.0-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "5b83205732a603af57acf1f79c0ae1e6dbc3b015",
-  "requestedFor": "라니팡 실제 게임 v1.2 캐릭터 모션, 초반 밸런스, 모바일 최적화와 PC 전체화면 정책 반영",
+  "sourceCommit": "4c6544490148fb2406fc48cac297c75319ff8703",
+  "requestedFor": "라니팡 v1.3 게임형 지도·지역·도감·팝업 페이지 전환 및 모바일 화면 넘침 방지 적용",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true
 }
