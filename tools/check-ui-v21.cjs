@@ -13,7 +13,7 @@ const kit={
  buttons:[...['pink','blue','gold','green','wood','red'].map(x=>'skin-'+x),
   ...['play','resume','next','retry','map','home','help','pause','exit','back','friends','close','settings','sound','notice','confirm','cancel'].map(x=>'action-'+x)],
  popup:['clear','fail','help','pause','install','friends','settings','confirm'].map(x=>'panel-'+x),
- hud:['stage','goal','moves','score','best','booster','clock','progress-track','progress-fill'].map(x=>'panel-'+x),
+ hud:[...['stage','goal','moves','score','best','booster','clock'].map(x=>'panel-'+x),'progress-track','progress-fill'],
  map:['world','chapter','prev','next'],
  booster:['hammer','shuffle','color','time'].map(x=>'badge-'+x)
 };
