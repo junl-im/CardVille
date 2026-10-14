@@ -48,6 +48,7 @@ jobs:
           node tools/check-gameplay-v12.cjs
           node tools/check-pages-v13.cjs
           node tools/check-pwa-v14.cjs
+          node tools/check-art-buttons-v15.cjs
           node tools/check-firebase-preview.cjs
       - name: Confirm matching project service-account ID (no secret output)
         env:
@@ -80,6 +81,9 @@ jobs:
               grep -Fq 'lany-polish.js?v=1.5.0' /tmp/lany-live.html && \
               grep -Fq 'lany-polish.css?v=1.5.0' /tmp/lany-live.html && \
               grep -Fq 'lany-install.js?v=1.5.0' /tmp/lany-live.html && \
+              grep -Fq 'lany-art-buttons.css?v=1.5.0' /tmp/lany-live.html && \
+              grep -Fq 'title-play.svg?v=1.5.0' /tmp/lany-live.html && \
+              curl --fail --silent --show-error --location --max-time 25 "$url/assets/buttons/title-play.svg" | grep -Fq '<svg' && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/lanypang-icon-512.png" -o /tmp/lany-launch.png && \
               test "$(wc -c </tmp/lany-launch.png)" -gt 1000 && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/polish/rabbit-wink.webp" -o /tmp/lany-wink.webp && \
