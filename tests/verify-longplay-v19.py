@@ -14,6 +14,7 @@ with sync_playwright() as pw:
   page=ctx.new_page();errors=[];missing=[]
   page.on('pageerror',lambda e:errors.append(str(e)))
   page.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
+  page.set_default_timeout(120000)
   page.goto(base+'?v=1.9.0',wait_until='load',timeout=30000)
   page.wait_for_function("typeof LanyShell==='object' && typeof LanyTitleParticles==='object'")
   assert page.evaluate('LanyTitleParticles.isRunning()'),(name,'title particles should run')
@@ -64,7 +65,7 @@ with sync_playwright() as pw:
       floats:document.querySelectorAll('.score-float,.combo-display').length,
       stageStarts:LanyPerf.stageStarts
     };
-  }""",timeout=120000)
+  }""")
   assert result['totalMoves']>=9,(name,'too few real successful swaps',result)
   assert result['scoreGained']>0,(name,'match score did not increase',result)
   assert result['cellCreates']==64 and result['domCells']==64,(name,'DOM grew',result)
