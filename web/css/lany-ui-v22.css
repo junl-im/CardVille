@@ -28,7 +28,8 @@
 .lany-v22-goal-track .progress-bar{height:clamp(18px,4vh,28px)!important;overflow:hidden!important;border-radius:999px!important;background:#8b647c url('../assets/ui/v21/hud/progress-track.webp') center/100% 100% no-repeat!important;border:3px solid #fff2bd!important;box-shadow:0 3px 0 #b788a2,0 3px 6px #67526869,inset 0 2px 4px #69406678!important}
 .lany-v22-goal-track .progress-fill{height:100%!important;background:#ffd74b url('../assets/ui/v21/hud/progress-fill.webp') left center/auto 100% repeat-x!important;border-radius:999px!important;box-shadow:inset 0 3px 4px #fff8b2b7,0 0 12px #ffe768aa!important;transition:width .35s ease}
 .lany-v22-star-marker{position:absolute;top:17px;z-index:2;line-height:1;font-size:clamp(19px,4.6vw,26px);color:#d3bdc8;-webkit-text-stroke:1px #8e6478;text-shadow:0 2px #875a6e,0 3px 3px #774e72;transform:translateX(-50%) scale(.9)}
-.lany-v22-star-marker.star-one{left:30%}.lany-v22-star-marker.star-two{left:65%}.lany-v22-star-marker.star-three{left:97%}
+/* Marker positions correspond to reward thresholds 1x / 1.4x / 2x of the goal. */
+.lany-v22-star-marker.star-one{left:50%}.lany-v22-star-marker.star-two{left:70%}.lany-v22-star-marker.star-three{left:97%}
 .lany-v22-star-marker.earned{color:#ffe253;-webkit-text-stroke:1px #c88c25;text-shadow:0 2px 0 #c18a30,0 0 8px #ffcf58;transform:translateX(-50%) scale(1.1)}
 /* Main board framed with the same ivory / glossy family; preserve 8x8 tile targets. */
 #board-wrap{max-width:min(500px,calc(100vw - 12px),calc(100dvh - 272px))!important}
