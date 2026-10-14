@@ -29,7 +29,7 @@ jobs:
           const v=JSON.parse(fs.readFileSync('web/version.json','utf8'));
           assert.equal(r.projectId,'cardville');
           assert.equal(r.channelId,'live');
-          assert.equal(r.release,'1.7.0-beta');
+          assert.equal(r.release,'1.8.0-beta');
           assert.equal(v.version,r.release);
           assert.equal(f.projects.default,'cardville');
           assert.equal(r.site,'cardville');
@@ -51,6 +51,7 @@ jobs:
           node tools/check-art-buttons-v15.cjs
           node tools/check-action-art-v16.cjs
           node tools/check-title-stage-v17.cjs
+          node tools/check-visual-perf-v18.cjs
           node tools/check-firebase-preview.cjs
       - name: Confirm matching project service-account ID (no secret output)
         env:
@@ -63,6 +64,11 @@ jobs:
         run: |
           python -m pip install --quiet CairoSVG==2.7.1
           python tools/build-pwa-icons.py
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          python -m pip install --quiet Pillow==11.3.0
+          python tools/build-visual-v18.py
+          node tools/check-visual-perf-v18.cjs --raster
           node tools/check-pwa-v14.cjs --raster
       - name: Deploy actual Firebase Hosting live site
         id: live
@@ -77,19 +83,21 @@ jobs:
           set -euo pipefail
           url='https://cardville.web.app'
           for attempt in $(seq 1 8); do
-            if curl --fail --silent --show-error --location --max-time 25 "$url/?v=1.7.0" -o /tmp/lany-live.html && \
+            if curl --fail --silent --show-error --location --max-time 25 "$url/?v=1.8.0" -o /tmp/lany-live.html && \
               grep -Fq '<html lang="ko">' /tmp/lany-live.html && \
               grep -Fq '라니팡!' /tmp/lany-live.html && \
-              grep -Fq 'lany-polish.js?v=1.7.0' /tmp/lany-live.html && \
-              grep -Fq 'lany-polish.css?v=1.7.0' /tmp/lany-live.html && \
-              grep -Fq 'lany-install.js?v=1.7.0' /tmp/lany-live.html && \
-              grep -Fq 'lany-art-buttons.css?v=1.7.0' /tmp/lany-live.html && \
-              grep -Fq 'lany-action-art-v16.css?v=1.7.0' /tmp/lany-live.html && \
-              grep -Fq 'lany-title-stage-v17.css?v=1.7.0' /tmp/lany-live.html && \
-              grep -Fq 'lany-update-v17.js?v=1.7.0' /tmp/lany-live.html && \
+              grep -Fq 'lany-polish.js?v=1.8.0' /tmp/lany-live.html && \
+              grep -Fq 'lany-polish.css?v=1.8.0' /tmp/lany-live.html && \
+              grep -Fq 'lany-install.js?v=1.8.0' /tmp/lany-live.html && \
+              grep -Fq 'lany-art-buttons.css?v=1.8.0' /tmp/lany-live.html && \
+              grep -Fq 'lany-action-art-v16.css?v=1.8.0' /tmp/lany-live.html && \
+              grep -Fq 'lany-title-stage-v17.css?v=1.8.0' /tmp/lany-live.html && \
+              grep -Fq 'lany-raster-v18.css?v=1.8.0' /tmp/lany-live.html && \
+              curl --fail --silent --show-error --location --max-time 25 "$url/assets/title/btn-play-v18.webp" -o /tmp/btn-play-v18.webp && test "$(wc -c </tmp/btn-play-v18.webp)" -gt 1000 && \
+              grep -Fq 'lany-update-v17.js?v=1.8.0' /tmp/lany-live.html && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/title/title-forest-v17.svg" | grep -Fq '<svg' && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/buttons/action-resume.svg" | grep -Fq '<svg' && \
-              grep -Fq 'title-play.svg?v=1.7.0' /tmp/lany-live.html && \
+              grep -Fq 'btn-play-v18.webp?v=1.8.0' /tmp/lany-live.html && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/buttons/title-play.svg" | grep -Fq '<svg' && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/lanypang-icon-512.png" -o /tmp/lany-launch.png && \
               test "$(wc -c </tmp/lany-launch.png)" -gt 1000 && \
@@ -98,7 +106,7 @@ jobs:
               curl --fail --silent --show-error --location --max-time 25 "$url/js/lany-polish.js" | grep -Fq 'LanyPolish'; then
               echo '라니팡 Firebase LIVE HTTP/asset test: PASS'
               echo '## 라니팡 실제 Firebase 정식 게임 배포 성공' >> "$GITHUB_STEP_SUMMARY"
-              echo '- 정식 게임 URL: https://cardville.web.app/?v=1.7.0' >> "$GITHUB_STEP_SUMMARY"
+              echo '- 정식 게임 URL: https://cardville.web.app/?v=1.8.0' >> "$GITHUB_STEP_SUMMARY"
               echo '- 원본 데이터 및 Firestore/Auth 변경 없음' >> "$GITHUB_STEP_SUMMARY"
               exit 0
             fi

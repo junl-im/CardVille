@@ -2,7 +2,7 @@
    No storage deletes, no forced refresh, and no polling or timers. */
 (()=>{
  'use strict';
- const LOCAL='1.7.0-beta';
+ const LOCAL='1.8.0-beta';
  const $=id=>document.getElementById(id);
  let available=null;
  let waitingSW=false;
