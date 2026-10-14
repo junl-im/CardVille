@@ -10,7 +10,7 @@ assert(fs.statSync('web/assets/lanypang-cover.webp').size>100000);
 assert(css.includes('.lany-cover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover'));
 assert(css.includes('.lany-route')&&css.includes('.lany-map-levels .lany-level:not(:disabled)'));
 for(const marker of ['createElementNS','renderMap','routePath.setAttribute','openPrep','stageColumn','resumeGameFromMap','LanyTempo?.pause()','LanyTempo?.resume()','lany-cover-fallback'])assert(shell.includes(marker),'map or pause: '+marker);
-for(const marker of ['setInterval(update,200)','getRemaining','isExpired','durationFor','visibilitychange','state.animating','remaining<=10','setEnabled'])assert(tempo.includes(marker),'timer: '+marker);
+for(const marker of ['ticker=setInterval(update,250)','getRemaining','isExpired','durationFor','visibilitychange','state.animating','remaining<=10','setEnabled'])assert(tempo.includes(marker),'timer: '+marker);
 assert(html.includes("window.LanyTempo?.stop('win')")&&html.includes("window.LanyTempo?.stop('lose')"));
 assert(html.includes('window.LanyTempo?.start(lv)'));
 assert(html.includes('state.combo>=8'),'Runaway cascades need a hard limit');
