@@ -516,20 +516,33 @@ function getCtx() {
 // Resume AudioContext on first user interaction (browser policy)
 document.addEventListener('click', () => { if(actx && actx.state==='suspended') actx.resume(); }, {once:true});
 
+// Keep transient Web Audio nodes bounded during long combo sessions.
+let lanyActiveAudioVoices=0;
+const LANY_MAX_AUDIO_VOICES=24;
 function playTone(freq, type='sine', duration=0.1, vol=0.3, delay=0) {
+  if(document.hidden||lanyActiveAudioVoices>=LANY_MAX_AUDIO_VOICES)return;
+  let osc=null,gain=null,started=false;
   try {
-    const ctx = getCtx();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
+    const ctx=getCtx();
+    osc=ctx.createOscillator();
+    gain=ctx.createGain();
     osc.connect(gain);
     gain.connect(ctx.destination);
-    osc.type = type;
-    osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
-    gain.gain.setValueAtTime(vol, ctx.currentTime + delay);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + duration);
-    osc.start(ctx.currentTime + delay);
-    osc.stop(ctx.currentTime + delay + duration + 0.05);
-  } catch(e) {}
+    osc.type=type;
+    osc.frequency.setValueAtTime(freq,ctx.currentTime+delay);
+    gain.gain.setValueAtTime(vol,ctx.currentTime+delay);
+    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+delay+duration);
+    osc.onended=()=>{
+      try{osc.disconnect();gain.disconnect();}catch(_){}
+      lanyActiveAudioVoices=Math.max(0,lanyActiveAudioVoices-1);
+    };
+    osc.start(ctx.currentTime+delay);started=true;
+    lanyActiveAudioVoices++;
+    osc.stop(ctx.currentTime+delay+duration+0.05);
+  }catch(_){
+    if(started){try{osc.stop()}catch(_){}}
+    else {try{osc?.disconnect();gain?.disconnect()}catch(_){}}
+  }
 }
 
 function playChord(freqs, duration=0.15, vol=0.25) {
