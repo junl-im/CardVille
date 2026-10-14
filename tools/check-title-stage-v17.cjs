@@ -27,7 +27,7 @@ for(const name of ['title-forest-v17.svg','title-mascots-v17.svg']){
  const img=read('web/assets/title/'+name);
  assert(img.includes('<svg')&&img.includes('</svg>')&&img.length>2500,name);
  assert(!/<script|foreignObject/i.test(img),name);
- assert(sw.includes('./assets/title/'+name),name+' offline');
+ // Legacy SVG files remain for source provenance, but are no longer PWA-preloaded.
 }
 assert(sw.includes('lanypang-match-v1.8.0-ko'));
 assert(sw.includes('./js/lany-update-v17.js'));
