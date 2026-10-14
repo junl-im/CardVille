@@ -1,0 +1,96 @@
+/* 라니팡 v1.6 — gameplay action illustrations. Decorative art + real Korean button labels. */
+button[data-lany-art]{
+  --lany-action-size:clamp(23px,5.5vw,33px);
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  column-gap:clamp(3px,1vw,7px);
+  min-width:0;
+  max-width:100%;
+  white-space:normal;
+  line-height:1.14;
+  text-align:center;
+  position:relative;
+  overflow:visible;
+  isolation:isolate;
+}
+button[data-lany-art]::before{
+  content:"";
+  display:block;
+  width:var(--lany-action-size);
+  height:var(--lany-action-size);
+  flex:0 0 var(--lany-action-size);
+  background-image:var(--lany-action-image);
+  background-size:contain;
+  background-repeat:no-repeat;
+  background-position:center;
+  pointer-events:none;
+  filter:drop-shadow(0 2px 1px #4a316449);
+  transition:transform .16s cubic-bezier(.2,1.5,.3,1),filter .14s ease;
+}
+button[data-lany-art="play"]{--lany-action-image:url('../assets/buttons/action-play.svg')}
+button[data-lany-art="map"]{--lany-action-image:url('../assets/buttons/action-map.svg')}
+button[data-lany-art="resume"]{--lany-action-image:url('../assets/buttons/action-resume.svg')}
+button[data-lany-art="retry"]{--lany-action-image:url('../assets/buttons/action-retry.svg')}
+button[data-lany-art="next"]{--lany-action-image:url('../assets/buttons/action-next.svg')}
+button[data-lany-art="home"]{--lany-action-image:url('../assets/buttons/action-home.svg')}
+button[data-lany-art="help"]{--lany-action-image:url('../assets/buttons/action-help.svg')}
+button[data-lany-art="pause"]{--lany-action-image:url('../assets/buttons/action-pause.svg')}
+button[data-lany-art="exit"]{--lany-action-image:url('../assets/buttons/action-exit.svg')}
+button[data-lany-art="back"]{--lany-action-image:url('../assets/buttons/action-back.svg')}
+button[data-lany-art="friends"]{--lany-action-image:url('../assets/buttons/action-friends.svg')}
+button[data-lany-art="close"]{--lany-action-image:url('../assets/buttons/action-close.svg')}
+@media(hover:hover) and (pointer:fine){
+  button[data-lany-art]:not(:disabled):hover::before{
+    transform:translateY(-2px) rotate(-7deg) scale(1.12);
+    filter:drop-shadow(0 4px 2px #4234636a) saturate(1.17);
+  }
+}
+button[data-lany-art]:active::before,
+button[data-lany-art].lany-pressed::before{
+  transform:translateY(3px) rotate(4deg) scale(.88);
+  filter:brightness(.95) drop-shadow(0 0 1px #51436a66);
+}
+.lany-map-bottom button[data-lany-art]{
+  --lany-action-size:clamp(21px,6.2vw,29px);
+  padding:7px clamp(2px,.9vw,10px)!important;
+  font-size:clamp(.72rem,2.5vw,.89rem);
+  word-break:keep-all;
+}
+.lany-map-bottom button#lany-map-continue{flex:2.2}
+.lany-map-bottom button[data-lany-art="exit"]{flex:1.15}
+.lany-prep-card button[data-lany-art]{
+  --lany-action-size:clamp(25px,6vw,37px);
+  min-height:46px;
+}
+.lany-prep-card .lany-prep-cancel{font-size:clamp(.79rem,3vw,1rem)}
+.lany-dialog button[data-lany-art]{--lany-action-size:clamp(25px,6.7vw,36px);min-height:46px!important;padding:6px 8px}
+.overlay .modal button[data-lany-art]{--lany-action-size:clamp(25px,6.6vw,36px);min-height:44px!important;padding:7px 10px!important}
+#overlay-win .modal-btns,#overlay-lose .modal-btns{display:flex;flex-direction:column;align-items:stretch;gap:8px}
+#overlay-win .modal-btns button[data-lany-art],#overlay-lose .modal-btns button[data-lany-art]{width:100%;margin:0!important}
+.lany-game-nav button[data-lany-art]{
+  --lany-action-size:clamp(21px,5.3vw,28px);
+  padding:5px 4px!important;
+  font-size:clamp(.72rem,2.65vw,.94rem)!important;
+  min-height:43px;
+  gap:clamp(2px,.65vw,5px);
+}
+.header .hud button[data-lany-art]{
+  --lany-action-size:18px;
+  font-size:.73rem!important;
+  gap:1px;
+}
+.lany-friends-panel footer button[data-lany-art]{--lany-action-size:25px}
+button[data-lany-art]:focus-visible{outline:3px solid #ffef97!important;outline-offset:2px!important}
+@media(max-width:360px){
+  .lany-map-bottom button[data-lany-art]{--lany-action-size:20px;font-size:.69rem!important;padding:5px 2px!important;column-gap:2px}
+  .lany-game-nav button[data-lany-art]{--lany-action-size:21px;font-size:.69rem!important;gap:1px}
+  .header .hud button[data-lany-art]{--lany-action-size:16px;font-size:.68rem!important}
+}
+@media(max-height:620px){
+  .lany-dialog button[data-lany-art]{--lany-action-size:24px;min-height:39px!important}
+  .overlay .modal button[data-lany-art]{--lany-action-size:22px;min-height:39px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  button[data-lany-art]::before{transition:none!important;animation:none!important}
+}
