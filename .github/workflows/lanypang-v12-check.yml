@@ -37,6 +37,7 @@ jobs:
           node tools/check-longplay-v19.cjs
           node tools/check-v20-cache-map.cjs
           node tools/check-ui-v21.cjs
+          node tools/check-raster-only-v22.cjs
 
   browser-pages:
     needs: regression
@@ -51,7 +52,7 @@ jobs:
         run: |
           python -m pip install playwright==1.58.0
           python -m playwright install --with-deps chromium
-          python -m pip install --quiet CairoSVG==2.7.1
+          python -m pip install --quiet Pillow==11.3.0
           python tools/build-pwa-icons.py
           sudo apt-get update -qq
           sudo apt-get install -y -qq fonts-noto-cjk
@@ -61,6 +62,7 @@ jobs:
           node tools/check-v20-cache-map.cjs --raster
           node tools/check-ui-v21.cjs --raster
           node tools/check-pwa-v14.cjs --raster
+          node tools/check-raster-only-v22.cjs
       - name: Validate actual mobile and desktop page navigation
         run: |
           set -euo pipefail
