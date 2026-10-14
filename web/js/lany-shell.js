@@ -11,12 +11,46 @@
  const worldTabSize=()=>window.innerWidth<500?3:window.innerWidth<850?4:5;
  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
  let mapRenderId=0;
+ let goEpoch=0,goTimers=[];
+ function cancelGo(){
+   goEpoch++;
+   for(const timer of goTimers)clearTimeout(timer);
+   goTimers=[];
+   const overlay=$('lany-go-intro');
+   if(overlay)overlay.hidden=true;
+ }
+ function launchGo(){
+   cancelGo();
+   const overlay=$('lany-go-intro'),number=$('lany-go-number');
+   if(!overlay||!number||nav.screen!=='game')return;
+   const seq=goEpoch,reduce=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+   const frames=reduce?[['GO!',0]]:[['3',0],['2',650],['1',1300],['GO!',1950]];
+   overlay.hidden=false;
+   window.LanyTempo?.pause();
+   for(const [value,delay] of frames){
+     const update=()=>{
+       if(goEpoch!==seq||nav.screen!=='game')return;
+       number.textContent=value;
+       number.classList.toggle('go',value==='GO!');
+       number.style.animation='none';
+       void number.offsetWidth;
+       number.style.animation='';
+     };
+     if(delay===0)update();else goTimers.push(setTimeout(update,delay));
+   }
+   goTimers.push(setTimeout(()=>{
+     if(goEpoch!==seq)return;
+     overlay.hidden=true;goTimers=[];
+     if(nav.screen==='game'&&!nav.overlay&&!document.hidden)window.LanyTempo?.resume();
+   },reduce?470:2650));
+ }
  const savedStage=()=>{let n=Number(localStorage.getItem('cv_last_level'));return Number.isInteger(n)&&n>0&&n<=250&&state.unlockedLevels.includes(n)?n:1};
  const reached=(n)=>state.unlockedLevels.includes(n);
  const hide=()=>{for(const id of ['lany-pause','lany-exit'])$(id).hidden=true;nav.overlay=null};
  const hideLegacy=()=>{for(const id of overlayIds){const el=$(id);if(el)el.style.display='none'}};
  const hideViews=()=>{for(const id of ['lany-world-map','lany-stage-prep'])$(id).hidden=true};
  function openMap(worldIndex){
+   cancelGo();
    const from=nav.screen;
    const finished=['overlay-win','overlay-lose'].some(id=>$(id)?.style.display==='flex');
    if(nav.screen==='game' && !finished)nav.returnToGame=true;
@@ -175,6 +209,7 @@
    if(nav.screen!=='prep'||!reached(nav.selectedLevel))return;
    nav.returnToGame=false;
    const n=nav.selectedLevel;window.LanyTempo?.setEnabled($('lany-time-mode').checked);hideViews();nav.screen='game';hideLegacy();window.initGame(n);
+   launchGo();
    $('board')?.focus?.();
  }
  function resumeGameFromMap(){if(!nav.returnToGame||!state.board.length)return;hideViews();hide();nav.screen='game';nav.returnToGame=false;window.LanyTempo?.resume();$('board')?.focus?.()}
@@ -183,10 +218,10 @@
    nav.started=true;nav.world=Math.floor((savedStage()-1)/25);openMap(nav.world);
    try{if(mobileFullscreen()&&document.documentElement.requestFullscreen&&!document.fullscreenElement)Promise.resolve(document.documentElement.requestFullscreen({navigationUI:'hide'})).catch(()=>{})}catch(_){/* browser permission */}
  }
- function openPause(){if(nav.screen!=='game'){openExit();return}window.LanyTempo?.pause();hide();nav.overlay='pause';$('lany-pause').hidden=false;$('lany-pause').querySelector('button').focus()}
- function openExit(){window.LanyTempo?.pause();hide();nav.previousScreen=nav.screen;nav.overlay='exit';$('lany-exit').hidden=false;$('lany-exit').querySelector('button').focus()}
+ function openPause(){cancelGo();if(nav.screen!=='game'){openExit();return}window.LanyTempo?.pause();hide();nav.overlay='pause';$('lany-pause').hidden=false;$('lany-pause').querySelector('button').focus()}
+ function openExit(){cancelGo();window.LanyTempo?.pause();hide();nav.previousScreen=nav.screen;nav.overlay='exit';$('lany-exit').hidden=false;$('lany-exit').querySelector('button').focus()}
  function resume(){hide();if(nav.screen==='game')window.LanyTempo?.resume();if(nav.screen==='map')$('lany-map-continue').focus();else if(nav.screen==='prep')$('lany-prep-play').focus();else $('board')?.focus?.()}
- function showHome(){window.LanyTempo?.pause();hide();hideLegacy();hideViews();nav.started=false;nav.returnToGame=false;nav.screen='title';document.body.classList.add('lany-at-title');$('lany-title').hidden=false;if(document.fullscreenElement)Promise.resolve(document.exitFullscreen?.()).catch(()=>{});$('lany-start-button').focus()}
+ function showHome(){cancelGo();window.LanyTempo?.pause();hide();hideLegacy();hideViews();nav.started=false;nav.returnToGame=false;nav.screen='title';document.body.classList.add('lany-at-title');$('lany-title').hidden=false;if(document.fullscreenElement)Promise.resolve(document.exitFullscreen?.()).catch(()=>{});$('lany-start-button').focus()}
  function exitGame(){showHome()}
  function openHelp(){window.LanyTempo?.pause();nav.helpIndex=0;nav.wasHelpFrom=nav.overlay||nav.screen;hide();$('overlay-tutorial').style.display='flex';$('overlay-tutorial').querySelector('h2').textContent='🌟 라니팡 게임 방법';$('overlay-tutorial').querySelector('.btn.btn-primary').textContent='알겠어요';renderHelpPage()}
  function closeTutorial(){$('overlay-tutorial').style.display='none';const from=nav.wasHelpFrom;nav.wasHelpFrom=null;if(from==='pause')openPause();else if(from==='exit')openExit();else if(from==='title')showHome();else if(from==='map')openMap();else if(from==='prep')openPrep(nav.selectedLevel);else if(from==='game')window.LanyTempo?.resume()}
@@ -221,7 +256,7 @@
  },{passive:true});
  document.addEventListener('contextmenu',e=>e.preventDefault(),true);
  document.addEventListener('dragstart',e=>e.preventDefault(),true);
- window.LanyShell={start:begin,openPause,openExit,resume,showHome,exitGame,openHelp,closeTutorial,toggleFullscreen,openMap,openPrep,playPrepared,continueStage,resumeGameFromMap,mapPage,worldPage,prepPage,helpPage,getCurrentScreen:()=>nav.overlay||nav.screen};
+ window.LanyShell={start:begin,openPause,openExit,resume,showHome,exitGame,openHelp,closeTutorial,toggleFullscreen,openMap,openPrep,playPrepared,launchGo,continueStage,resumeGameFromMap,mapPage,worldPage,prepPage,helpPage,getCurrentScreen:()=>nav.overlay||nav.screen};
  $('lany-start-button')?.addEventListener('click',begin);
  const cover=$('lany-cover-image');
  if(cover){cover.addEventListener('load',()=>document.body.classList.add('lany-cover-loaded'));cover.addEventListener('error',()=>{document.body.classList.add('lany-cover-fallback');console.warn('[라니팡] 타이틀 이미지 불러오기 실패: 기본 배경으로 전환');});if(cover.complete&&cover.naturalWidth)document.body.classList.add('lany-cover-loaded');}
