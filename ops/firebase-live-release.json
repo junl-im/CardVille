@@ -4,7 +4,7 @@
   "site": "cardville",
   "channelId": "live",
   "sourceCommit": "6e3533f1bb7b120db37066747fb6069338d90c06",
-  "requestedFor": "라니팡 v1.9 실제 연속 매칭·장시간 성능 개선, WebAudio 연결 해제 및 동시재생 상한, 첫 화면 파티클 중단, 모바일 로컬 FPS 진단, 검은 고양이 WebP 결과 연출",
+  "requestedFor": "라니팡 v1.9 실제 연속 매칭·장시간 성능 개선, WebAudio 연결 해제 및 동시재생 상한, 첫 화면 파티클 중단, 모바일 로컬 FPS 진단, 검은 고양이 WebP 결과 연출 · Firebase Hosting 업로드 성공 이후 curl broken pipe HTTP 검증 수정 재실행",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true
 }
