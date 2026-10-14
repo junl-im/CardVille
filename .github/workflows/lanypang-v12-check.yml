@@ -77,11 +77,12 @@ jobs:
           python tests/verify-longplay-v19.py
           python tests/verify-v20-offline-map.py
           python tests/verify-ui-v21.py
+          python tests/verify-raster-v22.py
       - name: Preserve comparison screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: lanypang-v21-premium-webp-all-screens
+          name: lanypang-v22-raster-only-all-screens
           path: |
             docs/paging-v13/*.png
             docs/art-buttons-v15/*.png
@@ -91,4 +92,5 @@ jobs:
             docs/longplay-v19/*.png
             docs/v20-offline-map/*.png
             docs/ui-v21/*.png
+            docs/v22-visual/*.png
           if-no-files-found: ignore
