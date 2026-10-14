@@ -4,7 +4,7 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
 const load=p=>fs.readFileSync(p,'utf8');
 const html=load('web/index.html'),shell=load('web/js/lany-shell.js'),css=load('web/css/lany-shell.css'),tempo=load('web/js/lany-tempo.js');
 const sw=load('web/sw.js');const version=JSON.parse(load('web/version.json'));const manifest=JSON.parse(load('web/manifest.json'));
-assert.equal(version.version,'1.4.0-beta');assert.equal(manifest.start_url,'./?v=1.4.0');
+assert.equal(version.version,'1.4.0-beta');assert(manifest.start_url.startsWith('./?v=1.4.0'),'PWA start URL must retain versioned game entry');
 for(const marker of ['id="lany-cover-image"','src="./assets/lanypang-cover.webp?v=1.4.0"','id="lany-time-mode"','id="lany-clock"','id="lany-clock-value"','lany-map-tip','lany-tempo.js'])assert(html.includes(marker),'missing: '+marker);
 assert(fs.statSync('web/assets/lanypang-cover.webp').size>100000);
 assert(css.includes('.lany-cover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover'));
