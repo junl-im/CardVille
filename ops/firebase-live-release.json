@@ -1,10 +1,10 @@
 {
-  "release": "1.8.0-beta",
+  "release": "1.9.0-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "5edf3ad5bb62d759b790e648f04e8beb9970167d",
-  "requestedFor": "라니팡 v1.8 기존 고품질 WebP 캐릭터·배경 복구, 검은 고양이 캐릭터, 실제 WebP 이미지 버튼, 퍼즐 DOM 재사용 및 비동기 레벨 갱신 렉 안정화",
+  "sourceCommit": "6e3533f1bb7b120db37066747fb6069338d90c06",
+  "requestedFor": "라니팡 v1.9 실제 연속 매칭·장시간 성능 개선, WebAudio 연결 해제 및 동시재생 상한, 첫 화면 파티클 중단, 모바일 로컬 FPS 진단, 검은 고양이 WebP 결과 연출",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true
 }
