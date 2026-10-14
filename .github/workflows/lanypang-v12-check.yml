@@ -76,6 +76,7 @@ jobs:
           python tests/verify-longplay-v19.py
           python tests/verify-v20-offline-map.py
           python tests/verify-ui-v21.py
+          python tests/verify-raster-v22.py
       - name: Preserve comparison screenshots
         if: always()
         uses: actions/upload-artifact@v4
@@ -86,6 +87,7 @@ jobs:
             docs/art-buttons-v15/*.png
             docs/action-art-v16/*.png
             docs/title-stage-v17/*.png
+            docs/raster-v22/*.png
             docs/v18-perf/*.png
             docs/longplay-v19/*.png
             docs/v20-offline-map/*.png
