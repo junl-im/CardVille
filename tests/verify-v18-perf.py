@@ -15,7 +15,7 @@ with sync_playwright() as pw:
   p=ctx.new_page();errors=[];missing=[]
   p.on('pageerror',lambda e:errors.append(str(e)))
   p.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
-  p.goto(base+'?v=2.0.0',wait_until='load',timeout=30000)
+  p.goto(base+'?v=2.1.0',wait_until='load',timeout=30000)
   p.wait_for_function('typeof LanyShell==="object"&&typeof LanyPerf==="object"')
   assert p.locator('.lany-cover').evaluate('(e)=>e.complete&&e.naturalWidth>0'),name
   assert p.locator('.lany-cover').evaluate('(e)=>getComputedStyle(e).visibility')=='visible',name

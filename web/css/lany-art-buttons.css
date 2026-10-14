@@ -21,12 +21,13 @@
 .lany-art-button.lany-pressed,.lany-art-button:active{transform:translateY(6px) scale(.955)!important;filter:brightness(.89) saturate(1.09)!important;transition-duration:70ms!important}
 .lany-art-button.lany-pressed .lany-button-picture,.lany-art-button:active .lany-button-picture{filter:drop-shadow(0 0 1px #5c2d71a0)!important}
 .lany-art-button.lany-pressed .lany-button-word{transform:translate(-50%,-44%) scale(.97)}
-/* Reusable imagery from one art system: varied purpose-specific candy colors. */
-:is(.lany-action,.lany-secondary,.lany-page-arrow,.overlay .btn,.lany-game-nav button,#game-mode-bar button,.lany-difficulty-close,.lany-install-done,.lany-world-tab,.lany-back,.lany-map-icon){background-image:url('../assets/buttons/skin-pink.svg')!important;background-repeat:no-repeat!important;background-position:center!important;background-size:100% 100%!important;background-color:transparent!important;border-color:transparent!important;box-shadow:none!important;filter:drop-shadow(0 3px 2px #633d6677);text-shadow:0 1px 2px #65375ca0;transition:transform .12s ease,filter .12s ease!important;touch-action:manipulation}
-:is(.lany-secondary,.lany-action.pale,.lany-game-nav .lany-game-map-button,.lany-map-icon,.lany-back){background-image:url('../assets/buttons/skin-blue.svg')!important;color:#fff!important}
-:is(.lany-page-arrow,.lany-world-tab,.lany-difficulty-close){background-image:url('../assets/buttons/skin-gold.svg')!important;color:#864b27!important;text-shadow:0 1px 1px #fffcc8!important}
-:is(.lany-game-nav .lany-game-pause-button,.lany-action:not(.pale):not(.quiet),#lany-prep-play){background-image:url('../assets/buttons/skin-green.svg')!important;color:#fff!important;text-shadow:0 2px 2px #3b6a40!important}
-.lany-action.quiet{background-image:url('../assets/buttons/skin-blue.svg')!important;color:#fff!important}
+/* Legacy v1.5 button layout and tactile behaviour preserved. v2.1 owns all background images;
+   do not reintroduce high-specificity !important SVG skins here. */
+:is(.lany-action,.lany-secondary,.lany-page-arrow,.overlay .btn,.lany-game-nav button,#game-mode-bar button,.lany-difficulty-close,.lany-install-done,.lany-world-tab,.lany-back,.lany-map-icon){background-repeat:no-repeat!important;background-position:center!important;background-size:100% 100%!important;background-color:transparent!important;border-color:transparent!important;box-shadow:none!important;filter:drop-shadow(0 3px 2px #633d6677);text-shadow:0 1px 2px #65375ca0;transition:transform .12s ease,filter .12s ease!important;touch-action:manipulation}
+:is(.lany-secondary,.lany-action.pale,.lany-game-nav .lany-game-map-button,.lany-map-icon,.lany-back){color:#fff!important}
+:is(.lany-page-arrow,.lany-world-tab,.lany-difficulty-close){color:#864b27!important;text-shadow:0 1px 1px #fffcc8!important}
+:is(.lany-game-nav .lany-game-pause-button,.lany-action:not(.pale):not(.quiet),#lany-prep-play){color:#fff!important;text-shadow:0 2px 2px #3b6a40!important}
+.lany-action.quiet{color:#fff!important}
 .lany-page-arrow:disabled,.lany-world-tab:disabled{filter:grayscale(.75) brightness(.8);opacity:.45}
 @media(hover:hover) and (pointer:fine){
  :is(.lany-action,.lany-secondary,.lany-page-arrow,.overlay .btn,.lany-game-nav button,#game-mode-bar button,.lany-difficulty-close,.lany-install-done,.lany-world-tab,.lany-back,.lany-map-icon):not(:disabled):hover{transform:translateY(-2px) scale(1.027)!important;filter:brightness(1.08) drop-shadow(0 4px 4px #603a6870)!important}
@@ -64,4 +65,4 @@
 
 /* Installed PWA has 2 quick shortcuts, never a blank install slot. */
 .lany-title-shortcuts:has(#lany-install-button[hidden]){grid-template-columns:repeat(2,minmax(0,1fr));width:min(76%,290px)}
-.lany-world-tab.active{background-image:url('../assets/buttons/skin-green.svg')!important;color:#fff!important;text-shadow:0 1px 3px #347345!important}
+.lany-world-tab.active{color:#fff!important;text-shadow:0 1px 3px #347345!important}

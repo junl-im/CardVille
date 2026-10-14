@@ -238,3 +238,132 @@ def build_stage_medallions():
 
 if __name__=='__main__':
     build_stage_medallions()
+
+# v2.1 — unified independent raster game UI kit, rebuilt reproducibly
+# from the approved animal WebP library. No temporary SVG heroes.
+def build_ui_v21():
+    from PIL import ImageDraw, ImageColor, ImageFilter
+    base=A/'ui'/'v21'
+    groups=['title','buttons','hud','popup','map','booster','icons']
+    for group in groups:(base/group).mkdir(parents=True,exist_ok=True)
+    schemes={
+        'pink':('#ffe8f3','#ff76b4','#de377f','#833757'),
+        'blue':('#d9faff','#70cdf9','#3289df','#2c568c'),
+        'gold':('#fff6ba','#ffce65','#f4a02f','#996032'),
+        'green':('#eaffb5','#8be76a','#40ba61','#437343'),
+        'wood':('#ffe5b9','#d4935c','#ad693f','#774837'),
+        'red':('#ffe4ea','#fa8393','#d94f75','#843e57'),
+    }
+    def panel(name,palette,size=(520,144),rounded=52,detail=True):
+        top,mid,low,edge=schemes[palette]
+        w,h=size
+        out=Image.new('RGBA',size)
+        sh=Image.new('RGBA',size)
+        ds=ImageDraw.Draw(sh)
+        ds.rounded_rectangle((17,18,w-12,h-9),radius=rounded,fill=(61,36,58,95))
+        out.alpha_composite(sh.filter(ImageFilter.GaussianBlur(8)))
+        d=ImageDraw.Draw(out,'RGBA')
+        d.rounded_rectangle((7,5,w-8,h-16),radius=rounded,fill=edge,outline='#fff9de',width=5)
+        d.rounded_rectangle((14,11,w-15,h-22),radius=max(10,rounded-6),fill=low)
+        bbox=(19,15,w-20,h-28)
+        grad=Image.new('RGBA',size)
+        gd=ImageDraw.Draw(grad,'RGBA')
+        c1=ImageColor.getrgb(top);c2=ImageColor.getrgb(mid)
+        for y in range(bbox[1],bbox[3]+1):
+            t=(y-bbox[1])/max(1,bbox[3]-bbox[1])
+            r=tuple(int(a*(1-t)+b*t) for a,b in zip(c1,c2))
+            gd.line((bbox[0],y,bbox[2],y),fill=(*r,255))
+        mask=Image.new('L',size)
+        ImageDraw.Draw(mask).rounded_rectangle(bbox,radius=max(8,rounded-11),fill=255)
+        out.paste(grad,(0,0),mask)
+        d=ImageDraw.Draw(out,'RGBA')
+        d.arc((30,23,w-32,h-31),190,339,fill=(255,255,255,183),width=8)
+        if detail:
+            d.ellipse((int(w*.11),int(h*.35),int(w*.12+12),int(h*.36+12)),fill=(255,255,240,170))
+            d.ellipse((int(w*.82),int(h*.55),int(w*.82+9),int(h*.55+9)),fill=(255,255,235,140))
+            if palette=='wood':
+                d.arc((19,19,w-25,h-43),5,178,fill=(127,67,39,65),width=3)
+        return out
+    def save(target,pic):
+        pic.save(target,'WEBP',quality=90,method=6)
+        with Image.open(target) as im:
+            assert im.format=='WEBP'
+        print('OK UI',target.relative_to(A),target.stat().st_size)
+    # Title visuals preserve real approved character silhouettes, not substitute vector mascots.
+    for key,source in [('logo','title-logo-v18.webp'),('play','btn-play-v18.webp'),
+                       ('install','btn-install-v18.webp'),('help','btn-help-v18.webp'),
+                       ('friends','btn-friends-v18.webp')]:
+        original=Image.open(T/source).convert('RGBA')
+        # Re-export each role in a clearly versioned standalone asset.
+        save(base/'title'/f'{key}.webp',original)
+    # 6 independent full-width image skins; labels remain native accessible HTML.
+    for color in schemes:
+        save(base/'buttons'/f'skin-{color}.webp',panel('skin',color,(560,146),64))
+    # Popup backing at 2x raster (decor stays in the image instead of expensive CSS filters).
+    for key,color in [('clear','gold'),('fail','blue'),('help','green'),('pause','pink'),('install','blue'),('friends','green'),('settings','wood'),('confirm','pink')]:
+        pic=panel(key,color,(800,1000),72)
+        d=ImageDraw.Draw(pic,'RGBA')
+        # Frame with glossy inset inset cream for readable content; not a flat rectangle.
+        d.rounded_rectangle((34,54,765,920),radius=62,fill='#fff9ec',outline='#fff4d5',width=13)
+        d.rounded_rectangle((51,74,749,899),radius=50,outline=(250,197,135,160),width=8)
+        for x,y in [(59,111),(726,164),(100,842),(708,848)]:
+            d.ellipse((x-11,y-11,x+11,y+11),fill='#ffdb7c',outline='#fffdf2',width=4)
+        save(base/'popup'/f'panel-{key}.webp',pic)
+    # Game HUD widgets: actually separate image files for level, goal, moves, score & bonuses.
+    for key,color in [('stage','wood'),('goal','pink'),('moves','gold'),('score','blue'),('best','green'),('booster','green'),('clock','red')]:
+        save(base/'hud'/f'panel-{key}.webp',panel(key,color,(340,158),38))
+    # Map chapter labels + navigation buttons
+    for key,color in [('world','wood'),('chapter','gold'),('prev','blue'),('next','green')]:
+        save(base/'map'/f'{key}.webp',panel(key,color,(500,150),50))
+    # Booster-specific badge art uses the original animal expressions and candy jewel art.
+    effects=[('hammer','rabbit'),('shuffle','chick'),('color','cat'),('time','bear')]
+    for key,mascot in effects:
+        badge=panel(key,'blue' if key in ('shuffle','color') else 'gold',(230,232),56)
+        fg=image('polish/'+mascot+'-cheer.webp')
+        fg.thumbnail((132,132),RES)
+        badge.alpha_composite(fg,((230-fg.width)//2,19))
+        save(base/'booster'/f'badge-{key}.webp',badge)
+    # All role buttons are unique files, with color meaning. Icons remain small helpers.
+    actions={
+      'play':'green','resume':'green','next':'gold','retry':'red','map':'blue','home':'blue',
+      'help':'gold','pause':'wood','exit':'red','back':'blue','friends':'green','close':'red',
+      'settings':'wood','sound':'wood','notice':'blue','confirm':'green','cancel':'red'
+    }
+    for key,color in actions.items():
+        badge=panel(key,color,(360,110),46)
+        if key in ('friends','play','retry','help'):
+            person={'friends':'bear','play':'rabbit','retry':'cat','help':'chick'}[key]
+            fg=image('polish/'+person+'-cheer.webp')
+            fg.thumbnail((66,66),RES)
+            badge.alpha_composite(fg,(30,19))
+        save(base/'buttons'/f'action-{key}.webp',badge)
+    # Use the user's actual glossy illustrated sprite-sheet cutouts for the
+    # title's primary game / book / collection actions. Keep the previously
+    # approved black-cat INSTALL illustration (not the older white bunny).
+    import zipfile,io,hashlib
+    archive=base/'source-original-kit.zip'
+    assert archive.is_file(), 'Original user-approved v2.1 sprite kit missing'
+    with zipfile.ZipFile(archive,'r') as source:
+        for role,source_name in [('play','start_main.webp'),('help','help.webp'),
+                                 ('friends','friends.webp')]:
+            src=Image.open(io.BytesIO(source.read(source_name))).convert('RGBA')
+            save(base/'title'/f'{role}.webp',src)
+        original_data=source.read('MANIFEST.json')
+        original_manifest=json.loads(original_data.decode('utf-8')) if 'json' in globals() else __import__('json').loads(original_data)
+        assert all(n in original_manifest['files'] for n in ['start_main.webp','help.webp','friends.webp'])
+    source_sha256=hashlib.sha256(archive.read_bytes()).hexdigest()
+    # A lightweight consolidated inventory for CI and future replacement of each independent image.
+    import json
+    stock={}
+    for kind in groups:
+        stock[kind]=sorted(x.name for x in (base/kind).glob('*.webp'))
+    (base/'manifest.json').write_text(json.dumps({
+       'release':'2.1.0-beta','style':'LanyPang approved WebP studio',
+       'roles':stock,'generation':'tools/build-visual-v18.py',
+       'source':['web/assets/friends','web/assets/polish'],'userArtSource':'web/assets/ui/v21/source-original-kit.zip','userArtSHA256':source_sha256
+    },ensure_ascii=False,indent=2),encoding='utf-8')
+    assert len(list(base.rglob('*.webp')))>=44
+    print('OK v2.1 UI kit',sum(len(x) for x in stock.values()),'individual WebP assets')
+
+if __name__=='__main__':
+    build_ui_v21()
