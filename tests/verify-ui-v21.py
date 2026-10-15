@@ -42,6 +42,9 @@ with sync_playwright() as pw:
   page.screenshot(path=str(out/(name+'-map.png')))
   page.locator('#lany-map-continue').click()
   assert page.locator('#lany-stage-prep').is_visible(),name
+  if mobile:
+   assert page.locator('#lany-prep-pager').is_visible(),(name,'mobile prep must page its content')
+   assert page.locator('[data-prep-page="1"]').is_hidden(),(name,'unused prep details should stay hidden')
   bg('.lany-prep-card','panel-help.webp')
   # Standalone action art must keep its source aspect ratio instead of stretching text.
   for selector in ('#lany-prep-play','#lany-stage-prep .lany-prep-cancel'):

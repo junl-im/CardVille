@@ -182,7 +182,7 @@
    renderPrepPage();$('lany-prep-play').focus();return true;
  }
  function renderPrepPage(){
-   const compact=Math.min(window.innerHeight||800,window.visualViewport?.height||Infinity)<740;
+   const compact=window.matchMedia("(max-width: 600px)").matches||Math.min(window.innerHeight||800,window.visualViewport?.height||Infinity)<740;
    const root=$('lany-stage-prep'),pager=$('lany-prep-pager');
    root.classList.toggle('lany-prep-compact',compact);
    pager.hidden=!compact;
