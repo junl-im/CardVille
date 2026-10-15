@@ -52,7 +52,10 @@ with sync_playwright() as pw:
   assert page.locator('#game-mode-bar').evaluate("e=>getComputedStyle(e).position")=='static',name
   assert page.locator('#leaderboard').evaluate("e=>getComputedStyle(e).backgroundColor")!='rgb(22, 27, 34)',name
   for kind in ('hammer','shuffle','color','time'):
-   bg('#b-'+kind,'badge-'+kind+'.webp')
+   bg('#b-'+kind,'/v30/boosters/'+kind+'.webp')
+  assert page.locator('#board-wrap').evaluate("e=>e.compareDocumentPosition(document.querySelector('.boosters')) & Node.DOCUMENT_POSITION_FOLLOWING"),(name,'boosters must follow board')
+  if mobile and h>=568:
+   assert page.locator('.boosters').evaluate("e=>e.getBoundingClientRect().top < innerHeight - 20"),(name,'boosters must enter first viewport')
   page.screenshot(path=str(out/(name+'-game.png')))
   page.locator('#lany-quick-pause').click()
   assert page.locator('#lany-pause').is_visible(),name

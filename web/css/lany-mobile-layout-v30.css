@@ -1,0 +1,50 @@
+/* v30: show the real booster art beside the puzzle and keep it visible on phones. */
+#app .boosters{width:min(100%,520px)!important;margin:8px auto 6px!important;padding:5px 6px 6px!important;gap:clamp(4px,1.6vw,8px)!important}
+#app .boosters .booster{
+ height:clamp(62px,16vw,80px)!important;
+ background-size:70% 70%,100% 100%!important;
+ background-position:center 17%,center!important;
+ background-repeat:no-repeat!important;
+ background-color:#fff9e8!important;
+ border-radius:16px!important;
+}
+#app .boosters #b-hammer{background-image:url('../assets/v30/boosters/hammer.webp'),url('../assets/ui/v21/hud/panel-booster.webp')!important}
+#app .boosters #b-shuffle{background-image:url('../assets/v30/boosters/shuffle.webp'),url('../assets/ui/v21/hud/panel-booster.webp')!important}
+#app .boosters #b-color{background-image:url('../assets/v30/boosters/color.webp'),url('../assets/ui/v21/hud/panel-booster.webp')!important}
+#app .boosters #b-time{background-image:url('../assets/v30/boosters/time.webp'),url('../assets/ui/v21/hud/panel-booster.webp')!important}
+#app .boosters .booster span{bottom:1px!important;background:#fffaf0f5!important;color:#75445d!important;padding:3px 1px!important;font-size:clamp(.62rem,2.3vw,.75rem)!important}
+#app .boosters .booster .count{z-index:2!important;top:-4px!important;right:-2px!important}
+
+/* The stage art yields space to the four tools before the browser's bottom edge. */
+@media(max-width:600px){
+ #app{gap:0!important;padding:4px 5px 12px!important}
+ #app #board-wrap{width:min(calc(100vw - 12px),max(256px,calc(100dvh - 315px)),440px)!important;max-width:none!important;margin-inline:auto!important}
+ #app .boosters{margin-top:7px!important}
+ #app .lany-game-nav{margin-top:5px!important}
+ #app .cv-controls-hint{display:none!important}
+}
+@media(max-width:380px){
+ #app .boosters .booster{height:60px!important}
+ #app .boosters .booster span{font-size:.59rem!important}
+}
+
+/* Make region choices and stage markers readable without covering the painted map. */
+#lany-world-map .lany-world-switcher{gap:3px!important;padding-inline:5px!important}
+#lany-world-map #lany-world-tabs{gap:clamp(3px,1vw,7px)!important;justify-content:center!important}
+#lany-world-map #lany-world-tabs .lany-world-tab{flex-basis:clamp(82px,26vw,132px)!important;width:clamp(82px,26vw,132px)!important}
+#lany-world-map .lany-world-switcher .lany-page-arrow{width:clamp(34px,9vw,42px)!important;min-width:34px!important;padding-inline:2px!important}
+#lany-world-map .lany-map-section .lany-map-levels .lany-level:not(:disabled){filter:drop-shadow(0 3px 3px #7f4d65a8)!important}
+#lany-world-map .lany-map-section .lany-map-levels .lany-level.current{filter:drop-shadow(0 0 5px #fff6af) drop-shadow(0 3px 3px #8b5673)!important}
+#lany-world-map .lany-map-section .lany-map-levels .lany-level small{font-size:clamp(.64rem,2.35vw,.78rem)!important;color:#643c5e!important;font-weight:950!important}
+#lany-world-map .lany-map-tip{margin-block:0!important}
+@media(max-width:600px){
+ #lany-world-map .lany-map-bottom{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:2px 7px!important;padding:3px 10px max(6px,env(safe-area-inset-bottom))!important}
+ #lany-world-map .lany-map-bottom #lany-map-continue{grid-column:1/-1!important;grid-row:1!important;justify-self:center!important;width:min(76vw,310px)!important}
+ #lany-world-map .lany-map-bottom #lany-map-resume{grid-column:1!important;grid-row:2!important}
+ #lany-world-map .lany-map-bottom button[data-lany-art="exit"]{grid-column:2!important;grid-row:2!important}
+ #lany-world-map .lany-map-bottom #lany-map-resume[hidden]{display:none!important}
+ #lany-world-map .lany-map-bottom #lany-map-resume[hidden]+#lany-map-continue+button[data-lany-art="exit"]{grid-column:1/-1!important;justify-self:center!important;width:min(60vw,240px)!important}
+ #lany-world-map .lany-map-bottom button[data-lany-art]{width:100%;height:clamp(42px,8dvh,56px)!important;background-size:contain!important}
+ #lany-world-map .lany-map-section{gap:4px!important}
+ #lany-world-map .lany-map-section .lany-map-levels .lany-level{width:clamp(53px,15vw,68px)!important;height:clamp(52px,8dvh,67px)!important}
+}

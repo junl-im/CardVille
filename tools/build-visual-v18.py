@@ -138,7 +138,8 @@ def font(size):
        '/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc',
        '/usr/share/fonts/truetype/noto/NotoSansCJK-Bold.ttc',
        '/usr/share/fonts/truetype/nanum/NanumGothicBold.ttf',
-       '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
+       '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf',
+       'C:/Windows/Fonts/malgunbd.ttf'
     ]
     for path in candidates:
         if Path(path).exists():
