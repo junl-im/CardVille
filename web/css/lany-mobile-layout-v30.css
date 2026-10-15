@@ -46,5 +46,6 @@
  #lany-world-map .lany-map-bottom #lany-map-resume[hidden]+#lany-map-continue+button[data-lany-art="exit"]{grid-column:1/-1!important;justify-self:center!important;width:min(60vw,240px)!important}
  #lany-world-map .lany-map-bottom button[data-lany-art]{width:100%;height:clamp(42px,8dvh,56px)!important;background-size:contain!important}
  #lany-world-map .lany-map-section{gap:4px!important}
+ #lany-world-map .lany-map-section .lany-map-levels{min-height:0!important;flex:1 1 auto!important}
  #lany-world-map .lany-map-section .lany-map-levels .lany-level{width:clamp(53px,15vw,68px)!important;height:clamp(52px,8dvh,67px)!important}
 }
