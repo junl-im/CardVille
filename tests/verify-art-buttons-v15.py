@@ -34,10 +34,15 @@ with sync_playwright() as pw:
    const bounds= [...document.querySelectorAll('#lany-title .lany-title-top,#lany-start-button,.lany-title-shortcuts,.lany-version')].map(e=>e.getBoundingClientRect().toJSON());
    return {start:pr,subs,rows,bounds,outerScroll:document.documentElement.scrollWidth>innerWidth+2};
   }""")
-  assert dims['rows']==3,(name,'not a three-column grid',dims)
+  expected_rows=2 if w<650 and h>680 else 3
+  assert dims['rows']==expected_rows,(name,'unexpected helper grid',dims)
   assert not dims['outerScroll'],(name,'horizontal overflow',dims)
-  assert dims['start']['width'] > dims['subs'][0]['width']*2,(name,'play button should be dominant')
-  assert abs(dims['subs'][0]['y']-dims['subs'][1]['y'])<3 and abs(dims['subs'][1]['y']-dims['subs'][2]['y'])<3,(name,'not one row')
+  assert dims['start']['width'] > dims['subs'][0]['width']*(1.5 if expected_rows==2 else 2),(name,'play button should be dominant')
+  assert abs(dims['subs'][0]['y']-dims['subs'][1]['y'])<3,(name,'first helper row misaligned')
+  if expected_rows==2:
+   assert dims['subs'][2]['y']>dims['subs'][1]['bottom'],(name,'gallery shortcut not below first row')
+  else:
+   assert abs(dims['subs'][1]['y']-dims['subs'][2]['y'])<3,(name,'not one row')
   assert dims['subs'][0]['y']>=dims['start']['y']+dims['start']['height']+2,(name,'start and helpers too close',dims)
   for bound in dims['bounds']:
    assert bound['top']>=-3 and bound['bottom']<=h+3,(name,'clipped title',bound,h)
@@ -68,7 +73,7 @@ with sync_playwright() as pw:
   else:assert not page.locator('.lany-map-head .lany-mobile-fullscreen').is_visible(),name
   assert not errors,(name,errors)
   assert not missing,(name,missing)
-  rows.append({'screen':name,'size':f'{w}x{h}','illustratedButtons':4,'threeInline':True,'mainButtonDominant':True,'titleUnclipped':True,'missingAssets':0,'jsErrors':0})
+  rows.append({'screen':name,'size':f'{w}x{h}','illustratedButtons':4,'helperColumns':expected_rows,'mainButtonDominant':True,'titleUnclipped':True,'missingAssets':0,'jsErrors':0})
   ctx.close()
  browser.close()
 print(json.dumps(rows,ensure_ascii=False,indent=2))
