@@ -8,6 +8,11 @@ assert(h.includes('lany-v24-restore.css?v=2.3.0'),'CSS import missing');
 assert(h.includes('v2.3.0 · 250단계'),'stale release label');
 assert(sw.includes("lanypang-match-v2.3.0-ko-v24-restore-r1"),'cache not rotated');
 assert(sw.includes("'./css/lany-v24-restore.css'"),'offline style not cached');
+// Chrome Cache.addAll can reject duplicate request URLs and leave the PWA uncontrolled.
+const precache=sw.match(/const PRECACHE=\[([^;]+)\];/)?.[1];
+assert(precache,'Precache list missing');
+const urls=[...precache.matchAll(/'([^']+)'/g)].map(x=>x[1]);
+assert.equal(new Set(urls).size,urls.length,'Duplicate offline resources abort PWA installation');
 assert(!read('web/css/lany-raster-only-v22.css').includes("content:url('../assets/ui/v21/buttons/skin-blue.webp')"),'install art regression');
 const files=['title/start.webp','title/help.webp','title/install.webp','animals/cat-black.webp',
  ...Array.from({length:10},(_,i)=>'regions/tab-'+String(i+1).padStart(2,'0')+'.webp'),
