@@ -1,0 +1,39 @@
+/* Independent 384px transparent character art over a jewel-tone game board. */
+#board {
+  gap: clamp(2px, .75vw, 4px) !important;
+  padding: clamp(7px, 1.8vw, 11px) !important;
+  background: linear-gradient(145deg, #ffa9d0, #ff66ad 48%, #cf4f9f) !important;
+  border: 4px solid #ffe6aa !important;
+  border-radius: 23px !important;
+  box-shadow: 0 5px 0 #a33d79, 0 12px 25px #48275088, inset 0 0 0 3px #fff0f4 !important;
+}
+#board .cell:not(.locked) {
+  overflow: hidden;
+  padding: 0;
+  border-radius: clamp(7px, 2vw, 11px) !important;
+  border: 1px solid #bc82ca66 !important;
+  background: linear-gradient(150deg, #50316d, #35234e) !important;
+  box-shadow: inset 0 2px 3px #ffffff17, inset 0 -2px 4px #180d27a8 !important;
+}
+#board .cell:nth-child(16n + 2),
+#board .cell:nth-child(16n + 4),
+#board .cell:nth-child(16n + 6),
+#board .cell:nth-child(16n + 8),
+#board .cell:nth-child(16n + 9),
+#board .cell:nth-child(16n + 11),
+#board .cell:nth-child(16n + 13),
+#board .cell:nth-child(16n + 15) {
+  background: linear-gradient(150deg, #65417d, #472e64) !important;
+}
+#board .cell .lany-animal-face {
+  width: 98% !important;
+  height: 98% !important;
+  border-radius: 0 !important;
+  object-fit: contain !important;
+  filter: drop-shadow(0 2px 2px #13091fb0) !important;
+}
+#board .cell.gem-4 {
+  background: linear-gradient(150deg, #9075aa, #655080) !important;
+}
+#board .cell.locked { background: linear-gradient(#aca4bc, #756c87) !important; }
+#board .cell.selected { outline: 3px solid #ffe77a !important; outline-offset: -2px; }

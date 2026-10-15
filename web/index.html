@@ -305,6 +305,7 @@ body {
 <link rel="stylesheet" href="./css/lany-raster-only-v22.css?v=2.3.0">
 <link rel="stylesheet" href="./css/lany-art-v23.css?v=2.3.0">
 <link rel="stylesheet" href="./css/lany-v24-restore.css?v=2.3.0">
+<link rel="stylesheet" href="./css/lany-puzzle-art-v25.css?v=1">
 </head>
 <body class="lany-at-title">
 <main id="lany-title" class="lany-title" role="main" aria-label="라니팡 시작 화면">
@@ -1039,8 +1040,9 @@ function renderBoard() {
        face.className='lany-animal-face';face.draggable=false;face.decoding='async';
        div.replaceChildren(face);
      }
-     if(face.dataset.gem!==expectedName || face.dataset.lanyOriginal || !face.getAttribute('src')?.includes(expectedName==='cat'?'/cat-black.webp':'/'+expectedName+'-normal.webp')){
-       face.src=expectedName==='cat'?'./assets/v24/animals/cat-black.webp':'./assets/polish/'+expectedName+'-normal.webp';
+     const assetPath='./assets/v25/animals/'+expectedName+'.webp';
+     if(face.dataset.gem!==expectedName || face.getAttribute('src')!==assetPath){
+       face.src=assetPath;
        face.dataset.gem=expectedName;
        delete face.dataset.lanyOriginal;
      }
@@ -1599,7 +1601,7 @@ function startBgMusic() {
 <script defer src="./js/lany-friends.js?v=2.3.0"></script>
 <script defer src="./js/lany-tempo.js?v=2.3.0"></script>
 <script defer src="./js/lany-shell.js?v=2.3.0"></script>
-<script defer src="./js/lany-polish.js?v=2.3.0"></script>
+<script defer src="./js/lany-polish.js?v=2.3.0-art25"></script>
 <script defer src="./js/lany-install.js?v=2.3.0"></script>
 <script defer src="./js/lany-art-buttons.js?v=2.3.0"></script>
 <script defer src="./js/lany-update-v17.js?v=2.3.0"></script>
