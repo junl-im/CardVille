@@ -260,3 +260,52 @@
 #lany-world-map .lany-map-head button.lany-map-icon:not(.lany-mobile-fullscreen){
  background-image:url('../assets/v24/controls/help.webp')!important;
 }
+
+/* FINAL VISUAL QA: Seven text-baked crops contain neighboring art and mismatched
+   lettering. Never stretch those source-board crop files on live buttons.
+   Restore the already approved glossy WebP skin + a single accessible HTML label. */
+#lany-stage-prep #lany-prep-play,
+#lany-stage-prep .lany-prep-cancel,
+.lany-map-bottom #lany-map-resume,
+.lany-map-bottom button[data-lany-art="exit"],
+#lany-exit .lany-dialog button[data-lany-art="resume"],
+#lany-exit .lany-dialog button[data-lany-art="home"],
+#lany-exit .lany-dialog button[data-lany-art="exit"]{
+ color:#593a55!important;
+ font-size:clamp(.78rem,3.25vw,1.02rem)!important;
+ font-weight:1000!important;
+ text-shadow:0 1px 0 #fffae8!important;
+ line-height:1.15!important;
+ letter-spacing:-.02em!important;
+ white-space:normal!important;
+ word-break:keep-all!important;
+ border:0!important;
+ border-radius:18px!important;
+ box-shadow:0 3px 1px #b78c9b63!important;
+}
+#lany-stage-prep #lany-prep-play,
+#lany-exit .lany-dialog button[data-lany-art="resume"]{
+ background:var(--cv-skin-green) center/100% 100% no-repeat!important;
+ color:#31593a!important;
+}
+#lany-stage-prep .lany-prep-cancel,
+.lany-map-bottom #lany-map-resume,
+#lany-exit .lany-dialog button[data-lany-art="home"]{
+ background:var(--cv-skin-blue) center/100% 100% no-repeat!important;
+ color:#295577!important;
+}
+.lany-map-bottom button[data-lany-art="exit"],
+#lany-exit .lany-dialog button[data-lany-art="exit"]{
+ background:var(--cv-skin-red) center/100% 100% no-repeat!important;
+ color:#70394a!important;
+}
+#lany-stage-prep #lany-prep-play{
+ min-height:clamp(50px,8dvh,63px)!important;
+}
+#lany-stage-prep .lany-prep-cancel{
+ min-height:clamp(46px,7dvh,57px)!important;
+}
+@media(max-height:540px){
+ #lany-stage-prep #lany-prep-play{min-height:46px!important}
+ #lany-stage-prep .lany-prep-cancel{min-height:42px!important}
+}
