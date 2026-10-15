@@ -37,6 +37,18 @@ with sync_playwright() as pw:
   assert bounds['bottom']['top']>=-3 and bounds['bottom']['bottom']<=h+3,(name,'bottom clipping',bounds)
   assert bounds['top']['top']>=-3 and bounds['top']['bottom']<=h+3,(name,'logo clipping',bounds)
   page.screenshot(path=str(OUT/(name+'-title.png')))
+  # Server version probe is fresh, but a matching version must never show update.
+  current=page.locator('meta[name="lany-build-version"]').get_attribute('content')
+  assert current=='2.3.0-beta',name
+  assert page.locator('#lany-update-banner').is_hidden(),(name,'banner shown for current build')
+  page.route('**/version.json?_fresh=*',lambda route:route.fulfill(status=200,content_type='application/json',body=json.dumps({'version':current})))
+  page.evaluate('LanyUpdate.check()')
+  assert page.locator('#lany-update-banner').is_hidden(),(name,'matching version must be quiet')
+  page.unroute('**/version.json?_fresh=*')
+  page.route('**/version.json?_fresh=*',lambda route:route.fulfill(status=200,content_type='application/json',body='{"version":"2.2.0-beta"}'))
+  page.evaluate('LanyUpdate.check()')
+  assert page.locator('#lany-update-banner').is_hidden(),(name,'older server version must be quiet')
+  page.unroute('**/version.json?_fresh=*')
   # New version is detected via no-store version metadata and needs explicit action to refresh.
   page.route('**/version.json?_fresh=*',lambda route:route.fulfill(status=200,content_type='application/json',body='{"version":"9.9.9-beta"}'))
   page.evaluate('LanyUpdate.check()')

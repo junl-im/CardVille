@@ -33,6 +33,7 @@ jobs:
           node tools/check-art-buttons-v15.cjs
           node tools/check-action-art-v16.cjs
           node tools/check-title-stage-v17.cjs
+          node tools/check-update-version.cjs
           node tools/check-visual-perf-v18.cjs
           node tools/check-longplay-v19.cjs
           node tools/check-v20-cache-map.cjs
