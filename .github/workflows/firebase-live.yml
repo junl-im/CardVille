@@ -101,6 +101,7 @@ jobs:
               grep -Fq 'lany-install.js?v=2.3.0' /tmp/lany-live.html && \
               grep -Fq 'lany-art-buttons.css?v=2.3.0' /tmp/lany-live.html && \
               grep -Fq 'lany-user-art-v26.css?v=6' /tmp/lany-live.html && \
+              grep -Fq 'lany-compact-ui-v27.css?v=1' /tmp/lany-live.html && \
               grep -Fq 'lany-action-art-v16.css?v=2.3.0' /tmp/lany-live.html && \
               grep -Fq 'lany-title-stage-v17.css?v=2.3.0' /tmp/lany-live.html && \
               grep -Fq 'lany-raster-v18.css?v=2.3.0' /tmp/lany-live.html && \
