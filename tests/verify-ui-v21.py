@@ -50,10 +50,11 @@ with sync_playwright() as pw:
   page.locator('#lany-quick-pause').click()
   assert page.locator('#lany-pause').is_visible(),name
   page.screenshot(path=str(out/(name+'-pause.png')))
-  for key,art in [('overlay-win','panel-clear.webp'),('overlay-lose','panel-fail.webp')]:
+  for key,art in [('overlay-win','panel-win.webp'),('overlay-lose','panel-lose.webp')]:
    page.evaluate("""key=>{for(const el of ['overlay-win','overlay-lose'])document.getElementById(el).style.display=el===key?'flex':'none'}""",key)
    bg('#'+key+' .modal',art)
-  page.screenshot(path=str(out/(name+'-result.png')))
+   page.screenshot(path=str(out/(name+'-'+key+'.png')))
+   assert page.locator('#'+key+' .modal-btns button').evaluate_all("els=>els.every(e=>{const r=e.getBoundingClientRect();return r.height>=40&&r.top>=0&&r.bottom<=innerHeight})"),(name,key,'result buttons clipped')
   assert page.evaluate('document.documentElement.scrollWidth-innerWidth')<=3,(name,'page horizontal clipping')
   assert not errors,(name,errors)
   assert not missing,(name,missing)

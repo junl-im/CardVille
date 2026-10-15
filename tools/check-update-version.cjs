@@ -6,7 +6,7 @@ const html=fs.readFileSync('web/index.html','utf8');
 const release=JSON.parse(fs.readFileSync('web/version.json','utf8'));
 assert.equal(release.version,'2.3.0-beta');
 assert(html.includes('lany-update-v17.js?v=2.3.0'),'approved update handler missing');
-assert(sw.includes('lanypang-match-v2.3.0-ko-v27-compact-ui-r1'),'update handler must escape old cached service worker');
+assert(sw.includes('lanypang-match-v2.3.0-ko-v28-result-polish-r1'),'update handler must escape old cached service worker');
 assert(!script.includes('localStorage'),'version detection must not touch game progress');
 assert(script.includes("cache:'no-store'"),'version probe must not use cached metadata');
 assert(script.includes('requestSequence'),'out-of-order server results must not re-show banners');
