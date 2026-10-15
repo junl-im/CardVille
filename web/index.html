@@ -310,6 +310,7 @@ body {
 <link rel="stylesheet" href="./css/lany-compact-ui-v27.css?v=1">
 <link rel="stylesheet" href="./css/lany-result-polish-v28.css?v=1">
 <link rel="stylesheet" href="./css/lany-screen-polish-v29.css?v=1">
+<link rel="stylesheet" href="./css/lany-mobile-layout-v30.css?v=1">
 </head>
 <body class="lany-at-title">
 <main id="lany-title" class="lany-title" role="main" aria-label="라니팡 시작 화면">
@@ -449,17 +450,19 @@ body {
     <div id="board" aria-label="드래그로 블록을 교환하는 퍼즐판"></div>
   </div>
 
-  <nav class="lany-game-nav" aria-label="게임 화면 이동"><button id="lany-quick-map" class="lany-game-map-button" type="button" onclick="LanyShell.openMap()" data-lany-art="map">모험 지도</button>
-  <button class="lany-game-friends-button" type="button" onclick="LanyFriends.open()" data-lany-art="friends">동물 친구</button><button id="lany-quick-pause" class="lany-game-pause-button" type="button" onclick="LanyShell.openPause()" data-lany-art="pause">쉬기</button></nav>
-  <div class="cv-controls-hint" role="note">👆 블록을 누른 채 옆으로 밀어 보세요. 우클릭은 사용할 수 없습니다.</div>
-  <div class="moves-bar" id="moves-bar"></div>
-
   <div class="boosters">
     <div class="booster" id="b-hammer" onclick="activateBooster('hammer')">🔨<span>망치</span><div class="count" id="b-hammer-cnt">3</div></div>
     <div class="booster" id="b-shuffle" onclick="activateBooster('shuffle')">🔀<span>섞기</span><div class="count" id="b-shuffle-cnt">2</div></div>
     <div class="booster" id="b-color" onclick="activateBooster('color')">🌈<span>색상 제거</span><div class="count" id="b-color-cnt">2</div></div>
     <div class="booster" id="b-time" onclick="activateBooster('time')">⏱️<span>이동 +5회</span><div class="count" id="b-time-cnt">1</div></div>
   </div>
+
+  <nav class="lany-game-nav" aria-label="게임 화면 이동"><button id="lany-quick-map" class="lany-game-map-button" type="button" onclick="LanyShell.openMap()" data-lany-art="map">모험 지도</button>
+  <button class="lany-game-friends-button" type="button" onclick="LanyFriends.open()" data-lany-art="friends">동물 친구</button><button id="lany-quick-pause" class="lany-game-pause-button" type="button" onclick="LanyShell.openPause()" data-lany-art="pause">쉬기</button></nav>
+  <div class="cv-controls-hint" role="note">👆 블록을 누른 채 옆으로 밀어 보세요. 우클릭은 사용할 수 없습니다.</div>
+  <div class="moves-bar" id="moves-bar"></div>
+
+
 
 </div>
 

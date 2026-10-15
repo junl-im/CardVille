@@ -104,12 +104,14 @@ jobs:
               grep -Fq 'lany-compact-ui-v27.css?v=1' /tmp/lany-live.html && \
               grep -Fq 'lany-result-polish-v28.css?v=1' /tmp/lany-live.html && \
               grep -Fq 'lany-screen-polish-v29.css?v=1' /tmp/lany-live.html && \
+              grep -Fq 'lany-mobile-layout-v30.css?v=1' /tmp/lany-live.html && \
               grep -Fq 'lany-action-art-v16.css?v=2.3.0' /tmp/lany-live.html && \
               grep -Fq 'lany-title-stage-v17.css?v=2.3.0' /tmp/lany-live.html && \
               grep -Fq 'lany-raster-v18.css?v=2.3.0' /tmp/lany-live.html && \
               grep -Fq 'lany-result-v19.css?v=2.3.0' /tmp/lany-live.html && \
               grep -Fq 'lany-worlds-v20.css?v=2.3.0' /tmp/lany-live.html && \
               grep -Fq 'lany-ui-v21.css?v=2.3.0' /tmp/lany-live.html && \
+              curl --fail --silent --show-error --location --max-time 25 "$url/assets/v30/boosters/hammer.webp" -o /tmp/lany-v30-hammer.webp && test "$(wc -c </tmp/lany-v30-hammer.webp)" -gt 10000 && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/v28/results/panel-win.webp" -o /tmp/lany-v28-win.webp && test "$(wc -c </tmp/lany-v28-win.webp)" -gt 10000 && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/v28/results/panel-lose.webp" -o /tmp/lany-v28-lose.webp && test "$(wc -c </tmp/lany-v28-lose.webp)" -gt 10000 && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/v24/animals/cat-black.webp" -o /tmp/lany-live-blackcat.webp && test "$(wc -c </tmp/lany-live-blackcat.webp)" -gt 700 && \
