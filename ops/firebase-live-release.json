@@ -3,8 +3,8 @@
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "54f61aa7f81646d6fbdfffb0b973b048a4da2ce2",
-  "requestedFor": "라니팡 v28 단계 완료·실패 팝업 전용 WebP 배경, 별·점수·버튼 간격 및 작은 화면 버튼 크기 개선. 기존 게임 데이터 유지.",
+  "sourceCommit": "ca10bc4bfba5682b84120d3e792b18b66c1fce44",
+  "requestedFor": "라니팡 v29 사용자 화면 개선: 단계 준비창 개별 버튼 원본 비율 유지, 지도 버튼 정리, 설치·방법·도감 글자 및 게임 중 최고 점수·옵션 카드 캔디 UI 통일. 기존 게임 데이터 유지.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -14,5 +14,6 @@
   "userArtV26": true,
   "compactUiV27": true,
   "releaseCheckFixV27": true,
-  "resultPolishV28": true
+  "resultPolishV28": true,
+  "screenPolishV29": true
 }
