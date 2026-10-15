@@ -35,6 +35,9 @@ with sync_playwright() as playwright:
     assert page.locator('#lany-update-banner').is_hidden(),(tag,'false positive update notice')
     assert page.locator('#lany-start-button img').evaluate('e=>e.complete&&e.naturalWidth>0')
     assert page.locator('#lany-install-button img').evaluate('e=>e.complete&&e.naturalWidth>0')
+    assert 'v2.3.0' in page.locator('.lany-version').inner_text(),(tag,'old 2.2 text visible')
+    for sel,art in [('#lany-start-button','start.webp'),('.lany-art-help','help.webp'),('#lany-install-button','install.webp')]:
+      assert 'v24/title/'+art in page.locator(sel+' img.lany-button-picture').evaluate('e=>getComputedStyle(e).content'),(tag,'approved illustrated title missing',sel)
     shot('title','#lany-title')
     page.locator('#lany-install-button').click()
     assert viewport_fit('.lany-install-card'),(tag,'install panel clipped')
@@ -88,6 +91,8 @@ with sync_playwright() as playwright:
     assert page.locator('#lany-world-map').is_visible()
     for selector,asset in (('.lany-map-head .lany-back','back.webp'),('.lany-map-head .lany-map-icon:not(.lany-mobile-fullscreen)','help.webp'),('#lany-world-prev','prev.webp'),('#lany-world-next','next.webp')):
       assert 'buttons/'+asset in page.locator(selector).evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,selector,'new independent utility raster not applied')
+    assert page.locator('#lany-world-tabs .lany-world-tab').first.evaluate("e=>getComputedStyle(e,'::before').backgroundImage.includes('tab-01.webp')"),(tag,'regional illustration is not mapped')
+    assert page.locator('#lany-world-tabs .lany-world-tab').first.evaluate("e=>getComputedStyle(e.querySelector('span:last-child')).visibility==='visible'"),(tag,'region label must be native readable text')
     shot('map','#lany-world-map')
     assert page.locator('.lany-map-levels canvas.lany-route').count()==1
     assert 'world-map.webp' in page.locator('.lany-map-levels').evaluate('e=>getComputedStyle(e).backgroundImage')
@@ -120,6 +125,9 @@ with sync_playwright() as playwright:
     shot('countdown','#lany-go-intro')
     page.wait_for_function("document.getElementById('lany-go-intro').hidden",timeout=5000)
     assert page.locator('#board .cell').count()==64
+    page.evaluate("() => { state.board[0]=GEMS[4]; renderBoard(); }")
+    assert 'cat-black.webp' in page.locator('#board .cell img').first.get_attribute('src'),(tag,'white cat regression')
+    assert page.locator('#board .cell img').first.evaluate("e=>e.complete&&e.naturalWidth>0"),(tag,'black cat source missing')
     shot('game','#board')
     page.locator('#lany-quick-pause').click()
     shot('pause','#lany-pause')

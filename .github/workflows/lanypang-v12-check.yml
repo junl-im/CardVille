@@ -39,6 +39,7 @@ jobs:
           node tools/check-ui-v21.cjs
           node tools/check-raster-only-v22.cjs
           node tools/check-art-v23.cjs
+          node tools/check-v24-restore.cjs
 
   browser-pages:
     needs: regression

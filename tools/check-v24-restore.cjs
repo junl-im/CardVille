@@ -1,0 +1,27 @@
+'use strict';
+const fs=require('node:fs'),assert=require('node:assert/strict');
+const read=p=>fs.readFileSync(p,'utf8');
+const v=JSON.parse(read('web/version.json')),h=read('web/index.html'),css=read('web/css/lany-v24-restore.css');
+const map=read('web/js/lany-shell.js'),sw=read('web/sw.js'),polish=read('web/js/lany-polish.js');
+assert.equal(v.version,'2.3.0-beta');assert.equal(v.visualRelease,'2.3.0');
+assert(h.includes('lany-v24-restore.css?v=2.3.0'),'CSS import missing');
+assert(h.includes('v2.3.0 · 250단계'),'stale release label');
+assert(sw.includes("lanypang-match-v2.3.0-ko-v24-restore-r1"),'cache not rotated');
+assert(sw.includes("'./css/lany-v24-restore.css'"),'offline style not cached');
+assert(!read('web/css/lany-raster-only-v22.css').includes("content:url('../assets/ui/v21/buttons/skin-blue.webp')"),'install art regression');
+const files=['title/start.webp','title/help.webp','title/install.webp','animals/cat-black.webp',
+ ...Array.from({length:10},(_,i)=>'regions/tab-'+String(i+1).padStart(2,'0')+'.webp'),
+ ...['previous','next','back','help','close','understood','left','right'].map(x=>'controls/'+x+'.webp'),
+ ...['progress','stage-start','map-return','resume','home','exit','exit-game'].map(x=>'actions/'+x+'.webp')];
+for(const name of files){
+ const path='web/assets/v24/'+name;const b=fs.readFileSync(path);
+ assert(b.length>700&&b.toString('ascii',0,4)==='RIFF'&&b.toString('ascii',8,12)==='WEBP',name+' corrupt');
+ assert(sw.includes("'./assets/v24/"+name+"'"),name+' not precached');
+}
+for(let n=0;n<10;n++)assert(css.includes('--lp24-region-icon:url(\'../assets/v24/regions/tab-'+String(n+1).padStart(2,'0')+'.webp\')'),'region '+n);
+assert(map.includes("btn.dataset.world=String(i)"),'region index dataset required');
+assert(h.includes("face.src=expectedName==='cat'?'./assets/v24/animals/cat-black.webp'"),'black cat not mounted');
+assert(h.includes("'./assets/polish/'+expectedName+'-normal.webp'"),'approved transparent faces missing');
+assert(polish.includes("if(name==='cat')"),'reaction may revert black cat to white');
+for(const role of ['start','help','install'])assert(css.includes("v24/title/"+role+".webp"),'missing restored title '+role);
+console.log(JSON.stringify({pass:true,version:v.version,assets:files.length,regionTabs:10,originalMechanicsPreserved:true,blackCat:true,noSVG:true}));

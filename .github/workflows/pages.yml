@@ -45,6 +45,7 @@ jobs:
           node tools/check-v20-cache-map.cjs
           node tools/check-ui-v21.cjs
           node tools/check-raster-only-v22.cjs
+          node tools/check-v24-restore.cjs
           node tools/check-tempo.cjs
           test -f web/index.html
           test -f web/LICENSE
