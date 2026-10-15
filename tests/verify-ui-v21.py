@@ -41,9 +41,16 @@ with sync_playwright() as pw:
   page.locator('#lany-map-continue').click()
   assert page.locator('#lany-stage-prep').is_visible(),name
   bg('.lany-prep-card','panel-help.webp')
+  # Standalone action art must keep its source aspect ratio instead of stretching text.
+  for selector in ('#lany-prep-play','#lany-stage-prep .lany-prep-cancel'):
+   box=page.locator(selector).bounding_box()
+   assert box and 2.4 < box['width']/box['height'] < 2.6,(name,selector,box)
+   assert page.locator(selector).evaluate("e=>getComputedStyle(e).backgroundSize")=='contain',(name,selector)
   page.locator('#lany-prep-play').click()
   assert page.locator('#board .cell').count()==64,name
   bg('#app>.header .hud-box','panel-score.webp')
+  assert page.locator('#game-mode-bar').evaluate("e=>getComputedStyle(e).position")=='static',name
+  assert page.locator('#leaderboard').evaluate("e=>getComputedStyle(e).backgroundColor")!='rgb(22, 27, 34)',name
   for kind in ('hammer','shuffle','color','time'):
    bg('#b-'+kind,'badge-'+kind+'.webp')
   page.screenshot(path=str(out/(name+'-game.png')))
