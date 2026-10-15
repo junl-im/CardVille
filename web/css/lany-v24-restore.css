@@ -224,7 +224,8 @@
  object-fit:contain!important;
 }
 @media(max-height:480px){
- .lany-title .lany-title-shortcuts .lany-art-small{
+ /* Narrow-title rule uses #lany-title and would override class-only styles. */
+ #lany-title .lany-title-shortcuts .lany-art-small{
   max-width:70px!important;
  }
 }
