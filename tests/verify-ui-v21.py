@@ -22,7 +22,7 @@ with sync_playwright() as pw:
   for selector in ['.lany-title .lany-illustrated-logo img','.lany-title #lany-start-button img','.lany-title .lany-art-install img','.lany-title .lany-art-help img','.lany-title .lany-art-friends img']:
    img=page.locator(selector).first
    assert img.evaluate('e=>e.complete && e.naturalWidth>0'),(name,selector)
-   assert '/ui/v21/' in img.get_attribute('src'),(name,selector)
+   assert '/v26/title/' in img.get_attribute('src'),(name,selector)
   assert page.locator('.lany-title-shortcuts .lany-art-small').count()==3,name
   page.screenshot(path=str(out/(name+'-title.png')))
   page.locator('.lany-art-help').click()
@@ -36,7 +36,7 @@ with sync_playwright() as pw:
   page.locator('#lany-start-button').click()
   assert page.locator('#lany-world-map').is_visible(),name
   bg('#lany-world-map .lany-world-banner','region-header.webp')  # v2.3 text-free art replaces word-baked chapter
-  bg('#lany-map-continue','skin-green.webp')
+  bg('#lany-map-continue','v26/actions/continue.webp')
   page.screenshot(path=str(out/(name+'-map.png')))
   page.locator('#lany-map-continue').click()
   assert page.locator('#lany-stage-prep').is_visible(),name

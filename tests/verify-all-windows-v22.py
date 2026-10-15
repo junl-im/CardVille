@@ -37,7 +37,7 @@ with sync_playwright() as playwright:
     assert page.locator('#lany-install-button img').evaluate('e=>e.complete&&e.naturalWidth>0')
     assert 'v2.3.0' in page.locator('.lany-version').inner_text(),(tag,'old 2.2 text visible')
     for sel,art in [('#lany-start-button','start.webp'),('.lany-art-help','help.webp'),('#lany-install-button','install.webp')]:
-      assert 'v24/title/'+art in page.locator(sel+' img.lany-button-picture').evaluate('e=>getComputedStyle(e).content'),(tag,'approved illustrated title missing',sel)
+      assert 'v26/title/'+art in page.locator(sel+' img.lany-button-picture').evaluate('e=>getComputedStyle(e).content'),(tag,'approved illustrated title missing',sel)
     shot('title','#lany-title')
     page.locator('#lany-install-button').click()
     assert viewport_fit('.lany-install-card'),(tag,'install panel clipped')
@@ -53,10 +53,8 @@ with sync_playwright() as playwright:
     page.evaluate('LanyShell.closeTutorial()')
     page.locator('.lany-art-friends').click()
     assert viewport_fit('.lany-friends-panel'),(tag,'friends card clipped')
-    assert page.locator('.lany-friends-panel footer button[data-lany-art="close"]').evaluate("""e=>{
-      const rect=e.getBoundingClientRect();const c=getComputedStyle(e);
-      return rect.width>=75 && rect.height>=35 && c.whiteSpace==='nowrap' && e.scrollWidth<=e.clientWidth+1;
-    }"""),(tag,'gallery close button wraps/clips on mobile')
+    assert page.locator('.lany-friends-close').is_visible(),(tag,'gallery close control missing')
+    assert page.locator('.lany-friends-panel footer button[data-lany-art="close"]').is_hidden(),(tag,'duplicate gallery close control shown')
     # Inspect every page, not only the first: no white/broken animal slots.
     friend_pages=0
     while True:
@@ -91,8 +89,8 @@ with sync_playwright() as playwright:
     assert page.locator('#lany-world-map').is_visible()
     for selector,asset in (('.lany-map-head .lany-back','back.webp'),('.lany-map-head .lany-map-icon:not(.lany-mobile-fullscreen)','help.webp'),('#lany-world-prev','left.webp'),('#lany-world-next','right.webp')):
       assert 'controls/'+asset in page.locator(selector).evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,selector,'approved v2.3 illustration missing')
-    assert page.locator('#lany-world-tabs .lany-world-tab').first.evaluate("e=>getComputedStyle(e,'::before').backgroundImage.includes('tab-01.webp')"),(tag,'regional illustration is not mapped')
-    assert page.locator('#lany-world-tabs .lany-world-tab').first.evaluate("e=>getComputedStyle(e.querySelector('span:last-child')).visibility==='visible'"),(tag,'region label must be native readable text')
+    assert page.locator('#lany-world-tabs .lany-world-tab').first.evaluate("e=>getComputedStyle(e).backgroundImage.includes('v26/regions/tab-01.webp')"),(tag,'regional illustration is not mapped')
+    assert page.locator('#lany-world-tabs .lany-world-tab').first.get_attribute('aria-label'),(tag,'region name must remain accessible')
     shot('map','#lany-world-map')
     assert page.locator('.lany-map-levels canvas.lany-route').count()==1
     assert 'world-map.webp' in page.locator('.lany-map-levels').evaluate('e=>getComputedStyle(e).backgroundImage')
@@ -114,13 +112,13 @@ with sync_playwright() as playwright:
     page.evaluate('LanyShell.mapPage(-1)')
     page.locator('.lany-map-levels .lany-level:not([disabled])').first.click()
     assert page.locator('#lany-stage-prep').is_visible()
-    # Text-baked screenshot cutouts had blank/incorrect/cropped button lettering.
-    for selector,skin in (('#lany-prep-play','skin-green.webp'),('.lany-prep-cancel','skin-blue.webp')):
+    # Each source button is now a complete individual raster image with accessible HTML text.
+    for selector,skin in (('#lany-prep-play','v26/actions/prep-start.webp'),('.lany-prep-cancel','v26/actions/prep-map.webp')):
       assert page.locator('#lany-stage-prep '+selector).evaluate("""(e,asset)=>{
         const c=getComputedStyle(e);
-        return c.backgroundImage.includes(asset)&&parseFloat(c.fontSize)>=12
-          && e.textContent.trim().length>=2 && e.scrollWidth<=e.clientWidth+3;
-      }""",skin),(tag,selector,'cropped/textless action artwork regression')
+        return c.backgroundImage.includes(asset)&&e.textContent.trim().length>=2
+          && e.getBoundingClientRect().width>100;
+      }""",skin),(tag,selector,'individual action artwork missing')
     shot('stage-ready','#lany-stage-prep')
     if page.locator('#lany-prep-pager').is_visible():
       page.evaluate('LanyShell.prepPage(1)')
