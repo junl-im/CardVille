@@ -16,7 +16,7 @@ function render(){
  const start=currentPage*size;
  for(const a of roster.slice(start,start+size)){
    const card=document.createElement('article');card.className='lany-friend-card'+(a.main?' main-friend':'');
-   const img=document.createElement('img');img.src=imageRoot+a.id+'.webp';
+   const img=document.createElement('img');img.src=a.main?'./assets/v25/animals/'+a.id+'.webp':imageRoot+a.id+'.webp';
    img.loading='eager';img.decoding='async';img.alt=a.name+' 동물 얼굴';img.draggable=false;
    const label=document.createElement('span');label.textContent=a.name;card.append(img,label);grid.appendChild(card);
  }

@@ -14,8 +14,8 @@ assert(css.includes('lanypang-cover.webp')===false);
 assert(css.includes('visibility:visible!important')&&css.includes('.lany-title .lany-cover'));
 assert(css.includes('.lany-title .lany-title-play-scene .lany-art-play'));
 for(const key of ['title-logo-v18.webp','btn-play-v18.webp','btn-install-v18.webp','btn-help-v18.webp','btn-friends-v18.webp']){
- const titleMap={'title-logo-v18.webp':'logo','btn-play-v18.webp':'play','btn-install-v18.webp':'install','btn-help-v18.webp':'help','btn-friends-v18.webp':'friends'};
- assert(html.includes('./assets/ui/v21/title/'+titleMap[key]+'.webp?v=2.3.0'),key);
+ const titleMap={'title-logo-v18.webp':'logo','btn-play-v18.webp':'start','btn-install-v18.webp':'install','btn-help-v18.webp':'help','btn-friends-v18.webp':'friends'};
+ assert(html.includes('./assets/v26/title/'+titleMap[key]+'.webp'),key);
  assert(sw.includes('./assets/title/'+key),key+' precache');
 }
 assert(py.includes("A/'friends'/'cat.webp'"),'generated black cat portrait');

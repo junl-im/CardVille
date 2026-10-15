@@ -21,7 +21,7 @@ for(const source of ['/','/index.html','/version.json','/sw.js']){
  const h=cfg.hosting.headers.find(x=>x.source===source);
  assert(h&&h.headers.some(v=>v.key==='Cache-Control'&&v.value.includes('no-store')),source);
 }
-for(const value of ['lany-title-stage-v17.css?v=2.3.0','lany-update-v17.js?v=2.3.0','play.webp?v=2.3.0','lany-title-play-scene','lany-title-woodsign','id="lany-update-now"','id="lany-update-banner"','v2.3.0'])assert(html.includes(value),value);
+for(const value of ['lany-title-stage-v17.css?v=2.3.0','lany-update-v17.js?v=2.3.0','./assets/v26/title/start.webp','lany-title-play-scene','lany-title-woodsign','id="lany-update-now"','id="lany-update-banner"','v2.3.0'])assert(html.includes(value),value);
 for(const value of ['lanypang-cover.webp','.lany-title-cast','.lany-title-woodsign','.lany-title-play-scene','prefers-reduced-motion','max-height:480px','.lany-title-shortcuts'])assert(css.includes(value),value);
 assert(fs.existsSync('web/assets/lanypang-cover.webp'),'Approved raster cover must exist');
 assert(sw.includes('lanypang-match-v2.3.0-ko'));
