@@ -40,6 +40,8 @@ jobs:
           node tools/check-raster-only-v22.cjs
           node tools/check-art-v23.cjs
           node tools/check-v24-restore.cjs
+          node tools/check-progress-migration.cjs
+          node tools/check-canonical-redirect.cjs
 
   browser-pages:
     needs: regression
