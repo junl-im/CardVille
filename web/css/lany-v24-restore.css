@@ -181,3 +181,38 @@
 #lany-world-map #lany-world-tabs .lany-world-tab.locked-tab>span:last-child{
  color:#555366!important;
 }
+
+/* Regression screenshot: the map's Next pill went blank because an older,
+   more-specific selector supplied a background-image shorthand. */
+#lany-world-map .lany-map-section #lany-map-prev,
+#lany-stage-prep #lany-prep-prev,
+#overlay-tutorial #lany-help-prev,
+#lany-friends-modal #lany-friends-prev{
+ background-image:url('../assets/v24/controls/previous.webp')!important;
+ background-size:100% 100%!important;
+}
+#lany-world-map .lany-map-section #lany-map-next,
+#lany-stage-prep #lany-prep-next,
+#overlay-tutorial #lany-help-next,
+#lany-friends-modal #lany-friends-next{
+ background-image:url('../assets/v24/controls/next.webp')!important;
+ background-size:100% 100%!important;
+}
+@media(max-width:380px){
+ #lany-world-map .lany-map-head{
+  gap:4px!important;padding-left:6px!important;padding-right:6px!important;
+ }
+ #lany-world-map .lany-map-head>div{min-width:0!important;flex:1 1 auto!important}
+ #lany-world-map .lany-map-head #lany-map-heading{
+  font-size:clamp(.86rem,4vw,1.12rem)!important;
+  line-height:1.15!important;white-space:nowrap!important;
+  overflow:hidden!important;text-overflow:ellipsis!important;
+ }
+ #lany-world-map .lany-map-head .lany-map-eyebrow{font-size:.65rem!important}
+}
+@media(min-height:490px) and (max-height:729px){
+ #lany-world-map .lany-map-section .lany-map-levels{
+  flex:1 1 auto!important;min-height:clamp(165px,34dvh,310px)!important;
+  grid-template-rows:repeat(var(--lany-map-rows,2),minmax(48px,1fr))!important;
+ }
+}
