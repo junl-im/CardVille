@@ -3,11 +3,12 @@
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "403456e1698df92ade598276ad14360a56db3f32",
-  "requestedFor": "라니팡 공식 LIVE 업데이트 안내 오탐 방지: 실행 중인 버전보다 서버의 유효한 새 버전이 높을 때만 안내, 동일/구버전/오프라인/오류 응답에는 숨김. 진행 기록·게임 그래픽 유지.",
+  "sourceCommit": "256da9918192b8a3ec53674933608fad6b72746d",
+  "requestedFor": "라니팡 퍼즐 캐릭터 그래픽 개선: 7종 개별 WebP, 검은 고양이 구분, 매치 윙크 표정, 캔디 스타일 보드. 기존 게임 데이터 유지.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
   "approvedAtKST": "2026-10-15",
-  "versionCheckFix": true
+  "versionCheckFix": true,
+  "puzzleArtV25": true
 }
