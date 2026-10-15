@@ -216,3 +216,29 @@
   grid-template-rows:repeat(var(--lany-map-rows,2),minmax(48px,1fr))!important;
  }
 }
+
+/* QA: The v2.2 install regression selector includes img and defeated the
+   previous rule. Restore the actual v2.3 illustrated install cutout. */
+.lany-title #lany-install-button img.lany-button-picture{
+ content:url('../assets/v24/title/install.webp')!important;
+ object-fit:contain!important;
+}
+@media(max-height:480px){
+ .lany-title .lany-title-shortcuts .lany-art-small{
+  max-width:70px!important;
+ }
+}
+/* v2.3 illustration action footer: real class, not the non-existent id. */
+.lany-map-bottom #lany-map-resume{
+ background:url('../assets/v24/actions/progress.webp') center/100% 100% no-repeat!important;
+ color:transparent!important;text-shadow:none!important;font-size:0!important;
+ border:0!important;box-shadow:none!important;
+}
+.lany-map-bottom button[data-lany-art="exit"]{
+ background:url('../assets/v24/actions/exit-game.webp') center/100% 100% no-repeat!important;
+ color:transparent!important;text-shadow:none!important;font-size:0!important;
+ border:0!important;box-shadow:none!important;
+}
+:is(.lany-map-bottom #lany-map-resume,.lany-map-bottom button[data-lany-art="exit"])::before{
+ content:none!important;display:none!important;
+}
