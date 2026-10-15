@@ -6,9 +6,11 @@ const reduced=()=>window.matchMedia?.('(prefers-reduced-motion: reduce)').matche
 const getLayer=()=>{if(!layer){layer=document.createElement('div');layer.className='lany-vfx-layer';layer.setAttribute('aria-hidden','true');document.body.appendChild(layer)}return layer};
 const face=(el,variant)=>{
   if(!el)return;const img=el.querySelector('.lany-animal-face');if(!img)return;
-  const name=(img.dataset.lanyOriginal||img.src).split('/').pop().split('.')[0];
+  const name=img.dataset.gem||(img.dataset.lanyOriginal||img.src).split('/').pop().split('.')[0].split('-')[0];
   if(!['rabbit','bear','chick','puppy','fox','cat','wolf','panda'].includes(name))return;
   const key=variants.includes(variant)?variant:'normal';
+  // A unique source-approved black cat head must never flash back to the old white cat on combos.
+  if(name==='cat'){if(key==='normal'&&img.dataset.lanyOriginal){img.src=img.dataset.lanyOriginal;delete img.dataset.lanyOriginal;}return;}
   if(key==='normal'){if(img.dataset.lanyOriginal){img.src=img.dataset.lanyOriginal;delete img.dataset.lanyOriginal;}return;}
   if(!img.dataset.lanyOriginal)img.dataset.lanyOriginal=img.src;
   img.src=root+name+'-'+key+'.webp';

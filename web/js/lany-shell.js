@@ -95,6 +95,7 @@
    for(let i=nav.worldTabPage*groupSize;i<Math.min(worlds.length,(nav.worldTabPage+1)*groupSize);i++){
      const btn=document.createElement('button');btn.type='button';
      btn.className='lany-world-tab'+(i===n?' active':'')+(last<i*25+1?' locked-tab':'');
+     btn.dataset.world=String(i);
      btn.setAttribute('aria-label',`제${i+1}지역 ${worlds[i][1]}`);
      btn.setAttribute('aria-pressed',String(i===n));
      btn.innerHTML=`<span class="world-emoji">${worlds[i][0]}</span><span>${i+1}지역</span>`;

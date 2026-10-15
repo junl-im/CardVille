@@ -1038,8 +1038,8 @@ function renderBoard() {
        face.className='lany-animal-face';face.draggable=false;face.decoding='async';
        div.replaceChildren(face);
      }
-     if(face.dataset.gem!==expectedName || face.dataset.lanyOriginal || !face.getAttribute('src')?.endsWith('/'+expectedName+'.webp')){
-       face.src='./assets/friends/'+expectedName+'.webp';
+     if(face.dataset.gem!==expectedName || face.dataset.lanyOriginal || !face.getAttribute('src')?.includes(expectedName==='cat'?'/cat-black.webp':'/'+expectedName+'-normal.webp')){
+       face.src=expectedName==='cat'?'./assets/v24/animals/cat-black.webp':'./assets/polish/'+expectedName+'-normal.webp';
        face.dataset.gem=expectedName;
        delete face.dataset.lanyOriginal;
      }
