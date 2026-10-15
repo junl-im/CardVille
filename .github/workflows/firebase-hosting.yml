@@ -50,6 +50,7 @@ jobs:
           node tools/check-ui-v21.cjs
           node tools/check-raster-only-v22.cjs
           node tools/check-v24-restore.cjs
+          node tools/check-progress-migration.cjs
           node tools/check-tempo.cjs
           node tools/check-firebase-preview.cjs
           # Both JSON configurations are parsed by the preflight checks above.

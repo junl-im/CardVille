@@ -57,6 +57,7 @@ jobs:
           node tools/check-ui-v21.cjs
           node tools/check-raster-only-v22.cjs
           node tools/check-v24-restore.cjs
+          node tools/check-progress-migration.cjs
           node tools/check-firebase-preview.cjs
       - name: Confirm matching project service-account ID (no secret output)
         env:
