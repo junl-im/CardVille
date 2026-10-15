@@ -78,7 +78,7 @@ with sync_playwright() as pw:
   }""")
   assert page.evaluate("""() => {
     const img=document.querySelector('#board .cell .lany-animal-face');
-    return img && img.src.endsWith(img.dataset.gem==='cat'?'/cat-black.webp':'/'+img.dataset.gem+'-normal.webp') && !img.dataset.lanyOriginal;
+    return img && img.src.endsWith('/v25/animals/'+img.dataset.gem+'.webp') && !img.dataset.lanyOriginal;
   }"""),(name,'stale face sprite persists after render')
   # Open result overlays to verify both approved studio images.
   for overlay,animal in [('overlay-win','cat-cheer.webp'),('overlay-lose','chick-wink.webp')]:

@@ -6,7 +6,7 @@ const map=read('web/js/lany-shell.js'),sw=read('web/sw.js'),polish=read('web/js/
 assert.equal(v.version,'2.3.0-beta');assert.equal(v.visualRelease,'2.3.0');
 assert(h.includes('lany-v24-restore.css?v=2.3.0'),'CSS import missing');
 assert(h.includes('v2.3.0 · 250단계'),'stale release label');
-assert(sw.includes("lanypang-match-v2.3.0-ko-v24-restore-r3"),'cache not rotated');
+assert(sw.includes("lanypang-match-v2.3.0-ko-v25-puzzle-art-r1"),'cache not rotated');
 assert(sw.includes("'./css/lany-v24-restore.css'"),'offline style not cached');
 // Chrome Cache.addAll can reject duplicate request URLs and leave the PWA uncontrolled.
 const precache=sw.match(/const PRECACHE=\[([^;]+)\];/)?.[1];
@@ -25,8 +25,13 @@ for(const name of files){
 }
 for(let n=0;n<10;n++)assert(css.includes('--lp24-region-icon:url(\'../assets/v24/regions/tab-'+String(n+1).padStart(2,'0')+'.webp\')'),'region '+n);
 assert(map.includes("btn.dataset.world=String(i)"),'region index dataset required');
-assert(h.includes("face.src=expectedName==='cat'?'./assets/v24/animals/cat-black.webp'"),'black cat not mounted');
-assert(h.includes("'./assets/polish/'+expectedName+'-normal.webp'"),'approved transparent faces missing');
-assert(polish.includes("if(name==='cat')"),'reaction may revert black cat to white');
+assert(h.includes("'./assets/v25/animals/'+expectedName+'.webp'"),'individual puzzle faces missing');
+assert(polish.includes("img.src=puzzleRoot+name+'-wink.webp'"),'match reactions missing');
+for(const name of ['rabbit','bear','chick','puppy','cat','fox','wolf'])for(const suffix of ['','-wink']){
+ const path='web/assets/v25/animals/'+name+suffix+'.webp';const b=fs.readFileSync(path);
+ assert(b.length>1000&&b.toString('ascii',0,4)==='RIFF'&&b.toString('ascii',8,12)==='WEBP',path+' corrupt');
+ assert(sw.includes("'./assets/v25/animals/"+name+suffix+".webp'"),path+' not precached');
+}
+assert(sw.includes("'./css/lany-puzzle-art-v25.css'"),'puzzle style not precached');
 for(const role of ['start','help','install'])assert(css.includes("v24/title/"+role+".webp"),'missing restored title '+role);
 console.log(JSON.stringify({pass:true,version:v.version,assets:files.length,regionTabs:10,originalMechanicsPreserved:true,blackCat:true,noSVG:true}));

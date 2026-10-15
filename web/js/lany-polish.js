@@ -2,6 +2,8 @@
 (()=>{'use strict';
 const variants=['normal','wink','cheer','surprise'];
 const root='./assets/polish/';let layer;
+const puzzleFaces=['rabbit','bear','chick','puppy','cat','fox','wolf'];
+const puzzleRoot='./assets/v25/animals/';
 const reduced=()=>window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 const getLayer=()=>{if(!layer){layer=document.createElement('div');layer.className='lany-vfx-layer';layer.setAttribute('aria-hidden','true');document.body.appendChild(layer)}return layer};
 const face=(el,variant)=>{
@@ -9,8 +11,11 @@ const face=(el,variant)=>{
   const name=img.dataset.gem||(img.dataset.lanyOriginal||img.src).split('/').pop().split('.')[0].split('-')[0];
   if(!['rabbit','bear','chick','puppy','fox','cat','wolf','panda'].includes(name))return;
   const key=variants.includes(variant)?variant:'normal';
-  // A unique source-approved black cat head must never flash back to the old white cat on combos.
-  if(name==='cat'){if(key==='normal'&&img.dataset.lanyOriginal){img.src=img.dataset.lanyOriginal;delete img.dataset.lanyOriginal;}return;}
+  if(puzzleFaces.includes(name)&&key==='wink'){
+    if(!img.dataset.lanyOriginal)img.dataset.lanyOriginal=img.src;
+    img.src=puzzleRoot+name+'-wink.webp';
+    return;
+  }
   if(key==='normal'){if(img.dataset.lanyOriginal){img.src=img.dataset.lanyOriginal;delete img.dataset.lanyOriginal;}return;}
   if(!img.dataset.lanyOriginal)img.dataset.lanyOriginal=img.src;
   img.src=root+name+'-'+key+'.webp';
@@ -30,11 +35,9 @@ function down(e){if(e.button!==0)return;const tile=e.target.closest?.('#board .c
 function up(){if(pressed){const old=pressed;pressed=null;old.classList.remove('lany-tap');}}
 function onMatch(indices,chain=1){const cells=[];
   for(const idx of indices){let el=document.querySelector(`#board .cell[data-r="${Math.floor(idx/8)}"][data-c="${idx%8}"]`);if(el)cells.push(el)}
-  const tiny=window.matchMedia?.('(max-width: 520px) and (pointer: coarse)').matches;
-  // Limit expensive WebP expression swaps. Every tile still gets the CSS match animation.
   cells.forEach((el,i)=>{
     el.classList.add('lany-match-pop');
-    if(i<(tiny?2:4))face(el,(i+chain)%4===0?'wink':'cheer');
+    face(el,'wink');
     el.style.setProperty('--lany-delay',Math.min(i,9)*16+'ms');
   });
   if(cells.length){const a=cells[Math.floor(cells.length/2)],rect=a.getBoundingClientRect();burst(rect,cells.length>=5||chain>=3?'burst-star':'burst-heart');if(chain>=3)burst(rect,'combo')}
@@ -47,7 +50,13 @@ function promoteDialog(){document.querySelectorAll('#lany-pause .lany-dialog-emo
  el.textContent='';const img=document.createElement('img');img.className='lany-popup-mascot';img.src=root+(i===0?'rabbit-wink.webp':'bear-surprise.webp');img.alt='';img.draggable=false;el.append(img)
  });}
 function dialog(type){promoteDialog();const sel=type==='win'?'#overlay-win .modal':'#overlay-lose .modal';const el=document.querySelector(sel);if(el)burst(el.getBoundingClientRect(),type==='win'?'burst-star':'burst-heart');}
-function init(){promoteDialog();document.addEventListener('pointerdown',down,{capture:true,passive:true});document.addEventListener('pointerup',up,{capture:true,passive:true});document.addEventListener('pointercancel',up,{capture:true,passive:true});}
+function init(){
+  promoteDialog();
+  puzzleFaces.forEach(name=>{const image=new Image();image.src=puzzleRoot+name+'-wink.webp';});
+  document.addEventListener('pointerdown',down,{capture:true,passive:true});
+  document.addEventListener('pointerup',up,{capture:true,passive:true});
+  document.addEventListener('pointercancel',up,{capture:true,passive:true});
+}
 window.LanyPolish={onMatch,onFall,invalidSwap,onSwap,dialog,burst,face};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();

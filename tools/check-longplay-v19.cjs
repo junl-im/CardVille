@@ -16,8 +16,9 @@ assert(h.includes('function syncTitleParticles()'), 'title particles lifecycle')
 assert(h.includes('const LANY_MAX_AUDIO_VOICES=24')&&h.includes('osc.onended=')&&h.includes('osc.disconnect();gain.disconnect();'),'Audio voice cap and node release');
 assert(h.includes('cancelAnimationFrame(lanyTitleParticleFrame)'), 'rAF cancel');
 assert(h.includes("titleVisibilityObserver.observe(document.body"),'title enter/leave');
-assert(h.includes("if(face.dataset.gem!==expectedName || face.dataset.lanyOriginal"),'restore expression sprite');
-assert(polish.includes('if(i<(tiny?2:4))face('),'limit expression decodes');
+assert(h.includes("face.getAttribute('src')!==assetPath"),'restore expression sprite');
+assert(polish.includes("puzzleFaces.forEach(name=>{const image=new Image()"),'preload bounded expression set');
+assert(polish.includes("face(el,'wink')"),'match expression');
 assert(!polish.includes("face(tile,'wink')"),'no costly image switch on touch down');
 assert(diag.includes("get('perf')!=='1'"),'opt-in only');
 assert(diag.includes('longtask')&&diag.includes('performance.memory')&&diag.includes('cancelAnimationFrame(raf)'),'diagnostic data');

@@ -133,7 +133,7 @@ with sync_playwright() as playwright:
     page.wait_for_function("document.getElementById('lany-go-intro').hidden",timeout=5000)
     assert page.locator('#board .cell').count()==64
     page.evaluate("() => { state.board[0]=GEMS[4]; renderBoard(); }")
-    assert 'cat-black.webp' in page.locator('#board .cell img').first.get_attribute('src'),(tag,'white cat regression')
+    assert '/v25/animals/cat.webp' in page.locator('#board .cell img').first.get_attribute('src'),(tag,'black cat regression')
     assert page.locator('#board .cell img').first.evaluate("e=>e.complete&&e.naturalWidth>0"),(tag,'black cat source missing')
     shot('game','#board')
     page.locator('#lany-quick-pause').click()
