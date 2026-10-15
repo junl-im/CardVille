@@ -203,7 +203,7 @@
 }
 
 
-/* Real-device QA hotfix from Oct 14 screenshots. Preserve approved WebP art.
+/* Restored the originally approved install picture. The v2.2 blue-skin override was regression.\n   Real-device QA hotfix from Oct 14 screenshots. Preserve approved WebP art.
    No SVG, no separate emoji/synthetic buttons and no gameplay changes. */
 .lany-title #lany-install-button{
   background:transparent!important; position:relative!important;
@@ -211,7 +211,7 @@
 }
 .lany-title #lany-install-button img.lany-button-picture{
   width:100%!important;height:100%!important;object-fit:fill!important;
-  content:url('../assets/ui/v21/buttons/skin-blue.webp')!important;
+  content:url('../assets/ui/v21/title/install.webp')!important;
   filter:drop-shadow(0 3px 2px #70456a78)!important;
 }
 .lany-title #lany-install-button::before{

@@ -2,7 +2,7 @@
    No storage deletes, no forced refresh, and no polling or timers. */
 (()=>{
  'use strict';
- const LOCAL=document.querySelector('meta[name="lany-build-version"]')?.content || '2.2.0-beta';
+ const LOCAL=document.querySelector('meta[name="lany-build-version"]')?.content || '2.3.0-beta';
  const $=id=>document.getElementById(id);
  let available=null;
  let waitingSW=false;

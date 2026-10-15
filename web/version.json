@@ -1,9 +1,9 @@
 {
   "name": "라니팡",
-  "version": "2.2.0-beta",
+  "version": "2.3.0-beta",
   "stageCount": 250,
   "language": "ko",
-  "build": "2026-10-14",
+  "build": "2026-10-15",
   "titleScreen": true,
   "backExitPopup": true,
   "stageMap": true,
@@ -17,7 +17,7 @@
   "animalFriends": 30,
   "animalTiles": 7,
   "mobilePopupFit": true,
-  "visualRelease": "2.1.0",
+  "visualRelease": "2.3.0",
   "approvedOriginalAssets": true,
   "expressionVariants": 4,
   "newPopupButtons": true,
@@ -82,5 +82,9 @@
   "vectorAssetsRemoved": 29,
   "candyCanvasMapRoute": true,
   "threeStarScoreMeter": true,
-  "compactMovesHUD": true
+  "compactMovesHUD": true,
+  "v23SourceArtRestored": true,
+  "titleIllustratedMenusRestored": true,
+  "blackCatOriginalArt": true,
+  "regionTabsV24": true
 }

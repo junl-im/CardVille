@@ -30,16 +30,19 @@ with sync_playwright() as playwright:
           r.left>=-5 && r.right<=innerWidth+5 && r.top>=-6 &&
           r.bottom<=innerHeight+6;
       }""")
-    page.goto(BASE+'?v=2.2.0',wait_until='load',timeout=30000)
+    page.goto(BASE+'?v=2.3.0',wait_until='load',timeout=30000)
     page.wait_for_function("typeof LanyShell==='object' && typeof LanyFriends==='object' && typeof LanyUpdate==='object'")
     assert page.locator('#lany-update-banner').is_hidden(),(tag,'false positive update notice')
     assert page.locator('#lany-start-button img').evaluate('e=>e.complete&&e.naturalWidth>0')
     assert page.locator('#lany-install-button img').evaluate('e=>e.complete&&e.naturalWidth>0')
+    assert 'v2.3.0' in page.locator('.lany-version').inner_text(),(tag,'old 2.2 text visible')
+    for sel,art in [('#lany-start-button','start.webp'),('.lany-art-help','help.webp'),('#lany-install-button','install.webp')]:
+      assert 'v24/title/'+art in page.locator(sel+' img.lany-button-picture').evaluate('e=>getComputedStyle(e).content'),(tag,'approved illustrated title missing',sel)
     shot('title','#lany-title')
     page.locator('#lany-install-button').click()
     assert viewport_fit('.lany-install-card'),(tag,'install panel clipped')
     assert 'install-ornament.webp' in page.locator('#lany-install-guide-title').evaluate("e=>getComputedStyle(e,'::before').backgroundImage"),(tag,'install ornament not applied')
-    assert 'buttons/close.webp' in page.locator('.lany-install-close').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'new close art not applied')
+    assert 'controls/close.webp' in page.locator('.lany-install-close').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'new close art not applied')
     shot('install','.lany-install-card')
     page.locator('.lany-install-close').click()
     page.locator('.lany-art-help').click()
@@ -64,14 +67,14 @@ with sync_playwright() as playwright:
       assert page.locator('#lany-friends-grid img[loading="eager"]').count()==page.locator('#lany-friends-grid img').count(),(tag,'gallery must eagerly load visible art')
       friend_pages+=1
       assert 'friends-ornament.webp' in page.locator('#lany-friends-heading').evaluate("e=>getComputedStyle(e,'::before').backgroundImage"),(tag,'friends ornament not applied')
-      assert 'buttons/close.webp' in page.locator('.lany-friends-close').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'gallery close art not applied')
+      assert 'controls/close.webp' in page.locator('.lany-friends-close').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'gallery close art not applied')
       shot('friends-'+str(friend_pages),'.lany-friends-panel')
       if page.locator('#lany-friends-next').is_disabled():break
       page.evaluate('LanyFriends.page(1)')
     assert page.evaluate('LanyFriends.roster.length')==30,(tag,'30 friend portraits should be retained')
     page.locator('.lany-friends-close').click()
     if tag=='phone':
-      page.route('**/version.json?*',lambda route:route.fulfill(status=200,content_type='application/json',body='{"version":"2.3.0-beta"}'))
+      page.route('**/version.json?*',lambda route:route.fulfill(status=200,content_type='application/json',body='{"version":"2.4.0-beta"}'))
       page.evaluate('LanyUpdate.check()')
       page.locator('#lany-update-banner').wait_for(state='visible',timeout=3000)
       assert page.evaluate("""() => {
@@ -86,8 +89,10 @@ with sync_playwright() as playwright:
       page.locator('#lany-update-banner').wait_for(state='hidden',timeout=3000)
     page.locator('#lany-start-button').click()
     assert page.locator('#lany-world-map').is_visible()
-    for selector,asset in (('.lany-map-head .lany-back','back.webp'),('.lany-map-head .lany-map-icon:not(.lany-mobile-fullscreen)','help.webp'),('#lany-world-prev','prev.webp'),('#lany-world-next','next.webp')):
-      assert 'buttons/'+asset in page.locator(selector).evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,selector,'new independent utility raster not applied')
+    for selector,asset in (('.lany-map-head .lany-back','back.webp'),('.lany-map-head .lany-map-icon:not(.lany-mobile-fullscreen)','help.webp'),('#lany-world-prev','left.webp'),('#lany-world-next','right.webp')):
+      assert 'controls/'+asset in page.locator(selector).evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,selector,'approved v2.3 illustration missing')
+    assert page.locator('#lany-world-tabs .lany-world-tab').first.evaluate("e=>getComputedStyle(e,'::before').backgroundImage.includes('tab-01.webp')"),(tag,'regional illustration is not mapped')
+    assert page.locator('#lany-world-tabs .lany-world-tab').first.evaluate("e=>getComputedStyle(e.querySelector('span:last-child')).visibility==='visible'"),(tag,'region label must be native readable text')
     shot('map','#lany-world-map')
     assert page.locator('.lany-map-levels canvas.lany-route').count()==1
     assert 'world-map.webp' in page.locator('.lany-map-levels').evaluate('e=>getComputedStyle(e).backgroundImage')
@@ -120,6 +125,9 @@ with sync_playwright() as playwright:
     shot('countdown','#lany-go-intro')
     page.wait_for_function("document.getElementById('lany-go-intro').hidden",timeout=5000)
     assert page.locator('#board .cell').count()==64
+    page.evaluate("() => { state.board[0]=GEMS[4]; renderBoard(); }")
+    assert 'cat-black.webp' in page.locator('#board .cell img').first.get_attribute('src'),(tag,'white cat regression')
+    assert page.locator('#board .cell img').first.evaluate("e=>e.complete&&e.naturalWidth>0"),(tag,'black cat source missing')
     shot('game','#board')
     page.locator('#lany-quick-pause').click()
     shot('pause','#lany-pause')

@@ -15,7 +15,7 @@ with sync_playwright() as pw:
   page.on('pageerror',lambda e:errors.append(str(e)))
   page.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
   page.set_default_timeout(120000)
-  page.goto(base+'?v=2.2.0',wait_until='load',timeout=30000)
+  page.goto(base+'?v=2.3.0',wait_until='load',timeout=30000)
   page.wait_for_function("typeof LanyShell==='object' && typeof LanyTitleParticles==='object'")
   assert page.evaluate('LanyTitleParticles.isRunning()'),(name,'title particles should run')
   page.locator('#lany-start-button').click()
@@ -78,7 +78,7 @@ with sync_playwright() as pw:
   }""")
   assert page.evaluate("""() => {
     const img=document.querySelector('#board .cell .lany-animal-face');
-    return img&&img.src.endsWith('/'+img.dataset.gem+'.webp')&&!img.dataset.lanyOriginal;
+    return img && img.src.endsWith(img.dataset.gem==='cat'?'/cat-black.webp':'/'+img.dataset.gem+'-normal.webp') && !img.dataset.lanyOriginal;
   }"""),(name,'stale face sprite persists after render')
   # Open result overlays to verify both approved studio images.
   for overlay,animal in [('overlay-win','cat-cheer.webp'),('overlay-lose','chick-wink.webp')]:
@@ -96,9 +96,9 @@ with sync_playwright() as pw:
   ctx.close()
  # Separate opt-in query tests protect normal users from diagnostics overhead.
  ctx=browser.new_context(viewport={'width':390,'height':844},is_mobile=True,has_touch=True,service_workers='block')
- page=ctx.new_page();page.goto(base+'?v=2.2.0',wait_until='load')
+ page=ctx.new_page();page.goto(base+'?v=2.3.0',wait_until='load')
  assert page.evaluate('typeof LanyPerfDiagnostics')=='undefined','diagnostics should stay absent without perf=1'
- page.goto(base+'?v=2.2.0&perf=1',wait_until='load')
+ page.goto(base+'?v=2.3.0&perf=1',wait_until='load')
  page.wait_for_function('typeof LanyPerfDiagnostics==="object"')
  assert page.locator('#lany-perf-hud').is_visible()
  page.wait_for_timeout(2250)
