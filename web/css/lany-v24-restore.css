@@ -243,3 +243,20 @@
 :is(.lany-map-bottom #lany-map-resume,.lany-map-bottom button[data-lany-art="exit"])::before{
  content:none!important;display:none!important;
 }
+
+/* Full-screen QA: more specific v2.3 button selectors must not overrule
+   the approved illustration cutouts. Keep real native button semantics. */
+#lany-install-modal .lany-install-card button.lany-install-close,
+#lany-friends-modal .lany-friends-panel button.lany-friends-close{
+ background-image:url('../assets/v24/controls/close.webp')!important;
+ background-size:100% 100%!important;
+ background-position:center!important;background-repeat:no-repeat!important;
+}
+#lany-world-map .lany-map-head button.lany-back,
+#lany-stage-prep .lany-prep-card button.lany-prep-back{
+ background-image:url('../assets/v24/controls/back.webp')!important;
+ background-size:100% 100%!important;
+}
+#lany-world-map .lany-map-head button.lany-map-icon:not(.lany-mobile-fullscreen){
+ background-image:url('../assets/v24/controls/help.webp')!important;
+}
