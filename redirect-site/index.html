@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ko"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>라니팡 공식 게임으로 이동 중</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100dvh;display:grid;place-items:center;padding:20px;background:linear-gradient(145deg,#fff7e4,#ffeaf5,#dbf8ff);font-family:system-ui,"Malgun Gothic",sans-serif;color:#643e61;text-align:center}
+main{width:min(100%,400px);background:#fffdf7;border:5px solid #fff5e3;border-radius:30px;padding:26px 20px;box-shadow:0 8px 0 #e5afd0,0 17px 32px #7a537344}
+h1{font-size:23px}p{font-size:15px;line-height:1.65}a{display:block;margin-top:20px;padding:15px 12px;background:linear-gradient(#ecffa4,#94e391);box-shadow:0 4px 0 #6cba6b;border-radius:18px;text-decoration:none;color:#56365b;font-weight:900}small{display:block;margin-top:16px;color:#856b80}
+</style>
+</head><body>
+<main><div style="font-size:44px" aria-hidden="true">🐰 🍬</div>
+<h1>라니팡 공식 주소로 이동해요!</h1><p>주소가 하나로 통합됐어요.<br>이전에 모은 별과 최고 점수도 가져올게요.</p>
+<a id="official-link" href="https://cardville.web.app/">라니팡 공식 게임 열기</a>
+<small>https://cardville.web.app/</small></main>
+<noscript><meta http-equiv="refresh" content="0;url=https://cardville.web.app/"></noscript>
+<script id="redirect-code">
+(() => {
+ 'use strict';
+ const home='https://cardville.web.app/';
+ const from=location.hostname==='junl-im.github.io'?'pages':'preview';
+ const read=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key)||'null')??fallback}catch(_){return fallback}};
+ let next=home;
+ try {
+   const unlocked=read('sc_unlocked',[1]),best=read('sc_best',{}),stars=read('sc_stars',{});
+   const last=Number(localStorage.getItem('cv_last_level'))||1;
+   const hasProgress=(Array.isArray(unlocked)&&unlocked.some(n=>Number(n)>1))
+     ||(best&&Object.keys(best).length>0)||(stars&&Object.keys(stars).length>0)||last>1;
+   if(hasProgress){
+     const value=btoa(JSON.stringify({v:1,source:from,unlocked,best,stars,last}))
+       .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+     if(value.length<=24000)next+='#lp-progress='+encodeURIComponent(value);
+   }
+ }catch(_){}
+ const a=document.getElementById('official-link');if(a)a.href=next;
+ try{
+   if('serviceWorker' in navigator)navigator.serviceWorker.getRegistrations()
+     .then(rs=>rs.forEach(r=>r.unregister())).catch(()=>{});
+ }catch(_){}
+ location.replace(next);
+})();
+</script>
+</body></html>
