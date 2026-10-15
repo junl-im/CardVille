@@ -1,0 +1,86 @@
+/* User supplied standalone raster art, 2026-10-15. Keep real button labels for accessibility. */
+#lany-title .lany-illustrated-logo{width:min(96vw,560px)!important;max-width:560px!important}
+#lany-title .lany-illustrated-logo img{content:url('../assets/v26/title/logo.webp')!important;width:100%!important;height:auto!important;max-height:min(25dvh,210px)!important;object-fit:contain!important}
+#lany-title .lany-title-bottom.lany-title-art-actions{width:min(93vw,470px)!important}
+#lany-title .lany-title-play-scene .lany-title-cast{display:none!important}
+#lany-title .lany-title-play-scene .lany-art-play{width:min(82%,390px)!important}
+#lany-title .lany-title-shortcuts{width:min(100%,390px)!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:clamp(5px,1.6vw,12px)!important;margin:clamp(8px,2dvh,18px) auto 0!important;align-items:center!important}
+#lany-title .lany-title-shortcuts .lany-art-small{width:100%!important;max-width:none!important;min-width:0!important}
+#lany-title .lany-title-shortcuts .lany-art-friends{grid-column:1/-1;width:min(49%,195px)!important;justify-self:center!important}
+#lany-title .lany-title-shortcuts:has(#lany-install-button[hidden]){grid-template-columns:repeat(2,minmax(0,1fr))!important;width:min(100%,390px)!important}
+#lany-title .lany-title-shortcuts:has(#lany-install-button[hidden]) .lany-art-friends{grid-column:auto;width:100%!important}
+#lany-title .lany-art-button .lany-button-word{display:none!important}
+#lany-title #lany-start-button img.lany-button-picture{content:url('../assets/v26/title/start.webp')!important}
+#lany-title #lany-install-button img.lany-button-picture{content:url('../assets/v26/title/install.webp')!important}
+#lany-title .lany-art-help img.lany-button-picture{content:url('../assets/v26/title/help.webp')!important}
+#lany-title .lany-art-friends img.lany-button-picture{content:url('../assets/v26/title/friends.webp')!important}
+#lany-title .lany-title-shortcuts .lany-button-picture{width:100%!important;height:auto!important;object-fit:contain!important}
+
+/* Complete single-image region tabs replace the cropped left-edge composites. */
+#lany-world-map #lany-world-tabs{gap:clamp(2px,.9vw,8px)!important;padding:5px 2px 7px!important;align-items:center!important}
+#lany-world-map #lany-world-tabs .lany-world-tab{
+ flex:0 0 clamp(77px,22vw,135px)!important;width:clamp(77px,22vw,135px)!important;
+ height:auto!important;aspect-ratio:2.4!important;min-height:0!important;
+ padding:0!important;border:0!important;border-radius:0!important;overflow:visible!important;
+ background-image:var(--cv26-region-art)!important;background-size:contain!important;
+ background-position:center!important;background-repeat:no-repeat!important;
+ box-shadow:none!important;text-shadow:none!important;color:transparent!important;
+}
+#lany-world-map #lany-world-tabs .lany-world-tab::before{content:none!important;display:none!important}
+#lany-world-map #lany-world-tabs .lany-world-tab>span{display:none!important}
+#lany-world-map #lany-world-tabs .lany-world-tab.active{background-image:var(--cv26-region-art)!important;filter:drop-shadow(0 0 5px #fff2a1) drop-shadow(0 2px 4px #8e4a6f)!important;outline:none!important;transform:translateY(-1px) scale(1.035)!important}
+#lany-world-map #lany-world-tabs .lany-world-tab.locked-tab{filter:grayscale(.65) opacity(.72)!important}
+#lany-world-map #lany-world-tabs .lany-world-tab:focus-visible{outline:3px solid #fff1a0!important;outline-offset:2px!important;border-radius:14px!important}
+#lany-world-map #lany-world-tabs .lany-world-tab[data-world="0"]{--cv26-region-art:url('../assets/v26/regions/tab-01.webp')}
+#lany-world-map #lany-world-tabs .lany-world-tab[data-world="1"]{--cv26-region-art:url('../assets/v26/regions/tab-02.webp')}
+#lany-world-map #lany-world-tabs .lany-world-tab[data-world="2"]{--cv26-region-art:url('../assets/v26/regions/tab-03.webp')}
+#lany-world-map #lany-world-tabs .lany-world-tab[data-world="3"]{--cv26-region-art:url('../assets/v26/regions/tab-04.webp')}
+#lany-world-map #lany-world-tabs .lany-world-tab[data-world="4"]{--cv26-region-art:url('../assets/v26/regions/tab-05.webp')}
+#lany-world-map #lany-world-tabs .lany-world-tab[data-world="5"]{--cv26-region-art:url('../assets/v26/regions/tab-06.webp')}
+#lany-world-map #lany-world-tabs .lany-world-tab[data-world="6"]{--cv26-region-art:url('../assets/v26/regions/tab-07.webp')}
+#lany-world-map #lany-world-tabs .lany-world-tab[data-world="7"]{--cv26-region-art:url('../assets/v26/regions/tab-08.webp')}
+#lany-world-map #lany-world-tabs .lany-world-tab[data-world="8"]{--cv26-region-art:url('../assets/v26/regions/tab-09.webp')}
+#lany-world-map #lany-world-tabs .lany-world-tab[data-world="9"]{--cv26-region-art:url('../assets/v26/regions/tab-10.webp')}
+
+/* Full individual action art keeps the artwork's own proportions. */
+#lany-world-map .lany-map-bottom{gap:7px!important;padding:8px 9px max(8px,env(safe-area-inset-bottom))!important;align-items:center!important}
+#lany-world-map .lany-map-bottom button[data-lany-art]{background-color:transparent!important;background-position:center!important;background-repeat:no-repeat!important;background-size:112% 112%!important;border:0!important;box-shadow:none!important;color:transparent!important;font-size:0!important;text-shadow:none!important;padding:0!important;min-height:0!important;height:clamp(52px,9dvh,74px)!important;line-height:0!important}
+#lany-world-map .lany-map-bottom button[data-lany-art]::before{content:none!important;display:none!important}
+#lany-world-map .lany-map-bottom #lany-map-resume{background-image:url('../assets/v26/actions/progress.webp')!important}
+#lany-world-map .lany-map-bottom #lany-map-continue{background-image:url('../assets/v26/actions/continue.webp')!important;flex:1.45!important}
+#lany-world-map .lany-map-bottom button[data-lany-art="exit"]{background-image:url('../assets/v26/actions/exit.webp')!important;flex:1!important}
+@media(min-width:850px) and (max-height:820px){#lany-world-map .lany-map-section .lany-map-levels{min-height:0!important}}
+
+#lany-stage-prep .lany-prep-card :is(#lany-prep-play,.lany-prep-cancel){background-color:transparent!important;background-position:center!important;background-repeat:no-repeat!important;background-size:112% 112%!important;border:0!important;border-radius:0!important;box-shadow:none!important;color:transparent!important;font-size:0!important;text-shadow:none!important;min-height:0!important;height:clamp(66px,11dvh,88px)!important;padding:0!important;width:min(100%,365px)!important;margin-inline:auto!important}
+#lany-stage-prep .lany-prep-card :is(#lany-prep-play,.lany-prep-cancel)::before{content:none!important;display:none!important}
+#lany-stage-prep .lany-prep-card #lany-prep-play{background-image:url('../assets/v26/actions/prep-start.webp')!important}
+#lany-stage-prep .lany-prep-card .lany-prep-cancel{background-image:url('../assets/v26/actions/prep-map.webp')!important}
+
+/* Compact, consistent dialog presentation without crowding the game art. */
+:is(.lany-modal-wrap,.lany-install-modal,#overlay-tutorial){backdrop-filter:blur(5px) saturate(.9);background-color:rgba(32,21,55,.62)!important}
+:is(.lany-dialog,.lany-install-card,.lany-friends-panel,#overlay-tutorial .modal){max-height:calc(100dvh - 22px)!important;overflow-y:auto!important;overscroll-behavior:contain;scrollbar-width:thin}
+#lany-pause .lany-dialog,#lany-exit .lany-dialog{width:min(92vw,430px)!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px!important;padding:clamp(14px,3vw,22px)!important;align-items:stretch}
+#lany-pause .lany-dialog>:is(.lany-dialog-emoji,h2,p),#lany-exit .lany-dialog>:is(.lany-dialog-emoji,h2,p){grid-column:1/-1;margin:0!important}
+#lany-pause .lany-dialog .lany-dialog-emoji,#lany-exit .lany-dialog .lany-dialog-emoji{font-size:clamp(2rem,6dvh,3rem)!important;line-height:1}
+#lany-pause .lany-dialog>button:first-of-type,#lany-exit .lany-dialog>button:first-of-type{grid-column:1/-1}
+#lany-pause .lany-dialog>button,#lany-exit .lany-dialog>button{width:100%!important;min-width:0!important;min-height:46px!important;margin:0!important;font-size:clamp(.76rem,2.8vw,.94rem)!important}
+#overlay-tutorial .modal{width:min(94vw,430px)!important;padding:clamp(14px,3vw,22px)!important}
+#overlay-tutorial .modal>.btn-primary{--cv-skin-green:url('../assets/v24/controls/understood.webp');--lany-21-green:url('../assets/v24/controls/understood.webp');background:url('../assets/v24/controls/understood.webp') center/contain no-repeat!important;border:0!important;box-shadow:none!important;color:transparent!important;font-size:0!important;text-shadow:none!important;min-height:66px!important}
+#lany-friends-modal button[data-lany-art="close"]{display:none!important}
+
+@media(min-width:650px){
+ #lany-title .lany-title-shortcuts{grid-template-columns:repeat(3,minmax(0,1fr))!important;width:min(100%,500px)!important}
+ #lany-title .lany-title-shortcuts .lany-art-friends{grid-column:auto;width:100%!important}
+}
+@media(max-height:680px){
+ #lany-title .lany-illustrated-logo img{max-height:21dvh!important}
+ #lany-title .lany-title-play-scene .lany-art-play{width:min(72%,310px)!important}
+ #lany-title .lany-title-shortcuts{grid-template-columns:repeat(3,minmax(0,1fr))!important;width:min(100%,410px)!important;margin-top:4px!important}
+ #lany-title .lany-title-shortcuts .lany-art-friends{grid-column:auto;width:100%!important}
+}
+@media(max-height:480px){
+ #lany-title .lany-illustrated-logo img{max-height:19dvh!important}
+ #lany-title .lany-title-play-scene .lany-art-play{width:min(65%,230px)!important}
+ #lany-title .lany-title-shortcuts .lany-art-small{max-width:none!important}
+ #lany-pause .lany-dialog,#lany-exit .lany-dialog{gap:5px!important;padding:9px!important}
+}

@@ -6,7 +6,7 @@ const map=read('web/js/lany-shell.js'),sw=read('web/sw.js'),polish=read('web/js/
 assert.equal(v.version,'2.3.0-beta');assert.equal(v.visualRelease,'2.3.0');
 assert(h.includes('lany-v24-restore.css?v=2.3.0'),'CSS import missing');
 assert(h.includes('v2.3.0 · 250단계'),'stale release label');
-assert(sw.includes("lanypang-match-v2.3.0-ko-v25-puzzle-art-r1"),'cache not rotated');
+assert(sw.includes("lanypang-match-v2.3.0-ko-v26-user-art-r8"),'cache not rotated');
 assert(sw.includes("'./css/lany-v24-restore.css'"),'offline style not cached');
 // Chrome Cache.addAll can reject duplicate request URLs and leave the PWA uncontrolled.
 const precache=sw.match(/const PRECACHE=\[([^;]+)\];/)?.[1];
@@ -33,5 +33,15 @@ for(const name of ['rabbit','bear','chick','puppy','cat','fox','wolf'])for(const
  assert(sw.includes("'./assets/v25/animals/"+name+suffix+".webp'"),path+' not precached');
 }
 assert(sw.includes("'./css/lany-puzzle-art-v25.css'"),'puzzle style not precached');
+assert(h.includes('lany-user-art-v26.css?v=6'),'user art style missing');
+assert(sw.includes("'./css/lany-user-art-v26.css'"),'user art style not precached');
+for(const path of ['title/logo.webp','title/start.webp','title/install.webp','title/help.webp','title/friends.webp',
+ ...Array.from({length:10},(_,i)=>'regions/tab-'+String(i+1).padStart(2,'0')+'.webp'),
+ ...['continue','progress','exit','prep-start','prep-map'].map(x=>'actions/'+x+'.webp')]){
+ const asset='web/assets/v26/'+path;const b=fs.readFileSync(asset);
+ assert(b.length>1000&&b.toString('ascii',0,4)==='RIFF'&&b.toString('ascii',8,12)==='WEBP',asset+' corrupt');
+ assert(sw.includes("'./assets/v26/"+path+"'"),asset+' not precached');
+}
+assert(read('web/js/lany-friends.js').includes("a.main?'./assets/v25/animals/'"),'main gallery faces do not match puzzle');
 for(const role of ['start','help','install'])assert(css.includes("v24/title/"+role+".webp"),'missing restored title '+role);
 console.log(JSON.stringify({pass:true,version:v.version,assets:files.length,regionTabs:10,originalMechanicsPreserved:true,blackCat:true,noSVG:true}));

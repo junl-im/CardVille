@@ -6,7 +6,7 @@ const sw=read('web/sw.js'),v=JSON.parse(read('web/version.json')),m=JSON.parse(r
 assert.equal(v.version,'2.3.0-beta');
 for(const flag of ['illustratedTitleButtons','oneRowTitleShortcuts','titleMascotLogo','sharedImageButtonSkins','pressHoverTouchFeedback'])assert(v[flag]===true,flag);
 assert(m.start_url.includes('v=2.3.0'),'PWA install must launch the current release');
-for(const x of ['lany-title-shortcuts','id="lany-start-button"','id="lany-install-button"','logo.webp','play.webp','install.webp','help.webp','friends.webp','class="lany-art-button lany-art-small','lany-art-buttons.css?v=2.3.0','lany-art-buttons.js?v=2.3.0','aria-label="동물 친구 도감"'])assert(h.includes(x),x);
+for(const x of ['lany-title-shortcuts','id="lany-start-button"','id="lany-install-button"','logo.webp','start.webp','install.webp','help.webp','friends.webp','class="lany-art-button lany-art-small','lany-art-buttons.css?v=2.3.0','lany-art-buttons.js?v=2.3.0','aria-label="동물 친구 도감"'])assert(h.includes(x),x);
 assert.equal((h.match(/class="lany-art-button lany-art-small/g)||[]).length,3,'exactly three small buttons');
 const bitmapCss=read('web/css/lany-ui-v21.css');
 for(const color of ['blue','green','gold','pink'])assert(bitmapCss.includes('skin-'+color+'.webp'),color+' latest picture skin');

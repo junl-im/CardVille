@@ -38,8 +38,8 @@ assert(builder.includes("('play','start_main.webp')")&&builder.includes("('help'
 assert(builder.includes('build_ui_v21()'),'Generator is not invoked');
 assert(builder.includes('source'), 'Missing art source');
 assert(!css.includes('url(\'../assets/ui/v21/title/logo.svg\')'),'Vector UI regression');
-for(const [role,file] of Object.entries({logo:'logo',play:'play',install:'install',help:'help',friends:'friends'}))
- assert(h.includes('./assets/ui/v21/title/'+file+'.webp?v=2.3.0'),role);
+for(const [role,file] of Object.entries({logo:'logo',play:'start',install:'install',help:'help',friends:'friends'}))
+ assert(h.includes('./assets/v26/title/'+file+'.webp'),role);
 if(process.argv.includes('--raster')){
  const p='web/assets/ui/v21/manifest.json';
  const manifest=JSON.parse(read(p));

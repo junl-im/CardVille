@@ -23,7 +23,7 @@ with sync_playwright() as pw:
   assert page.locator('.lany-illustrated-logo img').evaluate('(e)=>e.complete&&e.naturalWidth>0'),name
   bg=page.locator('.lany-title').evaluate('(e)=>getComputedStyle(e).backgroundImage')
   assert page.locator('.lany-cover').evaluate("e=>getComputedStyle(e).visibility==='visible' && e.complete && e.naturalWidth>0"),name
-  assert page.locator('.lany-illustrated-logo img').get_attribute('src').endswith('v=2.3.0'),name
+  assert page.locator('.lany-illustrated-logo img').get_attribute('src')=='./assets/v26/title/logo.webp',name
   bounds=page.evaluate("""()=>({
     top:document.querySelector('.lany-title-top').getBoundingClientRect().toJSON(),
     play:document.querySelector('#lany-start-button').getBoundingClientRect().toJSON(),
@@ -32,8 +32,13 @@ with sync_playwright() as pw:
     horizontal:document.documentElement.scrollWidth-innerWidth,
   })""")
   assert bounds['horizontal']<=3,(name,'horizontal overflow',bounds)
-  assert bounds['play']['width']>bounds['helpers'][0]['width']*2,(name,'play focus',bounds)
-  assert max(abs(bounds['helpers'][0]['top']-x['top']) for x in bounds['helpers'])<3,(name,'three helper buttons in one row')
+  two_rows=w<650 and h>680
+  assert bounds['play']['width']>bounds['helpers'][0]['width']*(1.5 if two_rows else 2),(name,'play focus',bounds)
+  assert abs(bounds['helpers'][0]['top']-bounds['helpers'][1]['top'])<3,(name,'first helper row',bounds)
+  if two_rows:
+   assert bounds['helpers'][2]['top']>bounds['helpers'][1]['bottom'],(name,'centered gallery row',bounds)
+  else:
+   assert abs(bounds['helpers'][1]['top']-bounds['helpers'][2]['top'])<3,(name,'three helper buttons in one row')
   assert bounds['bottom']['top']>=-3 and bounds['bottom']['bottom']<=h+3,(name,'bottom clipping',bounds)
   assert bounds['top']['top']>=-3 and bounds['top']['bottom']<=h+3,(name,'logo clipping',bounds)
   page.screenshot(path=str(OUT/(name+'-title.png')))
