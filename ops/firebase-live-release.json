@@ -3,17 +3,18 @@
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "ca10bc4bfba5682b84120d3e792b18b66c1fce44",
-  "requestedFor": "라니팡 v29 사용자 화면 개선: 단계 준비창 개별 버튼 원본 비율 유지, 지도 버튼 정리, 설치·방법·도감 글자 및 게임 중 최고 점수·옵션 카드 캔디 UI 통일. 기존 게임 데이터 유지.",
+  "sourceCommit": "25ec1f84589c8da62f88cfe23e6eaa0204dadfe7",
+  "requestedFor": "라니팡 v30 모바일 게임 아이템 4종 새 WebP 적용, 퍼즐판 바로 아래 배치, 휴대폰 높이별 퍼즐판 조정, 지도 탭·단계·하단 버튼 개선. 기존 게임 데이터 유지.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
-  "approvedAtKST": "2026-10-15",
+  "approvedAtKST": "2026-10-16",
   "versionCheckFix": true,
   "puzzleArtV25": true,
   "userArtV26": true,
   "compactUiV27": true,
   "releaseCheckFixV27": true,
   "resultPolishV28": true,
-  "screenPolishV29": true
+  "screenPolishV29": true,
+  "mobileLayoutV30": true
 }
