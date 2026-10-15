@@ -42,7 +42,7 @@ with sync_playwright() as playwright:
     page.locator('#lany-install-button').click()
     assert viewport_fit('.lany-install-card'),(tag,'install panel clipped')
     assert 'install-ornament.webp' in page.locator('#lany-install-guide-title').evaluate("e=>getComputedStyle(e,'::before').backgroundImage"),(tag,'install ornament not applied')
-    assert 'buttons/close.webp' in page.locator('.lany-install-close').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'new close art not applied')
+    assert 'controls/close.webp' in page.locator('.lany-install-close').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'new close art not applied')
     shot('install','.lany-install-card')
     page.locator('.lany-install-close').click()
     page.locator('.lany-art-help').click()
@@ -67,7 +67,7 @@ with sync_playwright() as playwright:
       assert page.locator('#lany-friends-grid img[loading="eager"]').count()==page.locator('#lany-friends-grid img').count(),(tag,'gallery must eagerly load visible art')
       friend_pages+=1
       assert 'friends-ornament.webp' in page.locator('#lany-friends-heading').evaluate("e=>getComputedStyle(e,'::before').backgroundImage"),(tag,'friends ornament not applied')
-      assert 'buttons/close.webp' in page.locator('.lany-friends-close').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'gallery close art not applied')
+      assert 'controls/close.webp' in page.locator('.lany-friends-close').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'gallery close art not applied')
       shot('friends-'+str(friend_pages),'.lany-friends-panel')
       if page.locator('#lany-friends-next').is_disabled():break
       page.evaluate('LanyFriends.page(1)')
@@ -89,8 +89,8 @@ with sync_playwright() as playwright:
       page.locator('#lany-update-banner').wait_for(state='hidden',timeout=3000)
     page.locator('#lany-start-button').click()
     assert page.locator('#lany-world-map').is_visible()
-    for selector,asset in (('.lany-map-head .lany-back','back.webp'),('.lany-map-head .lany-map-icon:not(.lany-mobile-fullscreen)','help.webp'),('#lany-world-prev','prev.webp'),('#lany-world-next','next.webp')):
-      assert 'buttons/'+asset in page.locator(selector).evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,selector,'new independent utility raster not applied')
+    for selector,asset in (('.lany-map-head .lany-back','back.webp'),('.lany-map-head .lany-map-icon:not(.lany-mobile-fullscreen)','help.webp'),('#lany-world-prev','left.webp'),('#lany-world-next','right.webp')):
+      assert 'controls/'+asset in page.locator(selector).evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,selector,'approved v2.3 illustration missing')
     assert page.locator('#lany-world-tabs .lany-world-tab').first.evaluate("e=>getComputedStyle(e,'::before').backgroundImage.includes('tab-01.webp')"),(tag,'regional illustration is not mapped')
     assert page.locator('#lany-world-tabs .lany-world-tab').first.evaluate("e=>getComputedStyle(e.querySelector('span:last-child')).visibility==='visible'"),(tag,'region label must be native readable text')
     shot('map','#lany-world-map')
