@@ -30,7 +30,7 @@ with sync_playwright() as playwright:
           r.left>=-5 && r.right<=innerWidth+5 && r.top>=-6 &&
           r.bottom<=innerHeight+6;
       }""")
-    page.goto(BASE+'?v=2.2.0',wait_until='load',timeout=30000)
+    page.goto(BASE+'?v=2.3.0',wait_until='load',timeout=30000)
     page.wait_for_function("typeof LanyShell==='object' && typeof LanyFriends==='object' && typeof LanyUpdate==='object'")
     assert page.locator('#lany-update-banner').is_hidden(),(tag,'false positive update notice')
     assert page.locator('#lany-start-button img').evaluate('e=>e.complete&&e.naturalWidth>0')
@@ -71,7 +71,7 @@ with sync_playwright() as playwright:
     assert page.evaluate('LanyFriends.roster.length')==30,(tag,'30 friend portraits should be retained')
     page.locator('.lany-friends-close').click()
     if tag=='phone':
-      page.route('**/version.json?*',lambda route:route.fulfill(status=200,content_type='application/json',body='{"version":"2.3.0-beta"}'))
+      page.route('**/version.json?*',lambda route:route.fulfill(status=200,content_type='application/json',body='{"version":"2.4.0-beta"}'))
       page.evaluate('LanyUpdate.check()')
       page.locator('#lany-update-banner').wait_for(state='visible',timeout=3000)
       assert page.evaluate("""() => {

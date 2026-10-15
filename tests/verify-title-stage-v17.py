@@ -23,7 +23,7 @@ with sync_playwright() as pw:
   assert page.locator('.lany-illustrated-logo img').evaluate('(e)=>e.complete&&e.naturalWidth>0'),name
   bg=page.locator('.lany-title').evaluate('(e)=>getComputedStyle(e).backgroundImage')
   assert page.locator('.lany-cover').evaluate("e=>getComputedStyle(e).visibility==='visible' && e.complete && e.naturalWidth>0"),name
-  assert page.locator('.lany-illustrated-logo img').get_attribute('src').endswith('v=2.2.0'),name
+  assert page.locator('.lany-illustrated-logo img').get_attribute('src').endswith('v=2.3.0'),name
   bounds=page.evaluate("""()=>({
     top:document.querySelector('.lany-title-top').getBoundingClientRect().toJSON(),
     play:document.querySelector('#lany-start-button').getBoundingClientRect().toJSON(),
