@@ -1,0 +1,28 @@
+/* v31: compact control rhythm across map, preparation and dialogs. */
+@media(max-width:600px){
+ /* Keep the illustrated map as the main surface; actions form one short row. */
+ #lany-world-map .lany-map-bottom{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5px!important;padding:4px 6px max(6px,env(safe-area-inset-bottom))!important}
+ #lany-world-map .lany-map-bottom:has(#lany-map-resume[hidden]){grid-template-columns:1.25fr 1fr!important}
+ #lany-world-map .lany-map-bottom #lany-map-resume,
+ #lany-world-map .lany-map-bottom #lany-map-continue,
+ #lany-world-map .lany-map-bottom button[data-lany-art="exit"]{grid-column:auto!important;grid-row:auto!important;justify-self:stretch!important;width:100%!important;min-width:0!important;height:clamp(43px,6dvh,52px)!important}
+ #lany-world-map .lany-map-bottom #lany-map-resume[hidden]+#lany-map-continue+button[data-lany-art="exit"]{grid-column:auto!important;justify-self:stretch!important;width:100%!important}
+ #lany-world-map .lany-map-section .lany-world-banner{min-height:clamp(43px,7dvh,62px)!important;padding:6px 12px!important}
+ #lany-world-map .lany-map-tip{font-size:clamp(.68rem,2.5vw,.79rem)!important;padding:5px 8px!important}
+
+ #lany-stage-prep #lany-prep-booster-counts{font-size:clamp(.7rem,2.7vw,.83rem)!important;line-height:1.25!important;white-space:nowrap!important;text-align:center!important}
+ /* The two full-art stage actions retain their shape without dominating the card. */
+ #lany-stage-prep .lany-prep-card :is(#lany-prep-play,.lany-prep-cancel){width:min(58vw,220px)!important;max-width:220px!important;height:auto!important;min-height:0!important;aspect-ratio:2.5!important}
+
+ /* Secondary in-game navigation has the same comfortable 44px touch target. */
+ #app .lany-game-nav{width:min(90vw,455px)!important;padding:3px!important;gap:3px!important}
+ #app .lany-game-nav button[data-lany-art]{height:44px!important;min-height:44px!important}
+
+ #lany-pause .lany-dialog,#lany-exit .lany-dialog{width:min(90vw,370px)!important;gap:6px!important}
+ #lany-pause .lany-dialog>button,#lany-exit .lany-dialog>button{min-height:44px!important;height:44px!important}
+ #overlay-tutorial .modal>.btn-primary{min-height:54px!important}
+}
+@media(max-height:600px) and (max-width:600px){
+ #lany-stage-prep .lany-prep-card :is(#lany-prep-play,.lany-prep-cancel){width:min(51vw,196px)!important;max-width:196px!important}
+ #lany-world-map .lany-map-bottom :is(#lany-map-resume,#lany-map-continue,button[data-lany-art="exit"]){height:43px!important}
+}

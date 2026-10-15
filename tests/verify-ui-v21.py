@@ -37,6 +37,8 @@ with sync_playwright() as pw:
   assert page.locator('#lany-world-map').is_visible(),name
   bg('#lany-world-map .lany-world-banner','region-header.webp')  # v2.3 text-free art replaces word-baked chapter
   bg('#lany-map-continue','v26/actions/continue.webp')
+  if mobile:
+   assert page.locator('#lany-map-continue').evaluate("e=>Math.abs(e.getBoundingClientRect().top-document.querySelector('.lany-map-bottom button[data-lany-art=\"exit\"]').getBoundingClientRect().top)<=3"),(name,'map actions should share one row')
   page.screenshot(path=str(out/(name+'-map.png')))
   page.locator('#lany-map-continue').click()
   assert page.locator('#lany-stage-prep').is_visible(),name

@@ -176,7 +176,7 @@
    $('lany-prep-locks').textContent=lv.lockedCount?'🔒 잠금 블록 '+lv.lockedCount+'개':'🔓 잠금 블록 없음';
    const best=state.bestScores[n]||0;
    $('lany-prep-record').textContent=best?`⭐ 최고 점수 ${best.toLocaleString()}점`:'⭐ 최고 기록 없음';
-   const b=state.boosters;$('lany-prep-booster-counts').textContent=`🔨 망치 ${b.hammer}개 · 🔀 섞기 ${b.shuffle}개 · 🌈 색상 제거 ${b.color}개`;
+   const b=state.boosters;$('lany-prep-booster-counts').textContent=`🔨 망치 ${b.hammer} · 🔀 섞기 ${b.shuffle} · 🌈 색상 ${b.color}`;
    const clock=$('lany-time-mode');clock.checked=window.LanyTempo?.enabled()??true;
    $('lany-time-hint').textContent=`제한 ${window.LanyTempo?.durationFor(n)??150}초 · 시간 종료 시 도전 실패. 끄면 이동 횟수만 적용돼요.`;
    renderPrepPage();$('lany-prep-play').focus();return true;
