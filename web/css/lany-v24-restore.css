@@ -12,7 +12,7 @@
 .lany-title .lany-title-shortcuts{align-items:center!important}
 #lany-world-tabs .lany-world-tab{
  display:flex!important;justify-content:center!important;align-items:center!important;
- min-width:0!important;min-height:clamp(48px,8.5vw,72px)!important;
+ min-width:0!important;min-height:0!important;height:clamp(39px,6.5dvh,55px)!important;
  padding:0!important;border:0!important;border-radius:14px!important;
  background-color:transparent!important;background-size:100% 100%!important;
  background-position:center center!important;background-repeat:no-repeat!important;
@@ -142,7 +142,7 @@
 #board .cell.selected{outline:3px solid #ffe479!important;outline-offset:-2px}
 #board .cell.bomb-gem::after,#board .cell.stripe-gem::after{opacity:.85}
 @media(max-width:380px){
- #lany-world-tabs .lany-world-tab{min-height:clamp(43px,9vw,61px)!important}
+ #lany-world-tabs .lany-world-tab{height:clamp(37px,7dvh,47px)!important;min-height:0!important}
  #lany-world-map :is(#lany-map-prev,#lany-map-next){min-width:61px!important}
  #lany-title .lany-title-shortcuts .lany-art-small{max-width:118px!important}
 }
