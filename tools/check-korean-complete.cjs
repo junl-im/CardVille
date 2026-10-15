@@ -35,6 +35,7 @@ for (const en of ['Connecting to PeerJS','Room ready!','Room not found','Connect
 assert(sw.includes('lanypang-match-v2.3.0-ko'),'Service worker cache must be bumped');
 const previewWorkflow=fs.readFileSync('.github/workflows/firebase-hosting.yml','utf8');
 assert(!previewWorkflow.includes("grep -q 'CardVille'"),'Legacy English game-name smoke check regressed');
-assert(previewWorkflow.includes("name:'사탕 골짜기 · 반짝이는 첫걸음'"),'Firebase must verify actual Korean stage data');
+assert(previewWorkflow.includes('entryPoint: ./redirect-site'),'Firebase preview must serve only the redirect portal');
+assert(fs.readFileSync('redirect-site/index.html','utf8').includes('https://cardville.web.app/'),'all public game paths must forward to the Korean LIVE site');
 assert(overlay.includes('온라인 순위 기능은 서버 연동 후 제공됩니다.'));
 console.log(JSON.stringify({passed:true,language:'ko',stageRecords:250,englishStageFields:0,localizedThemes:10,distinctKoreanNames:250,translatedMultiplayer:true,offlineCache:'v2.3.0-ko'},null,2));

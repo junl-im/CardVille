@@ -15,7 +15,7 @@ assert(wf.includes('      - web/**'),'Preview must deploy for game source change
 assert(wf.includes('ops/firebase-preview-trigger.json'));
 assert(wf.includes('channelId: cardville-match3-preview'));
 assert(wf.includes('node tools/check-title-stage-v17.cjs'));
-assert(wf.includes('version.json')&&wf.includes('expected_version'),'Preview smoke must compare published version to repo');
+assert(wf.includes('entryPoint: ./redirect-site')&&wf.includes('https://cardville.web.app/'),'Preview must forward to canonical v2.3 LIVE');
 assert(!/channelId:\s*live\b/.test(wf),'Preview must never publish to live');
 for(const source of ['/','/index.html','/version.json','/sw.js']){
  const h=cfg.hosting.headers.find(x=>x.source===source);

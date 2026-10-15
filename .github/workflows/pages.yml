@@ -47,26 +47,18 @@ jobs:
           node tools/check-raster-only-v22.cjs
           node tools/check-v24-restore.cjs
           node tools/check-progress-migration.cjs
+          node tools/check-canonical-redirect.cjs
+          node tools/check-progress-migration.cjs
           node tools/check-tempo.cjs
           test -f web/index.html
           test -f web/LICENSE
           test -f web/sw.js
           test -f web/version.json
-      - name: Render matching favicon, home-screen and maskable app icons
-        run: |
-          python -m pip install --quiet Pillow==11.3.0
-          python tools/build-pwa-icons.py
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq fonts-noto-cjk
-          python -m pip install --quiet Pillow==11.3.0
-          python tools/build-visual-v18.py
-          node tools/check-visual-perf-v18.cjs --raster
-          node tools/check-v20-cache-map.cjs --raster
-          node tools/check-ui-v21.cjs --raster
-          node tools/check-pwa-v14.cjs --raster
+      - name: Validate public redirect to official Firebase LIVE
+        run: node tools/check-canonical-redirect.cjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: web
+          path: redirect-site
       - id: deployment
         uses: actions/deploy-pages@v4

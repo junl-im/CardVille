@@ -21,5 +21,5 @@ for(const method of ['requestFullscreen','popstate','openExit','showHome','exitG
 new vm.Script(shell);
 const work=fs.readFileSync('.github/workflows/firebase-hosting.yml','utf8');
 assert(!work.includes("grep -q 'CardVille'"),'Old English-only smoke check has returned');
-assert(work.includes('assets/lanypang-cover.webp'),'Live preview smoke must test cover asset');
+assert(work.includes('entryPoint: ./redirect-site')&&work.includes('https://cardville.web.app/'),'Preview must direct players to the official game address');
 console.log(JSON.stringify({ok:true,brand:'라니팡!',koreanTutorial:true,fullscreen:true,backExitDialog:true,illustration:true,oldSaveKeysPreserved:true}));

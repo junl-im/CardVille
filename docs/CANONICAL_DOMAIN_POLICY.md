@@ -30,3 +30,14 @@ https://cardville.web.app/
 
 - 1차 작업: Firebase LIVE v2.3.0-beta 선행 배포
 - 2차 작업: 대체 주소 자동 전환·데이터 보존
+
+## 자동 이동 실제 구성
+
+- `redirect-site/index.html` / `404.html`: GitHub Pages와 Firebase 미리보기에서 실행되는 단일 공식 게임 이동 브리지.
+- `redirect-site/sw.js`: 이전 Pages/미리보기 PWA의 낡은 화면 캐시 제거(게임 기록 LocalStorage는 건드리지 않음).
+- `redirect-site/firebase.json`: Firebase `cardville-match3-preview` 채널만 HTML 브리지로 배포, 와일드카드 URL 처리.
+- `tools/check-canonical-redirect.cjs`: 두 주소 자동 이동, 해금/최고 점수/별 데이터 전달, 악성 데이터 삭제 금지 QA.
+- GitHub Pages는 redirect-site 정적 아티팩트만 게시하며 더 이상 보조 게임 서버가 아니다.
+- Firebase preview 채널의 30일 만료를 막기 위해 매월 1일·15일에 리다이렉트 배포를 갱신한다.
+- 브라우저 저장 데이터는 공식 주소의 `lany-origin-migration.js`가 수신·안전하게 병합한다.
+- 이전 URL에서 설치한 PWA 홈 화면 아이콘은 실행 URL이 자동 변경되지 않을 수 있다. 정식 주소를 다시 설치한다.

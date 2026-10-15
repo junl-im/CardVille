@@ -9,6 +9,10 @@ on:
       - firebase.json
       - .github/workflows/firebase-hosting.yml
       - tools/**
+      - redirect-site/**
+
+  schedule:
+    - cron: '0 3 1,15 * *'
 
 permissions:
   contents: read
@@ -51,6 +55,8 @@ jobs:
           node tools/check-raster-only-v22.cjs
           node tools/check-v24-restore.cjs
           node tools/check-progress-migration.cjs
+          node tools/check-canonical-redirect.cjs
+          node tools/check-progress-migration.cjs
           node tools/check-tempo.cjs
           node tools/check-firebase-preview.cjs
           # Both JSON configurations are parsed by the preflight checks above.
@@ -68,53 +74,34 @@ jobs:
         env:
           FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARDVILLE }}
         run: node tools/check-iam-identity.cjs
-      - name: Render matching favicon, home-screen and maskable app icons
-        run: |
-          python -m pip install --quiet Pillow==11.3.0
-          python tools/build-pwa-icons.py
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq fonts-noto-cjk
-          python -m pip install --quiet Pillow==11.3.0
-          python tools/build-visual-v18.py
-          node tools/check-visual-perf-v18.cjs --raster
-          node tools/check-v20-cache-map.cjs --raster
-          node tools/check-ui-v21.cjs --raster
-          node tools/check-pwa-v14.cjs --raster
-      - name: Deploy to isolated preview channel (NOT live)
+      - name: Validate canonical legacy redirect bridge
+        run: node tools/check-canonical-redirect.cjs
+      - name: Deploy redirect page to retired preview channel (NEVER LIVE)
         id: firebase_preview
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARDVILLE }}
           projectId: cardville
           channelId: cardville-match3-preview
+          entryPoint: ./redirect-site
           expires: 30d
-      - name: Show preview URL and check uploaded game
+      - name: Verify retired preview forwards to official game URL
         env:
           PREVIEW_URL: ${{ steps.firebase_preview.outputs.details_url }}
-          EXPIRE_AT: ${{ steps.firebase_preview.outputs.expire_time }}
         run: |
           set -eu
-          if [ -z "$PREVIEW_URL" ]; then
-            echo 'Firebase Action produced no preview URL' >&2
-            exit 1
-          fi
-          case "$PREVIEW_URL" in https://*) ;; *) echo 'Unexpected preview URL format' >&2; exit 1;; esac
-          echo "Preview: $PREVIEW_URL"
-          {
-            echo '## CardVille Match-3 Firebase preview'
-            echo "- Preview URL: $PREVIEW_URL"
-            echo "- Expires at: $EXPIRE_AT"
-            echo '- Firebase project ID: cardville'
-            echo '- Channel: cardville-match3-preview (never live)'
-          } >> "$GITHUB_STEP_SUMMARY"
-          expected_version="$(node -p "require('./web/version.json').version")"
-          echo "Expected preview version: $expected_version"
+          test -n "$PREVIEW_URL"
           for attempt in 1 2 3 4 5; do
-            if curl --fail --silent --show-error --location --max-time 20 "$PREVIEW_URL" -o /tmp/cardville-preview.html && grep -Fq '<html lang="ko">' /tmp/cardville-preview.html && grep -Fq 'lany-title-stage-v17.css?v=2.3.0' /tmp/cardville-preview.html && grep -Fq 'lany-raster-v18.css?v=2.3.0' /tmp/cardville-preview.html && grep -Fq 'lany-result-v19.css?v=2.3.0' /tmp/cardville-preview.html && grep -Fq 'lany-worlds-v20.css?v=2.3.0' /tmp/cardville-preview.html && grep -Fq 'lany-ui-v21.css?v=2.3.0' /tmp/cardville-preview.html && grep -Fq 'lany-perf-v19.js?v=2.3.0' /tmp/cardville-preview.html && grep -Fq 'ui/v21/title/play.webp?v=2.3.0' /tmp/cardville-preview.html && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/assets/ui/v21/title/install.webp" -o /tmp/lany-install-v21.webp && test $(wc -c </tmp/lany-install-v21.webp) -ge 1000 && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/assets/map/stage-current-v20.webp" -o /tmp/lany-map-current-v20.webp && test "$(wc -c </tmp/lany-map-current-v20.webp)" -gt 700 && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/version.json" -o /tmp/lany-preview-version.json && node -e "const fs=require('fs');const v=JSON.parse(fs.readFileSync('/tmp/lany-preview-version.json','utf8'));if(v.version!==process.argv[1])process.exit(1)" "$expected_version" && grep -Fq '라니팡!' /tmp/cardville-preview.html && grep -Fq 'id="lany-cover-image"' /tmp/cardville-preview.html && grep -Fq 'id="lany-clock"' /tmp/cardville-preview.html && grep -Fq 'id="lany-map-levels"' /tmp/cardville-preview.html && grep -Fq 'id="lany-quick-map"' /tmp/cardville-preview.html && grep -Fq "name:'사탕 골짜기 · 반짝이는 첫걸음'" /tmp/cardville-preview.html && grep -Fq 'const LEVELS' /tmp/cardville-preview.html && grep -Fq 'id="lany-world-map"' /tmp/cardville-preview.html && grep -Fq 'id="lany-stage-prep"' /tmp/cardville-preview.html && grep -Fq 'id="lany-friends-modal"' /tmp/cardville-preview.html && grep -Fq 'lany-mobile-friends.css' /tmp/cardville-preview.html && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/assets/lanypang-cover.webp" -o /tmp/lanypang-cover.webp && test $(wc -c </tmp/lanypang-cover.webp) -ge 15000 && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/js/lany-tempo.js" | grep -Fq "LanyTempo" && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/js/lany-shell.js" | grep -Fq "document.querySelector('.lany-map-section')" && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/js/lany-polish.js" | grep -Fq 'LanyPolish' && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/css/lany-polish.css" | grep -Fq 'lany-popup-mascot' && curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/assets/polish/rabbit-wink.webp" -o /tmp/lany-rabbit-wink.webp && test $(wc -c </tmp/lany-rabbit-wink.webp) -ge 1000; then
-              echo 'Preview HTTP smoke test: PASS'
+            if curl --fail --silent --show-error --location --max-time 20 "${PREVIEW_URL%/}/" -o /tmp/cardville-redirect.html && \
+              grep -Fq 'https://cardville.web.app/' /tmp/cardville-redirect.html && \
+              grep -Fq 'lp-progress=' /tmp/cardville-redirect.html && \
+              ! grep -Fq 'const LEVELS' /tmp/cardville-redirect.html; then
+              echo 'Firebase legacy preview redirect: PASS'
+              echo '- Canonical LIVE: https://cardville.web.app/' >> "$GITHUB_STEP_SUMMARY"
+              echo '- This preview site no longer serves a second game' >> "$GITHUB_STEP_SUMMARY"
               exit 0
             fi
-            sleep 8
+            sleep 7
           done
-          echo 'Preview deployment completed but web smoke test did not pass' >&2
+          echo 'Old preview URL did not publish the redirect portal' >&2
           exit 1
