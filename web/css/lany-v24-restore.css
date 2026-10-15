@@ -296,7 +296,7 @@
 }
 .lany-map-bottom button[data-lany-art="exit"],
 #lany-exit .lany-dialog button[data-lany-art="exit"]{
- background:var(--cv-skin-red) center/100% 100% no-repeat!important;
+ background:url('../assets/ui/v21/buttons/skin-red.webp') center/100% 100% no-repeat!important;
  color:#70394a!important;
 }
 #lany-stage-prep #lany-prep-play{
