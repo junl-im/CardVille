@@ -27,16 +27,16 @@
 }
 #lany-world-tabs .lany-world-tab.locked-tab{filter:grayscale(.65) opacity(.75)!important}
 #lany-world-tabs .lany-world-tab:focus-visible{outline:3px solid #59377d!important;outline-offset:2px!important}
-#lany-world-tabs .lany-world-tab[data-world="0"]{background-image:url('../assets/v24/regions/tab-01.webp')!important}
-#lany-world-tabs .lany-world-tab[data-world="1"]{background-image:url('../assets/v24/regions/tab-02.webp')!important}
-#lany-world-tabs .lany-world-tab[data-world="2"]{background-image:url('../assets/v24/regions/tab-03.webp')!important}
-#lany-world-tabs .lany-world-tab[data-world="3"]{background-image:url('../assets/v24/regions/tab-04.webp')!important}
-#lany-world-tabs .lany-world-tab[data-world="4"]{background-image:url('../assets/v24/regions/tab-05.webp')!important}
-#lany-world-tabs .lany-world-tab[data-world="5"]{background-image:url('../assets/v24/regions/tab-06.webp')!important}
-#lany-world-tabs .lany-world-tab[data-world="6"]{background-image:url('../assets/v24/regions/tab-07.webp')!important}
-#lany-world-tabs .lany-world-tab[data-world="7"]{background-image:url('../assets/v24/regions/tab-08.webp')!important}
-#lany-world-tabs .lany-world-tab[data-world="8"]{background-image:url('../assets/v24/regions/tab-09.webp')!important}
-#lany-world-tabs .lany-world-tab[data-world="9"]{background-image:url('../assets/v24/regions/tab-10.webp')!important}
+#lany-world-tabs .lany-world-tab[data-world="0"]{--lp24-region-icon:url('../assets/v24/regions/tab-01.webp')}
+#lany-world-tabs .lany-world-tab[data-world="1"]{--lp24-region-icon:url('../assets/v24/regions/tab-02.webp')}
+#lany-world-tabs .lany-world-tab[data-world="2"]{--lp24-region-icon:url('../assets/v24/regions/tab-03.webp')}
+#lany-world-tabs .lany-world-tab[data-world="3"]{--lp24-region-icon:url('../assets/v24/regions/tab-04.webp')}
+#lany-world-tabs .lany-world-tab[data-world="4"]{--lp24-region-icon:url('../assets/v24/regions/tab-05.webp')}
+#lany-world-tabs .lany-world-tab[data-world="5"]{--lp24-region-icon:url('../assets/v24/regions/tab-06.webp')}
+#lany-world-tabs .lany-world-tab[data-world="6"]{--lp24-region-icon:url('../assets/v24/regions/tab-07.webp')}
+#lany-world-tabs .lany-world-tab[data-world="7"]{--lp24-region-icon:url('../assets/v24/regions/tab-08.webp')}
+#lany-world-tabs .lany-world-tab[data-world="8"]{--lp24-region-icon:url('../assets/v24/regions/tab-09.webp')}
+#lany-world-tabs .lany-world-tab[data-world="9"]{--lp24-region-icon:url('../assets/v24/regions/tab-10.webp')}
 
 /* Icon controls: independent WebP artwork; native aria-label stays on real buttons. */
 #lany-world-map .lany-map-head .lany-back,#lany-stage-prep .lany-prep-back{
@@ -148,4 +148,36 @@
 }
 @media(prefers-reduced-motion:reduce){
  #lany-world-tabs .lany-world-tab{transition:none!important}
+}
+
+/* Full source sheets contain baked region names that may clip at 320px.
+   Use their original painted mascots as real artwork, but render the number
+   as readable live HTML; never ship truncated baked letters. */
+#lany-world-map #lany-world-tabs .lany-world-tab{
+ position:relative!important;overflow:hidden!important;
+ background-image:var(--cv-skin-blue)!important;
+ background-size:100% 100%!important;background-repeat:no-repeat!important;
+ background-position:center!important;
+ padding:0 4px 0 42%!important;justify-content:center!important;
+}
+#lany-world-map #lany-world-tabs .lany-world-tab.active{
+ background-image:var(--cv-skin-gold)!important;
+}
+#lany-world-map #lany-world-tabs .lany-world-tab::before{
+ content:"";display:block!important;position:absolute!important;
+ pointer-events:none!important;top:4%;left:2%;height:92%;width:40%;
+ background-image:var(--lp24-region-icon)!important;
+ background-size:250% 100%!important;background-position:left center!important;
+ background-repeat:no-repeat!important;
+}
+#lany-world-map #lany-world-tabs .lany-world-tab .world-emoji{display:none!important}
+#lany-world-map #lany-world-tabs .lany-world-tab>span:last-child{
+ position:relative!important;visibility:visible!important;display:block!important;
+ color:#6e355c!important;font-weight:1000!important;
+ font-size:clamp(.73rem,2.8vw,1rem)!important;
+ line-height:1.05!important;letter-spacing:-.05em!important;
+ text-shadow:0 1px 0 #fff9ea!important;white-space:nowrap!important;
+}
+#lany-world-map #lany-world-tabs .lany-world-tab.locked-tab>span:last-child{
+ color:#555366!important;
 }
