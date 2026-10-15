@@ -3,13 +3,14 @@
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "f6a94984726c490e82b1f4d10330a4f2e9724f67",
-  "requestedFor": "라니팡 사용자 제공 단일 WebP 에셋 적용: 새 타이틀 로고와 시작·설치·방법·도감 버튼, 10개 지역 탭, 지도·단계 버튼, 검은 고양이 도감 일치, 팝업 배치 정리. 기존 게임 데이터 유지.",
+  "sourceCommit": "0fd7b3d11ca5fb93e5267520a7339dba12dd8286",
+  "requestedFor": "라니팡 사용자 제공 단일 WebP 에셋 적용: 새 타이틀 로고와 시작·설치·방법·도감 버튼, 10개 지역 탭, 지도·단계 버튼, 검은 고양이 도감 일치, 팝업 배치 정리 및 v27 팝업·상태창·버튼 비율 축소. 기존 게임 데이터 유지.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
   "approvedAtKST": "2026-10-15",
   "versionCheckFix": true,
   "puzzleArtV25": true,
-  "userArtV26": true
+  "userArtV26": true,
+  "compactUiV27": true
 }
