@@ -114,6 +114,13 @@ with sync_playwright() as playwright:
     page.evaluate('LanyShell.mapPage(-1)')
     page.locator('.lany-map-levels .lany-level:not([disabled])').first.click()
     assert page.locator('#lany-stage-prep').is_visible()
+    # Text-baked screenshot cutouts had blank/incorrect/cropped button lettering.
+    for selector,skin in (('#lany-prep-play','skin-green.webp'),('.lany-prep-cancel','skin-blue.webp')):
+      assert page.locator('#lany-stage-prep '+selector).evaluate("""(e,asset)=>{
+        const c=getComputedStyle(e);
+        return c.backgroundImage.includes(asset)&&parseFloat(c.fontSize)>=12
+          && e.textContent.trim().length>=2 && e.scrollWidth<=e.clientWidth+3;
+      }""",skin),(tag,selector,'cropped/textless action artwork regression')
     shot('stage-ready','#lany-stage-prep')
     if page.locator('#lany-prep-pager').is_visible():
       page.evaluate('LanyShell.prepPage(1)')
@@ -133,6 +140,12 @@ with sync_playwright() as playwright:
     shot('pause','#lany-pause')
     assert viewport_fit('#lany-pause .lany-dialog'),(tag,'pause card clipped')
     page.evaluate('LanyShell.openExit()')
+    for action,skin in [('resume','skin-green.webp'),('home','skin-blue.webp'),('exit','skin-red.webp')]:
+      assert page.locator('#lany-exit .lany-dialog button[data-lany-art="'+action+'"]').evaluate("""(e,asset)=>{
+        const c=getComputedStyle(e);
+        return c.backgroundImage.includes(asset)&&parseFloat(c.fontSize)>=12
+          && e.textContent.trim().length>=2 && e.scrollWidth<=e.clientWidth+3;
+      }""",skin),(tag,action,'exit artwork must preserve readable HTML labels')
     shot('exit','#lany-exit')
     assert viewport_fit('#lany-exit .lany-dialog'),(tag,'exit card clipped')
     assert page.locator('#lany-exit button[data-lany-art="resume"]').evaluate("e=>getComputedStyle(e,'::before').display=='none'"),'decorative pseudo icon leaked'
