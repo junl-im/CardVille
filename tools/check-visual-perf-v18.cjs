@@ -22,9 +22,9 @@ assert(py.includes("A/'friends'/'cat.webp'"),'generated black cat portrait');
 assert(py.includes("f'polish/cat-{expression}.webp'"),'generated black cat expressions');
 for(const file of ['web/assets/lanypang-cover.webp','web/assets/polish/rabbit-cheer.webp','web/assets/polish/bear-cheer.webp','web/assets/polish/chick-cheer.webp'])assert(fs.statSync(file).size>1500,file);
 assert(sw.includes('lanypang-match-v2.3.0-ko'));
-assert(read('.github/workflows/firebase-hosting.yml').includes('tools/build-visual-v18.py'));
+assert(read('.github/workflows/firebase-hosting.yml').includes('entryPoint: ./redirect-site'),'preview must redirect');
 assert(read('.github/workflows/firebase-live.yml').includes('tools/build-visual-v18.py'));
-assert(read('.github/workflows/pages.yml').includes('tools/build-visual-v18.py'));
+assert(read('.github/workflows/pages.yml').includes('path: redirect-site'),'Pages must serve redirect portal');
 if(process.argv.includes('--raster')){
  for(const file of ['title-logo-v18.webp','btn-play-v18.webp','btn-install-v18.webp','btn-help-v18.webp','btn-friends-v18.webp']){
   const data=fs.readFileSync('web/assets/title/'+file);assert(data.subarray(0,4).toString()==='RIFF'&&data.subarray(8,12).toString()==='WEBP',file);

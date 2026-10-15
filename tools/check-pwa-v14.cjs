@@ -15,8 +15,8 @@ assert(!manifest.icons.some(x=>x.type==='image/svg+xml'),'No vector icons in PWA
 for(const path of ['.github/workflows/pages.yml','.github/workflows/firebase-hosting.yml','.github/workflows/firebase-live.yml','.github/workflows/lanypang-v12-check.yml']){
  const w=read(path);assert(w.includes('tools/check-pwa-v14.cjs'),path);
 }
-assert(read('.github/workflows/pages.yml').includes('tools/build-pwa-icons.py'));
-assert(read('.github/workflows/firebase-hosting.yml').includes('tools/build-pwa-icons.py'));
+assert(read('.github/workflows/pages.yml').includes('path: redirect-site'),'Pages must use official redirect bridge');
+assert(read('.github/workflows/firebase-hosting.yml').includes('entryPoint: ./redirect-site'),'preview must use redirect-only deployment');
 assert(read('.github/workflows/firebase-live.yml').includes('tools/build-pwa-icons.py'));
 new vm.Script(js,{filename:'lany-install.js'});
 if(process.argv.includes('--raster')){
