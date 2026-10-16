@@ -194,6 +194,7 @@ with sync_playwright() as playwright:
     page.evaluate('LevelEditor.showPage(1)')
     shot('editor-settings','#ng-level-editor')
     page.evaluate("document.getElementById('ng-level-editor').style.display='none'")
+    page.locator('#lany-extra-controls summary').click()
     page.get_by_role('button',name='📅 오늘의 도전').click()
     shot('daily-challenge','#daily-modal')
     page.evaluate("document.getElementById('daily-modal').style.display='none'")
