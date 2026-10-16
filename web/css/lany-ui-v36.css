@@ -1,0 +1,40 @@
+/* v36: keep the illustrated controls legible and the play area compact. */
+#lany-world-map #lany-world-tabs .lany-world-tab{font-size:0!important;color:transparent!important}
+#lany-world-map #lany-world-tabs .lany-world-tab>span{display:none!important}
+#lany-world-map .lany-map-section .lany-world-banner{padding-left:clamp(31px,6vw,47px)!important;padding-right:30px!important}
+#lany-world-map .lany-world-banner>div{min-width:0}
+#lany-stage-prep .lany-prep-card{max-height:calc(100dvh - 24px)!important;overflow-y:auto!important}
+@media(min-width:601px){#lany-stage-prep .lany-prep-card{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:6px!important;padding:12px!important;width:min(92vw,470px)!important}#lany-stage-prep .lany-prep-card>:not(button){grid-column:1/-1}#lany-stage-prep .lany-prep-card :is(#lany-prep-play,.lany-prep-cancel){grid-column:auto!important;width:100%!important;max-width:none!important;height:61px!important}}
+#app .lany-goal-time{display:grid;grid-template-columns:minmax(0,1fr) minmax(102px,31%);align-items:center;gap:8px;min-width:0}
+#app .lany-goal-time .lany-score-progress{min-width:0;margin:0!important}
+#app .lany-goal-time .lany-clock{box-sizing:border-box;width:100%!important;min-width:0;margin:0!important;padding:3px 6px!important}
+#app .lany-goal-time .lany-clock-head{gap:3px;font-size:clamp(.55rem,1.8vw,.78rem);white-space:nowrap}
+#app .lany-goal-time .lany-clock-track{height:4px!important}
+#app .boosters .booster{background-size:43% 49%,100% 100%!important;background-position:center 6px,center!important}
+@media(max-width:600px){#app .boosters .booster{height:49px!important;background-size:39% 44%,100% 100%!important}#app .boosters{margin:3px auto!important}}
+#app .lany-game-nav button[data-lany-art]{box-sizing:border-box!important;min-width:0!important;height:43px!important;min-height:43px!important;padding:2px 5px!important;border:0!important;border-radius:0!important;background:url('../assets/v33/frames/blue.png') center/100% 100% no-repeat!important;color:#fff!important;font-size:clamp(.65rem,2.6vw,.86rem)!important;font-weight:950!important;text-shadow:0 1px 2px #375e86!important;box-shadow:none!important}
+#app .lany-game-nav button[data-lany-art="friends"]{background-image:url('../assets/v33/frames/gold.png')!important;color:#774837!important;text-shadow:0 1px #fff3cc!important}
+#app .lany-game-nav button[data-lany-art="pause"]{background-image:url('../assets/v33/frames/pink.png')!important;text-shadow:0 1px 2px #92395f!important}
+#app .lany-game-nav button[data-lany-art]::before{display:none!important}
+#overlay-lose .modal{min-height:0!important;max-height:calc(100dvh - 24px)!important;overflow-y:auto!important}
+#overlay-lose .modal h2{white-space:normal!important;line-height:1.15!important;font-size:clamp(.8rem,3.3vw,.98rem)!important;max-width:250px!important;min-height:42px!important}
+#overlay-lose #lose-msg{font-size:.82rem!important;line-height:1.3!important;margin:2px auto 4px!important}
+#overlay-lose .modal-btns{width:100%!important}
+.lany-booster-pop{position:absolute;inset:5%;z-index:8;pointer-events:none;border-radius:50%;background:radial-gradient(circle,#fffbe0 0 12%,#ffe06599 25%,#ff85bb55 45%,transparent 70%);animation:lany-tool-pop .6s ease-out both}
+.lany-booster-pop-color{background:conic-gradient(#ff8dbc,#ffdf62,#7ddcfb,#ae90ff,#ff8dbc);mask-image:radial-gradient(circle,transparent 0 23%,#000 26% 52%,transparent 62%);opacity:.8}
+#board-wrap.lany-shuffling #board{animation:lany-tool-swirl .55s ease-in-out}
+#lany-hud-moves.lany-moves-bonus{animation:lany-tool-bonus .75s ease-out}
+@keyframes lany-tool-pop{0%{transform:scale(.2) rotate(-25deg);opacity:0}30%{transform:scale(1.35) rotate(10deg);opacity:1}100%{transform:scale(1.9) rotate(50deg);opacity:0}}
+@keyframes lany-tool-swirl{0%,100%{filter:none;transform:scale(1)}35%{filter:brightness(1.4) hue-rotate(32deg);transform:scale(.95) rotate(-2deg)}70%{filter:brightness(1.2) hue-rotate(-25deg);transform:scale(1.02) rotate(2deg)}}
+@keyframes lany-tool-bonus{0%,100%{transform:scale(1);filter:none}35%{transform:scale(1.35);filter:drop-shadow(0 0 8px #8ff57a)}}
+@media(prefers-reduced-motion:reduce){.lany-booster-pop,#board-wrap.lany-shuffling #board,#lany-hud-moves.lany-moves-bonus{animation:none!important}}
+#lany-extra-controls[open]{padding:8px!important;max-width:440px;background:#fff9ef!important;border-color:#f4bdce!important;box-shadow:0 5px 0 #d989ac55}
+#lany-extra-controls .lany-record-summary{padding:8px 10px;margin:6px auto;border:2px solid #f5d2a6;border-radius:13px;background:#fffdf6;color:#78475e;text-align:left}
+.lany-record-summary>strong{display:block;margin-bottom:5px;font-size:.86rem}
+.lany-record-summary>div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;text-align:center}
+.lany-record-summary span{padding:5px 2px;border-radius:8px;background:#ffecf4;font-size:.68rem}
+.lany-record-summary b{display:block;color:#ab4178;font-size:.91rem}
+#lany-extra-controls #leaderboard{max-width:100%!important;box-sizing:border-box!important;margin:6px auto!important;padding:9px!important;background:#fff7e7!important;border:1px solid #f3caa2!important;color:#704b62!important}
+#lany-extra-controls #game-mode-bar{background:none!important;border:0!important;box-shadow:none!important;padding:3px!important}
+
+@media(max-width:600px){#app .lany-goal-time .lany-clock-head{justify-content:center!important}#app .lany-goal-time #lany-clock-caption{display:none!important}#app .lany-goal-time #lany-clock-value{font-size:1rem!important;line-height:1.1!important}}

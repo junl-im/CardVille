@@ -316,6 +316,7 @@ body {
 <link rel="stylesheet" href="./css/lany-design-polish-v33.css?v=1">
 <link rel="stylesheet" href="./css/lany-puzzle-aqua-v34.css?v=1">
 <link rel="stylesheet" href="./css/lany-gameplay-v35.css?v=1">
+<link rel="stylesheet" href="./css/lany-ui-v36.css?v=1">
 </head>
 <body class="lany-at-title">
 <main id="lany-title" class="lany-title" role="main" aria-label="라니팡 시작 화면">
@@ -350,7 +351,7 @@ body {
           <span class="lany-button-word">친구 도감</span>
         </button>
       </div>
-      <div class="lany-version">라니팡 v2.3.0 · 250단계 · 한국어 전용</div>
+      <div class="lany-version">v2.3.0</div>
     </div>
   </div>
 </main>
@@ -438,19 +439,19 @@ body {
       <span class="level-title" id="level-name">달콤한 시작</span>
       <span class="level-goal" id="level-goal">목표 점수: 500</span>
     </div>
-    <div class="lany-score-progress" aria-label="1·2·3별 획득 진행도">
+    <div class="lany-goal-time"><div class="lany-score-progress" aria-label="1·2·3별 획득 진행도">
       <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
       <span class="lany-star-checkpoint" data-star="1" style="left:50%" aria-hidden="true">★</span>
       <span class="lany-star-checkpoint" data-star="2" style="left:70%" aria-hidden="true">★</span>
       <span class="lany-star-checkpoint" data-star="3" style="left:96%" aria-hidden="true">★</span>
     </div>
+    <div id="lany-clock" class="lany-clock" role="timer" aria-label="남은 시간"><div class="lany-clock-head"><span id="lany-clock-caption">⏰ 남은 시간</span><strong id="lany-clock-value">02:30</strong></div><div class="lany-clock-track"><div id="lany-clock-fill" class="lany-clock-fill"></div></div></div></div>
     <div class="level-row" style="font-size:.7rem;color:rgba(255,255,255,.4)">
       <span id="score-label">0 / 500</span>
       <span id="moves-label">남은 이동: 20</span>
     </div>
   </div>
 
-  <div id="lany-clock" class="lany-clock" role="timer" aria-label="남은 시간"><div class="lany-clock-head"><span id="lany-clock-caption">⏰ 남은 시간</span><strong id="lany-clock-value">02:30</strong></div><div class="lany-clock-track"><div id="lany-clock-fill" class="lany-clock-fill"></div></div></div>
   <div id="board-wrap">
     <div id="board" aria-label="드래그로 블록을 교환하는 퍼즐판"></div>
   </div>
@@ -499,7 +500,7 @@ body {
 <!-- Lose overlay -->
 <div id="overlay-lose" class="overlay" style="display:none">
   <div class="modal">
-    <h2>😢 이동 횟수를 모두 사용했어요!</h2>
+    <h2 id="lany-lose-title">이동 횟수가 끝났어요</h2>
     <p id="lose-msg">아쉬워요! 다시 도전할까요?</p>
     <div class="modal-btns">
       <button class="btn btn-gold" onclick="replayLevel()" data-lany-art="retry">다시 도전</button>
@@ -1420,8 +1421,34 @@ function showHint(){
 }
 
 // ── Boosters ─────────────────────────────────────────────────
+function boosterBurst(type,r,c){
+  const wrap=document.getElementById('board-wrap');
+  const cell=Number.isInteger(r)&&Number.isInteger(c)?document.querySelector(`#board .cell[data-r="${r}"][data-c="${c}"]`):null;
+  if(type==='shuffle'){
+    wrap?.classList.remove('lany-shuffling'); void wrap?.offsetWidth;
+    wrap?.classList.add('lany-shuffling');
+    setTimeout(()=>wrap?.classList.remove('lany-shuffling'),650);
+  }else if(type==='time'){
+    const hud=document.getElementById('lany-hud-moves');
+    hud?.classList.remove('lany-moves-bonus'); void hud?.offsetWidth;
+    hud?.classList.add('lany-moves-bonus');
+    setTimeout(()=>hud?.classList.remove('lany-moves-bonus'),800);
+  }else if(cell){
+    const pop=document.createElement('span');
+    pop.className=`lany-booster-pop lany-booster-pop-${type}`;
+    pop.setAttribute('aria-hidden','true');
+    cell.appendChild(pop); setTimeout(()=>pop.remove(),650);
+  }
+}
 function activateBooster(type){
-  if(state.boosters[type]<=0) return;
+  if(state.animating||state.boosters[type]<=0) return;
+  if(type==='shuffle'||type==='time'){
+    state.boosters[type]--; state.activeBooster=null;
+    document.querySelectorAll('.booster').forEach(b=>b.classList.remove('active'));
+    snd_booster(); boosterBurst(type);
+    if(type==='shuffle') shuffleBoard(); else state.movesLeft+=5;
+    updateHUD(); return;
+  }
   if(state.activeBooster===type){ state.activeBooster=null; }
   else { state.activeBooster=type; }
   document.querySelectorAll('.booster').forEach(b=>b.classList.remove('active'));
@@ -1436,7 +1463,7 @@ function applyBooster(r,c){
   snd_booster();
   const type=state.activeBooster;
   if(type==='hammer'){
-    state.boosters.hammer--; snd_bomb();
+    state.boosters.hammer--; snd_bomb(); boosterBurst('hammer',r,c);
     const idx=r*COLS+c;
     state.board[idx]=null; state.specials[idx]=SPECIAL_NONE; state.locked[idx]=false;
     state.score+=50;
@@ -1450,7 +1477,7 @@ function applyBooster(r,c){
       state.animating=false; checkEnd(); updateHUD();
     });
   } else if(type==='color'){
-    state.boosters.color--;
+    state.boosters.color--; boosterBurst('color',r,c);
     const gem=gemAt(r,c);
     let count=0;
     for(let i=0;i<ROWS*COLS;i++){ if(state.board[i]===gem){ state.board[i]=null; count++; } }
@@ -1549,8 +1576,9 @@ function showWin(stars){
 function showLose(){
   clearHint();
   const lv=LEVELS[state.level-1];
+  document.getElementById('lany-lose-title').textContent='이동 횟수가 끝났어요';
   document.getElementById('lose-msg').textContent=
-    `획득 점수 ${state.score.toLocaleString()}점, 목표 ${lv.goal.toLocaleString()}점. 다시 도전해 보세요!`;
+    `${state.score.toLocaleString()} / ${lv.goal.toLocaleString()}점 · 다시 도전해요!`;
   window.LanyTempo?.stop('lose');
   snd_lose(); document.getElementById('overlay-lose').style.display='flex'; window.LanyPolish?.dialog('lose');
 }
@@ -1615,6 +1643,7 @@ function startBgMusic() {
 <script src="js/daily-challenge.js"></script>
 <script src="js/a11y.js"></script>
 <details id="lany-extra-controls"><summary>추가 모드 · 기록</summary>
+<div class="lany-record-summary" aria-label="내 게임 기록"><strong>내 모험 기록</strong><div><span>완료 단계 <b id="lany-record-cleared">0</b></span><span>모은 별 <b id="lany-record-stars">0</b></span><span>최고 점수 <b id="lany-record-best">0</b></span></div></div>
 <div id="leaderboard" style="max-width:400px;margin:1rem auto;background:#161b22;border-radius:8px;padding:1rem;border:1px solid #30363d"></div>
 <script src="js/leaderboard.js"></script>
 <script src="js/difficulty.js"></script>
@@ -1642,6 +1671,7 @@ function startBgMusic() {
 <script defer src="./js/lany-tempo.js?v=2.3.0"></script>
 <script defer src="./js/lany-shell.js?v=2.3.0"></script>
 <script defer src="./js/lany-ui-v33.js?v=1"></script>
+<script defer src="./js/lany-ui-v36.js?v=1"></script>
 <script defer src="./js/lany-polish.js?v=2.3.0-art25"></script>
 <script defer src="./js/lany-install.js?v=2.3.0"></script>
 <script defer src="./js/lany-art-buttons.js?v=2.3.0"></script>
