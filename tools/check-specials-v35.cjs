@@ -1,0 +1,24 @@
+const fs=require('fs');
+const path=require('path');
+const vm=require('vm');
+const assert=require('assert/strict');
+const html=fs.readFileSync(path.join(__dirname,'../web/index.html'),'utf8');
+const start=html.indexOf('function expandSpecialMatches(cells){');
+const end=html.indexOf('// ── Resolve matches',start);
+assert(start>0&&end>start);
+const source=html.slice(start,end);
+const ctx={ROWS:8,COLS:8,SPECIAL_NONE:0,SPECIAL_BOMB:1,SPECIAL_STRIPE_H:2,SPECIAL_STRIPE_V:3,SPECIAL_WRAP:4,SPECIAL_COLOR:5,state:{board:Array(64).fill('A'),specials:Array(64).fill(0)}};
+vm.createContext(ctx);vm.runInContext(source,ctx);
+function run(index,special){ctx.state.specials.fill(0);ctx.state.specials[index]=special;const cells=new Set([index]);assert.equal(ctx.expandSpecialMatches(cells),1);return cells;}
+assert.equal(run(27,2).size,8,'horizontal stripe');
+assert.equal(run(27,3).size,8,'vertical stripe');
+assert.equal(run(27,1).size,9,'3x3 bomb');
+assert.equal(run(0,4).size,4,'corner wrap');
+ctx.state.board=Array.from({length:64},(_,i)=>i%2?'B':'A');
+assert.equal(run(0,5).size,32,'rainbow color clear');
+ctx.state.specials.fill(0);ctx.state.specials[0]=2;ctx.state.specials[7]=3;
+const chain=new Set([0]);
+assert.equal(ctx.expandSpecialMatches(chain),2,'chain activates each special once');
+assert.equal(chain.size,15,'cross-line chain');
+assert(/await applyGravity\(epoch\);\s*if\(epoch!==state\.playEpoch\)return;\s*toCreate\.forEach/.test(html),'special reward must survive gravity');
+console.log('v35 special mechanics passed');

@@ -1,0 +1,4 @@
+/* v35: clear visual rewards for playable match specials. */
+#board .cell.color-gem::after{content:'🌈';position:absolute;right:1px;bottom:0;font-size:.7rem;filter:drop-shadow(0 1px 1px #295268)}
+#board .cell:is(.bomb-gem,.stripe-gem,.wrap-gem,.color-gem){box-shadow:inset 0 0 0 2px #ffe487,0 0 8px #ffd478aa!important}
+#board .cell:is(.bomb-gem,.stripe-gem,.wrap-gem,.color-gem)::after{z-index:2}
