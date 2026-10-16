@@ -315,6 +315,7 @@ body {
 <link rel="stylesheet" href="./css/lany-popup-compact-v32.css?v=1">
 <link rel="stylesheet" href="./css/lany-design-polish-v33.css?v=1">
 <link rel="stylesheet" href="./css/lany-puzzle-aqua-v34.css?v=1">
+<link rel="stylesheet" href="./css/lany-gameplay-v35.css?v=1">
 </head>
 <body class="lany-at-title">
 <main id="lany-title" class="lany-title" role="main" aria-label="라니팡 시작 화면">
@@ -1070,6 +1071,7 @@ function renderBoard() {
    if(sp===SPECIAL_BOMB)div.classList.add('bomb-gem');
    else if(sp===SPECIAL_STRIPE_H||sp===SPECIAL_STRIPE_V)div.classList.add('stripe-gem');
    else if(sp===SPECIAL_WRAP)div.classList.add('wrap-gem');
+   else if(sp===SPECIAL_COLOR)div.classList.add('color-gem');
    if(state.hintCell&&state.hintCell[0]===r&&state.hintCell[1]===c)div.classList.add('hint');
  }
 }
@@ -1234,6 +1236,29 @@ function findMatches(){
   return matchGroups;
 }
 
+// A matched special clears its own line, neighbourhood or animal type.
+// The queue also activates specials reached by another special, once each.
+function expandSpecialMatches(cells){
+  const queue=[...cells],activated=new Set();
+  const add=index=>{if(index>=0&&index<ROWS*COLS&&!cells.has(index)){cells.add(index);queue.push(index);}};
+  for(let head=0;head<queue.length;head++){
+    const index=queue[head],special=state.specials[index];
+    if(!special||activated.has(index))continue;
+    activated.add(index);
+    const r=Math.floor(index/COLS),c=index%COLS;
+    if(special===SPECIAL_STRIPE_H)for(let col=0;col<COLS;col++)add(r*COLS+col);
+    else if(special===SPECIAL_STRIPE_V)for(let row=0;row<ROWS;row++)add(row*COLS+c);
+    else if(special===SPECIAL_BOMB||special===SPECIAL_WRAP){
+      for(let row=Math.max(0,r-1);row<=Math.min(ROWS-1,r+1);row++)
+        for(let col=Math.max(0,c-1);col<=Math.min(COLS-1,c+1);col++)add(row*COLS+col);
+    } else if(special===SPECIAL_COLOR){
+      const gem=state.board[index];
+      for(let i=0;i<ROWS*COLS;i++)if(state.board[i]===gem)add(i);
+    }
+  }
+  return activated.size;
+}
+
 // ── Resolve matches ──────────────────────────────────────────
 async function resolveMatches(matchGroups,epoch=state.playEpoch){
   if(epoch!==state.playEpoch)return;
@@ -1242,6 +1267,8 @@ async function resolveMatches(matchGroups,epoch=state.playEpoch){
   window.LanyTempo?.onCombo(state.combo);
   const allCells=new Set();
   matchGroups.forEach(g=>g.cells.forEach(([r,c])=>allCells.add(r*COLS+c)));
+  const activatedSpecials=expandSpecialMatches(allCells);
+  if(activatedSpecials)snd_special();
 
   // Determine specials to create
   const toCreate=[];
@@ -1283,12 +1310,12 @@ async function resolveMatches(matchGroups,epoch=state.playEpoch){
     }
   });
 
-  // Create specials
-  toCreate.forEach(({r,c,s})=>{ setSpec(r,c,s); });
-
-  // Gravity
+  // Gravity fills cleared cells first. Placing the reward afterwards keeps it
+  // from being overwritten by a falling animal or a newly generated tile.
   await applyGravity(epoch);
   if(epoch!==state.playEpoch)return;
+  toCreate.forEach(({r,c,s})=>{ if(!state.locked[r*COLS+c])setSpec(r,c,s); });
+  if(toCreate.length)renderBoard();
 
   // Chain: guard against runaway accidental cascades on 3-color levels.
   const next=findMatches();
