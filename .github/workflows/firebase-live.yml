@@ -107,6 +107,7 @@ jobs:
               grep -Fq 'lany-mobile-layout-v30.css?v=1' /tmp/lany-live.html && \
               grep -Fq 'lany-control-polish-v31.css?v=1' /tmp/lany-live.html && \
               grep -Fq 'lany-design-polish-v33.css?v=1' /tmp/lany-live.html && \
+              grep -Fq 'lany-puzzle-aqua-v34.css?v=1' /tmp/lany-live.html && \
               grep -Fq 'lany-action-art-v16.css?v=2.3.0' /tmp/lany-live.html && \
               grep -Fq 'lany-title-stage-v17.css?v=2.3.0' /tmp/lany-live.html && \
               grep -Fq 'lany-raster-v18.css?v=2.3.0' /tmp/lany-live.html && \

@@ -1,0 +1,25 @@
+/* v34: transparent aqua tiles let the animal cutouts carry the color. */
+#board{
+ background:linear-gradient(150deg,#edfffa,#c8f7f3 54%,#daf3ff)!important;
+ border-color:#fff8df!important;
+ box-shadow:0 5px 0 #8acccc,0 10px 22px #4d759059,inset 0 0 0 3px #ffffffb8!important;
+}
+#board .cell:not(.locked):nth-child(n){
+ background:linear-gradient(155deg,#ffffff80,#d9fbfb69)!important;
+ border:1px solid #ffffff9c!important;
+ box-shadow:inset 0 1px 2px #ffffffaa,0 1px 2px #72b6bf36!important;
+}
+#board .cell:not(.locked):nth-child(2n){
+ background:linear-gradient(155deg,#f4fffb6b,#b6eff370)!important;
+}
+#board .cell .lany-animal-face{
+ width:100%!important;height:100%!important;
+ filter:drop-shadow(0 2px 1px #527f8a55)!important;
+}
+#board .cell.locked{
+ background:linear-gradient(150deg,#e8f0f5,#becdd8)!important;
+ border-color:#fff!important;
+ box-shadow:inset 0 0 0 2px #ffffff99,0 2px 3px #617f9c55!important;
+}
+#board .cell.selected{outline:3px solid #ffcf65!important;outline-offset:-2px!important;box-shadow:0 0 0 2px #fff8db,0 0 10px #ffc96b!important}
+#board .cell.cv-drag-target:after{border-color:#ffb34f!important}
