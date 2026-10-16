@@ -4,7 +4,7 @@
 #lany-world-map .lany-map-section .lany-world-banner{padding-left:clamp(31px,6vw,47px)!important;padding-right:30px!important}
 #lany-world-map .lany-world-banner>div{min-width:0}
 #lany-stage-prep .lany-prep-card{max-height:calc(100dvh - 24px)!important;overflow-y:auto!important}
-@media(min-width:601px){#lany-stage-prep .lany-prep-card{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:6px!important;padding:12px!important;width:min(92vw,470px)!important}#lany-stage-prep .lany-prep-card>:not(button){grid-column:1/-1}#lany-stage-prep .lany-prep-card :is(#lany-prep-play,.lany-prep-cancel){grid-column:auto!important;width:100%!important;max-width:none!important;height:61px!important}}
+@media(min-width:601px){#lany-stage-prep .lany-prep-card{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:6px!important;padding:12px!important;width:min(92vw,470px)!important}#lany-stage-prep .lany-prep-card>:not(button){grid-column:1/-1}#lany-stage-prep .lany-prep-card :is(#lany-prep-play,.lany-prep-cancel){grid-column:auto!important;width:min(100%,155px)!important;max-width:155px!important;justify-self:center!important;height:61px!important}}
 #app .lany-goal-time{display:grid;grid-template-columns:minmax(0,1fr) minmax(102px,31%);align-items:center;gap:8px;min-width:0}
 #app .lany-goal-time .lany-score-progress{min-width:0;margin:0!important}
 #app .lany-goal-time .lany-clock{box-sizing:border-box;width:100%!important;min-width:0;margin:0!important;padding:3px 6px!important}
