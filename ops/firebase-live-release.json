@@ -3,8 +3,8 @@
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "23e24791bb531743536114e120e968828b67badb",
-  "requestedFor": "라니팡 v33 지도 프레임과 작은 이전·다음 버튼, 공통 캔디 제목·결과·일시정지 버튼, 간결한 모바일 게임 HUD·아이템 줄 및 출발 연출 적용.",
+  "sourceCommit": "806b5bf54c15bbbece2718370e972427c5835044",
+  "requestedFor": "라니팡 v33 지도·준비·결과·일시정지·게임 HUD 디자인 개선과 마지막 그림 버튼 포커스 빛 효과를 Firebase live에 반영.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -19,5 +19,6 @@
   "mobileLayoutV30": true,
   "controlPolishV31": true,
   "popupCompactV32": true,
-  "designPolishV33": true
+  "designPolishV33": true,
+  "focusPolishV33": true
 }
