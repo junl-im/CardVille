@@ -24,14 +24,14 @@
    const overlay=$('lany-go-intro'),number=$('lany-go-number');
    if(!overlay||!number||nav.screen!=='game')return;
    const seq=goEpoch,reduce=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-   const frames=reduce?[['GO!',0]]:[['3',0],['2',650],['1',1300],['GO!',1950]];
+   const frames=reduce?[['출발!',0]]:[['3',0],['2',650],['1',1300],['출발!',1950]];
    overlay.hidden=false;
    window.LanyTempo?.pause();
    for(const [value,delay] of frames){
      const update=()=>{
        if(goEpoch!==seq||nav.screen!=='game')return;
        number.textContent=value;
-       number.classList.toggle('go',value==='GO!');
+       number.classList.toggle('go',value==='출발!');
        number.style.animation='none';
        void number.offsetWidth;
        number.style.animation='';
