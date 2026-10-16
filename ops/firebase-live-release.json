@@ -3,8 +3,8 @@
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "806b5bf54c15bbbece2718370e972427c5835044",
-  "requestedFor": "라니팡 v33 지도·준비·결과·일시정지·게임 HUD 디자인 개선과 마지막 그림 버튼 포커스 빛 효과를 Firebase live에 반영.",
+  "sourceCommit": "51d076579042812fec74edbec68bd84588ed205a",
+  "requestedFor": "라니팡 v34 퍼즐판의 어두운 보라색 개별 칸을 반투명 아쿠아 유리 톤으로 교체해 동물 캐릭터 색감을 밝히고, 기존 잠금·선택 표시와 게임 동작을 유지.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -20,5 +20,6 @@
   "controlPolishV31": true,
   "popupCompactV32": true,
   "designPolishV33": true,
-  "focusPolishV33": true
+  "focusPolishV33": true,
+  "puzzleAquaV34": true
 }
