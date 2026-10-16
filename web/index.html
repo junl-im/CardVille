@@ -319,6 +319,7 @@ body {
 <link rel="stylesheet" href="./css/lany-ui-v36.css?v=2">
 <link rel="stylesheet" href="./css/lany-ui-v38.css?v=1">
 <link rel="stylesheet" href="./css/lany-controls-v39.css?v=1">
+<link rel="stylesheet" href="./css/lany-hard-v40.css?v=1">
 </head>
 <body class="lany-at-title">
 <main id="lany-title" class="lany-title" role="main" aria-label="라니팡 시작 화면">
@@ -372,6 +373,7 @@ body {
  <div class="lany-screen-scrim" aria-hidden="true"></div>
  <div class="lany-map-panel">
   <header class="lany-map-head"><button class="lany-back" type="button" onclick="LanyShell.showHome()" aria-label="처음 화면으로">‹</button><div><span class="lany-map-eyebrow">사탕마을 여행 지도</span><h2 id="lany-map-heading">🗺️ 라니팡 모험 지도</h2></div><button class="lany-map-icon" type="button" onclick="LanyShell.openHelp()" aria-label="게임 방법">?</button><button class="lany-map-icon lany-mobile-fullscreen" type="button" onclick="LanyShell.toggleFullscreen()" aria-label="모바일 전체 화면">⛶</button></header>
+  <div class="lany-campaign-switch" role="group" aria-label="게임 모드"><button id="lany-mode-normal" type="button" onclick="LanyShell.setMode('normal')">🌼 노멀 · 250단계</button><button id="lany-mode-hard" type="button" onclick="LanyShell.setMode('hard')">🔥 하드 · 250단계</button></div>
   <div class="lany-map-summary"><span id="lany-map-progress">완료한 단계 0 / 250</span><span id="lany-map-star-count">⭐ 0개</span></div>
   <div class="lany-world-switcher" aria-label="모험 지역 페이지 이동"><button id="lany-world-prev" class="lany-page-arrow" type="button" onclick="LanyShell.worldPage(-1)" aria-label="이전 지역 목록">◀</button><nav id="lany-world-tabs" class="lany-world-tabs" aria-label="모험 지역 선택"></nav><button id="lany-world-next" class="lany-page-arrow" type="button" onclick="LanyShell.worldPage(1)" aria-label="다음 지역 목록">▶</button></div>
   <div class="lany-map-section"><div class="lany-world-banner"><div><span id="lany-world-no">제1지역</span><h3 id="lany-world-title">사탕 골짜기</h3></div><span id="lany-world-icon" aria-hidden="true">🍭</span></div>
@@ -895,19 +897,45 @@ const LEVELS = [
   {l:250,name:'수정 동굴 · 전설의 관문',theme:'수정 동굴',goal:297750,moves:14,colors:7,hasLocked:true,lockedCount:16,hasBombs:true,isBoss:true}
 ];
 
+
+// A separate 250-stage campaign. Normal progress keys sc_unlocked, sc_best, sc_stars remain compatible with older saves.
+const HARD_LEVELS=LEVELS.map((base,index)=>{
+  const world=Math.floor(index/25),step=index%25;
+  return {...base,name:`${base.theme} · 하드 ${step+1}단계`,
+    goal:Math.round((850+index*13)/50)*50,moves:Math.max(14,Math.min(20,base.moves-2)),hasBombs:true,
+    colors:Math.max(5,base.colors),hasLocked:true,
+    lockedCount:Math.min(12,2+world+Math.floor(step/8)),
+    wallCount:Math.min(7,2+Math.floor(world/2)+Math.floor(step/10)),
+    bombCount:2+Math.floor(step/8),morphSeconds:Math.max(7,15-world-Math.floor(step/10))};
+});
+function activeLevels(){return state.mode==='hard'?HARD_LEVELS:LEVELS;}
+function campaignKey(key){return state.mode==='hard'?`sc_hard_${key}`:`sc_${key}`;}
+function setCampaignMode(mode){
+  if(mode!=='normal'&&mode!=='hard')return;
+  state.mode=mode;
+  state.bestScores=JSON.parse(localStorage.getItem(campaignKey('best'))||'{}');
+  state.unlockedLevels=JSON.parse(localStorage.getItem(campaignKey('unlocked'))||'[1]');
+  state.levelStars=JSON.parse(localStorage.getItem(campaignKey('stars'))||'{}');
+  try{localStorage.setItem('cv_campaign_mode',mode);}catch(_){}
+  document.body.dataset.campaign=mode;
+}
+
 let state = {
-  board: [], specials: [], locked: [],
+  board: [], specials: [], locked: [], walls: [], morphTimer: null,
+  mode: localStorage.getItem('cv_campaign_mode')==='hard'?'hard':'normal',
   score: 0, level: 1, movesLeft: 20,
   selected: null, animating: false,
   activeBooster: null,
   boosters: { hammer:3, shuffle:2, color:2, time:1 },
-  bestScores: JSON.parse(localStorage.getItem('sc_best')||'{}'),
-  unlockedLevels: JSON.parse(localStorage.getItem('sc_unlocked')||'[1]'),
-  levelStars: JSON.parse(localStorage.getItem('sc_stars')||'{}'),
+  bestScores: {},
+  unlockedLevels: [1],
+  levelStars: {},
   combo: 0,
   playEpoch: 0,
   hintTimer: null, hintCell: null,
 };
+
+setCampaignMode(state.mode);
 
 function gemAt(r,c) { return state.board[r*COLS+c]; }
 function setGem(r,c,g) { state.board[r*COLS+c]=g; }
@@ -974,9 +1002,10 @@ window.LanyTitleParticles={isRunning:()=>lanyTitleParticleRunning,frames:()=>lan
 function initLevel(lvNum) {
   state.playEpoch++;
   LanyPerf.stageStarts++;
-  const lv = LEVELS[lvNum-1];
+  const lv = activeLevels()[lvNum-1];
   state.level = lvNum;
-  try { localStorage.setItem('cv_last_level', String(lvNum)); } catch (_) {}
+  try { localStorage.setItem(state.mode==='hard'?'cv_hard_last_level':'cv_last_level', String(lvNum)); } catch (_) {}
+  clearInterval(state.morphTimer); state.morphTimer=null;
   state.score = 0;
   state.movesLeft = lv.moves;
   state.selected = null;
@@ -989,17 +1018,23 @@ function initLevel(lvNum) {
   state.board = [];
   state.specials = new Array(ROWS*COLS).fill(SPECIAL_NONE);
   state.locked  = new Array(ROWS*COLS).fill(false);
+  state.walls = new Array(ROWS*COLS).fill(false);
+  if(lv.wallCount){
+    // Distributed blockers leave at least six tiles per row and playable routes.
+    for(let i=0;i<lv.wallCount;i++){let pos=((i*3+Math.floor(lvNum/4))%ROWS)*COLS+(i*5+lvNum)%COLS;while(state.walls[pos])pos=(pos+1)%(ROWS*COLS);state.walls[pos]=true;}
+  }
 
   // Place locked cells
   let lockPositions = new Set();
   for(let i=0;i<lv.lockedCount;i++){
-    let pos; do { pos = Math.floor(Math.random()*ROWS*COLS); } while(lockPositions.has(pos));
+    let pos; do { pos = Math.floor(Math.random()*ROWS*COLS); } while(lockPositions.has(pos)||state.walls[pos]);
     lockPositions.add(pos);
   }
   for(let i=0;i<ROWS*COLS;i++) state.locked[i] = lockPositions.has(i);
 
   // Fill board (no initial matches)
   for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+    if(state.walls[r*COLS+c]){setGem(r,c,null);continue;}
     let gem;
     do {
       gem = gemTypes[Math.floor(Math.random()*gemTypes.length)];
@@ -1011,6 +1046,11 @@ function initLevel(lvNum) {
   }
 
   if(!hasLegalSwap()) shuffleBoard();
+  if(lv.bombCount){
+    const candidates=state.board.map((gem,i)=>gem&&!state.locked[i]&&!state.walls[i]?i:-1).filter(i=>i>=0);
+    for(let i=0;i<lv.bombCount&&candidates.length;i++){const pick=Math.floor(Math.random()*candidates.length);state.specials[candidates.splice(pick,1)[0]]=SPECIAL_BOMB;}
+  }
+  if(lv.morphSeconds)state.morphTimer=setInterval(morphHardAnimals,lv.morphSeconds*1000);
   updateHUD();
   renderBoard();
   scheduleHint();
@@ -1024,9 +1064,22 @@ const LANY_CELL_COLORS=[
 ];
 const LanyPerf={stageStarts:0,cellCreates:0,boardRenders:0};
 window.LanyPerf=LanyPerf;
+function morphHardAnimals(){
+  if(state.mode!=='hard'||state.animating||document.hidden||window.LanyShell?.getCurrentScreen?.()!=='game')return;
+  const lv=activeLevels()[state.level-1],changed=[];
+  for(let tries=0;tries<32&&changed.length<3;tries++){
+    const idx=Math.floor(Math.random()*ROWS*COLS);
+    if(state.walls[idx]||state.locked[idx]||changed.includes(idx))continue;
+    const old=state.board[idx],next=GEMS[Math.floor(Math.random()*lv.colors)];
+    if(next===old)continue;state.board[idx]=next;
+    if(findMatches().length||!hasLegalSwap()){state.board[idx]=old;continue;}
+    changed.push(idx);
+  }
+  if(changed.length){renderBoard();changed.forEach(i=>getCellEl(Math.floor(i/COLS),i%COLS)?.classList.add('lany-morph'));}
+}
 function renderBoard() {
  const board=document.getElementById('board');
- const lv=LEVELS[state.level-1];
+ const lv=activeLevels()[state.level-1];
  board.style.gridTemplateColumns=`repeat(${COLS},1fr)`;
  // Create exactly 64 cells once; do not reallocate DOM/images/listeners every swipe.
  if(board.children.length!==ROWS*COLS){
@@ -1046,6 +1099,7 @@ function renderBoard() {
  for(let idx=0;idx<ROWS*COLS;idx++){
    const r=Math.floor(idx/COLS),c=idx%COLS,div=board.children[idx];
    const gemKind=GEMS.indexOf(state.board[idx]);
+   if(state.walls[idx]){div.replaceChildren();div.classList.add('lany-wall');div.setAttribute('aria-label','움직일 수 없는 벽');continue;}
    const expectedName=gemKind>=0?LANY_FACE_IDS[gemKind]:'';
    div.className='cell';
    if(gemKind>=0){
@@ -1094,12 +1148,12 @@ function getThemeEmoji(theme) {
   return map[theme] || '🍬';
 }
 function updateHUD(){
-  const lv=LEVELS[state.level-1];
+  const lv=activeLevels()[state.level-1];
   document.getElementById('score-val').textContent=state.score.toLocaleString();
   document.getElementById('level-val').textContent=state.level;
   const best=state.bestScores[state.level]||0;
   document.getElementById('best-val').textContent=best>0?best.toLocaleString():'—';
-  document.getElementById('level-name').textContent=lv.name;
+  document.getElementById('level-name').textContent=(state.mode==='hard'?'🔥 ':'')+lv.name;
   document.getElementById('level-goal').textContent=`목표 점수: ${lv.goal.toLocaleString()}`;
   document.getElementById('score-label').textContent=`${state.score.toLocaleString()} / ${lv.goal.toLocaleString()}`;
   document.getElementById('moves-label').textContent=`남은 이동: ${state.movesLeft}회`;
@@ -1132,17 +1186,17 @@ function updateHUD(){
 // ── Click / swap logic ───────────────────────────────────────
 function onCellClick(r,c){
   // Pointer tap is never a selection or a swap. Targeted boosters remain tappable.
-  if(state.animating || state.locked[r*COLS+c]) return;
+  if(state.animating || state.walls[r*COLS+c] || state.locked[r*COLS+c]) return;
   if(state.activeBooster) applyBooster(r,c);
 }
 // Explicit keyboard-only alternative (Enter/Space), not a second pointer control scheme.
 function cvKeyboardSelect(r,c){
-  if(state.animating || state.activeBooster || state.locked[r*COLS+c]) return;
+  if(state.animating || state.activeBooster || state.walls[r*COLS+c] || state.locked[r*COLS+c]) return;
   if(!state.selected){state.selected=[r,c]; clearHint(); snd_select(); renderBoard(); return;}
   const [sr,sc]=state.selected;
   state.selected=null;
   if(sr===r && sc===c){renderBoard();return;}
-  if(isAdjacent(sr,sc,r,c) && !state.locked[sr*COLS+sc]){snd_swap();void trySwap(sr,sc,r,c);}
+  if(isAdjacent(sr,sc,r,c) && !state.walls[sr*COLS+sc] && !state.locked[sr*COLS+sc]){snd_swap();void trySwap(sr,sc,r,c);}
   else {state.selected=[r,c];renderBoard();}
 }
 
@@ -1151,7 +1205,7 @@ function isAdjacent(r1,c1,r2,c2){
 }
 
 async function trySwap(r1,c1,r2,c2){
-  if(window.LanyTempo?.isExpired())return;
+  if(window.LanyTempo?.isExpired()||state.walls[r1*COLS+c1]||state.walls[r2*COLS+c2]||state.locked[r1*COLS+c1]||state.locked[r2*COLS+c2])return;
   const epoch=state.playEpoch;
   state.animating=true;
   doSwap(r1,c1,r2,c2);
@@ -1243,7 +1297,7 @@ function findMatches(){
 // The queue also activates specials reached by another special, once each.
 function expandSpecialMatches(cells){
   const queue=[...cells],activated=new Set();
-  const add=index=>{if(index>=0&&index<ROWS*COLS&&!cells.has(index)){cells.add(index);queue.push(index);}};
+  const add=index=>{if(index>=0&&index<ROWS*COLS&&!state.walls?.[index]&&!cells.has(index)){cells.add(index);queue.push(index);}};
   for(let head=0;head<queue.length;head++){
     const index=queue[head],special=state.specials[index];
     if(!special||activated.has(index))continue;
@@ -1305,6 +1359,7 @@ async function resolveMatches(matchGroups,epoch=state.playEpoch){
 
   // Clear matched cells
   allCells.forEach(idx=>{
+    if(state.walls[idx])return;
     if(!state.locked[idx]){
       state.board[idx]=null;
       state.specials[idx]=SPECIAL_NONE;
@@ -1342,25 +1397,34 @@ async function applyGravity(epoch=state.playEpoch){
   if(epoch!==state.playEpoch)return;
   let fell=false;
   const dropped=[];
+  const lv=activeLevels()[state.level-1];
+  const gemTypes=GEMS.slice(0,lv.colors);
   for(let c=0;c<COLS;c++){
-    let writeR=ROWS-1;
-    for(let r=ROWS-1;r>=0;r--){
-      if(state.board[r*COLS+c]!==null){
-        if(r!==writeR){fell=true;dropped.push(writeR*COLS+c);}
-        state.board[writeR*COLS+c]=state.board[r*COLS+c];
-        state.specials[writeR*COLS+c]=state.specials[r*COLS+c];
-        if(r!==writeR){ state.board[r*COLS+c]=null; state.specials[r*COLS+c]=SPECIAL_NONE; }
-        writeR--;
+    // Every wall splits its column into independent gravity sections.
+    let bottom=ROWS-1;
+    while(bottom>=0){
+      if(state.walls[bottom*COLS+c]){bottom--;continue;}
+      let top=bottom;
+      while(top>0&&!state.walls[(top-1)*COLS+c])top--;
+      let write=bottom;
+      for(let r=bottom;r>=top;r--){
+        const from=r*COLS+c;
+        if(state.board[from]===null)continue;
+        const to=write*COLS+c;
+        if(to!==from){
+          state.board[to]=state.board[from];state.specials[to]=state.specials[from];
+          state.board[from]=null;state.specials[from]=SPECIAL_NONE;
+          dropped.push(to);fell=true;
+        }
+        write--;
       }
-    }
-    // Fill nulls
-    const lv=LEVELS[state.level-1];
-    const gemTypes=GEMS.slice(0,lv.colors);
-    for(let r=writeR;r>=0;r--){
-      state.board[r*COLS+c]=gemTypes[Math.floor(Math.random()*gemTypes.length)];
-      dropped.push(r*COLS+c);
-      state.specials[r*COLS+c]=SPECIAL_NONE;
-      fell=true;
+      for(let r=write;r>=top;r--){
+        const idx=r*COLS+c;
+        state.board[idx]=gemTypes[Math.floor(Math.random()*gemTypes.length)];
+        state.specials[idx]=SPECIAL_NONE;
+        dropped.push(idx);fell=true;
+      }
+      bottom=top-1;
     }
   }
   renderBoard();
@@ -1404,14 +1468,14 @@ function clearHint(){
 function showHint(){
   // Find first valid swap
   for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
-    if(state.locked[r*COLS+c]) continue;
-    if(c<COLS-1 && !state.locked[r*COLS+c+1]){
+    if(state.walls[r*COLS+c]||state.locked[r*COLS+c]) continue;
+    if(c<COLS-1 && !state.walls[r*COLS+c+1] && !state.locked[r*COLS+c+1]){
       doSwap(r,c,r,c+1);
       const m=findMatches();
       doSwap(r,c,r,c+1);
       if(m.length>0){ state.hintCell=[r,c]; renderBoard(); return; }
     }
-    if(r<ROWS-1 && !state.locked[(r+1)*COLS+c]){
+    if(r<ROWS-1 && !state.walls[(r+1)*COLS+c] && !state.locked[(r+1)*COLS+c]){
       doSwap(r,c,r+1,c);
       const m=findMatches();
       doSwap(r,c,r+1,c);
@@ -1506,9 +1570,9 @@ function applyBooster(r,c){
 
 function hasLegalSwap(){
   for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) {
-    if(state.locked[r*COLS+c]) continue;
+    if(state.walls[r*COLS+c]||state.locked[r*COLS+c]) continue;
     for(const [nr,nc] of [[r,c+1],[r+1,c]]) {
-      if(nr>=ROWS || nc>=COLS || state.locked[nr*COLS+nc]) continue;
+      if(nr>=ROWS || nc>=COLS || state.locked[nr*COLS+nc] || state.walls[nr*COLS+nc]) continue;
       doSwap(r,c,nr,nc);
       const valid=findMatches().length>0;
       doSwap(r,c,nr,nc);
@@ -1519,12 +1583,12 @@ function hasLegalSwap(){
 }
 
 function shuffleBoard(){
-  const lv=LEVELS[state.level-1];
+  const lv=activeLevels()[state.level-1];
   const gemTypes=GEMS.slice(0,lv.colors);
   let valid=false;
   for(let attempt=0;attempt<256;attempt++){
     for(let i=0;i<ROWS*COLS;i++){
-      state.board[i]=gemTypes[Math.floor(Math.random()*gemTypes.length)];
+      state.board[i]=state.walls[i]?null:gemTypes[Math.floor(Math.random()*gemTypes.length)];
       state.specials[i]=SPECIAL_NONE;
     }
     if(findMatches().length===0 && hasLegalSwap()) { valid=true;break; }
@@ -1536,22 +1600,22 @@ function shuffleBoard(){
 
 // ── End conditions ───────────────────────────────────────────
 function checkEnd(){
-  const lv=LEVELS[state.level-1];
+  const lv=activeLevels()[state.level-1];
   if(state.score>=lv.goal){
     const stars = state.score>=lv.goal*2?3:state.score>=lv.goal*1.4?2:1;
     // Update best
     if(!state.bestScores[state.level]||state.score>state.bestScores[state.level]){
       state.bestScores[state.level]=state.score;
-      localStorage.setItem('sc_best',JSON.stringify(state.bestScores));
+      localStorage.setItem(campaignKey('best'),JSON.stringify(state.bestScores));
     }
     // Unlock next
     const unlocked=state.unlockedLevels;
-    if(state.level<LEVELS.length && !unlocked.includes(state.level+1)){
+    if(state.level<activeLevels().length && !unlocked.includes(state.level+1)){
       unlocked.push(state.level+1);
-      localStorage.setItem('sc_unlocked',JSON.stringify(unlocked));
+      localStorage.setItem(campaignKey('unlocked'),JSON.stringify(unlocked));
     }
     state.levelStars[state.level]=Math.max(state.levelStars[state.level]||0,stars);
-    localStorage.setItem('sc_stars',JSON.stringify(state.levelStars));
+    localStorage.setItem(campaignKey('stars'),JSON.stringify(state.levelStars));
     showWin(stars); return;
   }
   if(state.movesLeft<=0){
@@ -1561,7 +1625,7 @@ function checkEnd(){
 
 // ── Overlays ─────────────────────────────────────────────────
 function showWin(stars){
-  clearHint();
+  clearHint(); clearInterval(state.morphTimer); state.morphTimer=null;
   const msgs=['잘했어요! ⭐','훌륭해요! ⭐⭐','완벽한 성공! ⭐⭐⭐'];
   document.getElementById('win-msg').textContent=msgs[stars-1];
   document.getElementById('win-score').textContent='획득 점수: '+state.score.toLocaleString();
@@ -1578,8 +1642,8 @@ function showWin(stars){
   snd_win(); snd_levelUp(); document.getElementById('overlay-win').style.display='flex'; window.LanyPolish?.dialog('win');
 }
 function showLose(){
-  clearHint();
-  const lv=LEVELS[state.level-1];
+  clearHint(); clearInterval(state.morphTimer); state.morphTimer=null;
+  const lv=activeLevels()[state.level-1];
   document.getElementById('lany-lose-title').textContent='이동 횟수가 끝났어요';
   document.getElementById('lose-msg').textContent=
     `${state.score.toLocaleString()} / ${lv.goal.toLocaleString()}점 · 다시 도전해요!`;
@@ -1590,15 +1654,15 @@ function hideOverlay(id){ document.getElementById(id).style.display='none'; }
 
 function nextLevel(){
   hideOverlay('overlay-win');
-  if(state.level<LEVELS.length) { LanyShell.openPrep(state.level+1); }
+  if(state.level<activeLevels().length) { LanyShell.openPrep(state.level+1); }
   else { LanyShell.openMap(); }
 }
 function replayLevel(){
   hideOverlay('overlay-win'); hideOverlay('overlay-lose');
   initGame(state.level);
 }
-function initGame(lv=Number(localStorage.getItem('cv_last_level'))||1){
-  lv = Number.isInteger(lv) && lv>=1 && lv<=LEVELS.length && state.unlockedLevels.includes(lv) ? lv : 1;
+function initGame(lv=Number(localStorage.getItem(state.mode==='hard'?'cv_hard_last_level':'cv_last_level'))||1){
+  lv = Number.isInteger(lv) && lv>=1 && lv<=activeLevels().length && state.unlockedLevels.includes(lv) ? lv : 1;
   hideOverlay('overlay-win'); hideOverlay('overlay-lose');
   initLevel(lv);
   window.LanyTempo?.start(lv);
@@ -1672,7 +1736,7 @@ function startBgMusic() {
 <script defer src="./project-overlay/project.js"></script>
 <script defer src="./js/lany-friends.js?v=26"></script>
 <script defer src="./js/lany-tempo.js?v=2.3.0"></script>
-<script defer src="./js/lany-shell.js?v=2.3.0-ui37"></script>
+<script defer src="./js/lany-shell.js?v=2.3.0-ui40"></script>
 <script defer src="./js/lany-ui-v33.js?v=1"></script>
 <script defer src="./js/lany-ui-v36.js?v=1"></script>
 <script defer src="./js/lany-polish.js?v=2.3.0-art25"></script>

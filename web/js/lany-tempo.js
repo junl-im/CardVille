@@ -44,7 +44,7 @@
    render();
    if(enabled&&remaining===0 && !state.animating){
      expired=true;paused=true;stopClock();
-     if(state.score>=LEVELS[state.level-1].goal){window.checkEnd?.();return;}
+     if(state.score>=activeLevels()[state.level-1].goal){window.checkEnd?.();return;}
      if(typeof window.showLose==='function'){
        $('lose-msg').textContent=`⏰ 시간이 끝났어요! ${seconds}초 동안 ${state.score.toLocaleString()}점을 획득했어요. 다시 도전해 보세요!`;
        window.showLose();

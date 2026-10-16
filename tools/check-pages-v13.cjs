@@ -29,5 +29,5 @@ assert(rowsSource);for(const [height,result] of [[420,3],[568,6],[844,9],[1000,1
 const worldsSource=shell.match(/const worldTabSize=\(\)=>[^;]*;/);assert(worldsSource);
 assert.equal(vm.runInNewContext(worldsSource[0]+'worldTabSize()', {window:{innerWidth:390}}),3);
 assert.equal(vm.runInNewContext(worldsSource[0]+'worldTabSize()', {window:{innerWidth:1366}}),5);
-assert(h.includes("sc_unlocked")&&h.includes("sc_stars")&&h.includes("sc_best"));
+assert(h.includes("campaignKey(key)")&&h.includes("`sc_${key}`")&&h.includes("cv_last_level"));
 console.log(JSON.stringify({pass:true,version:version.version,stages:250,worlds:10,friendCards:30,layouts:[3,6,9,12],scrollbarsReplaced:true,saveKeysPreserved:true}));

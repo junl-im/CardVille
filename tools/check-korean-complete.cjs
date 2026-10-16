@@ -7,7 +7,7 @@ const overlay = fs.readFileSync('web/project-overlay/project.js','utf8');
 const sw = fs.readFileSync('web/sw.js','utf8');
 const version = JSON.parse(fs.readFileSync('web/version.json','utf8'));
 const manifest = JSON.parse(fs.readFileSync('web/manifest.json','utf8'));
-const data = html.match(/const LEVELS = \[([\s\S]*?)\];\s*let state/);
+const data = html.match(/const LEVELS = \[([\s\S]*?)\];/);
 assert(data, 'Missing stage dataset');
 const levels=vm.runInNewContext('['+data[1]+']');
 assert.equal(levels.length,250);

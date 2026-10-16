@@ -40,7 +40,17 @@ function onMatch(indices,chain=1){const cells=[];
     face(el,'wink');
     el.style.setProperty('--lany-delay',Math.min(i,9)*16+'ms');
   });
-  if(cells.length){const a=cells[Math.floor(cells.length/2)],rect=a.getBoundingClientRect();burst(rect,cells.length>=5||chain>=3?'burst-star':'burst-heart');if(chain>=3)burst(rect,'combo')}
+  if(cells.length){
+  const a=cells[Math.floor(cells.length/2)],rect=a.getBoundingClientRect();
+  if(!reduced()){
+    const ring=document.createElement('span');ring.className='lany-match-ring';
+    ring.style.left=(rect.left+rect.width/2)+'px';ring.style.top=(rect.top+rect.height/2)+'px';
+    ring.style.setProperty('--ring-size',Math.max(48,rect.width*2.3)+'px');
+    const parent=getLayer();parent.append(ring);setTimeout(()=>ring.remove(),470);
+  }
+  burst(rect,cells.length>=5||chain>=3?'burst-star':'burst-heart');
+  if(chain>=3)burst(rect,'combo');
+}
 }
 function onFall(indices){if(reduced())return;const tiles=document.getElementById('board')?.children;if(!tiles)return;indices.slice(0,24).forEach((idx,i)=>{const el=tiles[idx];if(el){el.classList.add('lany-fall-in');el.style.setProperty('--lany-delay',(i%8)*22+'ms')}})}
 function invalidSwap(r1,c1,r2,c2){if(reduced())return;const tiles=document.getElementById('board')?.children;if(!tiles)return;for(const idx of [r1*8+c1,r2*8+c2]){const el=tiles[idx];if(el){el.classList.add('lany-swap-reject');setTimeout(()=>el.classList.remove('lany-swap-reject'),250)}}}

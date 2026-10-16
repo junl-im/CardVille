@@ -44,7 +44,7 @@
      if(nav.screen==='game'&&!nav.overlay&&!document.hidden)window.LanyTempo?.resume();
    },reduce?470:2650));
  }
- const savedStage=()=>{let n=Number(localStorage.getItem('cv_last_level'));return Number.isInteger(n)&&n>0&&n<=250&&state.unlockedLevels.includes(n)?n:1};
+ const savedStage=()=>{let n=Number(localStorage.getItem(state.mode==='hard'?'cv_hard_last_level':'cv_last_level'));return Number.isInteger(n)&&n>0&&n<=250&&state.unlockedLevels.includes(n)?n:1};
  const reached=(n)=>state.unlockedLevels.includes(n);
  const hide=()=>{for(const id of ['lany-pause','lany-exit'])$(id).hidden=true;nav.overlay=null};
  const hideLegacy=()=>{for(const id of overlayIds){const el=$(id);if(el)el.style.display='none'}};
@@ -72,11 +72,18 @@
      $('lany-map-continue').onclick=()=>continueStage();
    }
  }
+ function setMode(mode){
+   if(mode===state.mode)return;
+   nav.returnToGame=false;window.LanyTempo?.stop();setCampaignMode(mode);
+   nav.world=0;nav.mapPage=0;nav.worldTabPage=0;renderMap();
+ }
  function renderMap(){
+   for(const mode of ['normal','hard']){const button=$('lany-mode-'+mode);button.setAttribute('aria-pressed',String(state.mode===mode));}
    const unlocked=new Set(state.unlockedLevels),n=nav.world;
    const last=Math.max(1,...state.unlockedLevels.filter(i=>i>=1&&i<=250));
+   const levels=activeLevels();
    const stars=Object.values(state.levelStars).reduce((a,b)=>a+(Number(b)||0),0);
-   $('lany-map-progress').textContent=`도전 가능한 단계 ${unlocked.size} / 250`;
+   $('lany-map-progress').textContent=`${state.mode==='hard'?'🔥 하드':'🌼 노멀'} · 도전 가능 ${unlocked.size} / 250`;
    $('lany-map-star-count').textContent=`⭐ 모은 별 ${stars}개`;
    $('lany-map-continue').textContent=`▶ ${savedStage()}단계 이어서 도전`;
    $('lany-map-resume').hidden=!nav.returnToGame;
@@ -114,13 +121,13 @@
    grid.appendChild(route);
    const nodes=[],renderId=++mapRenderId;
    for(let offset=start;offset<end;offset++){
-     const i=n*25+offset+1,enabled=unlocked.has(i),boss=LEVELS[i-1].isBoss,index=offset-start;
+     const i=n*25+offset+1,enabled=unlocked.has(i),boss=levels[i-1].isBoss,index=offset-start;
      const btn=document.createElement('button');btn.type='button';
      btn.className='lany-level'+(boss?' boss':'')+(i===savedStage()?' current':'');
      btn.style.gridColumn=String(stageColumn(index)+1);
      btn.style.gridRow=String(Math.floor(index/3)+1);
      btn.disabled=!enabled;
-     btn.setAttribute('aria-label',`${i}단계 ${LEVELS[i-1].name}${enabled?'':' 잠김'}`);
+     btn.setAttribute('aria-label',`${i}단계 ${levels[i-1].name}${enabled?'':' 잠김'}`);
      const starCount=state.levelStars[i]||0;
      btn.innerHTML=`<span>${enabled?i:'🔒'}</span><small>${enabled?('⭐'.repeat(starCount)||(boss?'👑':'시작')):i+'단계'}</small>`;
      if(enabled)btn.addEventListener('click',()=>openPrep(i));
@@ -167,13 +174,13 @@
  }
  function continueStage(){let n=savedStage();nav.world=Math.floor((n-1)/25);openPrep(n)}
  function openPrep(number){
-   const n=Number(number);if(!Number.isInteger(n)||n<1||n>LEVELS.length||!reached(n))return false;
+   const n=Number(number);if(!Number.isInteger(n)||n<1||n>activeLevels().length||!reached(n))return false;
    hide();hideLegacy();hideViews();nav.started=true;nav.screen='prep';nav.selectedLevel=n;nav.world=Math.floor((n-1)/25);nav.mapPage=Math.floor(((n-1)%25)/mapPageSize());nav.prepIndex=0;
    $('lany-title').hidden=true;document.body.classList.remove('lany-at-title');$('lany-stage-prep').hidden=false;
-   const lv=LEVELS[n-1];$('lany-prep-region').textContent=`제${nav.world+1}지역 · ${lv.theme}`;
-   $('lany-prep-heading').textContent=`${n}단계 준비`;$('lany-prep-subtitle').textContent=lv.name;
+   const lv=activeLevels()[n-1];$('lany-prep-region').textContent=`제${nav.world+1}지역 · ${lv.theme}`;
+   $('lany-prep-heading').textContent=`${state.mode==='hard'?'🔥 하드':'🌼 노멀'} ${n}단계 준비`;$('lany-prep-subtitle').textContent=lv.name;
    $('lany-prep-goal').textContent=lv.goal.toLocaleString()+'점';$('lany-prep-moves').textContent=lv.moves+'회';
-   $('lany-prep-locks').textContent=lv.lockedCount?'🔒 잠금 블록 '+lv.lockedCount+'개':'🔓 잠금 블록 없음';
+   $('lany-prep-locks').textContent=state.mode==='hard'?`🧱 벽 ${lv.wallCount} · 🔒 잠금 ${lv.lockedCount} · 💣 폭탄 ${lv.bombCount} · 🔄 ${lv.morphSeconds}초마다 변화`:(lv.lockedCount?'🔒 잠금 블록 '+lv.lockedCount+'개':'🔓 잠금 블록 없음');
    const best=state.bestScores[n]||0;
    $('lany-prep-record').textContent=best?`⭐ 최고 점수 ${best.toLocaleString()}점`:'⭐ 최고 기록 없음';
    const b=state.boosters;$('lany-prep-booster-counts').textContent=`🔨 망치 ${b.hammer} · 🔀 섞기 ${b.shuffle} · 🌈 색상 ${b.color}`;
@@ -257,7 +264,7 @@
  },{passive:true});
  document.addEventListener('contextmenu',e=>e.preventDefault(),true);
  document.addEventListener('dragstart',e=>e.preventDefault(),true);
- window.LanyShell={start:begin,openPause,openExit,resume,showHome,exitGame,openHelp,closeTutorial,toggleFullscreen,openMap,openPrep,playPrepared,launchGo,continueStage,resumeGameFromMap,mapPage,worldPage,prepPage,helpPage,getCurrentScreen:()=>nav.overlay||nav.screen};
+ window.LanyShell={start:begin,openPause,openExit,resume,showHome,exitGame,openHelp,closeTutorial,toggleFullscreen,openMap,openPrep,playPrepared,launchGo,continueStage,resumeGameFromMap,mapPage,worldPage,prepPage,helpPage,setMode,getCurrentScreen:()=>nav.overlay||nav.screen};
  $('lany-start-button')?.addEventListener('click',begin);
  const cover=$('lany-cover-image');
  if(cover){cover.addEventListener('load',()=>document.body.classList.add('lany-cover-loaded'));cover.addEventListener('error',()=>{document.body.classList.add('lany-cover-fallback');console.warn('[라니팡] 타이틀 이미지 불러오기 실패: 기본 배경으로 전환');});if(cover.complete&&cover.naturalWidth)document.body.classList.add('lany-cover-loaded');}
