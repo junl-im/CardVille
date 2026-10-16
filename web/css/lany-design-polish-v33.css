@@ -32,7 +32,7 @@
 #lany-exit .lany-dialog .lany-dialog-emoji{background-image:url('../assets/polish/bear-surprise.webp')!important}
 #lany-pause .lany-dialog p,#lany-exit .lany-dialog p{font-size:clamp(.76rem,2.8vw,.88rem)!important;line-height:1.4!important;color:#765b69!important}
 #overlay-win .modal-btns,#overlay-lose .modal-btns{gap:3px!important;margin-top:0!important}
-#overlay-win .modal-btns button[data-lany-art],#overlay-lose .modal-btns button[data-lany-art]{height:39px!important;min-height:39px!important;max-height:39px!important}
+#overlay-win .modal-btns button[data-lany-art],#overlay-lose .modal-btns button[data-lany-art]{height:40px!important;min-height:40px!important;max-height:40px!important}
 
 /* The map is a framed page with the painted journey as its centerpiece. */
 #lany-world-map .lany-map-panel{background:linear-gradient(#fdf7e9,#fff2e5 64%,#ffe6ee)!important}
