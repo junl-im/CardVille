@@ -3,12 +3,12 @@
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "774b1789c5ffab986fcb878b928a0d1fc17578be",
-  "requestedFor": "라니팡 v39 지도·도감·나가기 그림 버튼, 음악 버튼과 추가 모드 버튼 디자인 개선 배포.",
+  "sourceCommit": "fe2b14399fcc97e3de36df8c0d85e60fcda3f980",
+  "requestedFor": "라니팡 하드 모드 250단계, 깨지는 벽·폭탄·시간 변화 캐릭터, 파스텔 퍼즐 배경과 부드러운 매치 효과 배포.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
-  "approvedAtKST": "2026-10-16",
+  "approvedAtKST": "2026-10-17",
   "versionCheckFix": true,
   "puzzleArtV25": true,
   "userArtV26": true,
@@ -26,5 +26,6 @@
   "uiPolishV36": true,
   "uiAuditV37": true,
   "popupPolishV38": true,
-  "illustratedControlsV39": true
+  "illustratedControlsV39": true,
+  "hardModeV40": true
 }
