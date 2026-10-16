@@ -138,7 +138,7 @@ with sync_playwright() as playwright:
     shot('pause','#lany-pause')
     assert viewport_fit('#lany-pause .lany-dialog'),(tag,'pause card clipped')
     page.evaluate('LanyShell.openExit()')
-    for action,skin in [('resume','skin-green.webp'),('home','skin-blue.webp'),('exit','skin-red.webp')]:
+    for action,skin in [('resume','green.png'),('home','gold.png'),('exit','pink.png')]:
       assert page.locator('#lany-exit .lany-dialog button[data-lany-art="'+action+'"]').evaluate("""(e,asset)=>{
         const c=getComputedStyle(e);
         return c.backgroundImage.includes(asset)&&parseFloat(c.fontSize)>=12
@@ -163,8 +163,8 @@ with sync_playwright() as playwright:
         }""")
         assert fits,(tag,kind,i,'all result buttons must fit the screen')
       # Visual-regression guard: the official game button cutouts must be visible.
-      button_art={'win':{'next':'skin-green.webp','map':'skin-blue.webp','retry':'skin-gold.webp'},
-                  'lose':{'retry':'skin-gold.webp','map':'skin-blue.webp'}}[kind]
+      button_art={'win':{'next':'green.png','map':'blue.png','retry':'gold.png'},
+                  'lose':{'retry':'gold.png','map':'blue.png'}}[kind]
       for action,filename in button_art.items():
         value=page.locator('#overlay-'+kind+' button[data-lany-art="'+action+'"]').evaluate('e=>getComputedStyle(e).backgroundImage')
         assert filename in value,(tag,kind,action,'missing approved raster skin',value)
