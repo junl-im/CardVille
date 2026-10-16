@@ -3,8 +3,8 @@
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "337055c28d1d3be56b52b953cd6ea68cb38c38f2",
-  "requestedFor": "라니팡 v32 모바일 단계 준비창 정보 분리와 크기 축소, 일시정지·종료·설치·게임 방법·단계 결과창의 폭과 여백 조정. 기존 게임 데이터 유지.",
+  "sourceCommit": "23e24791bb531743536114e120e968828b67badb",
+  "requestedFor": "라니팡 v33 지도 프레임과 작은 이전·다음 버튼, 공통 캔디 제목·결과·일시정지 버튼, 간결한 모바일 게임 HUD·아이템 줄 및 출발 연출 적용.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -18,5 +18,6 @@
   "screenPolishV29": true,
   "mobileLayoutV30": true,
   "controlPolishV31": true,
-  "popupCompactV32": true
+  "popupCompactV32": true,
+  "designPolishV33": true
 }
