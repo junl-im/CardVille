@@ -6,7 +6,7 @@ const assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const html=read('web/index.html');
-const block=html.match(/const LEVELS = \[([\s\S]*?)\];\s*let state/);
+const block=html.match(/const LEVELS = \[([\s\S]*?)\];/);
 assert(block,'Expected 250-level data in game engine');
 const LEVELS=vm.runInNewContext('['+block[1]+']');
 assert.equal(LEVELS.length,250);

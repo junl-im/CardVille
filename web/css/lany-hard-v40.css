@@ -1,0 +1,43 @@
+/* v40: finished button edges and distinct hard campaign. */
+#lany-world-map .lany-campaign-switch{display:grid;grid-template-columns:1fr 1fr;gap:7px;width:min(100%,420px);margin:5px auto 8px;padding:0 6px}
+#lany-world-map .lany-campaign-switch button{min-width:0;min-height:40px;padding:5px 9px;border:0;border-radius:13px;background:#fff7e6;color:#70465b;font:900 clamp(.76rem,2.8vw,.92rem)/1.15 system-ui,sans-serif;box-shadow:inset 0 0 0 2px #fff,0 3px 0 #dba6bc,0 5px 9px #59364b2b;cursor:pointer}
+#lany-world-map .lany-campaign-switch button[aria-pressed="true"]{background:linear-gradient(180deg,#fff5bd,#ffc769);color:#6c3545;box-shadow:inset 0 0 0 2px #fff5e5,0 3px 0 #ca8b41,0 5px 12px #a8514088}
+#lany-world-map #lany-mode-hard[aria-pressed="true"]{background:linear-gradient(180deg,#ffb1d8,#f04c91);color:#fff;text-shadow:0 1px 2px #9c2055;box-shadow:inset 0 0 0 2px #fff1f9,0 3px 0 #a72f65,0 5px 12px #93275088}
+#lany-world-map .lany-campaign-switch button:focus-visible{outline:3px solid #733ea0;outline-offset:2px}
+body[data-campaign="hard"] #lany-world-map .lany-map-panel,body[data-campaign="hard"] #lany-stage-prep .lany-prep-card{box-shadow:0 0 0 3px #fa74b7,0 10px 32px #65335966}
+#board .cell.lany-wall{background:linear-gradient(145deg,#b982c3,#694b9d)!important;box-shadow:inset 0 0 0 2px #efd7fa,inset 0 -5px 0 #54347d,0 2px 5px #38245e88;border-radius:12px;pointer-events:none}
+#board .cell.lany-wall::before{content:"✦";display:grid;place-items:center;position:absolute;inset:16%;border-radius:8px;background:linear-gradient(155deg,#f5c8fa,#a471cc);color:#fff;font-size:clamp(17px,5vw,27px);text-shadow:0 2px 3px #71428a;box-shadow:inset 1px 2px 4px #fff7}
+#board .cell.lany-wall::after{display:none!important}
+#board .cell.lany-morph .lany-animal-face{animation:lany-morph-pop .55s ease-out}
+@keyframes lany-morph-pop{0%{transform:scale(.65) rotate(-20deg);filter:brightness(2)}60%{transform:scale(1.17) rotate(8deg)}100%{transform:scale(1) rotate(0)}}
+@media(prefers-reduced-motion:reduce){#board .cell.lany-morph .lany-animal-face{animation:none}}
+/* Raster button art contains its own rim: suppress old borders and clip at the painted contour. */
+#app .lany-game-nav button[data-lany-art],#lany-extra-controls #game-mode-bar button,#lany-extra-controls .cv-action-toolbar button{border:0!important;border-radius:15px!important;box-shadow:none!important;overflow:hidden!important;background-clip:padding-box!important}
+#app .lany-game-nav button[data-lany-art]::before{filter:drop-shadow(0 1px 1px #70476777)!important}
+
+/* Seven quiet, distinct pastel aqua tints support fast visual scanning. */
+#board{background:linear-gradient(155deg,#f2fffd,#dff5f5 60%,#eaf6fc)!important;border-color:#fff8e9!important;box-shadow:0 4px 0 #a8d5d5,0 9px 20px #4b77803d,inset 0 0 0 2px #ffffffb8!important}
+#board .cell:not(.locked):nth-child(n){border:1px solid #ffffffc9!important;box-shadow:inset 0 1px 2px #ffffffd9,0 1px 2px #688e9b2c!important}
+#board .cell.gem-0:not(.locked):nth-child(n){background:linear-gradient(155deg,#fff4f9,#f8d9e8)!important}
+#board .cell.gem-1:not(.locked):nth-child(n){background:linear-gradient(155deg,#fff8ec,#f6dfc6)!important}
+#board .cell.gem-2:not(.locked):nth-child(n){background:linear-gradient(155deg,#fffde8,#f5edb8)!important}
+#board .cell.gem-3:not(.locked):nth-child(n){background:linear-gradient(155deg,#f0fff6,#cdeedc)!important}
+#board .cell.gem-4:not(.locked):nth-child(n){background:linear-gradient(155deg,#f2f1ff,#dcd7f4)!important}
+#board .cell.gem-5:not(.locked):nth-child(n){background:linear-gradient(155deg,#fff2eb,#f7d4c5)!important}
+#board .cell.gem-6:not(.locked):nth-child(n){background:linear-gradient(155deg,#effaff,#cfe7f5)!important}
+#board .cell .lany-animal-face{filter:drop-shadow(0 1px 1px #51788942)!important}
+#board .cell:is(.bomb-gem,.stripe-gem,.wrap-gem,.color-gem):not(.locked){box-shadow:inset 0 0 0 2px #f6ce77,0 0 4px #eebc6475!important}
+#board .cell.lany-wall:not(.locked):nth-child(n){background:linear-gradient(145deg,#b6acd8,#8172b4)!important;border-color:#e6ddf7!important;box-shadow:inset 0 0 0 2px #e7dff5,inset 0 -4px 0 #7663a4!important}
+
+/* The hit appears at the matched animals, then releases into a soft landing. */
+.lany-match-ring{position:absolute;width:var(--ring-size);height:var(--ring-size);border:3px solid #fff9d5;border-radius:50%;pointer-events:none;box-shadow:0 0 0 2px #f8bdd180,0 0 12px #fff9dd88;animation:lany-hit-ring .46s cubic-bezier(.16,.78,.32,1) forwards}
+@keyframes lany-hit-ring{0%{opacity:0;transform:translate(-50%,-50%) scale(.25)}25%{opacity:.9}100%{opacity:0;transform:translate(-50%,-50%) scale(1.15)}}
+#board .cell.matched{animation:lany-soft-pop .29s cubic-bezier(.21,.83,.28,1) forwards}
+@keyframes lany-soft-pop{0%{transform:scale(1);opacity:1}42%{transform:scale(1.12);opacity:1}100%{transform:scale(.7);opacity:0}}
+#board .cell.lany-fall-in .lany-animal-face{animation-duration:.33s;animation-timing-function:cubic-bezier(.18,.82,.32,1)}
+.lany-vfx-pop{width:clamp(55px,15vw,96px);animation-duration:.46s;opacity:.78}
+@media(prefers-reduced-motion:reduce){.lany-match-ring{display:none}#board .cell.matched{animation:none}}
+
+#board .cell.lany-wall-break{animation:lany-wall-crack .28s ease-out forwards}
+@keyframes lany-wall-crack{0%{transform:scale(1);opacity:1}45%{transform:scale(1.13) rotate(-6deg);opacity:1}100%{transform:scale(.65) rotate(7deg);opacity:0}}
+@media(prefers-reduced-motion:reduce){#board .cell.lany-wall-break{animation:none}}

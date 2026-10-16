@@ -22,7 +22,7 @@ assert(sw.includes('lanypang-match-v2.3.0-ko'),'Release cache version not bumped
 assert(!html.includes('How to Play CardVille'));
 for(const path of ['web/js/lany-shell.js','web/css/lany-shell.css','web/assets/lanypang-cover.webp'])assert(fs.existsSync(path));
 new vm.Script(shell);
-const code=html.match(/const LEVELS = \[([\s\S]*?)\];\s*let state/);
+const code=html.match(/const LEVELS = \[([\s\S]*?)\];/);
 assert(code);const stages=vm.runInNewContext('['+code[1]+']');
 assert.equal(stages.length,250);
 assert.equal(stages.filter(x=>x.isBoss).length,10);

@@ -4,7 +4,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs'),vm=require('node:vm');
 const read=p=>fs.readFileSync(p,'utf8');
 const html=read('web/index.html');
-const raw=html.match(/const LEVELS = \[([\s\S]*?)\];\s*let state/);
+const raw=html.match(/const LEVELS = \[([\s\S]*?)\];/);
 assert(raw,'250 stage list required');
 const levels=vm.runInNewContext('['+raw[1]+']');
 const expected=[650,850,1100,1350,1550,1750,1950,2200,2450,2700,2850,2950,3050,3200,3300,3420,3540,3660,3780,3920,4050,4180,4300,4450,4650];
@@ -37,7 +37,7 @@ for(const name of ['function onFall','function invalidSwap','function onSwap','c
 assert(html.includes('LanyPolish?.onMatch(allCells,state.combo)'),'Chain context must reach VFX');
 assert(html.includes('const particleCount=particleReduced?0:'),'Reduce particles for phones and reduced motion');
 assert(html.includes('bar.replaceChildren(frag)'),'HUD must reuse dots');
-for(const k of ['sc_unlocked','sc_best','sc_stars','cv_last_level'])assert(html.includes(k),'Preserve existing saves');
+assert(html.includes('campaignKey(key)')&&html.includes('`sc_${key}`')&&html.includes('cv_last_level'),'Preserve existing normal saves alongside hard saves');
 for(const [i,m] of [...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].entries())new vm.Script(m[1],{filename:'inline-'+i});
 for(const p of ['web/js/lany-polish.js','web/js/lany-shell.js','web/js/lany-tempo.js'])new vm.Script(read(p),{filename:p});
 console.log(JSON.stringify({pass:true,stages:250,firstGoal:levels[0].goal,tenthGoal:levels[9].goal,earlyCapProtected:true,combo8ForThree:score(3,8),mobileOnlyFullscreen:true,animations:true,saveKeysPreserved:true}));

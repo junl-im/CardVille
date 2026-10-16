@@ -10,7 +10,7 @@ const sandbox={
  document:{getElementById:el,addEventListener(){}},
  localStorage:{getItem:k=>store[k]??null,setItem:(k,v)=>store[k]=String(v)},
  performance:{now:()=>now},setInterval(fn,interval){assert.equal(interval,250);starts++;liveTickers++;assert.equal(liveTickers,1);tick=fn;return starts},clearInterval(id){assert(id>=1);stops++;liveTickers--;assert.equal(liveTickers,0)},
- state:{animating:false,score:0,level:1},LEVELS:[{goal:500}],
+ state:{animating:false,score:0,level:1},LEVELS:[{goal:500}],activeLevels(){return [{goal:500}]},
  showLose(){lose++},checkEnd(){win++},
  console,snd_tick(){}
 };sandbox.window=sandbox;vm.createContext(sandbox);vm.runInContext(source,sandbox);
