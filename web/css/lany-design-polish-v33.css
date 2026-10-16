@@ -106,3 +106,9 @@ body.lany-at-title #lany-extra-controls{visibility:hidden;pointer-events:none}
 
 @media(max-width:600px){.cv-local-caption{display:none!important}}
 #lany-pause .lany-dialog>button:focus-visible,#lany-exit .lany-dialog>button:focus-visible{outline:2px solid #ee9dc8!important;outline-offset:0!important}
+
+/* Programmatically focused illustrated actions keep a visible rounded glow. */
+#lany-world-map .lany-map-bottom button[data-lany-art]:focus-visible,
+#lany-stage-prep .lany-prep-card :is(#lany-prep-play,.lany-prep-cancel):focus-visible{
+ outline:none!important;filter:drop-shadow(0 0 4px #fff2a6) drop-shadow(0 0 7px #e65ca3)!important;
+}
