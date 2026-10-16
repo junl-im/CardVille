@@ -37,3 +37,7 @@ body[data-campaign="hard"] #lany-world-map .lany-map-panel,body[data-campaign="h
 #board .cell.lany-fall-in .lany-animal-face{animation-duration:.33s;animation-timing-function:cubic-bezier(.18,.82,.32,1)}
 .lany-vfx-pop{width:clamp(55px,15vw,96px);animation-duration:.46s;opacity:.78}
 @media(prefers-reduced-motion:reduce){.lany-match-ring{display:none}#board .cell.matched{animation:none}}
+
+#board .cell.lany-wall-break{animation:lany-wall-crack .28s ease-out forwards}
+@keyframes lany-wall-crack{0%{transform:scale(1);opacity:1}45%{transform:scale(1.13) rotate(-6deg);opacity:1}100%{transform:scale(.65) rotate(7deg);opacity:0}}
+@media(prefers-reduced-motion:reduce){#board .cell.lany-wall-break{animation:none}}

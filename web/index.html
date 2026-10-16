@@ -1326,6 +1326,15 @@ async function resolveMatches(matchGroups,epoch=state.playEpoch){
   matchGroups.forEach(g=>g.cells.forEach(([r,c])=>allCells.add(r*COLS+c)));
   const activatedSpecials=expandSpecialMatches(allCells);
   if(activatedSpecials)snd_special();
+  // A match or bomb touching a wall breaks it and opens that route for gravity.
+  const wallsToBreak=new Set();
+  for(const index of allCells){
+    const row=Math.floor(index/COLS),col=index%COLS;
+    for(const [dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]){
+      const nr=row+dr,nc=col+dc;
+      if(nr>=0&&nr<ROWS&&nc>=0&&nc<COLS&&state.walls[nr*COLS+nc])wallsToBreak.add(nr*COLS+nc);
+    }
+  }
 
   // Determine specials to create
   const toCreate=[];
@@ -1347,14 +1356,16 @@ async function resolveMatches(matchGroups,epoch=state.playEpoch){
     const el=getCellEl(r,c);
     if(el) el.classList.add('matched');
   });
+  wallsToBreak.forEach(index=>getCellEl(Math.floor(index/COLS),index%COLS)?.classList.add('lany-wall-break'));
   window.LanyPolish?.onMatch(allCells,state.combo);
   await sleep(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 120 : 290);
   if(epoch!==state.playEpoch)return;
 
   // Score
   const pts = comboPoints(allCells.size,state.combo);
-  state.score += pts;
-  showScoreFloat(pts);
+  state.score += pts+wallsToBreak.size*80;
+  showScoreFloat(pts+wallsToBreak.size*80);
+  for(const index of wallsToBreak){state.walls[index]=false;state.board[index]=null;state.specials[index]=SPECIAL_NONE;}
   if(state.combo>2) showCombo(state.combo);
 
   // Clear matched cells
