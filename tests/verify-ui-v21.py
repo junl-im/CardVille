@@ -66,7 +66,14 @@ with sync_playwright() as pw:
   if name=='desktop' or h>=568:
    assert page.locator('.lany-game-nav').evaluate('e=>e.getBoundingClientRect().bottom<=innerHeight-4'),(name,'game controls must fit first viewport')
   page.screenshot(path=str(out/(name+'-game.png')))
-  page.locator('#lany-quick-pause').click()
+  for key,label,art in [('map','지도','map.webp'),('friends','도감','friends-ornament.webp'),('exit','나가기','exit.webp')]:
+   control=page.locator('.lany-game-nav button[data-lany-art="'+key+'"]')
+   assert control.count()==1 and control.inner_text().strip()==label,(name,key,'navigation label')
+   assert control.evaluate('e=>getComputedStyle(e,"::before").backgroundImage',).find(art)>=0,(name,key,'navigation icon')
+  page.locator('#lany-quick-exit').click()
+  assert page.locator('#lany-exit').is_visible(),(name,'exit confirmation')
+  page.locator('#lany-exit button[data-lany-art="resume"]').click()
+  page.evaluate('LanyShell.openPause()')
   assert page.locator('#lany-pause').is_visible(),name
   page.screenshot(path=str(out/(name+'-pause.png')))
   for key,art in [('overlay-win','panel-win.webp'),('overlay-lose','panel-lose.webp')]:

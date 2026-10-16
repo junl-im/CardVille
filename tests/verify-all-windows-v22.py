@@ -134,7 +134,7 @@ with sync_playwright() as playwright:
     assert '/v25/animals/cat.webp' in page.locator('#board .cell img').first.get_attribute('src'),(tag,'black cat regression')
     assert page.locator('#board .cell img').first.evaluate("e=>e.complete&&e.naturalWidth>0"),(tag,'black cat source missing')
     shot('game','#board')
-    page.locator('#lany-quick-pause').click()
+    page.evaluate('LanyShell.openPause()')
     shot('pause','#lany-pause')
     assert viewport_fit('#lany-pause .lany-dialog'),(tag,'pause card clipped')
     page.evaluate('LanyShell.openExit()')
