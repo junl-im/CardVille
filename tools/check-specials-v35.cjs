@@ -7,7 +7,7 @@ const start=html.indexOf('function expandSpecialMatches(cells){');
 const end=html.indexOf('// ── Resolve matches',start);
 assert(start>0&&end>start);
 const source=html.slice(start,end);
-const ctx={ROWS:8,COLS:8,SPECIAL_NONE:0,SPECIAL_BOMB:1,SPECIAL_STRIPE_H:2,SPECIAL_STRIPE_V:3,SPECIAL_WRAP:4,SPECIAL_COLOR:5,state:{board:Array(64).fill('A'),specials:Array(64).fill(0)}};
+const ctx={ROWS:8,COLS:8,SPECIAL_NONE:0,SPECIAL_BOMB:1,SPECIAL_STRIPE_H:2,SPECIAL_STRIPE_V:3,SPECIAL_WRAP:4,SPECIAL_COLOR:5,SPECIAL_FRENZY_ROW:6,SPECIAL_FRENZY_COL:7,SPECIAL_FRENZY_BURST:8,state:{board:Array(64).fill('A'),specials:Array(64).fill(0)}};
 vm.createContext(ctx);vm.runInContext(source,ctx);
 function run(index,special){ctx.state.specials.fill(0);ctx.state.specials[index]=special;const cells=new Set([index]);assert.equal(ctx.expandSpecialMatches(cells),1);return cells;}
 assert.equal(run(27,2).size,8,'horizontal stripe');

@@ -180,6 +180,7 @@
    const lv=activeLevels()[n-1];$('lany-prep-region').textContent=`제${nav.world+1}지역 · ${lv.theme}`;
    $('lany-prep-heading').textContent=`${state.mode==='hard'?'🔥 하드':'🌼 노멀'} ${n}단계 준비`;$('lany-prep-subtitle').textContent=lv.name;
    $('lany-prep-goal').textContent=lv.goal.toLocaleString()+'점';$('lany-prep-moves').textContent=lv.moves+'회';
+   $('lany-prep-clear-goal').hidden=state.mode!=='hard';if(state.mode==='hard')$('lany-prep-clear-goal').textContent=`동물 매치 ${lv.clearGoal}회도 달성해야 승리! 5개 이상 연결하면 광폭 친구가 나타나요.`;
    $('lany-prep-locks').textContent=state.mode==='hard'?`🧱 벽 ${lv.wallCount} · 🔒 잠금 ${lv.lockedCount} · 💣 폭탄 ${lv.bombCount} · 🔄 ${lv.morphSeconds}초마다 변화`:(lv.lockedCount?'🔒 잠금 블록 '+lv.lockedCount+'개':'🔓 잠금 블록 없음');
    const best=state.bestScores[n]||0;
    $('lany-prep-record').textContent=best?`⭐ 최고 점수 ${best.toLocaleString()}점`:'⭐ 최고 기록 없음';
