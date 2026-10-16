@@ -3,8 +3,8 @@
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "d27dea59eb7dda6d3fd5a455f310f137f52fa02c",
-  "requestedFor": "라니팡 v36 첫 화면·지도·단계 준비·게임 HUD와 아이템 효과·종료창·추가 기록 UI 개선 배포.",
+  "sourceCommit": "5f57751dba0abdbfa51495c435f2c113f624854d",
+  "requestedFor": "라니팡 v37 지도 지역명 중복 제거, 배너 정렬, 첫 화면 게임 버튼 배치와 아이템 효과 표시 보정 배포.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -23,5 +23,6 @@
   "focusPolishV33": true,
   "puzzleAquaV34": true,
   "specialBlocksV35": true,
-  "uiPolishV36": true
+  "uiPolishV36": true,
+  "uiAuditV37": true
 }
