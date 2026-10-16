@@ -44,7 +44,7 @@ with sync_playwright() as pw:
   assert any(x['action']=='play' for x in prep),name
   page.locator('#lany-prep-play').click()
   assert page.locator('#board .cell').count()==64,name
-  page.locator('#lany-quick-pause').click()
+  page.evaluate('LanyShell.openPause()')
   assert page.locator('#lany-pause').is_visible(),name
   pause=inspect_buttons('#lany-pause [data-lany-art]')
   assert len(pause)==5,(name,'pause action count',pause)

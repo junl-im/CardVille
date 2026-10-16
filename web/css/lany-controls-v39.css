@@ -1,0 +1,24 @@
+/* v39: small illustrated controls with labels that match their actions. */
+#app .lany-game-nav{box-sizing:border-box!important;width:min(91vw,344px)!important;max-width:344px!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important;padding:4px 5px!important;margin:3px auto!important}
+#app .lany-game-nav button[data-lany-art]{box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;width:100%!important;min-width:0!important;height:45px!important;min-height:45px!important;padding:3px 5px!important;font-size:clamp(.72rem,2.5vw,.87rem)!important;white-space:nowrap!important;letter-spacing:-.03em!important;background:url('../assets/v33/frames/blue.png') center/100% 100% no-repeat!important}
+#app .lany-game-nav button[data-lany-art="friends"]{background-image:url('../assets/v33/frames/gold.png')!important;color:#78422d!important;text-shadow:0 1px #fff3d8!important}
+#app .lany-game-nav button[data-lany-art="exit"]{background-image:url('../assets/v33/frames/pink.png')!important;color:#fff!important;text-shadow:0 1px 2px #9b3e70!important}
+#app .lany-game-nav button[data-lany-art]::before{content:""!important;display:block!important;position:static!important;flex:0 0 34px!important;width:34px!important;height:34px!important;background-position:center!important;background-size:contain!important;background-repeat:no-repeat!important;filter:drop-shadow(0 1px 1px #70476777)!important;pointer-events:none!important}
+#app .lany-game-nav button[data-lany-art="map"]::before{background-image:url('../assets/v24/controls/map.webp')!important}
+#app .lany-game-nav button[data-lany-art="friends"]::before{background-image:url('../assets/v23/decor/friends-ornament.webp')!important;flex-basis:39px!important;width:39px!important}
+#app .lany-game-nav button[data-lany-art="exit"]::before{background-image:url('../assets/v24/actions/exit.webp')!important}
+#app>.header .hud #music-btn{box-sizing:border-box!important;flex:0 0 39px!important;width:39px!important;height:39px!important;min-height:39px!important;padding:0!important;background:url('../assets/v24/controls/sound-off.webp') center/contain no-repeat!important;border:0!important;border-radius:0!important;box-shadow:none!important;color:transparent!important;font-size:0!important;text-shadow:none!important}
+#app>.header .hud #music-btn[aria-pressed="true"]{background-image:url('../assets/v24/controls/sound-on.webp')!important}
+#app>.header .hud #music-btn:focus-visible,#app .lany-game-nav button:focus-visible{outline:3px solid #6e377d!important;outline-offset:2px!important}
+/* Replace the remaining plain experiment buttons with the same candy frames. */
+#lany-extra-controls>summary{box-sizing:border-box;width:min(100%,232px);min-height:36px;margin:0 auto;padding:7px 12px!important;background:url('../assets/v33/frames/gold.png') center/100% 100% no-repeat!important;color:#794e43!important;font-size:.77rem!important;text-shadow:0 1px #fff7d9!important}
+#lany-extra-controls #game-mode-bar button{box-sizing:border-box!important;min-width:110px!important;min-height:39px!important;padding:5px 11px!important;background:url('../assets/v33/frames/blue.png') center/100% 100% no-repeat!important;border:0!important;border-radius:0!important;box-shadow:none!important;color:#fff!important;font-size:.73rem!important;font-weight:900!important;text-shadow:0 1px 2px #3d6590!important}
+#lany-extra-controls #game-mode-bar #lany-multiplayer-button{background-image:url('../assets/v33/frames/pink.png')!important;text-shadow:0 1px 2px #984669!important}
+@media(max-width:360px){
+ #app .lany-game-nav{width:min(94vw,306px)!important;gap:2px!important}
+ #app .lany-game-nav button[data-lany-art]{gap:0!important;padding-inline:2px!important;font-size:.72rem!important}
+ #app .lany-game-nav button[data-lany-art]::before{flex-basis:29px!important;width:29px!important;height:29px!important}
+ #app .lany-game-nav button[data-lany-art="friends"]::before{flex-basis:34px!important;width:34px!important}
+}
+#lany-extra-controls .cv-action-toolbar button{box-sizing:border-box!important;min-width:110px!important;min-height:39px!important;padding:5px 10px!important;background:url('../assets/v33/frames/gold.png') center/100% 100% no-repeat!important;border:0!important;border-radius:0!important;box-shadow:none!important;color:#774b35!important;font-size:.73rem!important;font-weight:900!important;text-shadow:0 1px #fff3d4!important}
+#lany-extra-controls .cv-action-toolbar button:nth-child(2){background-image:url('../assets/v33/frames/blue.png')!important;color:#fff!important;text-shadow:0 1px 2px #3d6590!important}
