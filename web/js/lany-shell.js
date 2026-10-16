@@ -98,7 +98,7 @@
      btn.dataset.world=String(i);
      btn.setAttribute('aria-label',`제${i+1}지역 ${worlds[i][1]}`);
      btn.setAttribute('aria-pressed',String(i===n));
-     btn.innerHTML=`<span class="world-emoji">${worlds[i][0]}</span><span>${i+1}지역</span>`;
+     btn.textContent="";
      btn.addEventListener('click',()=>{nav.world=i;nav.mapPage=0;nav.worldTabPage=Math.floor(i/worldTabSize());renderMap();});
      tabs.appendChild(btn);
    }
@@ -182,7 +182,7 @@
    renderPrepPage();$('lany-prep-play').focus();return true;
  }
  function renderPrepPage(){
-   const compact=window.matchMedia("(max-width: 600px)").matches||Math.min(window.innerHeight||800,window.visualViewport?.height||Infinity)<740;
+   const compact=window.matchMedia("(max-width: 600px)").matches||Math.min(window.innerHeight||800,window.visualViewport?.height||Infinity)<900;
    const root=$('lany-stage-prep'),pager=$('lany-prep-pager');
    root.classList.toggle('lany-prep-compact',compact);
    pager.hidden=!compact;

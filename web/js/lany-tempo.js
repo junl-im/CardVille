@@ -48,6 +48,7 @@
      if(typeof window.showLose==='function'){
        $('lose-msg').textContent=`⏰ 시간이 끝났어요! ${seconds}초 동안 ${state.score.toLocaleString()}점을 획득했어요. 다시 도전해 보세요!`;
        window.showLose();
+       const title=document.getElementById('lany-lose-title'); if(title) title.textContent='시간이 끝났어요';
        $('lose-msg').textContent=`⏰ 시간이 끝났어요! ${seconds}초 동안 ${state.score.toLocaleString()}점을 획득했어요. 다시 도전해 보세요!`;
      }
    }
