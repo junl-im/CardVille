@@ -1,0 +1,26 @@
+/* v32: keep each popup sized to its actual mobile content. */
+@media(max-width:600px){
+ #lany-stage-prep .lany-prep-card{width:min(90vw,360px)!important;max-height:calc(100dvh - 20px)!important;gap:5px!important;padding:12px!important;overflow-y:auto!important}
+ #lany-stage-prep .lany-prep-card .lany-prep-region{margin-top:14px!important}
+ #lany-stage-prep .lany-prep-card .lany-prep-page{gap:6px!important}
+ #lany-stage-prep .lany-prep-card .lany-time-option{padding:8px 10px!important}
+ #lany-stage-prep .lany-prep-card .lany-prep-boosters{padding:8px!important;gap:4px!important}
+ #lany-stage-prep .lany-prep-card .lany-game-pager{min-height:42px!important}
+ #lany-stage-prep .lany-prep-card :is(#lany-prep-play,.lany-prep-cancel){width:min(52vw,196px)!important;max-width:196px!important}
+
+ #lany-pause .lany-dialog,#lany-exit .lany-dialog{width:min(88vw,340px)!important;padding:12px!important;gap:5px!important}
+ #lany-pause .lany-dialog .lany-dialog-emoji,#lany-exit .lany-dialog .lany-dialog-emoji{min-height:66px!important;height:66px!important}
+ #lany-pause .lany-dialog h2,#lany-exit .lany-dialog h2{padding:7px 10px!important}
+ #overlay-tutorial .modal,#lany-install-modal .lany-install-card{width:min(88vw,350px)!important;max-width:350px!important;padding:12px!important}
+ #overlay-win .modal,#overlay-lose .modal{width:min(90vw,350px)!important;max-width:350px!important;min-height:min(90vw,350px)!important;padding:clamp(70px,21vw,86px) clamp(27px,8vw,34px) clamp(24px,7vw,31px)!important}
+}
+@media(min-width:370px) and (max-width:600px){
+ #lany-stage-prep .lany-prep-card{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+ #lany-stage-prep .lany-prep-card>:not(button){grid-column:1/-1}
+ #lany-stage-prep .lany-prep-card :is(#lany-prep-play,.lany-prep-cancel){grid-column:auto!important;width:100%!important;max-width:none!important;margin:0!important}
+}
+@media(max-height:600px) and (max-width:600px){
+ #lany-stage-prep .lany-prep-card{gap:3px!important;padding:9px!important}
+ #lany-stage-prep .lany-prep-card .lany-prep-region{margin-top:8px!important}
+ #lany-stage-prep .lany-prep-card .lany-game-pager{min-height:38px!important}
+}
