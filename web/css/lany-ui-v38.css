@@ -36,7 +36,7 @@
 /* Painted result panels have their own proportions; keep labels and actions inside. */
 #overlay-win .modal,#overlay-lose .modal{width:min(88vw,345px)!important;max-width:345px!important;min-height:min(88vw,345px)!important;padding:clamp(72px,22vw,85px) clamp(29px,8vw,36px) clamp(25px,7vw,31px)!important;gap:3px!important}
 #overlay-win .modal h2,#overlay-lose .modal h2{width:100%!important;max-width:245px!important;min-height:38px!important;white-space:normal!important;font-size:clamp(.82rem,3.4vw,.98rem)!important;line-height:1.12!important}
-#overlay-win .modal-btns button[data-lany-art],#overlay-lose .modal-btns button[data-lany-art]{height:38px!important;min-height:38px!important;max-height:38px!important;font-size:.76rem!important;white-space:normal!important}
+#overlay-win .modal-btns button[data-lany-art],#overlay-lose .modal-btns button[data-lany-art]{height:40px!important;min-height:40px!important;max-height:40px!important;font-size:.76rem!important;white-space:normal!important}
 /* Four compact square tools, not four full-width cards. */
 #app .boosters{box-sizing:border-box!important;width:min(100%,332px)!important;max-width:332px!important;display:flex!important;justify-content:space-evenly!important;align-items:center!important;gap:9px!important;margin:5px auto 4px!important;padding:5px 7px!important;overflow:visible!important}
 #app .boosters .booster{box-sizing:border-box!important;flex:0 0 auto!important;width:clamp(55px,15.5vw,64px)!important;height:clamp(55px,15.5vw,64px)!important;aspect-ratio:1!important;padding:0!important;border-radius:11px!important;background-size:67% 62%,100% 100%!important;background-position:center 8%,center!important}
@@ -44,6 +44,9 @@
 #app .boosters .booster .count{top:-5px!important;right:-4px!important;min-width:19px!important;width:19px!important;height:19px!important;font-size:.68rem!important}
 @media(min-width:601px) and (max-height:900px){
  #app #board-wrap{width:min(520px,calc(100dvh - 400px))!important}
+}
+@media(max-width:600px) and (min-height:500px) and (max-height:650px){
+ #app #board-wrap{width:min(calc(100vw - 12px),calc(100dvh - 300px),440px)!important}
 }
 @media(max-width:360px){
  #app .boosters{width:min(100%,288px)!important;gap:4px!important;padding-inline:4px!important}
