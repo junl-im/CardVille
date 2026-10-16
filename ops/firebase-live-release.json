@@ -3,8 +3,8 @@
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "f5fa7b48ff2d59d05edffae551a87260bd3e8e4a",
-  "requestedFor": "라니팡 v38 설치·게임방법·일시정지·종료·결과 팝업 정리, 작은 정사각형 아이템과 화면 배치 보정 배포.",
+  "sourceCommit": "774b1789c5ffab986fcb878b928a0d1fc17578be",
+  "requestedFor": "라니팡 v39 지도·도감·나가기 그림 버튼, 음악 버튼과 추가 모드 버튼 디자인 개선 배포.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -25,5 +25,6 @@
   "specialBlocksV35": true,
   "uiPolishV36": true,
   "uiAuditV37": true,
-  "popupPolishV38": true
+  "popupPolishV38": true,
+  "illustratedControlsV39": true
 }
