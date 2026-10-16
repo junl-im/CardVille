@@ -3,8 +3,8 @@
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "5f57751dba0abdbfa51495c435f2c113f624854d",
-  "requestedFor": "라니팡 v37 지도 지역명 중복 제거, 배너 정렬, 첫 화면 게임 버튼 배치와 아이템 효과 표시 보정 배포.",
+  "sourceCommit": "f5fa7b48ff2d59d05edffae551a87260bd3e8e4a",
+  "requestedFor": "라니팡 v38 설치·게임방법·일시정지·종료·결과 팝업 정리, 작은 정사각형 아이템과 화면 배치 보정 배포.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -24,5 +24,6 @@
   "puzzleAquaV34": true,
   "specialBlocksV35": true,
   "uiPolishV36": true,
-  "uiAuditV37": true
+  "uiAuditV37": true,
+  "popupPolishV38": true
 }
