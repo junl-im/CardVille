@@ -150,38 +150,6 @@
  #lany-world-tabs .lany-world-tab{transition:none!important}
 }
 
-/* Full source sheets contain baked region names that may clip at 320px.
-   Use their original painted mascots as real artwork, but render the number
-   as readable live HTML; never ship truncated baked letters. */
-#lany-world-map #lany-world-tabs .lany-world-tab{
- position:relative!important;overflow:hidden!important;
- background-image:var(--cv-skin-blue)!important;
- background-size:100% 100%!important;background-repeat:no-repeat!important;
- background-position:center!important;
- padding:0 4px 0 42%!important;justify-content:center!important;
-}
-#lany-world-map #lany-world-tabs .lany-world-tab.active{
- background-image:var(--cv-skin-gold)!important;
-}
-#lany-world-map #lany-world-tabs .lany-world-tab::before{
- content:"";display:block!important;position:absolute!important;
- pointer-events:none!important;top:4%;left:2%;height:92%;width:40%;
- background-image:var(--lp24-region-icon)!important;
- background-size:250% 100%!important;background-position:left center!important;
- background-repeat:no-repeat!important;
-}
-#lany-world-map #lany-world-tabs .lany-world-tab .world-emoji{display:none!important}
-#lany-world-map #lany-world-tabs .lany-world-tab>span:last-child{
- position:relative!important;visibility:visible!important;display:block!important;
- color:#6e355c!important;font-weight:1000!important;
- font-size:clamp(.73rem,2.8vw,1rem)!important;
- line-height:1.05!important;letter-spacing:-.05em!important;
- text-shadow:0 1px 0 #fff9ea!important;white-space:nowrap!important;
-}
-#lany-world-map #lany-world-tabs .lany-world-tab.locked-tab>span:last-child{
- color:#555366!important;
-}
-
 /* Regression screenshot: the map's Next pill went blank because an older,
    more-specific selector supplied a background-image shorthand. */
 #lany-world-map .lany-map-section #lany-map-prev,

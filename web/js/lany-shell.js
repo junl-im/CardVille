@@ -102,7 +102,7 @@
      btn.addEventListener('click',()=>{nav.world=i;nav.mapPage=0;nav.worldTabPage=Math.floor(i/worldTabSize());renderMap();});
      tabs.appendChild(btn);
    }
-   $('lany-world-no').textContent=`제${n+1}지역 · ${(n*25)+1}~${(n+1)*25}단계`;
+   $('lany-world-no').textContent=`${(n*25)+1}~${(n+1)*25}단계`;
    $('lany-world-title').textContent=worlds[n][1];$('lany-world-icon').textContent=worlds[n][0];
    const grid=$('lany-map-levels');grid.replaceChildren();
    grid.dataset.world=String(n);grid.dataset.page=String(nav.mapPage);

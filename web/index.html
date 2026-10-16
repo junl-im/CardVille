@@ -316,7 +316,7 @@ body {
 <link rel="stylesheet" href="./css/lany-design-polish-v33.css?v=1">
 <link rel="stylesheet" href="./css/lany-puzzle-aqua-v34.css?v=1">
 <link rel="stylesheet" href="./css/lany-gameplay-v35.css?v=1">
-<link rel="stylesheet" href="./css/lany-ui-v36.css?v=1">
+<link rel="stylesheet" href="./css/lany-ui-v36.css?v=2">
 </head>
 <body class="lany-at-title">
 <main id="lany-title" class="lany-title" role="main" aria-label="라니팡 시작 화면">
@@ -1433,11 +1433,22 @@ function boosterBurst(type,r,c){
     hud?.classList.remove('lany-moves-bonus'); void hud?.offsetWidth;
     hud?.classList.add('lany-moves-bonus');
     setTimeout(()=>hud?.classList.remove('lany-moves-bonus'),800);
-  }else if(cell){
-    const pop=document.createElement('span');
-    pop.className=`lany-booster-pop lany-booster-pop-${type}`;
-    pop.setAttribute('aria-hidden','true');
-    cell.appendChild(pop); setTimeout(()=>pop.remove(),650);
+  }else if(cell&&wrap){
+    const bounds=wrap.getBoundingClientRect();
+    const targets=type==='color'
+      ? [...document.querySelectorAll('#board .cell')].filter((el,i)=>state.board[i]===state.board[r*COLS+c]).slice(0,16)
+      : [cell];
+    targets.forEach((target,i)=>{
+      const pos=target.getBoundingClientRect(),pop=document.createElement('span');
+      pop.className=`lany-booster-pop lany-booster-pop-${type}`;
+      pop.setAttribute('aria-hidden','true');
+      pop.style.left=`${pos.left-bounds.left}px`;
+      pop.style.top=`${pos.top-bounds.top}px`;
+      pop.style.width=`${pos.width}px`;
+      pop.style.height=`${pos.height}px`;
+      pop.style.animationDelay=`${Math.min(i,5)*35}ms`;
+      wrap.appendChild(pop);setTimeout(()=>pop.remove(),850);
+    });
   }
 }
 function activateBooster(type){
@@ -1453,11 +1464,6 @@ function activateBooster(type){
   else { state.activeBooster=type; }
   document.querySelectorAll('.booster').forEach(b=>b.classList.remove('active'));
   if(state.activeBooster) document.getElementById(`b-${type}`)?.classList.add('active');
-  if(type==='shuffle'&&state.activeBooster){
-    state.boosters.shuffle--;
-    state.activeBooster=null;
-    shuffleBoard();
-  }
 }
 function applyBooster(r,c){
   snd_booster();
@@ -1491,10 +1497,6 @@ function applyBooster(r,c){
       if(epoch!==state.playEpoch)return;
       state.animating=false; checkEnd(); updateHUD();
     });
-  } else if(type==='time'){
-    state.boosters.time--;
-    state.movesLeft+=5;
-    updateHUD();
   }
   state.activeBooster=null;
   document.querySelectorAll('.booster').forEach(b=>b.classList.remove('active'));
@@ -1669,7 +1671,7 @@ function startBgMusic() {
 <script defer src="./project-overlay/project.js"></script>
 <script defer src="./js/lany-friends.js?v=26"></script>
 <script defer src="./js/lany-tempo.js?v=2.3.0"></script>
-<script defer src="./js/lany-shell.js?v=2.3.0"></script>
+<script defer src="./js/lany-shell.js?v=2.3.0-ui37"></script>
 <script defer src="./js/lany-ui-v33.js?v=1"></script>
 <script defer src="./js/lany-ui-v36.js?v=1"></script>
 <script defer src="./js/lany-polish.js?v=2.3.0-art25"></script>

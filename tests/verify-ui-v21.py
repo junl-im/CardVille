@@ -36,6 +36,8 @@ with sync_playwright() as pw:
   page.locator('#lany-start-button').click()
   assert page.locator('#lany-world-map').is_visible(),name
   bg('#lany-world-map .lany-world-banner','region-header.webp')  # v2.3 text-free art replaces word-baked chapter
+  assert page.locator('#lany-world-tabs .lany-world-tab').evaluate_all("els=>els.every(e=>e.childElementCount===0&&e.textContent.trim()===''&&getComputedStyle(e,'::before').display==='none')"),(name,'region art must have one painted label')
+  assert page.locator('#lany-world-no').inner_text()=='1~25단계',(name,'banner must not repeat region name')
   bg('#lany-map-continue','v26/actions/continue.webp')
   if mobile:
    assert page.locator('#lany-map-continue').evaluate("e=>Math.abs(e.getBoundingClientRect().top-document.querySelector('.lany-map-bottom button[data-lany-art=\"exit\"]').getBoundingClientRect().top)<=3"),(name,'map actions should share one row')
@@ -61,6 +63,8 @@ with sync_playwright() as pw:
   assert page.locator('#board-wrap').evaluate("e=>e.compareDocumentPosition(document.querySelector('.boosters')) & Node.DOCUMENT_POSITION_FOLLOWING"),(name,'boosters must follow board')
   if mobile and h>=568:
    assert page.locator('.boosters').evaluate("e=>e.getBoundingClientRect().top < innerHeight - 20"),(name,'boosters must enter first viewport')
+  if name=='desktop' or h>=568:
+   assert page.locator('.lany-game-nav').evaluate('e=>e.getBoundingClientRect().bottom<=innerHeight-4'),(name,'game controls must fit first viewport')
   page.screenshot(path=str(out/(name+'-game.png')))
   page.locator('#lany-quick-pause').click()
   assert page.locator('#lany-pause').is_visible(),name
