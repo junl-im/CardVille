@@ -66,7 +66,7 @@ with sync_playwright() as pw:
   if name=='desktop' or h>=568:
    assert page.locator('.lany-game-nav').evaluate('e=>e.getBoundingClientRect().bottom<=innerHeight-4'),(name,'game controls must fit first viewport')
   page.screenshot(path=str(out/(name+'-game.png')))
-  for key,label,art in [('map','지도','map.webp'),('friends','도감','friends-ornament.webp'),('exit','나가기','exit.webp')]:
+  for key,label,art in [('map','맵','rabbit.webp'),('friends','도감','cat.webp'),('exit','나가기','exit.webp')]:
    control=page.locator('.lany-game-nav button[data-lany-art="'+key+'"]')
    assert control.count()==1 and control.inner_text().strip()==label,(name,key,'navigation label')
    assert control.evaluate('e=>getComputedStyle(e,"::before").backgroundImage',).find(art)>=0,(name,key,'navigation icon')
