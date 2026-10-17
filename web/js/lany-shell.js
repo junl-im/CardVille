@@ -26,6 +26,7 @@
    const seq=goEpoch,reduce=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
    const frames=reduce?[['출발!',0]]:[['3',0],['2',650],['1',1300],['출발!',1950]];
    overlay.hidden=false;
+   overlay.querySelector('.lany-go-caption').textContent=state.mode==='hard'?'별빛 하드 도전 시작!':'달콤한 도전이 시작돼요!';
    window.LanyTempo?.pause();
    for(const [value,delay] of frames){
      const update=()=>{
@@ -79,6 +80,9 @@
  }
  function renderMap(){
    for(const mode of ['normal','hard']){const button=$('lany-mode-'+mode);button.setAttribute('aria-pressed',String(state.mode===mode));}
+   $('lany-map-heading').textContent=state.mode==='hard'?'🌙 라니팡 하드 지도':'🗺️ 라니팡 모험 지도';
+   document.querySelector('.lany-map-eyebrow').textContent=state.mode==='hard'?'별빛 도전 지도':'사탕마을 여행 지도';
+   $('lany-map-tip').textContent=state.mode==='hard'?'⚡ 목표 점수와 동물 매치 횟수를 모두 채우세요. 5개 이상 연결하면 광폭 친구가 등장해요.':'🔓 빛나는 숫자를 눌러 도전을 시작하세요. 잠긴 단계는 이전 단계를 완료하면 열려요.';
    const unlocked=new Set(state.unlockedLevels),n=nav.world;
    const last=Math.max(1,...state.unlockedLevels.filter(i=>i>=1&&i<=250));
    const levels=activeLevels();
@@ -156,7 +160,7 @@
      draw();ctx.strokeStyle='#fff8d2';ctx.lineWidth=9;ctx.stroke();
      draw();ctx.setLineDash([2,13]);ctx.lineDashOffset=-4;ctx.strokeStyle='#f7b54e';ctx.lineWidth=4;ctx.stroke();
    });
-   $('lany-map-tip').textContent=last<n*25+1?'🔒 이 지역은 아직 잠겨 있어요. 앞 지역의 단계를 완료해 주세요.':'✨ 숫자를 선택해 도전하세요. ◀ ▶ 버튼으로 같은 지역의 다음 구간을 넘길 수 있어요.';
+   $('lany-map-tip').textContent=last<n*25+1?'🔒 이 지역은 아직 잠겨 있어요. 앞 지역의 단계를 완료해 주세요.':state.mode==='hard'?'⚡ 목표 점수와 동물 매치 횟수를 모두 채우세요. 5개 연결로 광폭 친구 등장!':'✨ 숫자를 선택해 도전하세요. ◀ ▶ 버튼으로 같은 지역의 다음 구간을 넘길 수 있어요.';
  }
  function mapPage(delta){
    if(nav.screen!=='map'||!Number.isInteger(delta))return;
@@ -180,7 +184,7 @@
    const lv=activeLevels()[n-1];$('lany-prep-region').textContent=`제${nav.world+1}지역 · ${lv.theme}`;
    $('lany-prep-heading').textContent=`${state.mode==='hard'?'🔥 하드':'🌼 노멀'} ${n}단계 준비`;$('lany-prep-subtitle').textContent=lv.name;
    $('lany-prep-goal').textContent=lv.goal.toLocaleString()+'점';$('lany-prep-moves').textContent=lv.moves+'회';
-   $('lany-prep-clear-goal').hidden=state.mode!=='hard';if(state.mode==='hard')$('lany-prep-clear-goal').textContent=`동물 매치 ${lv.clearGoal}회도 달성해야 승리! 5개 이상 연결하면 광폭 친구가 나타나요.`;
+   $('lany-prep-clear-goal').hidden=state.mode!=='hard';if(state.mode==='hard')$('lany-prep-clear-goal').textContent=`동물 매치 ${lv.clearGoal}회 · 5개 연결하면 광폭 친구 등장!`;
    $('lany-prep-locks').textContent=state.mode==='hard'?`🧱 벽 ${lv.wallCount} · 🔒 잠금 ${lv.lockedCount} · 💣 폭탄 ${lv.bombCount} · 🔄 ${lv.morphSeconds}초마다 변화`:(lv.lockedCount?'🔒 잠금 블록 '+lv.lockedCount+'개':'🔓 잠금 블록 없음');
    const best=state.bestScores[n]||0;
    $('lany-prep-record').textContent=best?`⭐ 최고 점수 ${best.toLocaleString()}점`:'⭐ 최고 기록 없음';

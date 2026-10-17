@@ -1,0 +1,73 @@
+/* Distinct campaign worlds and raster-only hard mode art. */
+#lany-world-map .lany-campaign-switch{width:min(100%,450px);gap:5px;margin:3px auto 5px;padding:0 6px}
+#lany-world-map .lany-campaign-switch button{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:clamp(43px,6.7dvh,55px);min-height:43px;padding:2px 22px!important;
+  border:0!important;border-radius:0!important;box-shadow:none!important;
+  background-color:transparent!important;background-position:center!important;
+  background-repeat:no-repeat!important;background-size:100% 100%!important;
+  font-size:clamp(.77rem,2.9vw,.96rem)!important;line-height:1.03!important;
+  transition:filter .18s ease,transform .18s ease;
+}
+#lany-world-map #lany-mode-normal{background-image:url('../assets/v42/mode-normal.webp')!important;color:#fff9d6!important;text-shadow:0 2px 2px #2a661a,0 0 2px #25531c!important}
+#lany-world-map #lany-mode-hard{background-image:url('../assets/v42/mode-hard.webp')!important;color:#fff7ee!important;text-shadow:0 2px 2px #4d145f,0 0 2px #321447!important}
+#lany-world-map .lany-campaign-switch button small{font-size:.63em;letter-spacing:.03em}
+#lany-world-map .lany-campaign-switch button[aria-pressed="false"]{filter:saturate(.7) brightness(.83)}
+#lany-world-map .lany-campaign-switch button[aria-pressed="true"]{filter:drop-shadow(0 3px 5px #73428999) brightness(1.08);transform:translateY(-2px)}
+#lany-world-map .lany-campaign-switch button:focus-visible{outline:3px solid #fffad1!important;outline-offset:1px!important}
+body[data-campaign="hard"] #lany-world-map{background:#342454!important}
+body[data-campaign="hard"] #lany-world-map .lany-screen-scrim{background:#302655 url('../assets/v42/hard-map.webp') center/cover no-repeat!important;filter:blur(5px) brightness(.67)!important}
+body[data-campaign="hard"] #lany-world-map .lany-map-panel{background:linear-gradient(#e6dffc,#c4c3f0 30%,#eee0f6)!important;box-shadow:0 0 0 3px #b778e7,0 12px 42px #180d42a8!important}
+body[data-campaign="hard"] #lany-world-map .lany-map-head{background:linear-gradient(155deg,#332754,#5c397f)!important;border-color:#8cd9f3!important}
+body[data-campaign="hard"] #lany-world-map .lany-map-head h2{color:#fff1d7!important;text-shadow:0 2px 3px #21143e!important}
+body[data-campaign="hard"] #lany-world-map .lany-map-eyebrow{color:#aee9ff!important}
+body[data-campaign="hard"] #lany-world-map .lany-map-summary{background:#513671!important;color:#fff7e6!important}
+body[data-campaign="hard"] #lany-world-map .lany-world-switcher{background:#e5d8f6!important;border-bottom-color:#a67bc5!important}
+body[data-campaign="hard"] #lany-world-map .lany-map-section{background:linear-gradient(#e3d6f6,#d5c9ea)!important;border-color:#9d78c3!important}
+body[data-campaign="hard"] #lany-world-map .lany-world-banner{background:linear-gradient(115deg,#fff7e6,#dac4f4)!important;border-color:#fff4d4!important;box-shadow:0 3px 0 #845aa9,0 5px 12px #37245977!important}
+body[data-campaign="hard"] #lany-world-map .lany-world-banner h3{color:#5c2e78!important}
+body[data-campaign="hard"] #lany-world-map .lany-map-levels{
+  background-image:linear-gradient(#271d5670,#3222544d),url('../assets/v42/hard-map.webp')!important;
+  background-size:cover!important;background-position:center!important;
+  border-color:#eee1ff!important;box-shadow:0 0 0 2px #855ab1,0 7px 16px #2d1a547a!important;
+}
+body[data-campaign="hard"] #lany-world-map .lany-map-levels .lany-route-ink{stroke:#ffe7a1;filter:drop-shadow(0 2px 3px #22173d)}
+body[data-campaign="hard"] #lany-world-map .lany-map-tip{background:#56407bee!important;color:#fff8e6!important}
+body[data-campaign="hard"] #lany-world-map .lany-map-bottom{background:#e9dbf7!important;border-color:#b48ed6!important}
+body[data-campaign="hard"] #lany-stage-prep .lany-prep-card{background:linear-gradient(#fff8e9,#efe4fa)!important;border-color:#d5b5f6!important}
+body[data-campaign="hard"] #lany-pause .lany-dialog,body[data-campaign="hard"] #lany-exit .lany-dialog{background:linear-gradient(#fff9ee,#eee1fb)!important;border-color:#cfb4ed!important}
+
+/* Each blocker is an actual glossy brick wall raster tile. */
+#board .cell.lany-wall::before{content:''!important;inset:3%!important;border:0!important;border-radius:0!important;background:url('../assets/v42/brick-wall.webp') center/contain no-repeat!important;box-shadow:none!important}
+#board .cell.lany-wall{background:#6f538e!important}
+
+/* A complete mascot row above the number card prevents ear and chin clipping. */
+.lany-go-intro{gap:5px!important;background:rgba(34,25,64,.32)!important}
+.lany-go-intro .lany-go-mascots{box-sizing:content-box!important;width:min(66vw,245px)!important;height:clamp(95px,15dvh,128px)!important;min-height:95px!important;margin:0 auto 2px!important;gap:8px!important;align-items:center!important;overflow:visible!important;z-index:2!important}
+.lany-go-intro .lany-go-mascots img{display:block!important;width:clamp(88px,25vw,116px)!important;height:100%!important;object-fit:contain!important;object-position:center center!important;overflow:visible!important}
+.lany-go-intro .lany-go-number,.lany-go-intro .lany-go-number.go{width:clamp(168px,48vw,232px)!important;height:clamp(73px,17vw,94px)!important;margin:0 auto!important;padding:2px 12px!important;font-size:clamp(2.45rem,12vw,3.5rem)!important}
+.lany-go-intro .lany-go-caption{margin-top:2px!important;font-size:clamp(.73rem,2.7vw,.88rem)!important}
+body[data-campaign="hard"] .lany-go-intro .lany-go-number{background-image:url('../assets/v42/mode-hard.webp')!important}
+
+/* Tidy short dialogs and allow long Korean messages to wrap inside the frame. */
+#lany-install-modal .lany-install-card,#overlay-tutorial .modal,#lany-pause .lany-dialog,#lany-exit .lany-dialog{
+  max-height:calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;
+  overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior:contain;
+  border-radius:24px!important;
+}
+#lany-pause .lany-dialog p,#lany-exit .lany-dialog p,#overlay-tutorial .lany-tutorial-page p,#lany-install-modal li{overflow-wrap:anywhere;word-break:keep-all}
+#overlay-win .modal,#overlay-lose .modal{max-height:calc(100dvh - 24px)!important;overflow-y:auto!important}
+#overlay-win .modal-btns,#overlay-lose .modal-btns{max-width:100%!important;min-width:0!important}
+#overlay-win .modal-btns button,#overlay-lose .modal-btns button{min-width:0!important;overflow-wrap:anywhere!important;word-break:keep-all!important}
+#overlay-lose .modal{justify-content:center!important;padding-top:clamp(58px,17vw,70px)!important;padding-bottom:clamp(30px,12vw,46px)!important}
+@media(max-width:369px){
+  #lany-stage-prep .lany-prep-card{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+  #lany-stage-prep .lany-prep-card>:not(button){grid-column:1/-1}
+  #lany-stage-prep .lany-prep-card :is(#lany-prep-play,.lany-prep-cancel){grid-column:auto!important;width:100%!important;max-width:none!important;min-width:0!important;margin:0!important}
+}
+@media(max-height:620px){
+  .lany-go-intro .lany-go-mascots{height:84px!important;min-height:84px!important}
+  .lany-go-intro .lany-go-number,.lany-go-intro .lany-go-number.go{height:68px!important}
+  #overlay-lose .modal{padding-top:45px!important;padding-bottom:18px!important}
+}
+@media(prefers-reduced-motion:reduce){#lany-world-map .lany-campaign-switch button{transition:none!important}}
