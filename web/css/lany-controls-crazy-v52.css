@@ -48,3 +48,7 @@ body[data-campaign=crazy] #lany-world-map .lany-map-levels{background-image:line
 /* A dynamic label replaces the old baked "지도" art. */
 #lany-stage-prep .lany-prep-cancel[data-lany-art="map"]{background:linear-gradient(#aaf2ff,#3ab8f2 55%,#1689da)!important;border:2px solid #f7fcff!important;border-radius:21px!important;box-shadow:0 3px 0 #4679a8,0 5px 10px #314a7955!important;color:#fff!important;font-size:clamp(.79rem,3.5vw,.95rem)!important;font-weight:900!important;text-shadow:0 2px 2px #24629a!important}
 #lany-stage-prep .lany-prep-cancel[data-lany-art="map"]::before,#lany-stage-prep .lany-prep-cancel[data-lany-art="map"]::after{display:none!important;content:none!important}
+
+/* Override late v24 button-specific rules at every viewport height. */
+#lany-world-map .lany-map-head button.lany-back,#lany-stage-prep .lany-prep-card button.lany-prep-back{background-image:url('../assets/v23/buttons/back.webp')!important;background-size:contain!important}
+#lany-world-map .lany-map-head button.lany-map-icon:not(.lany-mobile-fullscreen){background-image:url('../assets/v23/buttons/help.webp')!important;background-size:contain!important}
