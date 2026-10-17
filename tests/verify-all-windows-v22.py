@@ -161,8 +161,8 @@ with sync_playwright() as playwright:
         }""")
         assert fits,(tag,kind,i,'all result buttons must fit the screen')
       # Visual-regression guard: the official game button cutouts must be visible.
-      button_art={'win':{'next':'green.png','map':'blue.png','retry':'gold.png'},
-                  'lose':{'retry':'gold.png','map':'blue.png'}}[kind]
+      button_art={'win':{'next':'green.png','map':'stage-map.webp','retry':'retry.webp'},
+                  'lose':{'retry':'gold.png','map':'stage-map.webp'}}[kind]
       for action,filename in button_art.items():
         value=page.locator('#overlay-'+kind+' button[data-lany-art="'+action+'"]').evaluate('e=>getComputedStyle(e).backgroundImage')
         assert filename in value,(tag,kind,action,'missing approved raster skin',value)
