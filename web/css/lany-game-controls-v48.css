@@ -1,0 +1,41 @@
+/* Use complete illustrated icons in the compact game header. */
+#app>.header .hud button[data-lany-art="pause"],
+#app>.header .hud #lany-header-map-button{
+  box-sizing:border-box!important;
+  flex:0 0 clamp(38px,10vw,44px)!important;
+  width:clamp(38px,10vw,44px)!important;
+  height:clamp(38px,10vw,44px)!important;
+  min-height:38px!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  background-position:center!important;
+  background-size:contain!important;
+  background-repeat:no-repeat!important;
+  color:transparent!important;
+  font-size:0!important;
+}
+#app>.header .hud button[data-lany-art="pause"]{background-image:url('../assets/v24/controls/pause.webp')!important}
+#app>.header .hud #lany-header-map-button{background-image:url('../assets/v24/controls/map.webp')!important}
+#app>.header .hud button[data-lany-art="pause"]::before,
+#app>.header .hud #lany-header-map-button::before{display:none!important;content:none!important}
+#app>.header .hud button[data-lany-art="pause"]:focus-visible,
+#app>.header .hud #lany-header-map-button:focus-visible{outline:3px solid #4c74b1!important;outline-offset:2px!important}
+#app>.level-info .level-row:last-child{
+  font-size:clamp(.69rem,2.5vw,.77rem)!important;
+  font-weight:900!important;
+  opacity:1!important;
+}
+body[data-campaign="normal"] #app>.level-info :is(#score-label,#moves-label){color:#35634e!important}
+body[data-campaign="hard"] #app>.level-info :is(#score-label,#moves-label){color:#884957!important}
+#app .boosters button.booster.active{
+  outline:3px solid #f8b839!important;
+  outline-offset:2px!important;
+  box-shadow:0 0 0 5px #fff8df,0 3px 8px #a8617580!important;
+  filter:brightness(1.07)!important;
+}
+@media(max-width:360px){
+  #app>.header .hud button[data-lany-art="pause"],
+  #app>.header .hud #lany-header-map-button{flex-basis:36px!important;width:36px!important;height:36px!important;min-height:36px!important}
+}
