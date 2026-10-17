@@ -13,7 +13,7 @@ const hard=vm.runInNewContext(hardSource[0]+'\nHARD_LEVELS',{LEVELS:normal,Math}
 assert.equal(normal.length,250);assert.equal(hard.length,250);
 assert.equal(hard[0].l,1);assert.equal(hard[249].l,250);
 assert(hard.every((stage,i)=>stage.l===i+1&&stage.wallCount>=2&&stage.bombCount>=2&&stage.morphSeconds>0&&stage.hasBombs));
-assert(hard.every(stage=>stage.moves>=14&&stage.moves<=20&&stage.colors>=5&&stage.colors<=7));
+assert(hard.every(stage=>stage.moves>=20&&stage.moves<=27&&stage.clearGoal>=7&&stage.colors>=5&&stage.colors<=7));
 assert(hard.every((stage,i)=>!i||stage.goal>=hard[i-1].goal));
 assert(hard[0].goal>normal[0].goal&&hard[0].lockedCount>0);
 assert.equal(new Set(hard.map(stage=>stage.theme)).size,10);

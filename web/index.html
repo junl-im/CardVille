@@ -319,7 +319,7 @@ body {
 <link rel="stylesheet" href="./css/lany-ui-v36.css?v=2">
 <link rel="stylesheet" href="./css/lany-ui-v38.css?v=1">
 <link rel="stylesheet" href="./css/lany-controls-v39.css?v=1">
-<link rel="stylesheet" href="./css/lany-hard-v40.css?v=1">
+<link rel="stylesheet" href="./css/lany-hard-v40.css?v=2">
 </head>
 <body class="lany-at-title">
 <main id="lany-title" class="lany-title" role="main" aria-label="라니팡 시작 화면">
@@ -390,7 +390,7 @@ body {
   <p class="lany-prep-region" id="lany-prep-region">제1지역</p><h2 id="lany-prep-heading">1단계</h2>
   <p class="lany-prep-subtitle" id="lany-prep-subtitle">달콤한 모험을 준비하세요!</p>
   <div class="lany-prep-page" data-prep-page="0"><div class="lany-stage-stats"><div><span>🎯 목표 점수</span><strong id="lany-prep-goal">0</strong></div><div><span>👆 이동 가능</span><strong id="lany-prep-moves">0회</strong></div></div>
-  <div class="lany-prep-info"><span id="lany-prep-locks">🔓 잠금 블록 없음</span><span id="lany-prep-record">⭐ 최고 기록 없음</span></div></div>
+  <p id="lany-prep-clear-goal" class="lany-prep-clear-goal" hidden></p><div class="lany-prep-info"><span id="lany-prep-locks">🔓 잠금 블록 없음</span><span id="lany-prep-record">⭐ 최고 기록 없음</span></div></div>
   <div class="lany-prep-page" data-prep-page="1"><label class="lany-time-option" for="lany-time-mode"><input id="lany-time-mode" type="checkbox" checked><span>⏰ 시간 도전 모드</span><small id="lany-time-hint">일정 시간 안에 목표를 달성하면 성공! 끄면 이동 횟수만 적용돼요.</small></label>
   <div class="lany-prep-boosters"><span>도움 아이템</span><div id="lany-prep-booster-counts">🔨 망치 · 🔀 섞기 · 🌈 색상</div><small>아이템은 게임 안에서 사용해요. 준비창에서는 소모되지 않아요.</small></div></div>
   <nav id="lany-prep-pager" class="lany-game-pager" aria-label="단계 준비 정보 페이지" hidden><button type="button" id="lany-prep-prev" class="lany-page-arrow" onclick="LanyShell.prepPage(-1)">◀ 이전</button><span id="lany-prep-page-status" role="status" aria-live="polite">1 / 2</span><button type="button" id="lany-prep-next" class="lany-page-arrow" onclick="LanyShell.prepPage(1)">다음 ▶</button></nav>
@@ -450,6 +450,7 @@ body {
       <span class="lany-star-checkpoint" data-star="3" style="left:96%" aria-hidden="true">★</span>
     </div>
     <div id="lany-clock" class="lany-clock" role="timer" aria-label="남은 시간"><div class="lany-clock-head"><span id="lany-clock-caption">⏰ 남은 시간</span><strong id="lany-clock-value">02:30</strong></div><div class="lany-clock-track"><div id="lany-clock-fill" class="lany-clock-fill"></div></div></div></div>
+    <div id="lany-hard-objective" class="lany-hard-objective" role="status" aria-live="polite" hidden></div>
     <div class="level-row" style="font-size:.7rem;color:rgba(255,255,255,.4)">
       <span id="score-label">0 / 500</span>
       <span id="moves-label">남은 이동: 20</span>
@@ -635,7 +636,8 @@ const GEMS = ['🍭','🍬','🍦','🧁','🍰','🎂','🍫'];
 // 7가지 게임 보석은 동일한 동물 친구 얼굴로 표시하며, 기존 퍼즐 판정 데이터는 변경하지 않습니다.
 const LANY_FACE_IDS=['rabbit','bear','chick','puppy','cat','fox','wolf'];
 const LANY_FACE_KO=['토끼','곰','병아리','강아지','고양이','여우','늑대'];
-const SPECIAL_NONE=0, SPECIAL_BOMB=1, SPECIAL_STRIPE_H=2, SPECIAL_STRIPE_V=3, SPECIAL_WRAP=4, SPECIAL_COLOR=5;
+const SPECIAL_NONE=0, SPECIAL_BOMB=1, SPECIAL_STRIPE_H=2, SPECIAL_STRIPE_V=3, SPECIAL_WRAP=4, SPECIAL_COLOR=5, SPECIAL_FRENZY_ROW=6, SPECIAL_FRENZY_COL=7, SPECIAL_FRENZY_BURST=8;
+const isFrenzy=s=>s>=SPECIAL_FRENZY_ROW&&s<=SPECIAL_FRENZY_BURST;
 const COLS = 8, ROWS = 8;
 // A skillful chain is rewarding without yielding unlimited points per move.
 function comboPoints(matched,chain){
@@ -902,7 +904,7 @@ const LEVELS = [
 const HARD_LEVELS=LEVELS.map((base,index)=>{
   const world=Math.floor(index/25),step=index%25;
   return {...base,name:`${base.theme} · 하드 ${step+1}단계`,
-    goal:Math.round((850+index*13)/50)*50,moves:Math.max(14,Math.min(20,base.moves-2)),hasBombs:true,
+    goal:Math.round((850+index*13)/50)*50,moves:Math.max(20,Math.min(27,base.moves+4)),clearGoal:7+Math.floor(world/2)+Math.floor(step/8),hasBombs:true,
     colors:Math.max(5,base.colors),hasLocked:true,
     lockedCount:Math.min(12,2+world+Math.floor(step/8)),
     wallCount:Math.min(7,2+Math.floor(world/2)+Math.floor(step/10)),
@@ -921,7 +923,7 @@ function setCampaignMode(mode){
 }
 
 let state = {
-  board: [], specials: [], locked: [], walls: [], morphTimer: null,
+  board: [], specials: [], locked: [], walls: [], morphTimer: null, hardClears: 0, pendingFrenzy: [],
   mode: localStorage.getItem('cv_campaign_mode')==='hard'?'hard':'normal',
   score: 0, level: 1, movesLeft: 20,
   selected: null, animating: false,
@@ -1007,6 +1009,7 @@ function initLevel(lvNum) {
   try { localStorage.setItem(state.mode==='hard'?'cv_hard_last_level':'cv_last_level', String(lvNum)); } catch (_) {}
   clearInterval(state.morphTimer); state.morphTimer=null;
   state.score = 0;
+  state.hardClears = 0; state.pendingFrenzy = [];
   state.movesLeft = lv.moves;
   state.selected = null;
   state.animating = false;
@@ -1069,7 +1072,7 @@ function morphHardAnimals(){
   const lv=activeLevels()[state.level-1],changed=[];
   for(let tries=0;tries<32&&changed.length<3;tries++){
     const idx=Math.floor(Math.random()*ROWS*COLS);
-    if(state.walls[idx]||state.locked[idx]||changed.includes(idx))continue;
+    if(state.walls[idx]||state.locked[idx]||state.specials[idx]||changed.includes(idx))continue;
     const old=state.board[idx],next=GEMS[Math.floor(Math.random()*lv.colors)];
     if(next===old)continue;state.board[idx]=next;
     if(findMatches().length||!hasLegalSwap()){state.board[idx]=old;continue;}
@@ -1129,6 +1132,7 @@ function renderBoard() {
    else if(sp===SPECIAL_STRIPE_H||sp===SPECIAL_STRIPE_V)div.classList.add('stripe-gem');
    else if(sp===SPECIAL_WRAP)div.classList.add('wrap-gem');
    else if(sp===SPECIAL_COLOR)div.classList.add('color-gem');
+    else if(isFrenzy(sp)){div.classList.add('lany-frenzy-gem',sp===SPECIAL_FRENZY_ROW?'lany-frenzy-row':sp===SPECIAL_FRENZY_COL?'lany-frenzy-col':'lany-frenzy-burst');div.setAttribute('aria-label',LANY_FACE_KO[gemKind]+' 광폭 블록 · '+(sp===SPECIAL_FRENZY_ROW?'가로 한 줄':sp===SPECIAL_FRENZY_COL?'세로 한 줄':'주변 폭발'));}
    if(state.hintCell&&state.hintCell[0]===r&&state.hintCell[1]===c)div.classList.add('hint');
  }
 }
@@ -1155,6 +1159,9 @@ function updateHUD(){
   document.getElementById('best-val').textContent=best>0?best.toLocaleString():'—';
   document.getElementById('level-name').textContent=(state.mode==='hard'?'🔥 ':'')+lv.name;
   document.getElementById('level-goal').textContent=`목표 점수: ${lv.goal.toLocaleString()}`;
+  const hardObjective=document.getElementById('lany-hard-objective');
+  hardObjective.hidden=state.mode!=='hard';
+  if(state.mode==='hard')hardObjective.textContent=`동물 매치 ${Math.min(state.hardClears,lv.clearGoal)} / ${lv.clearGoal}`;
   document.getElementById('score-label').textContent=`${state.score.toLocaleString()} / ${lv.goal.toLocaleString()}`;
   document.getElementById('moves-label').textContent=`남은 이동: ${state.movesLeft}회`;
   document.getElementById('lany-hud-moves').textContent=state.movesLeft;
@@ -1296,16 +1303,16 @@ function findMatches(){
 // A matched special clears its own line, neighbourhood or animal type.
 // The queue also activates specials reached by another special, once each.
 function expandSpecialMatches(cells){
-  const queue=[...cells],activated=new Set();
+  const queue=[...cells],directMatches=new Set(cells),activated=new Set();
   const add=index=>{if(index>=0&&index<ROWS*COLS&&!state.walls?.[index]&&!cells.has(index)){cells.add(index);queue.push(index);}};
   for(let head=0;head<queue.length;head++){
     const index=queue[head],special=state.specials[index];
-    if(!special||activated.has(index))continue;
+    if(!special||activated.has(index)||(special>=SPECIAL_FRENZY_ROW&&special<=SPECIAL_FRENZY_BURST&&!directMatches.has(index)))continue;
     activated.add(index);
     const r=Math.floor(index/COLS),c=index%COLS;
-    if(special===SPECIAL_STRIPE_H)for(let col=0;col<COLS;col++)add(r*COLS+col);
-    else if(special===SPECIAL_STRIPE_V)for(let row=0;row<ROWS;row++)add(row*COLS+c);
-    else if(special===SPECIAL_BOMB||special===SPECIAL_WRAP){
+    if(special===SPECIAL_STRIPE_H||special===SPECIAL_FRENZY_ROW)for(let col=0;col<COLS;col++)add(r*COLS+col);
+    else if(special===SPECIAL_STRIPE_V||special===SPECIAL_FRENZY_COL)for(let row=0;row<ROWS;row++)add(row*COLS+c);
+    else if(special===SPECIAL_BOMB||special===SPECIAL_WRAP||special===SPECIAL_FRENZY_BURST){
       for(let row=Math.max(0,r-1);row<=Math.min(ROWS-1,r+1);row++)
         for(let col=Math.max(0,c-1);col<=Math.min(COLS-1,c+1);col++)add(row*COLS+col);
     } else if(special===SPECIAL_COLOR){
@@ -1341,7 +1348,13 @@ async function resolveMatches(matchGroups,epoch=state.playEpoch){
   for(const g of matchGroups){
     const n=g.cells.length;
     const pivot=g.cells[Math.floor(g.cells.length/2)];
-    if(n>=5){ snd_colorBomb(); toCreate.push({r:pivot[0],c:pivot[1],s:SPECIAL_COLOR}); }
+    if(n>=5){
+      snd_colorBomb();
+      if(state.mode==='hard'){
+        const kind=n>=6?SPECIAL_FRENZY_BURST:g.dir==='h'?SPECIAL_FRENZY_ROW:SPECIAL_FRENZY_COL;
+        state.pendingFrenzy.push({index:pivot[0]*COLS+pivot[1],gem:g.gem,kind});
+      } else toCreate.push({r:pivot[0],c:pivot[1],s:SPECIAL_COLOR});
+    }
     else if(n===4){ snd_stripe(); toCreate.push({r:pivot[0],c:pivot[1],s:g.dir==='h'?SPECIAL_STRIPE_H:SPECIAL_STRIPE_V}); }
     else if(n>=3 && matchGroups.filter(g2=>g2.cells.some(([r,c])=>g.cells.some(([r2,c2])=>r===r2&&c===c2))).length>1){
       toCreate.push({r:pivot[0],c:pivot[1],s:SPECIAL_BOMB});
@@ -1364,6 +1377,7 @@ async function resolveMatches(matchGroups,epoch=state.playEpoch){
   // Score
   const pts = comboPoints(allCells.size,state.combo);
   state.score += pts+wallsToBreak.size*80;
+  if(state.mode==='hard')state.hardClears+=matchGroups.length;
   showScoreFloat(pts+wallsToBreak.size*80);
   for(const index of wallsToBreak){state.walls[index]=false;state.board[index]=null;state.specials[index]=SPECIAL_NONE;}
   if(state.combo>2) showCombo(state.combo);
@@ -1392,6 +1406,7 @@ async function resolveMatches(matchGroups,epoch=state.playEpoch){
     // 8 rewarding chains per move are enough; reset to a match-free playable board.
     shuffleBoard();
     state.combo=0;
+    placePendingFrenzy();
     renderBoard();
   } else if(next.length>0){
     await sleep(100);
@@ -1399,9 +1414,29 @@ async function resolveMatches(matchGroups,epoch=state.playEpoch){
     await resolveMatches(next,epoch);
   } else {
     state.combo=0;
+    placePendingFrenzy();
     renderBoard();
   }
   updateHUD();
+}
+
+// Rewards appear after the whole cascade, preserving the matched animal and giving
+// the player a chance to combine it with that animal on a later move.
+function placePendingFrenzy(){
+  for(const reward of state.pendingFrenzy){
+    const choices=[reward.index,...state.board.map((_,i)=>i)];
+    let target=-1;
+    for(const index of choices){
+      if(state.walls[index]||state.locked[index]||state.specials[index]||!state.board[index])continue;
+      const previous=state.board[index];state.board[index]=reward.gem;
+      const safe=findMatches().length===0;
+      state.board[index]=previous;
+      if(safe){target=index;break;}
+    }
+    if(target<0)target=choices.find(i=>!state.walls[i]&&!state.locked[i]&&!state.specials[i]&&state.board[i])??-1;
+    if(target>=0){state.board[target]=reward.gem;state.specials[target]=reward.kind;}
+  }
+  state.pendingFrenzy=[];
 }
 
 async function applyGravity(epoch=state.playEpoch){
@@ -1612,7 +1647,7 @@ function shuffleBoard(){
 // ── End conditions ───────────────────────────────────────────
 function checkEnd(){
   const lv=activeLevels()[state.level-1];
-  if(state.score>=lv.goal){
+  if(state.score>=lv.goal && (state.mode!=='hard'||state.hardClears>=lv.clearGoal)){
     const stars = state.score>=lv.goal*2?3:state.score>=lv.goal*1.4?2:1;
     // Update best
     if(!state.bestScores[state.level]||state.score>state.bestScores[state.level]){
