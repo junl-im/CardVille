@@ -1,0 +1,77 @@
+{
+  "release": "2.3.0-beta",
+  "style": "LanyPang approved WebP studio",
+  "roles": {
+    "title": [
+      "friends.webp",
+      "help.webp",
+      "install.webp",
+      "logo.webp",
+      "play.webp"
+    ],
+    "buttons": [
+      "action-back.webp",
+      "action-cancel.webp",
+      "action-close.webp",
+      "action-confirm.webp",
+      "action-exit.webp",
+      "action-friends.webp",
+      "action-help.webp",
+      "action-home.webp",
+      "action-map.webp",
+      "action-next.webp",
+      "action-notice.webp",
+      "action-pause.webp",
+      "action-play.webp",
+      "action-resume.webp",
+      "action-retry.webp",
+      "action-settings.webp",
+      "action-sound.webp",
+      "skin-blue.webp",
+      "skin-gold.webp",
+      "skin-green.webp",
+      "skin-pink.webp",
+      "skin-red.webp",
+      "skin-wood.webp"
+    ],
+    "hud": [
+      "panel-best.webp",
+      "panel-booster.webp",
+      "panel-clock.webp",
+      "panel-goal.webp",
+      "panel-moves.webp",
+      "panel-score.webp",
+      "panel-stage.webp"
+    ],
+    "popup": [
+      "panel-clear.webp",
+      "panel-confirm.webp",
+      "panel-fail.webp",
+      "panel-friends.webp",
+      "panel-help.webp",
+      "panel-install.webp",
+      "panel-pause.webp",
+      "panel-settings.webp"
+    ],
+    "map": [
+      "chapter.webp",
+      "next.webp",
+      "prev.webp",
+      "world.webp"
+    ],
+    "booster": [
+      "badge-color.webp",
+      "badge-hammer.webp",
+      "badge-shuffle.webp",
+      "badge-time.webp"
+    ],
+    "icons": []
+  },
+  "generation": "tools/build-visual-v18.py",
+  "source": [
+    "web/assets/friends",
+    "web/assets/polish"
+  ],
+  "userArtSource": "web/assets/ui/v21/source-original-kit.zip",
+  "userArtSHA256": "8c5298686a2814d6709b26b1af13b715f1955cbd9b3bd3596988604f6060e28d"
+}

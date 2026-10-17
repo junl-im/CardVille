@@ -322,6 +322,7 @@ body {
 <link rel="stylesheet" href="./css/lany-hard-v40.css?v=2">
 <link rel="stylesheet" href="./css/lany-hard-v42.css?v=1">
 <link rel="stylesheet" href="./css/lany-mode-world-v43.css?v=1">
+<link rel="stylesheet" href="./css/lany-mode-game-v44.css?v=1">
 </head>
 <body class="lany-at-title">
 <main id="lany-title" class="lany-title" role="main" aria-label="라니팡 시작 화면">
@@ -464,10 +465,10 @@ body {
   </div>
 
   <div class="boosters">
-    <div class="booster" id="b-hammer" onclick="activateBooster('hammer')">🔨<span>망치</span><div class="count" id="b-hammer-cnt">3</div></div>
-    <div class="booster" id="b-shuffle" onclick="activateBooster('shuffle')">🔀<span>섞기</span><div class="count" id="b-shuffle-cnt">2</div></div>
-    <div class="booster" id="b-color" onclick="activateBooster('color')">🌈<span>색상 제거</span><div class="count" id="b-color-cnt">2</div></div>
-    <div class="booster" id="b-time" onclick="activateBooster('time')">⏱️<span>이동 +5회</span><div class="count" id="b-time-cnt">1</div></div>
+    <button class="booster" id="b-hammer" type="button" onclick="activateBooster('hammer')" aria-label="망치 3개" aria-pressed="false">🔨<span>망치</span><span class="count" id="b-hammer-cnt" aria-hidden="true">3</span></button>
+    <button class="booster" id="b-shuffle" type="button" onclick="activateBooster('shuffle')" aria-label="섞기 2개" aria-pressed="false">🔀<span>섞기</span><span class="count" id="b-shuffle-cnt" aria-hidden="true">2</span></button>
+    <button class="booster" id="b-color" type="button" onclick="activateBooster('color')" aria-label="색상 제거 2개" aria-pressed="false">🌈<span>색상 제거</span><span class="count" id="b-color-cnt" aria-hidden="true">2</span></button>
+    <button class="booster" id="b-time" type="button" onclick="activateBooster('time')" aria-label="이동 +5회 1개" aria-pressed="false">⏱️<span>이동 +5회</span><span class="count" id="b-time-cnt" aria-hidden="true">1</span></button>
   </div>
 
   <nav class="lany-game-nav" aria-label="게임 화면 이동"><button id="lany-quick-map" class="lany-game-map-button" type="button" onclick="LanyShell.openMap()" data-lany-art="map" aria-label="모험 지도 열기">지도</button>
@@ -1189,6 +1190,8 @@ function updateHUD(){
   Object.entries(state.boosters).forEach(([k,v])=>{
     const el=document.getElementById(`b-${k}-cnt`);
     if(el) el.textContent=v;
+    const button=document.getElementById(`b-${k}`);
+    if(button){button.disabled=v<=0;button.setAttribute('aria-label',`${{hammer:'망치',shuffle:'섞기',color:'색상 제거',time:'이동 +5회'}[k]} ${v}개`);button.setAttribute('aria-pressed',String(state.activeBooster===k));}
   });
 }
 
@@ -1578,6 +1581,7 @@ function activateBooster(type){
   else { state.activeBooster=type; }
   document.querySelectorAll('.booster').forEach(b=>b.classList.remove('active'));
   if(state.activeBooster) document.getElementById(`b-${type}`)?.classList.add('active');
+  document.querySelectorAll('.booster').forEach(b=>b.setAttribute('aria-pressed',String(b.classList.contains('active'))));
 }
 function applyBooster(r,c){
   snd_booster();
@@ -1613,7 +1617,7 @@ function applyBooster(r,c){
     });
   }
   state.activeBooster=null;
-  document.querySelectorAll('.booster').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.booster').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-pressed','false')});
 }
 
 function hasLegalSwap(){
