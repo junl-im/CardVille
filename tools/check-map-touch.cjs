@@ -4,7 +4,7 @@ const html=fs.readFileSync('web/index.html','utf8');
 const css=fs.readFileSync('web/css/lany-shell.css','utf8');
 const shell=fs.readFileSync('web/js/lany-shell.js','utf8');
 const sw=fs.readFileSync('web/sw.js','utf8');
-assert(html.includes('id="lany-header-map-button"'));
+assert(!html.includes('id="lany-header-map-button"'));
 assert(html.includes('id="lany-quick-map"'));
 assert(html.includes('onclick="LanyShell.openMap()"'));
 assert(css.includes('#app>.header{position:sticky'));
