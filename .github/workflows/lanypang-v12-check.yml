@@ -22,6 +22,7 @@ jobs:
           node tools/check-korean-complete.cjs
           node tools/check-lany-shell.cjs
           node tools/check-world-map.cjs
+          node tools/check-map-reliability-v46.cjs
           node tools/check-v09.cjs
           node tools/check-map-touch.cjs
           node tools/check-friends-mobile.cjs

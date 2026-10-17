@@ -8,6 +8,8 @@
  const overlayIds=['overlay-win','overlay-lose','overlay-levels','overlay-tutorial'];
  const stageColumn=i=>Math.floor(i/3)%2===0?i%3:2-(i%3);
  const mapPageSize=()=>{const h=Math.min(window.innerHeight||800,window.visualViewport?.height||Infinity);return h<470?3:h<650?6:h<900?9:12;};
+ const pageWindow=(page,size)=>{const pages=Math.ceil(25/size),base=Math.floor(25/pages),extra=25%pages,start=page*base+Math.min(page,extra);return {pages,start,end:start+base+(page<extra?1:0)};};
+ const pageForOffset=(offset,size)=>{const pages=Math.ceil(25/size);for(let page=0;page<pages;page++)if(offset<pageWindow(page,size).end)return page;return pages-1;};
  const worldTabSize=()=>window.innerWidth<500?3:window.innerWidth<850?4:5;
  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
  let mapRenderId=0;
@@ -62,7 +64,7 @@
    nav.world=clamp(desired,0,9);
    if(from==='title'||from==='prep'){
      const relevant=from==='prep'?nav.selectedLevel:savedStage();
-     nav.mapPage=Math.floor(((relevant-1)%25)/mapPageSize());
+     nav.mapPage=pageForOffset((relevant-1)%25,mapPageSize());
    }
    nav.worldTabPage=Math.floor(nav.world/worldTabSize());
    $('lany-world-map').hidden=false;
@@ -76,7 +78,7 @@
  function setMode(mode){
    if(mode===state.mode)return;
    nav.returnToGame=false;window.LanyTempo?.stop();setCampaignMode(mode);
-   const stage=savedStage();nav.world=Math.floor((stage-1)/25);nav.mapPage=Math.floor(((stage-1)%25)/mapPageSize());nav.worldTabPage=Math.floor(nav.world/worldTabSize());renderMap();
+   const stage=savedStage();nav.world=Math.floor((stage-1)/25);nav.mapPage=pageForOffset((stage-1)%25,mapPageSize());nav.worldTabPage=Math.floor(nav.world/worldTabSize());renderMap();
  }
  function renderMap(){
    for(const mode of ['normal','hard']){const button=$('lany-mode-'+mode);button.setAttribute('aria-pressed',String(state.mode===mode));}
@@ -94,7 +96,7 @@
    const size=mapPageSize(),pages=Math.ceil(25/size);
    nav.mapPage=clamp(nav.mapPage,0,pages-1);
    nav.mapPageSize=size;
-   const start=nav.mapPage*size,end=Math.min(start+size,25);
+   const {start,end}=pageWindow(nav.mapPage,size);
    $('lany-map-page-status').textContent=`${nav.mapPage+1} / ${pages} · ${n*25+start+1}~${n*25+end}단계`;
    $('lany-map-prev').disabled=nav.mapPage===0;
    $('lany-map-next').disabled=nav.mapPage>=pages-1;
@@ -179,7 +181,7 @@
  function continueStage(){let n=savedStage();nav.world=Math.floor((n-1)/25);openPrep(n)}
  function openPrep(number){
    const n=Number(number);if(!Number.isInteger(n)||n<1||n>activeLevels().length||!reached(n))return false;
-   hide();hideLegacy();hideViews();nav.started=true;nav.screen='prep';nav.selectedLevel=n;nav.world=Math.floor((n-1)/25);nav.mapPage=Math.floor(((n-1)%25)/mapPageSize());nav.prepIndex=0;
+   hide();hideLegacy();hideViews();nav.started=true;nav.screen='prep';nav.selectedLevel=n;nav.world=Math.floor((n-1)/25);nav.mapPage=pageForOffset((n-1)%25,mapPageSize());nav.prepIndex=0;
    $('lany-title').hidden=true;document.body.classList.remove('lany-at-title');$('lany-stage-prep').hidden=false;
    const lv=activeLevels()[n-1];$('lany-prep-region').textContent=`제${nav.world+1}지역 · ${lv.theme}`;
    $('lany-prep-heading').textContent=`${state.mode==='hard'?'🔥 하드':'🌼 노멀'} ${n}단계 준비`;$('lany-prep-subtitle').textContent=lv.name;
@@ -259,8 +261,8 @@
    resizeFrame=requestAnimationFrame(()=>{
      resizeFrame=0;
      if(nav.screen==='map'){
-       const anchor=nav.mapPage*nav.mapPageSize;
-       nav.mapPage=Math.floor(anchor/mapPageSize());
+       const anchor=pageWindow(nav.mapPage,nav.mapPageSize).start;
+       nav.mapPage=pageForOffset(anchor,mapPageSize());
        nav.worldTabPage=Math.floor(nav.world/worldTabSize());
        renderMap();
      }

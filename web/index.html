@@ -916,12 +916,16 @@ const HARD_LEVELS=LEVELS.map((base,index)=>{
 });
 function activeLevels(){return state.mode==='hard'?HARD_LEVELS:LEVELS;}
 function campaignKey(key){return state.mode==='hard'?`sc_hard_${key}`:`sc_${key}`;}
+function readCampaignSave(key,fallback){
+  try{const value=JSON.parse(localStorage.getItem(campaignKey(key))||'null');return value??fallback;}catch(_){return fallback;}
+}
 function setCampaignMode(mode){
   if(mode!=='normal'&&mode!=='hard')return;
   state.mode=mode;
-  state.bestScores=JSON.parse(localStorage.getItem(campaignKey('best'))||'{}');
-  state.unlockedLevels=JSON.parse(localStorage.getItem(campaignKey('unlocked'))||'[1]');
-  state.levelStars=JSON.parse(localStorage.getItem(campaignKey('stars'))||'{}');
+  const best=readCampaignSave('best',{}),unlocked=readCampaignSave('unlocked',[1]),stars=readCampaignSave('stars',{});
+  state.bestScores=best&&typeof best==='object'&&!Array.isArray(best)?best:{};
+  state.unlockedLevels=Array.isArray(unlocked)?[...new Set([1,...unlocked.filter(n=>Number.isInteger(n)&&n>=1&&n<=250)])].sort((a,b)=>a-b):[1];
+  state.levelStars=stars&&typeof stars==='object'&&!Array.isArray(stars)?stars:{};
   try{localStorage.setItem('cv_campaign_mode',mode);}catch(_){}
   document.body.dataset.campaign=mode;
 }
