@@ -3,8 +3,8 @@
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "2665e608e69b31d1b588704bcadecd817b2a891d",
-  "requestedFor": "라니팡 노멀 숲·하드 붉은 마을 지도, 중앙 주 행동 팝업, 다시 도전·단계 지도 정사각형 버튼 배포.",
+  "sourceCommit": "f38d24296473944c8774e37335f42a36fda322d1",
+  "requestedFor": "라니팡 노멀·하드 게임 화면 보정, 빠진 원본 스타일 이미지·설치 아이콘 복원, 오프라인 이미지 경로 정밀검사 배포.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -30,5 +30,6 @@
   "hardModeV40": true,
   "hardFrenzyV41": true,
   "hardVisualV42": true,
-  "modeWorldV43": true
+  "modeWorldV43": true,
+  "modeGameplayV44": true
 }
