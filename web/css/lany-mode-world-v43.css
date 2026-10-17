@@ -1,0 +1,43 @@
+/* Distinct forest and ember worlds, with matching compact action controls. */
+body[data-campaign="normal"] #lany-world-map{background:#a7dabb!important}
+body[data-campaign="normal"] #lany-world-map .lany-screen-scrim{background:#6ec69e url('../assets/v43/normal-forest.webp') center/cover no-repeat!important;filter:blur(4px) brightness(.87)!important}
+body[data-campaign="normal"] #lany-world-map .lany-map-levels{background-image:linear-gradient(#e9ffeb38,#c8fff638),url('../assets/v43/normal-forest.webp')!important;background-size:cover!important;background-position:center!important}
+body[data-campaign="normal"] #lany-world-map .lany-map-panel{background:linear-gradient(#f1ffef,#dbf7e3)!important;box-shadow:0 0 0 3px #79cb9a,0 12px 42px #245a4088!important}
+body[data-campaign="normal"] #lany-world-map .lany-map-head{background:linear-gradient(145deg,#148a85,#55b28a)!important}
+body[data-campaign="normal"] #lany-world-map .lany-map-head h2,body[data-campaign="normal"] #lany-world-map .lany-map-eyebrow{color:#fffbea!important;text-shadow:0 2px 3px #176653!important}
+body[data-campaign="normal"] #lany-world-map .lany-map-summary{background:#d1f5dc!important;color:#285e4d!important}
+body[data-campaign="normal"] #lany-world-map .lany-map-section{background:linear-gradient(#e6f9df,#cfeecf)!important}
+body[data-campaign="normal"] #lany-world-map .lany-map-tip{background:#e6ffe6eb!important;color:#275d45!important}
+body[data-campaign="hard"] #lany-world-map{background:#7b203d!important}
+body[data-campaign="hard"] #lany-world-map .lany-screen-scrim{background:#9f2942 url('../assets/v43/hard-village.webp') center/cover no-repeat!important;filter:blur(4px) brightness(.77)!important}
+body[data-campaign="hard"] #lany-world-map .lany-map-panel{background:linear-gradient(#ffebd8,#e9bbbd 40%,#f5d6c9)!important;box-shadow:0 0 0 3px #f07866,0 12px 42px #5f1e32aa!important}
+body[data-campaign="hard"] #lany-world-map .lany-map-head{background:linear-gradient(145deg,#8b254b,#d5534b)!important;border-color:#ffcf84!important}
+body[data-campaign="hard"] #lany-world-map .lany-map-eyebrow{color:#ffe2ae!important}
+body[data-campaign="hard"] #lany-world-map .lany-map-summary{background:#9c3752!important;color:#fff4e1!important}
+body[data-campaign="hard"] #lany-world-map .lany-world-switcher{background:#f5cec1!important;border-color:#dc866e!important}
+body[data-campaign="hard"] #lany-world-map .lany-map-section{background:linear-gradient(#ffe7cf,#ecc6c0)!important;border-color:#e59280!important}
+body[data-campaign="hard"] #lany-world-map .lany-world-banner{background:linear-gradient(110deg,#fff6e3,#ffd7b8)!important;box-shadow:0 3px 0 #b95560,0 5px 12px #67314c77!important}
+body[data-campaign="hard"] #lany-world-map .lany-world-banner h3{color:#893d4b!important}
+body[data-campaign="hard"] #lany-world-map .lany-map-levels{background-image:linear-gradient(#67233338,#a62f3240),url('../assets/v43/hard-village.webp')!important;background-size:cover!important;background-position:center!important;border-color:#ffe4cb!important;box-shadow:0 0 0 2px #d8686a,0 7px 16px #61344c77!important}
+body[data-campaign="hard"] #lany-world-map .lany-map-tip{background:#8d4059ef!important;color:#fff8e8!important}
+body[data-campaign="hard"] #lany-world-map .lany-map-bottom{background:#f5d7c6!important;border-color:#dc8d80!important}
+body[data-campaign="hard"] #lany-stage-prep .lany-prep-card{background:linear-gradient(#fff3db,#f5d2c8)!important;border-color:#e89b81!important}
+
+/* The frequent action sits at the visual center; smaller square choices sit below it. */
+#overlay-win .modal,#overlay-lose .modal{justify-content:center!important;gap:4px!important;padding-top:clamp(56px,17vw,66px)!important;padding-bottom:16px!important}
+#overlay-win .modal-btns,#overlay-lose .modal-btns{display:grid!important;grid-template-columns:repeat(2,minmax(0,86px))!important;justify-content:center!important;justify-items:center!important;align-items:start!important;column-gap:12px!important;row-gap:4px!important;margin:5px auto 0!important;width:100%!important}
+#overlay-win .modal-btns button:first-child,#overlay-lose .modal-btns button:first-child{grid-column:1/-1!important;justify-self:center!important;width:min(100%,186px)!important;height:47px!important;min-height:47px!important;max-height:47px!important;font-size:clamp(.77rem,2.8vw,.9rem)!important}
+#overlay-win .modal-btns button[data-lany-art="map"],#overlay-win .modal-btns button[data-lany-art="retry"],#overlay-lose .modal-btns button[data-lany-art="map"]{width:76px!important;min-width:76px!important;height:76px!important;min-height:76px!important;max-height:76px!important;justify-self:center!important;padding:56px 1px 0!important;border:0!important;border-radius:0!important;box-shadow:none!important;background-color:transparent!important;background-position:center top!important;background-repeat:no-repeat!important;background-size:68px 68px!important;font-size:.69rem!important;line-height:1!important;color:#70465b!important;text-shadow:0 1px #fff!important}
+#overlay-win .modal-btns button[data-lany-art="map"],#overlay-lose .modal-btns button[data-lany-art="map"]{background-image:url('../assets/v43/stage-map.webp')!important}
+#overlay-win .modal-btns button[data-lany-art="retry"]{background-image:url('../assets/v43/retry.webp')!important}
+#overlay-lose .modal-btns button[data-lany-art="map"]{grid-column:1/-1!important}
+#overlay-win .modal-btns button:focus-visible,#overlay-lose .modal-btns button:focus-visible{outline:3px solid #5b74c8!important;outline-offset:1px!important}
+#overlay-win .modal-btns button:active,#overlay-lose .modal-btns button:active{transform:translateY(2px)!important}
+
+/* Dialog choices form short, predictable rows with a centered primary action. */
+#lany-pause .lany-dialog,#lany-exit .lany-dialog{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));justify-items:center;gap:6px!important}
+#lany-pause .lany-dialog>:is(.lany-dialog-emoji,h2,p),#lany-exit .lany-dialog>:is(.lany-dialog-emoji,h2,p){grid-column:1/-1}
+#lany-pause .lany-dialog>button:first-of-type,#lany-exit .lany-dialog>button:first-of-type{grid-column:1/-1;width:min(100%,180px)!important;margin:3px auto!important;height:44px!important;min-height:44px!important;max-height:44px!important}
+#lany-pause .lany-dialog>button:not(:first-of-type),#lany-exit .lany-dialog>button:not(:first-of-type){width:100%!important;min-width:0!important;margin:0!important;padding-inline:3px!important}
+#lany-exit .lany-dialog>button:last-of-type{width:100%!important}
+@media(max-height:620px){#overlay-win .modal,#overlay-lose .modal{padding-top:48px!important;padding-bottom:15px!important}#overlay-win .modal-btns button[data-lany-art="map"],#overlay-win .modal-btns button[data-lany-art="retry"],#overlay-lose .modal-btns button[data-lany-art="map"]{height:66px!important;min-height:66px!important;max-height:66px!important;background-size:58px 58px!important;padding-top:49px!important}}

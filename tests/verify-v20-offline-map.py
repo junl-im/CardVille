@@ -49,7 +49,7 @@ with sync_playwright() as pw:
   assert locked.count()>=1,name
   assert 'stage-locked-v20.webp' in locked.first.evaluate("e=>getComputedStyle(e).backgroundImage"),name
   mapBg=page.locator('#lany-map-levels').evaluate("e=>getComputedStyle(e).backgroundImage")
-  assert 'world-map.webp' in mapBg,name
+  assert 'normal-forest.webp' in mapBg,name
   assert page.evaluate('document.documentElement.scrollWidth-innerWidth')<=3,(name,'horizontal overflow')
   page.screenshot(path=str(out/(name+'-map.png')))
   # Offline re-entry requires no network and must still boot from canonical index.
