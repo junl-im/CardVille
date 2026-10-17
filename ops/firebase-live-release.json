@@ -3,8 +3,8 @@
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "9d080fccbf3223bba317513b0b041008a0ef24b6",
-  "requestedFor": "맵 상단바 제거, 크레이지 버튼과 모드별 지역 동물 그림 개선 배포.",
+  "sourceCommit": "185f3903d39db99436f0ebfe14ef4f76d46285a8",
+  "requestedFor": "하드 붉은 마을과 크레이지 보라빛 마을 맵 배경 개선 배포.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -41,7 +41,9 @@
   "gameAuditV51": true,
   "crazyModeV52": true,
   "candyDesignV53": true,
-  "compactMapV54": true
+  "compactMapV54": true,
+  "modeMapV55": true
 }
+
 
 
