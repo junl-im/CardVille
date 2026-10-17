@@ -42,7 +42,7 @@ with sync_playwright() as playwright:
     page.locator('#lany-install-button').click()
     assert viewport_fit('.lany-install-card'),(tag,'install panel clipped')
     assert 'install-ornament.webp' in page.locator('#lany-install-guide-title').evaluate("e=>getComputedStyle(e,'::before').backgroundImage"),(tag,'install ornament not applied')
-    assert 'controls/close.webp' in page.locator('.lany-install-close').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'new close art not applied')
+    assert 'v53/control.webp' in page.locator('.lany-install-close').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'new close art not applied')
     shot('install','.lany-install-card')
     page.locator('.lany-install-close').click()
     page.locator('.lany-art-help').click()
@@ -65,7 +65,7 @@ with sync_playwright() as playwright:
       assert page.locator('#lany-friends-grid img[loading="eager"]').count()==page.locator('#lany-friends-grid img').count(),(tag,'gallery must eagerly load visible art')
       friend_pages+=1
       assert 'friends-ornament.webp' in page.locator('#lany-friends-heading').evaluate("e=>getComputedStyle(e,'::before').backgroundImage"),(tag,'friends ornament not applied')
-      assert 'controls/close.webp' in page.locator('.lany-friends-close').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'gallery close art not applied')
+      assert 'v53/control.webp' in page.locator('.lany-friends-close').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'gallery close art not applied')
       shot('friends-'+str(friend_pages),'.lany-friends-panel')
       if page.locator('#lany-friends-next').is_disabled():break
       page.evaluate('LanyFriends.page(1)')
@@ -88,7 +88,7 @@ with sync_playwright() as playwright:
     page.locator('#lany-start-button').click()
     assert page.locator('#lany-world-map').is_visible()
     for selector,asset in (('.lany-map-head .lany-back','back.webp'),('.lany-map-head .lany-map-icon:not(.lany-mobile-fullscreen)','help.webp'),('#lany-world-prev','prev.webp'),('#lany-world-next','next.webp')):
-      assert 'v23/buttons/'+asset in page.locator(selector).evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,selector,'approved v2.3 illustration missing')
+      assert 'v53/control.webp' in page.locator(selector).evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,selector,'approved v2.3 illustration missing')
     assert page.locator('#lany-world-tabs .lany-world-tab').first.evaluate("e=>getComputedStyle(e).backgroundImage.includes('v26/regions/tab-01.webp')"),(tag,'regional illustration is not mapped')
     assert page.locator('#lany-world-tabs .lany-world-tab').first.get_attribute('aria-label'),(tag,'region name must remain accessible')
     shot('map','#lany-world-map')
@@ -119,7 +119,7 @@ with sync_playwright() as playwright:
         return c.backgroundImage.includes(asset)&&e.textContent.trim().length>=2
           && e.getBoundingClientRect().width>100;
       }""",skin),(tag,selector,'individual action artwork missing')
-    assert 'linear-gradient' in page.locator('#lany-stage-prep .lany-prep-cancel').evaluate('e=>getComputedStyle(e).backgroundImage')
+    assert 'v53/action.webp' in page.locator('#lany-stage-prep .lany-prep-cancel').evaluate('e=>getComputedStyle(e).backgroundImage')
     assert page.locator('#lany-stage-prep .lany-prep-cancel').inner_text().strip()=='맵 돌아가기'
     shot('stage-ready','#lany-stage-prep')
     if page.locator('#lany-prep-pager').is_visible():
@@ -140,7 +140,7 @@ with sync_playwright() as playwright:
     shot('pause','#lany-pause')
     assert viewport_fit('#lany-pause .lany-dialog'),(tag,'pause card clipped')
     page.evaluate('LanyShell.openExit()')
-    for action,skin in [('resume','green.png'),('home','gold.png'),('exit','pink.png')]:
+    for action,skin in [('resume','v53/action.webp'),('home','v53/action.webp'),('exit','v53/action.webp')]:
       assert page.locator('#lany-exit .lany-dialog button[data-lany-art="'+action+'"]').evaluate("""(e,asset)=>{
         const c=getComputedStyle(e);
         return c.backgroundImage.includes(asset)&&parseFloat(c.fontSize)>=12
@@ -165,8 +165,8 @@ with sync_playwright() as playwright:
         }""")
         assert fits,(tag,kind,i,'all result buttons must fit the screen')
       # Visual-regression guard: the official game button cutouts must be visible.
-      button_art={'win':{'next':'green.png','map':'stage-map.webp','retry':'retry.webp'},
-                  'lose':{'retry':'gold.png','map':'stage-map.webp'}}[kind]
+      button_art={'win':{'next':'v53/action.webp','map':'stage-map.webp','retry':'retry.webp'},
+                  'lose':{'retry':'v53/action.webp','map':'stage-map.webp'}}[kind]
       for action,filename in button_art.items():
         value=page.locator('#overlay-'+kind+' button[data-lany-art="'+action+'"]').evaluate('e=>getComputedStyle(e).backgroundImage')
         assert filename in value,(tag,kind,action,'missing approved raster skin',value)
@@ -212,3 +212,5 @@ with sync_playwright() as playwright:
     context.close()
   browser.close()
 print(json.dumps(reports,ensure_ascii=False,indent=2))
+
+

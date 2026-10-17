@@ -44,7 +44,7 @@ with sync_playwright() as pw:
   assert page.locator('#lany-world-map').is_visible()
   current=page.locator('#lany-map-levels .lany-level.current')
   assert current.count()>=1,name
-  assert 'stage-current-v20.webp' in current.first.evaluate("e=>getComputedStyle(e).backgroundImage"),name
+  assert 'v53/control.webp' in current.first.evaluate("e=>getComputedStyle(e).backgroundImage"),name
   locked=page.locator('#lany-map-levels .lany-level:disabled')
   assert locked.count()>=1,name
   assert 'stage-locked-v20.webp' in locked.first.evaluate("e=>getComputedStyle(e).backgroundImage"),name
@@ -71,3 +71,4 @@ with sync_playwright() as pw:
   ctx.close()
  browser.close()
 print(json.dumps(report,ensure_ascii=False,indent=2))
+
