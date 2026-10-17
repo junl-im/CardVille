@@ -1,0 +1,24 @@
+/* Keep each region recognizable inside the forest and ember campaign shells. */
+#lany-world-map .lany-map-section .lany-map-levels[data-world]{
+  background-image:linear-gradient(150deg,#fff9eb1c,#ffffff13),url('../assets/v23/regions/world-atlas.webp')!important;
+  background-size:cover,500% 200%!important;
+  background-repeat:no-repeat!important;
+}
+body[data-campaign="hard"] #lany-world-map .lany-map-section .lany-map-levels[data-world]{
+  background-image:linear-gradient(150deg,#85243c70,#da514d66),url('../assets/v23/regions/world-atlas.webp')!important;
+}
+#lany-world-map .lany-map-section .lany-map-levels[data-world="0"]{background-position:center,0% 0%!important}
+#lany-world-map .lany-map-section .lany-map-levels[data-world="1"]{background-position:center,25% 0%!important}
+#lany-world-map .lany-map-section .lany-map-levels[data-world="2"]{background-position:center,50% 0%!important}
+#lany-world-map .lany-map-section .lany-map-levels[data-world="3"]{background-position:center,75% 0%!important}
+#lany-world-map .lany-map-section .lany-map-levels[data-world="4"]{background-position:center,100% 0%!important}
+#lany-world-map .lany-map-section .lany-map-levels[data-world="5"]{background-position:center,0% 100%!important}
+#lany-world-map .lany-map-section .lany-map-levels[data-world="6"]{background-position:center,25% 100%!important}
+#lany-world-map .lany-map-section .lany-map-levels[data-world="7"]{background-position:center,50% 100%!important}
+#lany-world-map .lany-map-section .lany-map-levels[data-world="8"]{background-position:center,75% 100%!important}
+#lany-world-map .lany-map-section .lany-map-levels[data-world="9"]{background-position:center,100% 100%!important}
+#lany-world-map .lany-map-levels .lany-level span{
+  color:#553348!important;
+  text-shadow:0 1px 2px #fff,0 0 4px #fff9e9!important;
+}
+#lany-world-map .lany-map-levels .lany-level:disabled span{color:#745f70!important}
