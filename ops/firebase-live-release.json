@@ -3,8 +3,8 @@
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "b7702e8d3fd481524d975ad3dc960f03394072c5",
-  "requestedFor": "라니팡 나가기 곰 캐릭터 버튼, 상단 소리 컨트롤, GO 윙크 캐릭터 보정 배포.",
+  "sourceCommit": "218592812c2d302900598352ab7e6b5317f7e9e7",
+  "requestedFor": "라니팡 섞기·잠금 블록 로직 보정, 저장 예외 처리, 기록 패널 디자인 개선 배포.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -37,5 +37,6 @@
   "characterPolishV47": true,
   "gameControlsV48": true,
   "characterNavV49": true,
-  "gamePolishV50": true
+  "gamePolishV50": true,
+  "gameAuditV51": true
 }
