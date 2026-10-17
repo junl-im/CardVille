@@ -330,6 +330,8 @@ body {
 <link rel="stylesheet" href="./css/lany-game-polish-v50.css?v=1">
 <link rel="stylesheet" href="./css/lany-game-audit-v51.css?v=1">
 <link rel="stylesheet" href="./css/lany-controls-crazy-v52.css?v=1">
+<link rel="stylesheet" href="./css/lany-design-v53.css?v=1">
+<script defer src="./js/lany-design-v53.js?v=1"></script>
 </head>
 <body class="lany-at-title">
 <main id="lany-title" class="lany-title" role="main" aria-label="라니팡 시작 화면">
@@ -343,7 +345,7 @@ body {
     <div class="lany-title-top"><span class="lany-ribbon">반짝반짝 사탕마을에 오신 걸 환영해요</span><h1 class="lany-logo lany-illustrated-logo"><img src="./assets/v26/title/logo.webp" alt="라니팡!" decoding="async" fetchpriority="high"></h1><p class="lany-subtitle">쓱 밀고, 팡! 터지는 퍼즐 세상</p></div>
     <div class="lany-title-bottom lany-title-art-actions">
       <div class="lany-title-play-scene">
-        <img class="lany-title-cast" src="./assets/polish/cat-cheer.webp?v=2.3.0" alt="" draggable="false" aria-hidden="true">
+        <img class="lany-title-cast" src="./assets/v25/animals/cat.webp?v=2.3.0" alt="" draggable="false" aria-hidden="true">
       <button id="lany-start-button" class="lany-art-button lany-art-play" type="button" aria-label="게임 시작">
         <img class="lany-button-picture" src="./assets/v26/title/start.webp" alt="" draggable="false">
         <span class="lany-button-word">게임 시작</span>
@@ -1092,7 +1094,7 @@ const LANY_CELL_COLORS=[
 const LanyPerf={stageStarts:0,cellCreates:0,boardRenders:0};
 window.LanyPerf=LanyPerf;
 function morphHardAnimals(){
-  if(state.mode==='normal'||state.animating||document.hidden||window.LanyShell?.getCurrentScreen?.()!=='game')return;
+  if(state.mode==='normal'||state.animating||document.hidden||window.LanyShell?.getCurrentScreen?.()!=='game'||!window.LanyTempo?.isRunning?.())return;
   const lv=activeLevels()[state.level-1],changed=[];
   for(let tries=0;tries<32&&changed.length<3;tries++){
     const idx=Math.floor(Math.random()*ROWS*COLS);
@@ -1827,3 +1829,4 @@ function startBgMusic() {
 <script defer src="./js/lany-perf-v19.js?v=2.3.0"></script>
 </body>
 </html>
+
