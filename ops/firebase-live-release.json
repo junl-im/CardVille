@@ -3,8 +3,8 @@
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "c72f2a482e88bce02c141528d4ee9e84e7fafb29",
-  "requestedFor": "라니팡 지도 지역별 배경 복원, 모드별 저장 진행 위치 연결, 지역 선택 초점 보정 배포.",
+  "sourceCommit": "04fc2f1f11ccac07954a389d9668c6daec8aafd5",
+  "requestedFor": "라니팡 지도 단계 페이지 균형 배분, 화면 크기 변경 시 위치 유지, 손상된 진행 기록 복구 배포.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -32,5 +32,6 @@
   "hardVisualV42": true,
   "modeWorldV43": true,
   "modeGameplayV44": true,
-  "mapConnectV45": true
+  "mapConnectV45": true,
+  "mapReliabilityV46": true
 }
