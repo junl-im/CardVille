@@ -3,8 +3,8 @@
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "4f2be77588f2eb8f6e3ad999fdff10a6f5cf4514",
-  "requestedFor": "라니팡 게임 상단 메뉴·지도 그림 버튼 복구, 진행 정보 가독성 및 선택 아이템 표시 개선 배포.",
+  "sourceCommit": "b234c81ef4521ebe30de16f598d99623165fc1bb",
+  "requestedFor": "라니팡 게임 상단 중복 지도 버튼 제거, 맵·도감 토끼와 검은 고양이 캐릭터 버튼 적용 배포.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -35,5 +35,6 @@
   "mapConnectV45": true,
   "mapReliabilityV46": true,
   "characterPolishV47": true,
-  "gameControlsV48": true
+  "gameControlsV48": true,
+  "characterNavV49": true
 }
