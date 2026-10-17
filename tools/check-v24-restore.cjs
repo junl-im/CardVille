@@ -6,7 +6,7 @@ const map=read('web/js/lany-shell.js'),sw=read('web/sw.js'),polish=read('web/js/
 assert.equal(v.version,'2.3.0-beta');assert.equal(v.visualRelease,'2.3.0');
 assert(h.includes('lany-v24-restore.css?v=2.3.0'),'CSS import missing');
 assert(h.includes('<div class="lany-version">v2.3.0</div>'),'stale release label');
-assert(sw.includes("lanypang-match-v2.3.0-ko-v46-map-reliability-r1"),'cache not rotated');
+assert(sw.includes("lanypang-match-v2.3.0-ko-v47-character-polish-r1"),'cache not rotated');
 assert(sw.includes("'./css/lany-v24-restore.css'"),'offline style not cached');
 // Chrome Cache.addAll can reject duplicate request URLs and leave the PWA uncontrolled.
 const precache=sw.match(/const PRECACHE=\[([^;]+)\];/)?.[1];
