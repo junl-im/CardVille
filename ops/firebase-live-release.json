@@ -3,8 +3,8 @@
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "5833b0d0e09054cdca1983f93aec58120fc7a27b",
-  "requestedFor": "라니팡 크레이지 250단계와 공통 버튼·맵 배지·팝업 디자인 개선 배포.",
+  "sourceCommit": "9d080fccbf3223bba317513b0b041008a0ef24b6",
+  "requestedFor": "맵 상단바 제거, 크레이지 버튼과 모드별 지역 동물 그림 개선 배포.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -40,6 +40,8 @@
   "gamePolishV50": true,
   "gameAuditV51": true,
   "crazyModeV52": true,
-  "candyDesignV53": true
+  "candyDesignV53": true,
+  "compactMapV54": true
 }
+
 
