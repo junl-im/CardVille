@@ -3,8 +3,8 @@
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "04fc2f1f11ccac07954a389d9668c6daec8aafd5",
-  "requestedFor": "라니팡 지도 단계 페이지 균형 배분, 화면 크기 변경 시 위치 유지, 손상된 진행 기록 복구 배포.",
+  "sourceCommit": "fb7470941f95807fa36808b6612ee2f137ee70f4",
+  "requestedFor": "라니팡 일반·하드 지도 분위기와 상태 표시를 캐릭터 디자인에 맞게 다듬은 버전 배포.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -33,5 +33,6 @@
   "modeWorldV43": true,
   "modeGameplayV44": true,
   "mapConnectV45": true,
-  "mapReliabilityV46": true
+  "mapReliabilityV46": true,
+  "characterPolishV47": true
 }
