@@ -1,0 +1,11 @@
+LanyPang v53 raster controls — built-in image_gen, transparent background; no SVG.
+
+action.webp
+Source: ../v53-action-source.png (2172x724 RGBA)
+Prompt: One blank wide horizontal strawberry pink gel/enamel pill, front-on, clean thin pale cream outer rim and fine rose inner edge, soft light pink highlight, slight lower depth and shadow. Spacious smooth center. Premium cute animal match-3 UI. Full perimeter with transparent margins. No text, icons, flowers, characters, sparkles, scratch marks, extra rings or clipped edges.
+Export: crop left110 top95 width1950 height545; resize width640; WebP quality95 alphaQuality100.
+
+control.webp
+Source: C:/Users/JUN/.codex/generated_images/01a13a23-01e0-7b72-a808-b84340a784a9/exec-ddf7ddc7-f306-4c90-8db0-a615efcb4153.png
+Parent-generated source; exact prompt held by parent task. Observed asset: blank rounded square peach gel control, cream rim, soft highlights and lower shadow, transparent background.
+Export: crop left60 top80 width1160 height1140; resize width192; WebP quality95 alphaQuality100.

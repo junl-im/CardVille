@@ -1,0 +1,54 @@
+/* v52: one complete control family, compact help, three distinct campaigns. */
+#lany-world-map .lany-campaign-switch{width:min(100%,470px)!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important}
+#lany-world-map .lany-campaign-switch button{min-width:0!important;width:100%!important;height:clamp(39px,6dvh,53px)!important;min-height:0!important;padding:3px 1px!important;line-height:1.04!important;font-size:clamp(.72rem,2.6vw,.93rem)!important;background-size:100% 100%!important}
+#lany-world-map #lany-mode-crazy{background-image:linear-gradient(145deg,#87204d,#cf365e 52%,#581944)!important;border:2px solid #ffc37e!important;border-radius:15px!important;color:#fff3cc!important;box-shadow:inset 0 2px 0 #ffffff55,0 3px 0 #6d294d!important;text-shadow:0 2px 2px #481329!important}
+#lany-world-map #lany-mode-crazy[aria-pressed=true]{box-shadow:inset 0 2px 0 #ffffff77,0 0 0 2px #ffe681,0 4px 9px #60154499!important}
+body[data-campaign=crazy] #lany-world-map .lany-screen-scrim{background:#29162d url('../assets/v43/hard-village.webp') center/cover no-repeat!important;filter:blur(5px) brightness(.48) saturate(1.5)!important}
+body[data-campaign=crazy] #lany-world-map .lany-map-panel{background:linear-gradient(#fff0dd,#e9c3d0 48%,#e0c6df)!important;box-shadow:0 0 0 3px #ed745d,0 12px 42px #301137aa!important}
+body[data-campaign=crazy] #lany-world-map .lany-map-head{background:linear-gradient(130deg,#502147,#9d2454,#d5514e)!important;border-color:#f8b777!important}
+body[data-campaign=crazy] #lany-world-map .lany-map-eyebrow{color:#ffe5bb!important}
+body[data-campaign=crazy] #lany-world-map .lany-map-summary{background:#582b52!important;color:#fff4df!important}
+body[data-campaign=crazy] #lany-world-map .lany-world-switcher{background:#e5bfd2!important;border-color:#b5688e!important}
+body[data-campaign=crazy] #lany-world-map .lany-map-section{background:linear-gradient(#f4d7d8,#dabbd2)!important;border-color:#be6e91!important}
+body[data-campaign=crazy] #lany-world-map .lany-map-levels{background-image:linear-gradient(#49143c55,#641d4077),url('../assets/v43/hard-village.webp')!important;background-size:cover!important;background-position:center!important;border-color:#ffe2bf!important}
+body[data-campaign=crazy] #lany-world-map .lany-map-tip{background:#5f315aeb!important;color:#fff4df!important}
+body[data-campaign=crazy] #lany-stage-prep .lany-prep-card{background:linear-gradient(#fff0d9,#eed1df)!important;border-color:#d0799b!important}
+/* The region title is real text on a quiet frame; no letter collides with ornament art. */
+#lany-world-map .lany-map-section .lany-world-banner{box-sizing:border-box!important;width:calc(100% - 10px)!important;margin:3px 5px 5px!important;min-height:48px!important;padding:7px 14px!important;background:linear-gradient(125deg,#fffdf0,#e9f7df)!important;border:2px solid #fff!important;border-radius:15px!important;box-shadow:0 2px 0 #7cbd8a,0 4px 12px #3e805044!important;overflow:visible!important}
+#lany-world-map .lany-map-section .lany-world-banner>div{padding:0!important}
+#lany-world-map .lany-map-section .lany-world-banner #lany-world-no{color:#478c69!important}
+#lany-world-map .lany-map-section .lany-world-banner #lany-world-title{color:#366957!important;text-shadow:0 1px #fff!important}
+#lany-world-map .lany-map-section .lany-world-banner #lany-world-icon{font-size:1.5rem!important}
+body[data-campaign=hard] #lany-world-map .lany-map-section .lany-world-banner,body[data-campaign=crazy] #lany-world-map .lany-map-section .lany-world-banner{background:linear-gradient(125deg,#fff9e9,#ffe0cb)!important;box-shadow:0 2px 0 #bf7482,0 4px 12px #8d405755!important}
+/* Complete raster icons use contain so their transparent edges and highlights survive. */
+#lany-world-map .lany-map-head .lany-back,#lany-stage-prep .lany-prep-back{background-image:url('../assets/v23/buttons/back.webp')!important}
+#lany-world-map .lany-map-head .lany-map-icon:not(.lany-mobile-fullscreen){background-image:url('../assets/v23/buttons/help.webp')!important}
+#lany-install-modal .lany-install-close,#lany-friends-modal .lany-friends-close{background-image:url('../assets/v23/buttons/close.webp')!important}
+#lany-world-map #lany-world-prev{background-image:url('../assets/v23/buttons/prev.webp')!important}
+#lany-world-map #lany-world-next{background-image:url('../assets/v23/buttons/next.webp')!important}
+:is(#lany-world-map .lany-map-head .lany-back,#lany-stage-prep .lany-prep-back,#lany-world-map .lany-map-head .lany-map-icon,#lany-install-modal .lany-install-close,#lany-friends-modal .lany-friends-close,#lany-world-map #lany-world-prev,#lany-world-map #lany-world-next){background-size:contain!important}
+/* All previous/next controls share one pair, including the help and catalogue dialogs. */
+:is(#lany-map-prev,#lany-prep-prev,#lany-help-prev,#lany-friends-prev){background-image:url('../assets/v24/controls/previous.webp')!important;background-size:contain!important}
+:is(#lany-map-next,#lany-prep-next,#lany-help-next,#lany-friends-next){background-image:url('../assets/v24/controls/next.webp')!important;background-size:contain!important}
+#overlay-tutorial .modal{box-sizing:border-box!important;width:min(90vw,350px)!important;padding:13px 15px!important;gap:5px!important}
+#overlay-tutorial .modal>.btn-primary{box-sizing:border-box!important;width:140px!important;max-width:140px!important;height:42px!important;min-height:42px!important;margin:5px auto 1px!important;background:linear-gradient(#fff394,#ffd442 53%,#efa52d)!important;border:2px solid #fff6d5!important;border-radius:24px!important;box-shadow:0 3px 0 #ba713c,0 5px 10px #6f3b4a66!important;color:#703a41!important;font-size:.88rem!important;font-weight:900!important;text-shadow:0 1px #fff8d7!important}
+#overlay-tutorial .lany-tutorial-page p{padding:7px 9px!important}
+#lany-pause .lany-dialog .lany-dialog-emoji,#lany-exit .lany-dialog .lany-dialog-emoji{box-sizing:border-box!important;width:74px!important;height:70px!important;min-height:70px!important;background-size:contain!important;background-position:center!important;overflow:visible!important}
+@media(max-width:360px){#lany-world-map .lany-campaign-switch button{font-size:.68rem!important}#overlay-tutorial .modal{padding:10px 12px!important}}
+
+/* Opaque reading surface and scaled actions on the help dialog. */
+#overlay-tutorial .modal{background:linear-gradient(180deg,#fffdf3,#fff7e8)!important;box-shadow:inset 0 0 0 4px #fff,0 5px 0 #cf72a0,0 16px 32px #34224499!important}
+#overlay-tutorial .modal>.btn-primary[data-lany-art="play"]{width:116px!important;max-width:116px!important;height:38px!important;min-height:38px!important;padding:0 10px!important;background-image:none!important;background-color:#ffd347!important;color:#703a41!important;font-size:.83rem!important;line-height:1!important}
+#overlay-tutorial .modal>.btn-primary[data-lany-art="play"]::before,#overlay-tutorial .modal>.btn-primary[data-lany-art="play"]::after{display:none!important;content:none!important}
+#lany-exit .lany-dialog .lany-dialog-emoji{background-image:url('../assets/v25/animals/bear.webp')!important;background-size:contain!important}
+#lany-pause .lany-dialog .lany-dialog-emoji{background-image:url('../assets/v25/animals/rabbit.webp')!important;background-size:contain!important}
+body[data-campaign=crazy] #lany-world-map .lany-map-head h2{color:#fff4d6!important;text-shadow:0 2px 3px #421534!important}
+body[data-campaign=crazy] #lany-world-map .lany-map-levels{background-image:linear-gradient(#53163e55,#641d4070),url('../assets/v43/hard-village.webp')!important}
+
+/* A dynamic label replaces the old baked "지도" art. */
+#lany-stage-prep .lany-prep-cancel[data-lany-art="map"]{background:linear-gradient(#aaf2ff,#3ab8f2 55%,#1689da)!important;border:2px solid #f7fcff!important;border-radius:21px!important;box-shadow:0 3px 0 #4679a8,0 5px 10px #314a7955!important;color:#fff!important;font-size:clamp(.79rem,3.5vw,.95rem)!important;font-weight:900!important;text-shadow:0 2px 2px #24629a!important}
+#lany-stage-prep .lany-prep-cancel[data-lany-art="map"]::before,#lany-stage-prep .lany-prep-cancel[data-lany-art="map"]::after{display:none!important;content:none!important}
+
+/* Override late v24 button-specific rules at every viewport height. */
+#lany-world-map .lany-map-head button.lany-back,#lany-stage-prep .lany-prep-card button.lany-prep-back{background-image:url('../assets/v23/buttons/back.webp')!important;background-size:contain!important}
+#lany-world-map .lany-map-head button.lany-map-icon:not(.lany-mobile-fullscreen){background-image:url('../assets/v23/buttons/help.webp')!important;background-size:contain!important}

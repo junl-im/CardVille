@@ -79,7 +79,7 @@ const Difficulty = (function() {
     card.setAttribute('aria-label','시험용 난이도 선택');card.setAttribute('aria-modal','true');
     const title=document.createElement('h2');title.textContent='⚙️ 난이도 선택 (시험용)';
     const note=document.createElement('p');note.className='lany-difficulty-note';
-    note.textContent='이 메뉴는 시험용이며 실제 모험 지도 250단계 난이도에는 적용되지 않아요.';
+    note.textContent='이 메뉴는 시험용이며 실제 모험 맵 250단계 난이도에는 적용되지 않아요.';
     const options=document.createElement('div');options.className='lany-difficulty-options';
     const entries=Object.entries(LEVELS),pages=Math.ceil(entries.length/2);
     for(const [key,d] of entries.slice(currentPage*2,currentPage*2+2)){

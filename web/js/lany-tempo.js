@@ -44,7 +44,7 @@
    render();
    if(enabled&&remaining===0 && !state.animating){
      expired=true;paused=true;stopClock();
-     if(state.score>=activeLevels()[state.level-1].goal&&(state.mode!=='hard'||state.hardClears>=activeLevels()[state.level-1].clearGoal)){window.checkEnd?.();return;}
+     if(state.score>=activeLevels()[state.level-1].goal&&(state.mode==='normal'||state.hardClears>=activeLevels()[state.level-1].clearGoal)){window.checkEnd?.();return;}
      if(typeof window.showLose==='function'){
        window.showLose();
        const title=document.getElementById('lany-lose-title'); if(title) title.textContent='시간이 끝났어요';

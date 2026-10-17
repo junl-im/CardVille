@@ -329,6 +329,9 @@ body {
 <link rel="stylesheet" href="./css/lany-game-nav-v49.css?v=1">
 <link rel="stylesheet" href="./css/lany-game-polish-v50.css?v=1">
 <link rel="stylesheet" href="./css/lany-game-audit-v51.css?v=1">
+<link rel="stylesheet" href="./css/lany-controls-crazy-v52.css?v=1">
+<link rel="stylesheet" href="./css/lany-design-v53.css?v=1">
+<script defer src="./js/lany-design-v53.js?v=1"></script>
 </head>
 <body class="lany-at-title">
 <main id="lany-title" class="lany-title" role="main" aria-label="라니팡 시작 화면">
@@ -342,7 +345,7 @@ body {
     <div class="lany-title-top"><span class="lany-ribbon">반짝반짝 사탕마을에 오신 걸 환영해요</span><h1 class="lany-logo lany-illustrated-logo"><img src="./assets/v26/title/logo.webp" alt="라니팡!" decoding="async" fetchpriority="high"></h1><p class="lany-subtitle">쓱 밀고, 팡! 터지는 퍼즐 세상</p></div>
     <div class="lany-title-bottom lany-title-art-actions">
       <div class="lany-title-play-scene">
-        <img class="lany-title-cast" src="./assets/polish/cat-cheer.webp?v=2.3.0" alt="" draggable="false" aria-hidden="true">
+        <img class="lany-title-cast" src="./assets/v25/animals/cat.webp?v=2.3.0" alt="" draggable="false" aria-hidden="true">
       <button id="lany-start-button" class="lany-art-button lany-art-play" type="button" aria-label="게임 시작">
         <img class="lany-button-picture" src="./assets/v26/title/start.webp" alt="" draggable="false">
         <span class="lany-button-word">게임 시작</span>
@@ -377,12 +380,12 @@ body {
   <button type="button" class="lany-install-done">알겠어요</button>
  </div>
 </section>
-<!-- 라니팡 월드맵: 단계 선택은 지도에서, 실제 보드는 준비창에서만 생성합니다. -->
+<!-- 라니팡 월드맵: 단계 선택은 맵에서, 실제 보드는 준비창에서만 생성합니다. -->
 <section id="lany-world-map" class="lany-game-screen" role="dialog" aria-modal="true" aria-labelledby="lany-map-heading" hidden>
  <div class="lany-screen-scrim" aria-hidden="true"></div>
  <div class="lany-map-panel">
-  <header class="lany-map-head"><button class="lany-back" type="button" onclick="LanyShell.showHome()" aria-label="처음 화면으로">‹</button><div><span class="lany-map-eyebrow">사탕마을 여행 지도</span><h2 id="lany-map-heading">🗺️ 라니팡 모험 지도</h2></div><button class="lany-map-icon" type="button" onclick="LanyShell.openHelp()" aria-label="게임 방법">?</button><button class="lany-map-icon lany-mobile-fullscreen" type="button" onclick="LanyShell.toggleFullscreen()" aria-label="모바일 전체 화면">⛶</button></header>
-  <div class="lany-campaign-switch" role="group" aria-label="게임 모드"><button id="lany-mode-normal" type="button" onclick="LanyShell.setMode('normal')"><span>노멀 모드</span><small>250단계</small></button><button id="lany-mode-hard" type="button" onclick="LanyShell.setMode('hard')"><span>하드 모드</span><small>250단계</small></button></div>
+  <header class="lany-map-head"><button class="lany-back" type="button" onclick="LanyShell.showHome()" aria-label="처음 화면으로">‹</button><div><span class="lany-map-eyebrow">사탕마을 여행 맵</span><h2 id="lany-map-heading">🗺️ 라니팡 모험 맵</h2></div><button class="lany-map-icon" type="button" onclick="LanyShell.openHelp()" aria-label="게임 방법">?</button><button class="lany-map-icon lany-mobile-fullscreen" type="button" onclick="LanyShell.toggleFullscreen()" aria-label="모바일 전체 화면">⛶</button></header>
+  <div class="lany-campaign-switch" role="group" aria-label="게임 모드"><button id="lany-mode-normal" type="button" onclick="LanyShell.setMode('normal')"><span>노멀 모드</span><small>250단계</small></button><button id="lany-mode-hard" type="button" onclick="LanyShell.setMode('hard')"><span>하드 모드</span><small>250단계</small></button><button id="lany-mode-crazy" type="button" onclick="LanyShell.setMode('crazy')"><span>크레이지</span><small>250단계</small></button></div>
   <div class="lany-map-summary"><span id="lany-map-progress">완료한 단계 0 / 250</span><span id="lany-map-star-count">⭐ 0개</span></div>
   <div class="lany-world-switcher" aria-label="모험 지역 페이지 이동"><button id="lany-world-prev" class="lany-page-arrow" type="button" onclick="LanyShell.worldPage(-1)" aria-label="이전 지역 목록">◀</button><nav id="lany-world-tabs" class="lany-world-tabs" aria-label="모험 지역 선택"></nav><button id="lany-world-next" class="lany-page-arrow" type="button" onclick="LanyShell.worldPage(1)" aria-label="다음 지역 목록">▶</button></div>
   <div class="lany-map-section"><div class="lany-world-banner"><div><span id="lany-world-no">제1지역</span><h3 id="lany-world-title">사탕 골짜기</h3></div><span id="lany-world-icon" aria-hidden="true">🍭</span></div>
@@ -394,7 +397,7 @@ body {
 <section id="lany-stage-prep" class="lany-game-screen" role="dialog" aria-modal="true" aria-labelledby="lany-prep-heading" hidden>
  <div class="lany-screen-scrim" aria-hidden="true"></div>
  <div class="lany-prep-card">
-  <button class="lany-back lany-prep-back" type="button" onclick="LanyShell.openMap()" aria-label="지도로 돌아가기">‹</button>
+  <button class="lany-back lany-prep-back" type="button" onclick="LanyShell.openMap()" aria-label="맵로 돌아가기">‹</button>
   <div class="lany-prep-hero" aria-hidden="true">🐰 <span>🍬</span> ⭐</div>
   <p class="lany-prep-region" id="lany-prep-region">제1지역</p><h2 id="lany-prep-heading">1단계</h2>
   <p class="lany-prep-subtitle" id="lany-prep-subtitle">달콤한 모험을 준비하세요!</p>
@@ -404,7 +407,7 @@ body {
   <div class="lany-prep-boosters"><span>도움 아이템</span><div id="lany-prep-booster-counts">🔨 망치 · 🔀 섞기 · 🌈 색상</div><small>아이템은 게임 안에서 사용해요. 준비창에서는 소모되지 않아요.</small></div></div>
   <nav id="lany-prep-pager" class="lany-game-pager" aria-label="단계 준비 정보 페이지" hidden><button type="button" id="lany-prep-prev" class="lany-page-arrow" onclick="LanyShell.prepPage(-1)">◀ 이전</button><span id="lany-prep-page-status" role="status" aria-live="polite">1 / 2</span><button type="button" id="lany-prep-next" class="lany-page-arrow" onclick="LanyShell.prepPage(1)">다음 ▶</button></nav>
   <button id="lany-prep-play" class="lany-cta lany-prep-play" type="button" onclick="LanyShell.playPrepared()" data-lany-art="play">이 단계 시작</button>
-  <button class="lany-secondary lany-prep-cancel" type="button" onclick="LanyShell.openMap()" data-lany-art="map">지도 돌아가기</button>
+  <button class="lany-secondary lany-prep-cancel" type="button" onclick="LanyShell.openMap()" data-lany-art="map">맵 돌아가기</button>
  </div>
 </section>
 <section id="lany-friends-modal" class="lany-modal-wrap lany-friends-screen" role="dialog" aria-modal="true" aria-labelledby="lany-friends-heading" hidden>
@@ -415,7 +418,7 @@ body {
 <section id="lany-pause" class="lany-modal-wrap" role="dialog" aria-modal="true" aria-labelledby="lany-pause-title" hidden>
  <div class="lany-dialog"><div class="lany-dialog-emoji">🐰</div><h2 id="lany-pause-title">잠시 쉬어 갈까요?</h2><p>진행한 단계 기록은 이 기기에 저장돼요.</p>
  <button class="lany-action" type="button" onclick="LanyShell.resume()" data-lany-art="resume">계속하기</button>
- <button class="lany-action pale" type="button" onclick="LanyShell.openMap()" data-lany-art="map">모험 지도</button>
+ <button class="lany-action pale" type="button" onclick="LanyShell.openMap()" data-lany-art="map">모험 맵</button>
  <button class="lany-action pale" type="button" onclick="LanyShell.openHelp()" data-lany-art="help">게임 방법</button>
  <button class="lany-action pale" type="button" onclick="LanyShell.showHome()" data-lany-art="home">처음 화면으로</button>
  <button class="lany-action quiet" type="button" onclick="LanyShell.openExit()" data-lany-art="exit">나가기</button>
@@ -489,7 +492,7 @@ body {
 <!-- Level select overlay -->
 <div id="overlay-levels" class="overlay" style="display:none">
   <div class="modal" style="width:min(420px,92vw)">
-    <h2>🗺️ 단계 지도</h2>
+    <h2>🗺️ 단계 맵</h2>
     <p>원하는 단계를 선택하세요!</p>
     <div class="level-grid" id="level-grid"></div>
     <button class="btn btn-primary" onclick="hideOverlay('overlay-levels')" data-lany-art="close">닫기</button>
@@ -505,7 +508,7 @@ body {
     <div style="font-size:1.4rem;font-weight:800;color:#ffd700;margin:8px 0" id="win-score"></div>
     <div class="modal-btns">
       <button class="btn btn-primary" onclick="nextLevel()" data-lany-art="next">다음 단계 준비</button>
-      <button class="btn" style="background:rgba(255,255,255,.1);color:#fff" onclick="LanyShell.openMap()" data-lany-art="map">모험 지도</button>
+      <button class="btn" style="background:rgba(255,255,255,.1);color:#fff" onclick="LanyShell.openMap()" data-lany-art="map">모험 맵</button>
       <button class="btn" style="background:rgba(255,255,255,.1);color:#fff" onclick="replayLevel()" data-lany-art="retry">다시 도전</button>
     </div>
   </div>
@@ -518,7 +521,7 @@ body {
     <p id="lose-msg">아쉬워요! 다시 도전할까요?</p>
     <div class="modal-btns">
       <button class="btn btn-gold" onclick="replayLevel()" data-lany-art="retry">다시 도전</button>
-      <button class="btn btn-primary" onclick="showLevelSelect()" data-lany-art="map">단계 지도</button>
+      <button class="btn btn-primary" onclick="showLevelSelect()" data-lany-art="map">단계 맵</button>
     </div>
   </div>
 </div>
@@ -536,7 +539,7 @@ body {
       <div data-tutorial-page="1" class="lany-tutorial-page" hidden>
        <p>💥 <b>4개 이상 연결</b>하면 특별 블록을 만들 수 있어요.</p>
        <p>🌟 연속 콤보를 만들면 더 높은 점수와 화려한 효과가 나와요.</p>
-       <p>🔨 막히면 도움 아이템을 사용하고, 지도의 다음 지역에 도전해 보세요.</p>
+       <p>🔨 막히면 도움 아이템을 사용하고, 맵의 다음 지역에 도전해 보세요.</p>
       </div>
      </div>
      <nav class="lany-game-pager lany-tutorial-pager" aria-label="게임 방법 페이지"><button type="button" id="lany-help-prev" class="lany-page-arrow" onclick="LanyShell.helpPage(-1)">◀ 이전</button><span id="lany-help-status" role="status" aria-live="polite">1 / 2</span><button type="button" id="lany-help-next" class="lany-page-arrow" onclick="LanyShell.helpPage(1)">다음 ▶</button></nav>
@@ -919,13 +922,23 @@ const HARD_LEVELS=LEVELS.map((base,index)=>{
     wallCount:Math.min(7,2+Math.floor(world/2)+Math.floor(step/10)),
     bombCount:2+Math.floor(step/8),morphSeconds:Math.max(7,15-world-Math.floor(step/10))};
 });
-function activeLevels(){return state.mode==='hard'?HARD_LEVELS:LEVELS;}
-function campaignKey(key){return state.mode==='hard'?`sc_hard_${key}`:`sc_${key}`;}
+const CRAZY_LEVELS=LEVELS.map((base,index)=>{
+  const world=Math.floor(index/25),step=index%25;
+  return {...base,name:`${base.theme} · 크레이지 ${step+1}단계`,
+    goal:Math.round((1350+index*17)/50)*50,moves:Math.max(17,Math.min(23,base.moves+1)),
+    clearGoal:12+Math.floor(world/2)+Math.floor(step/6),hasBombs:true,
+    colors:Math.max(6,base.colors),hasLocked:true,
+    lockedCount:Math.min(16,5+world+Math.floor(step/6)),
+    wallCount:Math.min(10,4+Math.floor(world/2)+Math.floor(step/8)),
+    bombCount:1+Math.floor(step/12),morphSeconds:Math.max(5,10-world-Math.floor(step/12))};
+});
+function activeLevels(){return state.mode==='crazy'?CRAZY_LEVELS:state.mode==='hard'?HARD_LEVELS:LEVELS;}
+function campaignKey(key){return state.mode==='crazy'?`sc_crazy_${key}`:state.mode==='hard'?`sc_hard_${key}`:`sc_${key}`;}
 function readCampaignSave(key,fallback){
   try{const value=JSON.parse(localStorage.getItem(campaignKey(key))||'null');return value??fallback;}catch(_){return fallback;}
 }
 function setCampaignMode(mode){
-  if(mode!=='normal'&&mode!=='hard')return;
+  if(!['normal','hard','crazy'].includes(mode))return;
   state.mode=mode;
   const best=readCampaignSave('best',{}),unlocked=readCampaignSave('unlocked',[1]),stars=readCampaignSave('stars',{});
   state.bestScores=best&&typeof best==='object'&&!Array.isArray(best)?best:{};
@@ -937,7 +950,7 @@ function setCampaignMode(mode){
 
 let state = {
   board: [], specials: [], locked: [], walls: [], morphTimer: null, hardClears: 0, pendingFrenzy: [],
-  mode: (()=>{try{return localStorage.getItem('cv_campaign_mode')==='hard'?'hard':'normal'}catch(_){return 'normal'}})(),
+  mode: (()=>{try{return ['normal','hard','crazy'].includes(localStorage.getItem('cv_campaign_mode'))?localStorage.getItem('cv_campaign_mode'):'normal'}catch(_){return 'normal'}})(),
   score: 0, level: 1, movesLeft: 20,
   selected: null, animating: false,
   activeBooster: null,
@@ -1019,7 +1032,7 @@ function initLevel(lvNum) {
   LanyPerf.stageStarts++;
   const lv = activeLevels()[lvNum-1];
   state.level = lvNum;
-  try { localStorage.setItem(state.mode==='hard'?'cv_hard_last_level':'cv_last_level', String(lvNum)); } catch (_) {}
+  try { localStorage.setItem(state.mode==='crazy'?'cv_crazy_last_level':state.mode==='hard'?'cv_hard_last_level':'cv_last_level', String(lvNum)); } catch (_) {}
   clearInterval(state.morphTimer); state.morphTimer=null;
   state.score = 0;
   state.hardClears = 0; state.pendingFrenzy = [];
@@ -1081,7 +1094,7 @@ const LANY_CELL_COLORS=[
 const LanyPerf={stageStarts:0,cellCreates:0,boardRenders:0};
 window.LanyPerf=LanyPerf;
 function morphHardAnimals(){
-  if(state.mode!=='hard'||state.animating||document.hidden||window.LanyShell?.getCurrentScreen?.()!=='game')return;
+  if(state.mode==='normal'||state.animating||document.hidden||window.LanyShell?.getCurrentScreen?.()!=='game'||!window.LanyTempo?.isRunning?.())return;
   const lv=activeLevels()[state.level-1],changed=[];
   for(let tries=0;tries<32&&changed.length<3;tries++){
     const idx=Math.floor(Math.random()*ROWS*COLS);
@@ -1170,11 +1183,11 @@ function updateHUD(){
   document.getElementById('level-val').textContent=state.level;
   const best=state.bestScores[state.level]||0;
   document.getElementById('best-val').textContent=best>0?best.toLocaleString():'—';
-  document.getElementById('level-name').textContent=(state.mode==='hard'?'🔥 ':'')+lv.name;
+  document.getElementById('level-name').textContent=(state.mode==='crazy'?'💀 ':state.mode==='hard'?'🔥 ':'')+lv.name;
   document.getElementById('level-goal').textContent=`목표 점수: ${lv.goal.toLocaleString()}`;
   const hardObjective=document.getElementById('lany-hard-objective');
-  hardObjective.hidden=state.mode!=='hard';
-  if(state.mode==='hard')hardObjective.textContent=`동물 매치 ${Math.min(state.hardClears,lv.clearGoal)} / ${lv.clearGoal}`;
+  hardObjective.hidden=state.mode==='normal';
+  if(state.mode!=='normal')hardObjective.textContent=`동물 매치 ${Math.min(state.hardClears,lv.clearGoal)} / ${lv.clearGoal}`;
   document.getElementById('score-label').textContent=`${state.score.toLocaleString()} / ${lv.goal.toLocaleString()}`;
   document.getElementById('moves-label').textContent=`남은 이동: ${state.movesLeft}회`;
   document.getElementById('lany-hud-moves').textContent=state.movesLeft;
@@ -1365,7 +1378,7 @@ async function resolveMatches(matchGroups,epoch=state.playEpoch){
     const pivot=g.cells[Math.floor(g.cells.length/2)];
     if(n>=5){
       snd_colorBomb();
-      if(state.mode==='hard'){
+      if(state.mode!=='normal'){
         const kind=n>=6?SPECIAL_FRENZY_BURST:g.dir==='h'?SPECIAL_FRENZY_ROW:SPECIAL_FRENZY_COL;
         state.pendingFrenzy.push({index:pivot[0]*COLS+pivot[1],gem:g.gem,kind});
       } else toCreate.push({r:pivot[0],c:pivot[1],s:SPECIAL_COLOR});
@@ -1392,7 +1405,7 @@ async function resolveMatches(matchGroups,epoch=state.playEpoch){
   // Score
   const pts = comboPoints(allCells.size,state.combo);
   state.score += pts+wallsToBreak.size*80;
-  if(state.mode==='hard')state.hardClears+=matchGroups.length;
+  if(state.mode!=='normal')state.hardClears+=matchGroups.length;
   showScoreFloat(pts+wallsToBreak.size*80);
   for(const index of wallsToBreak){state.walls[index]=false;state.board[index]=null;state.specials[index]=SPECIAL_NONE;}
   if(state.combo>2) showCombo(state.combo);
@@ -1672,7 +1685,7 @@ function shuffleBoard(){
 // ── End conditions ───────────────────────────────────────────
 function checkEnd(){
   const lv=activeLevels()[state.level-1];
-  if(state.score>=lv.goal && (state.mode!=='hard'||state.hardClears>=lv.clearGoal)){
+  if(state.score>=lv.goal && (state.mode==='normal'||state.hardClears>=lv.clearGoal)){
     const stars = state.score>=lv.goal*2?3:state.score>=lv.goal*1.4?2:1;
     // Update best
     if(!state.bestScores[state.level]||state.score>state.bestScores[state.level]){
@@ -1732,7 +1745,7 @@ function replayLevel(){
   hideOverlay('overlay-win'); hideOverlay('overlay-lose');
   initGame(state.level);
 }
-function initGame(lv=Number(localStorage.getItem(state.mode==='hard'?'cv_hard_last_level':'cv_last_level'))||1){
+function initGame(lv=Number(localStorage.getItem(state.mode==='crazy'?'cv_crazy_last_level':state.mode==='hard'?'cv_hard_last_level':'cv_last_level'))||1){
   lv = Number.isInteger(lv) && lv>=1 && lv<=activeLevels().length && state.unlockedLevels.includes(lv) ? lv : 1;
   hideOverlay('overlay-win'); hideOverlay('overlay-lose');
   initLevel(lv);
@@ -1743,8 +1756,8 @@ function initGame(lv=Number(localStorage.getItem(state.mode==='hard'?'cv_hard_la
 function showLevelSelect(){
   // All old map entry points use the same actual map UI.
   if(window.LanyShell?.openMap) return window.LanyShell.openMap();
-  console.error('[라니팡] 지도 모듈이 로드되지 않았습니다.');
-  alert('지도를 여는 중 문제가 발생했어요. 페이지를 새로고침한 후 다시 시도해 주세요.');
+  console.error('[라니팡] 맵 모듈이 로드되지 않았습니다.');
+  alert('맵를 여는 중 문제가 발생했어요. 페이지를 새로고침한 후 다시 시도해 주세요.');
 }
 
 // ── Utils ────────────────────────────────────────────────────
@@ -1816,3 +1829,4 @@ function startBgMusic() {
 <script defer src="./js/lany-perf-v19.js?v=2.3.0"></script>
 </body>
 </html>
+

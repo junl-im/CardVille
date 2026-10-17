@@ -10,7 +10,7 @@ const sandbox={
  document:{getElementById:el,addEventListener(){}},
  localStorage:{getItem:k=>store[k]??null,setItem:(k,v)=>store[k]=String(v)},
  performance:{now:()=>now},setInterval(fn,interval){assert.equal(interval,250);starts++;liveTickers++;assert.equal(liveTickers,1);tick=fn;return starts},clearInterval(id){assert(id>=1);stops++;liveTickers--;assert.equal(liveTickers,0)},
- state:{animating:false,score:0,level:1},LEVELS:[{goal:500}],activeLevels(){return [{goal:500}]},
+ state:{animating:false,score:0,level:1,mode:'normal',hardClears:0},LEVELS:[{goal:500}],activeLevels(){return [{goal:500,clearGoal:12}]},
  showLose(){lose++},checkEnd(){win++},
  console,snd_tick(){}
 };sandbox.window=sandbox;vm.createContext(sandbox);vm.runInContext(source,sandbox);
@@ -27,4 +27,21 @@ tempo.stop();assert(!tempo.isRunning());assert.equal(liveTickers,0);
 tempo.setEnabled(true);tempo.start(1);now=250000;tick();assert.equal(lose,1);assert(tempo.isExpired());assert(!tempo.isRunning());
 assert.equal(win,0);assert.equal(store.lany_timed_challenge,'on');
 assert.equal(liveTickers,0);assert.equal(starts,stops,'no clock intervals leaked');
-console.log(JSON.stringify({ok:true,pausedNotDecremented:true,classicElapsed:true,expiryLose:true,secretFree:true}));
+// Time expiry must resolve every mode, including Crazy with a score-only objective met.
+for(const mode of ['normal','hard','crazy']){
+  sandbox.state.mode=mode;sandbox.state.score=500;sandbox.state.hardClears=0;
+  const previousWin=win,previousLose=lose;
+  tempo.start(1);now+=186000;tick();
+  assert.equal(win,previousWin+(mode==='normal'?1:0),`${mode}: match objective gates the win`);
+  assert.equal(lose,previousLose+(mode==='normal'?0:1),`${mode}: unmet match objective expires to a loss`);
+  assert.equal(liveTickers,0,`${mode}: no expired timer is left running`);
+  if(mode!=='normal'){
+    sandbox.state.hardClears=12;
+    const completedWins=win,completedLosses=lose;
+    tempo.start(1);now+=186000;tick();
+    assert.equal(win,completedWins+1,`${mode}: both objectives complete wins`);
+    assert.equal(lose,completedLosses);
+  }
+}
+assert.equal(starts,stops,'all mode expiry timers are released');
+console.log(JSON.stringify({ok:true,pausedNotDecremented:true,classicElapsed:true,expiryLose:true,campaignExpiry:true,secretFree:true}));

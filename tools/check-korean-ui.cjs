@@ -8,7 +8,7 @@ const manifest=JSON.parse(fs.readFileSync('web/manifest.json','utf8'));
 const version=JSON.parse(fs.readFileSync('web/version.json','utf8'));
 assert(html.includes('<html lang="ko">'));
 assert(manifest.name.includes('라니팡'));assert.equal(version.language,'ko');
-for(const text of ['점수','최고 점수','단계 지도','게임 시작','드래그','목표 점수','남은 이동'])assert(html.includes(text),'Missing Korean UI '+text);
+for(const text of ['점수','최고 점수','단계 맵','게임 시작','드래그','목표 점수','남은 이동'])assert(html.includes(text),'Missing Korean UI '+text);
 assert(game.includes('cvWorldNames=') && game.includes('cvStageNames='));
 const worlds=JSON.parse(game.match(/const cvWorldNames=(\[[^;]+\]);/)[1]);
 const phases=JSON.parse(game.match(/const cvStageNames=(\[[^;]+\]);/)[1]);
