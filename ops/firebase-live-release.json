@@ -3,8 +3,8 @@
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "b234c81ef4521ebe30de16f598d99623165fc1bb",
-  "requestedFor": "라니팡 게임 상단 중복 지도 버튼 제거, 맵·도감 토끼와 검은 고양이 캐릭터 버튼 적용 배포.",
+  "sourceCommit": "b7702e8d3fd481524d975ad3dc960f03394072c5",
+  "requestedFor": "라니팡 나가기 곰 캐릭터 버튼, 상단 소리 컨트롤, GO 윙크 캐릭터 보정 배포.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -36,5 +36,6 @@
   "mapReliabilityV46": true,
   "characterPolishV47": true,
   "gameControlsV48": true,
-  "characterNavV49": true
+  "characterNavV49": true,
+  "gamePolishV50": true
 }
