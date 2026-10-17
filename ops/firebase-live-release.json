@@ -3,8 +3,8 @@
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "fb7470941f95807fa36808b6612ee2f137ee70f4",
-  "requestedFor": "라니팡 일반·하드 지도 분위기와 상태 표시를 캐릭터 디자인에 맞게 다듬은 버전 배포.",
+  "sourceCommit": "4f2be77588f2eb8f6e3ad999fdff10a6f5cf4514",
+  "requestedFor": "라니팡 게임 상단 메뉴·지도 그림 버튼 복구, 진행 정보 가독성 및 선택 아이템 표시 개선 배포.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -34,5 +34,6 @@
   "modeGameplayV44": true,
   "mapConnectV45": true,
   "mapReliabilityV46": true,
-  "characterPolishV47": true
+  "characterPolishV47": true,
+  "gameControlsV48": true
 }
