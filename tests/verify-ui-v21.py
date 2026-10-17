@@ -27,7 +27,7 @@ with sync_playwright() as pw:
   page.screenshot(path=str(out/(name+'-title.png')))
   page.locator('.lany-art-help').click()
   assert page.locator('#overlay-tutorial').is_visible(),name
-  bg('#overlay-tutorial .modal','panel-confirm.webp')
+  bg('#overlay-tutorial .modal','linear-gradient')
   page.evaluate("LanyShell.closeTutorial()")
   page.locator('.lany-art-friends').click()
   assert page.locator('#lany-friends-modal').is_visible(),name
@@ -35,7 +35,7 @@ with sync_playwright() as pw:
   page.locator('.lany-friends-close').click()
   page.locator('#lany-start-button').click()
   assert page.locator('#lany-world-map').is_visible(),name
-  bg('#lany-world-map .lany-world-banner','region-header.webp')  # v2.3 text-free art replaces word-baked chapter
+  bg('#lany-world-map .lany-world-banner','linear-gradient')  # v52 keeps the region title readable on a quiet frame
   assert page.locator('#lany-world-tabs .lany-world-tab').evaluate_all("els=>els.every(e=>e.childElementCount===0&&e.textContent.trim()===''&&getComputedStyle(e,'::before').display==='none')"),(name,'region art must have one painted label')
   assert page.locator('#lany-world-no').inner_text()=='1~25단계',(name,'banner must not repeat region name')
   bg('#lany-map-continue','v26/actions/continue.webp')
@@ -49,10 +49,12 @@ with sync_playwright() as pw:
    assert page.locator('[data-prep-page="1"]').is_hidden(),(name,'unused prep details should stay hidden')
   bg('.lany-prep-card','panel-help.webp')
   # Standalone action art must keep its source aspect ratio instead of stretching text.
-  for selector in ('#lany-prep-play','#lany-stage-prep .lany-prep-cancel'):
+  for selector in ('#lany-prep-play',):
    box=page.locator(selector).bounding_box()
    assert box and 2.4 < box['width']/box['height'] < 2.6,(name,selector,box)
    assert page.locator(selector).evaluate("e=>getComputedStyle(e).backgroundSize")=='contain',(name,selector)
+  assert page.locator('#lany-stage-prep .lany-prep-cancel').inner_text().strip()=='맵 돌아가기'
+  bg('#lany-stage-prep .lany-prep-cancel','linear-gradient')
   page.locator('#lany-prep-play').click()
   assert page.locator('#board .cell').count()==64,name
   bg('#app>.header .hud-box','panel-score.webp')
