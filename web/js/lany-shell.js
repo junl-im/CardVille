@@ -120,6 +120,7 @@
    $('lany-world-icon').src='./assets/v25/animals/'+mapFriends[state.mode][n]+'.webp';
    const grid=$('lany-map-levels');grid.replaceChildren();
    grid.dataset.world=String(n);grid.dataset.page=String(nav.mapPage);
+   grid.style.setProperty('--lany-world-y',`${Math.min(n*11,100)}%`);
    grid.style.setProperty('--lany-map-rows',String(Math.ceil((end-start)/3)));
    // One light-weight Canvas layer for the route: no vector DOM and no separate image downloads.
    const route=document.createElement('canvas');
