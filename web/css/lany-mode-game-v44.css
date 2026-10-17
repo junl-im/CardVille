@@ -1,0 +1,22 @@
+/* Keep animal tiles calm while the surrounding game identifies its campaign. */
+body[data-campaign="normal"]:not(.lany-at-title){background:linear-gradient(#eaffefdf,#d7f5e6cc),url('../assets/v43/normal-forest.webp') center/cover fixed!important;color:#315e53!important}
+body[data-campaign="hard"]:not(.lany-at-title){background:linear-gradient(#fff0e2df,#efc5bbcf),url('../assets/v43/hard-village.webp') center/cover fixed!important;color:#763e4a!important}
+body[data-campaign="normal"] #app{background:linear-gradient(#edfff638,#d1f4e238)!important}
+body[data-campaign="hard"] #app{background:linear-gradient(#fff0e638,#eeaeab38)!important}
+body[data-campaign="normal"] #app>.header{background:linear-gradient(#fafff3,#e2f7e6)!important;border-color:#fff8d8!important;box-shadow:0 3px 0 #88c8a6,0 6px 12px #447d6744!important}
+body[data-campaign="hard"] #app>.header{background:linear-gradient(#fff8e8,#ffdacc)!important;border-color:#fff5d9!important;box-shadow:0 3px 0 #d98f7d,0 6px 12px #8b4b5144!important}
+body[data-campaign="normal"] #app .level-info{background:linear-gradient(#fafff0,#e7f9e8)!important;border-color:#fff5d5!important;box-shadow:0 3px 0 #97caa5,0 6px 12px #4a7d6044!important}
+body[data-campaign="hard"] #app .level-info{background:linear-gradient(#fff9e9,#ffe4d5)!important;border-color:#fff2cc!important;box-shadow:0 3px 0 #d99483,0 6px 12px #8e4c5244!important}
+body[data-campaign="normal"] #app .level-title{color:#337e5f!important}
+body[data-campaign="hard"] #app .level-title{color:#9b4a46!important}
+body[data-campaign="normal"] #board{border-color:#e8ffed!important;box-shadow:0 4px 0 #8bc9a4,0 9px 20px #457c5d4d,inset 0 0 0 2px #ffffffb8!important}
+body[data-campaign="hard"] #board{border-color:#fff4dd!important;box-shadow:0 4px 0 #db9b7c,0 9px 20px #9c615b55,inset 0 0 0 2px #ffffffb8!important}
+body[data-campaign="normal"] #app .boosters,body[data-campaign="normal"] #app .lany-game-nav{background:linear-gradient(#f8fff0,#def5dd)!important;border-color:#fff9d8!important;box-shadow:0 3px 0 #90c69c,0 6px 12px #497b5d44!important}
+body[data-campaign="hard"] #app .boosters,body[data-campaign="hard"] #app .lany-game-nav{background:linear-gradient(#fff8e9,#f9d9cb)!important;border-color:#fff2cd!important;box-shadow:0 3px 0 #d7957e,0 6px 12px #8c4e4d44!important}
+body[data-campaign="hard"] .lany-go-intro .lany-go-number,body[data-campaign="hard"] .lany-go-intro .lany-go-number.go{background-image:url('../assets/v44/mode-hard-red.webp')!important;color:#fff9de!important;text-shadow:0 2px 3px #713036!important}
+#lany-world-map #lany-mode-hard{background-image:url('../assets/v44/mode-hard-red.webp')!important;text-shadow:0 2px 2px #812b39,0 0 2px #52202d!important}
+/* Real buttons give the four tools keyboard access and clear focus. */
+#app .boosters button.booster{font-family:inherit;color:inherit;appearance:none;-webkit-appearance:none;line-height:1!important}
+#app .boosters button.booster:focus-visible{outline:3px solid #405ea1!important;outline-offset:3px!important}
+#app .boosters button.booster:disabled{opacity:.55!important;filter:grayscale(.55)!important;cursor:not-allowed!important}
+@media(prefers-reduced-motion:reduce){#app .boosters button.booster{transition:none!important}}
