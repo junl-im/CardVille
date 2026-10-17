@@ -10,7 +10,7 @@ assert.equal(version.illustratedActionBadges,12);
 assert.equal(version.illustratedGameplayButtons,25);
 assert(version.actionSpecificButtonArt===true);
 assert(manifest.start_url.includes('v=2.3.0'));
-assert.equal((html.match(/data-lany-art="/g)||[]).length,25);
+assert.equal((html.match(/data-lany-art="/g)||[]).length,27);
 assert(html.includes('lany-action-art-v16.css?v=2.3.0'));
 for(const state of ['ordinary','current','boss','locked']){
  const path='./assets/map/stage-'+state+'-v20.webp';

@@ -236,7 +236,7 @@
    try{if(mobileFullscreen()&&document.documentElement.requestFullscreen&&!document.fullscreenElement)Promise.resolve(document.documentElement.requestFullscreen({navigationUI:'hide'})).catch(()=>{})}catch(_){/* browser permission */}
  }
  function openPause(){cancelGo();if(nav.screen!=='game'){openExit();return}window.LanyTempo?.pause();hide();nav.overlay='pause';$('lany-pause').hidden=false;$('lany-pause').querySelector('button').focus()}
- function openExit(){cancelGo();window.LanyTempo?.pause();hide();nav.previousScreen=nav.screen;nav.overlay='exit';$('lany-exit').hidden=false;$('lany-exit').querySelector('button').focus()}
+ function openExit(){cancelGo();for(const id of ['overlay-win','overlay-lose']){const el=$(id);if(el)el.style.display='none'}window.LanyTempo?.pause();hide();nav.previousScreen=nav.screen;nav.overlay='exit';$('lany-exit').hidden=false;$('lany-exit').querySelector('button').focus()}
  function resume(){hide();if(nav.screen==='game')window.LanyTempo?.resume();if(nav.screen==='map')$('lany-map-continue').focus();else if(nav.screen==='prep')$('lany-prep-play').focus();else $('board')?.focus?.()}
  function showHome(){cancelGo();window.LanyTempo?.pause();hide();hideLegacy();hideViews();nav.started=false;nav.returnToGame=false;nav.screen='title';document.body.classList.add('lany-at-title');$('lany-title').hidden=false;if(document.fullscreenElement)Promise.resolve(document.exitFullscreen?.()).catch(()=>{});$('lany-start-button').focus()}
  function exitGame(){showHome()}
