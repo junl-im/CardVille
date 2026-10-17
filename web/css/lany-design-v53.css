@@ -176,3 +176,4 @@ html body #app .boosters #b-hammer{background-image:url('../assets/v30/boosters/
 html body #app .boosters #b-shuffle{background-image:url('../assets/v30/boosters/shuffle.webp'),url('../assets/v53/control.webp')!important}
 html body #app .boosters #b-color{background-image:url('../assets/v30/boosters/color.webp'),url('../assets/v53/control.webp')!important}
 html body #app .boosters #b-time{background-image:url('../assets/v30/boosters/time.webp'),url('../assets/v53/control.webp')!important}
+@media(min-width:700px){html body #lany-world-map .lany-map-head button.lany-mobile-fullscreen{display:none!important}}
