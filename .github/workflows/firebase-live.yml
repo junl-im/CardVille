@@ -54,6 +54,7 @@ jobs:
           node tools/check-mode-game-v44.cjs
           node tools/check-precache-assets-v44.cjs
           node tools/check-map-connect-v45.cjs
+          node tools/check-map-reliability-v46.cjs
           node tools/check-pages-v13.cjs
           node tools/check-pwa-v14.cjs
           node tools/check-art-buttons-v15.cjs
