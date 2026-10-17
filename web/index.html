@@ -326,6 +326,7 @@ body {
 <link rel="stylesheet" href="./css/lany-map-connect-v45.css?v=1">
 <link rel="stylesheet" href="./css/lany-character-polish-v47.css?v=1">
 <link rel="stylesheet" href="./css/lany-game-controls-v48.css?v=1">
+<link rel="stylesheet" href="./css/lany-game-nav-v49.css?v=1">
 </head>
 <body class="lany-at-title">
 <main id="lany-title" class="lany-title" role="main" aria-label="라니팡 시작 화면">
@@ -440,7 +441,7 @@ body {
       <div class="hud-box"><div class="hud-val" id="score-val">0</div><div class="hud-lbl">점수</div></div>
       <div class="hud-box"><div class="hud-val" id="best-val">0</div><div class="hud-lbl">최고 점수</div></div>
       <div class="hud-box"><div class="hud-val" id="level-val">1</div><div class="hud-lbl">단계</div></div><div class="hud-box lany-moves-hud"><div class="hud-val" id="lany-hud-moves">20</div><div class="hud-lbl">남은 이동</div></div>
-      <button class="btn btn-primary" onclick="LanyShell.openPause()" aria-label="게임 메뉴" style="padding:6px 12px;font-size:.75rem;" data-lany-art="pause">메뉴</button> <button class="btn btn-primary" id="lany-header-map-button" type="button" onclick="LanyShell.openMap()" style="padding:8px 14px;font-size:.85rem;" data-lany-art="map">지도</button> <button class="btn btn-primary" onclick="toggleBgMusic()" id="music-btn" aria-label="배경 음악 켜기" aria-pressed="false" style="padding:6px 10px;font-size:.75rem;">🎵</button>
+      <button class="btn btn-primary" onclick="LanyShell.openPause()" aria-label="게임 메뉴" style="padding:6px 12px;font-size:.75rem;" data-lany-art="pause">메뉴</button> <button class="btn btn-primary" onclick="toggleBgMusic()" id="music-btn" aria-label="배경 음악 켜기" aria-pressed="false" style="padding:6px 10px;font-size:.75rem;">🎵</button>
     </div>
   </header>
 
@@ -474,7 +475,7 @@ body {
     <button class="booster" id="b-time" type="button" onclick="activateBooster('time')" aria-label="이동 +5회 1개" aria-pressed="false">⏱️<span>이동 +5회</span><span class="count" id="b-time-cnt" aria-hidden="true">1</span></button>
   </div>
 
-  <nav class="lany-game-nav" aria-label="게임 화면 이동"><button id="lany-quick-map" class="lany-game-map-button" type="button" onclick="LanyShell.openMap()" data-lany-art="map" aria-label="모험 지도 열기">지도</button>
+  <nav class="lany-game-nav" aria-label="게임 화면 이동"><button id="lany-quick-map" class="lany-game-map-button" type="button" onclick="LanyShell.openMap()" data-lany-art="map" aria-label="모험 맵 열기">맵</button>
   <button class="lany-game-friends-button" type="button" onclick="LanyFriends.open()" data-lany-art="friends" aria-label="동물 친구 도감 열기">도감</button><button id="lany-quick-exit" class="lany-game-exit-button" type="button" onclick="LanyShell.openExit()" data-lany-art="exit" aria-label="게임 나가기">나가기</button></nav>
   <div class="cv-controls-hint" role="note">👆 블록을 누른 채 옆으로 밀어 보세요. 우클릭은 사용할 수 없습니다.</div>
   <div class="moves-bar" id="moves-bar"></div>

@@ -17,7 +17,7 @@ with sync_playwright() as pw:
   page.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
   page.goto(url+'?v=1.6.0',wait_until='load',timeout=30000)
   page.wait_for_function("typeof LanyShell==='object' && typeof LanyButtonFX==='object'")
-  assert page.locator('[data-lany-art]').count()==26,name
+  assert page.locator('[data-lany-art]').count()==25,name
   page.locator('#lany-start-button').click()
   assert page.locator('#lany-world-map').is_visible(),name
   def inspect_buttons(selector):
@@ -69,7 +69,7 @@ with sync_playwright() as pw:
   page.evaluate("""() => document.getElementById('overlay-lose').style.display='none'""")
   assert not missing,(name,missing)
   assert not errors,(name,errors)
-  results.append(dict(device=name,screen=f'{w}x{h}',gameplayIllustrations=26,pauseActions=5,winActions=3,
+  results.append(dict(device=name,screen=f'{w}x{h}',gameplayIllustrations=25,pauseActions=5,winActions=3,
      iconsLoaded=True,overflow=False,jsErrors=0))
   ctx.close()
  browser.close()

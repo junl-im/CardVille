@@ -44,12 +44,13 @@ for device,w,h,mobile in [('android',360,780,True),('desktop',1366,768,False)]:
   tap('#lany-map-resume')
   assert page.evaluate('LanyShell.getCurrentScreen()')=='game'
   assert page.evaluate('state.board.join(",")')==original
-  tap('#lany-header-map-button')
-  assert page.locator('#lany-world-map').is_visible(),(device,'header map button failed')
+  assert page.locator('#lany-header-map-button').count()==0
+  tap('#lany-quick-map')
+  assert page.locator('#lany-world-map').is_visible(),(device,'single map button failed')
   tap('#lany-map-levels button.lany-level:not([disabled])')
   assert page.locator('#lany-stage-prep').is_visible(),(device,'stage node click failed')
   assert not errs,(device,errs)
-  out.append({'device':device,'realTouch':mobile,'bottomMapWorks':True,'headerMapWorks':True,'stageTapWorks':True,'resumePreservesBoard':True,'javascriptErrors':0})
+  out.append({'device':device,'realTouch':mobile,'bottomMapWorks':True,'singleMapAction':True,'stageTapWorks':True,'resumePreservesBoard':True,'javascriptErrors':0})
   browser.close()
 (root/'docs'/'MAP_TOUCH_V091.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
 print(json.dumps(out,ensure_ascii=False,indent=2))
