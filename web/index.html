@@ -327,6 +327,7 @@ body {
 <link rel="stylesheet" href="./css/lany-character-polish-v47.css?v=1">
 <link rel="stylesheet" href="./css/lany-game-controls-v48.css?v=1">
 <link rel="stylesheet" href="./css/lany-game-nav-v49.css?v=1">
+<link rel="stylesheet" href="./css/lany-game-polish-v50.css?v=1">
 </head>
 <body class="lany-at-title">
 <main id="lany-title" class="lany-title" role="main" aria-label="라니팡 시작 화면">
@@ -428,7 +429,7 @@ body {
 </section>
 
 <section id="lany-go-intro" class="lany-go-intro" hidden aria-live="off" aria-label="퍼즐 게임 시작">
-  <div class="lany-go-mascots" aria-hidden="true"><img src="./assets/polish/rabbit-cheer.webp?v=2.3.0" alt="" draggable="false"><img src="./assets/polish/bear-cheer.webp?v=2.3.0" alt="" draggable="false"></div>
+  <div class="lany-go-mascots" aria-hidden="true"><img src="./assets/v25/animals/rabbit-wink.webp?v=2.3.0" alt="" draggable="false"><img src="./assets/v25/animals/bear-wink.webp?v=2.3.0" alt="" draggable="false"></div>
   <strong class="lany-go-number" id="lany-go-number" aria-hidden="true">3</strong>
   <span class="lany-go-caption">달콤한 도전이 시작돼요!</span>
 </section>
@@ -441,7 +442,7 @@ body {
       <div class="hud-box"><div class="hud-val" id="score-val">0</div><div class="hud-lbl">점수</div></div>
       <div class="hud-box"><div class="hud-val" id="best-val">0</div><div class="hud-lbl">최고 점수</div></div>
       <div class="hud-box"><div class="hud-val" id="level-val">1</div><div class="hud-lbl">단계</div></div><div class="hud-box lany-moves-hud"><div class="hud-val" id="lany-hud-moves">20</div><div class="hud-lbl">남은 이동</div></div>
-      <button class="btn btn-primary" onclick="LanyShell.openPause()" aria-label="게임 메뉴" style="padding:6px 12px;font-size:.75rem;" data-lany-art="pause">메뉴</button> <button class="btn btn-primary" onclick="toggleBgMusic()" id="music-btn" aria-label="배경 음악 켜기" aria-pressed="false" style="padding:6px 10px;font-size:.75rem;">🎵</button>
+      <button class="btn btn-primary" onclick="LanyShell.openPause()" aria-label="게임 메뉴" style="padding:6px 12px;font-size:.75rem;" data-lany-art="pause">메뉴</button> <button class="btn btn-primary" onclick="toggleBgMusic()" id="music-btn" aria-label="배경 음악 켜기" aria-pressed="false" style="padding:6px 10px;font-size:.75rem;"></button>
     </div>
   </header>
 
@@ -1749,7 +1750,6 @@ let bgNote = 0;
 function toggleBgMusic() {
   bgMusicOn = !bgMusicOn;
   const musicButton = document.getElementById('music-btn');
-  musicButton.textContent = bgMusicOn ? '🔇' : '🎵';
   musicButton.setAttribute('aria-pressed', String(bgMusicOn));
   musicButton.setAttribute('aria-label', bgMusicOn ? '배경 음악 끄기' : '배경 음악 켜기');
   if(bgMusicOn) startBgMusic();
