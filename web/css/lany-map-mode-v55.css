@@ -1,0 +1,8 @@
+/* Mode scenery: warm red village in Hard, dark violet village in Crazy. */
+html body[data-campaign="hard"] #lany-world-map .lany-map-section .lany-map-levels[data-world]{background-image:linear-gradient(145deg,#bf432525,#95344630),url('../assets/v43/hard-village.webp')!important;background-size:cover,cover!important;background-position:center,center var(--lany-world-y,50%)!important;background-blend-mode:normal,normal!important}
+html body[data-campaign="crazy"] #lany-world-map .lany-map-section .lany-map-levels[data-world]{background-image:linear-gradient(145deg,#31104c99,#8e256788),url('../assets/v43/hard-village.webp')!important;background-size:cover,cover!important;background-position:center,center var(--lany-world-y,50%)!important;background-blend-mode:normal,normal!important}
+html body[data-campaign="hard"] #lany-world-map .lany-map-section .lany-world-banner{background:linear-gradient(135deg,#fff9ed,#ffe5cf)!important;border-color:#d99a83!important}
+html body[data-campaign="crazy"] #lany-world-map .lany-map-section .lany-world-banner{background:linear-gradient(135deg,#fff9f1,#f3dfed)!important;border-color:#bb87b5!important;box-shadow:inset 0 1px #fff,0 3px 8px #57325a3d!important}
+html body[data-campaign="crazy"] #lany-world-map .lany-map-section .lany-world-banner #lany-world-title{color:#6e436f!important}
+
+

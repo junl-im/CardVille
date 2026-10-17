@@ -104,7 +104,7 @@ with sync_playwright() as playwright:
       assert 'world-atlas.webp' in bg,(tag,world_index,'regional map missing')
     page.locator('.lany-map-levels').evaluate("e=>e.dataset.world='0'")
     page.locator('#lany-mode-hard').click()
-    assert 'world-atlas.webp' in page.locator('.lany-map-levels').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'regional map missing in hard mode')
+    assert 'hard-village.webp' in page.locator('.lany-map-levels').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'red village missing in hard mode')
     assert 'hard-village.webp' in page.locator('#lany-world-map .lany-screen-scrim').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'hard village atmosphere missing')
     page.locator('#lany-mode-normal').click()
     assert page.locator('#lany-world-title').inner_text()=='사탕 골짜기',(tag,'canonical title changed')
@@ -218,5 +218,6 @@ with sync_playwright() as playwright:
     context.close()
   browser.close()
 print(json.dumps(reports,ensure_ascii=False,indent=2))
+
 
 
