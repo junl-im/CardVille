@@ -26,7 +26,7 @@
    const seq=goEpoch,reduce=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
    const frames=reduce?[['출발!',0]]:[['3',0],['2',650],['1',1300],['출발!',1950]];
    overlay.hidden=false;
-   overlay.querySelector('.lany-go-caption').textContent=state.mode==='hard'?'별빛 하드 도전 시작!':'달콤한 도전이 시작돼요!';
+   overlay.querySelector('.lany-go-caption').textContent=state.mode==='hard'?'불꽃 하드 도전 시작!':'달콤한 도전이 시작돼요!';
    window.LanyTempo?.pause();
    for(const [value,delay] of frames){
      const update=()=>{
@@ -80,8 +80,8 @@
  }
  function renderMap(){
    for(const mode of ['normal','hard']){const button=$('lany-mode-'+mode);button.setAttribute('aria-pressed',String(state.mode===mode));}
-   $('lany-map-heading').textContent=state.mode==='hard'?'🌙 라니팡 하드 지도':'🗺️ 라니팡 모험 지도';
-   document.querySelector('.lany-map-eyebrow').textContent=state.mode==='hard'?'별빛 도전 지도':'사탕마을 여행 지도';
+   $('lany-map-heading').textContent=state.mode==='hard'?'🔥 라니팡 하드 지도':'🗺️ 라니팡 모험 지도';
+   document.querySelector('.lany-map-eyebrow').textContent=state.mode==='hard'?'붉은 사탕마을 · 하드 도전':'푸른 숲속 · 노멀 모험';
    $('lany-map-tip').textContent=state.mode==='hard'?'⚡ 목표 점수와 동물 매치 횟수를 모두 채우세요. 5개 이상 연결하면 광폭 친구가 등장해요.':'🔓 빛나는 숫자를 눌러 도전을 시작하세요. 잠긴 단계는 이전 단계를 완료하면 열려요.';
    const unlocked=new Set(state.unlockedLevels),n=nav.world;
    const last=Math.max(1,...state.unlockedLevels.filter(i=>i>=1&&i<=250));
