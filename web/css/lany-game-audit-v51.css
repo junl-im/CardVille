@@ -1,0 +1,33 @@
+/* Keep the optional record drawer in the same candy UI as the game controls. */
+#lany-extra-controls[open]{
+  border:3px solid #f4c2d8!important;
+  border-radius:20px!important;
+  background:#fffaf0f2!important;
+  box-shadow:inset 0 0 0 2px #fff,0 5px 0 #d78cac88,0 9px 18px #704d7355!important;
+}
+#lany-extra-controls[open] .lany-record-summary{
+  border-color:#efbed0!important;
+  border-radius:16px!important;
+  background:#fffdf7!important;
+  box-shadow:inset 0 2px 4px #f8d3cb88!important;
+}
+#lany-extra-controls .lany-record-summary>strong{
+  width:max-content;
+  max-width:100%;
+  min-width:115px;
+  padding:4px 12px;
+  margin:-2px auto 7px;
+  background:url('../assets/v33/frames/pink.png') center/100% 100% no-repeat;
+  color:#fffdf7;
+  text-align:center;
+  text-shadow:0 1px 2px #933f68;
+}
+#lany-extra-controls .lany-record-summary span{
+  border:1px solid #f6d1dd;
+  background:#fff1f6;
+}
+#lany-extra-controls #leaderboard{
+  border:2px solid #f1cbb5!important;
+  border-radius:14px!important;
+  box-shadow:inset 0 2px 4px #e8bdab66!important;
+}

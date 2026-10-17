@@ -328,6 +328,7 @@ body {
 <link rel="stylesheet" href="./css/lany-game-controls-v48.css?v=1">
 <link rel="stylesheet" href="./css/lany-game-nav-v49.css?v=1">
 <link rel="stylesheet" href="./css/lany-game-polish-v50.css?v=1">
+<link rel="stylesheet" href="./css/lany-game-audit-v51.css?v=1">
 </head>
 <body class="lany-at-title">
 <main id="lany-title" class="lany-title" role="main" aria-label="라니팡 시작 화면">
@@ -936,7 +937,7 @@ function setCampaignMode(mode){
 
 let state = {
   board: [], specials: [], locked: [], walls: [], morphTimer: null, hardClears: 0, pendingFrenzy: [],
-  mode: localStorage.getItem('cv_campaign_mode')==='hard'?'hard':'normal',
+  mode: (()=>{try{return localStorage.getItem('cv_campaign_mode')==='hard'?'hard':'normal'}catch(_){return 'normal'}})(),
   score: 0, level: 1, movesLeft: 20,
   selected: null, animating: false,
   activeBooster: null,
@@ -1207,7 +1208,7 @@ function updateHUD(){
 // ── Click / swap logic ───────────────────────────────────────
 function onCellClick(r,c){
   // Pointer tap is never a selection or a swap. Targeted boosters remain tappable.
-  if(state.animating || state.walls[r*COLS+c] || state.locked[r*COLS+c]) return;
+  if(state.animating || state.walls[r*COLS+c] || (state.locked[r*COLS+c]&&!state.activeBooster)) return;
   if(state.activeBooster) applyBooster(r,c);
 }
 // Explicit keyboard-only alternative (Enter/Space), not a second pointer control scheme.
@@ -1580,10 +1581,11 @@ function boosterBurst(type,r,c){
 function activateBooster(type){
   if(state.animating||state.boosters[type]<=0) return;
   if(type==='shuffle'||type==='time'){
+    if(type==='shuffle'&&!shuffleBoard()){updateHUD();return;}
     state.boosters[type]--; state.activeBooster=null;
     document.querySelectorAll('.booster').forEach(b=>b.classList.remove('active'));
     snd_booster(); boosterBurst(type);
-    if(type==='shuffle') shuffleBoard(); else state.movesLeft+=5;
+    if(type==='time') state.movesLeft+=5;
     updateHUD(); return;
   }
   if(state.activeBooster===type){ state.activeBooster=null; }
@@ -1613,7 +1615,7 @@ function applyBooster(r,c){
     state.boosters.color--; boosterBurst('color',r,c);
     const gem=gemAt(r,c);
     let count=0;
-    for(let i=0;i<ROWS*COLS;i++){ if(state.board[i]===gem){ state.board[i]=null; count++; } }
+    for(let i=0;i<ROWS*COLS;i++){ if(state.board[i]===gem&&!state.walls[i]){ if(state.locked[i])state.locked[i]=false; else {state.board[i]=null;state.specials[i]=SPECIAL_NONE;} count++; } }
     state.score+=count*60;
     state.animating=true;
     const epoch=state.playEpoch;
@@ -1646,17 +1648,25 @@ function hasLegalSwap(){
 function shuffleBoard(){
   const lv=activeLevels()[state.level-1];
   const gemTypes=GEMS.slice(0,lv.colors);
+  // A shuffle only rearranges movable ordinary animals. Locks, walls and earned
+  // special blocks keep their contents and positions.
+  const movable=[];
+  for(let i=0;i<ROWS*COLS;i++){
+    if(!state.walls[i]&&!state.locked[i]&&!state.specials[i])movable.push(i);
+  }
+  const original=state.board.slice();
   let valid=false;
   for(let attempt=0;attempt<256;attempt++){
-    for(let i=0;i<ROWS*COLS;i++){
-      state.board[i]=state.walls[i]?null:gemTypes[Math.floor(Math.random()*gemTypes.length)];
-      state.specials[i]=SPECIAL_NONE;
-    }
+    for(const i of movable) state.board[i]=gemTypes[Math.floor(Math.random()*gemTypes.length)];
     if(findMatches().length===0 && hasLegalSwap()) { valid=true;break; }
   }
-  if(!valid) console.warn('[PROJECT MATCH] No playable random shuffle found within 256 attempts');
+  if(!valid){
+    state.board=original;
+    console.warn('[라니팡] 잠금·특수 블록을 유지하며 섞을 수 있는 배치를 찾지 못했습니다.');
+  }
   renderBoard();
-  scheduleHint();
+  if(valid) scheduleHint();
+  return valid;
 }
 
 // ── End conditions ───────────────────────────────────────────
@@ -1667,16 +1677,16 @@ function checkEnd(){
     // Update best
     if(!state.bestScores[state.level]||state.score>state.bestScores[state.level]){
       state.bestScores[state.level]=state.score;
-      localStorage.setItem(campaignKey('best'),JSON.stringify(state.bestScores));
+      try{localStorage.setItem(campaignKey('best'),JSON.stringify(state.bestScores));}catch(_){/* Keep the win playable without storage. */}
     }
     // Unlock next
     const unlocked=state.unlockedLevels;
     if(state.level<activeLevels().length && !unlocked.includes(state.level+1)){
       unlocked.push(state.level+1);
-      localStorage.setItem(campaignKey('unlocked'),JSON.stringify(unlocked));
+      try{localStorage.setItem(campaignKey('unlocked'),JSON.stringify(unlocked));}catch(_){/* Keep the win playable without storage. */}
     }
     state.levelStars[state.level]=Math.max(state.levelStars[state.level]||0,stars);
-    localStorage.setItem(campaignKey('stars'),JSON.stringify(state.levelStars));
+    try{localStorage.setItem(campaignKey('stars'),JSON.stringify(state.levelStars));}catch(_){/* Keep the win playable without storage. */}
     showWin(stars); return;
   }
   if(state.movesLeft<=0){
@@ -1753,7 +1763,7 @@ function toggleBgMusic() {
   musicButton.setAttribute('aria-pressed', String(bgMusicOn));
   musicButton.setAttribute('aria-label', bgMusicOn ? '배경 음악 끄기' : '배경 음악 켜기');
   if(bgMusicOn) startBgMusic();
-  else if(bgMusicTimer) clearInterval(bgMusicTimer);
+  else if(bgMusicTimer){clearInterval(bgMusicTimer);bgMusicTimer=null;}
 }
 
 function startBgMusic() {
