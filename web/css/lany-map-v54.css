@@ -1,0 +1,12 @@
+/* v54: compact map, regional animal portraits, and a distinct Crazy mode. */
+#lany-world-map .lany-map-visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+html body #lany-world-map .lany-map-panel{padding-top:clamp(8px,2.2vw,13px)!important}
+html body #lany-world-map .lany-campaign-switch{margin-top:0!important}
+html body #lany-world-map .lany-map-section .lany-world-banner{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;padding-right:9px!important}
+html body #lany-world-map .lany-map-section .lany-world-banner>div{min-width:0!important;flex:1!important}
+html body #lany-world-map .lany-map-section .lany-world-banner #lany-world-icon{display:block!important;flex:none!important;width:44px!important;height:44px!important;object-fit:contain!important;background:none!important;border:0!important;border-radius:0!important;filter:drop-shadow(0 3px 3px #69506335)!important}
+html body #lany-world-map #lany-mode-crazy{position:relative!important;isolation:isolate!important;filter:none!important;background:linear-gradient(155deg,#8d3693,#b44abc 45%,#613284)!important;border:2px solid #ffd47a!important;border-radius:13px!important;box-shadow:inset 0 2px 0 #ffffff66,0 3px 0 #6d296d,0 5px 9px #55316b55!important;color:#fff8db!important;text-shadow:0 2px 2px #4d235f!important;padding-left:23px!important}
+html body #lany-world-map #lany-mode-crazy::before{content:''!important;position:absolute!important;z-index:1!important;left:3px!important;top:50%!important;width:27px!important;height:27px!important;transform:translateY(-50%)!important;background:url('../assets/v41/hard/burst.webp') center/contain no-repeat!important;filter:drop-shadow(0 2px 2px #442364aa)!important;pointer-events:none!important}
+html body #lany-world-map #lany-mode-crazy[aria-pressed="true"]{box-shadow:inset 0 2px 0 #ffffff88,0 0 0 2px #fff0a0,0 3px 0 #6d296d,0 6px 12px #55316b88!important;opacity:1!important}
+html body #lany-world-map #lany-mode-crazy span,html body #lany-world-map #lany-mode-crazy small{position:relative!important;z-index:2!important}
+@media(max-width:360px){html body #lany-world-map #lany-mode-crazy{padding-left:17px!important}html body #lany-world-map #lany-mode-crazy::before{width:22px!important;height:22px!important}}

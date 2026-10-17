@@ -87,7 +87,8 @@ with sync_playwright() as playwright:
       page.locator('#lany-update-banner').wait_for(state='hidden',timeout=3000)
     page.locator('#lany-start-button').click()
     assert page.locator('#lany-world-map').is_visible()
-    for selector,asset in (('.lany-map-head .lany-back','back.webp'),('.lany-map-head .lany-map-icon:not(.lany-mobile-fullscreen)','help.webp'),('#lany-world-prev','prev.webp'),('#lany-world-next','next.webp')):
+    assert page.locator('.lany-map-head').count()==0,(tag,'obsolete map title bar')
+    for selector,asset in (('#lany-world-prev','prev.webp'),('#lany-world-next','next.webp')):
       assert 'v53/control.webp' in page.locator(selector).evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,selector,'approved v2.3 illustration missing')
     assert page.locator('#lany-world-tabs .lany-world-tab').first.evaluate("e=>getComputedStyle(e).backgroundImage.includes('v26/regions/tab-01.webp')"),(tag,'regional illustration is not mapped')
     assert page.locator('#lany-world-tabs .lany-world-tab').first.get_attribute('aria-label'),(tag,'region name must remain accessible')
@@ -107,6 +108,11 @@ with sync_playwright() as playwright:
     assert 'hard-village.webp' in page.locator('#lany-world-map .lany-screen-scrim').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'hard village atmosphere missing')
     page.locator('#lany-mode-normal').click()
     assert page.locator('#lany-world-title').inner_text()=='사탕 골짜기',(tag,'canonical title changed')
+    assert 'rabbit.webp' in page.locator('#lany-world-icon').get_attribute('src'),(tag,'normal map friend')
+    page.locator('#lany-mode-crazy').click()
+    assert 'cat.webp' in page.locator('#lany-world-icon').get_attribute('src'),(tag,'crazy map friend')
+    assert page.locator('#lany-mode-crazy').evaluate("e=>getComputedStyle(e,'::before').backgroundImage.includes('burst.webp')"),(tag,'crazy mode badge')
+    page.locator('#lany-mode-normal').click()
     page.evaluate('LanyShell.mapPage(1)')
     shot('map-next-page','#lany-world-map')
     page.evaluate('LanyShell.mapPage(-1)')

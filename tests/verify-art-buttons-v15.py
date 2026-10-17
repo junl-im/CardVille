@@ -69,8 +69,8 @@ with sync_playwright() as pw:
   page.locator('.lany-install-done').click()
   page.locator('#lany-start-button').click()
   assert page.locator('#lany-world-map').is_visible(),name
-  if mobile:assert page.locator('.lany-map-head .lany-mobile-fullscreen').is_visible(),name
-  else:assert not page.locator('.lany-map-head .lany-mobile-fullscreen').is_visible(),name
+  assert page.locator('.lany-map-head').count()==0,(name,'obsolete map title bar')
+  assert page.locator('#lany-world-icon').evaluate('e=>e.tagName=="IMG"&&e.complete&&e.naturalWidth>0'),(name,'region friend art')
   assert not errors,(name,errors)
   assert not missing,(name,missing)
   rows.append({'screen':name,'size':f'{w}x{h}','illustratedButtons':4,'helperColumns':expected_rows,'mainButtonDominant':True,'titleUnclipped':True,'missingAssets':0,'jsErrors':0})

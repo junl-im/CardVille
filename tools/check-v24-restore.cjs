@@ -6,7 +6,7 @@ const map=read('web/js/lany-shell.js'),sw=read('web/sw.js'),polish=read('web/js/
 assert.equal(v.version,'2.3.0-beta');assert.equal(v.visualRelease,'2.3.0');
 assert(h.includes('lany-v24-restore.css?v=2.3.0'),'CSS import missing');
 assert(h.includes('<div class="lany-version">v2.3.0</div>'),'stale release label');
-assert(sw.includes("lanypang-match-v2.3.0-ko-v53-candy-design-r1"),'cache not rotated');
+assert(sw.includes("lanypang-match-v2.3.0-ko-v54-map-compact-r1"),'cache not rotated');
 assert(sw.includes("'./css/lany-v24-restore.css'"),'offline style not cached');
 // Chrome Cache.addAll can reject duplicate request URLs and leave the PWA uncontrolled.
 const precache=sw.match(/const PRECACHE=\[([^;]+)\];/)?.[1];
@@ -45,3 +45,4 @@ for(const path of ['title/logo.webp','title/start.webp','title/install.webp','ti
 assert(read('web/js/lany-friends.js').includes("a.main?'./assets/v25/animals/'"),'main gallery faces do not match puzzle');
 for(const role of ['start','help','install'])assert(css.includes("v24/title/"+role+".webp"),'missing restored title '+role);
 console.log(JSON.stringify({pass:true,version:v.version,assets:files.length,regionTabs:10,originalMechanicsPreserved:true,blackCat:true,noSVG:true}));
+
