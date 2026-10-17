@@ -93,16 +93,18 @@ with sync_playwright() as playwright:
     assert page.locator('#lany-world-tabs .lany-world-tab').first.get_attribute('aria-label'),(tag,'region name must remain accessible')
     shot('map','#lany-world-map')
     assert page.locator('.lany-map-levels canvas.lany-route').count()==1
-    assert 'normal-forest.webp' in page.locator('.lany-map-levels').evaluate('e=>getComputedStyle(e).backgroundImage')
+    assert 'world-atlas.webp' in page.locator('.lany-map-levels').evaluate('e=>getComputedStyle(e).backgroundImage')
+    assert 'normal-forest.webp' in page.locator('#lany-world-map .lany-screen-scrim').evaluate('e=>getComputedStyle(e).backgroundImage')
     assert 'region-header.webp' in page.locator('.lany-world-banner').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'text-free world banner missing')
     # The map atmosphere now follows the campaign; every region keeps its title and stage nodes.
     for world_index in range(10):
       page.locator('.lany-map-levels').evaluate('(e,k)=>e.dataset.world=k',str(world_index))
       bg=page.locator('.lany-map-levels').evaluate('e=>getComputedStyle(e).backgroundImage')
-      assert 'normal-forest.webp' in bg,(tag,world_index,'normal forest map missing')
+      assert 'world-atlas.webp' in bg,(tag,world_index,'regional map missing')
     page.locator('.lany-map-levels').evaluate("e=>e.dataset.world='0'")
     page.locator('#lany-mode-hard').click()
-    assert 'hard-village.webp' in page.locator('.lany-map-levels').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'hard village map missing')
+    assert 'world-atlas.webp' in page.locator('.lany-map-levels').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'regional map missing in hard mode')
+    assert 'hard-village.webp' in page.locator('#lany-world-map .lany-screen-scrim').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'hard village atmosphere missing')
     page.locator('#lany-mode-normal').click()
     assert page.locator('#lany-world-title').inner_text()=='사탕 골짜기',(tag,'canonical title changed')
     page.evaluate('LanyShell.mapPage(1)')
