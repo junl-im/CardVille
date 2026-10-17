@@ -28,7 +28,7 @@
    const seq=goEpoch,reduce=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
    const frames=reduce?[['출발!',0]]:[['3',0],['2',650],['1',1300],['출발!',1950]];
    overlay.hidden=false;
-   overlay.querySelector('.lany-go-caption').textContent=state.mode==='hard'?'불꽃 하드 도전 시작!':'달콤한 도전이 시작돼요!';
+   overlay.querySelector('.lany-go-caption').textContent=state.mode==='crazy'?'크레이지 도전 시작!':state.mode==='hard'?'불꽃 하드 도전 시작!':'달콤한 도전이 시작돼요!';
    window.LanyTempo?.pause();
    for(const [value,delay] of frames){
      const update=()=>{
@@ -47,7 +47,7 @@
      if(nav.screen==='game'&&!nav.overlay&&!document.hidden)window.LanyTempo?.resume();
    },reduce?470:2650));
  }
- const savedStage=()=>{let n=Number(localStorage.getItem(state.mode==='hard'?'cv_hard_last_level':'cv_last_level'));return Number.isInteger(n)&&n>0&&n<=250&&state.unlockedLevels.includes(n)?n:1};
+ const savedStage=()=>{let n=Number(localStorage.getItem(state.mode==='crazy'?'cv_crazy_last_level':state.mode==='hard'?'cv_hard_last_level':'cv_last_level'));return Number.isInteger(n)&&n>0&&n<=250&&state.unlockedLevels.includes(n)?n:1};
  const reached=(n)=>state.unlockedLevels.includes(n);
  const hide=()=>{for(const id of ['lany-pause','lany-exit'])$(id).hidden=true;nav.overlay=null};
  const hideLegacy=()=>{for(const id of overlayIds){const el=$(id);if(el)el.style.display='none'}};
@@ -70,8 +70,8 @@
    $('lany-world-map').hidden=false;
    document.querySelector('.lany-map-section')?.setAttribute('data-paged','true');
    try {renderMap();$('lany-map-continue').focus();} catch(error) {
-     console.error('[라니팡] 지도 화면 열기 실패',error);
-     $('lany-map-tip').textContent='지도 화면에 문제가 발생했어요. 잠시 후 다시 시도해 주세요.';
+     console.error('[라니팡] 맵 화면 열기 실패',error);
+     $('lany-map-tip').textContent='맵 화면에 문제가 발생했어요. 잠시 후 다시 시도해 주세요.';
      $('lany-map-continue').onclick=()=>continueStage();
    }
  }
@@ -81,15 +81,15 @@
    const stage=savedStage();nav.world=Math.floor((stage-1)/25);nav.mapPage=pageForOffset((stage-1)%25,mapPageSize());nav.worldTabPage=Math.floor(nav.world/worldTabSize());renderMap();
  }
  function renderMap(){
-   for(const mode of ['normal','hard']){const button=$('lany-mode-'+mode);button.setAttribute('aria-pressed',String(state.mode===mode));}
-   $('lany-map-heading').textContent=state.mode==='hard'?'🔥 라니팡 하드 지도':'🗺️ 라니팡 모험 지도';
-   document.querySelector('.lany-map-eyebrow').textContent=state.mode==='hard'?'붉은 사탕마을 · 하드 도전':'푸른 숲속 · 노멀 모험';
-   $('lany-map-tip').textContent=state.mode==='hard'?'⚡ 목표 점수와 동물 매치 횟수를 모두 채우세요. 5개 이상 연결하면 광폭 친구가 등장해요.':'🔓 빛나는 숫자를 눌러 도전을 시작하세요. 잠긴 단계는 이전 단계를 완료하면 열려요.';
+   for(const mode of ['normal','hard','crazy']){const button=$('lany-mode-'+mode);button.setAttribute('aria-pressed',String(state.mode===mode));}
+   $('lany-map-heading').textContent=state.mode==='crazy'?'💥 라니팡 크레이지 맵':state.mode==='hard'?'🔥 라니팡 하드 맵':'🗺️ 라니팡 모험 맵';
+   document.querySelector('.lany-map-eyebrow').textContent=state.mode==='crazy'?'번개 치는 사탕마을 · 극한 도전':state.mode==='hard'?'붉은 사탕마을 · 하드 도전':'푸른 숲속 · 노멀 모험';
+   $('lany-map-tip').textContent=state.mode!=='normal'?'⚡ 목표 점수와 동물 매치 횟수를 모두 채우세요. 5개 이상 연결하면 광폭 친구가 등장해요.':'🔓 빛나는 숫자를 눌러 도전을 시작하세요. 잠긴 단계는 이전 단계를 완료하면 열려요.';
    const unlocked=new Set(state.unlockedLevels),n=nav.world;
    const last=Math.max(1,...state.unlockedLevels.filter(i=>i>=1&&i<=250));
    const levels=activeLevels();
    const stars=Object.values(state.levelStars).reduce((a,b)=>a+(Number(b)||0),0);
-   $('lany-map-progress').textContent=`${state.mode==='hard'?'🔥 하드':'🌼 노멀'} · 도전 가능 ${unlocked.size} / 250`;
+   $('lany-map-progress').textContent=`${state.mode==='crazy'?'💥 크레이지':state.mode==='hard'?'🔥 하드':'🌼 노멀'} · 도전 가능 ${unlocked.size} / 250`;
    $('lany-map-star-count').textContent=`⭐ 모은 별 ${stars}개`;
    $('lany-map-continue').textContent=`▶ ${savedStage()}단계 이어서 도전`;
    $('lany-map-resume').hidden=!nav.returnToGame;
@@ -162,7 +162,7 @@
      draw();ctx.strokeStyle='#fff8d2';ctx.lineWidth=9;ctx.stroke();
      draw();ctx.setLineDash([2,13]);ctx.lineDashOffset=-4;ctx.strokeStyle='#f7b54e';ctx.lineWidth=4;ctx.stroke();
    });
-   $('lany-map-tip').textContent=last<n*25+1?'🔒 이 지역은 아직 잠겨 있어요. 앞 지역의 단계를 완료해 주세요.':state.mode==='hard'?'⚡ 목표 점수와 동물 매치 횟수를 모두 채우세요. 5개 연결로 광폭 친구 등장!':'✨ 숫자를 선택해 도전하세요. ◀ ▶ 버튼으로 같은 지역의 다음 구간을 넘길 수 있어요.';
+   $('lany-map-tip').textContent=last<n*25+1?'🔒 이 지역은 아직 잠겨 있어요. 앞 지역의 단계를 완료해 주세요.':state.mode!=='normal'?'⚡ 목표 점수와 동물 매치 횟수를 모두 채우세요. 5개 연결로 광폭 친구 등장!':'✨ 숫자를 선택해 도전하세요. ◀ ▶ 버튼으로 같은 지역의 다음 구간을 넘길 수 있어요.';
  }
  function mapPage(delta){
    if(nav.screen!=='map'||!Number.isInteger(delta))return;
@@ -184,10 +184,10 @@
    hide();hideLegacy();hideViews();nav.started=true;nav.screen='prep';nav.selectedLevel=n;nav.world=Math.floor((n-1)/25);nav.mapPage=pageForOffset((n-1)%25,mapPageSize());nav.prepIndex=0;
    $('lany-title').hidden=true;document.body.classList.remove('lany-at-title');$('lany-stage-prep').hidden=false;
    const lv=activeLevels()[n-1];$('lany-prep-region').textContent=`제${nav.world+1}지역 · ${lv.theme}`;
-   $('lany-prep-heading').textContent=`${state.mode==='hard'?'🔥 하드':'🌼 노멀'} ${n}단계 준비`;$('lany-prep-subtitle').textContent=lv.name;
+   $('lany-prep-heading').textContent=`${state.mode==='crazy'?'💥 크레이지':state.mode==='hard'?'🔥 하드':'🌼 노멀'} ${n}단계 준비`;$('lany-prep-subtitle').textContent=lv.name;
    $('lany-prep-goal').textContent=lv.goal.toLocaleString()+'점';$('lany-prep-moves').textContent=lv.moves+'회';
-   $('lany-prep-clear-goal').hidden=state.mode!=='hard';if(state.mode==='hard')$('lany-prep-clear-goal').textContent=`동물 매치 ${lv.clearGoal}회 · 5개 연결하면 광폭 친구 등장!`;
-   $('lany-prep-locks').textContent=state.mode==='hard'?`🧱 벽 ${lv.wallCount} · 🔒 잠금 ${lv.lockedCount} · 💣 폭탄 ${lv.bombCount} · 🔄 ${lv.morphSeconds}초마다 변화`:(lv.lockedCount?'🔒 잠금 블록 '+lv.lockedCount+'개':'🔓 잠금 블록 없음');
+   $('lany-prep-clear-goal').hidden=state.mode==='normal';if(state.mode!=='normal')$('lany-prep-clear-goal').textContent=`동물 매치 ${lv.clearGoal}회 · 5개 연결하면 광폭 친구 등장!`;
+   $('lany-prep-locks').textContent=state.mode!=='normal'?`🧱 벽 ${lv.wallCount} · 🔒 잠금 ${lv.lockedCount} · 💣 폭탄 ${lv.bombCount} · 🔄 ${lv.morphSeconds}초마다 변화`:(lv.lockedCount?'🔒 잠금 블록 '+lv.lockedCount+'개':'🔓 잠금 블록 없음');
    const best=state.bestScores[n]||0;
    $('lany-prep-record').textContent=best?`⭐ 최고 점수 ${best.toLocaleString()}점`:'⭐ 최고 기록 없음';
    const b=state.boosters;$('lany-prep-booster-counts').textContent=`🔨 망치 ${b.hammer} · 🔀 섞기 ${b.shuffle} · 🌈 색상 ${b.color}`;

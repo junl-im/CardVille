@@ -15,6 +15,6 @@ for(const name of ['normal-forest','hard-village','retry','stage-map']){
 assert(css.includes('#overlay-win .modal-btns button:first-child'));
 assert(css.includes('#overlay-lose .modal-btns button:first-child'));
 assert(shell.includes('붉은 사탕마을')&&shell.includes('푸른 숲속'));
-assert(sw.includes('v51-game-audit-r1'));
+assert(sw.includes('v52-controls-crazy-r1'));
 assert(!fs.readdirSync('web/assets/v43').some(name=>name.endsWith('.svg')));
 console.log('v43 worlds and popup actions: OK');

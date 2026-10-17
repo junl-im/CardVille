@@ -87,15 +87,15 @@ with sync_playwright() as playwright:
       page.locator('#lany-update-banner').wait_for(state='hidden',timeout=3000)
     page.locator('#lany-start-button').click()
     assert page.locator('#lany-world-map').is_visible()
-    for selector,asset in (('.lany-map-head .lany-back','back.webp'),('.lany-map-head .lany-map-icon:not(.lany-mobile-fullscreen)','help.webp'),('#lany-world-prev','left.webp'),('#lany-world-next','right.webp')):
-      assert 'controls/'+asset in page.locator(selector).evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,selector,'approved v2.3 illustration missing')
+    for selector,asset in (('.lany-map-head .lany-back','back.webp'),('.lany-map-head .lany-map-icon:not(.lany-mobile-fullscreen)','help.webp'),('#lany-world-prev','prev.webp'),('#lany-world-next','next.webp')):
+      assert 'v23/buttons/'+asset in page.locator(selector).evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,selector,'approved v2.3 illustration missing')
     assert page.locator('#lany-world-tabs .lany-world-tab').first.evaluate("e=>getComputedStyle(e).backgroundImage.includes('v26/regions/tab-01.webp')"),(tag,'regional illustration is not mapped')
     assert page.locator('#lany-world-tabs .lany-world-tab').first.get_attribute('aria-label'),(tag,'region name must remain accessible')
     shot('map','#lany-world-map')
     assert page.locator('.lany-map-levels canvas.lany-route').count()==1
     assert 'world-atlas.webp' in page.locator('.lany-map-levels').evaluate('e=>getComputedStyle(e).backgroundImage')
     assert 'normal-forest.webp' in page.locator('#lany-world-map .lany-screen-scrim').evaluate('e=>getComputedStyle(e).backgroundImage')
-    assert 'region-header.webp' in page.locator('.lany-world-banner').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'text-free world banner missing')
+    assert 'linear-gradient' in page.locator('.lany-world-banner').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'quiet world title frame missing')
     # The map atmosphere now follows the campaign; every region keeps its title and stage nodes.
     for world_index in range(10):
       page.locator('.lany-map-levels').evaluate('(e,k)=>e.dataset.world=k',str(world_index))
@@ -113,12 +113,14 @@ with sync_playwright() as playwright:
     page.locator('.lany-map-levels .lany-level:not([disabled])').first.click()
     assert page.locator('#lany-stage-prep').is_visible()
     # Each source button is now a complete individual raster image with accessible HTML text.
-    for selector,skin in (('#lany-prep-play','v26/actions/prep-start.webp'),('.lany-prep-cancel','v26/actions/prep-map.webp')):
+    for selector,skin in (('#lany-prep-play','v26/actions/prep-start.webp'),):
       assert page.locator('#lany-stage-prep '+selector).evaluate("""(e,asset)=>{
         const c=getComputedStyle(e);
         return c.backgroundImage.includes(asset)&&e.textContent.trim().length>=2
           && e.getBoundingClientRect().width>100;
       }""",skin),(tag,selector,'individual action artwork missing')
+    assert 'linear-gradient' in page.locator('#lany-stage-prep .lany-prep-cancel').evaluate('e=>getComputedStyle(e).backgroundImage')
+    assert page.locator('#lany-stage-prep .lany-prep-cancel').inner_text().strip()=='맵 돌아가기'
     shot('stage-ready','#lany-stage-prep')
     if page.locator('#lany-prep-pager').is_visible():
       page.evaluate('LanyShell.prepPage(1)')

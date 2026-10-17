@@ -11,7 +11,7 @@ assert.equal(version.version,'2.3.0-beta');
 assert(version.stageMap&&version.stagePreparation);
 assert.equal(manifest.short_name,'라니팡');
 assert(manifest.start_url.startsWith('./?v=2.3.0'),'PWA start URL must retain versioned game entry');
-for(const s of ['lany-world-map','lany-world-tabs','lany-map-levels','lany-map-resume','lany-stage-prep','lany-prep-goal','lany-prep-moves','lany-prep-play','이 단계 시작','지도 돌아가기','250단계'])assert(html.includes(s),`Missing map/prep UI: ${s}`);
+for(const s of ['lany-world-map','lany-world-tabs','lany-map-levels','lany-map-resume','lany-stage-prep','lany-prep-goal','lany-prep-moves','lany-prep-play','이 단계 시작','맵 돌아가기','250단계'])assert(html.includes(s),`Missing map/prep UI: ${s}`);
 for(const s of ['function openMap','function openPrep','function playPrepared','function renderMap','function continueStage','function resumeGameFromMap','const worlds=[','aria-pressed','btn.disabled=!enabled','state.unlockedLevels','state.levelStars','state.bestScores','state.boosters','const n=nav.selectedLevel'])assert(shell.includes(s),`Missing map logic: ${s}`);
 assert(shell.includes('window.initGame(n)')&&!shell.includes('window.initGame();'),'No board creation before stage confirmation');
 assert(html.includes('LanyShell.openPrep(state.level+1)'),'Winning must show preparation first');

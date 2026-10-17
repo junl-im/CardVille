@@ -23,7 +23,7 @@ assert.equal(indirect.size,8,'A line touching a frenzy must not detonate it indi
 state.specials.fill(0);state.pendingFrenzy=[{index:27,gem:'rabbit',kind:6}];
 ctx.placePendingFrenzy();
 assert.equal(state.specials[27],6);assert.equal(state.board[27],'rabbit');assert.equal(state.pendingFrenzy.length,0);
-assert(html.includes("state.mode==='hard'&&state.hardClears>=lv.clearGoal")||html.includes("state.mode!=='hard'||state.hardClears>=lv.clearGoal"));
+assert(html.includes("state.mode==='hard'&&state.hardClears>=lv.clearGoal")||html.includes("state.mode==='normal'||state.hardClears>=lv.clearGoal"));
 assert(html.includes('state.hardClears+=matchGroups.length'));
 assert(html.includes('state.specials[idx]||changed.includes(idx)'));
 for(const name of ['row','column','burst','wall','bomb','morph','clears','hard']){
