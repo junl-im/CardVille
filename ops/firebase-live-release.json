@@ -3,8 +3,8 @@
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "fe2b14399fcc97e3de36df8c0d85e60fcda3f980",
-  "requestedFor": "라니팡 하드 모드 250단계, 깨지는 벽·폭탄·시간 변화 캐릭터, 파스텔 퍼즐 배경과 부드러운 매치 효과 배포.",
+  "sourceCommit": "58957223f84e58c332900721d7619e544ef08207",
+  "requestedFor": "라니팡 하드 모드 광폭 동물 블록 3종, 동물 매치 목표, 전용 아이콘 8종과 HUD 배포.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -27,5 +27,6 @@
   "uiAuditV37": true,
   "popupPolishV38": true,
   "illustratedControlsV39": true,
-  "hardModeV40": true
+  "hardModeV40": true,
+  "hardFrenzyV41": true
 }
