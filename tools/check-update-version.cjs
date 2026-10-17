@@ -6,7 +6,7 @@ const html=fs.readFileSync('web/index.html','utf8');
 const release=JSON.parse(fs.readFileSync('web/version.json','utf8'));
 assert.equal(release.version,'2.3.0-beta');
 assert(html.includes('lany-update-v17.js?v=2.3.0'),'approved update handler missing');
-assert(sw.includes('lanypang-match-v2.3.0-ko-v53-candy-design-r1'),'update handler must escape old cached service worker');
+assert(sw.includes('lanypang-match-v2.3.0-ko-v54-map-compact-r1'),'update handler must escape old cached service worker');
 assert(!script.includes('localStorage'),'version detection must not touch game progress');
 assert(script.includes("cache:'no-store'"),'version probe must not use cached metadata');
 assert(script.includes('requestSequence'),'out-of-order server results must not re-show banners');
@@ -74,3 +74,4 @@ function make(local=release.version){
  assert.equal(race.elements['lany-update-banner'].hidden,true,'late stale request cannot show update');
  console.log(JSON.stringify({pass:true,release:release.version,sameVersionHidden:true,olderHidden:true,newerShown:true,prereleaseAware:true,offlineHidden:true,raceSafe:true,progressPreserved:true}));
 })().catch(e=>{console.error(e);process.exitCode=1});
+

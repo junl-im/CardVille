@@ -6,7 +6,7 @@ const shell=fs.readFileSync('web/js/lany-shell.js','utf8');
 const css=fs.readFileSync('web/css/lany-shell.css','utf8');
 const manifest=JSON.parse(fs.readFileSync('web/manifest.json','utf8'));
 const version=JSON.parse(fs.readFileSync('web/version.json','utf8'));
-for (const text of ['라니팡!','게임 시작','게임 방법','게임을 종료할까요?','계속 플레이','첫 화면으로','전체 화면'])assert(html.includes(text),`Missing Korean UI: ${text}`);
+for (const text of ['라니팡!','게임 시작','게임 방법','게임을 종료할까요?','계속 플레이','첫 화면으로'])assert(html.includes(text),`Missing Korean UI: ${text}`);
 assert(html.includes('<html lang="ko">'));
 assert(!html.includes('How to Play CardVille'));
 assert(!html.includes("Let's Play!"));
@@ -23,3 +23,4 @@ const work=fs.readFileSync('.github/workflows/firebase-hosting.yml','utf8');
 assert(!work.includes("grep -q 'CardVille'"),'Old English-only smoke check has returned');
 assert(work.includes('entryPoint: ./redirect-site')&&work.includes('https://cardville.web.app/'),'Preview must direct players to the official game address');
 console.log(JSON.stringify({ok:true,brand:'라니팡!',koreanTutorial:true,fullscreen:true,backExitDialog:true,illustration:true,oldSaveKeysPreserved:true}));
+

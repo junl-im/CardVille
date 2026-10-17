@@ -6,7 +6,7 @@ const html=read('web/index.html'),css=read('web/css/lany-art-v23.css'),sw=read('
 const names=['buttons/back.webp','buttons/help.webp','buttons/close.webp','buttons/prev.webp','buttons/next.webp','buttons/settings.webp','buttons/music.webp','regions/world-01.webp','regions/world-03.webp','regions/world-05.webp','decor/region-header.webp','decor/daily-ornament.webp','decor/vs-ornament.webp','decor/invite-ornament.webp','decor/install-ornament.webp','decor/friends-ornament.webp','decor/editor-ornament.webp'];
 assert(html.includes('lany-art-v23.css?v=2.3.0'),'load the stylesheet');
 assert(html.indexOf('lany-art-v23.css')>html.indexOf('lany-raster-only-v22.css'),'v23 follows v22');
-assert(sw.includes('lanypang-match-v2.3.0-ko-v53-candy-design-r1'),'rotate cache');
+assert(sw.includes('lanypang-match-v2.3.0-ko-v54-map-compact-r1'),'rotate cache');
 assert(sw.includes("'./css/lany-art-v23.css'"),'cache stylesheet');
 assert(!css.includes('.svg')&&!css.includes('<svg'),'no vector art');
 for(const name of names){
@@ -29,3 +29,4 @@ for(const name of ['back','help','close','prev','next'])assert(css.includes('but
 for(const art of ['daily-ornament','vs-ornament','invite-ornament','editor-ornament','install-ornament','friends-ornament'])assert(css.includes(art+'.webp'),'missing '+art);
 for(const n of ['사탕 골짜기','막대사탕 숲','젤리 바다','초콜릿 산맥','무지개 하늘','설탕 성','말랑별 은하','캐러멜 협곡','토피 설원','수정 동굴'])assert(shell.includes(n),'original world name lost');
 console.log(JSON.stringify({pass:true,art:'v23',webp:names.length,independentWorlds:10,decorativeFeatures:6,worldNamesUnchanged:true,svg:false,offline:true}));
+

@@ -14,7 +14,9 @@ for(const name of ['normal-forest','hard-village','retry','stage-map']){
 }
 assert(css.includes('#overlay-win .modal-btns button:first-child'));
 assert(css.includes('#overlay-lose .modal-btns button:first-child'));
-assert(shell.includes('붉은 사탕마을')&&shell.includes('푸른 숲속'));
-assert(sw.includes('v53-candy-design-r1'));
+assert(shell.includes('mapFriends={normal:')&&shell.includes('crazy:')); 
+assert(sw.includes('v54-map-compact-r1'));
 assert(!fs.readdirSync('web/assets/v43').some(name=>name.endsWith('.svg')));
 console.log('v43 worlds and popup actions: OK');
+
+

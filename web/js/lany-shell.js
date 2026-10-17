@@ -83,7 +83,6 @@
  function renderMap(){
    for(const mode of ['normal','hard','crazy']){const button=$('lany-mode-'+mode);button.setAttribute('aria-pressed',String(state.mode===mode));}
    $('lany-map-heading').textContent=state.mode==='crazy'?'💥 라니팡 크레이지 맵':state.mode==='hard'?'🔥 라니팡 하드 맵':'🗺️ 라니팡 모험 맵';
-   document.querySelector('.lany-map-eyebrow').textContent=state.mode==='crazy'?'번개 치는 사탕마을 · 극한 도전':state.mode==='hard'?'붉은 사탕마을 · 하드 도전':'푸른 숲속 · 노멀 모험';
    $('lany-map-tip').textContent=state.mode!=='normal'?'⚡ 목표 점수와 동물 매치 횟수를 모두 채우세요. 5개 이상 연결하면 광폭 친구가 등장해요.':'🔓 빛나는 숫자를 눌러 도전을 시작하세요. 잠긴 단계는 이전 단계를 완료하면 열려요.';
    const unlocked=new Set(state.unlockedLevels),n=nav.world;
    const last=Math.max(1,...state.unlockedLevels.filter(i=>i>=1&&i<=250));
@@ -116,7 +115,9 @@
      tabs.appendChild(btn);
    }
    $('lany-world-no').textContent=`${(n*25)+1}~${(n+1)*25}단계`;
-   $('lany-world-title').textContent=worlds[n][1];$('lany-world-icon').textContent=worlds[n][0];
+   $('lany-world-title').textContent=worlds[n][1];
+   const mapFriends={normal:['rabbit','bear','chick','puppy','fox','cat','wolf','puppy','rabbit','chick'],hard:['fox','bear','wolf','cat','fox','wolf','bear','cat','wolf','puppy'],crazy:['cat','wolf','fox','cat','wolf','fox','cat','wolf','fox','cat']};
+   $('lany-world-icon').src='./assets/v25/animals/'+mapFriends[state.mode][n]+'.webp';
    const grid=$('lany-map-levels');grid.replaceChildren();
    grid.dataset.world=String(n);grid.dataset.page=String(nav.mapPage);
    grid.style.setProperty('--lany-map-rows',String(Math.ceil((end-start)/3)));
@@ -277,3 +278,4 @@
  if(cover){cover.addEventListener('load',()=>document.body.classList.add('lany-cover-loaded'));cover.addEventListener('error',()=>{document.body.classList.add('lany-cover-fallback');console.warn('[라니팡] 타이틀 이미지 불러오기 실패: 기본 배경으로 전환');});if(cover.complete&&cover.naturalWidth)document.body.classList.add('lany-cover-loaded');}
  document.addEventListener('visibilitychange',()=>{if(document.hidden&&nav.screen==='game'&&!nav.overlay)openPause()});
 })();
+
