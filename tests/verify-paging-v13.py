@@ -16,8 +16,10 @@ def audit_page(page, device, viewport):
     page.locator("#lany-start-button").click()
     assert page.locator("#lany-world-map").is_visible(),device
     stage_size=3 if viewport[1]<470 else 6 if viewport[1]<650 else 9 if viewport[1]<900 else 12
+    pages=(25+stage_size-1)//stage_size
+    first_page_count=25//pages+(1 if 25%pages else 0)
     tabs_size=3 if viewport[0]<500 else 4 if viewport[0]<850 else 5
-    assert page.locator("#lany-map-levels .lany-level").count()==stage_size,(device,"map count")
+    assert page.locator("#lany-map-levels .lany-level").count()==first_page_count,(device,"map count")
     assert page.locator("#lany-world-tabs .lany-world-tab").count()==tabs_size,(device,"world tabs")
     assert page.locator("#lany-map-prev").is_disabled()
     assert page.locator("#lany-map-next").is_enabled()
