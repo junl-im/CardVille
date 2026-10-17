@@ -76,7 +76,7 @@
  function setMode(mode){
    if(mode===state.mode)return;
    nav.returnToGame=false;window.LanyTempo?.stop();setCampaignMode(mode);
-   nav.world=0;nav.mapPage=0;nav.worldTabPage=0;renderMap();
+   const stage=savedStage();nav.world=Math.floor((stage-1)/25);nav.mapPage=Math.floor(((stage-1)%25)/mapPageSize());nav.worldTabPage=Math.floor(nav.world/worldTabSize());renderMap();
  }
  function renderMap(){
    for(const mode of ['normal','hard']){const button=$('lany-mode-'+mode);button.setAttribute('aria-pressed',String(state.mode===mode));}
@@ -110,7 +110,7 @@
      btn.setAttribute('aria-label',`제${i+1}지역 ${worlds[i][1]}`);
      btn.setAttribute('aria-pressed',String(i===n));
      btn.textContent="";
-     btn.addEventListener('click',()=>{nav.world=i;nav.mapPage=0;nav.worldTabPage=Math.floor(i/worldTabSize());renderMap();});
+     btn.addEventListener('click',()=>{nav.world=i;nav.mapPage=0;nav.worldTabPage=Math.floor(i/worldTabSize());renderMap();tabs.querySelector(`[data-world="${i}"]`)?.focus();});
      tabs.appendChild(btn);
    }
    $('lany-world-no').textContent=`${(n*25)+1}~${(n+1)*25}단계`;
