@@ -1,10 +1,10 @@
 {
-  "release": "2.3.0-beta",
+  "release": "2.3.1-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "94349104f78e1340a3846dfdf46f3c16cc6a965c",
-  "requestedFor": "세 모드 캐릭터 버튼, 단계 준비와 GO 연출, 결과창 나가기 개선 배포.",
+  "sourceCommit": "256d1b53073910ef19602dea7a9f76938fe9ed20",
+  "requestedFor": "v2.3.1 패치: 브라우저별 최종 나가기 처리와 버전 표기 갱신.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -43,5 +43,6 @@
   "candyDesignV53": true,
   "compactMapV54": true,
   "modeMapV55": true,
-  "modePopupV56": true
+  "modePopupV56": true,
+  "browserExitV57": true
 }
