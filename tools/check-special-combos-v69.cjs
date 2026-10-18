@@ -1,0 +1,21 @@
+const fs=require('fs'),path=require('path'),vm=require('vm'),assert=require('node:assert/strict');
+const html=fs.readFileSync(path.join(__dirname,'../web/index.html'),'utf8');
+const start=html.indexOf('function buildSpecialSwapCells(a,b){');
+const end=html.indexOf('// ── Match finding',start);
+assert(start>0&&end>start,'special combo resolver missing');
+const context={ROWS:8,COLS:8,SPECIAL_BOMB:1,SPECIAL_STRIPE_H:2,SPECIAL_STRIPE_V:3,SPECIAL_WRAP:4,SPECIAL_COLOR:5,SPECIAL_FRENZY_ROW:6,SPECIAL_FRENZY_COL:7,SPECIAL_FRENZY_BURST:8,state:{board:Array(64).fill('rabbit'),specials:Array(64).fill(0),walls:Array(64).fill(false)}};
+vm.createContext(context);vm.runInContext(html.slice(start,end),context);
+function combo(sa,sb){context.state.specials.fill(0);context.state.walls.fill(false);context.state.specials[27]=sa;context.state.specials[28]=sb;return context.buildSpecialSwapCells(27,28)}
+assert.equal(combo(0,2),null,'one special is not a combination');
+assert.equal(combo(2,3).size,22,'row and column clear both crosses');
+assert.equal(combo(1,1).size,30,'two bombs clear nearby five by six area');
+assert.equal(combo(1,2).size,24,'bomb and row clear three rows');
+assert.equal(combo(1,3).size,24,'bomb and column clear three columns');
+assert.equal(combo(5,5).size,64,'two color specials clear the board');
+context.state.board=Array.from({length:64},(_,i)=>i%2?'bear':'rabbit');
+assert.equal(combo(5,1).size,33,'color and bomb target the partner animal');
+context.state.walls[27]=true;
+assert.equal(combo(1,2).size,24,'wall placement does not widen a row effect');
+assert(html.includes('if(matches.length>0||comboCells)'),'special swap must count as a valid move');
+assert(html.includes('await resolveMatches([{cells:[[r1,c1],[r2,c2]]'),'special swap must use the match resolver');
+console.log('v69 special combinations passed');
