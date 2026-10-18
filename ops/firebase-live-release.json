@@ -1,9 +1,9 @@
 {
-  "release": "2.3.15-beta",
+  "release": "2.3.16-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.15 패치: 동물 퍼즐 배경의 구분을 높이고 특수 블록 교환 조합을 추가.",
+  "requestedFor": "v2.3.16 패치: 입력 멈춤 복구, 모드 초반 난이도와 결과 화면, 선택 모드 표시 개선.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -55,5 +55,6 @@
   "matchJoyV66": true,
   "quietHintV67": true,
   "gameFeelV68": true,
-  "readabilityCombosV69": true
+  "readabilityCombosV69": true,
+  "inputRecoveryBalanceResultsV70": true
 }

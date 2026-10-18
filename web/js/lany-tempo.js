@@ -63,6 +63,6 @@
  // No timer while at the title, map, pause, or with the app hidden.
  // Exactly one ticker is allocated while active, and cancelled on pause/stop.
  document.addEventListener('visibilitychange',()=>{if(document.hidden)pause()});
- window.LanyTempo={start,pause,resume,stop,enabled:()=>enabled,setEnabled,durationFor,isExpired,onCombo,getRemaining,isRunning:()=>active&&!paused,getElapsed:()=>seconds};
+ window.LanyTempo={start,pause,resume,stop,enabled:()=>enabled,setEnabled,durationFor,isExpired,onCombo,getRemaining,isRunning:()=>active&&!paused,getElapsed:()=>seconds,flush:update};
  render();
 })();

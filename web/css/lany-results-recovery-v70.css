@@ -1,0 +1,38 @@
+/* Keep the decision and missing objective legible inside the existing artwork. */
+#overlay-win .modal,#overlay-lose .modal{
+  gap:2px!important;
+  aspect-ratio:auto!important;
+  height:auto!important;
+  padding-top:clamp(58px,17vw,72px)!important;
+  padding-bottom:clamp(18px,5vw,24px)!important;
+}
+#overlay-win .modal .lany-result-detail,#overlay-lose .modal .lany-result-detail{
+  width:100%;box-sizing:border-box;margin:0 auto 2px;padding:2px 5px;
+  text-align:center;color:#654d60;font-size:clamp(.69rem,2.6vw,.81rem);
+  font-weight:800;line-height:1.2;overflow-wrap:anywhere;
+}
+#overlay-win .modal-btns button:first-child,#overlay-lose .modal-btns button:first-child{
+  grid-column:1/-1!important;min-height:44px!important;height:44px!important;max-height:44px!important;
+}
+#overlay-win .modal-btns button:not(:first-child),#overlay-lose .modal-btns button:not(:first-child){min-height:40px!important;height:40px!important;max-height:40px!important}
+@media(max-height:620px){
+ #overlay-win .modal .lany-result-detail,#overlay-lose .modal .lany-result-detail{font-size:.7rem;padding:0 3px}
+ #overlay-win .modal-btns button:first-child,#overlay-lose .modal-btns button:first-child{min-height:42px!important;height:42px!important;max-height:42px!important}
+}
+
+/* An illustrated pin crosses the active mode card's top edge. */
+html body #lany-world-map .lany-campaign-switch{padding-top:24px!important;overflow:visible!important}
+html body #lany-world-map .lany-campaign-switch button[data-cv-picture="art"]{overflow:visible!important}
+html body #lany-world-map .lany-campaign-switch button[data-cv-picture="art"][aria-pressed="true"]{
+  z-index:2!important;filter:drop-shadow(0 0 8px #ffe78e)!important;
+}
+html body #lany-world-map .lany-campaign-switch button[data-cv-picture="art"][aria-pressed="true"]::after,
+html body #lany-world-map #lany-mode-crazy[data-cv-picture="art"][aria-pressed="true"]::after{
+  content:''!important;display:block!important;opacity:1!important;
+  position:absolute!important;z-index:5!important;top:-26px!important;right:-1px!important;
+  width:60px!important;height:56px!important;pointer-events:none!important;
+  background:url('../assets/v70/selected-mode-pin.webp') center/contain no-repeat!important;
+  border:0!important;border-radius:0!important;box-shadow:none!important;
+  filter:drop-shadow(0 3px 2px #60404977)!important;
+}
+@media(max-width:375px){html body #lany-world-map .lany-campaign-switch button[data-cv-picture="art"][aria-pressed="true"]::after,html body #lany-world-map #lany-mode-crazy[data-cv-picture="art"][aria-pressed="true"]::after{width:50px!important;height:47px!important;top:-25px!important;right:-3px!important}}

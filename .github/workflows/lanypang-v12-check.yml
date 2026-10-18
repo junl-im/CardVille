@@ -83,6 +83,7 @@ jobs:
           python tests/verify-title-stage-v17.py
           python tests/verify-v18-perf.py
           python tests/verify-longplay-v19.py
+          python tests/verify-input-recovery-v70.py
           python tests/verify-v20-offline-map.py
           python tests/verify-ui-v21.py
           python tests/verify-raster-v22.py

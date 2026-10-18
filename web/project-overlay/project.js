@@ -47,19 +47,20 @@
     const dc = dr ? 0 : Math.sign(dx);
     const nr=s.r+dr, nc=s.c+dc;
     if (nr<0||nr>=ROWS||nc<0||nc>=COLS) return null;
-    if (state.locked[nr*COLS+nc]) return null;
+    if(state.locked[nr*COLS+nc]||state.walls[nr*COLS+nc]) return null;
     return [nr,nc];
   }
   board.addEventListener('pointerdown', e => {
     // Right/middle click is prohibited on the entire game view, no drag initiates.
     if (e.button!==0 || (e.pointerType==='mouse' && (e.buttons&1)!==1)) return;
+    if (gesture && (gesture.pointerId!==e.pointerId || performance.now()-gesture.started>1500) && !board.hasPointerCapture?.(gesture.pointerId)) cleanup();
     if (gesture || typeof state === 'undefined' || state.animating || state.activeBooster) return;
     if (document.querySelector('.overlay[style*="flex"]')) return;
     const cell=getCell(e.target);
     if (!cell) return;
     const r=Number(cell.dataset.r),c=Number(cell.dataset.c);
-    if(state.locked[r*COLS+c]) return;
-    gesture={pointerId:e.pointerId,r,c,x:e.clientX,y:e.clientY,width:cell.getBoundingClientRect().width,target:null};
+    if(state.locked[r*COLS+c]||state.walls[r*COLS+c]) return;
+    gesture={pointerId:e.pointerId,r,c,x:e.clientX,y:e.clientY,width:cell.getBoundingClientRect().width,target:null,started:performance.now()};
     try { board.setPointerCapture?.(e.pointerId); } catch (_) { /* synthetic/test or interrupted pointer */ }
     cell.classList.add('cv-dragging');
     clearHint();
@@ -95,7 +96,11 @@
     void trySwap(s.r,s.c,to[0],to[1]);
   });
   board.addEventListener('pointercancel', cleanup);
+  board.addEventListener('lostpointercapture', cleanup);
+  window.addEventListener('pointerup', e=>{if(gesture&&e.pointerId===gesture.pointerId)cleanup()});
+  window.addEventListener('pointercancel', cleanup);
   window.addEventListener('blur',cleanup);
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)cleanup()});
   board.addEventListener('click', e => {
     if (performance.now() < suppressClickUntil || !state.activeBooster) {
       e.preventDefault();e.stopImmediatePropagation();
