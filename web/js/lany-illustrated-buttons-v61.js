@@ -13,8 +13,7 @@
   };
   const iconPictures = {
     'lany-world-prev':'v24/controls/left.webp', 'lany-world-next':'v24/controls/right.webp',
-    'lany-prep-back':'v24/controls/back.webp', 'lany-install-close':'v24/controls/close.webp',
-    'lany-friends-close':'v24/controls/close.webp',
+    'lany-prep-back':'v24/controls/back.webp',
     'lany-map-prev':'v24/controls/previous.webp','lany-map-next':'v24/controls/next.webp',
     'lany-prep-prev':'v24/controls/previous.webp','lany-prep-next':'v24/controls/next.webp',
     'lany-help-prev':'v24/controls/previous.webp','lany-help-next':'v24/controls/next.webp',
@@ -30,6 +29,7 @@
     const id = button.id;
     const modeArt = document.body.dataset.campaign === 'crazy' ? pictures.crazy : document.body.dataset.campaign === 'hard' ? pictures.hard : pictures.green;
     if (iconPictures[id]) return ['icon', root + iconPictures[id]];
+    if (button.matches('.lany-install-close,.lany-friends-close')) return ['icon', root + 'v24/controls/close.webp'];
     if (id === 'music-btn') return ['icon', root + (button.getAttribute('aria-pressed') === 'true' ? 'v24/controls/sound-on.webp' : 'v24/controls/sound-off.webp')];
     if (button.matches('#app>.header .hud button[data-lany-art="pause"]')) return ['icon', root + 'v24/controls/pause.webp'];
     if (button.matches('#ng-level-editor>div>div:first-child>button:first-of-type:not([data-type])')) return ['icon', root + 'v24/controls/close.webp'];
