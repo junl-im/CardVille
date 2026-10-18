@@ -4,9 +4,9 @@ const root=path.resolve(__dirname,'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const html=read('web/index.html'),css=read('web/css/lany-art-v23.css'),sw=read('web/sw.js'),shell=read('web/js/lany-shell.js');
 const names=['buttons/back.webp','buttons/help.webp','buttons/close.webp','buttons/prev.webp','buttons/next.webp','buttons/settings.webp','buttons/music.webp','regions/world-01.webp','regions/world-03.webp','regions/world-05.webp','decor/region-header.webp','decor/daily-ornament.webp','decor/vs-ornament.webp','decor/invite-ornament.webp','decor/install-ornament.webp','decor/friends-ornament.webp','decor/editor-ornament.webp'];
-assert(html.includes('lany-art-v23.css?v=2.3.12'),'load the stylesheet');
+assert(html.includes('lany-art-v23.css?v=2.3.13'),'load the stylesheet');
 assert(html.indexOf('lany-art-v23.css')>html.indexOf('lany-raster-only-v22.css'),'v23 follows v22');
-assert(sw.includes('lanypang-match-v2.3.12-ko-v66-match-joy-r1'),'rotate cache');
+assert(sw.includes('lanypang-match-v2.3.13-ko-v67-quiet-hint-r1'),'rotate cache');
 assert(sw.includes("'./css/lany-art-v23.css'"),'cache stylesheet');
 assert(!css.includes('.svg')&&!css.includes('<svg'),'no vector art');
 for(const name of names){

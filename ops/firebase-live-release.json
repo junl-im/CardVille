@@ -1,9 +1,9 @@
 {
-  "release": "2.3.12-beta",
+  "release": "2.3.13-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.12 패치: 퍼즐 맞춤 효과와 점수 표시를 귀엽고 집중되게 개선.",
+  "requestedFor": "v2.3.13 패치: 퍼즐 힌트의 무한 점멸과 일시정지 중 안내를 개선.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -52,5 +52,6 @@
   "controlFitV64": true,
   "halfTempoV64": true,
   "visualCalmV65": true,
-  "matchJoyV66": true
+  "matchJoyV66": true,
+  "quietHintV67": true
 }

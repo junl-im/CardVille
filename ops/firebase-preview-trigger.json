@@ -1,6 +1,6 @@
 {
-  "version": "2.3.12-beta",
-  "request": "라니팡 v2.3.12: 모든 화면의 행동 버튼을 첫 화면과 같은 캐릭터 그림 버튼으로 통일",
+  "version": "2.3.13-beta",
+  "request": "라니팡 v2.3.13: 모든 화면의 행동 버튼을 첫 화면과 같은 캐릭터 그림 버튼으로 통일",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,

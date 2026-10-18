@@ -1,6 +1,6 @@
 {
   "name": "라니팡",
-  "version": "2.3.12-beta",
+  "version": "2.3.13-beta",
   "stageCount": 250,
   "language": "ko",
   "build": "2026-10-18",
@@ -17,7 +17,7 @@
   "animalFriends": 30,
   "animalTiles": 7,
   "mobilePopupFit": true,
-  "visualRelease": "2.3.12",
+  "visualRelease": "2.3.13",
   "approvedOriginalAssets": true,
   "expressionVariants": 4,
   "newPopupButtons": true,
@@ -95,5 +95,6 @@
   "controlFitV64": true,
   "halfTempoV64": true,
   "visualCalmV65": true,
-  "matchJoyV66": true
+  "matchJoyV66": true,
+  "quietHintV67": true
 }
