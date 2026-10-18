@@ -1,0 +1,121 @@
+/* Compact, consistent controls across map, preparation and puzzle screens. */
+html body #lany-world-map .lany-map-bottom{
+  box-sizing:border-box!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  justify-items:center!important;align-items:center!important;column-gap:8px!important;row-gap:3px!important;
+  width:min(100%,430px)!important;margin:5px auto 0!important;padding:2px 8px 5px!important;
+  border:0!important;background:transparent!important;box-shadow:none!important;
+}
+html body #lany-world-map .lany-map-bottom #lany-map-continue[data-cv-picture="art"]{
+  grid-column:1/-1!important;grid-row:1!important;justify-self:center!important;flex:none!important;
+  box-sizing:border-box!important;width:clamp(192px,60vw,238px)!important;max-width:238px!important;
+  height:clamp(59px,16vw,70px)!important;min-height:59px!important;max-height:70px!important;
+  margin:0 auto!important;padding:0!important;aspect-ratio:auto!important;
+}
+html body #lany-world-map .lany-map-bottom #lany-map-continue>.cv-illustrated-label{
+  font-size:clamp(.88rem,3.6vw,1.16rem)!important;left:40%!important;right:5%!important;
+}
+html body #lany-world-map .lany-map-bottom :is(#lany-map-resume,button[data-lany-art="exit"])[data-cv-picture="art"]{
+  grid-row:2!important;box-sizing:border-box!important;width:min(100%,148px)!important;
+  height:42px!important;min-height:42px!important;max-height:42px!important;flex:none!important;margin:0!important;
+}
+html body #lany-world-map .lany-map-bottom #lany-map-resume[hidden]{display:none!important}
+html body #lany-world-map .lany-map-bottom #lany-map-resume[hidden]~button[data-lany-art="exit"]{
+  grid-column:1/-1!important;justify-self:center!important;
+}
+html body #lany-world-map .lany-map-bottom > button[data-lany-art="exit"][data-cv-picture="art"]{
+  grid-column:1/-1!important;width:148px!important;max-width:148px!important;justify-self:center!important;
+}
+html body #lany-world-map .lany-map-bottom #lany-map-resume[hidden]+#lany-map-continue+button[data-lany-art="exit"][data-cv-picture="art"]{
+  grid-column:1/-1!important;grid-row:2!important;justify-self:center!important;width:148px!important;
+}
+/* Preserve the complete raster rim and its natural proportions on every pager. */
+html body button[data-cv-picture="icon"]{
+  background-size:contain!important;background-origin:content-box!important;background-clip:content-box!important;
+  filter:drop-shadow(0 2px 2px #593c5a55)!important;
+}
+html body :is(#lany-map-prev,#lany-map-next,#lany-prep-prev,#lany-prep-next,#lany-help-prev,#lany-help-next,#lany-friends-prev,#lany-friends-next,#lany-editor-prev,#lany-editor-next)[data-cv-picture="icon"]{
+  width:clamp(68px,20vw,100px)!important;height:clamp(37px,10vw,44px)!important;
+  min-width:0!important;min-height:37px!important;max-height:44px!important;margin:0!important;
+}
+html body :is(#lany-world-prev,#lany-world-next,#lany-install-close,#lany-friends-close)[data-cv-picture="icon"]{
+  width:clamp(37px,10vw,44px)!important;height:clamp(37px,10vw,44px)!important;
+  min-width:37px!important;min-height:37px!important;max-width:44px!important;max-height:44px!important;
+}
+html body #lany-stage-prep .lany-prep-card{padding-top:clamp(11px,3vw,18px)!important}
+html body #lany-stage-prep .lany-prep-hero{margin-top:0!important}
+/* The square illustrated stage skin also covers locked stages. */
+html body #lany-world-map .lany-map-section .lany-map-levels .lany-level,
+html body #lany-world-map .lany-map-section .lany-map-levels .lany-level:disabled{
+  box-sizing:border-box!important;background-image:url('../assets/v53/control.webp')!important;
+  background-size:100% 100%!important;background-position:center!important;background-repeat:no-repeat!important;
+  border:0!important;border-radius:0!important;box-shadow:none!important;overflow:visible!important;
+}
+html body #lany-world-map .lany-map-section .lany-map-levels .lany-level:disabled{
+  filter:grayscale(.92) brightness(1.04) drop-shadow(0 2px 2px #694f6544)!important;opacity:.87!important;
+}
+html body #lany-world-map .lany-map-section .lany-map-levels .lany-level.current:not(:disabled){
+  filter:drop-shadow(0 0 5px #fff29f) drop-shadow(0 3px 3px #9b5a69)!important;
+}
+/* Score and move panels form one deliberate group; menu controls sit tightly beside them. */
+html body #app>.header{width:min(100%,560px)!important;padding:7px 8px!important;min-height:0!important;margin-bottom:6px!important}
+html body #app>.header .hud{
+  box-sizing:border-box!important;display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 38px 38px!important;
+  justify-content:center!important;align-items:center!important;gap:clamp(3px,1vw,7px)!important;
+  width:100%!important;max-width:470px!important;margin:auto!important;
+}
+html body #app>.header .hud>.hud-box:first-child{grid-column:1!important;grid-row:1!important}
+html body #app>.header .hud>.lany-moves-hud{grid-column:2!important;grid-row:1!important}
+html body #app>.header .hud>button[data-lany-art="pause"]{
+  grid-column:3!important;grid-row:1!important;position:static!important;
+}
+html body #app>.header .hud>#music-btn{
+  grid-column:4!important;grid-row:1!important;position:static!important;
+  width:38px!important;height:38px!important;min-width:38px!important;min-height:38px!important;
+  max-width:38px!important;max-height:38px!important;
+}
+html body #app>.header .hud-box:not(:nth-child(2)):not(:nth-child(3)){
+  box-sizing:border-box!important;width:100%!important;max-width:none!important;min-width:0!important;
+  height:48px!important;min-height:48px!important;padding:5px 3px!important;
+}
+html body #app>.header .hud button[data-cv-picture="icon"]{
+  box-sizing:border-box!important;width:38px!important;height:38px!important;min-width:38px!important;min-height:38px!important;
+  max-width:38px!important;max-height:38px!important;margin:0!important;
+}
+/* Four tools form a compact row while retaining a comfortable tap target. */
+html body #app .boosters{
+  box-sizing:border-box!important;display:grid!important;grid-template-columns:repeat(4,49px)!important;
+  justify-content:center!important;align-items:center!important;gap:5px!important;
+  width:max-content!important;max-width:100%!important;margin:3px auto 2px!important;padding:3px 5px!important;
+  border-radius:17px!important;
+}
+html body #app .boosters .booster{
+  box-sizing:border-box!important;flex:none!important;width:49px!important;height:49px!important;
+  min-width:49px!important;min-height:49px!important;max-width:49px!important;max-height:49px!important;
+  aspect-ratio:1!important;border-radius:11px!important;background-size:58% 55%,100% 100%!important;
+  background-position:center 5%,center!important;
+}
+html body #app .boosters > .booster,
+html body #app .boosters > button.booster{
+  width:49px!important;height:49px!important;min-width:49px!important;min-height:49px!important;
+  max-width:49px!important;max-height:49px!important;
+}
+html body #app .boosters .booster span:not(.count){font-size:.55rem!important}
+html body #app .boosters .booster .count{min-width:17px!important;width:17px!important;height:17px!important;font-size:.61rem!important}
+/* Crazy mode gains an unmistakable violet board, with a fiercer black cat. */
+html body[data-campaign="crazy"] #app #board-wrap{
+  border-color:#ffe8a2!important;box-shadow:0 0 0 3px #9d4bd2,0 0 20px #ec6695a8,0 7px 0 #682c82!important;
+}
+html body[data-campaign="crazy"] #app #board .cell{
+  background:linear-gradient(145deg,#f2d6ff,#d5c3ff 57%,#bda5ef)!important;
+  box-shadow:inset 0 1px 3px #fff9,inset 0 -2px 3px #794da455!important;
+}
+html body[data-campaign="crazy"] #app #board .cell.gem-4 .lany-animal-face{
+  filter:drop-shadow(0 0 3px #ff6fc9) saturate(1.16)!important;
+}
+@media(max-width:360px){
+  html body #app>.header .hud{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 35px 35px!important;gap:3px!important}
+  html body #app>.header .hud button[data-cv-picture="icon"]{width:35px!important;height:35px!important;min-width:35px!important;min-height:35px!important}
+  html body #app .boosters{grid-template-columns:repeat(4,47px)!important;gap:4px!important}
+  html body #app .boosters .booster{width:47px!important;height:47px!important;min-width:47px!important;min-height:47px!important;max-width:47px!important;max-height:47px!important}
+  html body #app .boosters > .booster{width:47px!important;height:47px!important;min-width:47px!important;min-height:47px!important;max-width:47px!important;max-height:47px!important}
+}

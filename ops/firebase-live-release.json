@@ -1,10 +1,9 @@
 {
-  "release": "2.3.7-beta",
+  "release": "2.3.8-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "06de48093e587f45106dd395c84e15c4538536fd",
-  "requestedFor": "v2.3.7 패치: 전체 화면에 첫 화면 스타일의 캐릭터 그림 버튼을 적용하고 모바일 화면을 정리.",
+  "requestedFor": "v2.3.8 패치: 모드 버튼, 지도, HUD, 아이템 배치와 크레이지 캐릭터 디자인 개선.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -46,5 +45,7 @@
   "modePopupV56": true,
   "browserExitV57": true,
   "illustratedButtonsV60": true,
-  "illustratedButtonsV61": true
+  "illustratedButtonsV61": true,
+  "layoutPolishV62": true,
+  "crazyFierceCatV62": true
 }
