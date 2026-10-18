@@ -1,11 +1,11 @@
 {
-  "version": "2.3.16-beta",
-  "request": "라니팡 v2.3.16: 모든 화면의 행동 버튼을 첫 화면과 같은 캐릭터 그림 버튼으로 통일",
+  "version": "2.3.17-beta",
+  "request": "라니팡 v2.3.17: 시작 카운트다운 동안 퍼즐과 아이템 조작 잠금",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,
   "sourceBranch": "main",
-  "requestedAtKST": "2026-10-18",
+  "requestedAtKST": "2026-10-19",
   "secretValueIncluded": false,
   "sourceOfTruth": "web/version.json"
 }

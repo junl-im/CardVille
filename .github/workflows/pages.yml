@@ -38,6 +38,7 @@ jobs:
           node tools/check-specials-v35.cjs
           node tools/check-special-combos-v69.cjs
           node tools/check-input-balance-v70.cjs
+          node tools/check-go-input-v71.cjs
           node tools/check-hard-mode-v40.cjs
           node tools/check-hard-frenzy-v41.cjs
           node tools/check-hard-visual-v42.cjs

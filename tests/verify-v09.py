@@ -51,6 +51,7 @@ for label,w,h,mobile in [('mobile',390,844,True),('desktop',1366,768,False)]:
   page.screenshot(path=str(root/'docs'/f'v09_{label}_prepare.png'))
   page.locator('#lany-prep-play').click()
   assert page.locator('#board .cell').count()==64
+  page.locator('#lany-go-intro').wait_for(state='hidden',timeout=5000)
   assert page.locator('#lany-clock').is_visible()
   assert page.evaluate('LanyTempo.isRunning()')
   t0=page.evaluate('LanyTempo.getRemaining()');page.wait_for_timeout(1200);t1=page.evaluate('LanyTempo.getRemaining()')
@@ -65,6 +66,7 @@ for label,w,h,mobile in [('mobile',390,844,True),('desktop',1366,768,False)]:
   # Classic no countdown, but still elapsed timer
   page.evaluate('LanyShell.openMap()');page.locator('#lany-map-continue').click()
   page.locator('#lany-time-mode').uncheck();page.locator('#lany-prep-play').click()
+  page.locator('#lany-go-intro').wait_for(state='hidden',timeout=5000)
   assert not page.evaluate('LanyTempo.enabled()')
   assert page.locator('#lany-clock-caption').inner_text()=='⌛ 진행 시간'
   page.wait_for_timeout(1800)

@@ -1,13 +1,13 @@
 {
-  "release": "2.3.16-beta",
+  "release": "2.3.17-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.16 패치: 입력 멈춤 복구, 모드 초반 난이도와 결과 화면, 선택 모드 표시 개선.",
+  "requestedFor": "v2.3.17 패치: 시작 카운트다운 동안 퍼즐·아이템 조작 잠금과 타이머 동기화.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
-  "approvedAtKST": "2026-10-18",
+  "approvedAtKST": "2026-10-19",
   "versionCheckFix": true,
   "puzzleArtV25": true,
   "userArtV26": true,
@@ -56,5 +56,6 @@
   "quietHintV67": true,
   "gameFeelV68": true,
   "readabilityCombosV69": true,
-  "inputRecoveryBalanceResultsV70": true
+  "inputRecoveryBalanceResultsV70": true,
+  "goCountdownInputV71": true
 }

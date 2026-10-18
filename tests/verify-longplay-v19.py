@@ -15,7 +15,7 @@ with sync_playwright() as pw:
   page.on('pageerror',lambda e:errors.append(str(e)))
   page.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
   page.set_default_timeout(120000)
-  page.goto(base+'?v=2.3.16',wait_until='load',timeout=30000)
+  page.goto(base+'?v=2.3.17',wait_until='load',timeout=30000)
   page.wait_for_function("typeof LanyShell==='object' && typeof LanyTitleParticles==='object'")
   assert page.evaluate('LanyTitleParticles.isRunning()'),(name,'title particles should run')
   page.locator('#lany-start-button').click()
@@ -25,6 +25,7 @@ with sync_playwright() as pw:
   frame0=page.evaluate('LanyTitleParticles.frames()')
   page.wait_for_timeout(130)
   assert page.evaluate('LanyTitleParticles.frames()')==frame0,(name,'rAF kept running in gameplay')
+  page.locator('#lany-go-intro').wait_for(state='hidden',timeout=5000)
   # This executes actual gameplay swap, match, gravity and score, not just initGame.
   result=page.evaluate("""async () => {
     LanyTempo.setEnabled(false);
@@ -97,9 +98,9 @@ with sync_playwright() as pw:
   ctx.close()
  # Separate opt-in query tests protect normal users from diagnostics overhead.
  ctx=browser.new_context(viewport={'width':390,'height':844},is_mobile=True,has_touch=True,service_workers='block')
- page=ctx.new_page();page.goto(base+'?v=2.3.16',wait_until='load')
+ page=ctx.new_page();page.goto(base+'?v=2.3.17',wait_until='load')
  assert page.evaluate('typeof LanyPerfDiagnostics')=='undefined','diagnostics should stay absent without perf=1'
- page.goto(base+'?v=2.3.16&perf=1',wait_until='load')
+ page.goto(base+'?v=2.3.17&perf=1',wait_until='load')
  page.wait_for_function('typeof LanyPerfDiagnostics==="object"')
  assert page.locator('#lany-perf-hud').is_visible()
  page.wait_for_timeout(2250)
