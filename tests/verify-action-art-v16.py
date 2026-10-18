@@ -24,10 +24,16 @@ with sync_playwright() as pw:
    return page.locator(selector).evaluate_all("""els=>els.filter(el=>el.getClientRects().length&&getComputedStyle(el).visibility!=='hidden').map(el=>{
     const r=el.getBoundingClientRect(),pseudo=getComputedStyle(el,'::before'),image=pseudo.backgroundImage;
     return {text:(el.textContent||'').trim(),action:el.dataset.lanyArt,width:r.width,
-      left:r.left,right:r.right,icon:image, iconSize:pseudo.width,scroll:el.scrollWidth,inner:el.clientWidth,
+      left:r.left,right:r.right,icon:image, iconSize:pseudo.width,
+      picture:el.dataset.cvPicture,background:getComputedStyle(el).backgroundImage,
+      scroll:el.scrollWidth,inner:el.clientWidth,
       bottom:r.bottom,top:r.top};
    })""")
   def has_action_art(item):
+   if item['picture']=='art':
+    return '/v61/buttons/' in item['background']
+   if item['picture']=='icon':
+    return '/v24/controls/' in item['background']
    icon=item['icon']
    return icon!='none' and ('action-'+item['action']+'.webp' in icon or '/animals/' in icon)
   for item in inspect_buttons('.lany-map-bottom [data-lany-art]'):
