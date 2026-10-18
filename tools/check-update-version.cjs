@@ -43,9 +43,9 @@ function make(local=release.version){
  assert.equal(t.elements['lany-update-banner'].hidden,true,'older server must not show an update');
  t.setVersion('2.3.1-beta+build.22');await t.api.check();
  assert.equal(t.elements['lany-update-banner'].hidden,true,'build metadata does not imply update');
- t.setVersion('2.3.1-beta');await t.api.check();
+ t.setVersion('2.3.2-beta');await t.api.check();
  assert.equal(t.elements['lany-update-banner'].hidden,false,'newer patch must show update');
- assert(t.elements['lany-update-msg'].textContent.includes('2.3.1'));
+ assert(t.elements['lany-update-msg'].textContent.includes('2.3.2'));
  t.setVersion('2.3.1-beta');await t.api.check();
  assert.equal(t.elements['lany-update-banner'].hidden,true,'banner must disappear on same version');
  t.setVersion('garbage');await t.api.check();
