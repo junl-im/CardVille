@@ -3,12 +3,12 @@
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "185f3903d39db99436f0ebfe14ef4f76d46285a8",
-  "requestedFor": "하드 붉은 마을과 크레이지 보라빛 마을 맵 배경 개선 배포.",
+  "sourceCommit": "94349104f78e1340a3846dfdf46f3c16cc6a965c",
+  "requestedFor": "세 모드 캐릭터 버튼, 단계 준비와 GO 연출, 결과창 나가기 개선 배포.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
-  "approvedAtKST": "2026-10-17",
+  "approvedAtKST": "2026-10-18",
   "versionCheckFix": true,
   "puzzleArtV25": true,
   "userArtV26": true,
@@ -42,8 +42,6 @@
   "crazyModeV52": true,
   "candyDesignV53": true,
   "compactMapV54": true,
-  "modeMapV55": true
+  "modeMapV55": true,
+  "modePopupV56": true
 }
-
-
-
