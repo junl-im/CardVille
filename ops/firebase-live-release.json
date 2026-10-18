@@ -1,10 +1,10 @@
 {
-  "release": "2.3.1-beta",
+  "release": "2.3.2-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "256d1b53073910ef19602dea7a9f76938fe9ed20",
-  "requestedFor": "v2.3.1 패치: 브라우저별 최종 나가기 처리와 버전 표기 갱신.",
+  "sourceCommit": "d71918f6eb41a8761e08bafe82f6ece32b789fef",
+  "requestedFor": "v2.3.2 패치: 노멀 모드 맵 배경 선명도 개선.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
