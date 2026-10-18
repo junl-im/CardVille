@@ -18,12 +18,13 @@ html body #lany-world-map .lany-map-bottom :is(#lany-map-resume,button[data-lany
   grid-row:2!important;box-sizing:border-box!important;width:min(100%,148px)!important;
   height:42px!important;min-height:42px!important;max-height:42px!important;flex:none!important;margin:0!important;
 }
+html body #lany-world-map .lany-map-bottom #lany-map-resume[data-cv-picture="art"]{grid-column:1!important;justify-self:center!important}
 html body #lany-world-map .lany-map-bottom #lany-map-resume[hidden]{display:none!important}
 html body #lany-world-map .lany-map-bottom #lany-map-resume[hidden]~button[data-lany-art="exit"]{
   grid-column:1/-1!important;justify-self:center!important;
 }
 html body #lany-world-map .lany-map-bottom > button[data-lany-art="exit"][data-cv-picture="art"]{
-  grid-column:1/-1!important;width:148px!important;max-width:148px!important;justify-self:center!important;
+  grid-column:2!important;width:148px!important;max-width:148px!important;justify-self:center!important;
 }
 html body #lany-world-map .lany-map-bottom #lany-map-resume[hidden]+#lany-map-continue+button[data-lany-art="exit"][data-cv-picture="art"]{
   grid-column:1/-1!important;grid-row:2!important;justify-self:center!important;width:148px!important;
