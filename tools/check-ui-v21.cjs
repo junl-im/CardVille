@@ -3,11 +3,11 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
 const read=p=>fs.readFileSync(p,'utf8');
 const h=read('web/index.html'),css=read('web/css/lany-ui-v21.css'),builder=read('tools/build-visual-v18.py'),
   sw=read('web/sw.js'),v=JSON.parse(read('web/version.json')),m=JSON.parse(read('web/manifest.json'));
-assert.equal(v.version,'2.3.2-beta');assert.equal(v.visualRelease,'2.3.2');
+assert.equal(v.version,'2.3.3-beta');assert.equal(v.visualRelease,'2.3.3');
 for(const flag of ['premiumIndependentArtKit','allScreenRasterUi','artKitWebpOnly','sourceUiFromApprovedStudio'])assert.equal(v[flag],true,flag);
-assert.equal(v.artKitAssets,51);assert(m.start_url.includes('v=2.3.2'));
-assert(sw.includes("lanypang-match-v2.3.2-ko"));
-assert(h.includes('lany-ui-v21.css?v=2.3.2'));
+assert.equal(v.artKitAssets,51);assert(m.start_url.includes('v=2.3.3'));
+assert(sw.includes("lanypang-match-v2.3.3-ko"));
+assert(h.includes('lany-ui-v21.css?v=2.3.3'));
 const kit={
  title:['logo','play','install','help','friends'],
  buttons:[...['pink','blue','gold','green','wood','red'].map(x=>'skin-'+x),
