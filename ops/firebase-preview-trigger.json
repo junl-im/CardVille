@@ -1,5 +1,5 @@
 {
-  "version": "2.3.1-beta",
+  "version": "2.3.2-beta",
   "request": "라니팡 v2.2 SVG 29개 제거, PNG 전용 PWA, Canvas 지도 경로, WebP 전용 UI/HUD/별 게이지 품질 보정",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",

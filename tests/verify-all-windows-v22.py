@@ -30,12 +30,12 @@ with sync_playwright() as playwright:
           r.left>=-5 && r.right<=innerWidth+5 && r.top>=-6 &&
           r.bottom<=innerHeight+6;
       }""")
-    page.goto(BASE+'?v=2.3.1',wait_until='load',timeout=30000)
+    page.goto(BASE+'?v=2.3.2',wait_until='load',timeout=30000)
     page.wait_for_function("typeof LanyShell==='object' && typeof LanyFriends==='object' && typeof LanyUpdate==='object'")
     assert page.locator('#lany-update-banner').is_hidden(),(tag,'false positive update notice')
     assert page.locator('#lany-start-button img').evaluate('e=>e.complete&&e.naturalWidth>0')
     assert page.locator('#lany-install-button img').evaluate('e=>e.complete&&e.naturalWidth>0')
-    assert 'v2.3.1' in page.locator('.lany-version').inner_text(),(tag,'old 2.2 text visible')
+    assert 'v2.3.2' in page.locator('.lany-version').inner_text(),(tag,'old 2.2 text visible')
     for sel,art in [('#lany-start-button','start.webp'),('.lany-art-help','help.webp'),('#lany-install-button','install.webp')]:
       assert 'v26/title/'+art in page.locator(sel+' img.lany-button-picture').evaluate('e=>getComputedStyle(e).content'),(tag,'approved illustrated title missing',sel)
     shot('title','#lany-title')
@@ -94,14 +94,14 @@ with sync_playwright() as playwright:
     assert page.locator('#lany-world-tabs .lany-world-tab').first.get_attribute('aria-label'),(tag,'region name must remain accessible')
     shot('map','#lany-world-map')
     assert page.locator('.lany-map-levels canvas.lany-route').count()==1
-    assert 'world-atlas.webp' in page.locator('.lany-map-levels').evaluate('e=>getComputedStyle(e).backgroundImage')
+    assert 'normal-forest.webp' in page.locator('.lany-map-levels').evaluate('e=>getComputedStyle(e).backgroundImage')
     assert 'normal-forest.webp' in page.locator('#lany-world-map .lany-screen-scrim').evaluate('e=>getComputedStyle(e).backgroundImage')
     assert 'linear-gradient' in page.locator('.lany-world-banner').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'quiet world title frame missing')
     # The map atmosphere now follows the campaign; every region keeps its title and stage nodes.
     for world_index in range(10):
       page.locator('.lany-map-levels').evaluate('(e,k)=>e.dataset.world=k',str(world_index))
       bg=page.locator('.lany-map-levels').evaluate('e=>getComputedStyle(e).backgroundImage')
-      assert 'world-atlas.webp' in bg,(tag,world_index,'regional map missing')
+      assert 'normal-forest.webp' in bg,(tag,world_index,'high-resolution normal map missing')
     page.locator('.lany-map-levels').evaluate("e=>e.dataset.world='0'")
     page.locator('#lany-mode-hard').click()
     assert 'hard-village.webp' in page.locator('.lany-map-levels').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'red village missing in hard mode')
@@ -218,6 +218,3 @@ with sync_playwright() as playwright:
     context.close()
   browser.close()
 print(json.dumps(reports,ensure_ascii=False,indent=2))
-
-
-
