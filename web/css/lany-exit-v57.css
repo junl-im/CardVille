@@ -1,0 +1,8 @@
+/* v57: clear browser exit fallback when a user-opened tab cannot close itself. */
+html body #lany-exit-finished{z-index:26000!important}
+html body #lany-exit-finished .lany-exit-finished-card{box-sizing:border-box!important;width:min(88vw,340px)!important;max-height:calc(100dvh - 32px)!important;overflow:auto!important;align-items:center!important;gap:8px!important;padding:19px 18px 18px!important;border:2px solid #fffdf6!important;border-radius:25px!important;background:linear-gradient(160deg,#fffef8,#fff0e5)!important;box-shadow:0 0 0 4px #efb4c8,0 7px 0 #ce86a5,0 18px 42px #291b3d66!important}
+html body #lany-exit-finished .lany-exit-finished-mascot{width:72px;height:72px;object-fit:contain;filter:drop-shadow(0 3px 4px #bf8b9a55)}
+html body #lany-exit-finished h2{font-size:clamp(1rem,4vw,1.25rem)!important;line-height:1.2!important;margin:0!important;color:#8a466a!important}
+html body #lany-exit-finished p{margin:0!important;font-size:clamp(.77rem,3vw,.87rem)!important;line-height:1.45!important;color:#765565!important;word-break:keep-all!important}
+html body #lany-exit-finished .lany-exit-browser-note{padding:9px 11px!important;border-radius:13px!important;background:#fffaf4!important;border:1px solid #f1dce2!important}
+html body #lany-exit-finished .lany-action{width:min(100%,180px)!important;min-height:44px!important;height:44px!important;margin-top:5px!important;background:transparent url('../assets/v53/action.webp') center/100% 100% no-repeat!important;border:0!important;border-radius:0!important;box-shadow:none!important;color:#fff!important;font-size:.82rem!important;text-shadow:0 1px 2px #8d3b61!important}
