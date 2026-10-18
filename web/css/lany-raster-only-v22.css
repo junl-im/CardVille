@@ -305,7 +305,7 @@
 /* Intro is an isolated, non-SVG overlay using approved mascots. */
 .lany-go-intro[hidden]{display:none!important}
 .lany-go-intro{
- position:fixed;inset:0;z-index:25000;pointer-events:none;
+ position:fixed;inset:0;z-index:25000;pointer-events:auto;
  display:flex;align-items:center;justify-content:center;flex-direction:column;
  background:radial-gradient(ellipse at center,rgba(255,248,196,.34),rgba(80,29,82,.36) 70%);
  backdrop-filter:blur(2px);
