@@ -1,6 +1,6 @@
 {
-  "version": "2.3.5-beta",
-  "request": "라니팡 v2.3.5: 첫 화면 타이틀 위치 조정",
+  "version": "2.3.6-beta",
+  "request": "라니팡 v2.3.6: 첫 화면 타이틀 위치를 확실히 아래로 조정",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,
