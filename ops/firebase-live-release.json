@@ -1,10 +1,10 @@
 {
-  "release": "2.3.3-beta",
+  "release": "2.3.4-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "4857cc34f363bca0b0a263a96d806cb2ca9f0ef4",
-  "requestedFor": "v2.3.3 패치: 캐릭터 강조 버튼과 보조 화면 디자인 개선.",
+  "sourceCommit": "65d7bb5810e06f66ea2f17c8b0303af629ab6736",
+  "requestedFor": "v2.3.4 패치: 남은 단순 버튼을 캐릭터·캔디 그림으로 전면 교체.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -44,5 +44,6 @@
   "compactMapV54": true,
   "modeMapV55": true,
   "modePopupV56": true,
-  "browserExitV57": true
+  "browserExitV57": true,
+  "illustratedButtonsV60": true
 }
