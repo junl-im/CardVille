@@ -1,10 +1,10 @@
 {
-  "release": "2.3.6-beta",
+  "release": "2.3.7-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "f326d55660a01da1a6f8f190baa1b8da004e6598",
-  "requestedFor": "v2.3.6 패치: 첫 시작 화면 라니팡 타이틀을 더 아래로 조정.",
+  "sourceCommit": "06de48093e587f45106dd395c84e15c4538536fd",
+  "requestedFor": "v2.3.7 패치: 전체 화면에 첫 화면 스타일의 캐릭터 그림 버튼을 적용하고 모바일 화면을 정리.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -45,5 +45,6 @@
   "modeMapV55": true,
   "modePopupV56": true,
   "browserExitV57": true,
-  "illustratedButtonsV60": true
+  "illustratedButtonsV60": true,
+  "illustratedButtonsV61": true
 }
