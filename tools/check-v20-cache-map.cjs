@@ -6,12 +6,12 @@ const sw=read('web/sw.js'),html=read('web/index.html'),worlds=read('web/css/lany
 const timer=read('web/js/lany-tempo.js'),builder=read('tools/build-visual-v18.py');
 const manifest=JSON.parse(read('web/manifest.json')),v=JSON.parse(read('web/version.json'));
 const mainAssets=['ordinary','current','boss','locked'].map(x=>'stage-'+x+'-v20.webp');
-assert.equal(v.version,'2.3.2-beta');
+assert.equal(v.version,'2.3.3-beta');
 for(const key of ['canonicalPwaCache','versionProbesNotCached','allAnimalArtOffline','mobileNoTileFilters','clockRunsOnlyDuringGameplay'])assert.equal(v[key],true,key);
 assert.equal(v.rasterMapMedallions,4);assert.equal(v.worldTintThemes,10);
-assert(manifest.start_url.includes('v=2.3.2'));
-assert(html.includes('lany-worlds-v20.css?v=2.3.2'));
-assert(sw.includes('lanypang-match-v2.3.2-ko'));
+assert(manifest.start_url.includes('v=2.3.3'));
+assert(html.includes('lany-worlds-v20.css?v=2.3.3'));
+assert(sw.includes('lanypang-match-v2.3.3-ko'));
 for(const src of ['PRECACHE=','staticURLs=new Set(','!isStatic(url)','const key=normalized(url)','cache.match(key)','cache.put(key,response.clone())','if(request.mode===\'navigate\')','fetch(request).catch(safeFallback)'])assert(sw.includes(src),src);
 assert(!sw.includes('cache.put(e.request,copy)'));
 assert(!sw.includes("caches.match(e.request,{ignoreSearch:true})"));

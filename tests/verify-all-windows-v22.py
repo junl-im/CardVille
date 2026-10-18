@@ -30,12 +30,12 @@ with sync_playwright() as playwright:
           r.left>=-5 && r.right<=innerWidth+5 && r.top>=-6 &&
           r.bottom<=innerHeight+6;
       }""")
-    page.goto(BASE+'?v=2.3.2',wait_until='load',timeout=30000)
+    page.goto(BASE+'?v=2.3.3',wait_until='load',timeout=30000)
     page.wait_for_function("typeof LanyShell==='object' && typeof LanyFriends==='object' && typeof LanyUpdate==='object'")
     assert page.locator('#lany-update-banner').is_hidden(),(tag,'false positive update notice')
     assert page.locator('#lany-start-button img').evaluate('e=>e.complete&&e.naturalWidth>0')
     assert page.locator('#lany-install-button img').evaluate('e=>e.complete&&e.naturalWidth>0')
-    assert 'v2.3.2' in page.locator('.lany-version').inner_text(),(tag,'old 2.2 text visible')
+    assert 'v2.3.3' in page.locator('.lany-version').inner_text(),(tag,'old 2.2 text visible')
     for sel,art in [('#lany-start-button','start.webp'),('.lany-art-help','help.webp'),('#lany-install-button','install.webp')]:
       assert 'v26/title/'+art in page.locator(sel+' img.lany-button-picture').evaluate('e=>getComputedStyle(e).content'),(tag,'approved illustrated title missing',sel)
     shot('title','#lany-title')
@@ -171,8 +171,8 @@ with sync_playwright() as playwright:
         }""")
         assert fits,(tag,kind,i,'all result buttons must fit the screen')
       # Visual-regression guard: the official game button cutouts must be visible.
-      button_art={'win':{'next':'v53/action.webp','map':'stage-map.webp','retry':'retry.webp'},
-                  'lose':{'retry':'v53/action.webp','map':'v33/frames/blue.png','exit':'v53/action.webp'}}[kind]
+      button_art={'win':{'next':'v33/frames/green.png','map':'stage-map.webp','retry':'retry.webp'},
+                  'lose':{'retry':'v33/frames/gold.png','map':'v33/frames/blue.png','exit':'v53/action.webp'}}[kind]
       for action,filename in button_art.items():
         value=page.locator('#overlay-'+kind+' button[data-lany-art="'+action+'"]').evaluate('e=>getComputedStyle(e).backgroundImage')
         assert filename in value,(tag,kind,action,'missing approved raster skin',value)
