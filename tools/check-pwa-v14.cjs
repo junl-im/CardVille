@@ -2,15 +2,15 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const read=p=>fs.readFileSync(p,'utf8'),h=read('web/index.html'),sw=read('web/sw.js');
 const manifest=JSON.parse(read('web/manifest.json')),ver=JSON.parse(read('web/version.json')),js=read('web/js/lany-install.js');
-assert.equal(ver.version,'2.3.6-beta');
+assert.equal(ver.version,'2.3.7-beta');
 for(const k of ['pwaStandaloneInstall','pwaPromptOnSupportedBrowsers','pwaIOSManualGuide','brandedFavicon','maskableGameIcon'])assert.equal(ver[k],true,k);
-assert.equal(manifest.display,'standalone');assert.equal(manifest.id,'./');assert.equal(manifest.scope,'./');assert(manifest.start_url.includes('v=2.3.6'));
+assert.equal(manifest.display,'standalone');assert.equal(manifest.id,'./');assert.equal(manifest.scope,'./');assert(manifest.start_url.includes('v=2.3.7'));
 assert.equal(manifest.short_name,'라니팡');
 assert(manifest.icons.some(x=>x.purpose==='maskable'&&x.sizes==='512x512'&&x.type==='image/png'));
 assert(manifest.icons.some(x=>x.purpose==='any'&&x.sizes==='192x192'&&x.type==='image/png'));
-for(const value of ['rel="icon" type="image/png"','rel="icon" type="image/png"','rel="apple-touch-icon"','name="apple-mobile-web-app-title"','id="lany-install-button"','id="lany-install-modal"','lany-install.js?v=2.3.6','lany-install.css?v=2.3.6'])assert(h.includes(value),value);
+for(const value of ['rel="icon" type="image/png"','rel="icon" type="image/png"','rel="apple-touch-icon"','name="apple-mobile-web-app-title"','id="lany-install-button"','id="lany-install-modal"','lany-install.js?v=2.3.7','lany-install.css?v=2.3.7'])assert(h.includes(value),value);
 for(const value of ['beforeinstallprompt','e.preventDefault()','event.prompt()','event.userChoice','appinstalled','display-mode: standalone','navigator.standalone','iPhone','홈 화면에 추가','showGuide','isInstalled'])assert(js.includes(value),value);
-for(const value of ['lanypang-match-v2.3.6-ko','lanypang-icon-192.png','lanypang-maskable-192.png','lanypang-maskable-512.png','lanypang-apple-touch-180.png','lany-install.js',"if(request.mode==='navigate')","safeFallback","staticURLs"])assert(sw.includes(value),value);
+for(const value of ['lanypang-match-v2.3.7-ko','lanypang-icon-192.png','lanypang-maskable-192.png','lanypang-maskable-512.png','lanypang-apple-touch-180.png','lany-install.js',"if(request.mode==='navigate')","safeFallback","staticURLs"])assert(sw.includes(value),value);
 assert(!manifest.icons.some(x=>x.type==='image/svg+xml'),'No vector icons in PWA manifest');
 for(const path of ['.github/workflows/pages.yml','.github/workflows/firebase-hosting.yml','.github/workflows/firebase-live.yml','.github/workflows/lanypang-v12-check.yml']){
  const w=read(path);assert(w.includes('tools/check-pwa-v14.cjs'),path);

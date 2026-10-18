@@ -1,0 +1,27 @@
+/* Full illustrated assets, matching the title screen. No flat frame substitutions. */
+html body button[data-cv-picture]{position:relative!important;isolation:isolate!important;overflow:visible!important;appearance:none!important;background-color:transparent!important;background-position:center!important;background-size:100% 100%!important;background-repeat:no-repeat!important;border:0!important;border-radius:0!important;box-shadow:none!important;text-shadow:none!important;transition:transform .12s ease,filter .12s ease!important}
+html body button[data-cv-picture]::before,html body button[data-cv-picture]::after{content:none!important;display:none!important;opacity:0!important;background:none!important}
+html body button[data-cv-picture]:not(:disabled):active{transform:translateY(2px) scale(.98)!important}
+html body button[data-cv-picture]:disabled{filter:grayscale(.7) opacity(.62)!important}
+html body button[data-cv-picture]:focus-visible{outline:3px solid #ffdb6e!important;outline-offset:2px!important}
+html body button[data-cv-picture="icon"]{font-size:0!important;color:transparent!important;text-shadow:none!important;padding:0!important;min-width:36px!important;min-height:36px!important;filter:none!important}
+html body button[data-cv-picture="icon"]>*{visibility:hidden!important}
+html body button[data-cv-picture="art"]{font-size:0!important;color:transparent!important;text-shadow:none!important;padding:0!important;min-height:43px!important;filter:none!important}
+html body button[data-cv-picture="art"]>:not(.cv-illustrated-label){visibility:hidden!important}
+html body button[data-cv-picture="art"]>.cv-illustrated-label{visibility:visible!important;display:flex!important;align-items:center!important;justify-content:center!important;position:absolute!important;z-index:3!important;top:10%!important;bottom:10%!important;left:43%!important;right:6%!important;color:#fffef4!important;font-family:inherit!important;font-size:clamp(.67rem,2.6vw,1.05rem)!important;font-weight:1000!important;line-height:1.12!important;letter-spacing:-.055em!important;text-align:center!important;white-space:normal!important;word-break:keep-all!important;text-shadow:-1px -1px 0 #6b2a48,1px -1px 0 #6b2a48,-1px 1px 0 #6b2a48,1px 1px 0 #6b2a48,0 2px 2px #4e2448!important;pointer-events:none!important}
+html body #lany-mode-normal[data-cv-picture],html body #lany-mode-hard[data-cv-picture],html body #lany-mode-crazy[data-cv-picture]{height:clamp(51px,13vw,66px)!important;min-height:51px!important;padding:0!important}
+html body .lany-campaign-switch button[data-cv-picture="art"]>.cv-illustrated-label{font-size:clamp(.65rem,2.35vw,.9rem)!important;left:42%!important;right:5%!important}
+html body :is(#lany-stage-prep,#lany-pause,#lany-exit,#overlay-win,#overlay-lose,#overlay-tutorial) button[data-cv-picture="art"]{height:clamp(44px,11vw,57px)!important;min-height:44px!important}
+html body :is(#lany-stage-prep,#lany-pause,#lany-exit,#overlay-win,#overlay-lose,#overlay-tutorial) button[data-cv-picture="art"]>.cv-illustrated-label{font-size:clamp(.78rem,3vw,1.13rem)!important}
+html body :is(#lany-install-modal,#overlay-tutorial) button[data-cv-picture="art"]{width:min(180px,48vw)!important;margin-inline:auto!important}
+html body #lany-map-pager button[data-cv-picture="icon"],html body #lany-prep-pager button[data-cv-picture="icon"],html body .lany-friends-pager button[data-cv-picture="icon"],html body .lany-tutorial-pager button[data-cv-picture="icon"],html body #ng-level-editor .lany-editor-pager button[data-cv-picture="icon"]{width:clamp(75px,23vw,115px)!important;height:clamp(37px,10vw,48px)!important;min-height:37px!important}
+html body :is(#lany-world-prev,#lany-world-next,#lany-prep-back,#lany-install-close,#lany-friends-close)[data-cv-picture="icon"]{width:clamp(36px,10vw,47px)!important;height:clamp(36px,10vw,47px)!important}
+html body #app>.header .hud button[data-cv-picture="icon"]{width:39px!important;height:39px!important;min-width:39px!important;min-height:39px!important}
+html body .lany-game-nav button[data-cv-picture="art"]{height:clamp(44px,11vw,57px)!important;min-height:44px!important}
+html body .lany-game-nav button[data-cv-picture="art"]>.cv-illustrated-label{font-size:clamp(.69rem,2.7vw,.98rem)!important}
+html body .lany-map-bottom button[data-cv-picture="art"]{height:clamp(47px,12vw,64px)!important;min-height:47px!important}
+html body #ng-level-editor button[data-cv-picture="art"],html body #daily-modal button[data-cv-picture="art"],html body #difficulty-modal button[data-cv-picture="art"],html body #mp-setup button[data-cv-picture="art"],html body #mp-share button[data-cv-picture="art"],html body #lany-extra-controls button[data-cv-picture="art"]{min-height:43px!important;height:auto!important;aspect-ratio:3.25!important}
+html body #difficulty-modal .lany-difficulty-option[data-cv-picture="art"]{aspect-ratio:auto!important;min-height:60px!important}
+html body button[data-cv-picture="art"][aria-pressed="true"]{filter:drop-shadow(0 0 5px #ffe981)!important;transform:translateY(-2px)!important}
+@media(max-width:375px){html body button[data-cv-picture="art"]>.cv-illustrated-label{font-size:.68rem!important}html body .lany-campaign-switch button[data-cv-picture="art"]>.cv-illustrated-label{font-size:.62rem!important}}
+@media(prefers-reduced-motion:reduce){html body button[data-cv-picture]{transition:none!important}}
