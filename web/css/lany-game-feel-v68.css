@@ -1,0 +1,28 @@
+/* Motion is brief and stays inside the two affected tiles. */
+#board .cell.lany-swap-land .lany-animal-face{animation:lany-direction-swap .17s ease-out both!important}
+@keyframes lany-direction-swap{from{transform:translate(var(--swap-x),var(--swap-y)) scale(.92)}to{transform:translate(0,0) scale(1)}}
+#board .cell.lany-swap-reject .lany-animal-face{animation:lany-direction-reject .22s ease-in-out both!important}
+@keyframes lany-direction-reject{0%,100%{transform:translate(0,0)}45%{transform:translate(var(--reject-x),var(--reject-y))}}
+#board .cell.lany-fall-in .lany-animal-face{animation:lany-distance-fall .21s ease-out both!important;animation-delay:var(--lany-delay,0ms)!important}
+@keyframes lany-distance-fall{from{opacity:.65;transform:translateY(var(--fall-offset)) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+/* One raster badge per special effect. Shape and direction remain distinguishable without glow. */
+html body #app #board .cell:is(.stripe-row,.stripe-col,.bomb-gem,.wrap-gem)::after{
+  content:''!important;position:absolute!important;right:0!important;bottom:0!important;
+  width:43%!important;height:43%!important;background-repeat:no-repeat!important;
+  background-size:contain!important;background-position:center!important;
+  filter:drop-shadow(0 1px 1px #604b6188)!important;pointer-events:none!important;
+}
+html body #app #board .cell.stripe-row::after{background-image:url('../assets/v41/hard/row.webp')!important}
+html body #app #board .cell.stripe-col::after{background-image:url('../assets/v41/hard/column.webp')!important}
+html body #app #board .cell.bomb-gem::after{background-image:url('../assets/v41/hard/bomb.webp')!important}
+html body #app #board .cell.wrap-gem::after{background-image:url('../assets/v41/hard/burst.webp')!important}
+.lany-special-trace{position:absolute;z-index:29001;pointer-events:none;border-radius:999px;background:#fff9debd;border:2px solid #f8c881b0;box-shadow:0 0 6px #f6c77b66;animation:lany-special-trace .38s ease-out forwards}
+.lany-special-trace[data-axis="row"]{height:13px;transform-origin:left center}
+.lany-special-trace[data-axis="col"]{width:13px;transform-origin:center top}
+.lany-special-trace[data-axis="burst"]{border-radius:50%;background:#ffdfc082}
+@keyframes lany-special-trace{from{opacity:.9;transform:scale(.2)}to{opacity:0;transform:scale(1)}}
+#app .level-goal.lany-next-star{color:#795b6b!important;font-variant-numeric:tabular-nums}
+#app .level-goal.lany-next-star.all-earned{color:#a3633e!important}
+.lany-star-checkpoint.lany-star-new{animation:lany-new-star .42s ease-out 1}
+@keyframes lany-new-star{50%{transform:translateX(-50%) scale(1.28)}}
+@media(prefers-reduced-motion:reduce){#board .cell:is(.lany-swap-land,.lany-swap-reject,.lany-fall-in) .lany-animal-face,.lany-special-trace,.lany-star-checkpoint.lany-star-new{animation:none!important}}

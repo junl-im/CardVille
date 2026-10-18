@@ -73,9 +73,43 @@ function onMatch(indices,chain=1){const cells=[];
   burst(rect,grade==='small'?'burst-heart':'burst-star');
 }
 }
-function onFall(indices){if(reduced())return;const tiles=document.getElementById('board')?.children;if(!tiles)return;indices.slice(0,24).forEach((idx,i)=>{const el=tiles[idx];if(el){el.classList.add('lany-fall-in');el.style.setProperty('--lany-delay',(i%8)*22+'ms')}})}
-function invalidSwap(r1,c1,r2,c2){if(reduced())return;const tiles=document.getElementById('board')?.children;if(!tiles)return;for(const idx of [r1*8+c1,r2*8+c2]){const el=tiles[idx];if(el){el.classList.add('lany-swap-reject');setTimeout(()=>el.classList.remove('lany-swap-reject'),250)}}}
-function onSwap(r1,c1,r2,c2){if(reduced())return;const tiles=document.getElementById('board')?.children;if(!tiles)return;for(const idx of [r1*8+c1,r2*8+c2])tiles[idx]?.classList.add('lany-swap-land')}
+function onFall(indices,distances={}){
+ if(reduced())return;
+ const board=document.getElementById('board'),tiles=board?.children;if(!tiles)return;
+ const cell=tiles[0];const step=(cell?.getBoundingClientRect().height||40)+(parseFloat(getComputedStyle(board).rowGap)||0);
+ indices.slice(0,24).forEach((idx,i)=>{const el=tiles[idx];if(!el)return;
+  el.style.setProperty('--fall-offset',-(Math.min(4,Math.max(1,distances[idx]||1))*step)+'px');
+  el.style.setProperty('--lany-delay',(i%8)*15+'ms');el.classList.add('lany-fall-in');
+  setTimeout(()=>el.classList.remove('lany-fall-in'),320);
+ });
+}
+function swapTiles(r1,c1,r2,c2,valid){
+ if(reduced())return;
+ const tiles=document.getElementById('board')?.children;if(!tiles)return;
+ const a=tiles[r1*8+c1],b=tiles[r2*8+c2];if(!a||!b)return;
+ const ar=a.getBoundingClientRect(),br=b.getBoundingClientRect();
+ for(const [el,dx,dy] of [[a,br.left-ar.left,br.top-ar.top],[b,ar.left-br.left,ar.top-br.top]]){
+  el.style.setProperty('--swap-x',dx+'px');el.style.setProperty('--swap-y',dy+'px');
+  el.style.setProperty('--reject-x',(dx*.22)+'px');el.style.setProperty('--reject-y',(dy*.22)+'px');
+  const cls=valid?'lany-swap-land':'lany-swap-reject';el.classList.add(cls);
+  setTimeout(()=>el.classList.remove(cls),valid?200:260);
+ }
+}
+function invalidSwap(r1,c1,r2,c2){swapTiles(r1,c1,r2,c2,false)}
+function onSwap(r1,c1,r2,c2){swapTiles(r1,c1,r2,c2,true)}
+function onSpecial(items){
+ if(reduced()||document.hidden||!items?.length)return;
+ const board=document.getElementById('board'),bounds=board?.getBoundingClientRect();if(!bounds)return;
+ for(const {index,special} of items.slice(0,3)){
+  const rect=board.children[index]?.getBoundingClientRect();if(!rect)continue;
+  const el=document.createElement('span');el.className='lany-special-trace';
+  const axis=[2,6].includes(special)?'row':[3,7].includes(special)?'col':'burst';el.dataset.axis=axis;
+  if(axis==='row'){el.style.left=bounds.left+'px';el.style.top=(rect.top+rect.height/2-6)+'px';el.style.width=bounds.width+'px'}
+  else if(axis==='col'){el.style.left=(rect.left+rect.width/2-6)+'px';el.style.top=bounds.top+'px';el.style.height=bounds.height+'px'}
+  else{el.style.left=(rect.left-rect.width*.45)+'px';el.style.top=(rect.top-rect.height*.45)+'px';el.style.width=rect.width*1.9+'px';el.style.height=rect.height*1.9+'px'}
+  getLayer().append(el);setTimeout(()=>el.remove(),430);
+ }
+}
 function promoteDialog(){document.querySelectorAll('#lany-pause .lany-dialog-emoji,#lany-exit .lany-dialog-emoji').forEach((el,i)=>{
  if(el.querySelector('img'))return;
  el.textContent='';const img=document.createElement('img');img.className='lany-popup-mascot';img.src=puzzleRoot+(i===0?'rabbit.webp':'bear.webp');img.alt='';img.draggable=false;el.append(img)
@@ -88,6 +122,6 @@ function init(){
   document.addEventListener('pointerup',up,{capture:true,passive:true});
   document.addEventListener('pointercancel',up,{capture:true,passive:true});
 }
-window.LanyPolish={onMatch,onFall,invalidSwap,onSwap,dialog,burst,face};
+window.LanyPolish={onMatch,onFall,invalidSwap,onSwap,onSpecial,dialog,burst,face};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();

@@ -1,9 +1,9 @@
 {
-  "release": "2.3.13-beta",
+  "release": "2.3.14-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.13 패치: 퍼즐 힌트의 무한 점멸과 일시정지 중 안내를 개선.",
+  "requestedFor": "v2.3.14 패치: 교환·낙하와 특수 블록, 목표 표시 및 장시간 플레이를 개선.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -53,5 +53,6 @@
   "halfTempoV64": true,
   "visualCalmV65": true,
   "matchJoyV66": true,
-  "quietHintV67": true
+  "quietHintV67": true,
+  "gameFeelV68": true
 }
