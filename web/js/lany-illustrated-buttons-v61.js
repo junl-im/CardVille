@@ -143,6 +143,6 @@
       m.type === 'characterData' && m.target.parentElement?.closest('button') && !m.target.parentElement?.classList.contains('cv-illustrated-label') ||
       m.type === 'childList' && m.target.closest?.('button') && !m.target.closest('#board,#lany-map-levels,#level-grid') && ![...m.addedNodes].every(n => n.nodeType === 1 && n.classList?.contains('cv-illustrated-label')) ||
       [...m.addedNodes].some(n => n.nodeType === 1 && !n.classList?.contains('cv-illustrated-label') && (n.matches?.('button') || n.querySelector?.('button')))
-    )) schedule();
+    )) paintAll();
   }).observe(document.documentElement, {subtree:true, childList:true, characterData:true, attributes:true, attributeFilter:['aria-pressed','data-campaign']});
 })();

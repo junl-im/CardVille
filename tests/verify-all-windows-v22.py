@@ -210,6 +210,7 @@ with sync_playwright() as playwright:
     page.evaluate("document.getElementById('ng-level-editor').style.display='none'")
     page.locator('#lany-extra-controls summary').click()
     page.get_by_role('button',name='📅 오늘의 도전').click()
+    page.locator('#daily-modal>div>button:first-of-type .cv-illustrated-label').wait_for()
     assert page.locator('#daily-modal>div>button:first-of-type').evaluate("e=>getComputedStyle(e).backgroundImage.includes('v61/buttons/')&&parseFloat(getComputedStyle(e.querySelector('.cv-illustrated-label')).fontSize)>10"),(tag,'daily start label and art')
     shot('daily-challenge','#daily-modal')
     page.evaluate("document.getElementById('daily-modal').style.display='none'")
