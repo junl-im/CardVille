@@ -1,9 +1,9 @@
 {
-  "release": "2.3.14-beta",
+  "release": "2.3.15-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.14 패치: 교환·낙하와 특수 블록, 목표 표시 및 장시간 플레이를 개선.",
+  "requestedFor": "v2.3.15 패치: 동물 퍼즐 배경의 구분을 높이고 특수 블록 교환 조합을 추가.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -54,5 +54,6 @@
   "visualCalmV65": true,
   "matchJoyV66": true,
   "quietHintV67": true,
-  "gameFeelV68": true
+  "gameFeelV68": true,
+  "readabilityCombosV69": true
 }
