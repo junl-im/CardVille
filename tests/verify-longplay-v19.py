@@ -15,7 +15,7 @@ with sync_playwright() as pw:
   page.on('pageerror',lambda e:errors.append(str(e)))
   page.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
   page.set_default_timeout(120000)
-  page.goto(base+'?v=2.3.13',wait_until='load',timeout=30000)
+  page.goto(base+'?v=2.3.14',wait_until='load',timeout=30000)
   page.wait_for_function("typeof LanyShell==='object' && typeof LanyTitleParticles==='object'")
   assert page.evaluate('LanyTitleParticles.isRunning()'),(name,'title particles should run')
   page.locator('#lany-start-button').click()
@@ -30,7 +30,7 @@ with sync_playwright() as pw:
     LanyTempo.setEnabled(false);
     window.__originCell=document.querySelector('#board .cell');
     let totalMoves=0,finished=0,scoreGained=0;
-    const rounds=9, movesPerRound=2;
+    const rounds=12, movesPerRound=2;
     for(let round=0;round<rounds;round++){
       initGame(1);
       for(let turn=0;turn<movesPerRound;turn++){
@@ -62,6 +62,7 @@ with sync_playwright() as pw:
       domImages:document.querySelectorAll('#board .lany-animal-face').length,
       cellUnchanged:window.__originCell===document.querySelector('#board .cell'),
       vfx:document.querySelector('.lany-vfx-layer')?.children.length||0,
+      lingering:document.querySelectorAll('.lany-swap-land,.lany-swap-reject,.lany-fall-in,.lany-star-new,.lany-special-trace').length,
       floats:document.querySelectorAll('.score-float,.combo-display').length,
       stageStarts:LanyPerf.stageStarts
     };
@@ -71,7 +72,7 @@ with sync_playwright() as pw:
   assert result['cellCreates']==64 and result['domCells']==64,(name,'DOM grew',result)
   assert result['cellUnchanged'],(name,'cell node identity changed',result)
   assert result['domImages']==64,(name,'image count',result)
-  assert result['vfx']==0 and result['floats']==0,(name,'effects leaked',result)
+  assert result['vfx']==0 and result['floats']==0 and result['lingering']==0,(name,'effects leaked',result)
   # Catch leftover expressive sprite after renderBoard refreshed the board.
   page.evaluate("""() => {const t=document.querySelector('#board .cell');
     LanyPolish.face(t,'wink');renderBoard();
@@ -96,9 +97,9 @@ with sync_playwright() as pw:
   ctx.close()
  # Separate opt-in query tests protect normal users from diagnostics overhead.
  ctx=browser.new_context(viewport={'width':390,'height':844},is_mobile=True,has_touch=True,service_workers='block')
- page=ctx.new_page();page.goto(base+'?v=2.3.13',wait_until='load')
+ page=ctx.new_page();page.goto(base+'?v=2.3.14',wait_until='load')
  assert page.evaluate('typeof LanyPerfDiagnostics')=='undefined','diagnostics should stay absent without perf=1'
- page.goto(base+'?v=2.3.13&perf=1',wait_until='load')
+ page.goto(base+'?v=2.3.14&perf=1',wait_until='load')
  page.wait_for_function('typeof LanyPerfDiagnostics==="object"')
  assert page.locator('#lany-perf-hud').is_visible()
  page.wait_for_timeout(2250)
