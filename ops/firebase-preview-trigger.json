@@ -1,6 +1,6 @@
 {
-  "version": "2.3.4-beta",
-  "request": "라니팡 v2.3.4: 전체 화면 버튼 그림과 캐릭터 마감 통일",
+  "version": "2.3.5-beta",
+  "request": "라니팡 v2.3.5: 첫 화면 타이틀 위치 조정",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,
