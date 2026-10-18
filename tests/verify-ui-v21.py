@@ -14,7 +14,7 @@ with sync_playwright() as pw:
   page=ctx.new_page();errors=[];missing=[]
   page.on('pageerror',lambda e:errors.append(str(e)))
   page.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
-  page.goto(base+'?v=2.3.7',wait_until='load',timeout=30000)
+  page.goto(base+'?v=2.3.8',wait_until='load',timeout=30000)
   page.wait_for_function("typeof LanyShell==='object' && typeof LanyFriends==='object'")
   def bg(selector,piece):
    val=page.locator(selector).first.evaluate("e=>getComputedStyle(e).backgroundImage")
@@ -40,7 +40,7 @@ with sync_playwright() as pw:
   assert page.locator('#lany-world-no').inner_text()=='1~25단계',(name,'banner must not repeat region name')
   bg('#lany-map-continue','v61/buttons/green-rabbit.webp')
   if mobile:
-   assert page.locator('#lany-map-continue').evaluate("e=>Math.abs(e.getBoundingClientRect().top-document.querySelector('.lany-map-bottom button[data-lany-art=\"exit\"]').getBoundingClientRect().top)<=3"),(name,'map actions should share one row')
+   assert page.locator('#lany-map-continue').evaluate("e=>{const a=e.getBoundingClientRect(),b=document.querySelector('.lany-map-bottom button[data-lany-art=\"exit\"]').getBoundingClientRect();return a.bottom<=b.top && Math.abs((a.left+a.width/2)-(b.left+b.width/2))<=3}"),(name,'primary map action should be centered above exit')
   page.screenshot(path=str(out/(name+'-map.png')))
   page.locator('#lany-map-continue').click()
   assert page.locator('#lany-stage-prep').is_visible(),name

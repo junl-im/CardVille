@@ -30,12 +30,12 @@ with sync_playwright() as playwright:
           r.left>=-5 && r.right<=innerWidth+5 && r.top>=-6 &&
           r.bottom<=innerHeight+6;
       }""")
-    page.goto(BASE+'?v=2.3.7',wait_until='load',timeout=30000)
+    page.goto(BASE+'?v=2.3.8',wait_until='load',timeout=30000)
     page.wait_for_function("typeof LanyShell==='object' && typeof LanyFriends==='object' && typeof LanyUpdate==='object'")
     assert page.locator('#lany-update-banner').is_hidden(),(tag,'false positive update notice')
     assert page.locator('#lany-start-button img').evaluate('e=>e.complete&&e.naturalWidth>0')
     assert page.locator('#lany-install-button img').evaluate('e=>e.complete&&e.naturalWidth>0')
-    assert 'v2.3.7' in page.locator('.lany-version').inner_text(),(tag,'old 2.2 text visible')
+    assert 'v2.3.8' in page.locator('.lany-version').inner_text(),(tag,'old 2.2 text visible')
     for sel,art in [('#lany-start-button','start.webp'),('.lany-art-help','help.webp'),('#lany-install-button','install.webp')]:
       assert 'v26/title/'+art in page.locator(sel+' img.lany-button-picture').evaluate('e=>getComputedStyle(e).content'),(tag,'approved illustrated title missing',sel)
     shot('title','#lany-title')
@@ -210,6 +210,7 @@ with sync_playwright() as playwright:
     page.evaluate("document.getElementById('ng-level-editor').style.display='none'")
     page.locator('#lany-extra-controls summary').click()
     page.get_by_role('button',name='📅 오늘의 도전').click()
+    page.locator('#daily-modal>div>button:first-of-type .cv-illustrated-label').wait_for()
     assert page.locator('#daily-modal>div>button:first-of-type').evaluate("e=>getComputedStyle(e).backgroundImage.includes('v61/buttons/')&&parseFloat(getComputedStyle(e.querySelector('.cv-illustrated-label')).fontSize)>10"),(tag,'daily start label and art')
     shot('daily-challenge','#daily-modal')
     page.evaluate("document.getElementById('daily-modal').style.display='none'")

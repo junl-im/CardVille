@@ -45,7 +45,7 @@ with sync_playwright() as pw:
   assert current.count()==1,(name,'current stage')
   assert 'v53/control.webp' in current.evaluate("e=>getComputedStyle(e).backgroundImage"),name
   locked=page.locator('#lany-map-levels .lany-level:disabled').first
-  assert 'stage-locked-v20.webp' in locked.evaluate("e=>getComputedStyle(e).backgroundImage"),name
+  assert 'v53/control.webp' in locked.evaluate("e=>getComputedStyle(e).backgroundImage"),name
   page.screenshot(path=str(out/(name+'-map.png')))
   page.locator('#lany-map-continue').click()
   assert page.locator('#lany-stage-prep').is_visible(),name

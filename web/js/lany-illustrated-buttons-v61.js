@@ -70,7 +70,7 @@
     button.dataset.cvPicture = kind;
     button.style.setProperty('background-image', `url("${path}")`, 'important');
     button.style.setProperty('background-color', 'transparent', 'important');
-    button.style.setProperty('background-size', '100% 100%', 'important');
+    button.style.setProperty('background-size', kind === 'icon' ? 'contain' : '100% 100%', 'important');
     button.style.setProperty('background-position', 'center', 'important');
     button.style.setProperty('background-repeat', 'no-repeat', 'important');
     button.style.setProperty('border', '0', 'important');
@@ -81,9 +81,9 @@
     button.style.setProperty('padding', '0', 'important');
     for (const child of button.children) if (!child.classList.contains('cv-illustrated-label')) child.style.setProperty('visibility','hidden','important');
     if (kind === 'icon' && button.matches('#lany-map-pager button,#lany-prep-pager button,.lany-friends-pager button,.lany-tutorial-pager button,#ng-level-editor .lany-editor-pager button,#difficulty-modal .lany-page-arrow')) {
-      button.style.setProperty('width','clamp(78px,23vw,112px)','important');
-      button.style.setProperty('height','42px','important');
-      button.style.setProperty('min-width','78px','important');
+      button.style.setProperty('width','clamp(68px,20vw,100px)','important');
+      button.style.setProperty('height','clamp(37px,10vw,44px)','important');
+      button.style.setProperty('min-width','68px','important');
     }
     if (button.matches('#overlay-win .modal-btns button[data-lany-art="map"],#overlay-win .modal-btns button[data-lany-art="retry"]')) {
       button.style.setProperty('width','100%','important');
@@ -143,6 +143,6 @@
       m.type === 'characterData' && m.target.parentElement?.closest('button') && !m.target.parentElement?.classList.contains('cv-illustrated-label') ||
       m.type === 'childList' && m.target.closest?.('button') && !m.target.closest('#board,#lany-map-levels,#level-grid') && ![...m.addedNodes].every(n => n.nodeType === 1 && n.classList?.contains('cv-illustrated-label')) ||
       [...m.addedNodes].some(n => n.nodeType === 1 && !n.classList?.contains('cv-illustrated-label') && (n.matches?.('button') || n.querySelector?.('button')))
-    )) schedule();
+    )) paintAll();
   }).observe(document.documentElement, {subtree:true, childList:true, characterData:true, attributes:true, attributeFilter:['aria-pressed','data-campaign']});
 })();
