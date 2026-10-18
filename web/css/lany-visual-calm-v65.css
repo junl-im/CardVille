@@ -1,0 +1,38 @@
+/* The animal faces are the focal point. Use quiet, distinct tile colors and thin rims. */
+html body #app #board {
+  background:#d9efeb!important;
+  border-color:#e9faf2!important;
+  box-shadow:0 3px 0 #99c8b5,0 7px 14px #4b776b38!important;
+  gap:3px;
+}
+html body #app #board .cell:not(.locked) {
+  border:1px solid #ffffff9c!important;
+  box-shadow:inset 0 1px 0 #ffffff7d!important;
+  filter:none!important;
+}
+html body #app #board .cell.gem-0:not(.locked){background:#f7e8ef!important}
+html body #app #board .cell.gem-1:not(.locked){background:#f5eadb!important}
+html body #app #board .cell.gem-2:not(.locked){background:#f4efd5!important}
+html body #app #board .cell.gem-3:not(.locked){background:#e2f2e8!important}
+html body #app #board .cell.gem-4:not(.locked){background:#e9e5f5!important}
+html body #app #board .cell.gem-5:not(.locked){background:#f4e4df!important}
+html body #app #board .cell.gem-6:not(.locked){background:#e1eef4!important}
+html body #app #board .cell .lany-animal-face {
+  filter:drop-shadow(0 1px 1px #50687830) saturate(.93)!important;
+}
+html body[data-campaign="crazy"] #app #board-wrap {
+  box-shadow:0 0 0 2px #9467b0,0 5px 0 #76528c!important;
+}
+html body[data-campaign="crazy"] #app #board .cell.gem-4 .lany-animal-face {
+  filter:drop-shadow(0 1px 1px #513d673d) saturate(.96)!important;
+}
+/* Keep action feedback, but avoid a bright idle pulse and full-board flashes. */
+html body #app #board .cell.lany-frenzy-gem::after{animation:none!important;filter:none!important}
+html body #app #board .cell.lany-frenzy-gem:not(.locked){box-shadow:inset 0 0 0 2px #d6ab65!important}
+html body #app #board-wrap.lany-impact{animation:none!important}
+html body #app #board-wrap.lany-shuffling #board{animation:lany-calm-shuffle .38s ease-in-out!important}
+@keyframes lany-calm-shuffle{50%{transform:scale(.985)}}
+html body #app .lany-clock.critical{animation:none!important;box-shadow:0 0 0 2px #dc7780!important}
+.lany-match-ring{box-shadow:0 0 0 1px #e8b6c3a0!important;opacity:.72}
+html body #app #board .cell.matched{animation-duration:.25s!important}
+@media(prefers-reduced-motion:reduce){html body #app #board-wrap.lany-shuffling #board{animation:none!important}}
