@@ -6,3 +6,7 @@ html body[data-campaign="crazy"] #lany-world-map .lany-map-section .lany-world-b
 html body[data-campaign="crazy"] #lany-world-map .lany-map-section .lany-world-banner #lany-world-title{color:#6e436f!important}
 
 
+
+/* Normal map: use the full-resolution portrait forest instead of enlarging a tiny atlas cell. */
+html body[data-campaign="normal"] #lany-world-map .lany-map-section .lany-map-levels[data-world]{background-image:linear-gradient(150deg,#fff9eb12,#ddfff015),url('../assets/v43/normal-forest.webp')!important;background-size:cover,cover!important;background-position:center,center var(--lany-world-y,50%)!important;background-repeat:no-repeat!important}
+
