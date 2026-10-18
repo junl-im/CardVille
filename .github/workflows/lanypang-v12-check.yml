@@ -44,6 +44,7 @@ jobs:
           node tools/check-art-v23.cjs
           node tools/check-v24-restore.cjs
           node tools/check-layout-polish-v62.cjs
+          node tools/check-control-rims-v63.cjs
           node tools/check-progress-migration.cjs
           node tools/check-canonical-redirect.cjs
 

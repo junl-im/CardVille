@@ -12,13 +12,12 @@
     crazy: root + 'v61/buttons/crazy-cat.webp'
   };
   const iconPictures = {
-    'lany-world-prev':'v24/controls/left.webp', 'lany-world-next':'v24/controls/right.webp',
-    'lany-prep-back':'v24/controls/back.webp',
-    'lany-map-prev':'v24/controls/previous.webp','lany-map-next':'v24/controls/next.webp',
-    'lany-prep-prev':'v24/controls/previous.webp','lany-prep-next':'v24/controls/next.webp',
-    'lany-help-prev':'v24/controls/previous.webp','lany-help-next':'v24/controls/next.webp',
-    'lany-friends-prev':'v24/controls/previous.webp','lany-friends-next':'v24/controls/next.webp',
-    'lany-editor-prev':'v24/controls/previous.webp','lany-editor-next':'v24/controls/next.webp'
+    'lany-world-prev':'v23/buttons/back.webp', 'lany-world-next':'v23/buttons/next.webp',
+    'lany-map-prev':'v23/buttons/back.webp','lany-map-next':'v23/buttons/next.webp',
+    'lany-prep-prev':'v23/buttons/back.webp','lany-prep-next':'v23/buttons/next.webp',
+    'lany-help-prev':'v23/buttons/back.webp','lany-help-next':'v23/buttons/next.webp',
+    'lany-friends-prev':'v23/buttons/back.webp','lany-friends-next':'v23/buttons/next.webp',
+    'lany-editor-prev':'v23/buttons/back.webp','lany-editor-next':'v23/buttons/next.webp'
   };
   const skip = '#lany-title .lany-art-button, #lany-world-tabs button, #lany-map-levels button, #level-grid button, #board button, .booster, #ng-level-editor button[data-type], #editor-grid button';
   function realText(button) {
@@ -29,12 +28,12 @@
     const id = button.id;
     const modeArt = document.body.dataset.campaign === 'crazy' ? pictures.crazy : document.body.dataset.campaign === 'hard' ? pictures.hard : pictures.green;
     if (iconPictures[id]) return ['icon', root + iconPictures[id]];
-    if (button.matches('.lany-install-close,.lany-friends-close')) return ['icon', root + 'v24/controls/close.webp'];
-    if (id === 'music-btn') return ['icon', root + (button.getAttribute('aria-pressed') === 'true' ? 'v24/controls/sound-on.webp' : 'v24/controls/sound-off.webp')];
-    if (button.matches('#app>.header .hud button[data-lany-art="pause"]')) return ['icon', root + 'v24/controls/pause.webp'];
-    if (button.matches('#ng-level-editor>div>div:first-child>button:first-of-type:not([data-type])')) return ['icon', root + 'v24/controls/close.webp'];
+    if (button.matches('.lany-install-close,.lany-friends-close')) return ['icon', root + 'v23/buttons/close.webp'];
+    if (id === 'music-btn') return ['icon', root + 'v23/buttons/music.webp'];
+    if (button.matches('#app>.header .hud button[data-lany-art="pause"]')) return ['icon', root + 'v53/control.webp'];
+    if (button.matches('#ng-level-editor>div>div:first-child>button:first-of-type:not([data-type])')) return ['icon', root + 'v23/buttons/close.webp'];
     if (button.classList.contains('lany-page-arrow') || button.matches('#difficulty-modal .lany-page-arrow')) {
-      return ['icon', root + (/다음|▶|›/.test(label) ? 'v24/controls/next.webp' : 'v24/controls/previous.webp')];
+      return ['icon', root + (/다음|▶|›/.test(label) ? 'v23/buttons/next.webp' : 'v23/buttons/back.webp')];
     }
     if (id === 'lany-mode-normal') return ['art', pictures.green, '노멀'];
     if (id === 'lany-mode-hard') return ['art', pictures.hard, '하드'];
@@ -81,9 +80,9 @@
     button.style.setProperty('padding', '0', 'important');
     for (const child of button.children) if (!child.classList.contains('cv-illustrated-label')) child.style.setProperty('visibility','hidden','important');
     if (kind === 'icon' && button.matches('#lany-map-pager button,#lany-prep-pager button,.lany-friends-pager button,.lany-tutorial-pager button,#ng-level-editor .lany-editor-pager button,#difficulty-modal .lany-page-arrow')) {
-      button.style.setProperty('width','clamp(68px,20vw,100px)','important');
-      button.style.setProperty('height','clamp(37px,10vw,44px)','important');
-      button.style.setProperty('min-width','68px','important');
+      button.style.setProperty('width','clamp(38px,11vw,44px)','important');
+      button.style.setProperty('height','clamp(38px,11vw,44px)','important');
+      button.style.setProperty('min-width','38px','important');
     }
     if (button.matches('#overlay-win .modal-btns button[data-lany-art="map"],#overlay-win .modal-btns button[data-lany-art="retry"]')) {
       button.style.setProperty('width','100%','important');

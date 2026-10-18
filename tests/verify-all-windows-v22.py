@@ -30,19 +30,19 @@ with sync_playwright() as playwright:
           r.left>=-5 && r.right<=innerWidth+5 && r.top>=-6 &&
           r.bottom<=innerHeight+6;
       }""")
-    page.goto(BASE+'?v=2.3.8',wait_until='load',timeout=30000)
+    page.goto(BASE+'?v=2.3.9',wait_until='load',timeout=30000)
     page.wait_for_function("typeof LanyShell==='object' && typeof LanyFriends==='object' && typeof LanyUpdate==='object'")
     assert page.locator('#lany-update-banner').is_hidden(),(tag,'false positive update notice')
     assert page.locator('#lany-start-button img').evaluate('e=>e.complete&&e.naturalWidth>0')
     assert page.locator('#lany-install-button img').evaluate('e=>e.complete&&e.naturalWidth>0')
-    assert 'v2.3.8' in page.locator('.lany-version').inner_text(),(tag,'old 2.2 text visible')
+    assert 'v2.3.9' in page.locator('.lany-version').inner_text(),(tag,'old 2.2 text visible')
     for sel,art in [('#lany-start-button','start.webp'),('.lany-art-help','help.webp'),('#lany-install-button','install.webp')]:
       assert 'v26/title/'+art in page.locator(sel+' img.lany-button-picture').evaluate('e=>getComputedStyle(e).content'),(tag,'approved illustrated title missing',sel)
     shot('title','#lany-title')
     page.locator('#lany-install-button').click()
     assert viewport_fit('.lany-install-card'),(tag,'install panel clipped')
     assert 'install-ornament.webp' in page.locator('#lany-install-guide-title').evaluate("e=>getComputedStyle(e,'::before').backgroundImage"),(tag,'install ornament not applied')
-    assert 'v24/controls/close.webp' in page.locator('.lany-install-close').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'new close art not applied')
+    assert 'v23/buttons/close.webp' in page.locator('.lany-install-close').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'new close art not applied')
     assert 'v61/buttons/' in page.locator('.lany-install-done').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'install confirmation artwork')
     assert page.locator('.lany-install-done .cv-illustrated-label').evaluate('e=>parseFloat(getComputedStyle(e).fontSize)>10'),(tag,'install confirmation label hidden')
     shot('install','.lany-install-card')
@@ -68,7 +68,7 @@ with sync_playwright() as playwright:
       assert page.locator('#lany-friends-grid img[loading="eager"]').count()==page.locator('#lany-friends-grid img').count(),(tag,'gallery must eagerly load visible art')
       friend_pages+=1
       assert 'friends-ornament.webp' in page.locator('#lany-friends-heading').evaluate("e=>getComputedStyle(e,'::before').backgroundImage"),(tag,'friends ornament not applied')
-      assert 'v24/controls/close.webp' in page.locator('.lany-friends-close').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'gallery close art not applied')
+      assert 'v23/buttons/close.webp' in page.locator('.lany-friends-close').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'gallery close art not applied')
       shot('friends-'+str(friend_pages),'.lany-friends-panel')
       if page.locator('#lany-friends-next').is_disabled():break
       page.evaluate('LanyFriends.page(1)')
@@ -91,8 +91,8 @@ with sync_playwright() as playwright:
     page.locator('#lany-start-button').click()
     assert page.locator('#lany-world-map').is_visible()
     assert page.locator('.lany-map-head').count()==0,(tag,'obsolete map title bar')
-    for selector,asset in (('#lany-world-prev','left.webp'),('#lany-world-next','right.webp')):
-      assert 'v24/controls/'+asset in page.locator(selector).evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,selector,'map navigation illustration missing')
+    for selector,asset in (('#lany-world-prev','back.webp'),('#lany-world-next','next.webp')):
+      assert 'v23/buttons/'+asset in page.locator(selector).evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,selector,'map navigation illustration missing')
     assert page.locator('#lany-world-tabs .lany-world-tab').first.evaluate("e=>getComputedStyle(e).backgroundImage.includes('v26/regions/tab-01.webp')"),(tag,'regional illustration is not mapped')
     assert page.locator('#lany-world-tabs .lany-world-tab').first.get_attribute('aria-label'),(tag,'region name must remain accessible')
     shot('map','#lany-world-map')
@@ -203,7 +203,7 @@ with sync_playwright() as playwright:
     shot('difficulty-more','#difficulty-modal')
     page.evaluate('Difficulty.close()')
     page.evaluate('LevelEditor.openEditor()')
-    assert 'v24/controls/close.webp' in page.locator('#ng-level-editor>div>div:first-child>button').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'editor close art')
+    assert 'v23/buttons/close.webp' in page.locator('#ng-level-editor>div>div:first-child>button').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'editor close art')
     shot('level-editor','#ng-level-editor')
     page.evaluate('LevelEditor.showPage(1)')
     shot('editor-settings','#ng-level-editor')

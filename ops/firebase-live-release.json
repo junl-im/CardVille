@@ -1,9 +1,9 @@
 {
-  "release": "2.3.8-beta",
+  "release": "2.3.9-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.8 패치: 모드 버튼, 지도, HUD, 아이템 배치와 크레이지 캐릭터 디자인 개선.",
+  "requestedFor": "v2.3.9 패치: 잘린 이전·다음·좌우·닫기 등 컨트롤 그림을 완전한 에셋으로 교체하고 화면 여백을 정리.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -47,5 +47,6 @@
   "illustratedButtonsV60": true,
   "illustratedButtonsV61": true,
   "layoutPolishV62": true,
-  "crazyFierceCatV62": true
+  "crazyFierceCatV62": true,
+  "controlRimsV63": true
 }
