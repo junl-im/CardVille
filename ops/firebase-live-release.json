@@ -1,9 +1,9 @@
 {
-  "release": "2.3.10-beta",
+  "release": "2.3.11-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.10 패치: 시간 도전 제한을 절반으로 줄이고 버튼 그림 기본값과 글씨 넘침을 수정.",
+  "requestedFor": "v2.3.11 패치: 퍼즐판의 눈 피로를 줄이고 캐릭터 식별과 움직임을 다듬음.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -50,5 +50,6 @@
   "crazyFierceCatV62": true,
   "controlRimsV63": true,
   "controlFitV64": true,
-  "halfTempoV64": true
+  "halfTempoV64": true,
+  "visualCalmV65": true
 }
