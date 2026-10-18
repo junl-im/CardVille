@@ -49,7 +49,7 @@ with sync_playwright() as pw:
   assert locked.count()>=1,name
   assert 'stage-locked-v20.webp' in locked.first.evaluate("e=>getComputedStyle(e).backgroundImage"),name
   mapBg=page.locator('#lany-map-levels').evaluate("e=>getComputedStyle(e).backgroundImage")
-  assert 'world-atlas.webp' in mapBg,name
+  assert 'normal-forest.webp' in mapBg,name
   assert 'normal-forest.webp' in page.locator('#lany-world-map .lany-screen-scrim').evaluate('e=>getComputedStyle(e).backgroundImage'),name
   assert page.evaluate('document.documentElement.scrollWidth-innerWidth')<=3,(name,'horizontal overflow')
   page.screenshot(path=str(out/(name+'-map.png')))
@@ -71,4 +71,3 @@ with sync_playwright() as pw:
   ctx.close()
  browser.close()
 print(json.dumps(report,ensure_ascii=False,indent=2))
-

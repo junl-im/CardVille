@@ -52,9 +52,9 @@ with sync_playwright() as pw:
   for selector in ('#lany-prep-play',):
    box=page.locator(selector).bounding_box()
    assert box and 2.2 < box['width']/box['height'] < 4.5,(name,selector,box)
-   assert 'linear-gradient' in page.locator(selector).evaluate("e=>getComputedStyle(e).backgroundImage"),(name,selector)
+   assert 'prep-start.webp' in page.locator(selector).evaluate("e=>getComputedStyle(e).backgroundImage"),(name,selector)
   assert page.locator('#lany-stage-prep .lany-prep-cancel').inner_text().strip()=='맵 돌아가기'
-  bg('#lany-stage-prep .lany-prep-cancel','linear-gradient')
+  bg('#lany-stage-prep .lany-prep-cancel','v33/frames/blue.png')
   page.locator('#lany-prep-play').click()
   assert page.locator('#board .cell').count()==64,name
   bg('#app>.header .hud-box','panel-score.webp')

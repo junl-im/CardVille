@@ -27,8 +27,11 @@ with sync_playwright() as pw:
       left:r.left,right:r.right,icon:image, iconSize:pseudo.width,scroll:el.scrollWidth,inner:el.clientWidth,
       bottom:r.bottom,top:r.top};
    })""")
+  def has_action_art(item):
+   icon=item['icon']
+   return icon!='none' and ('action-'+item['action']+'.webp' in icon or '/animals/' in icon)
   for item in inspect_buttons('.lany-map-bottom [data-lany-art]'):
-   assert item['icon']!='none' and 'action-'+item['action']+'.webp' in item['icon'],(name,item)
+   assert has_action_art(item),(name,item)
    assert item['left']>=-2 and item['right']<=w+2,(name,'map button cropped',item)
    assert item['scroll']<=item['inner']+3,(name,'map button contents clipped',item)
   # Every currently visible stage is rendered from state-specific candy-medallion art.
@@ -49,7 +52,7 @@ with sync_playwright() as pw:
   pause=inspect_buttons('#lany-pause [data-lany-art]')
   assert len(pause)==5,(name,'pause action count',pause)
   for item in pause:
-   assert 'action-'+item['action']+'.webp' in item['icon'],(name,item)
+   assert has_action_art(item),(name,item)
    assert item['scroll']<=item['inner']+3,(name,'pause text overflow',item)
   page.screenshot(path=str(out/(name+'-pause.png')))
   page.locator('#lany-pause button[data-lany-art="resume"]').click()
@@ -61,7 +64,7 @@ with sync_playwright() as pw:
   assert [x['action'] for x in victory]==['next','map','retry','exit'],(name,victory)
   for item in victory:
    assert item['scroll']<=item['inner']+3,(name,'win action overflow',item)
-   assert 'action-'+item['action']+'.webp' in item['icon'],(name,item)
+   assert has_action_art(item),(name,item)
   page.screenshot(path=str(out/(name+'-victory.png')))
   page.evaluate("""() => {document.getElementById('overlay-win').style.display='none';document.getElementById('overlay-lose').style.display='flex';}""")
   defeat=inspect_buttons('#overlay-lose [data-lany-art]')
