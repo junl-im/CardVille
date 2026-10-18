@@ -26,6 +26,25 @@ function burst(rect,type='burst-star'){
   v.style.left=(rect.left+rect.width/2)+'px';v.style.top=(rect.top+rect.height/2)+'px';
   const parent=getLayer();while(parent.children.length>=8)parent.firstElementChild?.remove();parent.appendChild(v);setTimeout(()=>v.remove(),650);
 }
+function spray(rect,grade){
+  if(reduced()||document.hidden||!rect)return;
+  const parent=getLayer();
+  const old=parent.querySelectorAll('.lany-match-spray');
+  if(old.length>=3)old[0].remove();
+  const group=document.createElement('span');group.className='lany-match-spray';
+  group.dataset.grade=grade;
+  group.style.left=(rect.left+rect.width/2)+'px';group.style.top=(rect.top+rect.height/2)+'px';
+  const count=grade==='combo'?8:grade==='big'?7:5;
+  const distance=Math.min(37,Math.max(19,rect.width*(grade==='small' ? 0.45 : 0.68)));
+  for(let i=0;i<count;i++){
+    const dot=document.createElement('i'),angle=(i/count)*Math.PI*2-Math.PI/2;
+    dot.style.setProperty('--dx',Math.round(Math.cos(angle)*distance)+'px');
+    dot.style.setProperty('--dy',Math.round(Math.sin(angle)*distance)+'px');
+    dot.style.setProperty('--spark-delay',((i%3)*18)+'ms');
+    group.appendChild(dot);
+  }
+  parent.appendChild(group);setTimeout(()=>group.remove(),620);
+}
 let pressed=null;
 function down(e){if(e.button!==0)return;const tile=e.target.closest?.('#board .cell');
  if(tile&&!tile.classList.contains('locked')){pressed=tile;tile.classList.add('lany-tap');return;}
@@ -42,14 +61,16 @@ function onMatch(indices,chain=1){const cells=[];
   });
   if(cells.length){
   const a=cells[Math.floor(cells.length/2)],rect=a.getBoundingClientRect();
+  if(window.LanyPolish)window.LanyPolish.lastMatchPoint={x:rect.left+rect.width/2,y:rect.top+rect.height/2};
   if(!reduced()){
     const ring=document.createElement('span');ring.className='lany-match-ring';
     ring.style.left=(rect.left+rect.width/2)+'px';ring.style.top=(rect.top+rect.height/2)+'px';
     ring.style.setProperty('--ring-size',Math.max(48,rect.width*2.3)+'px');
     const parent=getLayer();parent.append(ring);setTimeout(()=>ring.remove(),470);
   }
-  burst(rect,cells.length>=5||chain>=3?'burst-star':'burst-heart');
-  if(chain>=3)burst(rect,'combo');
+  const grade=chain>=3?'combo':cells.length>=5?'big':'small';
+  spray(rect,grade);
+  burst(rect,grade==='small'?'burst-heart':'burst-star');
 }
 }
 function onFall(indices){if(reduced())return;const tiles=document.getElementById('board')?.children;if(!tiles)return;indices.slice(0,24).forEach((idx,i)=>{const el=tiles[idx];if(el){el.classList.add('lany-fall-in');el.style.setProperty('--lany-delay',(i%8)*22+'ms')}})}
