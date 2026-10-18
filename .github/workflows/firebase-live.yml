@@ -151,7 +151,7 @@ jobs:
               echo '## 라니팡 실제 Firebase 정식 게임 배포 성공' >> "$GITHUB_STEP_SUMMARY"
               echo '- 정식 게임 URL: https://cardville.web.app/?v=2.3.6' >> "$GITHUB_STEP_SUMMARY"
               echo '- 단일 공식 주소: https://cardville.web.app/' >> "$GITHUB_STEP_SUMMARY"
-              echo '- 배포 승인 원본 커밋: bf8662db1c3d905182f3987f0fdcf26312a0038c' >> "$GITHUB_STEP_SUMMARY"
+              echo '- 배포 승인 원본 커밋: f326d55660a01da1a6f8f190baa1b8da004e6598' >> "$GITHUB_STEP_SUMMARY"
               echo '- 원본 데이터 및 Firestore/Auth 변경 없음' >> "$GITHUB_STEP_SUMMARY"
               exit 0
             fi
