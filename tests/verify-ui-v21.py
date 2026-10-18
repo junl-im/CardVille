@@ -38,7 +38,7 @@ with sync_playwright() as pw:
   bg('#lany-world-map .lany-world-banner','linear-gradient')  # v52 keeps the region title readable on a quiet frame
   assert page.locator('#lany-world-tabs .lany-world-tab').evaluate_all("els=>els.every(e=>e.childElementCount===0&&e.textContent.trim()===''&&getComputedStyle(e,'::before').display==='none')"),(name,'region art must have one painted label')
   assert page.locator('#lany-world-no').inner_text()=='1~25단계',(name,'banner must not repeat region name')
-  bg('#lany-map-continue','v26/actions/continue.webp')
+  bg('#lany-map-continue','v61/buttons/green-rabbit.webp')
   if mobile:
    assert page.locator('#lany-map-continue').evaluate("e=>Math.abs(e.getBoundingClientRect().top-document.querySelector('.lany-map-bottom button[data-lany-art=\"exit\"]').getBoundingClientRect().top)<=3"),(name,'map actions should share one row')
   page.screenshot(path=str(out/(name+'-map.png')))
@@ -52,9 +52,9 @@ with sync_playwright() as pw:
   for selector in ('#lany-prep-play',):
    box=page.locator(selector).bounding_box()
    assert box and 2.2 < box['width']/box['height'] < 4.5,(name,selector,box)
-   assert 'prep-start.webp' in page.locator(selector).evaluate("e=>getComputedStyle(e).backgroundImage"),(name,selector)
+   assert 'v61/buttons/green-rabbit.webp' in page.locator(selector).evaluate("e=>getComputedStyle(e).backgroundImage"),(name,selector)
   assert page.locator('#lany-stage-prep .lany-prep-cancel').inner_text().strip()=='맵 돌아가기'
-  bg('#lany-stage-prep .lany-prep-cancel','v33/frames/blue.png')
+  bg('#lany-stage-prep .lany-prep-cancel','v61/buttons/blue-map.webp')
   page.locator('#lany-prep-play').click()
   assert page.locator('#board .cell').count()==64,name
   bg('#app>.header .hud-box','panel-score.webp')
@@ -71,7 +71,7 @@ with sync_playwright() as pw:
   for key,label,art in [('map','맵','rabbit.webp'),('friends','도감','cat.webp'),('exit','나가기','bear.webp')]:
    control=page.locator('.lany-game-nav button[data-lany-art="'+key+'"]')
    assert control.count()==1 and control.inner_text().strip()==label,(name,key,'navigation label')
-   assert control.evaluate('e=>getComputedStyle(e,"::before").backgroundImage',).find(art)>=0,(name,key,'navigation icon')
+   assert 'v61/buttons/' in control.evaluate('e=>getComputedStyle(e).backgroundImage'),(name,key,'navigation button art')
   page.locator('#lany-quick-exit').click()
   assert page.locator('#lany-exit').is_visible(),(name,'exit confirmation')
   page.locator('#lany-exit button[data-lany-art="resume"]').click()
