@@ -121,6 +121,11 @@
       word.style.setProperty('width','auto','important');
       word.style.setProperty('font-size','clamp(13px,3.3vw,17px)','important');
       if (button.matches('.lany-campaign-switch button')) word.style.setProperty('font-size','clamp(11px,3vw,14px)','important');
+      if (button.matches('#lany-world-map .lany-map-bottom button,#lany-pause button,#lany-exit button')) {
+        word.style.setProperty('font-size','12px','important');
+        word.style.setProperty('left','33%','important');
+        word.style.setProperty('right','4%','important');
+      }
       word.style.setProperty('top','10%','important');
       word.style.setProperty('bottom','10%','important');
       word.style.setProperty('left','43%','important');

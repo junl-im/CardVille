@@ -10,7 +10,7 @@
  let ticker=null;
  const runClock=()=>{if(ticker===null)ticker=setInterval(update,250)};
  const stopClock=()=>{if(ticker!==null){clearInterval(ticker);ticker=null;}};
- const durationFor=level=>Math.max(115,185-(Math.floor((level-1)/25)*7));
+ const durationFor=level=>Math.ceil(Math.max(115,185-(Math.floor((level-1)/25)*7))/2);
  const getRemaining=()=>Math.max(0,remaining);
  const format=t=>`${String(Math.floor(t/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}`;
  function render(){

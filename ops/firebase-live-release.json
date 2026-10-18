@@ -1,9 +1,9 @@
 {
-  "release": "2.3.9-beta",
+  "release": "2.3.10-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.9 패치: 잘린 이전·다음·좌우·닫기 등 컨트롤 그림을 완전한 에셋으로 교체하고 화면 여백을 정리.",
+  "requestedFor": "v2.3.10 패치: 시간 도전 제한을 절반으로 줄이고 버튼 그림 기본값과 글씨 넘침을 수정.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -48,5 +48,7 @@
   "illustratedButtonsV61": true,
   "layoutPolishV62": true,
   "crazyFierceCatV62": true,
-  "controlRimsV63": true
+  "controlRimsV63": true,
+  "controlFitV64": true,
+  "halfTempoV64": true
 }

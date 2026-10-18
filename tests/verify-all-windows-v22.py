@@ -22,6 +22,7 @@ with sync_playwright() as playwright:
       if selector:
         assert page.locator(selector).is_visible(),(tag,name,'not visible')
       assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 4'),(tag,name,'horizontal document overflow')
+      assert page.evaluate("""() => [...document.querySelectorAll('button[data-cv-picture=\"art\"] .cv-illustrated-label')].every(e => !e.getClientRects().length || (e.scrollWidth <= e.clientWidth+1 && e.scrollHeight <= e.clientHeight+1))"""),(tag,name,'illustrated button text overflow')
       page.screenshot(path=str(OUT/(tag+'-'+name+'.png')),animations='disabled')
       shots.append(name)
     def viewport_fit(selector):
@@ -30,12 +31,12 @@ with sync_playwright() as playwright:
           r.left>=-5 && r.right<=innerWidth+5 && r.top>=-6 &&
           r.bottom<=innerHeight+6;
       }""")
-    page.goto(BASE+'?v=2.3.9',wait_until='load',timeout=30000)
+    page.goto(BASE+'?v=2.3.10',wait_until='load',timeout=30000)
     page.wait_for_function("typeof LanyShell==='object' && typeof LanyFriends==='object' && typeof LanyUpdate==='object'")
     assert page.locator('#lany-update-banner').is_hidden(),(tag,'false positive update notice')
     assert page.locator('#lany-start-button img').evaluate('e=>e.complete&&e.naturalWidth>0')
     assert page.locator('#lany-install-button img').evaluate('e=>e.complete&&e.naturalWidth>0')
-    assert 'v2.3.9' in page.locator('.lany-version').inner_text(),(tag,'old 2.2 text visible')
+    assert 'v2.3.10' in page.locator('.lany-version').inner_text(),(tag,'old 2.2 text visible')
     for sel,art in [('#lany-start-button','start.webp'),('.lany-art-help','help.webp'),('#lany-install-button','install.webp')]:
       assert 'v26/title/'+art in page.locator(sel+' img.lany-button-picture').evaluate('e=>getComputedStyle(e).content'),(tag,'approved illustrated title missing',sel)
     shot('title','#lany-title')
