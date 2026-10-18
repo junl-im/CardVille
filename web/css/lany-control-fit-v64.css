@@ -1,0 +1,29 @@
+/* Keep complete control art visible even before the illustrated-button script paints it. */
+html body :is(#lany-world-prev,#lany-map-prev,#lany-prep-prev,#lany-help-prev,#lany-friends-prev,#lany-editor-prev),
+html body #difficulty-modal .lany-page-arrow:first-child{
+  background-image:url('../assets/v23/buttons/back.webp')!important;
+  background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important;
+}
+html body :is(#lany-world-next,#lany-map-next,#lany-prep-next,#lany-help-next,#lany-friends-next,#lany-editor-next),
+html body #difficulty-modal .lany-page-arrow:last-child{
+  background-image:url('../assets/v23/buttons/next.webp')!important;
+  background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important;
+}
+html body :is(#lany-install-close,#lany-friends-close){
+  background-image:url('../assets/v23/buttons/close.webp')!important;
+  background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important;
+}
+html body #app>.header .hud>#music-btn{
+  background-image:url('../assets/v23/buttons/music.webp')!important;
+  background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important;
+}
+html body #app>.header .hud>button[data-lany-art="pause"]{
+  background-image:url('../assets/v53/control.webp')!important;
+  background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important;
+}
+/* Leave room for the caption within small illustrated buttons. */
+html body :is(#lany-world-map,#lany-pause,#lany-exit) button[data-cv-picture="art"]>.cv-illustrated-label{
+  left:38%!important;right:5%!important;top:8%!important;bottom:8%!important;
+  font-size:clamp(.69rem,2.4vw,.91rem)!important;line-height:1.05!important;
+  letter-spacing:-.055em!important;overflow-wrap:anywhere!important;
+}
