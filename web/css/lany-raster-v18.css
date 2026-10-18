@@ -22,7 +22,7 @@ body.lany-at-title .lany-title{
  max-height:clamp(138px,28dvh,228px);
  image-rendering:auto;
 }
-.lany-title .lany-title-top{padding-top:clamp(20px,3.6dvh,40px)}
+.lany-title .lany-title-top{padding-top:clamp(75px,10dvh,110px)}
 .lany-title .lany-title-play-scene{margin-top:auto}
 .lany-title .lany-art-play .lany-button-word{
  top:69%!important;
@@ -56,12 +56,12 @@ body.lany-at-title .lany-title{
  }
 }
 @media(max-height:700px){
- .lany-title .lany-title-top{padding-top:12px}
+ .lany-title .lany-title-top{padding-top:44px}
  .lany-title .lany-title-shortcuts{margin-top:4px!important}
  .lany-title .lany-title-play-scene .lany-art-play{width:min(82%,320px)!important}
 }
 @media(max-height:480px){
- .lany-title .lany-title-top{padding-top:4px}
+ .lany-title .lany-title-top{padding-top:22px}
  .lany-title .lany-title-shortcuts{margin-top:4px!important}
  .lany-title .lany-title-play-scene .lany-art-play{width:min(78%,215px)!important}
  .lany-title .lany-title-shortcuts .lany-button-word{font-size:clamp(.63rem,2vw,.78rem)}
