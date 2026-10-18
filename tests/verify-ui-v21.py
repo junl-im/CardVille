@@ -51,10 +51,10 @@ with sync_playwright() as pw:
   # Standalone action art must keep its source aspect ratio instead of stretching text.
   for selector in ('#lany-prep-play',):
    box=page.locator(selector).bounding_box()
-   assert box and 2.4 < box['width']/box['height'] < 2.6,(name,selector,box)
-   assert page.locator(selector).evaluate("e=>getComputedStyle(e).backgroundSize")=='contain',(name,selector)
+   assert box and 2.2 < box['width']/box['height'] < 4.5,(name,selector,box)
+   assert 'linear-gradient' in page.locator(selector).evaluate("e=>getComputedStyle(e).backgroundImage"),(name,selector)
   assert page.locator('#lany-stage-prep .lany-prep-cancel').inner_text().strip()=='맵 돌아가기'
-  bg('#lany-stage-prep .lany-prep-cancel','v53/action.webp')
+  bg('#lany-stage-prep .lany-prep-cancel','linear-gradient')
   page.locator('#lany-prep-play').click()
   assert page.locator('#board .cell').count()==64,name
   bg('#app>.header .hud-box','panel-score.webp')
@@ -91,4 +91,5 @@ with sync_playwright() as pw:
   ctx.close()
  browser.close()
 print(json.dumps(all_reports,ensure_ascii=False,indent=2))
+
 

@@ -111,7 +111,7 @@ with sync_playwright() as playwright:
     assert 'rabbit.webp' in page.locator('#lany-world-icon').get_attribute('src'),(tag,'normal map friend')
     page.locator('#lany-mode-crazy').click()
     assert 'cat.webp' in page.locator('#lany-world-icon').get_attribute('src'),(tag,'crazy map friend')
-    assert page.locator('#lany-mode-crazy').evaluate("e=>getComputedStyle(e,'::before').backgroundImage.includes('burst.webp')"),(tag,'crazy mode badge')
+    assert page.locator('#lany-mode-crazy').evaluate("e=>getComputedStyle(e,'::before').backgroundImage.includes('cat-black.webp')"),(tag,'crazy mode badge')
     page.locator('#lany-mode-normal').click()
     page.evaluate('LanyShell.mapPage(1)')
     shot('map-next-page','#lany-world-map')
@@ -119,13 +119,13 @@ with sync_playwright() as playwright:
     page.locator('.lany-map-levels .lany-level:not([disabled])').first.click()
     assert page.locator('#lany-stage-prep').is_visible()
     # Each source button is now a complete individual raster image with accessible HTML text.
-    for selector,skin in (('#lany-prep-play','v26/actions/prep-start.webp'),):
+    for selector,skin in (('#lany-prep-play','linear-gradient'),):
       assert page.locator('#lany-stage-prep '+selector).evaluate("""(e,asset)=>{
         const c=getComputedStyle(e);
         return c.backgroundImage.includes(asset)&&e.textContent.trim().length>=2
           && e.getBoundingClientRect().width>100;
       }""",skin),(tag,selector,'individual action artwork missing')
-    assert 'v53/action.webp' in page.locator('#lany-stage-prep .lany-prep-cancel').evaluate('e=>getComputedStyle(e).backgroundImage')
+    assert 'linear-gradient' in page.locator('#lany-stage-prep .lany-prep-cancel').evaluate('e=>getComputedStyle(e).backgroundImage')
     assert page.locator('#lany-stage-prep .lany-prep-cancel').inner_text().strip()=='맵 돌아가기'
     shot('stage-ready','#lany-stage-prep')
     if page.locator('#lany-prep-pager').is_visible():
@@ -172,7 +172,7 @@ with sync_playwright() as playwright:
         assert fits,(tag,kind,i,'all result buttons must fit the screen')
       # Visual-regression guard: the official game button cutouts must be visible.
       button_art={'win':{'next':'v53/action.webp','map':'stage-map.webp','retry':'retry.webp'},
-                  'lose':{'retry':'v53/action.webp','map':'stage-map.webp'}}[kind]
+                  'lose':{'retry':'v53/action.webp','map':'v33/frames/blue.png','exit':'v53/action.webp'}}[kind]
       for action,filename in button_art.items():
         value=page.locator('#overlay-'+kind+' button[data-lany-art="'+action+'"]').evaluate('e=>getComputedStyle(e).backgroundImage')
         assert filename in value,(tag,kind,action,'missing approved raster skin',value)

@@ -17,7 +17,7 @@ with sync_playwright() as pw:
   page.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
   page.goto(url+'?v=1.6.0',wait_until='load',timeout=30000)
   page.wait_for_function("typeof LanyShell==='object' && typeof LanyButtonFX==='object'")
-  assert page.locator('[data-lany-art]').count()==25,name
+  assert page.locator('[data-lany-art]').count()==27,name
   page.locator('#lany-start-button').click()
   assert page.locator('#lany-world-map').is_visible(),name
   def inspect_buttons(selector):
@@ -58,20 +58,21 @@ with sync_playwright() as pw:
   page.evaluate("""() => { document.getElementById('overlay-win').style.display='flex'; }""")
   assert page.locator('#overlay-win').is_visible(),name
   victory=inspect_buttons('#overlay-win [data-lany-art]')
-  assert [x['action'] for x in victory]==['next','map','retry'],(name,victory)
+  assert [x['action'] for x in victory]==['next','map','retry','exit'],(name,victory)
   for item in victory:
    assert item['scroll']<=item['inner']+3,(name,'win action overflow',item)
    assert 'action-'+item['action']+'.webp' in item['icon'],(name,item)
   page.screenshot(path=str(out/(name+'-victory.png')))
   page.evaluate("""() => {document.getElementById('overlay-win').style.display='none';document.getElementById('overlay-lose').style.display='flex';}""")
   defeat=inspect_buttons('#overlay-lose [data-lany-art]')
-  assert [x['action'] for x in defeat]==['retry','map'],(name,defeat)
+  assert [x['action'] for x in defeat]==['retry','map','exit'],(name,defeat)
   page.evaluate("""() => document.getElementById('overlay-lose').style.display='none'""")
   assert not missing,(name,missing)
   assert not errors,(name,errors)
-  results.append(dict(device=name,screen=f'{w}x{h}',gameplayIllustrations=25,pauseActions=5,winActions=3,
+  results.append(dict(device=name,screen=f'{w}x{h}',gameplayIllustrations=27,pauseActions=5,winActions=4,
      iconsLoaded=True,overflow=False,jsErrors=0))
   ctx.close()
  browser.close()
 print(json.dumps(results,ensure_ascii=False,indent=2))
+
 
