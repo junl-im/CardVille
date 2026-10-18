@@ -33,7 +33,7 @@ with sync_playwright() as pw:
    if item['picture']=='art':
     return '/v61/buttons/' in item['background']
    if item['picture']=='icon':
-    return '/v24/controls/' in item['background']
+    return '/v23/buttons/' in item['background'] or '/v53/control.webp' in item['background']
    icon=item['icon']
    return icon!='none' and ('action-'+item['action']+'.webp' in icon or '/animals/' in icon)
   for item in inspect_buttons('.lany-map-bottom [data-lany-art]'):
