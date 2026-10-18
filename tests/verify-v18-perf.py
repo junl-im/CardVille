@@ -55,6 +55,7 @@ with sync_playwright() as pw:
   assert result['stages']>=41,(name,result)
   # 40 boards should finish promptly, but avoid fragile comparisons to runner CPU.
   assert result['wall']<12000,(name,'per-run responsiveness',result['wall'])
+  p.locator('#lany-go-intro').wait_for(state='hidden',timeout=5000)
   p.evaluate("""() => {const x=state.playEpoch;void trySwap(0,0,0,1);initGame(1);window.__expectedEpoch=state.playEpoch;}""")
   p.wait_for_timeout(650)
   assert p.evaluate('state.score')==0,(name,'old async chain mutated next run')

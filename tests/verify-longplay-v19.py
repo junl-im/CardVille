@@ -25,6 +25,7 @@ with sync_playwright() as pw:
   frame0=page.evaluate('LanyTitleParticles.frames()')
   page.wait_for_timeout(130)
   assert page.evaluate('LanyTitleParticles.frames()')==frame0,(name,'rAF kept running in gameplay')
+  page.locator('#lany-go-intro').wait_for(state='hidden',timeout=5000)
   # This executes actual gameplay swap, match, gravity and score, not just initGame.
   result=page.evaluate("""async () => {
     LanyTempo.setEnabled(false);
