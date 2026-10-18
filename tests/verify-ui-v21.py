@@ -40,7 +40,7 @@ with sync_playwright() as pw:
   assert page.locator('#lany-world-no').inner_text()=='1~25단계',(name,'banner must not repeat region name')
   bg('#lany-map-continue','v61/buttons/green-rabbit.webp')
   if mobile:
-   assert page.locator('#lany-map-continue').evaluate("e=>Math.abs(e.getBoundingClientRect().top-document.querySelector('.lany-map-bottom button[data-lany-art=\"exit\"]').getBoundingClientRect().top)<=3"),(name,'map actions should share one row')
+   assert page.locator('#lany-map-continue').evaluate("e=>{const a=e.getBoundingClientRect(),b=document.querySelector('.lany-map-bottom button[data-lany-art=\"exit\"]').getBoundingClientRect();return a.bottom<=b.top && Math.abs((a.left+a.width/2)-(b.left+b.width/2))<=3}"),(name,'primary map action should be centered above exit')
   page.screenshot(path=str(out/(name+'-map.png')))
   page.locator('#lany-map-continue').click()
   assert page.locator('#lany-stage-prep').is_visible(),name
