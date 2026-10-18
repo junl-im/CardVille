@@ -3,7 +3,7 @@
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  `$12cc3a9f72eaaf4610a9eb2cf5c0d71d50dce1543`",
+  "sourceCommit": "2cc3a9f72eaaf4610a9eb2cf5c0d71d50dce1543",
   "requestedFor": "v2.3.2 패치: 노멀 모드 맵 배경 선명도 개선.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
