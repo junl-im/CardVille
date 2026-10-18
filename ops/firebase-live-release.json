@@ -1,10 +1,10 @@
 {
-  "release": "2.3.4-beta",
+  "release": "2.3.5-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "79d46468876636fc9ddfc0f2c45ae48932bcd203",
-  "requestedFor": "v2.3.4 패치: 버튼 그림 전면 교체와 전체 브라우저 QA 보정.",
+  "sourceCommit": "bf8662db1c3d905182f3987f0fdcf26312a0038c",
+  "requestedFor": "v2.3.5 패치: 첫 시작 화면 라니팡 타이틀을 아래로 조정.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
