@@ -1,10 +1,10 @@
 {
-  "release": "2.3.2-beta",
+  "release": "2.3.3-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "sourceCommit": "2cc3a9f72eaaf4610a9eb2cf5c0d71d50dce1543",
-  "requestedFor": "v2.3.2 패치: 노멀 모드 맵 배경 선명도 개선.",
+  "sourceCommit": "4857cc34f363bca0b0a263a96d806cb2ca9f0ef4",
+  "requestedFor": "v2.3.3 패치: 캐릭터 강조 버튼과 보조 화면 디자인 개선.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
