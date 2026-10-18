@@ -1,0 +1,146 @@
+/* v60: one illustrated control language for every non-puzzle button. */
+:root{--lany-button-focus:#ffe48a}
+html body button:focus-visible{outline:3px solid var(--lany-button-focus)!important;outline-offset:3px!important}
+html body button:disabled{cursor:not-allowed!important;filter:grayscale(.6) opacity(.56)!important}
+
+/* Compact controls use the intact, purpose-drawn raster art. Keep labels in the DOM. */
+html body :is(#lany-world-prev,#lany-world-next,#lany-prep-back,#lany-install-close,#lany-friends-close,#app>.header .hud button[data-lany-art="pause"],#app>.header .hud #music-btn){color:transparent!important;font-size:0!important;text-shadow:none!important;background-color:transparent!important;background-position:center!important;background-size:100% 100%!important;background-repeat:no-repeat!important;border:0!important;box-shadow:none!important;filter:none!important}
+html body :is(#lany-world-prev,#lany-prep-back){background-image:url('../assets/v23/buttons/back.webp')!important}
+html body #lany-world-next{background-image:url('../assets/v23/buttons/next.webp')!important}
+html body :is(#lany-install-close,#lany-friends-close){background-image:url('../assets/v23/buttons/close.webp')!important}
+html body #app>.header .hud button[data-lany-art="pause"]{background-image:url('../assets/v24/controls/pause.webp')!important}
+html body #app>.header .hud #music-btn{background-image:url('../assets/v23/buttons/music.webp')!important}
+html body #app>.header .hud #music-btn[aria-pressed="false"]{filter:grayscale(1) brightness(.85)!important}
+html body #app>.header .hud #music-btn[aria-pressed="false"]::after{content:''!important;display:block!important;position:absolute!important;left:25%!important;top:48%!important;width:52%!important;height:3px!important;border:1px solid white!important;border-radius:3px!important;background:#c44772!important;transform:rotate(-42deg)!important}
+html body :is(#lany-world-prev,#lany-world-next,#lany-prep-back,#lany-install-close,#lany-friends-close,#app>.header .hud button[data-lany-art="pause"],#app>.header .hud #music-btn)::before{content:none!important;display:none!important}
+html body :is(#lany-world-prev,#lany-world-next,#lany-prep-back,#lany-install-close,#lany-friends-close,#app>.header .hud button[data-lany-art="pause"])::after{content:none!important;display:none!important}
+
+/* Page controls have their own lettering and floral details painted into the image. */
+html body :is(#lany-map-prev,#lany-map-next,#lany-prep-prev,#lany-prep-next,#lany-help-prev,#lany-help-next,#lany-friends-prev,#lany-friends-next,#lany-editor-prev,#lany-editor-next,#difficulty-modal .lany-page-arrow){color:transparent!important;font-size:0!important;text-shadow:none!important;background-color:transparent!important;background-position:center!important;background-size:100% 100%!important;background-repeat:no-repeat!important;border:0!important;border-radius:0!important;box-shadow:none!important;filter:none!important;padding:0!important}
+html body :is(#lany-map-prev,#lany-prep-prev,#lany-help-prev,#lany-friends-prev,#lany-editor-prev,#difficulty-modal .lany-page-arrow:first-child){background-image:url('../assets/v24/controls/previous.webp')!important}
+html body :is(#lany-map-next,#lany-prep-next,#lany-help-next,#lany-friends-next,#lany-editor-next,#difficulty-modal .lany-page-arrow:last-child){background-image:url('../assets/v24/controls/next.webp')!important}
+html body :is(#lany-map-prev,#lany-map-next,#lany-prep-prev,#lany-prep-next,#lany-help-prev,#lany-help-next,#lany-friends-prev,#lany-friends-next,#lany-editor-prev,#lany-editor-next,#difficulty-modal .lany-page-arrow)::before,html body :is(#lany-map-prev,#lany-map-next,#lany-prep-prev,#lany-prep-next,#lany-help-prev,#lany-help-next,#lany-friends-prev,#lany-friends-next,#lany-editor-prev,#lany-editor-next,#difficulty-modal .lany-page-arrow)::after{content:none!important;display:none!important}
+
+/* Small confirmation and dismiss buttons get matching illustrated assets. */
+html body #difficulty-modal .lany-difficulty-close,html body #daily-modal>div>button:last-child{width:min(100%,134px)!important;min-height:39px!important;height:39px!important;align-self:center!important;margin:5px auto 0!important;color:transparent!important;font-size:0!important;text-shadow:none!important;background:transparent url('../assets/v24/controls/close-text.webp') center/100% 100% no-repeat!important;border:0!important;box-shadow:none!important;padding:0!important}
+html body #ng-level-editor>div>div:first-child>button:first-of-type:not([data-type]){width:38px!important;min-width:38px!important;height:38px!important;min-height:38px!important;color:transparent!important;font-size:0!important;background:transparent url('../assets/v23/buttons/close.webp') center/100% 100% no-repeat!important;border:0!important;box-shadow:none!important;padding:0!important}
+
+/* The stage-start drawing includes its own rabbit and title. */
+html body #lany-stage-prep .lany-prep-card #lany-prep-play{background:transparent url('../assets/v26/actions/prep-start.webp') center/100% 100% no-repeat!important;border:0!important;box-shadow:none!important;color:transparent!important;font-size:0!important;text-shadow:none!important;padding:0!important;filter:none!important}
+html body #lany-stage-prep .lany-prep-card #lany-prep-play::before,html body #lany-stage-prep .lany-prep-card #lany-prep-play::after{content:none!important;display:none!important}
+html body #lany-stage-prep .lany-prep-card #lany-prep-map[data-lany-art="map"]{background:transparent url('../assets/v33/frames/blue.png') center/100% 100% no-repeat!important;border:0!important;border-radius:0!important;box-shadow:none!important;color:#fff!important;text-shadow:0 1px 2px #336580!important;padding-left:34px!important;filter:none!important}
+html body #lany-stage-prep .lany-prep-card #lany-prep-map[data-lany-art="map"]::before{content:''!important;display:block!important;position:absolute!important;left:2px!important;top:50%!important;bottom:auto!important;width:31px!important;height:31px!important;transform:translateY(-50%)!important;background:url('../assets/ui/v21/buttons/action-map.webp') center/contain no-repeat!important}
+
+/* Auxiliary feature launchers should read as part of the animal world. */
+html body :is(#lany-extra-controls #game-mode-bar button,.cv-secondary-btn){position:relative!important;isolation:isolate!important;overflow:visible!important;min-height:45px!important;padding:3px 8px 3px 42px!important;color:#fffefa!important;text-shadow:0 1px 2px #59365c!important;font-weight:900!important;background:transparent url('../assets/v33/frames/blue.png') center/100% 100% no-repeat!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+html body #lany-extra-controls #game-mode-bar #lany-multiplayer-button{background-image:url('../assets/v33/frames/pink.png')!important}
+html body .cv-secondary-btn{background-image:url('../assets/v33/frames/gold.png')!important}
+html body :is(#lany-extra-controls #game-mode-bar button,.cv-secondary-btn)::before{content:''!important;display:block!important;position:absolute!important;left:1px!important;bottom:2px!important;width:39px!important;height:47px!important;background:url('../assets/v25/animals/fox-wink.webp') center bottom/contain no-repeat!important;pointer-events:none!important;filter:drop-shadow(0 2px 2px #50365366)!important}
+html body #lany-extra-controls #game-mode-bar #lany-multiplayer-button::before{background-image:url('../assets/v24/animals/cat-black.webp')!important}
+html body .cv-secondary-btn::before{background-image:url('../assets/v25/animals/bear-wink.webp')!important}
+
+/* Difficulty choices are illustrated cards, with clear selected state. */
+html body #difficulty-modal .lany-difficulty-option{min-height:70px!important;padding-left:54px!important;background:transparent url('../assets/v33/frames/gold.png') center/100% 100% no-repeat!important;border:0!important;border-radius:0!important;box-shadow:0 3px 7px #653e5940!important;color:#62304c!important;text-shadow:0 1px #fff8!important}
+html body #difficulty-modal .lany-difficulty-option:nth-child(2){background-image:url('../assets/v33/frames/blue.png')!important;color:#fff!important;text-shadow:0 1px 2px #345a79!important}
+html body #difficulty-modal .lany-difficulty-option::before{left:5px!important;width:44px!important;height:55px!important;filter:drop-shadow(0 2px 1px #63446055)!important}
+html body #difficulty-modal .lany-difficulty-option[aria-pressed="true"]{box-shadow:0 0 0 3px #ffe277,0 4px 9px #653e5955!important;transform:translateY(-2px)!important}
+
+/* Candy selection is a tool palette, not a run of bare emoji squares. */
+html body #ng-level-editor button[data-type]{width:clamp(32px,9vw,40px)!important;height:clamp(32px,9vw,40px)!important;min-width:0!important;min-height:0!important;display:grid!important;place-items:center!important;padding:0!important;background:transparent url('../assets/v53/control.webp') center/100% 100% no-repeat!important;border:0!important;border-radius:0!important;box-shadow:0 2px 3px #6d42652e!important;font-size:clamp(1rem,4vw,1.3rem)!important;line-height:1!important}
+html body #ng-level-editor button[data-type][aria-pressed="true"]{filter:drop-shadow(0 0 3px #ffe16d)!important;outline:2px solid #e0ac35!important;outline-offset:1px!important;transform:translateY(-2px)!important}
+
+/* Action rows in the editor, daily challenge and versus setup all use painted frames. */
+html body :is(#ng-level-editor .lany-editor-page>button,#ng-level-editor .lany-editor-page div>button:not([data-type]),#daily-modal>div>button:not(:last-child),#mp-setup button,#mp-share button,#lany-update-now){position:relative!important;isolation:isolate!important;overflow:visible!important;min-height:41px!important;color:#fffefa!important;font-weight:900!important;text-shadow:0 1px 2px #5b3e5a!important;background:transparent url('../assets/v33/frames/green.png') center/100% 100% no-repeat!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+html body :is(#ng-level-editor .lany-editor-page>button,#ng-level-editor .lany-editor-page div>button:not([data-type]),#daily-modal>div>button:not(:last-child),#mp-setup button,#mp-share button)::before{content:'';display:block;position:absolute;left:1px;bottom:0;width:38px;height:47px;background:url('../assets/v25/animals/rabbit-wink.webp') center bottom/contain no-repeat;pointer-events:none;filter:drop-shadow(0 2px 2px #57395477)}
+html body :is(#ng-level-editor .lany-editor-page>button,#ng-level-editor .lany-editor-page div>button:not([data-type]),#daily-modal>div>button:not(:last-child),#mp-setup button,#mp-share button){padding-left:37px!important}
+html body #ng-level-editor .lany-editor-page>button::before{background-image:url('../assets/v25/animals/chick-wink.webp')!important}
+html body #ng-level-editor .lany-editor-page div>button:first-child::before{background-image:url('../assets/v25/animals/fox-wink.webp')!important}
+html body :is(#mp-setup button,#mp-share button)::before{background-image:url('../assets/v25/animals/bear-wink.webp')!important}
+html body :is(#mp-setup button:last-child,#mp-share button:last-child){background-image:url('../assets/v33/frames/blue.png')!important}
+html body :is(#mp-setup button:last-child,#mp-share button:last-child)::before{background-image:url('../assets/v24/animals/cat-black.webp')!important}
+html body #mp-share button[onclick*="clipboard"]{background-image:url('../assets/v33/frames/blue.png')!important}
+html body #mp-share button[onclick*="clipboard"]::before{background-image:url('../assets/v25/animals/fox-wink.webp')!important}
+html body #lany-update-now{min-width:82px!important;min-height:36px!important;padding:2px 10px!important;background-image:url('../assets/v33/frames/pink.png')!important}
+
+/* Preserve finger targets and avoid artificial hover motion on disabled controls. */
+html body :is(#lany-world-prev,#lany-world-next,#lany-prep-back,#lany-install-close,#lany-friends-close,#app>.header .hud button[data-lany-art="pause"],#app>.header .hud #music-btn){min-width:37px!important;min-height:37px!important}
+html body button:not(:disabled):active{transform:translateY(2px)}
+@media(max-width:380px){html body :is(#lany-extra-controls #game-mode-bar button,.cv-secondary-btn){padding-left:34px!important;font-size:.69rem!important}html body :is(#lany-extra-controls #game-mode-bar button,.cv-secondary-btn)::before{width:33px!important;height:41px!important}}
+/* Older control selectors are highly specific; these exact overrides retire their blank skins. */
+html body #lany-install-modal .lany-install-card button.lany-install-close,
+html body #lany-friends-modal .lany-friends-panel header button.lany-friends-close{background-image:url('../assets/v23/buttons/close.webp')!important}
+html body #lany-stage-prep .lany-prep-card button.lany-prep-back,
+html body #lany-world-map #lany-world-prev{background-image:url('../assets/v23/buttons/back.webp')!important}
+html body #lany-world-map #lany-world-next{background-image:url('../assets/v23/buttons/next.webp')!important}
+html body #app>.header .hud button[data-lany-art="pause"]{background-image:url('../assets/v24/controls/pause.webp')!important}
+html body #app>.header .hud #music-btn{background-image:url('../assets/v23/buttons/music.webp')!important}
+html body #lany-world-map .lany-map-section #lany-map-prev,
+html body #lany-stage-prep #lany-prep-prev,
+html body #overlay-tutorial .lany-tutorial-pager #lany-help-prev,
+html body #lany-friends-modal #lany-friends-prev{background-image:url('../assets/v23/buttons/prev.webp')!important}
+html body #lany-world-map .lany-map-section #lany-map-next,
+html body #lany-stage-prep #lany-prep-next,
+html body #overlay-tutorial .lany-tutorial-pager #lany-help-next,
+html body #lany-friends-modal #lany-friends-next{background-image:url('../assets/v23/buttons/next.webp')!important}
+html body #lany-install-modal .lany-install-card button.lany-install-close::before,
+html body #lany-friends-modal .lany-friends-panel header button.lany-friends-close::before,
+html body #lany-stage-prep .lany-prep-card button.lany-prep-back::before,
+html body #lany-world-map #lany-world-prev::before,
+html body #lany-world-map #lany-world-next::before,
+html body #app>.header .hud button[data-lany-art="pause"]::before,
+html body #app>.header .hud #music-btn::before,
+html body #lany-world-map .lany-map-section #lany-map-prev::before,
+html body #lany-world-map .lany-map-section #lany-map-next::before,
+html body #lany-stage-prep #lany-prep-prev::before,
+html body #lany-stage-prep #lany-prep-next::before,
+html body #overlay-tutorial .lany-tutorial-pager #lany-help-prev::before,
+html body #overlay-tutorial .lany-tutorial-pager #lany-help-next::before,
+html body #lany-friends-modal #lany-friends-prev::before,
+html body #lany-friends-modal #lany-friends-next::before{content:none!important;display:none!important}
+html body #app>.header .hud #music-btn[aria-pressed="false"]{filter:grayscale(1) brightness(.85)!important}
+html body #app>.header .hud #music-btn[aria-pressed="true"]{filter:none!important}
+html body #ng-level-editor #lany-editor-prev{background-image:url('../assets/v23/buttons/prev.webp')!important}
+html body #ng-level-editor #lany-editor-next{background-image:url('../assets/v23/buttons/next.webp')!important}
+html body #difficulty-modal .lany-page-arrow:first-child{background-image:url('../assets/v23/buttons/prev.webp')!important}
+html body #difficulty-modal .lany-page-arrow:last-child{background-image:url('../assets/v23/buttons/next.webp')!important}
+/* The old wide confirmation crop lost its right edge. Compose it from a complete frame and check icon. */
+html body #lany-install-modal .lany-install-card button.lany-install-done,
+html body #overlay-tutorial .modal>button.btn-primary[data-lany-art="play"]{width:142px!important;min-width:142px!important;height:43px!important;min-height:43px!important;padding:0 8px 2px 37px!important;color:#713950!important;font-size:clamp(.78rem,3vw,.88rem)!important;font-weight:950!important;text-shadow:0 1px #fff8!important;background:transparent url('../assets/v33/frames/gold.png') center/100% 100% no-repeat!important;filter:none!important;border:0!important;box-shadow:none!important;position:relative!important}
+html body #lany-install-modal .lany-install-card button.lany-install-done::before,
+html body #overlay-tutorial .modal>button.btn-primary[data-lany-art="play"]::before{content:''!important;display:block!important;position:absolute!important;left:4px!important;top:50%!important;bottom:auto!important;width:31px!important;height:31px!important;transform:translateY(-50%)!important;background:url('../assets/v24/controls/confirm.webp') center/contain no-repeat!important;filter:none!important}
+html body #ng-level-editor>div>div:first-child>button:first-of-type:not([data-type]){background-image:url('../assets/v23/buttons/close.webp')!important}
+html body #ng-level-editor .lany-editor-page button[data-type][aria-pressed]{background:transparent url('../assets/v53/control.webp') center/100% 100% no-repeat!important;color:#803d62!important}
+html body #ng-level-editor .lany-editor-page button[data-type][aria-pressed="true"]{outline:2px solid #ffd76b!important;outline-offset:1px!important;filter:drop-shadow(0 0 3px #ffc957)!important}
+html body #ng-level-editor .lany-editor-pager #lany-editor-prev,html body #ng-level-editor .lany-editor-pager #lany-editor-next{font-size:0!important;color:transparent!important;text-shadow:none!important;padding:0!important}
+html body #ng-level-editor .lany-editor-pager #lany-editor-prev::before,html body #ng-level-editor .lany-editor-pager #lany-editor-next::before{content:none!important;display:none!important}
+html body #daily-modal>div>button:first-of-type:not(:last-child){background:transparent url('../assets/v33/frames/green.png') center/100% 100% no-repeat!important;color:#fff!important;font-size:clamp(.75rem,3vw,.9rem)!important;text-shadow:0 1px 2px #31743d!important;padding:0 8px 0 43px!important;min-height:43px!important}
+html body #daily-modal>div>button:first-of-type:not(:last-child)::before{content:''!important;display:block!important;position:absolute!important;left:1px!important;bottom:0!important;width:42px!important;height:49px!important;background:url('../assets/v25/animals/rabbit-wink.webp') center bottom/contain no-repeat!important}
+html body #daily-modal>div>button:last-child{background-image:url('../assets/v24/controls/close-text.webp')!important;color:transparent!important;font-size:0!important;text-shadow:none!important;padding:0!important;width:min(100%,134px)!important}
+html body :is(#lany-pause,#lany-exit) .lany-dialog>button[data-lany-art]:not(:first-of-type){position:relative!important;overflow:visible!important;padding-left:33px!important}
+html body :is(#lany-pause,#lany-exit) .lany-dialog>button[data-lany-art]:not(:first-of-type)::before{content:''!important;display:block!important;position:absolute!important;left:2px!important;top:auto!important;bottom:1px!important;width:30px!important;height:36px!important;transform:none!important;background:url('../assets/v25/animals/rabbit-wink.webp') center bottom/contain no-repeat!important;filter:drop-shadow(0 2px 2px #4b335866)!important}
+html body #lany-pause .lany-dialog>button[data-lany-art="help"]::before{background-image:url('../assets/v25/animals/chick-wink.webp')!important}
+html body :is(#lany-pause,#lany-exit) .lany-dialog>button[data-lany-art="home"]::before{background-image:url('../assets/v25/animals/bear-wink.webp')!important}
+html body :is(#lany-pause,#lany-exit) .lany-dialog>button[data-lany-art="exit"]::before{background-image:url('../assets/v24/animals/cat-black.webp')!important}
+html body #lany-exit .lany-dialog>button[data-lany-art="resume"]::before{background-image:url('../assets/v25/animals/puppy-wink.webp')!important}
+html body #lany-exit .lany-dialog>button[data-lany-art="resume"],html body #lany-exit-finished .lany-dialog>button[data-lany-art="resume"]{background:transparent url('../assets/v33/frames/green.png') center/100% 100% no-repeat!important;color:#fff!important;text-shadow:0 1px 2px #276441!important;padding-left:36px!important;overflow:visible!important}
+html body #lany-exit .lany-dialog>button[data-lany-art="home"]{background:transparent url('../assets/v33/frames/blue.png') center/100% 100% no-repeat!important;color:#fff!important;text-shadow:0 1px 2px #275b7a!important;padding-left:34px!important;overflow:visible!important}
+html body #lany-exit .lany-dialog>button[data-lany-art="exit"]{background:transparent url('../assets/v33/frames/pink.png') center/100% 100% no-repeat!important;color:#fff!important;text-shadow:0 1px 2px #90446d!important;padding-left:34px!important;overflow:visible!important}
+html body #lany-exit .lany-dialog>button[data-lany-art],html body #lany-exit-finished .lany-dialog>button[data-lany-art]{filter:none!important}
+html body #lany-exit .lany-dialog>button[data-lany-art]::before,html body #lany-exit-finished .lany-dialog>button[data-lany-art]::before{content:''!important;display:block!important;position:absolute!important;left:2px!important;top:auto!important;bottom:1px!important;width:32px!important;height:39px!important;transform:none!important;background:url('../assets/v25/animals/puppy-wink.webp') center bottom/contain no-repeat!important;filter:drop-shadow(0 2px 2px #4b335866)!important}
+html body #lany-exit .lany-dialog>button[data-lany-art="home"]::before{background-image:url('../assets/v25/animals/bear-wink.webp')!important}
+html body #lany-exit .lany-dialog>button[data-lany-art="exit"]::before{background-image:url('../assets/v24/animals/cat-black.webp')!important}
+html body #lany-exit-finished .lany-dialog>button[data-lany-art="resume"]::before{background-image:url('../assets/v25/animals/rabbit-wink.webp')!important}
+/* The older shared :is() reset carries two ID selectors; explicitly restore these sprites. */
+html body #lany-exit#lany-exit .lany-dialog>button[data-lany-art]::before{content:''!important;display:block!important}
+html body #lany-exit#lany-exit .lany-dialog>button[data-lany-art="home"]::before{background-image:url('../assets/v25/animals/bear-wink.webp')!important}
+html body #lany-exit#lany-exit .lany-dialog>button[data-lany-art="exit"]::before{background-image:url('../assets/v24/animals/cat-black.webp')!important}
+html body #lany-pause .lany-dialog>button[data-lany-art="help"]::before{background-image:url('../assets/v25/animals/chick-wink.webp')!important}
+html body #lany-pause .lany-dialog>button[data-lany-art="home"]::before{background-image:url('../assets/v25/animals/bear-wink.webp')!important}
+html body #lany-pause .lany-dialog>button[data-lany-art="exit"]::before{background-image:url('../assets/v24/animals/cat-black.webp')!important}
+html body #lany-update-banner #lany-update-now{min-width:98px!important;min-height:36px!important;padding:1px 7px 1px 26px!important;background:transparent url('../assets/v33/frames/pink.png') center/100% 100% no-repeat!important;color:#fff!important;text-shadow:0 1px 2px #87365e!important;border:0!important;box-shadow:none!important;position:relative!important}
+html body #lany-update-banner #lany-update-now::before{content:''!important;display:block!important;position:absolute!important;left:1px!important;bottom:1px!important;width:25px!important;height:32px!important;background:url('../assets/v25/animals/rabbit-wink.webp') center bottom/contain no-repeat!important;pointer-events:none!important}
+@media(prefers-reduced-motion:reduce){html body button{transition:none!important}}
+
+
+
+

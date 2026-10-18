@@ -5,19 +5,19 @@ const read=p=>fs.readFileSync(p,'utf8');
 const html=read('web/index.html'),css=read('web/css/lany-action-art-v16.css');
 const manifest=JSON.parse(read('web/manifest.json')),version=JSON.parse(read('web/version.json')),sw=read('web/sw.js');
 const actionNames=['play','map','resume','retry','next','home','help','pause','exit','back','friends','close'];
-assert.equal(version.version,'2.3.3-beta');
+assert.equal(version.version,'2.3.4-beta');
 assert.equal(version.illustratedActionBadges,12);
 assert.equal(version.illustratedGameplayButtons,25);
 assert(version.actionSpecificButtonArt===true);
-assert(manifest.start_url.includes('v=2.3.3'));
+assert(manifest.start_url.includes('v=2.3.4'));
 assert.equal((html.match(/data-lany-art="/g)||[]).length,28);
-assert(html.includes('lany-action-art-v16.css?v=2.3.3'));
+assert(html.includes('lany-action-art-v16.css?v=2.3.4'));
 for(const state of ['ordinary','current','boss','locked']){
  const path='./assets/map/stage-'+state+'-v20.webp';
  assert(sw.includes(path),path+' offline cache');
  assert(css.includes('stage-'+state+'-v20.webp'),path+' in map skin');
 }
-assert(sw.includes('lanypang-match-v2.3.3-ko')&&sw.includes('./css/lany-action-art-v16.css'));
+assert(sw.includes('lanypang-match-v2.3.4-ko')&&sw.includes('./css/lany-action-art-v16.css'));
 for(const key of actionNames){
  const path='./assets/ui/v21/buttons/action-'+key+'.webp';
  assert(sw.includes(path),path+' offline cache');

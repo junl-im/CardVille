@@ -30,23 +30,26 @@ with sync_playwright() as playwright:
           r.left>=-5 && r.right<=innerWidth+5 && r.top>=-6 &&
           r.bottom<=innerHeight+6;
       }""")
-    page.goto(BASE+'?v=2.3.3',wait_until='load',timeout=30000)
+    page.goto(BASE+'?v=2.3.4',wait_until='load',timeout=30000)
     page.wait_for_function("typeof LanyShell==='object' && typeof LanyFriends==='object' && typeof LanyUpdate==='object'")
     assert page.locator('#lany-update-banner').is_hidden(),(tag,'false positive update notice')
     assert page.locator('#lany-start-button img').evaluate('e=>e.complete&&e.naturalWidth>0')
     assert page.locator('#lany-install-button img').evaluate('e=>e.complete&&e.naturalWidth>0')
-    assert 'v2.3.3' in page.locator('.lany-version').inner_text(),(tag,'old 2.2 text visible')
+    assert 'v2.3.4' in page.locator('.lany-version').inner_text(),(tag,'old 2.2 text visible')
     for sel,art in [('#lany-start-button','start.webp'),('.lany-art-help','help.webp'),('#lany-install-button','install.webp')]:
       assert 'v26/title/'+art in page.locator(sel+' img.lany-button-picture').evaluate('e=>getComputedStyle(e).content'),(tag,'approved illustrated title missing',sel)
     shot('title','#lany-title')
     page.locator('#lany-install-button').click()
     assert viewport_fit('.lany-install-card'),(tag,'install panel clipped')
     assert 'install-ornament.webp' in page.locator('#lany-install-guide-title').evaluate("e=>getComputedStyle(e,'::before').backgroundImage"),(tag,'install ornament not applied')
-    assert 'v53/control.webp' in page.locator('.lany-install-close').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'new close art not applied')
+    assert 'v23/buttons/close.webp' in page.locator('.lany-install-close').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'new close art not applied')
+    assert 'v33/frames/gold.png' in page.locator('.lany-install-done').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'install confirmation frame')
+    assert page.locator('.lany-install-done').evaluate('e=>parseFloat(getComputedStyle(e).fontSize)>10'),(tag,'install confirmation label hidden')
     shot('install','.lany-install-card')
     page.locator('.lany-install-close').click()
     page.locator('.lany-art-help').click()
     assert viewport_fit('#overlay-tutorial .modal'),(tag,'tutorial card clipped')
+    assert 'v33/frames/gold.png' in page.locator('#overlay-tutorial .modal>button.btn-primary').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'tutorial confirmation frame')
     shot('tutorial-1','#overlay-tutorial')
     page.evaluate('LanyShell.helpPage(1)')
     shot('tutorial-2','#overlay-tutorial')
@@ -65,7 +68,7 @@ with sync_playwright() as playwright:
       assert page.locator('#lany-friends-grid img[loading="eager"]').count()==page.locator('#lany-friends-grid img').count(),(tag,'gallery must eagerly load visible art')
       friend_pages+=1
       assert 'friends-ornament.webp' in page.locator('#lany-friends-heading').evaluate("e=>getComputedStyle(e,'::before').backgroundImage"),(tag,'friends ornament not applied')
-      assert 'v53/control.webp' in page.locator('.lany-friends-close').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'gallery close art not applied')
+      assert 'v23/buttons/close.webp' in page.locator('.lany-friends-close').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'gallery close art not applied')
       shot('friends-'+str(friend_pages),'.lany-friends-panel')
       if page.locator('#lany-friends-next').is_disabled():break
       page.evaluate('LanyFriends.page(1)')
@@ -88,8 +91,8 @@ with sync_playwright() as playwright:
     page.locator('#lany-start-button').click()
     assert page.locator('#lany-world-map').is_visible()
     assert page.locator('.lany-map-head').count()==0,(tag,'obsolete map title bar')
-    for selector,asset in (('#lany-world-prev','prev.webp'),('#lany-world-next','next.webp')):
-      assert 'v53/control.webp' in page.locator(selector).evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,selector,'approved v2.3 illustration missing')
+    for selector,asset in (('#lany-world-prev','back.webp'),('#lany-world-next','next.webp')):
+      assert 'v23/buttons/'+asset in page.locator(selector).evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,selector,'approved v2.3 illustration missing')
     assert page.locator('#lany-world-tabs .lany-world-tab').first.evaluate("e=>getComputedStyle(e).backgroundImage.includes('v26/regions/tab-01.webp')"),(tag,'regional illustration is not mapped')
     assert page.locator('#lany-world-tabs .lany-world-tab').first.get_attribute('aria-label'),(tag,'region name must remain accessible')
     shot('map','#lany-world-map')
@@ -119,13 +122,13 @@ with sync_playwright() as playwright:
     page.locator('.lany-map-levels .lany-level:not([disabled])').first.click()
     assert page.locator('#lany-stage-prep').is_visible()
     # Each source button is now a complete individual raster image with accessible HTML text.
-    for selector,skin in (('#lany-prep-play','linear-gradient'),):
+    for selector,skin in (('#lany-prep-play','prep-start.webp'),):
       assert page.locator('#lany-stage-prep '+selector).evaluate("""(e,asset)=>{
         const c=getComputedStyle(e);
         return c.backgroundImage.includes(asset)&&e.textContent.trim().length>=2
           && e.getBoundingClientRect().width>100;
       }""",skin),(tag,selector,'individual action artwork missing')
-    assert 'linear-gradient' in page.locator('#lany-stage-prep .lany-prep-cancel').evaluate('e=>getComputedStyle(e).backgroundImage')
+    assert 'blue.png' in page.locator('#lany-stage-prep .lany-prep-cancel').evaluate('e=>getComputedStyle(e).backgroundImage')
     assert page.locator('#lany-stage-prep .lany-prep-cancel').inner_text().strip()=='맵 돌아가기'
     shot('stage-ready','#lany-stage-prep')
     if page.locator('#lany-prep-pager').is_visible():
@@ -146,15 +149,16 @@ with sync_playwright() as playwright:
     shot('pause','#lany-pause')
     assert viewport_fit('#lany-pause .lany-dialog'),(tag,'pause card clipped')
     page.evaluate('LanyShell.openExit()')
-    for action,skin in [('resume','v53/action.webp'),('home','v53/action.webp'),('exit','v53/action.webp')]:
+    for action,skin in [('resume','v33/frames/green.png'),('home','v33/frames/blue.png'),('exit','v33/frames/pink.png')]:
       assert page.locator('#lany-exit .lany-dialog button[data-lany-art="'+action+'"]').evaluate("""(e,asset)=>{
         const c=getComputedStyle(e);
         return c.backgroundImage.includes(asset)&&parseFloat(c.fontSize)>=12
           && e.textContent.trim().length>=2 && e.scrollWidth<=e.clientWidth+3;
       }""",skin),(tag,action,'exit artwork must preserve readable HTML labels')
+    assert page.locator('#lany-exit button[data-lany-art=\"exit\"]').evaluate("e=>getComputedStyle(e,'::before').display==='block'"),(tag,'exit mascot art')
     shot('exit','#lany-exit')
     assert viewport_fit('#lany-exit .lany-dialog'),(tag,'exit card clipped')
-    assert page.locator('#lany-exit button[data-lany-art="resume"]').evaluate("e=>getComputedStyle(e,'::before').display=='none'"),'decorative pseudo icon leaked'
+    assert page.locator('#lany-exit button[data-lany-art="resume"]').evaluate("e=>getComputedStyle(e,'::before').display=='block'"),'exit button mascot missing'
     page.evaluate('LanyShell.resume()')
     for kind in ('win','lose'):
       page.evaluate("""kind=>{document.getElementById('overlay-win').style.display=kind==='win'?'flex':'none';
@@ -198,12 +202,14 @@ with sync_playwright() as playwright:
     shot('difficulty-more','#difficulty-modal')
     page.evaluate('Difficulty.close()')
     page.evaluate('LevelEditor.openEditor()')
+    assert 'v23/buttons/close.webp' in page.locator('#ng-level-editor>div>div:first-child>button').evaluate('e=>getComputedStyle(e).backgroundImage'),(tag,'editor close art')
     shot('level-editor','#ng-level-editor')
     page.evaluate('LevelEditor.showPage(1)')
     shot('editor-settings','#ng-level-editor')
     page.evaluate("document.getElementById('ng-level-editor').style.display='none'")
     page.locator('#lany-extra-controls summary').click()
     page.get_by_role('button',name='📅 오늘의 도전').click()
+    assert page.locator('#daily-modal>div>button:first-of-type').evaluate("e=>getComputedStyle(e).backgroundImage.includes('v33/frames/green.png')&&parseFloat(getComputedStyle(e).fontSize)>10"),(tag,'daily start label and art')
     shot('daily-challenge','#daily-modal')
     page.evaluate("document.getElementById('daily-modal').style.display='none'")
     page.evaluate('Multiplayer.showSetupModal()')
