@@ -1,9 +1,9 @@
 {
   "name": "라니팡",
-  "version": "2.3.15-beta",
+  "version": "2.3.16-beta",
   "stageCount": 250,
   "language": "ko",
-  "build": "2026-10-18",
+  "build": "2026-10-19",
   "titleScreen": true,
   "backExitPopup": true,
   "stageMap": true,
@@ -17,7 +17,7 @@
   "animalFriends": 30,
   "animalTiles": 7,
   "mobilePopupFit": true,
-  "visualRelease": "2.3.15",
+  "visualRelease": "2.3.16",
   "approvedOriginalAssets": true,
   "expressionVariants": 4,
   "newPopupButtons": true,
@@ -98,5 +98,6 @@
   "matchJoyV66": true,
   "quietHintV67": true,
   "gameFeelV68": true,
-  "readabilityCombosV69": true
+  "readabilityCombosV69": true,
+  "inputRecoveryBalanceResultsV70": true
 }
