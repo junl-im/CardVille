@@ -129,7 +129,7 @@ with sync_playwright() as playwright:
           && e.getBoundingClientRect().width>100;
       }""",skin),(tag,selector,'individual action artwork missing')
     assert 'v61/buttons/blue-map.webp' in page.locator('#lany-stage-prep .lany-prep-cancel').evaluate('e=>getComputedStyle(e).backgroundImage')
-    assert page.locator('#lany-stage-prep .lany-prep-cancel').inner_text().strip()=='맵 돌아가기'
+    assert page.locator('#lany-stage-prep .lany-prep-cancel .cv-illustrated-label').inner_text().strip()=='맵 돌아가기'
     shot('stage-ready','#lany-stage-prep')
     if page.locator('#lany-prep-pager').is_visible():
       page.evaluate('LanyShell.prepPage(1)')

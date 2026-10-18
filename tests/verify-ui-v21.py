@@ -53,7 +53,7 @@ with sync_playwright() as pw:
    box=page.locator(selector).bounding_box()
    assert box and 2.2 < box['width']/box['height'] < 4.5,(name,selector,box)
    assert 'v61/buttons/green-rabbit.webp' in page.locator(selector).evaluate("e=>getComputedStyle(e).backgroundImage"),(name,selector)
-  assert page.locator('#lany-stage-prep .lany-prep-cancel').inner_text().strip()=='맵 돌아가기'
+  assert page.locator('#lany-stage-prep .lany-prep-cancel .cv-illustrated-label').inner_text().strip()=='맵 돌아가기'
   bg('#lany-stage-prep .lany-prep-cancel','v61/buttons/blue-map.webp')
   page.locator('#lany-prep-play').click()
   assert page.locator('#board .cell').count()==64,name
@@ -70,7 +70,7 @@ with sync_playwright() as pw:
   page.screenshot(path=str(out/(name+'-game.png')))
   for key,label,art in [('map','맵','rabbit.webp'),('friends','도감','cat.webp'),('exit','나가기','bear.webp')]:
    control=page.locator('.lany-game-nav button[data-lany-art="'+key+'"]')
-   assert control.count()==1 and control.inner_text().strip()==label,(name,key,'navigation label')
+   assert control.count()==1 and control.locator('.cv-illustrated-label').inner_text().strip()==label,(name,key,'navigation label')
    assert 'v61/buttons/' in control.evaluate('e=>getComputedStyle(e).backgroundImage'),(name,key,'navigation button art')
   page.locator('#lany-quick-exit').click()
   assert page.locator('#lany-exit').is_visible(),(name,'exit confirmation')
