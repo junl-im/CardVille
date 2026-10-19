@@ -7,7 +7,7 @@ with sync_playwright() as pw:
  browser=pw.chromium.launch(headless=True,args=['--no-sandbox'])
  for width,height in [(320,568),(390,844),(1366,768)]:
   page=browser.new_page(viewport={'width':width,'height':height},service_workers='block')
-  page.goto(BASE+'?v=2.3.23',wait_until='load')
+  page.goto(BASE+'?v=2.3.24',wait_until='load')
   page.locator('#lany-start-button').click()
   page.locator('#lany-map-continue').click()
   page.locator('#lany-prep-play').click()
@@ -36,6 +36,7 @@ with sync_playwright() as pw:
   }''')
   assert played['move'] and played['after']>played['before'],(width,'real match bonus',played)
   stars=page.evaluate('''()=>{
+   initGame(1);
    const level=activeLevels()[state.level-1];state.score=Math.ceil(level.goal*1.35);state.movesLeft=level.moves-2;
    checkEnd();return {score:state.score,stars:state.levelStars[state.level],detail:document.getElementById('win-detail').textContent};
   }''')

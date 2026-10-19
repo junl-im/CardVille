@@ -54,6 +54,7 @@ jobs:
           node tools/check-result-stars-v75.cjs
           node tools/check-star-record-v76.cjs
           node tools/check-game-input-lifecycle-v77.cjs
+          node tools/check-candy-stars-v78.cjs
           node tools/check-asset-paths-v74.cjs
 
   browser-pages:
@@ -99,6 +100,7 @@ jobs:
           python tests/verify-result-stars-v75.py
           python tests/verify-star-record-v76.py
           python tests/verify-game-input-lifecycle-v77.py
+          python tests/verify-candy-stars-v78.py
           python tests/verify-v20-offline-map.py
           python tests/verify-ui-v21.py
           python tests/verify-raster-v22.py

@@ -1,9 +1,9 @@
 {
-  "release": "2.3.23-beta",
+  "release": "2.3.24-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.23 패치: 화면 전환 중 퍼즐 입력 차단과 완료 판정 복구.",
+  "requestedFor": "v2.3.24 패치: 결과·점수·맵의 캔디 별 에셋 적용.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -63,5 +63,6 @@
   "resultGuardAssetsV74": true,
   "resultStarsV75": true,
   "starRecordV76": true,
-  "inputLifecycleV77": true
+  "inputLifecycleV77": true,
+  "candyStarsV78": true
 }

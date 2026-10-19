@@ -3,7 +3,7 @@ const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/st
 const source=fs.readFileSync('web/js/lany-tempo.js','utf8');
 const game=fs.readFileSync('web/index.html','utf8');
 const version=JSON.parse(fs.readFileSync('web/version.json','utf8'));
-assert.equal(version.version,'2.3.23-beta');
+assert.equal(version.version,'2.3.24-beta');
 assert.equal(version.matchTimeStarsV73,true);
 assert(game.includes('window.LanyTempo?.awardMatchTime(matchGroups)'));
 const elements=new Map();
