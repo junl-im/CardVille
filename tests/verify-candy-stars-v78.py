@@ -7,7 +7,7 @@ with sync_playwright() as pw:
  browser=pw.chromium.launch(headless=True,args=['--no-sandbox'])
  for width,height in [(320,568),(390,844),(1366,768)]:
   page=browser.new_page(viewport={'width':width,'height':height},service_workers='block')
-  page.goto(BASE+'?v=2.3.36',wait_until='load')
+  page.goto(BASE+'?v=2.3.37',wait_until='load')
   result=page.evaluate('''async() => {
     state.level=1;state.score=0;updateHUD();
     const checkpoints=[...document.querySelectorAll('.lany-star-checkpoint')];

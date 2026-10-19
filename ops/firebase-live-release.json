@@ -1,9 +1,9 @@
 {
-  "release": "2.3.36-beta",
+  "release": "2.3.37-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.36 패치: 특수 폭발 범위 표시를 보드 전환 시간에 맞춤.",
+  "requestedFor": "v2.3.37 패치: 단계 완료 후 이어서 도전 위치와 모드별 저장 복원 개선.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -76,5 +76,6 @@
   "morphInputGuardV87": true,
   "modeBalanceV88": true,
   "mobileFinishV89": true,
-  "specialTimingV90": true
+  "specialTimingV90": true,
+  "saveResumeV91": true
 }
