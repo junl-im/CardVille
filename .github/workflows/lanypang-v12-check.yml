@@ -105,6 +105,7 @@ jobs:
           python tests/verify-keyboard-boosters-v80.py
           python tests/verify-storage-fallback-v81.py
           python tests/verify-board-swap-v82.py
+          python tests/verify-cascade-performance-v83.py
           python tests/verify-v20-offline-map.py
           python tests/verify-ui-v21.py
           python tests/verify-raster-v22.py
