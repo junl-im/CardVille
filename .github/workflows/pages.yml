@@ -44,6 +44,7 @@ jobs:
           node tools/check-result-guard-v74.cjs
           node tools/check-result-stars-v75.cjs
           node tools/check-star-record-v76.cjs
+          node tools/check-game-input-lifecycle-v77.cjs
           node tools/check-asset-paths-v74.cjs
           node tools/check-hard-mode-v40.cjs
           node tools/check-hard-frenzy-v41.cjs

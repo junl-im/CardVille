@@ -1,9 +1,9 @@
 {
-  "release": "2.3.22-beta",
+  "release": "2.3.23-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.22 패치: 이번 별과 최고 별 기록 구분, 저장 데이터 검증.",
+  "requestedFor": "v2.3.23 패치: 화면 전환 중 퍼즐 입력 차단과 완료 판정 복구.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -62,5 +62,6 @@
   "matchTimeStarsV73": true,
   "resultGuardAssetsV74": true,
   "resultStarsV75": true,
-  "starRecordV76": true
+  "starRecordV76": true,
+  "inputLifecycleV77": true
 }

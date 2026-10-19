@@ -1,6 +1,6 @@
 {
   "name": "라니팡",
-  "version": "2.3.22-beta",
+  "version": "2.3.23-beta",
   "stageCount": 250,
   "language": "ko",
   "build": "2026-10-19",
@@ -17,7 +17,7 @@
   "animalFriends": 30,
   "animalTiles": 7,
   "mobilePopupFit": true,
-  "visualRelease": "2.3.22",
+  "visualRelease": "2.3.23",
   "approvedOriginalAssets": true,
   "expressionVariants": 4,
   "newPopupButtons": true,
@@ -105,5 +105,6 @@
   "matchTimeStarsV73": true,
   "resultGuardAssetsV74": true,
   "resultStarsV75": true,
-  "starRecordV76": true
+  "starRecordV76": true,
+  "inputLifecycleV77": true
 }

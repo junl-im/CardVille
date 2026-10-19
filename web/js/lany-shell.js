@@ -229,7 +229,7 @@
    launchGo();
    $('board')?.focus?.();
  }
- function resumeGameFromMap(){if(!nav.returnToGame||!state.board.length)return;hideViews();hide();nav.screen='game';nav.returnToGame=false;window.LanyTempo?.resume();$('board')?.focus?.()}
+ function resumeGameFromMap(){if(!nav.returnToGame||!state.board.length)return;hideViews();hide();nav.screen='game';nav.returnToGame=false;if(!state.animating)window.checkEnd?.();if(!state.ended)window.LanyTempo?.resume();$('board')?.focus?.()}
  function begin(){
    if(nav.started){if(nav.screen==='game')return;openMap();return}
    nav.started=true;nav.world=Math.floor((savedStage()-1)/25);openMap(nav.world);
@@ -237,7 +237,7 @@
  }
  function openPause(){cancelGo();if(nav.screen!=='game'){openExit();return}window.LanyTempo?.pause();window.LanyHints?.clear();hide();nav.overlay='pause';$('lany-pause').hidden=false;$('lany-pause').querySelector('button').focus()}
  function openExit(){cancelGo();nav.resultOverlay=['overlay-win','overlay-lose'].find(id=>$(id)?.style.display==='flex')||null;if(nav.resultOverlay)$(nav.resultOverlay).style.display='none';window.LanyTempo?.pause();window.LanyHints?.clear();hide();nav.previousScreen=nav.screen;nav.overlay='exit';$('lany-exit').hidden=false;$('lany-exit').querySelector('button').focus()}
- function resume(){hide();if(nav.resultOverlay){$(nav.resultOverlay).style.display='flex';nav.resultOverlay=null;return}if(nav.screen==='game'){window.LanyTempo?.resume();window.LanyHints?.schedule();}if(nav.screen==='map')$('lany-map-continue').focus();else if(nav.screen==='prep')$('lany-prep-play').focus();else $('board')?.focus?.()}
+ function resume(){hide();if(nav.resultOverlay){$(nav.resultOverlay).style.display='flex';nav.resultOverlay=null;return}if(nav.screen==='game'){if(!state.animating)window.checkEnd?.();if(!state.ended){window.LanyTempo?.resume();window.LanyHints?.schedule();}}if(nav.screen==='map')$('lany-map-continue').focus();else if(nav.screen==='prep')$('lany-prep-play').focus();else $('board')?.focus?.()}
  function showHome(){cancelGo();$('lany-exit-finished').hidden=true;nav.resultOverlay=null;window.LanyTempo?.pause();hide();hideLegacy();hideViews();nav.started=false;nav.returnToGame=false;nav.screen='title';document.body.classList.add('lany-at-title');$('lany-title').hidden=false;if(document.fullscreenElement)Promise.resolve(document.exitFullscreen?.()).catch(()=>{});$('lany-start-button').focus()}
  function exitGame(){showHome();$('lany-exit-finished').hidden=false;try{window.close()}catch(_){/* Browser may forbid closing a user-opened tab. */}}
  function openHelp(){window.LanyTempo?.pause();window.LanyHints?.clear();nav.helpIndex=0;nav.wasHelpFrom=nav.overlay||nav.screen;hide();$('overlay-tutorial').style.display='flex';$('overlay-tutorial').querySelector('h2').textContent='🌟 라니팡 게임 방법';$('overlay-tutorial').querySelector('.btn.btn-primary').textContent='알겠어요';renderHelpPage()}
