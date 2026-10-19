@@ -6,13 +6,16 @@
  let enabled=true;
  try{enabled=localStorage.getItem(KEY)!=='off';}catch(_){}
  let active=false,paused=true,expired=false,remaining=0,deadline=0,seconds=0;
- let currentStage=1, lastSecond=-1,lastTickAlert=-1,earnedBonus=0;
+ let currentStage=1,currentMode='normal',lastSecond=-1,lastTickAlert=-1,earnedBonus=0;
  const MAX_MATCH_BONUS=18;
  const bonusForGroups=groups=>(groups||[]).reduce((sum,group)=>sum+(group.run>=5?3:group.run===4?2:group.run===3?1:0),0);
  let ticker=null;
  const runClock=()=>{if(ticker===null)ticker=setInterval(update,250)};
  const stopClock=()=>{if(ticker!==null){clearInterval(ticker);ticker=null;}};
- const durationFor=level=>Math.ceil(Math.max(115,185-(Math.floor((level-1)/25)*7))/2);
+ const durationFor=(level,mode=state?.mode||'normal')=>{
+   const base=Math.ceil(Math.max(115,185-(Math.floor((level-1)/25)*7))/2);
+   return Math.ceil(base*(mode==='crazy'?.8:mode==='hard'?.9:1));
+ };
  const getRemaining=()=>Math.max(0,remaining);
  const format=t=>`${String(Math.floor(t/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}`;
  function render(){
@@ -22,10 +25,10 @@
    root.classList.toggle('critical',enabled&&remaining<=10&&active&&!paused);
    $('lany-clock-caption').textContent=enabled?'⏰ 남은 시간':'⌛ 진행 시간';
    $('lany-clock-value').textContent=format(enabled?remaining:seconds);
-   $('lany-clock-fill').style.width=(enabled?Math.min(100,remaining/durationFor(currentStage)*100):100)+'%';
+   $('lany-clock-fill').style.width=(enabled?Math.min(100,remaining/durationFor(currentStage,currentMode)*100):100)+'%';
  }
  function start(stage){
-   currentStage=stage||1;active=true;paused=false;expired=false;remaining=durationFor(currentStage);seconds=0;earnedBonus=0;
+   currentStage=stage||1;currentMode=state?.mode||'normal';active=true;paused=false;expired=false;remaining=durationFor(currentStage,currentMode);seconds=0;earnedBonus=0;
    deadline=performance.now()+1000;lastSecond=-1;lastTickAlert=-1;render();runClock();
  }
  function setEnabled(value){enabled=Boolean(value);try{localStorage.setItem(KEY,enabled?'on':'off');}catch(_){}render()}
