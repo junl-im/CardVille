@@ -1,9 +1,9 @@
 {
-  "release": "2.3.25-beta",
+  "release": "2.3.26-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.25 패치: 시간 종료와 화면 이동 경합 시 결과창 복구.",
+  "requestedFor": "v2.3.26 패치: 키보드 아이템 조작 및 퍼즐 칸 읽기 수정.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -65,5 +65,6 @@
   "starRecordV76": true,
   "inputLifecycleV77": true,
   "candyStarsV78": true,
-  "navigationResultV79": true
+  "navigationResultV79": true,
+  "keyboardBoostersV80": true
 }
