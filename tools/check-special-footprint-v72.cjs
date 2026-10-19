@@ -1,0 +1,16 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs');
+const game=fs.readFileSync('web/index.html','utf8');
+const effects=fs.readFileSync('web/js/lany-polish.js','utf8');
+const style=fs.readFileSync('web/css/lany-game-feel-v68.css','utf8');
+const version=JSON.parse(fs.readFileSync('web/version.json','utf8'));
+assert.equal(version.version,'2.3.18-beta');
+assert.equal(version.specialFootprintsV72,true);
+assert(game.includes('onSpecial(expandSpecialMatches.lastActivated,allCells,extraCells,state.board)'));
+assert(effects.includes('function specialFootprint(items,affected,comboCells,boardKinds)'));
+assert(effects.includes("if(!allowed.has(index))return"));
+assert(effects.includes("el.dataset.index=String(index)"));
+assert(style.includes('.lany-special-cell-wave[data-axis="row"]'));
+assert(style.includes('.lany-special-cell-wave[data-axis="col"]'));
+assert(style.includes('@media(prefers-reduced-motion:reduce){.lany-special-cell-wave'));
+console.log('v72 special footprint wiring passed');

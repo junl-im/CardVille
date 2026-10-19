@@ -1,6 +1,6 @@
 {
-  "version": "2.3.17-beta",
-  "request": "라니팡 v2.3.17: 시작 카운트다운 동안 퍼즐과 아이템 조작 잠금",
+  "version": "2.3.18-beta",
+  "request": "라니팡 v2.3.18: 특수 폭발 범위와 줄 파동 효과",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,

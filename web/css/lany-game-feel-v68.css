@@ -26,3 +26,19 @@ html body #app #board .cell.wrap-gem::after{background-image:url('../assets/v41/
 .lany-star-checkpoint.lany-star-new{animation:lany-new-star .42s ease-out 1}
 @keyframes lany-new-star{50%{transform:translateX(-50%) scale(1.28)}}
 @media(prefers-reduced-motion:reduce){#board .cell:is(.lany-swap-land,.lany-swap-reject,.lany-fall-in) .lany-animal-face,.lany-special-trace,.lany-star-checkpoint.lany-star-new{animation:none!important}}
+/* Special clears reveal their actual affected tiles. Each tile ripples in board order. */
+.lany-special-cell-wave{
+ position:absolute;z-index:29002;pointer-events:none;box-sizing:border-box;
+ border:2px solid #fff9d9;border-radius:11px;
+ background:radial-gradient(circle,#fff8d9b8 0%,#ffd97984 48%,#ffa57720 78%);
+ box-shadow:inset 0 0 0 1px #ffac83a3,0 0 7px #ffc878aa;
+ animation:lany-special-cell-wave .29s cubic-bezier(.2,.8,.3,1) var(--special-delay,0ms) both;
+}
+.lany-special-cell-wave[data-axis="row"],.lany-special-cell-wave[data-axis="col"]{
+ background:linear-gradient(100deg,#fff8dd42,#fff6d8d4 48%,#8de9fff0 52%,#abecff52);
+ border-color:#dffbff;box-shadow:inset 0 0 0 1px #81d9e8ba,0 0 6px #9de8ffc0;
+}
+.lany-special-cell-wave[data-axis="color"]{background:radial-gradient(circle,#fffbd4d9,#ffafd0b8 58%,#ffafd020)}
+.lany-special-cell-wave[data-axis="combo"]{background:radial-gradient(circle,#fff4d3e3,#ffbd8eb2 54%,#ffbd8e22)}
+@keyframes lany-special-cell-wave{0%{opacity:0;transform:scale(.52)}32%{opacity:.92;transform:scale(1.05)}100%{opacity:0;transform:scale(1.16)}}
+@media(prefers-reduced-motion:reduce){.lany-special-cell-wave{display:none!important}}

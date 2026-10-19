@@ -31,12 +31,12 @@ with sync_playwright() as playwright:
           r.left>=-5 && r.right<=innerWidth+5 && r.top>=-6 &&
           r.bottom<=innerHeight+6;
       }""")
-    page.goto(BASE+'?v=2.3.17',wait_until='load',timeout=30000)
+    page.goto(BASE+'?v=2.3.18',wait_until='load',timeout=30000)
     page.wait_for_function("typeof LanyShell==='object' && typeof LanyFriends==='object' && typeof LanyUpdate==='object'")
     assert page.locator('#lany-update-banner').is_hidden(),(tag,'false positive update notice')
     assert page.locator('#lany-start-button img').evaluate('e=>e.complete&&e.naturalWidth>0')
     assert page.locator('#lany-install-button img').evaluate('e=>e.complete&&e.naturalWidth>0')
-    assert 'v2.3.17' in page.locator('.lany-version').inner_text(),(tag,'old 2.2 text visible')
+    assert 'v2.3.18' in page.locator('.lany-version').inner_text(),(tag,'old 2.2 text visible')
     for sel,art in [('#lany-start-button','start.webp'),('.lany-art-help','help.webp'),('#lany-install-button','install.webp')]:
       assert 'v26/title/'+art in page.locator(sel+' img.lany-button-picture').evaluate('e=>getComputedStyle(e).content'),(tag,'approved illustrated title missing',sel)
     shot('title','#lany-title')
