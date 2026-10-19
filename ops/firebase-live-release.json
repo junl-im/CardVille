@@ -1,9 +1,9 @@
 {
-  "release": "2.3.20-beta",
+  "release": "2.3.21-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.20 패치: 결과 중복 처리 방지, 시간 모드 오표기 수정, 이미지 경로 검증.",
+  "requestedFor": "v2.3.21 패치: 결과 별 획득 표시와 완료 보너스 안내 수정.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -60,5 +60,6 @@
   "goCountdownInputV71": true,
   "specialFootprintsV72": true,
   "matchTimeStarsV73": true,
-  "resultGuardAssetsV74": true
+  "resultGuardAssetsV74": true,
+  "resultStarsV75": true
 }

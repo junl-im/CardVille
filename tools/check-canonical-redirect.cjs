@@ -11,7 +11,7 @@ assert(!html.includes('localStorage.removeItem'),'progress deletion forbidden');
 assert(sw.includes('self.skipWaiting()'),'previous PWA worker should be retired');
 assert.equal(cfg.hosting.site,'cardville');
 assert.equal(cfg.hosting.rewrites[0].destination,'/index.html');
-assert(fs.readFileSync('web/index.html','utf8').includes('lany-origin-migration.js?v=2.3.20'),'canonical handoff import missing');
+assert(fs.readFileSync('web/index.html','utf8').includes('lany-origin-migration.js?v=2.3.21'),'canonical handoff import missing');
 const body=html.match(/<script id="redirect-code">([\s\S]*?)<\/script>/)?.[1];
 assert(body,'redirect logic missing');
 const simulate=(hostname,progress)=>{

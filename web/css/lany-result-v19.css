@@ -45,6 +45,8 @@
  font-size:clamp(1.6rem,9vw,2.6rem);filter:drop-shadow(0 2px 1px #cc833b);
  transform-origin:50% 80%;
 }
+#overlay-win .stars .star-item.earned{color:#ffca36;text-shadow:0 1px #fff8cf,0 2px #c77824}
+#overlay-win .stars .star-item.unearned{color:#a8a9ae;filter:none;text-shadow:0 1px #fff;opacity:.75}
 #overlay-win .stars .star-item.lit{animation:lanyEarnStar .4s cubic-bezier(.26,1.32,.45,1) both}
 #overlay-win #win-msg{font-weight:900;font-size:clamp(.87rem,3.8vw,1.12rem);margin:1px auto 3px!important}
 #overlay-win #win-score{
