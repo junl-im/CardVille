@@ -1,9 +1,9 @@
 {
-  "release": "2.3.28-beta",
+  "release": "2.3.29-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.28 패치: 기존 매치로 인한 잘못된 이동 차감 방지와 전체 단계 시작판 점검.",
+  "requestedFor": "v2.3.29 패치: 긴 연쇄 입력 대기 단축과 저속 모바일 성능 회귀 검사.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -68,5 +68,6 @@
   "navigationResultV79": true,
   "keyboardBoostersV80": true,
   "storageFallbackV81": true,
-  "boardSwapGuardV82": true
+  "boardSwapGuardV82": true,
+  "cascadePerformanceV83": true
 }
