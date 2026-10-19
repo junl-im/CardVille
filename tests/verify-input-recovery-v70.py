@@ -9,7 +9,7 @@ with sync_playwright() as pw:
   page=browser.new_page(viewport={'width':width,'height':height},service_workers='block')
   errors=[]
   page.on('pageerror',lambda error:errors.append(str(error)))
-  page.goto(BASE+'?v=2.3.30',wait_until='load')
+  page.goto(BASE+'?v=2.3.31',wait_until='load')
   page.locator('#lany-start-button').click()
   for mode in ['normal','hard','crazy']:
    page.locator('#lany-mode-'+mode).click()

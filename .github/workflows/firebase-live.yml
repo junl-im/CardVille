@@ -29,7 +29,7 @@ jobs:
           const v=JSON.parse(fs.readFileSync('web/version.json','utf8'));
           assert.equal(r.projectId,'cardville');
           assert.equal(r.channelId,'live');
-          assert.equal(r.release,'2.3.30-beta');
+          assert.equal(r.release,'2.3.31-beta');
           assert.equal(v.version,r.release);
           assert.equal(f.projects.default,'cardville');
           assert.equal(r.site,'cardville');
@@ -111,14 +111,14 @@ jobs:
           set -euo pipefail
           url='https://cardville.web.app'
           for attempt in $(seq 1 8); do
-            if curl --fail --silent --show-error --location --max-time 25 "$url/?v=2.3.30" -o /tmp/lany-live.html && \
+            if curl --fail --silent --show-error --location --max-time 25 "$url/?v=2.3.31" -o /tmp/lany-live.html && \
               grep -Fq '<html lang="ko">' /tmp/lany-live.html && \
               grep -Fq '라니팡!' /tmp/lany-live.html && \
-              grep -Fq 'lany-polish.js?v=2.3.30' /tmp/lany-live.html && \
-              grep -Fq 'lany-v24-restore.css?v=2.3.30' /tmp/lany-live.html && \
-              grep -Fq 'lany-polish.css?v=2.3.30' /tmp/lany-live.html && \
-              grep -Fq 'lany-install.js?v=2.3.30' /tmp/lany-live.html && \
-              grep -Fq 'lany-art-buttons.css?v=2.3.30' /tmp/lany-live.html && \
+              grep -Fq 'lany-polish.js?v=2.3.31' /tmp/lany-live.html && \
+              grep -Fq 'lany-v24-restore.css?v=2.3.31' /tmp/lany-live.html && \
+              grep -Fq 'lany-polish.css?v=2.3.31' /tmp/lany-live.html && \
+              grep -Fq 'lany-install.js?v=2.3.31' /tmp/lany-live.html && \
+              grep -Fq 'lany-art-buttons.css?v=2.3.31' /tmp/lany-live.html && \
               grep -Fq 'lany-user-art-v26.css?v=6' /tmp/lany-live.html && \
               grep -Fq 'lany-compact-ui-v27.css?v=1' /tmp/lany-live.html && \
               grep -Fq 'lany-result-polish-v28.css?v=1' /tmp/lany-live.html && \
@@ -128,12 +128,12 @@ jobs:
               grep -Fq 'lany-design-polish-v33.css?v=1' /tmp/lany-live.html && \
               grep -Fq 'lany-puzzle-aqua-v34.css?v=1' /tmp/lany-live.html && \
               grep -Fq 'lany-gameplay-v35.css?v=1' /tmp/lany-live.html && \
-              grep -Fq 'lany-action-art-v16.css?v=2.3.30' /tmp/lany-live.html && \
-              grep -Fq 'lany-title-stage-v17.css?v=2.3.30' /tmp/lany-live.html && \
-              grep -Fq 'lany-raster-v18.css?v=2.3.30' /tmp/lany-live.html && \
-              grep -Fq 'lany-result-v19.css?v=2.3.30' /tmp/lany-live.html && \
-              grep -Fq 'lany-worlds-v20.css?v=2.3.30' /tmp/lany-live.html && \
-              grep -Fq 'lany-ui-v21.css?v=2.3.30' /tmp/lany-live.html && \
+              grep -Fq 'lany-action-art-v16.css?v=2.3.31' /tmp/lany-live.html && \
+              grep -Fq 'lany-title-stage-v17.css?v=2.3.31' /tmp/lany-live.html && \
+              grep -Fq 'lany-raster-v18.css?v=2.3.31' /tmp/lany-live.html && \
+              grep -Fq 'lany-result-v19.css?v=2.3.31' /tmp/lany-live.html && \
+              grep -Fq 'lany-worlds-v20.css?v=2.3.31' /tmp/lany-live.html && \
+              grep -Fq 'lany-ui-v21.css?v=2.3.31' /tmp/lany-live.html && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/v30/boosters/hammer.webp" -o /tmp/lany-v30-hammer.webp && test "$(wc -c </tmp/lany-v30-hammer.webp)" -gt 10000 && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/v28/results/panel-win.webp" -o /tmp/lany-v28-win.webp && test "$(wc -c </tmp/lany-v28-win.webp)" -gt 10000 && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/v28/results/panel-lose.webp" -o /tmp/lany-v28-lose.webp && test "$(wc -c </tmp/lany-v28-lose.webp)" -gt 10000 && \
@@ -141,19 +141,19 @@ jobs:
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/v24/regions/tab-10.webp" -o /tmp/lany-live-world10.webp && test "$(wc -c </tmp/lany-live-world10.webp)" -gt 700 && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/ui/v21/buttons/skin-green.webp" -o /tmp/lany-v21-skin.webp && test "$(wc -c </tmp/lany-v21-skin.webp)" -gt 500 && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/map/stage-current-v20.webp" -o /tmp/lany-map-current-v20.webp && test "$(wc -c </tmp/lany-map-current-v20.webp)" -gt 700 && \
-              grep -Fq 'lany-layout-polish-v62.css?v=2.3.30' /tmp/lany-live.html && \
-              grep -Fq 'lany-control-rims-v63.css?v=2.3.30' /tmp/lany-live.html && \
-              grep -Fq 'lany-control-fit-v64.css?v=2.3.30' /tmp/lany-live.html && \
-              grep -Fq 'lany-visual-calm-v65.css?v=2.3.30' /tmp/lany-live.html && \
-              grep -Fq 'lany-match-joy-v66.css?v=2.3.30' /tmp/lany-live.html && \
-              grep -Fq 'lany-quiet-hint-v67.css?v=2.3.30' /tmp/lany-live.html && \
-              grep -Fq 'lany-game-feel-v68.css?v=2.3.30' /tmp/lany-live.html && \
-              grep -Fq 'lany-readability-combos-v69.css?v=2.3.30' /tmp/lany-live.html && \
-              grep -Fq 'lany-results-recovery-v70.css?v=2.3.30' /tmp/lany-live.html && \
+              grep -Fq 'lany-layout-polish-v62.css?v=2.3.31' /tmp/lany-live.html && \
+              grep -Fq 'lany-control-rims-v63.css?v=2.3.31' /tmp/lany-live.html && \
+              grep -Fq 'lany-control-fit-v64.css?v=2.3.31' /tmp/lany-live.html && \
+              grep -Fq 'lany-visual-calm-v65.css?v=2.3.31' /tmp/lany-live.html && \
+              grep -Fq 'lany-match-joy-v66.css?v=2.3.31' /tmp/lany-live.html && \
+              grep -Fq 'lany-quiet-hint-v67.css?v=2.3.31' /tmp/lany-live.html && \
+              grep -Fq 'lany-game-feel-v68.css?v=2.3.31' /tmp/lany-live.html && \
+              grep -Fq 'lany-readability-combos-v69.css?v=2.3.31' /tmp/lany-live.html && \
+              grep -Fq 'lany-results-recovery-v70.css?v=2.3.31' /tmp/lany-live.html && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/v62/animals/cat-fierce.png" -o /tmp/lany-v62-cat.png && test "$(wc -c </tmp/lany-v62-cat.png)" -gt 10000 && \
-              grep -Fq 'lany-perf-v19.js?v=2.3.30' /tmp/lany-live.html && \
+              grep -Fq 'lany-perf-v19.js?v=2.3.31' /tmp/lany-live.html && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/ui/v21/title/play.webp" -o /tmp/btn-play-v21.webp && test "$(wc -c </tmp/btn-play-v21.webp)" -gt 1000 && \
-              grep -Fq 'lany-update-v17.js?v=2.3.30' /tmp/lany-live.html && \
+              grep -Fq 'lany-update-v17.js?v=2.3.31' /tmp/lany-live.html && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/ui/v21/title/logo.webp" -o /tmp/lany-raster-check-title-forest-v17.webp && test "$(wc -c </tmp/lany-raster-check-title-forest-v17.webp)" -gt 500 && \
               curl --fail --silent --show-error --location --max-time 25 "$url/assets/ui/v21/buttons/action-resume.webp" -o /tmp/lany-raster-check-action-resume.webp && test "$(wc -c </tmp/lany-raster-check-action-resume.webp)" -gt 500 && \
               grep -Fq 'assets/v26/title/logo.webp' /tmp/lany-live.html && \
@@ -169,7 +169,7 @@ jobs:
               curl --fail --silent --show-error --location --max-time 25 "$url/js/lany-polish.js" -o /tmp/lany-polish-source.js && grep -Fq 'LanyPolish' /tmp/lany-polish-source.js; then
               echo '라니팡 Firebase LIVE HTTP/asset test: PASS'
               echo '## 라니팡 실제 Firebase 정식 게임 배포 성공' >> "$GITHUB_STEP_SUMMARY"
-              echo '- 정식 게임 URL: https://cardville.web.app/?v=2.3.30' >> "$GITHUB_STEP_SUMMARY"
+              echo '- 정식 게임 URL: https://cardville.web.app/?v=2.3.31' >> "$GITHUB_STEP_SUMMARY"
               echo '- 단일 공식 주소: https://cardville.web.app/' >> "$GITHUB_STEP_SUMMARY"
               echo "- 배포 커밋: $GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
               echo '- 원본 데이터 및 Firestore/Auth 변경 없음' >> "$GITHUB_STEP_SUMMARY"
