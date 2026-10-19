@@ -137,7 +137,7 @@
      btn.disabled=!enabled;
      const starCount=state.levelStars[i]||0;
      btn.setAttribute('aria-label',`${i}단계 ${levels[i-1].name}${enabled?(starCount?` 최고 별 ${starCount}개`:' 기록 없음'):' 잠김'}`);
-     btn.innerHTML=`<span>${enabled?i:'🔒'}</span><small>${enabled?('⭐'.repeat(starCount)||(boss?'👑':'시작')):i+'단계'}</small>`;
+     btn.innerHTML=`<span>${enabled?i:'🔒'}</span><small${starCount?' class="lany-level-star-count"':''}>${enabled?(starCount?'<img src="./assets/v78/stars/earned.webp" alt="" draggable="false">'.repeat(starCount):(boss?'👑':'시작')):i+'단계'}</small>`;
      if(enabled)btn.addEventListener('click',()=>openPrep(i));
      nodes.push(btn);grid.appendChild(btn);
    }
