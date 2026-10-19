@@ -1,0 +1,14 @@
+'use strict';
+const fs=require('node:fs'),assert=require('node:assert/strict');
+const html=fs.readFileSync('web/index.html','utf8');
+const shell=fs.readFileSync('web/js/lany-shell.js','utf8');
+const release=JSON.parse(fs.readFileSync('web/version.json','utf8'));
+assert.equal(release.resultGuardAssetsV74,true);
+assert(html.includes('selected: null, animating: false, ended: false'));
+assert(/function checkEnd\(\)\{\s+if\(state\.ended\)return;/.test(html));
+assert(/function showWin\(stars,finishBonus=0\)\{\s+state\.ended=true;/.test(html));
+assert(/function showLose\(\)\{\s+state\.ended=true;/.test(html));
+assert(html.includes("window.LanyTempo?.enabled()?'남은 시간·이동':'남은 이동'"));
+assert(shell.includes('최대 18초'));
+assert(!html.includes('맵를'));
+console.log('v74 result guard and copy checks passed');
