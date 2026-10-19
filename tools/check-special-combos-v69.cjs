@@ -16,6 +16,6 @@ context.state.board=Array.from({length:64},(_,i)=>i%2?'bear':'rabbit');
 assert.equal(combo(5,1).size,33,'color and bomb target the partner animal');
 context.state.walls[27]=true;
 assert.equal(combo(1,2).size,24,'wall placement does not widen a row effect');
-assert(html.includes('if(matches.length>0||comboCells)'),'special swap must count as a valid move');
+assert(html.includes('if(swapMakesMatch(matches,r1,c1,r2,c2)||comboCells)'),'special swap must count as a valid move');
 assert(html.includes('await resolveMatches([{cells:[[r1,c1],[r2,c2]]'),'special swap must use the match resolver');
 console.log('v69 special combinations passed');

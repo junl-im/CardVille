@@ -44,7 +44,7 @@ with sync_playwright() as pw:
   page.screenshot(path=str(OUT/(name+'-title.png')))
   # Server version probe is fresh, but a matching version must never show update.
   current=page.locator('meta[name="lany-build-version"]').get_attribute('content')
-  assert current=='2.3.32-beta',name
+  assert current=='2.3.33-beta',name
   assert page.locator('#lany-update-banner').is_hidden(),(name,'banner shown for current build')
   page.route('**/version.json?_fresh=*',lambda route:route.fulfill(status=200,content_type='application/json',body=json.dumps({'version':current})))
   page.evaluate('LanyUpdate.check()')
