@@ -1,9 +1,9 @@
 {
-  "release": "2.3.27-beta",
+  "release": "2.3.28-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.27 패치: 저장소 차단 시 맵·게임 진행 복구.",
+  "requestedFor": "v2.3.28 패치: 기존 매치로 인한 잘못된 이동 차감 방지와 전체 단계 시작판 점검.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -67,5 +67,6 @@
   "candyStarsV78": true,
   "navigationResultV79": true,
   "keyboardBoostersV80": true,
-  "storageFallbackV81": true
+  "storageFallbackV81": true,
+  "boardSwapGuardV82": true
 }

@@ -14,7 +14,7 @@ with sync_playwright() as p:
   pg=ctx.new_page();errors=[];vectors=[]
   pg.on('pageerror',lambda e:errors.append(str(e)))
   pg.on('request',lambda req:vectors.append(req.url) if '.svg' in req.url.lower() else None)
-  pg.goto(base+'?v=2.3.27',wait_until='load',timeout=30000)
+  pg.goto(base+'?v=2.3.28',wait_until='load',timeout=30000)
   pg.wait_for_function("typeof LanyShell==='object'")
   assert pg.locator('svg').count()==0,(tag,'vector DOM at title')
   pg.screenshot(path=str(out/f'{tag}-title.png'))
