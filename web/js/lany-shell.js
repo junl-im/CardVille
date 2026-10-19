@@ -47,7 +47,7 @@
      if(nav.screen==='game'&&!nav.overlay&&!document.hidden){window.LanyTempo?.resume();window.LanyHints?.schedule();}
    },reduce?470:2650));
  }
- const savedStage=()=>{let n=Number(localStorage.getItem(state.mode==='crazy'?'cv_crazy_last_level':state.mode==='hard'?'cv_hard_last_level':'cv_last_level'));return Number.isInteger(n)&&n>0&&n<=250&&state.unlockedLevels.includes(n)?n:1};
+ const savedStage=()=>{let n;try{n=Number(localStorage.getItem(state.mode==='crazy'?'cv_crazy_last_level':state.mode==='hard'?'cv_hard_last_level':'cv_last_level'))}catch(_){return 1}return Number.isInteger(n)&&n>0&&n<=250&&state.unlockedLevels.includes(n)?n:1};
  const reached=(n)=>state.unlockedLevels.includes(n);
  const hide=()=>{for(const id of ['lany-pause','lany-exit'])$(id).hidden=true;nav.overlay=null};
  const hideLegacy=()=>{for(const id of overlayIds){const el=$(id);if(el)el.style.display='none'}};

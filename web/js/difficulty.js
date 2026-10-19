@@ -45,7 +45,8 @@ const Difficulty = (function() {
     },
   };
 
-  let current = localStorage.getItem('crushDifficulty') || 'normal';
+  let current = 'normal';
+  try { current = localStorage.getItem('crushDifficulty') || 'normal'; } catch (_) {}
 
   function get() { return LEVELS[current] || LEVELS.normal; }
   function getKey() { return current; }
@@ -53,7 +54,7 @@ const Difficulty = (function() {
   function set(key) {
     if (!LEVELS[key]) return;
     current = key;
-    localStorage.setItem('crushDifficulty', key);
+    try { localStorage.setItem('crushDifficulty', key); } catch (_) {}
     applyToGame();
   }
 

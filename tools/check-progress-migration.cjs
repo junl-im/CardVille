@@ -4,7 +4,7 @@ const fs=require('node:fs'),vm=require('node:vm');
 const source=fs.readFileSync('web/js/lany-origin-migration.js','utf8');
 const html=fs.readFileSync('web/index.html','utf8');
 const sw=fs.readFileSync('web/sw.js','utf8');
-assert(html.includes('<script src="./js/lany-origin-migration.js?v=2.3.26"></script>'),'progress importer must load before game state');
+assert(html.includes('<script src="./js/lany-origin-migration.js?v=2.3.27"></script>'),'progress importer must load before game state');
 assert(sw.includes("'./js/lany-origin-migration.js'"),'offline app must cache importer');
 const encode=p=>Buffer.from(JSON.stringify(p),'utf8').toString('base64url');
 function run(hash,seed={}){

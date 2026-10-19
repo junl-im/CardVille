@@ -7,7 +7,8 @@ function getLeaderboard() {
 function saveScore(score, level) {
   if(!Number.isFinite(score)||!Number.isFinite(level))return;
   const lb=getLeaderboard();
-  const name=(localStorage.getItem('ccm3_playerName')||'플레이어').slice(0,20);
+  let name='플레이어';
+  try{name=(localStorage.getItem('ccm3_playerName')||name).slice(0,20)}catch(_){}
   lb.push({name,score,level,date:new Date().toISOString()});
   lb.sort((a,b)=>(Number(b.score)||0)-(Number(a.score)||0));
   lb.splice(10);
@@ -31,7 +32,8 @@ function renderLeaderboard() {
   });
 }
 function setPlayerName() {
-  const name=prompt('닉네임을 입력하세요:',localStorage.getItem('ccm3_playerName')||'플레이어');
-  if(name) localStorage.setItem('ccm3_playerName',name.slice(0,20));
+  let current='플레이어';try{current=localStorage.getItem('ccm3_playerName')||current}catch(_){}
+  const name=prompt('닉네임을 입력하세요:',current);
+  if(name)try{localStorage.setItem('ccm3_playerName',name.slice(0,20))}catch(_){}
 }
 document.addEventListener('DOMContentLoaded',renderLeaderboard);

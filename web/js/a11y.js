@@ -52,13 +52,15 @@
   });
   function toggleHighContrast() {
     document.body.classList.toggle('high-contrast');
-    localStorage.setItem('crushHighContrast', String(document.body.classList.contains('high-contrast')));
+    try { localStorage.setItem('crushHighContrast', String(document.body.classList.contains('high-contrast'))); } catch (_) {}
   }
   function toggleReducedMotion() {
     document.body.classList.toggle('reduced-motion');
-    localStorage.setItem('crushReducedMotion', String(document.body.classList.contains('reduced-motion')));
+    try { localStorage.setItem('crushReducedMotion', String(document.body.classList.contains('reduced-motion'))); } catch (_) {}
   }
-  if(localStorage.getItem('crushHighContrast')==='true') document.body.classList.add('high-contrast');
-  if(localStorage.getItem('crushReducedMotion')==='true') document.body.classList.add('reduced-motion');
+  try {
+    if(localStorage.getItem('crushHighContrast')==='true') document.body.classList.add('high-contrast');
+    if(localStorage.getItem('crushReducedMotion')==='true') document.body.classList.add('reduced-motion');
+  } catch (_) { /* Keep the game usable when browser storage is unavailable. */ }
   window.A11y={toggleHighContrast,toggleReducedMotion,decorate};
 })();

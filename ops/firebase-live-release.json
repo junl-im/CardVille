@@ -1,9 +1,9 @@
 {
-  "release": "2.3.26-beta",
+  "release": "2.3.27-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.26 패치: 키보드 아이템 조작 및 퍼즐 칸 읽기 수정.",
+  "requestedFor": "v2.3.27 패치: 저장소 차단 시 맵·게임 진행 복구.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -66,5 +66,6 @@
   "inputLifecycleV77": true,
   "candyStarsV78": true,
   "navigationResultV79": true,
-  "keyboardBoostersV80": true
+  "keyboardBoostersV80": true,
+  "storageFallbackV81": true
 }
