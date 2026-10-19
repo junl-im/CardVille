@@ -50,6 +50,8 @@ jobs:
           node tools/check-go-input-v71.cjs
           node tools/check-special-footprint-v72.cjs
           node tools/check-match-time-stars-v73.cjs
+          node tools/check-result-guard-v74.cjs
+          node tools/check-asset-paths-v74.cjs
 
   browser-pages:
     needs: regression
@@ -90,6 +92,7 @@ jobs:
           python tests/verify-go-input-v71.py
           python tests/verify-special-footprint-v72.py
           python tests/verify-match-time-stars-v73.py
+          python tests/verify-result-guard-v74.py
           python tests/verify-v20-offline-map.py
           python tests/verify-ui-v21.py
           python tests/verify-raster-v22.py

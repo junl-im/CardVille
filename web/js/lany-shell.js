@@ -194,7 +194,7 @@
    $('lany-prep-record').textContent=best?`⭐ 최고 점수 ${best.toLocaleString()}점`:'⭐ 최고 기록 없음';
    const b=state.boosters;$('lany-prep-booster-counts').textContent=`🔨 망치 ${b.hammer} · 🔀 섞기 ${b.shuffle} · 🌈 색상 ${b.color}`;
    const clock=$('lany-time-mode');clock.checked=window.LanyTempo?.enabled()??true;
-   $('lany-time-hint').textContent=`제한 ${window.LanyTempo?.durationFor(n)??150}초 · 시간 종료 시 도전 실패. 끄면 이동 횟수만 적용돼요.`;
+   $('lany-time-hint').textContent=`제한 ${window.LanyTempo?.durationFor(n)??150}초 · 3/4/5개 매치 시 +1/+2/+3초(최대 18초). 끄면 이동 횟수만 적용돼요.`;
    renderPrepPage();$('lany-prep-play').focus();return true;
  }
  function renderPrepPage(){

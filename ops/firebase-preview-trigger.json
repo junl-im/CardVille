@@ -1,6 +1,6 @@
 {
-  "version": "2.3.19-beta",
-  "request": "라니팡 v2.3.19: 매치 시간 보너스와 별 점수 밸런스",
+  "version": "2.3.20-beta",
+  "request": "라니팡 v2.3.20: 결과 처리와 이미지 경로 점검",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,
