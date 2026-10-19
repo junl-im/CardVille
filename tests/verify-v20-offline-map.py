@@ -16,12 +16,12 @@ with sync_playwright() as pw:
   page=ctx.new_page();errors=[];failures=[]
   page.on('pageerror',lambda e:errors.append(str(e)))
   page.on('response',lambda r:failures.append((r.status,r.url)) if r.status>=400 else None)
-  page.goto(base+'?v=2.3.35',wait_until='load',timeout=30000)
+  page.goto(base+'?v=2.3.36',wait_until='load',timeout=30000)
   page.wait_for_function("navigator.serviceWorker?.controller !== null",timeout=30000)
   page.wait_for_function("typeof LanyShell==='object'",timeout=30000)
   counts=page.evaluate("""async ()=>{
     const reg=await navigator.serviceWorker.ready;
-    const all=await caches.keys(),key=all.find(x=>x.includes('lanypang-match-v2.3.35-ko'));
+    const all=await caches.keys(),key=all.find(x=>x.includes('lanypang-match-v2.3.36-ko'));
     if(!key)throw Error('missing v2 offline cache');
     const cache=await caches.open(key),before=await cache.keys();
     for(let i=0;i<60;i++)await fetch('./version.json?_fresh='+Date.now()+'-'+i,{cache:'no-store'});
@@ -55,7 +55,7 @@ with sync_playwright() as pw:
   page.screenshot(path=str(out/(name+'-map.png')))
   # Offline re-entry requires no network and must still boot from canonical index.
   ctx.set_offline(True)
-  page.goto(base+'?v=2.3.35&source=pwa&offline=1',wait_until='load',timeout=30000)
+  page.goto(base+'?v=2.3.36&source=pwa&offline=1',wait_until='load',timeout=30000)
   page.wait_for_function("typeof LanyShell==='object' && typeof LanyFriends==='object'")
   assert page.locator('#lany-start-button').is_visible(),name
   assert page.locator('.lany-illustrated-logo img').evaluate('e=>e.complete&&e.naturalWidth>0'),name
