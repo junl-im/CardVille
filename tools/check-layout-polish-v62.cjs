@@ -5,7 +5,7 @@ const css=fs.readFileSync('web/css/lany-layout-polish-v62.css','utf8');
 const sw=fs.readFileSync('web/sw.js','utf8');
 const buttons=fs.readFileSync('web/js/lany-illustrated-buttons-v61.js','utf8');
 const cat='web/assets/v62/animals/cat-fierce.png';
-assert(html.includes('lany-layout-polish-v62.css?v=2.3.20'));
+assert(html.includes('lany-layout-polish-v62.css?v=2.3.21'));
 assert(!html.includes('class="lany-prep-back"'),'duplicate preparation map button');
 assert(html.includes('./assets/v62/animals/cat-fierce.png'));
 assert(css.includes('#lany-map-continue[data-cv-picture="art"]'));

@@ -1,6 +1,6 @@
 {
-  "version": "2.3.20-beta",
-  "request": "라니팡 v2.3.20: 결과 처리와 이미지 경로 점검",
+  "version": "2.3.21-beta",
+  "request": "라니팡 v2.3.21: 결과 별 표시와 보너스 안내 점검",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,
