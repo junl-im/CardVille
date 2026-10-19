@@ -54,7 +54,7 @@
     // Right/middle click is prohibited on the entire game view, no drag initiates.
     if (e.button!==0 || (e.pointerType==='mouse' && (e.buttons&1)!==1)) return;
     if (gesture && (gesture.pointerId!==e.pointerId || performance.now()-gesture.started>1500) && !board.hasPointerCapture?.(gesture.pointerId)) cleanup();
-    if (gesture || typeof state === 'undefined' || state.animating || state.activeBooster || document.getElementById('lany-go-intro')?.hidden===false) return;
+    if (gesture || typeof state === 'undefined' || !window.gameInputReady?.() || state.animating || state.activeBooster) return;
     if (document.querySelector('.overlay[style*="flex"]')) return;
     const cell=getCell(e.target);
     if (!cell) return;
@@ -89,7 +89,7 @@
     try{if(board.hasPointerCapture?.(e.pointerId))board.releasePointerCapture(e.pointerId);}catch(_){}
     suppressClickUntil=performance.now()+420;
     e.preventDefault();
-    if(!to || state.animating || state.activeBooster || state.locked[s.r*COLS+s.c]) return;
+    if(!to || !window.gameInputReady?.() || state.animating || state.activeBooster || state.locked[s.r*COLS+s.c]) return;
     state.selected=null;
     clearHint();
     snd_swap();

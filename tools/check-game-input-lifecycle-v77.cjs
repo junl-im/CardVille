@@ -1,0 +1,11 @@
+'use strict';
+const fs=require('node:fs'),assert=require('node:assert/strict');
+const html=fs.readFileSync('web/index.html','utf8');
+const drag=fs.readFileSync('web/project-overlay/project.js','utf8');
+const shell=fs.readFileSync('web/js/lany-shell.js','utf8');
+assert(html.includes('function gameInputReady()'));
+assert((html.match(/!gameInputReady\(\)/g)||[]).length>=5);
+assert(html.includes("state.ended||window.LanyShell?.getCurrentScreen?.()!=='game'"));
+assert((drag.match(/!window\.gameInputReady\?\.\(\)/g)||[]).length===2);
+assert((shell.match(/if\(!state\.animating\)window\.checkEnd\?\.\(\)/g)||[]).length===2);
+console.log('game input lifecycle checks passed');
