@@ -14,7 +14,7 @@ with sync_playwright() as pw:
   page=ctx.new_page();errors=[];missing=[]
   page.on('pageerror',lambda e:errors.append(str(e)))
   page.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
-  page.goto(base+'?v=2.3.18',wait_until='load',timeout=30000)
+  page.goto(base+'?v=2.3.19',wait_until='load',timeout=30000)
   page.wait_for_function("typeof LanyShell==='object' && typeof LanyFriends==='object'")
   def bg(selector,piece):
    val=page.locator(selector).first.evaluate("e=>getComputedStyle(e).backgroundImage")
