@@ -1,6 +1,6 @@
 {
-  "version": "2.3.24-beta",
-  "request": "라니팡 v2.3.24: 캔디 별 디자인과 표시 점검",
+  "version": "2.3.25-beta",
+  "request": "라니팡 v2.3.25: 캔디 별 디자인과 표시 점검",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,
