@@ -36,6 +36,7 @@ with sync_playwright() as pw:
   }''')
   assert played['move'] and played['after']>played['before'],(width,'real match bonus',played)
   stars=page.evaluate('''()=>{
+   initGame(1);
    const level=activeLevels()[state.level-1];state.score=Math.ceil(level.goal*1.35);state.movesLeft=level.moves-2;
    checkEnd();return {score:state.score,stars:state.levelStars[state.level],detail:document.getElementById('win-detail').textContent};
   }''')
