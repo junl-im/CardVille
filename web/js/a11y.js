@@ -5,20 +5,26 @@
   let keyboardMode = false;
   const GRID_SIZE = 8;
   const board = document.getElementById('board');
-  function getCell(r,c) { return board?.querySelector(`.cell[data-r="${r}"][data-c="${c}"]`) || null; }
+  function getCell(r,c) { return board?.children?.[r*GRID_SIZE+c] || null; }
   function decorate() {
     for (const cell of board?.querySelectorAll('.cell') || []) {
       const r=Number(cell.dataset.r),c=Number(cell.dataset.c);
-      cell.setAttribute('role','button');
-      cell.tabIndex = r===focusRow && c===focusCol ? 0 : -1;
+      if(cell.getAttribute('role')!=='button')cell.setAttribute('role','button');
+      const tabStop=r===focusRow && c===focusCol ? 0 : -1;
+      if(cell.tabIndex!==tabStop)cell.tabIndex=tabStop;
       const content=cell.dataset.gameLabel||'빈 칸';
-      cell.setAttribute('aria-label',`퍼즐 ${r+1}행 ${c+1}열: ${content}${cell.classList.contains('locked')?' 잠김':''}`);
+      const label=`퍼즐 ${r+1}행 ${c+1}열: ${content}${cell.classList.contains('locked')?' 잠김':''}`;
+      if(cell.getAttribute('aria-label')!==label)cell.setAttribute('aria-label',label);
     }
   }
   document.addEventListener('focusin',e=>{keyboardMode=!!(board && board.contains(e.target));});
   function focusCell(r,c) {
     if(r<0||r>=GRID_SIZE||c<0||c>=GRID_SIZE) return;
-    focusRow=r;focusCol=c;decorate();getCell(r,c)?.focus({preventScroll:true});
+    const previous=getCell(focusRow,focusCol);
+    if(previous)previous.tabIndex=-1;
+    focusRow=r;focusCol=c;
+    const next=getCell(r,c);
+    if(next){next.tabIndex=0;next.focus({preventScroll:true});}
   }
   if (board) {
     new MutationObserver(()=>{decorate();

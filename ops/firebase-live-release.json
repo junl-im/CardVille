@@ -1,9 +1,9 @@
 {
-  "release": "2.3.30-beta",
+  "release": "2.3.31-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.30 패치: 퍼즐 드래그 DOM 검색 제거와 모바일 입력 성능 검사.",
+  "requestedFor": "v2.3.31 패치: 키보드 이동의 반복 접근성 갱신 제거와 입력 성능 검사.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -70,5 +70,6 @@
   "storageFallbackV81": true,
   "boardSwapGuardV82": true,
   "cascadePerformanceV83": true,
-  "dragCacheV84": true
+  "dragCacheV84": true,
+  "keyboardFocusV85": true
 }

@@ -49,7 +49,7 @@ assert(!/function onCellClick\(r,c\)\s*\{[^}]*state\.selected\s*=/.test(html),'N
 assert(read('web/project-overlay/project.js').includes('board.setPointerCapture'),'Pointer capture needed');
 assert(read('web/project-overlay/project.js').includes("addEventListener('contextmenu'"),'No right click menu');
 assert(!html.includes("div.addEventListener('touchstart'"),'Avoid duplicate touch event handling');
-assert(read('web/js/a11y.js').includes('.cell[data-r='),'A11y must select the actual game cells');
+assert(read('web/js/a11y.js').includes('board?.children?.[r*GRID_SIZE+c]'),'A11y must use the actual board cell');
 assert(read('web/js/leaderboard.js').includes('player.textContent'),'HTML name injection regression');
 assert(read('web/sw.js').includes("url.origin!==self.location.origin"),'SW must avoid cross-origin caching');
 const manifest=JSON.parse(read('web/manifest.json'));
