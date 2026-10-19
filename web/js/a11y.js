@@ -11,7 +11,8 @@
       const r=Number(cell.dataset.r),c=Number(cell.dataset.c);
       cell.setAttribute('role','button');
       cell.tabIndex = r===focusRow && c===focusCol ? 0 : -1;
-      cell.setAttribute('aria-label',`퍼즐 ${r+1}행 ${c+1}열: ${cell.textContent || '빈 칸'}${cell.classList.contains('locked')?' 잠김':''}`);
+      const content=cell.dataset.gameLabel||'빈 칸';
+      cell.setAttribute('aria-label',`퍼즐 ${r+1}행 ${c+1}열: ${content}${cell.classList.contains('locked')?' 잠김':''}`);
     }
   }
   document.addEventListener('focusin',e=>{keyboardMode=!!(board && board.contains(e.target));});
@@ -38,11 +39,13 @@
     else if(e.key==='ArrowLeft') focusCell(focusRow,focusCol-1);
     else if(e.key==='ArrowRight') focusCell(focusRow,focusCol+1);
     else if(e.key==='Enter'||e.key===' ') {
-      if (typeof cvKeyboardSelect === 'function') {
+      if (typeof state !== 'undefined' && state.activeBooster) {
+        getCell(focusRow,focusCol)?.click();
+      }
+      else if (typeof cvKeyboardSelect === 'function') {
         keyboardMode=true; cvKeyboardSelect(focusRow,focusCol);
         queueMicrotask(()=>getCell(focusRow,focusCol)?.focus({preventScroll:true}));
       }
-      else if (typeof state !== 'undefined' && state.activeBooster) getCell(focusRow,focusCol)?.click();
     }
     else moved=false;
     if(moved) e.preventDefault();
@@ -57,5 +60,5 @@
   }
   if(localStorage.getItem('crushHighContrast')==='true') document.body.classList.add('high-contrast');
   if(localStorage.getItem('crushReducedMotion')==='true') document.body.classList.add('reduced-motion');
-  window.A11y={toggleHighContrast,toggleReducedMotion};
+  window.A11y={toggleHighContrast,toggleReducedMotion,decorate};
 })();
