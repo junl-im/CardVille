@@ -9,7 +9,7 @@ with sync_playwright() as pw:
                             has_touch=True, service_workers='block')
     errors=[]
     page.on('pageerror', lambda error: errors.append(str(error)))
-    page.goto(base+'?v=2.3.32', wait_until='load', timeout=30000)
+    page.goto(base+'?v=2.3.33', wait_until='load', timeout=30000)
     page.locator('#lany-start-button').click()
     page.locator('#lany-map-continue').click()
     page.locator('#lany-prep-play').click()

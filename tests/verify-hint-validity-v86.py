@@ -8,7 +8,7 @@ with sync_playwright() as pw:
     page=browser.new_page(service_workers='block')
     errors=[]
     page.on('pageerror',lambda error:errors.append(str(error)))
-    page.goto(base+'?v=2.3.32',wait_until='load')
+    page.goto(base+'?v=2.3.33',wait_until='load')
     page.locator('#lany-start-button').click()
     page.locator('#lany-map-continue').click()
     page.locator('#lany-prep-play').click()

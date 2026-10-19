@@ -48,6 +48,7 @@ jobs:
           node tools/check-progress-migration.cjs
           node tools/check-canonical-redirect.cjs
           node tools/check-go-input-v71.cjs
+          node tools/check-special-combos-v69.cjs
           node tools/check-special-footprint-v72.cjs
           node tools/check-match-time-stars-v73.cjs
           node tools/check-result-guard-v74.cjs
@@ -109,6 +110,7 @@ jobs:
           python tests/verify-drag-performance-v84.py
           python tests/verify-keyboard-navigation-perf-v85.py
           python tests/verify-hint-validity-v86.py
+          python tests/verify-morph-input-v87.py
           python tests/verify-v20-offline-map.py
           python tests/verify-ui-v21.py
           python tests/verify-raster-v22.py

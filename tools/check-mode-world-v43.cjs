@@ -15,7 +15,7 @@ for(const name of ['normal-forest','hard-village','retry','stage-map']){
 assert(css.includes('#overlay-win .modal-btns button:first-child'));
 assert(css.includes('#overlay-lose .modal-btns button:first-child'));
 assert(shell.includes('mapFriends={normal:')&&shell.includes('crazy:')); 
-assert(sw.includes('v86-hint-validity-r1'));
+assert(sw.includes('v87-morph-input-guard-r1'));
 assert(!fs.readdirSync('web/assets/v43').some(name=>name.endsWith('.svg')));
 console.log('v43 worlds and popup actions: OK');
 
