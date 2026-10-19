@@ -52,6 +52,7 @@ jobs:
           node tools/check-match-time-stars-v73.cjs
           node tools/check-result-guard-v74.cjs
           node tools/check-result-stars-v75.cjs
+          node tools/check-star-record-v76.cjs
           node tools/check-asset-paths-v74.cjs
 
   browser-pages:
@@ -95,6 +96,7 @@ jobs:
           python tests/verify-match-time-stars-v73.py
           python tests/verify-result-guard-v74.py
           python tests/verify-result-stars-v75.py
+          python tests/verify-star-record-v76.py
           python tests/verify-v20-offline-map.py
           python tests/verify-ui-v21.py
           python tests/verify-raster-v22.py

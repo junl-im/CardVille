@@ -1,0 +1,10 @@
+'use strict';
+const fs=require('node:fs'),assert=require('node:assert/strict');
+const html=fs.readFileSync('web/index.html','utf8');
+const shell=fs.readFileSync('web/js/lany-shell.js','utf8');
+assert(html.includes('function normalizeLevelStars(saved)'));
+assert(html.includes('state.levelStars=normalizeLevelStars(stars)'));
+assert(html.includes('이번 별 ${stars}개 획득 · 단계 최고 ${bestStars}개'));
+assert(shell.includes('⭐ 최고 별 ${stars}개'));
+assert(shell.includes('최고 별 ${starCount}개'));
+console.log('star record labels and save normalization checks passed');
