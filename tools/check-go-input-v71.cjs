@@ -9,9 +9,9 @@ const shell=read('web/js/lany-shell.js');
 const tempo=read('web/js/lany-tempo.js');
 const sw=read('web/sw.js');
 const version=JSON.parse(read('web/version.json'));
-assert.equal(version.version,'2.3.21-beta');
+assert.equal(version.version,'2.3.22-beta');
 assert.equal(version.goCountdownInputV71,true);
-assert(sw.includes('v75-result-stars-r1'),'service worker cache must rotate');
+assert(sw.includes('v76-star-record-r1'),'service worker cache must rotate');
 assert(/\.lany-go-intro\{[^}]*pointer-events:auto/.test(css),'countdown must intercept touches');
 assert(html.includes("function gameCountdownActive(){return document.getElementById('lany-go-intro')?.hidden===false}"));
 for(const name of ['onCellClick','cvKeyboardSelect','trySwap','activateBooster','applyBooster']){

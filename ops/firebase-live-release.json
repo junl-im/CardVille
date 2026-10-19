@@ -1,9 +1,9 @@
 {
-  "release": "2.3.21-beta",
+  "release": "2.3.22-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.21 패치: 결과 별 획득 표시와 완료 보너스 안내 수정.",
+  "requestedFor": "v2.3.22 패치: 이번 별과 최고 별 기록 구분, 저장 데이터 검증.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -61,5 +61,6 @@
   "specialFootprintsV72": true,
   "matchTimeStarsV73": true,
   "resultGuardAssetsV74": true,
-  "resultStarsV75": true
+  "resultStarsV75": true,
+  "starRecordV76": true
 }

@@ -89,7 +89,7 @@
    const levels=activeLevels();
    const stars=Object.values(state.levelStars).reduce((a,b)=>a+(Number(b)||0),0);
    $('lany-map-progress').textContent=`${state.mode==='crazy'?'💥 크레이지':state.mode==='hard'?'🔥 하드':'🌼 노멀'} · 도전 가능 ${unlocked.size} / 250`;
-   $('lany-map-star-count').textContent=`⭐ 모은 별 ${stars}개`;
+   $('lany-map-star-count').textContent=`⭐ 최고 별 ${stars}개`;
    $('lany-map-continue').textContent=`▶ ${savedStage()}단계 이어서 도전`;
    $('lany-map-resume').hidden=!nav.returnToGame;
    const size=mapPageSize(),pages=Math.ceil(25/size);
@@ -135,8 +135,8 @@
      btn.style.gridColumn=String(stageColumn(index)+1);
      btn.style.gridRow=String(Math.floor(index/3)+1);
      btn.disabled=!enabled;
-     btn.setAttribute('aria-label',`${i}단계 ${levels[i-1].name}${enabled?'':' 잠김'}`);
      const starCount=state.levelStars[i]||0;
+     btn.setAttribute('aria-label',`${i}단계 ${levels[i-1].name}${enabled?(starCount?` 최고 별 ${starCount}개`:' 기록 없음'):' 잠김'}`);
      btn.innerHTML=`<span>${enabled?i:'🔒'}</span><small>${enabled?('⭐'.repeat(starCount)||(boss?'👑':'시작')):i+'단계'}</small>`;
      if(enabled)btn.addEventListener('click',()=>openPrep(i));
      nodes.push(btn);grid.appendChild(btn);
