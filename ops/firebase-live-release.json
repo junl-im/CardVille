@@ -1,9 +1,9 @@
 {
-  "release": "2.3.35-beta",
+  "release": "2.3.36-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.35 패치: 작은 모바일 화면의 앱 설치 안내 버튼 잘림 수정.",
+  "requestedFor": "v2.3.36 패치: 특수 폭발 범위 표시를 보드 전환 시간에 맞춤.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -75,5 +75,6 @@
   "hintValidityV86": true,
   "morphInputGuardV87": true,
   "modeBalanceV88": true,
-  "mobileFinishV89": true
+  "mobileFinishV89": true,
+  "specialTimingV90": true
 }
