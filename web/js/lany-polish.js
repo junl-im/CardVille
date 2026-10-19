@@ -97,18 +97,47 @@ function swapTiles(r1,c1,r2,c2,valid){
 }
 function invalidSwap(r1,c1,r2,c2){swapTiles(r1,c1,r2,c2,false)}
 function onSwap(r1,c1,r2,c2){swapTiles(r1,c1,r2,c2,true)}
-function onSpecial(items){
- if(reduced()||document.hidden||!items?.length)return;
- const board=document.getElementById('board'),bounds=board?.getBoundingClientRect();if(!bounds)return;
- for(const {index,special} of items.slice(0,3)){
-  const rect=board.children[index]?.getBoundingClientRect();if(!rect)continue;
-  const el=document.createElement('span');el.className='lany-special-trace';
-  const axis=[2,6].includes(special)?'row':[3,7].includes(special)?'col':'burst';el.dataset.axis=axis;
-  if(axis==='row'){el.style.left=bounds.left+'px';el.style.top=(rect.top+rect.height/2-6)+'px';el.style.width=bounds.width+'px'}
-  else if(axis==='col'){el.style.left=(rect.left+rect.width/2-6)+'px';el.style.top=bounds.top+'px';el.style.height=bounds.height+'px'}
-  else{el.style.left=(rect.left-rect.width*.45)+'px';el.style.top=(rect.top-rect.height*.45)+'px';el.style.width=rect.width*1.9+'px';el.style.height=rect.height*1.9+'px'}
-  getLayer().append(el);setTimeout(()=>el.remove(),430);
+function specialFootprint(items,affected,comboCells,boardKinds){
+ const hits=new Map(),allowed=new Set(affected||[]),combo=new Set(comboCells||[]);
+ const put=(index,axis,delay)=>{
+  if(!allowed.has(index))return;
+  const old=hits.get(index);
+  if(!old||delay<old.delay)hits.set(index,{axis,delay});
+ };
+ for(const {index,special} of items){
+  const r=Math.floor(index/8),c=index%8;
+  if([2,6].includes(special))for(let x=0;x<8;x++)put(r*8+x,'row',Math.abs(x-c)*20);
+  else if([3,7].includes(special))for(let y=0;y<8;y++)put(y*8+c,'col',Math.abs(y-r)*20);
+  else if([1,4,8].includes(special))for(let y=Math.max(0,r-1);y<=Math.min(7,r+1);y++)for(let x=Math.max(0,c-1);x<=Math.min(7,c+1);x++)put(y*8+x,'burst',Math.max(Math.abs(y-r),Math.abs(x-c))*55);
+  else if(special===5){
+   const gem=boardKinds?.[index];
+   for(const target of allowed)if(target===index||boardKinds?.[target]===gem)
+    put(target,'color',Math.min(140,(Math.abs(Math.floor(target/8)-r)+Math.abs(target%8-c))*18));
+  }
  }
+ // A paired special can reach farther than either single footprint.
+ if(combo.size){
+  const origins=items.map(item=>item.index);
+  for(const index of combo){
+   const distance=Math.min(...origins.map(origin=>Math.abs(Math.floor(index/8)-Math.floor(origin/8))+Math.abs(index%8-origin%8)));
+   put(index,'combo',Math.min(140,distance*20));
+  }
+ }
+ return hits;
+}
+function onSpecial(items,affected,comboCells,boardKinds){
+ if(reduced()||document.hidden||!items?.length)return;
+ const board=document.getElementById('board');if(!board)return;
+ const hits=specialFootprint(items,affected,comboCells,boardKinds),parent=getLayer();
+ const fragment=document.createDocumentFragment(),nodes=[];
+ for(const [index,{axis,delay}] of hits){
+  const rect=board.children[index]?.getBoundingClientRect();if(!rect)continue;
+  const el=document.createElement('span');el.className='lany-special-cell-wave';el.dataset.axis=axis;el.dataset.index=String(index);
+  el.style.left=rect.left+'px';el.style.top=rect.top+'px';el.style.width=rect.width+'px';el.style.height=rect.height+'px';
+  el.style.setProperty('--special-delay',delay+'ms');fragment.appendChild(el);nodes.push(el);
+ }
+ parent.appendChild(fragment);
+ setTimeout(()=>nodes.forEach(el=>el.remove()),470);
 }
 function onSpecialCombo(r1,c1,r2,c2){
  if(reduced()||document.hidden)return;
@@ -133,6 +162,6 @@ function init(){
   document.addEventListener('pointerup',up,{capture:true,passive:true});
   document.addEventListener('pointercancel',up,{capture:true,passive:true});
 }
-window.LanyPolish={onMatch,onFall,invalidSwap,onSwap,onSpecial,onSpecialCombo,dialog,burst,face};
+window.LanyPolish={onMatch,onFall,invalidSwap,onSwap,onSpecial,onSpecialCombo,dialog,burst,face,specialFootprint};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();

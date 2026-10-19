@@ -1,9 +1,9 @@
 {
-  "release": "2.3.17-beta",
+  "release": "2.3.18-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.17 패치: 시작 카운트다운 동안 퍼즐·아이템 조작 잠금과 타이머 동기화.",
+  "requestedFor": "v2.3.18 패치: 특수 블록의 실제 제거 범위를 따라 번지는 폭발·줄 파동 효과.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -57,5 +57,6 @@
   "gameFeelV68": true,
   "readabilityCombosV69": true,
   "inputRecoveryBalanceResultsV70": true,
-  "goCountdownInputV71": true
+  "goCountdownInputV71": true,
+  "specialFootprintsV72": true
 }
