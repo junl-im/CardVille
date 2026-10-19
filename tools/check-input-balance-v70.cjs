@@ -12,6 +12,16 @@ for(let i=0;i<25;i++){
  assert(modes.hard[i].goal>=3600&&modes.hard[i].clearGoal>=29,'hard early objective');
  assert(modes.crazy[i].goal>=3600&&modes.crazy[i].clearGoal>=25,'crazy early objective');
  assert(modes.crazy[i].moves<modes.hard[i].moves,'crazy has fewer moves');
+ assert(modes.crazy[i].goal>modes.hard[i].goal,'crazy score goal must exceed hard');
+ assert(modes.crazy[i].clearGoal>=modes.hard[i].clearGoal,'crazy match goal must not be easier');
+ assert(modes.crazy[i].wallCount>modes.hard[i].wallCount,'crazy needs more walls');
+ assert(modes.crazy[i].lockedCount>modes.hard[i].lockedCount,'crazy needs more locks');
+ assert(modes.crazy[i].morphSeconds<modes.hard[i].morphSeconds,'crazy changes animals faster');
+}
+for(let i=0;i<250;i++){
+ assert(modes.crazy[i].goal>modes.hard[i].goal,'crazy score hierarchy across campaign');
+ assert(modes.crazy[i].clearGoal>=modes.hard[i].clearGoal,'crazy match hierarchy across campaign');
+ assert(modes.crazy[i].moves<modes.hard[i].moves,'crazy move hierarchy across campaign');
 }
 assert(modes.hard[25].goal>=modes.hard[24].goal,'hard world boundary must not get easier');
 assert(modes.crazy[25].goal>=modes.crazy[24].goal,'crazy world boundary must not get easier');

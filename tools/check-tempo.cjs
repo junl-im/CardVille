@@ -17,6 +17,8 @@ const sandbox={
 const tempo=sandbox.LanyTempo;
 assert(tempo&&typeof tempo.start==='function');assert(tempo.enabled());
 assert.equal(tempo.durationFor(1),93);assert.equal(tempo.durationFor(250),61);
+assert.equal(tempo.durationFor(1,'hard'),84);assert.equal(tempo.durationFor(1,'crazy'),75);
+assert.equal(tempo.durationFor(250,'hard'),55);assert.equal(tempo.durationFor(250,'crazy'),49);
 assert.equal(liveTickers,0,'title does not require a ticker');
 tempo.start(1);
 assert.equal(liveTickers,1);assert.equal(tempo.getRemaining(),93);
@@ -32,7 +34,7 @@ assert.equal(liveTickers,0);assert.equal(starts,stops,'no clock intervals leaked
 for(const mode of ['normal','hard','crazy']){
   sandbox.state.mode=mode;sandbox.state.score=500;sandbox.state.hardClears=0;
   const previousWin=win,previousLose=lose;
-  tempo.start(1);now+=186000;tick();
+  tempo.start(1);assert.equal(tempo.getRemaining(),tempo.durationFor(1,mode),`${mode}: correct mode timer`);now+=186000;tick();
   assert.equal(win,previousWin+(mode==='normal'?1:0),`${mode}: match objective gates the win`);
   assert.equal(lose,previousLose+(mode==='normal'?0:1),`${mode}: unmet match objective expires to a loss`);
   assert.equal(liveTickers,0,`${mode}: no expired timer is left running`);

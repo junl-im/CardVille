@@ -1,9 +1,9 @@
 {
-  "release": "2.3.33-beta",
+  "release": "2.3.34-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.33 패치: 드래그 중 캐릭터 자동 변화 방지와 장시간 플레이 안정성 검사.",
+  "requestedFor": "v2.3.34 패치: 노멀·하드·크레이지 모드별 초반 목표와 제한 시간 조정.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -73,5 +73,6 @@
   "dragCacheV84": true,
   "keyboardFocusV85": true,
   "hintValidityV86": true,
-  "morphInputGuardV87": true
+  "morphInputGuardV87": true,
+  "modeBalanceV88": true
 }
