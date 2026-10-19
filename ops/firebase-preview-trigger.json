@@ -1,6 +1,6 @@
 {
-  "version": "2.3.18-beta",
-  "request": "라니팡 v2.3.18: 특수 폭발 범위와 줄 파동 효과",
+  "version": "2.3.19-beta",
+  "request": "라니팡 v2.3.19: 매치 시간 보너스와 별 점수 밸런스",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,

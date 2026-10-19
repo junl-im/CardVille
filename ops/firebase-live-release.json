@@ -1,9 +1,9 @@
 {
-  "release": "2.3.18-beta",
+  "release": "2.3.19-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.18 패치: 특수 블록의 실제 제거 범위를 따라 번지는 폭발·줄 파동 효과.",
+  "requestedFor": "v2.3.19 패치: 3·4·5개 매치 시간 보너스와 남은 시간·이동 별 점수 보정.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -58,5 +58,6 @@
   "readabilityCombosV69": true,
   "inputRecoveryBalanceResultsV70": true,
   "goCountdownInputV71": true,
-  "specialFootprintsV72": true
+  "specialFootprintsV72": true,
+  "matchTimeStarsV73": true
 }

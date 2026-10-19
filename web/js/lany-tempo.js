@@ -6,7 +6,9 @@
  let enabled=true;
  try{enabled=localStorage.getItem(KEY)!=='off';}catch(_){}
  let active=false,paused=true,expired=false,remaining=0,deadline=0,seconds=0;
- let currentStage=1, lastSecond=-1,lastTickAlert=-1;
+ let currentStage=1, lastSecond=-1,lastTickAlert=-1,earnedBonus=0;
+ const MAX_MATCH_BONUS=18;
+ const bonusForGroups=groups=>(groups||[]).reduce((sum,group)=>sum+(group.run>=5?3:group.run===4?2:group.run===3?1:0),0);
  let ticker=null;
  const runClock=()=>{if(ticker===null)ticker=setInterval(update,250)};
  const stopClock=()=>{if(ticker!==null){clearInterval(ticker);ticker=null;}};
@@ -23,7 +25,7 @@
    $('lany-clock-fill').style.width=(enabled?Math.min(100,remaining/durationFor(currentStage)*100):100)+'%';
  }
  function start(stage){
-   currentStage=stage||1;active=true;paused=false;expired=false;remaining=durationFor(currentStage);seconds=0;
+   currentStage=stage||1;active=true;paused=false;expired=false;remaining=durationFor(currentStage);seconds=0;earnedBonus=0;
    deadline=performance.now()+1000;lastSecond=-1;lastTickAlert=-1;render();runClock();
  }
  function setEnabled(value){enabled=Boolean(value);try{localStorage.setItem(KEY,enabled?'on':'off');}catch(_){}render()}
@@ -31,6 +33,16 @@
  function resume(){if(!active||!paused||expired)return;paused=false;deadline=performance.now()+1000;runClock();render()}
  function stop(){active=false;paused=true;stopClock();render()}
  function isExpired(){return active&&expired}
+ function awardMatchTime(groups){
+   if(!enabled||!active||paused||expired||remaining<=0)return 0;
+   update();
+   if(remaining<=0)return 0;
+   const amount=Math.min(bonusForGroups(groups),MAX_MATCH_BONUS-earnedBonus);
+   if(amount<=0)return 0;
+   earnedBonus+=amount;remaining+=amount;render();
+   window.LanyPolish?.onTimeBonus?.(amount);
+   return amount;
+ }
  function update(){
    if(!active||paused||expired)return;
    if(typeof state==='undefined')return;
@@ -63,6 +75,6 @@
  // No timer while at the title, map, pause, or with the app hidden.
  // Exactly one ticker is allocated while active, and cancelled on pause/stop.
  document.addEventListener('visibilitychange',()=>{if(document.hidden)pause()});
- window.LanyTempo={start,pause,resume,stop,enabled:()=>enabled,setEnabled,durationFor,isExpired,onCombo,getRemaining,isRunning:()=>active&&!paused,getElapsed:()=>seconds,flush:update};
+ window.LanyTempo={start,pause,resume,stop,enabled:()=>enabled,setEnabled,durationFor,isExpired,onCombo,awardMatchTime,bonusForGroups,getRemaining,getBonusEarned:()=>earnedBonus,isRunning:()=>active&&!paused,getElapsed:()=>seconds,flush:update};
  render();
 })();

@@ -150,6 +150,14 @@ function onSpecialCombo(r1,c1,r2,c2){
  ring.style.top=((ar.top+br.top+ar.height)/2-size/2)+'px';
  getLayer().append(ring);setTimeout(()=>ring.remove(),500);
 }
+function onTimeBonus(seconds){
+ if(document.hidden||seconds<=0)return;
+ const clock=document.getElementById('lany-clock'),rect=clock?.getBoundingClientRect();if(!rect)return;
+ const parent=getLayer();parent.querySelector('.lany-time-bonus')?.remove();
+ const label=document.createElement('span');label.className='lany-time-bonus';label.textContent=`⏱ +${seconds}초`;
+ label.style.left=(rect.left+rect.width/2)+'px';label.style.top=(rect.top+rect.height/2)+'px';
+ parent.appendChild(label);setTimeout(()=>label.remove(),950);
+}
 function promoteDialog(){document.querySelectorAll('#lany-pause .lany-dialog-emoji,#lany-exit .lany-dialog-emoji').forEach((el,i)=>{
  if(el.querySelector('img'))return;
  el.textContent='';const img=document.createElement('img');img.className='lany-popup-mascot';img.src=puzzleRoot+(i===0?'rabbit.webp':'bear.webp');img.alt='';img.draggable=false;el.append(img)
@@ -162,6 +170,6 @@ function init(){
   document.addEventListener('pointerup',up,{capture:true,passive:true});
   document.addEventListener('pointercancel',up,{capture:true,passive:true});
 }
-window.LanyPolish={onMatch,onFall,invalidSwap,onSwap,onSpecial,onSpecialCombo,dialog,burst,face,specialFootprint};
+window.LanyPolish={onMatch,onFall,invalidSwap,onSwap,onSpecial,onSpecialCombo,onTimeBonus,dialog,burst,face,specialFootprint};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
