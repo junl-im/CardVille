@@ -19,6 +19,6 @@ for(const name of ['hard-map','brick-wall','mode-normal','mode-hard']){
  assert(css.includes(`../assets/v42/${name}.webp`),`Visual style missing: ${name}`);
 }
 assert(!fs.readdirSync('web/assets/v42').some(name=>name.endsWith('.svg')));
-assert(sw.includes('v80-keyboard-boosters-r1'));
+assert(sw.includes('v81-storage-fallback-r1'));
 console.log(JSON.stringify({pass:true,modeArt:2,wall:'WebP',hardMap:'WebP',svg:0}));
 

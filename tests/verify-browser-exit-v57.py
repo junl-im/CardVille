@@ -16,7 +16,7 @@ with sync_playwright() as pw:
   else: browser=getattr(pw,engine).launch(headless=True)
   page=browser.new_page(viewport={'width':390,'height':844},service_workers='block')
   page.goto(BASE+'?exit-check=1',wait_until='load')
-  assert page.locator('.lany-version').inner_text().strip()=='v2.3.26',name
+  assert page.locator('.lany-version').inner_text().strip()=='v2.3.27',name
   page.evaluate('LanyShell.openExit()')
   page.locator('#lany-exit button[data-lany-art="exit"]').click()
   page.wait_for_timeout(300)
@@ -42,6 +42,6 @@ with sync_playwright() as pw:
   except Exception: pass
   popup_closed=child.is_closed()
   assert popup_closed or child.locator('#lany-exit-finished').is_visible(),name
-  results.append({'browser':name,'version':'v2.3.26','regularTab':'closed' if tab_closed else 'clear exit fallback','scriptOpenedWindow':'closed' if popup_closed else 'clear exit fallback'})
+  results.append({'browser':name,'version':'v2.3.27','regularTab':'closed' if tab_closed else 'clear exit fallback','scriptOpenedWindow':'closed' if popup_closed else 'clear exit fallback'})
   browser.close()
 print(json.dumps(results,ensure_ascii=False,indent=2))
