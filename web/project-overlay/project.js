@@ -32,11 +32,12 @@
     return cell && board.contains(cell) ? cell : null;
   };
   function cleanup() {
-    board.querySelectorAll('.cv-dragging,.cv-drag-target').forEach(cell => {
-      cell.classList.remove('cv-dragging','cv-drag-target');
-      cell.style.removeProperty('--cv-dx');
-      cell.style.removeProperty('--cv-dy');
-    });
+    if(gesture){
+      gesture.cell.classList.remove('cv-dragging');
+      gesture.cell.style.removeProperty('--cv-dx');
+      gesture.cell.style.removeProperty('--cv-dy');
+      gesture.targetCell?.classList.remove('cv-drag-target');
+    }
     gesture = null;
   }
   function destination(s, x, y) {
@@ -60,7 +61,8 @@
     if (!cell) return;
     const r=Number(cell.dataset.r),c=Number(cell.dataset.c);
     if(state.locked[r*COLS+c]||state.walls[r*COLS+c]) return;
-    gesture={pointerId:e.pointerId,r,c,x:e.clientX,y:e.clientY,width:cell.getBoundingClientRect().width,target:null,started:performance.now()};
+    gesture={pointerId:e.pointerId,r,c,x:e.clientX,y:e.clientY,width:cell.getBoundingClientRect().width,
+      cell,target:null,targetIndex:-1,targetCell:null,started:performance.now()};
     try { board.setPointerCapture?.(e.pointerId); } catch (_) { /* synthetic/test or interrupted pointer */ }
     cell.classList.add('cv-dragging');
     clearHint();
@@ -70,15 +72,20 @@
     if(!gesture || e.pointerId!==gesture.pointerId) return;
     if(e.pointerType==='mouse' && (e.buttons&1)===0){cleanup();return;}
     const s=gesture;
-    const cell=board.querySelector(`.cell[data-r="${s.r}"][data-c="${s.c}"]`);
     const scale=s.width*.46;
     const dx=Math.max(-scale,Math.min(scale,e.clientX-s.x));
     const dy=Math.max(-scale,Math.min(scale,e.clientY-s.y));
-    if(cell){cell.style.setProperty('--cv-dx',`${dx}px`);cell.style.setProperty('--cv-dy',`${dy}px`);}
+    s.cell.style.setProperty('--cv-dx',`${dx}px`);
+    s.cell.style.setProperty('--cv-dy',`${dy}px`);
     const next=destination(s,e.clientX,e.clientY);
-    board.querySelectorAll('.cv-drag-target').forEach(node=>node.classList.remove('cv-drag-target'));
-    if(next){board.querySelector(`.cell[data-r="${next[0]}"][data-c="${next[1]}"]`)?.classList.add('cv-drag-target');}
-    s.target=next;
+    const targetIndex=next?next[0]*COLS+next[1]:-1;
+    if(targetIndex!==s.targetIndex){
+      s.targetCell?.classList.remove('cv-drag-target');
+      s.targetCell=targetIndex>=0?board.children[targetIndex]:null;
+      s.targetCell?.classList.add('cv-drag-target');
+      s.targetIndex=targetIndex;
+      s.target=next;
+    }
     e.preventDefault();
   });
   board.addEventListener('pointerup', e => {
