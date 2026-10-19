@@ -55,9 +55,10 @@
  function openMap(worldIndex){
    cancelGo();
    const from=nav.screen;
-   const finished=['overlay-win','overlay-lose'].some(id=>$(id)?.style.display==='flex');
-   if(nav.screen==='game' && !finished)nav.returnToGame=true;
    if(nav.screen==='game'){window.LanyTempo?.pause();window.LanyHints?.clear();}
+   // Pausing can settle the final clock tick and open a result overlay.
+   const finished=['overlay-win','overlay-lose'].some(id=>$(id)?.style.display==='flex');
+   nav.returnToGame=from==='game'&&!finished&&!state.ended;
    hide();hideLegacy();hideViews();nav.started=true;nav.screen='map';$('lany-title').hidden=true;
    document.body.classList.remove('lany-at-title');
    const desired=Number.isInteger(worldIndex)?worldIndex:nav.world;
@@ -235,8 +236,8 @@
    nav.started=true;nav.world=Math.floor((savedStage()-1)/25);openMap(nav.world);
    try{if(mobileFullscreen()&&document.documentElement.requestFullscreen&&!document.fullscreenElement)Promise.resolve(document.documentElement.requestFullscreen({navigationUI:'hide'})).catch(()=>{})}catch(_){/* browser permission */}
  }
- function openPause(){cancelGo();if(nav.screen!=='game'){openExit();return}window.LanyTempo?.pause();window.LanyHints?.clear();hide();nav.overlay='pause';$('lany-pause').hidden=false;$('lany-pause').querySelector('button').focus()}
- function openExit(){cancelGo();nav.resultOverlay=['overlay-win','overlay-lose'].find(id=>$(id)?.style.display==='flex')||null;if(nav.resultOverlay)$(nav.resultOverlay).style.display='none';window.LanyTempo?.pause();window.LanyHints?.clear();hide();nav.previousScreen=nav.screen;nav.overlay='exit';$('lany-exit').hidden=false;$('lany-exit').querySelector('button').focus()}
+ function openPause(){cancelGo();if(nav.screen!=='game'){openExit();return}window.LanyTempo?.pause();window.LanyHints?.clear();if(state.ended)return;hide();nav.overlay='pause';$('lany-pause').hidden=false;$('lany-pause').querySelector('button').focus()}
+ function openExit(){cancelGo();window.LanyTempo?.pause();nav.resultOverlay=['overlay-win','overlay-lose'].find(id=>$(id)?.style.display==='flex')||null;if(nav.resultOverlay)$(nav.resultOverlay).style.display='none';window.LanyHints?.clear();hide();nav.previousScreen=nav.screen;nav.overlay='exit';$('lany-exit').hidden=false;$('lany-exit').querySelector('button').focus()}
  function resume(){hide();if(nav.resultOverlay){$(nav.resultOverlay).style.display='flex';nav.resultOverlay=null;return}if(nav.screen==='game'){if(!state.animating)window.checkEnd?.();if(!state.ended){window.LanyTempo?.resume();window.LanyHints?.schedule();}}if(nav.screen==='map')$('lany-map-continue').focus();else if(nav.screen==='prep')$('lany-prep-play').focus();else $('board')?.focus?.()}
  function showHome(){cancelGo();$('lany-exit-finished').hidden=true;nav.resultOverlay=null;window.LanyTempo?.pause();hide();hideLegacy();hideViews();nav.started=false;nav.returnToGame=false;nav.screen='title';document.body.classList.add('lany-at-title');$('lany-title').hidden=false;if(document.fullscreenElement)Promise.resolve(document.exitFullscreen?.()).catch(()=>{});$('lany-start-button').focus()}
  function exitGame(){showHome();$('lany-exit-finished').hidden=false;try{window.close()}catch(_){/* Browser may forbid closing a user-opened tab. */}}

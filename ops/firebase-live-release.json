@@ -1,9 +1,9 @@
 {
-  "release": "2.3.24-beta",
+  "release": "2.3.25-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.24 패치: 결과·점수·맵의 캔디 별 에셋 적용.",
+  "requestedFor": "v2.3.25 패치: 시간 종료와 화면 이동 경합 시 결과창 복구.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -64,5 +64,6 @@
   "resultStarsV75": true,
   "starRecordV76": true,
   "inputLifecycleV77": true,
-  "candyStarsV78": true
+  "candyStarsV78": true,
+  "navigationResultV79": true
 }
