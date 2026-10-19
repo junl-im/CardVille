@@ -1,0 +1,10 @@
+/* v89: keep the install action visible in short mobile viewports. */
+@media (max-width:600px) and (max-height:470px){
+  html body #lany-install-modal .lany-install-card{padding:8px 18px 10px!important;gap:2px!important}
+  html body #lany-install-modal .lany-install-icon{width:36px!important;height:36px!important}
+  html body #lany-install-modal .lany-install-card h2{font-size:.96rem!important;margin:0 auto!important}
+  html body #lany-install-modal .lany-install-card ol{gap:2px!important;font-size:.72rem!important;line-height:1.25!important}
+  html body #lany-install-modal .lany-install-card li{padding:2px 5px!important}
+  html body #lany-install-modal .lany-install-card p{padding:0 3px!important;font-size:.62rem!important;line-height:1.25!important}
+  html body #lany-install-modal .lany-install-card .lany-install-done{margin:0 auto!important;flex:none!important}
+}
