@@ -1,9 +1,9 @@
 {
-  "release": "2.3.43-beta",
+  "release": "2.3.44-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.43 패치: 오래된 드래그 캡처가 새 퍼즐 조작을 막지 않도록 복구.",
+  "requestedFor": "v2.3.44 패치: 두 손가락 취소, 화면 회전, 앱 전환 후 퍼즐 조작 복구.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -83,5 +83,6 @@
   "interruptedTurnV94": true,
   "mobileGameLayoutV95": true,
   "interruptedClockV96": true,
-  "staleDragRecoveryV97": true
+  "staleDragRecoveryV97": true,
+  "multitouchRecoveryV98": true
 }

@@ -16,7 +16,7 @@ assert(html.includes('lany-shell.js')&&html.includes('lany-shell.css'));
 assert(fs.statSync('web/assets/lanypang-cover.webp').size>15000);
 assert(css.includes('lanypang-cover.webp'));
 assert.equal(manifest.short_name,'라니팡');
-assert.equal(version.version,'2.3.43-beta');
+assert.equal(version.version,'2.3.44-beta');
 for(const method of ['requestFullscreen','popstate','openExit','showHome','exitGame'])assert(shell.includes(method));
 new vm.Script(shell);
 const work=fs.readFileSync('.github/workflows/firebase-hosting.yml','utf8');

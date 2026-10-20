@@ -1,6 +1,6 @@
 {
-  "version": "2.3.43-beta",
-  "request": "라니팡 v2.3.43: 오래된 드래그 캡처 복구 검사",
+  "version": "2.3.44-beta",
+  "request": "라니팡 v2.3.44: 멀티터치와 화면 전환 조작 복구 검사",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,
