@@ -1,9 +1,9 @@
 {
-  "release": "2.3.47-beta",
+  "release": "2.3.48-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.47 패치: 설치 앱 업데이트 중 캐시 혼합 방지와 오프라인 퍼즐판 복귀 검증.",
+  "requestedFor": "v2.3.48 패치: 별 디자인 이미지와 스타일의 오프라인 누락 수정.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -87,5 +87,6 @@
   "multitouchRecoveryV98": true,
   "calmCascadesV99": true,
   "modeBalanceV100": true,
-  "offlineUpdateHandoffV101": true
+  "offlineUpdateHandoffV101": true,
+  "offlineStarsV102": true
 }
