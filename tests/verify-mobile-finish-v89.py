@@ -11,7 +11,7 @@ with sync_playwright() as pw:
     for width, height in ((320, 440), (320, 568), (390, 844)):
         context = browser.new_context(viewport={'width': width, 'height': height}, is_mobile=True, has_touch=True, service_workers='block')
         page = context.new_page()
-        page.goto(base + '?v=2.3.39', wait_until='load')
+        page.goto(base + '?v=2.3.40', wait_until='load')
         page.locator('.lany-art-install').click()
         card = page.locator('#lany-install-modal .lany-install-card')
         button = page.locator('#lany-install-modal .lany-install-done')

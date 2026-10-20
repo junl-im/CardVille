@@ -359,7 +359,7 @@ def build_ui_v21():
     for kind in groups:
         stock[kind]=sorted(x.name for x in (base/kind).glob('*.webp'))
     (base/'manifest.json').write_text(json.dumps({
-       'release':'2.3.39-beta','style':'LanyPang approved WebP studio',
+       'release':'2.3.40-beta','style':'LanyPang approved WebP studio',
        'roles':stock,'generation':'tools/build-visual-v18.py',
        'source':['web/assets/friends','web/assets/polish'],'userArtSource':'web/assets/ui/v21/source-original-kit.zip','userArtSHA256':source_sha256
     },ensure_ascii=False,indent=2),encoding='utf-8')

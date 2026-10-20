@@ -100,6 +100,7 @@ jobs:
           python tests/verify-save-resume-v91.py
           python tests/verify-live-session-v92.py
           python tests/verify-idle-clock-v93.py
+          python tests/verify-interrupted-turn-v94.py
           python tests/verify-match-time-stars-v73.py
           python tests/verify-result-guard-v74.py
           python tests/verify-result-stars-v75.py
