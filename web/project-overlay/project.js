@@ -105,12 +105,14 @@
     snd_swap();
     void trySwap(s.r,s.c,to[0],to[1]);
   });
-  board.addEventListener('pointercancel', cleanup);
-  board.addEventListener('lostpointercapture', cleanup);
+  const cancelActivePointer = e => { if (gesture && e.pointerId === gesture.pointerId) cleanup(); };
+  board.addEventListener('pointercancel', cancelActivePointer);
+  board.addEventListener('lostpointercapture', cancelActivePointer);
   window.addEventListener('pointerup', e=>{if(gesture&&e.pointerId===gesture.pointerId)cleanup()});
-  window.addEventListener('pointercancel', cleanup);
+  window.addEventListener('pointercancel', cancelActivePointer);
   window.addEventListener('blur',cleanup);
   document.addEventListener('visibilitychange',()=>{if(document.hidden)cleanup()});
+  window.addEventListener('resize', cleanup);
   board.addEventListener('click', e => {
     if (performance.now() < suppressClickUntil || !state.activeBooster) {
       e.preventDefault();e.stopImmediatePropagation();
