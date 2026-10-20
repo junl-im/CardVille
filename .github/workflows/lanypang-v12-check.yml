@@ -29,6 +29,7 @@ jobs:
           node tools/check-polish.cjs
           node tools/check-tempo.cjs
           node tools/check-gameplay-v12.cjs
+          node tools/check-mode-balance-v100.cjs
           node tools/check-specials-v35.cjs
           node tools/check-pages-v13.cjs
           node tools/check-pwa-v14.cjs

@@ -1,6 +1,6 @@
 {
-  "version": "2.3.45-beta",
-  "request": "라니팡 v2.3.45: 연쇄 이펙트 가독성 검사",
+  "version": "2.3.46-beta",
+  "request": "라니팡 v2.3.46: 250단계 모드 난이도 검사",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,
