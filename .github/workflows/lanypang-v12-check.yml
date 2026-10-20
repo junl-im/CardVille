@@ -41,6 +41,7 @@ jobs:
           node tools/check-visual-perf-v18.cjs
           node tools/check-longplay-v19.cjs
           node tools/check-v20-cache-map.cjs
+          node tools/check-offline-asset-coverage-v102.cjs
           node tools/check-ui-v21.cjs
           node tools/check-raster-only-v22.cjs
           node tools/check-art-v23.cjs

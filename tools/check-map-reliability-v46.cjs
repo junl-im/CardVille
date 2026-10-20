@@ -9,7 +9,7 @@ assert(shell.includes('pageWindow(nav.mapPage,size)'));
 assert(shell.includes('pageForOffset(anchor,mapPageSize())'));
 assert(html.includes('function readCampaignSave(key,fallback)'));
 assert(html.includes('Array.isArray(unlocked)?[...new Set([1,'));
-assert(sw.includes('v101-offline-update-r1'));
+assert(sw.includes('v102-offline-stars-r1'));
 for(const size of [3,6,9,12]){
  const pages=Math.ceil(25/size),base=Math.floor(25/pages),extra=25%pages;
  const counts=Array.from({length:pages},(_,p)=>base+(p<extra?1:0));
