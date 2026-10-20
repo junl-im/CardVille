@@ -1,13 +1,13 @@
 {
-  "release": "2.3.38-beta",
+  "release": "2.3.39-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.38 패치: 진행 중 퍼즐판과 제한 시간의 새로고침 복원.",
+  "requestedFor": "v2.3.39 패치: 조작 없는 퍼즐판의 제한 시간도 매초 저장.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
-  "approvedAtKST": "2026-10-19",
+  "approvedAtKST": "2026-10-20",
   "versionCheckFix": true,
   "puzzleArtV25": true,
   "userArtV26": true,
@@ -78,5 +78,6 @@
   "mobileFinishV89": true,
   "specialTimingV90": true,
   "saveResumeV91": true,
-  "liveSessionV92": true
+  "liveSessionV92": true,
+  "idleClockV93": true
 }

@@ -4,7 +4,7 @@ const game=fs.readFileSync('web/index.html','utf8');
 const effects=fs.readFileSync('web/js/lany-polish.js','utf8');
 const style=fs.readFileSync('web/css/lany-game-feel-v68.css','utf8');
 const version=JSON.parse(fs.readFileSync('web/version.json','utf8'));
-assert.equal(version.version,'2.3.38-beta');
+assert.equal(version.version,'2.3.39-beta');
 assert.equal(version.specialFootprintsV72,true);
 assert(game.includes('onSpecial(expandSpecialMatches.lastActivated,allCells,extraCells,state.board,effectDwell)'));
 assert(effects.includes('function specialFootprint(items,affected,comboCells,boardKinds)'));
