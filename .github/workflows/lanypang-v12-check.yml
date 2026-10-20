@@ -120,6 +120,7 @@ jobs:
           python tests/verify-mobile-finish-v89.py
           python tests/verify-mobile-game-v95.py
           python tests/verify-interrupted-clock-v96.py
+          python tests/verify-stale-drag-v97.py
           python tests/verify-v20-offline-map.py
           python tests/verify-ui-v21.py
           python tests/verify-raster-v22.py

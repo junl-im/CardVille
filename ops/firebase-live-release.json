@@ -1,9 +1,9 @@
 {
-  "release": "2.3.42-beta",
+  "release": "2.3.43-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.42 패치: 중단된 이동이 끝나기 전 시계가 다시 흐르지 않도록 개선.",
+  "requestedFor": "v2.3.43 패치: 오래된 드래그 캡처가 새 퍼즐 조작을 막지 않도록 복구.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -82,5 +82,6 @@
   "idleClockV93": true,
   "interruptedTurnV94": true,
   "mobileGameLayoutV95": true,
-  "interruptedClockV96": true
+  "interruptedClockV96": true,
+  "staleDragRecoveryV97": true
 }

@@ -32,13 +32,15 @@
     return cell && board.contains(cell) ? cell : null;
   };
   function cleanup() {
-    if(gesture){
-      gesture.cell.classList.remove('cv-dragging');
-      gesture.cell.style.removeProperty('--cv-dx');
-      gesture.cell.style.removeProperty('--cv-dy');
-      gesture.targetCell?.classList.remove('cv-drag-target');
+    const old=gesture;
+    gesture=null;
+    if(old){
+      old.cell.classList.remove('cv-dragging');
+      old.cell.style.removeProperty('--cv-dx');
+      old.cell.style.removeProperty('--cv-dy');
+      old.targetCell?.classList.remove('cv-drag-target');
+      try{if(board.hasPointerCapture?.(old.pointerId))board.releasePointerCapture(old.pointerId)}catch(_){/* Browser already released it. */}
     }
-    gesture = null;
   }
   function destination(s, x, y) {
     const dx = x-s.x, dy = y-s.y;
@@ -54,7 +56,9 @@
   board.addEventListener('pointerdown', e => {
     // Right/middle click is prohibited on the entire game view, no drag initiates.
     if (e.button!==0 || (e.pointerType==='mouse' && (e.buttons&1)!==1)) return;
-    if (gesture && (gesture.pointerId!==e.pointerId || performance.now()-gesture.started>1500) && !board.hasPointerCapture?.(gesture.pointerId)) cleanup();
+    // A browser can miss pointerup/cancel while retaining capture. The next touch
+    // must recover a stale gesture even when hasPointerCapture still says true.
+    if (gesture && (performance.now()-gesture.started>3000 || (gesture.pointerId!==e.pointerId && !board.hasPointerCapture?.(gesture.pointerId)))) cleanup();
     if (gesture || typeof state === 'undefined' || !window.gameInputReady?.() || state.animating || state.activeBooster) return;
     if (document.querySelector('.overlay[style*="flex"]')) return;
     const cell=getCell(e.target);
@@ -93,7 +97,6 @@
     const s=gesture;
     const to=destination(s,e.clientX,e.clientY);
     cleanup();
-    try{if(board.hasPointerCapture?.(e.pointerId))board.releasePointerCapture(e.pointerId);}catch(_){}
     suppressClickUntil=performance.now()+420;
     e.preventDefault();
     if(!to || !window.gameInputReady?.() || state.animating || state.activeBooster || state.locked[s.r*COLS+s.c]) return;
