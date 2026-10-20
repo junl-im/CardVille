@@ -27,11 +27,14 @@
   if (!board) return;
   let gesture = null;
   let suppressClickUntil = 0;
+  let staleGestureTimer = null;
   const getCell = el => {
     const cell = el?.closest?.('.cell');
     return cell && board.contains(cell) ? cell : null;
   };
   function cleanup() {
+    clearTimeout(staleGestureTimer);
+    staleGestureTimer=null;
     const old=gesture;
     gesture=null;
     if(old){
@@ -41,6 +44,14 @@
       old.targetCell?.classList.remove('cv-drag-target');
       try{if(board.hasPointerCapture?.(old.pointerId))board.releasePointerCapture(old.pointerId)}catch(_){/* Browser already released it. */}
     }
+  }
+  function armGestureRecovery(pointerId) {
+    clearTimeout(staleGestureTimer);
+    // Some mobile browsers lose both pointerup and pointercancel after an app
+    // switch. A held gesture must never block the next attempt indefinitely.
+    staleGestureTimer=setTimeout(()=>{
+      if(gesture?.pointerId===pointerId)cleanup();
+    },4000);
   }
   function destination(s, x, y) {
     const dx = x-s.x, dy = y-s.y;
@@ -67,6 +78,7 @@
     if(state.locked[r*COLS+c]||state.walls[r*COLS+c]) return;
     gesture={pointerId:e.pointerId,r,c,x:e.clientX,y:e.clientY,width:cell.getBoundingClientRect().width,
       cell,target:null,targetIndex:-1,targetCell:null,started:performance.now()};
+    armGestureRecovery(e.pointerId);
     try { board.setPointerCapture?.(e.pointerId); } catch (_) { /* synthetic/test or interrupted pointer */ }
     cell.classList.add('cv-dragging');
     clearHint();
@@ -75,6 +87,7 @@
   board.addEventListener('pointermove', e => {
     if(!gesture || e.pointerId!==gesture.pointerId) return;
     if(e.pointerType==='mouse' && (e.buttons&1)===0){cleanup();return;}
+    armGestureRecovery(e.pointerId);
     const s=gesture;
     const scale=s.width*.46;
     const dx=Math.max(-scale,Math.min(scale,e.clientX-s.x));

@@ -1,4 +1,9 @@
 /* v95: keep the puzzle and its controls reachable on short phones. */
+@media (orientation:portrait) and (max-width:499px) and (min-height:551px) and (max-height:700px){
+  html body #app #board-wrap{width:min(calc(100vw - 12px),calc(100dvh - 300px),440px)!important}
+  html body #app:has(#lany-hard-objective:not([hidden])) #board-wrap{width:min(calc(100vw - 12px),calc(100dvh - 335px),440px)!important}
+  html body[data-campaign="crazy"] #app #board-wrap{width:min(calc(100vw - 12px),calc(100dvh - 350px),440px)!important}
+}
 @media (orientation:portrait) and (max-width:499px) and (max-height:550px){
   html body #app{padding:3px 5px max(5px,env(safe-area-inset-bottom))!important}
   html body #app>.header{min-height:54px!important;height:54px!important;padding:2px 4px!important;margin-bottom:3px!important}
