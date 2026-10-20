@@ -44,6 +44,8 @@
   html body #app>.level-info .level-row:first-child>*{max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;font-size:.68rem!important}
   html body #app .lany-score-progress{height:25px!important;margin:0 3px!important}
   html body #app .lany-goal-time,html body #app #lany-clock{min-width:0!important}
+  html body #app #lany-clock-caption{display:none!important}
+  html body #app .lany-clock-head{justify-content:center!important}
   html body #app #lany-clock-value{font-size:.8rem!important}
   html body #app .boosters{
     grid-column:2!important;grid-row:3!important;width:100%!important;max-width:none!important;
