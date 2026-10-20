@@ -1,9 +1,9 @@
 {
-  "release": "2.3.45-beta",
+  "release": "2.3.46-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.45 패치: 연쇄 매치 장식 효과와 특수 폭발 표시 겹침 완화.",
+  "requestedFor": "v2.3.46 패치: 후반 하드·크레이지 목표 조정과 보스 난이도 순서 정리.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -85,5 +85,6 @@
   "interruptedClockV96": true,
   "staleDragRecoveryV97": true,
   "multitouchRecoveryV98": true,
-  "calmCascadesV99": true
+  "calmCascadesV99": true,
+  "modeBalanceV100": true
 }
