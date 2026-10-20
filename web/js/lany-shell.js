@@ -242,6 +242,9 @@
    if(!window.LanySession?.read?.())return;
    hideViews();hide();nav.screen='game';nav.returnToGame=false;hideLegacy();
    if(!window.LanySession.restore()){openMap();return}
+   // A move may have settled while the map was open, after its result check was deferred.
+   window.checkEnd?.();
+   if(state.ended)return;
    launchGo();$('board')?.focus?.();
  }
  function begin(){
