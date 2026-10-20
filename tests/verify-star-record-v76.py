@@ -7,7 +7,7 @@ with sync_playwright() as pw:
  browser=pw.chromium.launch(headless=True,args=['--no-sandbox'])
  for width,height in [(320,568),(390,844),(1366,768)]:
   page=browser.new_page(viewport={'width':width,'height':height},service_workers='block')
-  page.goto(BASE+'?v=2.3.41',wait_until='load')
+  page.goto(BASE+'?v=2.3.42',wait_until='load')
   result=page.evaluate('''() => {
     localStorage.setItem('sc_stars',JSON.stringify({'1':3,'2':5,'3':-1,'4':'oops','251':2}));
     setCampaignMode('normal');

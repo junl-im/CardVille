@@ -23,7 +23,7 @@ assert.equal(new Set(levels.map(l=>l.name)).size,250);
 assert.equal(new Set(levels.map(l=>l.theme)).size,10);
 assert(html.includes('<html lang="ko">'));
 assert(manifest.name.includes('라니팡'));
-assert(version.language==='ko'&&version.version==='2.3.41-beta');
+assert(version.language==='ko'&&version.version==='2.3.42-beta');
 assert(!overlay.includes('lv.englishSourceName=lv.name'));
 assert(!overlay.includes('lv.name=`'), 'Late DOM-level translation is no longer safe');
 for(const label of ['방을 찾지 못했어요','대결 서버에 연결하지 못했어요','연결 시간이 초과됐어요','상대방의 연결이 끊어졌어요','님의 차례예요!','1번 플레이어','2번 플레이어']){
@@ -32,10 +32,10 @@ for(const label of ['방을 찾지 못했어요','대결 서버에 연결하지 
 for (const en of ['Connecting to PeerJS','Room ready!','Room not found','Connection timeout','Opponent disconnected',"'s turn!",'Player 1','Player 2']){
  assert(!multi.includes(en),`English user-facing text remains: ${en}`);
 }
-assert(sw.includes('lanypang-match-v2.3.41-ko'),'Service worker cache must be bumped');
+assert(sw.includes('lanypang-match-v2.3.42-ko'),'Service worker cache must be bumped');
 const previewWorkflow=fs.readFileSync('.github/workflows/firebase-hosting.yml','utf8');
 assert(!previewWorkflow.includes("grep -q 'CardVille'"),'Legacy English game-name smoke check regressed');
 assert(previewWorkflow.includes('entryPoint: ./redirect-site'),'Firebase preview must serve only the redirect portal');
 assert(fs.readFileSync('redirect-site/index.html','utf8').includes('https://cardville.web.app/'),'all public game paths must forward to the Korean LIVE site');
 assert(overlay.includes('온라인 순위 기능은 서버 연동 후 제공됩니다.'));
-console.log(JSON.stringify({passed:true,language:'ko',stageRecords:250,englishStageFields:0,localizedThemes:10,distinctKoreanNames:250,translatedMultiplayer:true,offlineCache:'v2.3.41-ko'},null,2));
+console.log(JSON.stringify({passed:true,language:'ko',stageRecords:250,englishStageFields:0,localizedThemes:10,distinctKoreanNames:250,translatedMultiplayer:true,offlineCache:'v2.3.42-ko'},null,2));
