@@ -5,9 +5,12 @@
   html body #app>.header .hud-box{min-height:44px!important;padding:4px 2px!important}
   html body #app>.level-info{padding:4px 7px 5px!important;gap:2px!important;margin-bottom:3px!important}
   html body #app>.level-info .level-row:last-child{display:none!important}
+  html body #app:has(#lany-hard-objective:not([hidden]))>.level-info .level-row:first-child{flex-direction:column!important;align-items:flex-start!important;gap:0!important}
+  html body #app:has(#lany-hard-objective:not([hidden]))>.level-info .level-row:first-child>*{max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;font-size:.68rem!important}
   html body #app .lany-score-progress{height:25px!important;margin:0 3px!important}
   html body #app #board-wrap{width:min(calc(100vw - 12px),calc(100dvh - 260px),440px)!important}
-  html body #app:has(#lany-hard-objective:not([hidden])) #board-wrap{width:min(calc(100vw - 12px),calc(100dvh - 300px),440px)!important}
+  html body #app:has(#lany-hard-objective:not([hidden])) #board-wrap{width:min(calc(100vw - 12px),calc(100dvh - 295px),440px)!important}
+  html body[data-campaign="crazy"] #app #board-wrap{width:min(calc(100vw - 12px),calc(100dvh - 310px),440px)!important}
   html body #app .boosters{margin:2px auto!important;padding:2px 4px!important}
   html body #app .boosters .booster{width:51px!important;height:51px!important}
   html body #app .lany-game-nav{margin:2px auto 0!important;padding:2px!important}

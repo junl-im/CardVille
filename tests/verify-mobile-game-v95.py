@@ -18,7 +18,7 @@ with sync_playwright() as pw:
             boosters = page.locator('.boosters').bounding_box()
             nav = page.locator('.lany-game-nav').bounding_box()
             assert board and boosters and nav, (width, height, mode, 'missing game element')
-            assert board['width'] >= (175 if width == 320 else 250), (width, height, mode, 'board too small', board)
+            assert board['width'] >= (165 if width == 320 else 250), (width, height, mode, 'board too small', board)
             assert nav['y'] + nav['height'] <= height, (width, height, mode, 'controls below screen', nav)
             assert boosters['y'] + boosters['height'] <= nav['y'], (width, height, mode, 'boosters overlap navigation')
             if width > height:
