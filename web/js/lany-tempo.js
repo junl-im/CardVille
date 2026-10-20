@@ -35,7 +35,8 @@
  function pause(){if(!active||paused)return;update();paused=true;stopClock();render()}
  function resume(){if(!active||!paused||expired)return;paused=false;deadline=performance.now()+1000;runClock();render()}
  function stop(){active=false;paused=true;stopClock();render()}
- function snapshot(){if(active&&!paused)update();return {enabled,remaining,seconds,earnedBonus}}
+ // The ticker owns clock advancement. Reading a snapshot must not re-enter update().
+ function snapshot(){return {enabled,remaining,seconds,earnedBonus}}
  function restore(stage,saved){
    if(!saved||!Number.isInteger(saved.remaining)||!Number.isInteger(saved.seconds)||!Number.isInteger(saved.earnedBonus))return false;
    if(saved.remaining<0||saved.remaining>3600||saved.seconds<0||saved.seconds>86400||saved.earnedBonus<0||saved.earnedBonus>MAX_MATCH_BONUS)return false;
@@ -74,6 +75,8 @@
        $('lose-msg').textContent=`⏰ 시간이 끝났어요! ${seconds}초 동안 ${state.score.toLocaleString()}점을 획득했어요. 다시 도전해 보세요!`;
      }
    }
+   // Keep an idle board's clock current without saving half-resolved swaps.
+   if(!state.animating&&!state.ended)window.LanySession?.save?.();
  }
  function onCombo(count){
    // Combo animation remains, but chains no longer replenish the timer.
