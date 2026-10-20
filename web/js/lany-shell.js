@@ -60,7 +60,7 @@
  function openMap(worldIndex){
    cancelGo();
    const from=nav.screen;
-   if(nav.screen==='game'){window.LanyTempo?.pause();window.LanyHints?.clear();}
+   if(nav.screen==='game'){window.LanyTempo?.pause();window.LanySession?.save();window.LanyHints?.clear();}
    // Pausing can settle the final clock tick and open a result overlay.
    const finished=['overlay-win','overlay-lose'].some(id=>$(id)?.style.display==='flex');
    nav.returnToGame=from==='game'&&!finished&&!state.ended;
@@ -97,7 +97,9 @@
    $('lany-map-progress').textContent=`${state.mode==='crazy'?'💥 크레이지':state.mode==='hard'?'🔥 하드':'🌼 노멀'} · 도전 가능 ${unlocked.size} / 250`;
    $('lany-map-star-count').textContent=`⭐ 최고 별 ${stars}개`;
    $('lany-map-continue').textContent=`▶ ${savedStage()}단계 이어서 도전`;
-   $('lany-map-resume').hidden=!nav.returnToGame;
+   const saved=window.LanySession?.read?.();
+   $('lany-map-resume').hidden=!nav.returnToGame&&!saved;
+   $('lany-map-resume').textContent=nav.returnToGame?'진행 중 퍼즐':saved?`${saved.level}단계 퍼즐 이어하기`:'진행 중 퍼즐';
    const size=mapPageSize(),pages=Math.ceil(25/size);
    nav.mapPage=clamp(nav.mapPage,0,pages-1);
    nav.mapPageSize=size;
@@ -235,16 +237,22 @@
    launchGo();
    $('board')?.focus?.();
  }
- function resumeGameFromMap(){if(!nav.returnToGame||!state.board.length)return;hideViews();hide();nav.screen='game';nav.returnToGame=false;if(!state.animating)window.checkEnd?.();if(!state.ended)window.LanyTempo?.resume();$('board')?.focus?.()}
+ function resumeGameFromMap(){
+   if(nav.returnToGame&&state.board.length){hideViews();hide();nav.screen='game';nav.returnToGame=false;if(!state.animating)window.checkEnd?.();if(!state.ended)window.LanyTempo?.resume();$('board')?.focus?.();return}
+   if(!window.LanySession?.read?.())return;
+   hideViews();hide();nav.screen='game';nav.returnToGame=false;hideLegacy();
+   if(!window.LanySession.restore()){openMap();return}
+   launchGo();$('board')?.focus?.();
+ }
  function begin(){
    if(nav.started){if(nav.screen==='game')return;openMap();return}
    nav.started=true;nav.world=Math.floor((savedStage()-1)/25);openMap(nav.world);
    try{if(mobileFullscreen()&&document.documentElement.requestFullscreen&&!document.fullscreenElement)Promise.resolve(document.documentElement.requestFullscreen({navigationUI:'hide'})).catch(()=>{})}catch(_){/* browser permission */}
  }
- function openPause(){cancelGo();if(nav.screen!=='game'){openExit();return}window.LanyTempo?.pause();window.LanyHints?.clear();if(state.ended)return;hide();nav.overlay='pause';$('lany-pause').hidden=false;$('lany-pause').querySelector('button').focus()}
- function openExit(){cancelGo();window.LanyTempo?.pause();nav.resultOverlay=['overlay-win','overlay-lose'].find(id=>$(id)?.style.display==='flex')||null;if(nav.resultOverlay)$(nav.resultOverlay).style.display='none';window.LanyHints?.clear();hide();nav.previousScreen=nav.screen;nav.overlay='exit';$('lany-exit').hidden=false;$('lany-exit').querySelector('button').focus()}
+ function openPause(){cancelGo();if(nav.screen!=='game'){openExit();return}window.LanyTempo?.pause();window.LanySession?.save();window.LanyHints?.clear();if(state.ended)return;hide();nav.overlay='pause';$('lany-pause').hidden=false;$('lany-pause').querySelector('button').focus()}
+ function openExit(){cancelGo();window.LanyTempo?.pause();window.LanySession?.save();nav.resultOverlay=['overlay-win','overlay-lose'].find(id=>$(id)?.style.display==='flex')||null;if(nav.resultOverlay)$(nav.resultOverlay).style.display='none';window.LanyHints?.clear();hide();nav.previousScreen=nav.screen;nav.overlay='exit';$('lany-exit').hidden=false;$('lany-exit').querySelector('button').focus()}
  function resume(){hide();if(nav.resultOverlay){const result=$(nav.resultOverlay);result.style.display='flex';result.querySelector('.modal-btns button')?.focus({preventScroll:true});nav.resultOverlay=null;return}if(nav.screen==='game'){if(!state.animating)window.checkEnd?.();if(!state.ended){window.LanyTempo?.resume();window.LanyHints?.schedule();}}if(nav.screen==='map')$('lany-map-continue').focus();else if(nav.screen==='prep')$('lany-prep-play').focus();else $('board')?.focus?.()}
- function showHome(){cancelGo();$('lany-exit-finished').hidden=true;nav.resultOverlay=null;window.LanyTempo?.pause();hide();hideLegacy();hideViews();nav.started=false;nav.returnToGame=false;nav.screen='title';document.body.classList.add('lany-at-title');$('lany-title').hidden=false;if(document.fullscreenElement)Promise.resolve(document.exitFullscreen?.()).catch(()=>{});$('lany-start-button').focus()}
+ function showHome(){cancelGo();$('lany-exit-finished').hidden=true;nav.resultOverlay=null;window.LanyTempo?.pause();window.LanySession?.save();hide();hideLegacy();hideViews();nav.started=false;nav.returnToGame=false;nav.screen='title';document.body.classList.add('lany-at-title');$('lany-title').hidden=false;if(document.fullscreenElement)Promise.resolve(document.exitFullscreen?.()).catch(()=>{});$('lany-start-button').focus()}
  function exitGame(){showHome();$('lany-exit-finished').hidden=false;try{window.close()}catch(_){/* Browser may forbid closing a user-opened tab. */}}
  function openHelp(){window.LanyTempo?.pause();window.LanyHints?.clear();nav.helpIndex=0;nav.wasHelpFrom=nav.overlay||nav.screen;hide();$('overlay-tutorial').style.display='flex';$('overlay-tutorial').querySelector('h2').textContent='🌟 라니팡 게임 방법';$('overlay-tutorial').querySelector('.btn.btn-primary').textContent='알겠어요';renderHelpPage()}
  function closeTutorial(){$('overlay-tutorial').style.display='none';const from=nav.wasHelpFrom;nav.wasHelpFrom=null;if(from==='pause')openPause();else if(from==='exit')openExit();else if(from==='title')showHome();else if(from==='map')openMap();else if(from==='prep')openPrep(nav.selectedLevel);else if(from==='game'){window.LanyTempo?.resume();window.LanyHints?.schedule()}}
@@ -278,6 +286,7 @@
    });
  },{passive:true});
  document.addEventListener('contextmenu',e=>e.preventDefault(),true);
+ document.addEventListener('visibilitychange',()=>{if(document.hidden&&nav.screen==='game')window.LanySession?.save()});
  document.addEventListener('dragstart',e=>e.preventDefault(),true);
  window.LanyShell={start:begin,openPause,openExit,resume,showHome,exitGame,openHelp,closeTutorial,toggleFullscreen,openMap,openPrep,playPrepared,launchGo,continueStage,resumeGameFromMap,mapPage,worldPage,prepPage,helpPage,setMode,getCurrentScreen:()=>nav.overlay||nav.screen};
  $('lany-start-button')?.addEventListener('click',begin);

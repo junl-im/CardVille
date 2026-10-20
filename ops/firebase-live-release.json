@@ -1,9 +1,9 @@
 {
-  "release": "2.3.37-beta",
+  "release": "2.3.38-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.37 패치: 단계 완료 후 이어서 도전 위치와 모드별 저장 복원 개선.",
+  "requestedFor": "v2.3.38 패치: 진행 중 퍼즐판과 제한 시간의 새로고침 복원.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -77,5 +77,6 @@
   "modeBalanceV88": true,
   "mobileFinishV89": true,
   "specialTimingV90": true,
-  "saveResumeV91": true
+  "saveResumeV91": true,
+  "liveSessionV92": true
 }

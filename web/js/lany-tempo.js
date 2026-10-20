@@ -35,6 +35,14 @@
  function pause(){if(!active||paused)return;update();paused=true;stopClock();render()}
  function resume(){if(!active||!paused||expired)return;paused=false;deadline=performance.now()+1000;runClock();render()}
  function stop(){active=false;paused=true;stopClock();render()}
+ function snapshot(){if(active&&!paused)update();return {enabled,remaining,seconds,earnedBonus}}
+ function restore(stage,saved){
+   if(!saved||!Number.isInteger(saved.remaining)||!Number.isInteger(saved.seconds)||!Number.isInteger(saved.earnedBonus))return false;
+   if(saved.remaining<0||saved.remaining>3600||saved.seconds<0||saved.seconds>86400||saved.earnedBonus<0||saved.earnedBonus>MAX_MATCH_BONUS)return false;
+   stopClock();currentStage=stage;currentMode=state?.mode||'normal';enabled=saved.enabled===true;
+   active=true;paused=true;expired=false;remaining=saved.remaining;seconds=saved.seconds;earnedBonus=saved.earnedBonus;
+   lastSecond=-1;lastTickAlert=-1;render();return true;
+ }
  function isExpired(){return active&&expired}
  function awardMatchTime(groups){
    if(!enabled||!active||paused||expired||remaining<=0)return 0;
@@ -78,6 +86,6 @@
  // No timer while at the title, map, pause, or with the app hidden.
  // Exactly one ticker is allocated while active, and cancelled on pause/stop.
  document.addEventListener('visibilitychange',()=>{if(document.hidden)pause()});
- window.LanyTempo={start,pause,resume,stop,enabled:()=>enabled,setEnabled,durationFor,isExpired,onCombo,awardMatchTime,bonusForGroups,getRemaining,getBonusEarned:()=>earnedBonus,isRunning:()=>active&&!paused,getElapsed:()=>seconds,flush:update};
+ window.LanyTempo={start,pause,resume,stop,snapshot,restore,enabled:()=>enabled,setEnabled,durationFor,isExpired,onCombo,awardMatchTime,bonusForGroups,getRemaining,getBonusEarned:()=>earnedBonus,isRunning:()=>active&&!paused,getElapsed:()=>seconds,flush:update};
  render();
 })();
