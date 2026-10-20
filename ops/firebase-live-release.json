@@ -1,9 +1,9 @@
 {
-  "release": "2.3.44-beta",
+  "release": "2.3.45-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.44 패치: 두 손가락 취소, 화면 회전, 앱 전환 후 퍼즐 조작 복구.",
+  "requestedFor": "v2.3.45 패치: 연쇄 매치 장식 효과와 특수 폭발 표시 겹침 완화.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -84,5 +84,6 @@
   "mobileGameLayoutV95": true,
   "interruptedClockV96": true,
   "staleDragRecoveryV97": true,
-  "multitouchRecoveryV98": true
+  "multitouchRecoveryV98": true,
+  "calmCascadesV99": true
 }
