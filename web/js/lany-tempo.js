@@ -5,7 +5,7 @@
  const KEY='lany_timed_challenge';
  let enabled=true;
  try{enabled=localStorage.getItem(KEY)!=='off';}catch(_){}
- let active=false,paused=true,expired=false,remaining=0,deadline=0,seconds=0;
+ let active=false,paused=true,expired=false,pendingResume=false,remaining=0,deadline=0,seconds=0;
  let currentStage=1,currentMode='normal',lastSecond=-1,lastTickAlert=-1,earnedBonus=0;
  const MAX_MATCH_BONUS=18;
  const bonusForGroups=groups=>(groups||[]).reduce((sum,group)=>sum+(group.run>=5?3:group.run===4?2:group.run===3?1:0),0);
@@ -28,20 +28,20 @@
    $('lany-clock-fill').style.width=(enabled?Math.min(100,remaining/durationFor(currentStage,currentMode)*100):100)+'%';
  }
  function start(stage){
-   currentStage=stage||1;currentMode=state?.mode||'normal';active=true;paused=false;expired=false;remaining=durationFor(currentStage,currentMode);seconds=0;earnedBonus=0;
+   currentStage=stage||1;currentMode=state?.mode||'normal';active=true;paused=false;expired=false;pendingResume=false;remaining=durationFor(currentStage,currentMode);seconds=0;earnedBonus=0;
    deadline=performance.now()+1000;lastSecond=-1;lastTickAlert=-1;render();runClock();
  }
  function setEnabled(value){enabled=Boolean(value);try{localStorage.setItem(KEY,enabled?'on':'off');}catch(_){}render()}
- function pause(){if(!active||paused)return;update();paused=true;stopClock();render()}
- function resume(){if(!active||!paused||expired)return;paused=false;deadline=performance.now()+1000;runClock();render()}
- function stop(){active=false;paused=true;stopClock();render()}
+ function pause(){pendingResume=false;if(!active||paused)return;update();paused=true;stopClock();render()}
+ function resume(){if(!active||!paused||expired)return;if(state?.animating){pendingResume=true;return}pendingResume=false;paused=false;deadline=performance.now()+1000;runClock();render()}
+ function stop(){active=false;paused=true;pendingResume=false;stopClock();render()}
  // The ticker owns clock advancement. Reading a snapshot must not re-enter update().
  function snapshot(){return {enabled,remaining,seconds,earnedBonus}}
  function restore(stage,saved){
    if(!saved||!Number.isInteger(saved.remaining)||!Number.isInteger(saved.seconds)||!Number.isInteger(saved.earnedBonus))return false;
    if(saved.remaining<0||saved.remaining>3600||saved.seconds<0||saved.seconds>86400||saved.earnedBonus<0||saved.earnedBonus>MAX_MATCH_BONUS)return false;
    stopClock();currentStage=stage;currentMode=state?.mode||'normal';enabled=saved.enabled===true;
-   active=true;paused=true;expired=false;remaining=saved.remaining;seconds=saved.seconds;earnedBonus=saved.earnedBonus;
+   active=true;paused=true;expired=false;pendingResume=false;remaining=saved.remaining;seconds=saved.seconds;earnedBonus=saved.earnedBonus;
    lastSecond=-1;lastTickAlert=-1;render();return true;
  }
  function isExpired(){return active&&expired}
@@ -78,6 +78,13 @@
    // Keep an idle board's clock current without saving half-resolved swaps.
    if(!state.animating&&!state.ended)window.LanySession?.save?.();
  }
+ function flush(){
+   if(pendingResume&&!state?.animating){
+     pendingResume=false;
+     if(!document.hidden&&!state?.ended&&window.LanyShell?.getCurrentScreen?.()==='game'&&$('lany-go-intro')?.hidden!==false)resume();
+   }
+   update();
+ }
  function onCombo(count){
    // Combo animation remains, but chains no longer replenish the timer.
    if(count<2 || document.hidden || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return;
@@ -89,6 +96,6 @@
  // No timer while at the title, map, pause, or with the app hidden.
  // Exactly one ticker is allocated while active, and cancelled on pause/stop.
  document.addEventListener('visibilitychange',()=>{if(document.hidden)pause()});
- window.LanyTempo={start,pause,resume,stop,snapshot,restore,enabled:()=>enabled,setEnabled,durationFor,isExpired,onCombo,awardMatchTime,bonusForGroups,getRemaining,getBonusEarned:()=>earnedBonus,isRunning:()=>active&&!paused,getElapsed:()=>seconds,flush:update};
+ window.LanyTempo={start,pause,resume,stop,snapshot,restore,enabled:()=>enabled,setEnabled,durationFor,isExpired,onCombo,awardMatchTime,bonusForGroups,getRemaining,getBonusEarned:()=>earnedBonus,isRunning:()=>active&&!paused,getElapsed:()=>seconds,flush};
  render();
 })();

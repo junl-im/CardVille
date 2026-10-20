@@ -3,10 +3,10 @@ const fs=require('node:fs'),assert=require('node:assert/strict');
 const read=p=>fs.readFileSync(p,'utf8');
 const v=JSON.parse(read('web/version.json')),h=read('web/index.html'),css=read('web/css/lany-v24-restore.css');
 const map=read('web/js/lany-shell.js'),sw=read('web/sw.js'),polish=read('web/js/lany-polish.js');
-assert.equal(v.version,'2.3.41-beta');assert.equal(v.visualRelease,'2.3.41');
-assert(h.includes('lany-v24-restore.css?v=2.3.41'),'CSS import missing');
-assert(h.includes('<div class="lany-version">v2.3.41</div>'),'stale release label');
-assert(sw.includes("lanypang-match-v2.3.41-ko-v95-mobile-layout-r1"),'cache not rotated');
+assert.equal(v.version,'2.3.42-beta');assert.equal(v.visualRelease,'2.3.42');
+assert(h.includes('lany-v24-restore.css?v=2.3.42'),'CSS import missing');
+assert(h.includes('<div class="lany-version">v2.3.42</div>'),'stale release label');
+assert(sw.includes("lanypang-match-v2.3.42-ko-v96-interrupted-clock-r1"),'cache not rotated');
 assert(sw.includes("'./css/lany-v24-restore.css'"),'offline style not cached');
 // Chrome Cache.addAll can reject duplicate request URLs and leave the PWA uncontrolled.
 const precache=sw.match(/const PRECACHE=\[([^;]+)\];/)?.[1];

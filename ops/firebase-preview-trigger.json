@@ -1,11 +1,11 @@
 {
-  "version": "2.3.41-beta",
-  "request": "라니팡 v2.3.41: 작은 모바일 게임 화면 배치 점검",
+  "version": "2.3.42-beta",
+  "request": "라니팡 v2.3.42: 중단된 이동과 시계 재개 검사",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,
   "sourceBranch": "main",
-  "requestedAtKST": "2026-10-19",
+  "requestedAtKST": "2026-10-20",
   "secretValueIncluded": false,
   "sourceOfTruth": "web/version.json"
 }
