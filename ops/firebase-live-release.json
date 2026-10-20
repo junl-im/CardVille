@@ -1,9 +1,9 @@
 {
-  "release": "2.3.46-beta",
+  "release": "2.3.47-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.46 패치: 후반 하드·크레이지 목표 조정과 보스 난이도 순서 정리.",
+  "requestedFor": "v2.3.47 패치: 설치 앱 업데이트 중 캐시 혼합 방지와 오프라인 퍼즐판 복귀 검증.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -86,5 +86,6 @@
   "staleDragRecoveryV97": true,
   "multitouchRecoveryV98": true,
   "calmCascadesV99": true,
-  "modeBalanceV100": true
+  "modeBalanceV100": true,
+  "offlineUpdateHandoffV101": true
 }

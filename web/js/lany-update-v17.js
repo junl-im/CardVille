@@ -71,8 +71,20 @@
    if(button)button.disabled=true;
    try{
      if('serviceWorker' in navigator){
-       const reg=await navigator.serviceWorker.getRegistration();
-       if(reg)await reg.update();
+       const workers=navigator.serviceWorker,reg=await workers.getRegistration();
+       if(reg){
+         const previous=workers.controller;
+         await reg.update();
+         if(previous&&workers.controller===previous){
+           await new Promise(resolve=>{
+             let timer;
+             const done=()=>{clearTimeout(timer);workers.removeEventListener('controllerchange',done);resolve()};
+             workers.addEventListener('controllerchange',done);
+             timer=setTimeout(done,3000);
+             if(workers.controller!==previous)done();
+           });
+         }
+       }
      }
    }catch(_){/* Navigation itself is network-first. */}
    const next=new URL(window.location.href);

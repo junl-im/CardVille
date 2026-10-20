@@ -1,6 +1,6 @@
 {
-  "version": "2.3.46-beta",
-  "request": "라니팡 v2.3.46: 250단계 모드 난이도 검사",
+  "version": "2.3.47-beta",
+  "request": "라니팡 v2.3.47: 설치 앱 업데이트와 오프라인 복귀 검사",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,
