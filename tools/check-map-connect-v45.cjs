@@ -5,7 +5,7 @@ const css=fs.readFileSync('web/css/lany-map-connect-v45.css','utf8');
 const html=fs.readFileSync('web/index.html','utf8');
 const sw=fs.readFileSync('web/sw.js','utf8');
 assert(html.includes('lany-map-connect-v45.css'));
-assert(sw.includes('v102-offline-stars-r1'));
+assert(sw.includes('v103-input-watchdog-r1'));
 assert(sw.includes('./css/lany-map-connect-v45.css'));
 assert(shell.includes('const stage=savedStage();nav.world=Math.floor((stage-1)/25)'));
 assert(shell.includes('tabs.querySelector(`[data-world="${i}"]`)?.focus()'));

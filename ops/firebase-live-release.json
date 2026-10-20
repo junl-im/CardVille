@@ -1,9 +1,9 @@
 {
-  "release": "2.3.48-beta",
+  "release": "2.3.49-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.48 패치: 별 디자인 이미지와 스타일의 오프라인 누락 수정.",
+  "requestedFor": "v2.3.49 패치: 별 디자인 이미지와 스타일의 오프라인 누락 수정.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",

@@ -11,5 +11,5 @@ assert(css.includes('#app>.header{position:sticky'));
 assert(css.includes('.lany-game-nav button{min-height:52px'));
 assert(!css.includes('animation:lanyFloat 3.2s'),'Animated map nodes intercept and destabilize taps');
 assert(shell.includes("document.querySelector('.lany-map-section')"));
-assert(sw.includes('lanypang-match-v2.3.48-ko'));
+assert(sw.includes('lanypang-match-v2.3.49-ko'));
 console.log(JSON.stringify({pass:true,version:'0.9.1',stickyHeader:true,bottomMapButton:true,stageStableTouchTargets:true,noProgressWipe:true}));
