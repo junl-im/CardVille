@@ -5,6 +5,7 @@ const root='./assets/polish/';let layer;
 const puzzleFaces=['rabbit','bear','chick','puppy','cat','fox','wolf'];
 const puzzleRoot='./assets/v25/animals/';
 const reduced=()=>window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+let lastMatchAccentAt=-Infinity;
 const getLayer=()=>{if(!layer){layer=document.createElement('div');layer.className='lany-vfx-layer';layer.setAttribute('aria-hidden','true');document.body.appendChild(layer)}return layer};
 const face=(el,variant)=>{
   if(!el)return;const img=el.querySelector('.lany-animal-face');if(!img)return;
@@ -62,15 +63,20 @@ function onMatch(indices,chain=1){const cells=[];
   if(cells.length){
   const a=cells[Math.floor(cells.length/2)],rect=a.getBoundingClientRect();
   if(window.LanyPolish)window.LanyPolish.lastMatchPoint={x:rect.left+rect.width/2,y:rect.top+rect.height/2};
-  if(!reduced()){
+  const now=performance.now(),showAccent=now-lastMatchAccentAt>=180;
+  if(showAccent)lastMatchAccentAt=now;
+  if(!reduced()&&showAccent){
     const ring=document.createElement('span');ring.className='lany-match-ring';
     ring.style.left=(rect.left+rect.width/2)+'px';ring.style.top=(rect.top+rect.height/2)+'px';
     ring.style.setProperty('--ring-size',Math.max(48,rect.width*2.3)+'px');
     const parent=getLayer();parent.append(ring);setTimeout(()=>ring.remove(),470);
   }
   const grade=chain>=3?'combo':cells.length>=5?'big':'small';
-  spray(rect,grade);
-  burst(rect,grade==='small'?'burst-heart':'burst-star');
+  if(showAccent){
+    spray(rect,grade);
+    // Cascades retain the pop and expression; one bright badge is enough.
+    if(chain===1||chain>=3)burst(rect,grade==='small'?'burst-heart':'burst-star');
+  }
 }
 }
 function onFall(indices,distances={}){
@@ -129,6 +135,8 @@ function onSpecial(items,affected,comboCells,boardKinds,dwell=360){
  if(reduced()||document.hidden||!items?.length)return;
  const board=document.getElementById('board');if(!board)return;
  const hits=specialFootprint(items,affected,comboCells,boardKinds),parent=getLayer();
+ // A new footprint replaces lingering tiles from the previous special wave.
+ parent.querySelectorAll('.lany-special-cell-wave').forEach(el=>el.remove());
  const maxDelay=Math.max(0,Math.min(140,dwell-160)),speed=maxDelay/140;
  const duration=Math.max(120,dwell-maxDelay-10);
  const fragment=document.createDocumentFragment(),nodes=[];
