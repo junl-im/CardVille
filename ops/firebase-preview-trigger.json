@@ -1,6 +1,6 @@
 {
-  "version": "2.3.40-beta",
-  "request": "라니팡 v2.3.40: 중단된 교환과 아이템 효과 복원 점검",
+  "version": "2.3.41-beta",
+  "request": "라니팡 v2.3.41: 작은 모바일 게임 화면 배치 점검",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,

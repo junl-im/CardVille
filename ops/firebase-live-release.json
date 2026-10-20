@@ -1,9 +1,9 @@
 {
-  "release": "2.3.40-beta",
+  "release": "2.3.41-beta",
   "projectId": "cardville",
   "site": "cardville",
   "channelId": "live",
-  "requestedFor": "v2.3.40 패치: 교환·아이템 효과 중단 복원과 지연된 완료 판정.",
+  "requestedFor": "v2.3.41 패치: 작은 모바일 화면의 퍼즐, HUD, 아이템, 하단 조작 배치 개선.",
   "onlyHosting": true,
   "noFirestoreOrAuthChanges": true,
   "canonicalGameUrl": "https://cardville.web.app/",
@@ -80,5 +80,6 @@
   "saveResumeV91": true,
   "liveSessionV92": true,
   "idleClockV93": true,
-  "interruptedTurnV94": true
+  "interruptedTurnV94": true,
+  "mobileGameLayoutV95": true
 }
