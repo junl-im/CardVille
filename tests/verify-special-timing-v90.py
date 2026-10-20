@@ -10,7 +10,7 @@ with sync_playwright() as pw:
     browser = pw.chromium.launch(**launch)
     for width, height in ((390, 844), (1366, 768)):
         page = browser.new_page(viewport={'width': width, 'height': height}, service_workers='block')
-        page.goto(base + '?v=2.3.46', wait_until='load')
+        page.goto(base + '?v=2.3.47', wait_until='load')
         page.locator('#lany-start-button').click()
         page.locator('#lany-map-continue').click()
         page.locator('#lany-prep-play').click()

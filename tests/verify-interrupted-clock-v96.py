@@ -9,7 +9,7 @@ with sync_playwright() as pw:
         launch['executable_path'] = os.environ['LANYPANG_CHROMIUM_EXECUTABLE']
     browser = pw.chromium.launch(**launch)
     page = browser.new_page(service_workers='block')
-    page.goto(base + '?v=2.3.46', wait_until='load')
+    page.goto(base + '?v=2.3.47', wait_until='load')
     page.evaluate("LanyShell.start();LanyShell.openPrep(1);LanyShell.playPrepared()")
     page.locator('#lany-go-intro').wait_for(state='hidden', timeout=5000)
     page.evaluate("""() => {

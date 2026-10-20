@@ -37,6 +37,7 @@ jobs:
           node tools/check-action-art-v16.cjs
           node tools/check-title-stage-v17.cjs
           node tools/check-update-version.cjs
+          node tools/check-update-cache-handoff-v101.cjs
           node tools/check-visual-perf-v18.cjs
           node tools/check-longplay-v19.cjs
           node tools/check-v20-cache-map.cjs
@@ -125,6 +126,7 @@ jobs:
           python tests/verify-multitouch-recovery-v98.py
           python tests/verify-calm-cascades-v99.py
           python tests/verify-v20-offline-map.py
+          python tests/verify-offline-board-resume-v101.py
           python tests/verify-ui-v21.py
           python tests/verify-raster-v22.py
           python tests/verify-all-windows-v22.py
