@@ -132,20 +132,25 @@ function specialFootprint(items,affected,comboCells,boardKinds){
  return hits;
 }
 function onSpecial(items,affected,comboCells,boardKinds,dwell=360){
- if(reduced()||document.hidden||!items?.length)return;
+ if(document.hidden||!items?.length)return;
  const board=document.getElementById('board');if(!board)return;
  const hits=specialFootprint(items,affected,comboCells,boardKinds),parent=getLayer();
- // A new footprint replaces lingering tiles from the previous special wave.
- parent.querySelectorAll('.lany-special-cell-wave').forEach(el=>el.remove());
+ // Show the entire affected area first. The travelling wave follows it.
+ parent.querySelectorAll('.lany-special-cell-preview,.lany-special-cell-wave').forEach(el=>el.remove());
  const maxDelay=Math.max(0,Math.min(140,dwell-160)),speed=maxDelay/140;
  const duration=Math.max(120,dwell-maxDelay-10);
  const fragment=document.createDocumentFragment(),nodes=[];
  for(const [index,{axis,delay}] of hits){
   const rect=board.children[index]?.getBoundingClientRect();if(!rect)continue;
-  const el=document.createElement('span');el.className='lany-special-cell-wave';el.dataset.axis=axis;el.dataset.index=String(index);
-  el.style.left=rect.left+'px';el.style.top=rect.top+'px';el.style.width=rect.width+'px';el.style.height=rect.height+'px';
-  el.style.setProperty('--special-delay',Math.round(delay*speed)+'ms');
-  el.style.setProperty('--special-duration',duration+'ms');fragment.appendChild(el);nodes.push(el);
+  const preview=document.createElement('span');preview.className='lany-special-cell-preview';preview.dataset.axis=axis;preview.dataset.index=String(index);
+  preview.style.left=rect.left+'px';preview.style.top=rect.top+'px';preview.style.width=rect.width+'px';preview.style.height=rect.height+'px';
+  fragment.appendChild(preview);nodes.push(preview);
+  if(!reduced()){
+   const el=document.createElement('span');el.className='lany-special-cell-wave';el.dataset.axis=axis;el.dataset.index=String(index);
+   el.style.left=rect.left+'px';el.style.top=rect.top+'px';el.style.width=rect.width+'px';el.style.height=rect.height+'px';
+   el.style.setProperty('--special-delay',Math.round(delay*speed)+'ms');
+   el.style.setProperty('--special-duration',duration+'ms');fragment.appendChild(el);nodes.push(el);
+  }
  }
  parent.appendChild(fragment);
  setTimeout(()=>nodes.forEach(el=>el.remove()),dwell+20);
