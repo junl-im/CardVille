@@ -12,7 +12,7 @@ with sync_playwright() as pw:
       Storage.prototype.getItem = () => { throw new DOMException('blocked', 'SecurityError'); };
       Storage.prototype.setItem = () => { throw new DOMException('blocked', 'SecurityError'); };
     })()''')
-    page.goto(BASE + '?v=2.3.50', wait_until='load')
+    page.goto(BASE + '?v=2.3.51', wait_until='load')
     page.locator('#lany-start-button').click()
     assert page.locator('#lany-world-map').is_visible()
     page.locator('#lany-map-continue').click()
