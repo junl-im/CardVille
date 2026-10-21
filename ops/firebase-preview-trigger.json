@@ -1,6 +1,6 @@
 {
-  "version": "2.3.49-beta",
-  "request": "라니팡 v2.3.49: 별 이미지 오프라인 캐시 검사",
+  "version": "2.3.50-beta",
+  "request": "라니팡 v2.3.50: 별 이미지 오프라인 캐시 검사",
   "projectId": "cardville",
   "channelId": "cardville-match3-preview",
   "neverDeployLive": true,
