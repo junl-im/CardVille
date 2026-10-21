@@ -30,6 +30,7 @@ jobs:
           node tools/check-tempo.cjs
           node tools/check-gameplay-v12.cjs
           node tools/check-mode-balance-v100.cjs
+          node tools/check-stage-pressure-v105.cjs
           node tools/check-specials-v35.cjs
           node tools/check-pages-v13.cjs
           node tools/check-pwa-v14.cjs
@@ -103,6 +104,9 @@ jobs:
           python tests/verify-special-preview-v104.py
           python tests/verify-save-resume-v91.py
           python tests/verify-live-session-v92.py
+          python tests/verify-mode-soak-v105.py
+          python tests/verify-booster-feedback-v105.py
+          python tests/verify-puzzle-readability-v105.py
           python tests/verify-idle-clock-v93.py
           python tests/verify-interrupted-turn-v94.py
           python tests/verify-match-time-stars-v73.py
