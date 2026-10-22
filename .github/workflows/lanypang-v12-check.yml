@@ -38,6 +38,7 @@ jobs:
           node tools/check-action-art-v16.cjs
           node tools/check-title-stage-v17.cjs
           node tools/check-update-version.cjs
+          node tools/check-forced-update-v107.cjs
           node tools/check-update-cache-handoff-v101.cjs
           node tools/check-visual-perf-v18.cjs
           node tools/check-longplay-v19.cjs
@@ -156,3 +157,4 @@ jobs:
             docs/v20-offline-map/*.png
             docs/ui-v21/*.png
           if-no-files-found: ignore
+
