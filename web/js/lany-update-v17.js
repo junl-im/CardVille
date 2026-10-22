@@ -1,12 +1,11 @@
-/* LanyPang version UX: show update only when the official server has a
-   strictly newer valid semantic version than the running HTML build.
-   Never show a banner for equal/older/invalid/offline responses or SW churn.
-   No periodic polling, no forced reload, and no progress storage writes. */
+/* Detect a newer complete release and switch to it after saving a settled board.
+   Keep playing when offline or during a partial deployment. */
 (()=>{
  'use strict';
  const LOCAL=document.querySelector('meta[name="lany-build-version"]')?.content?.trim()||'';
  const $=id=>document.getElementById(id);
- let available=null,requestSequence=0;
+ let available=null,requestSequence=0,refreshing=false,autoTimer=null;
+ const POLL_MS=120000;
  const parse=v=>{
    if(typeof v!=='string')return null;
    const m=/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z.-]+)?$/.exec(v.trim());
@@ -38,6 +37,7 @@
  };
  function hide(){
    available=null;
+   if(autoTimer!==null){clearTimeout(autoTimer);autoTimer=null;}
    const banner=$('lany-update-banner');
    if(banner)banner.hidden=true;
    const button=$('lany-update-now');
@@ -46,10 +46,20 @@
  function show(version){
    const banner=$('lany-update-banner'),button=$('lany-update-now'),message=$('lany-update-msg');
    if(!banner||!button||!message)return;
+   if(available!==version&&autoTimer!==null){clearTimeout(autoTimer);autoTimer=null;}
    available=version;
-   message.textContent='새 버전 '+version.replace(/-beta(?:\+.*)?$/,'')+'이 준비됐어요!';
+   message.textContent='새 버전 '+version.replace(/-beta(?:\+.*)?$/,'')+' 확인 중…';
    button.disabled=false;
    banner.hidden=false;
+   scheduleAuto(version);
+ }
+ function alreadyTried(version){
+   const url=new URL(window.location.href);
+   return url.searchParams.get('v')===version.split('-')[0]&&url.searchParams.has('_refresh');
+ }
+ function scheduleAuto(version){
+   if(autoTimer!==null||alreadyTried(version)||typeof setTimeout!=='function')return;
+   autoTimer=setTimeout(()=>{autoTimer=null;if(available===version)refresh();},1200);
  }
  async function check(){
    const ticket=++requestSequence;
@@ -66,10 +76,24 @@
    return false;
  }
  async function refresh(){
-   if(!available||!isNewer(available,LOCAL))return; // No manual reload on equal versions.
+   if(refreshing||!available||!isNewer(available,LOCAL)||!navigator.onLine)return;
+   refreshing=true;
+   const target=available;
    const button=$('lany-update-now');
    if(button)button.disabled=true;
    try{
+     // version.json may appear before index.html during a release. Confirm that
+     // a fresh HTML document really contains the target build before navigating.
+     const probe=new URL('./index.html',window.location.href);
+     probe.searchParams.set('v',target.split('-')[0]);
+     probe.searchParams.set('_update_probe',String(Date.now()));
+     const html=await fetch(probe.href,{cache:'no-store',credentials:'same-origin'});
+     if(!html.ok||!(await html.text()).includes('name="lany-build-version" content="'+target+'"'))return;
+     // Never save a half-resolved cascade. Wait until the accepted move settles.
+     for(let i=0;i<30&&typeof state!=='undefined'&&state.animating;i++)
+       await new Promise(resolve=>setTimeout(resolve,250));
+     if(typeof state!=='undefined'&&state.animating)return;
+     window.LanySession?.save?.();
      if('serviceWorker' in navigator){
        const workers=navigator.serviceWorker,reg=await workers.getRegistration();
        if(reg){
@@ -86,17 +110,24 @@
          }
        }
      }
-   }catch(_){/* Navigation itself is network-first. */}
-   const next=new URL(window.location.href);
-   next.searchParams.set('v',available.split('-')[0]);
-   next.searchParams.set('_refresh',String(Date.now()));
-   window.location.replace(next.href);
+     const next=new URL(window.location.href);
+     next.searchParams.set('v',target.split('-')[0]);
+     next.searchParams.set('_refresh',String(Date.now()));
+     window.location.replace(next.href);
+   }catch(_){/* Keep the current playable build when the update is incomplete. */}
+   finally{
+     refreshing=false;
+     if(button)button.disabled=false;
+   }
  }
  function init(){
    hide();
    $('lany-update-now')?.addEventListener('click',refresh);
    check();
+   if(typeof setInterval==='function')setInterval(()=>{if(!document.hidden)check();},POLL_MS);
    window.addEventListener('pageshow',e=>{if(e.persisted)check()},{passive:true});
+   window.addEventListener('focus',check,{passive:true});
+   document.addEventListener?.('visibilitychange',()=>{if(!document.hidden)check()},{passive:true});
    window.addEventListener('online',check,{passive:true});
    if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('controllerchange',check);
  }

@@ -10,7 +10,7 @@ with sync_playwright() as pw:
         page=context.new_page()
         errors=[]
         page.on('pageerror',lambda error:errors.append(str(error)))
-        page.goto(base+'?v=2.3.52',wait_until='load')
+        page.goto(base+'?v=2.3.53',wait_until='load')
         page.evaluate("LanyShell.start();LanyShell.setMode('normal');LanyShell.openPrep(1);LanyShell.playPrepared()")
         page.locator('#lany-go-intro').wait_for(state='hidden',timeout=5000)
         result=page.evaluate('''async () => {
@@ -39,7 +39,7 @@ with sync_playwright() as pw:
           const beats=[];
           for(const n of [1,2,3]){showCombo(n);beats.push(document.querySelector('.combo-display').textContent)}
           const level=activeLevels()[0];
-          state.score=Math.ceil(level.goal*1.4);state.movesLeft=Math.ceil(level.moves/2);
+          state.score=targets[2]+10;state.movesLeft=Math.ceil(level.moves/2);
           checkEnd();
           return {played,moves:state.movesLeft,displayed,initial,targets,beats,
             stars:[...document.querySelectorAll('#win-stars .star-item')].filter(x=>x.classList.contains('earned')).length,
@@ -53,3 +53,4 @@ with sync_playwright() as pw:
         context.close()
     browser.close()
 print('one move per swap, cascade beats, and normal stars v106: pass')
+

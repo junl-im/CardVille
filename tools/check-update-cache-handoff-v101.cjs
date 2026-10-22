@@ -38,12 +38,14 @@ async function checkRefresh(){
   const document={readyState:'complete',querySelector:()=>({content:running+'-beta'}),getElementById:id=>elements[id]};
   const window={location:{href:'https://game.example/?source=pwa',replace(url){calls.push(url)}},addEventListener(){}};
   const timers=[];
-  const fetch=async()=>({ok:true,json:async()=>({version:next+'-beta'})});
+  const fetch=async url=>String(url).includes('index.html')
+    ?{ok:true,text:async()=>'<meta name="lany-build-version" content="'+next+'-beta">'}
+    :{ok:true,json:async()=>({version:next+'-beta'})};
   vm.runInNewContext(script,{document,navigator:nav,window,URL,Date,fetch,
     setTimeout:fn=>{timers.push(fn);return timers.length},clearTimeout:()=>{}});
   await window.LanyUpdate.check();
   const updating=window.LanyUpdate.refresh();
-  for(let i=0;i<8;i++)await Promise.resolve();
+  for(let i=0;i<30;i++)await Promise.resolve();
   assert.equal(calls.length,0,'do not reload before the new worker controls the page');
   assert.equal(listeners.size,2);
   workers.controller={};for(const fn of [...listeners])fn();
@@ -55,3 +57,5 @@ async function checkRefresh(){
 
 (async()=>{await checkWorker();await checkRefresh();console.log('v101 update cache handoff: pass')})()
   .catch(error=>{console.error(error);process.exitCode=1});
+
+

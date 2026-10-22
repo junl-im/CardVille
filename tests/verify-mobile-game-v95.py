@@ -12,7 +12,7 @@ with sync_playwright() as pw:
         for mode in ('normal', 'hard', 'crazy'):
             context = browser.new_context(viewport={'width': width, 'height': height}, is_mobile=True, has_touch=True, service_workers='block')
             page = context.new_page()
-            page.goto(base + '?v=2.3.52', wait_until='load')
+            page.goto(base + '?v=2.3.53', wait_until='load')
             page.evaluate(f"LanyShell.start();LanyShell.setMode('{mode}');LanyShell.openPrep(1);LanyShell.playPrepared()")
             board = page.locator('#board-wrap').bounding_box()
             boosters = page.locator('.boosters').bounding_box()

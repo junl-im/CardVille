@@ -11,7 +11,7 @@ with sync_playwright() as pw:
     for motion in ('no-preference', 'reduce'):
         context = browser.new_context(viewport={'width': 390, 'height': 844}, reduced_motion=motion, service_workers='block')
         page = context.new_page()
-        page.goto(base + '?v=2.3.52', wait_until='load')
+        page.goto(base + '?v=2.3.53', wait_until='load')
         page.evaluate("LanyShell.start();LanyShell.openPrep(1);LanyShell.playPrepared()")
         page.locator('#lany-go-intro').wait_for(state='hidden', timeout=5000)
         result = page.evaluate("""() => {
