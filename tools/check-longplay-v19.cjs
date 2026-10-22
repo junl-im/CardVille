@@ -3,14 +3,14 @@ const fs=require('node:fs'), assert=require('node:assert/strict'),vm=require('no
 const read=p=>fs.readFileSync(p,'utf8'),h=read('web/index.html');
 const v=JSON.parse(read('web/version.json')),m=JSON.parse(read('web/manifest.json')),sw=read('web/sw.js');
 const diag=read('web/js/lany-perf-v19.js'),css=read('web/css/lany-result-v19.css'),polish=read('web/js/lany-polish.js');
-assert.equal(v.version,'2.3.51-beta');assert.equal(v.visualRelease,'2.3.51');
+assert.equal(v.version,'2.3.52-beta');assert.equal(v.visualRelease,'2.3.52');
 for(const k of ['titleRAFOffDuringGame','tapExpressionImagesCapped','animalExpressionRestored','localFpsDiagnostics','longPlayMoveQA','rasterResultOverlay'])assert.equal(v[k],true,k);
-assert(m.start_url.includes('v=2.3.51'),'PWA manifest');
-assert(sw.includes('lanypang-match-v2.3.51-ko'));
+assert(m.start_url.includes('v=2.3.52'),'PWA manifest');
+assert(sw.includes('lanypang-match-v2.3.52-ko'));
 for(const p of ['web/js/lany-perf-v19.js','web/css/lany-result-v19.css','web/css/lany-raster-v18.css']){
  assert(sw.includes('./'+p.slice(4)),p+' offline SW');
  assert(fs.existsSync(p),p);
- assert(h.includes('./'+p.slice(4)+'?v=2.3.51'),p+' HTML');
+ assert(h.includes('./'+p.slice(4)+'?v=2.3.52'),p+' HTML');
 }
 assert(h.includes('function syncTitleParticles()'), 'title particles lifecycle');
 assert(h.includes('const LANY_MAX_AUDIO_VOICES=24')&&h.includes('osc.onended=')&&h.includes('osc.disconnect();gain.disconnect();'),'Audio voice cap and node release');
