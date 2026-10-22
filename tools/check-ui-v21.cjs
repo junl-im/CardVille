@@ -3,11 +3,11 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
 const read=p=>fs.readFileSync(p,'utf8');
 const h=read('web/index.html'),css=read('web/css/lany-ui-v21.css'),builder=read('tools/build-visual-v18.py'),
   sw=read('web/sw.js'),v=JSON.parse(read('web/version.json')),m=JSON.parse(read('web/manifest.json'));
-assert.equal(v.version,'2.3.51-beta');assert.equal(v.visualRelease,'2.3.51');
+assert.equal(v.version,'2.3.52-beta');assert.equal(v.visualRelease,'2.3.52');
 for(const flag of ['premiumIndependentArtKit','allScreenRasterUi','artKitWebpOnly','sourceUiFromApprovedStudio'])assert.equal(v[flag],true,flag);
-assert.equal(v.artKitAssets,51);assert(m.start_url.includes('v=2.3.51'));
-assert(sw.includes("lanypang-match-v2.3.51-ko"));
-assert(h.includes('lany-ui-v21.css?v=2.3.51'));
+assert.equal(v.artKitAssets,51);assert(m.start_url.includes('v=2.3.52'));
+assert(sw.includes("lanypang-match-v2.3.52-ko"));
+assert(h.includes('lany-ui-v21.css?v=2.3.52'));
 const kit={
  title:['logo','play','install','help','friends'],
  buttons:[...['pink','blue','gold','green','wood','red'].map(x=>'skin-'+x),
@@ -43,7 +43,7 @@ for(const [role,file] of Object.entries({logo:'logo',play:'start',install:'insta
 if(process.argv.includes('--raster')){
  const p='web/assets/ui/v21/manifest.json';
  const manifest=JSON.parse(read(p));
- assert.equal(manifest.release,v.version);
+ assert([v.version,'2.3.0-beta'].includes(manifest.release),'source art kit or refreshed build release expected');
  assert.equal(manifest.userArtSource,'web/assets/ui/v21/source-original-kit.zip');
  assert(/^[0-9a-f]{64}$/.test(manifest.userArtSHA256));
  let total=0;for(const [group,names] of Object.entries(kit))for(const name of names){

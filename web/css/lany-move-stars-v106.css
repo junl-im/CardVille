@@ -1,0 +1,7 @@
+/* One readable beat per cascade. The counter changes once when the swap is accepted. */
+#board-wrap .combo-display{top:24%;max-width:82%;font-size:clamp(.92rem,3.5vw,1.2rem);padding:5px 13px;border-color:#fff8df;box-shadow:0 2px 8px #65506b55;animation:lany-chain-beat .65s ease-out both}
+#board-wrap .combo-display[data-chain="1"]{background:#fff9e8ec;color:#9a5d65}
+#board-wrap .combo-display[data-chain="2"]{background:#e9fff5ef;color:#36836d}
+#board-wrap .combo-display[data-chain="3"]{background:#eff2ffef;color:#6268aa}
+@keyframes lany-chain-beat{0%{opacity:0;transform:translate(-50%,-50%) scale(.72)}32%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}75%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-67%) scale(.96)}}
+@media(prefers-reduced-motion:reduce){#board-wrap .combo-display{animation:none;opacity:1}}

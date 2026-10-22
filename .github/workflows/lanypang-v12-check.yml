@@ -105,6 +105,7 @@ jobs:
           python tests/verify-save-resume-v91.py
           python tests/verify-live-session-v92.py
           python tests/verify-mode-soak-v105.py
+          python tests/verify-move-stars-v106.py
           python tests/verify-booster-feedback-v105.py
           python tests/verify-puzzle-readability-v105.py
           python tests/verify-idle-clock-v93.py

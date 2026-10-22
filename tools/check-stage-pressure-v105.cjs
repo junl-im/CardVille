@@ -15,7 +15,7 @@ for(const [mode,levels] of Object.entries(modes)){
       const id=world*25+offset+1;
       assert.equal(stage.l,id,`${mode} stage ID`);
       assert(stage.moves>=9&&stage.moves<=45,`${mode} ${id}: moves`);
-      assert(stage.goal>0&&stage.goal/stage.moves<=(mode==='normal'?250:mode==='hard'?400:510),`${mode} ${id}: score pressure`);
+      assert(stage.goal>0&&stage.goal/stage.moves<=(mode==='normal'?230:mode==='hard'?400:510),`${mode} ${id}: score pressure`);
       if(mode!=='normal'){
         assert(stage.clearGoal>0&&stage.clearGoal/stage.moves<=2.05,`${mode} ${id}: clear pressure`);
         assert(stage.wallCount>=0&&stage.wallCount<12,`${mode} ${id}: walls`);

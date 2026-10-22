@@ -13,8 +13,8 @@ with sync_playwright() as pw:
         page=context.new_page()
         errors=[]
         page.on('pageerror',lambda error:errors.append(str(error)))
-        page.goto(base+'?v=2.3.51',wait_until='load')
-        page.evaluate(f"LanyShell.start();LanyShell.setMode('{mode}');LanyShell.openPrep(1);LanyShell.playPrepared()")
+        page.goto(base+'?v=2.3.52',wait_until='load')
+        page.evaluate(f"LanyShell.start();LanyShell.setMode('{mode}');state.unlockedLevels.push(25);localStorage.setItem(campaignKey('unlocked'),JSON.stringify(state.unlockedLevels));LanyShell.openPrep(25);LanyShell.playPrepared()")
         page.locator('#lany-go-intro').wait_for(state='hidden',timeout=5000)
         result=page.evaluate("""async () => {
           LanyTempo.setEnabled(false);
