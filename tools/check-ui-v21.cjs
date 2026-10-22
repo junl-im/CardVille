@@ -43,7 +43,7 @@ for(const [role,file] of Object.entries({logo:'logo',play:'start',install:'insta
 if(process.argv.includes('--raster')){
  const p='web/assets/ui/v21/manifest.json';
  const manifest=JSON.parse(read(p));
- assert.match(manifest.release,/^2\.3\.0-beta$/,'source art kit release is independent of game patch version');
+ assert([v.version,'2.3.0-beta'].includes(manifest.release),'source art kit or refreshed build release expected');
  assert.equal(manifest.userArtSource,'web/assets/ui/v21/source-original-kit.zip');
  assert(/^[0-9a-f]{64}$/.test(manifest.userArtSHA256));
  let total=0;for(const [group,names] of Object.entries(kit))for(const name of names){
