@@ -52,9 +52,14 @@ html body #app #board .cell.wrap-gem::after{background-image:url('../assets/v41/
 .lany-special-cell-wave[data-axis="color"]{background:radial-gradient(circle,#fffbd4d9,#ffafd0b8 58%,#ffafd020)}
 .lany-special-cell-wave[data-axis="combo"]{background:radial-gradient(circle,#fff4d3e3,#ffbd8eb2 54%,#ffbd8e22)}
 @keyframes lany-special-cell-wave{0%{opacity:0;transform:scale(.62)}32%{opacity:.76;transform:scale(1.02)}100%{opacity:0;transform:scale(1.12)}}
+.lany-special-origin{position:absolute;z-index:29003;width:22px;height:22px;border:3px solid #fff9d1;border-radius:50%;pointer-events:none;box-shadow:0 0 0 2px #ffae80,0 0 12px #ffd78a;animation:lany-origin-pop .38s ease-out both}
+.lany-special-origin[data-axis="line"]{border-color:#e4ffff;box-shadow:0 0 0 2px #59c9e3,0 0 12px #8deeff}
+.lany-chain-ring{border-color:#ffcc7b!important;box-shadow:0 0 0 3px #ffafcf99,0 0 13px #ffe498!important}
+@keyframes lany-origin-pop{0%{opacity:0;transform:translate(-50%,-50%) scale(.25)}35%{opacity:1;transform:translate(-50%,-50%) scale(1.25)}100%{opacity:0;transform:translate(-50%,-50%) scale(2)}}
 @media(prefers-reduced-motion:reduce){
  .lany-vfx-layer:has(.lany-special-cell-preview){display:block}
  .lany-special-cell-wave{display:none!important}
+ .lany-special-origin{display:none!important}
 }
 .lany-time-bonus{
  position:absolute;z-index:29003;transform:translate(-50%,-50%);pointer-events:none;

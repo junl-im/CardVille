@@ -6,7 +6,7 @@ base = os.environ.get('LANYPANG_TEST_URL', 'http://127.0.0.1:8765/')
 with sync_playwright() as pw:
     browser = pw.chromium.launch(headless=True, args=['--no-sandbox'])
     page = browser.new_page(service_workers='block')
-    page.goto(base + '?v=2.3.53', wait_until='load')
+    page.goto(base + '?v=2.3.54', wait_until='load')
     page.wait_for_function("typeof initLevel==='function'")
     result = page.evaluate("""() => {
       const failures=[];

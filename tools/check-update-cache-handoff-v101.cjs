@@ -40,6 +40,7 @@ async function checkRefresh(){
   const timers=[];
   const fetch=async url=>String(url).includes('index.html')
     ?{ok:true,text:async()=>'<meta name="lany-build-version" content="'+next+'-beta">'}
+    :String(url).includes('/js/')?{ok:true,headers:{get:()=> 'application/javascript'}}
     :{ok:true,json:async()=>({version:next+'-beta'})};
   vm.runInNewContext(script,{document,navigator:nav,window,URL,Date,fetch,
     setTimeout:fn=>{timers.push(fn);return timers.length},clearTimeout:()=>{}});

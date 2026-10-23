@@ -61,6 +61,10 @@
    if(autoTimer!==null||alreadyTried(version)||typeof setTimeout!=='function')return;
    autoTimer=setTimeout(()=>{autoTimer=null;if(available===version)refresh();},1200);
  }
+ function retrySoon(version){
+   if(autoTimer!==null||alreadyTried(version)||typeof setTimeout!=='function')return;
+   autoTimer=setTimeout(()=>{autoTimer=null;if(available===version)refresh();},3000);
+ }
  async function check(){
    const ticket=++requestSequence;
    if(!navigator.onLine){hide();return false;}
@@ -89,11 +93,23 @@
      probe.searchParams.set('_update_probe',String(Date.now()));
      const html=await fetch(probe.href,{cache:'no-store',credentials:'same-origin'});
      if(!html.ok||!(await html.text()).includes('name="lany-build-version" content="'+target+'"'))return;
+     // A ready HTML page alone is insufficient during staggered uploads.
+     for(const path of ['./js/lany-shell.js','./js/lany-polish.js']){
+       const asset=new URL(path,window.location.href);
+       asset.searchParams.set('v',target.split('-')[0]);
+       const response=await fetch(asset.href,{cache:'no-store',credentials:'same-origin'});
+       if(!response.ok||!(/javascript/i).test(response.headers?.get?.('content-type')||''))return;
+     }
      // Never save a half-resolved cascade. Wait until the accepted move settles.
      for(let i=0;i<30&&typeof state!=='undefined'&&state.animating;i++)
        await new Promise(resolve=>setTimeout(resolve,250));
-     if(typeof state!=='undefined'&&state.animating)return;
-     window.LanySession?.save?.();
+     if(typeof state!=='undefined'&&state.animating){retrySoon(target);return;}
+     if(window.LanyShell?.getCurrentScreen?.()==='game'&&typeof state!=='undefined'&&!state.ended&&window.LanySession?.save?.()!==true){
+       // Keep the playable board when storage is full or unavailable.
+       const message=$('lany-update-msg');
+       if(message)message.textContent='진행 기록을 저장할 수 없어 업데이트를 보류했어요.';
+       return;
+     }
      if('serviceWorker' in navigator){
        const workers=navigator.serviceWorker,reg=await workers.getRegistration();
        if(reg){
