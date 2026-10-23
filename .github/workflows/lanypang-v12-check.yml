@@ -107,6 +107,7 @@ jobs:
           python tests/verify-live-session-v92.py
           python tests/verify-mode-soak-v105.py
           python tests/verify-move-stars-v106.py
+          python tests/verify-update-effects-v108.py
           python tests/verify-booster-feedback-v105.py
           python tests/verify-puzzle-readability-v105.py
           python tests/verify-idle-clock-v93.py
@@ -157,4 +158,3 @@ jobs:
             docs/v20-offline-map/*.png
             docs/ui-v21/*.png
           if-no-files-found: ignore
-

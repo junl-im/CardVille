@@ -25,7 +25,9 @@ function burst(rect,type='burst-star'){
   if(reduced()||!rect||!document.body)return;
   const v=document.createElement('img');v.className='lany-vfx-pop';v.src=root+type+'.webp';v.alt='';v.draggable=false;
   v.style.left=(rect.left+rect.width/2)+'px';v.style.top=(rect.top+rect.height/2)+'px';
-  const parent=getLayer();while(parent.children.length>=8)parent.firstElementChild?.remove();parent.appendChild(v);setTimeout(()=>v.remove(),650);
+  const parent=getLayer(),badges=parent.querySelectorAll('.lany-vfx-pop');
+  if(badges.length>=8)badges[0].remove();
+  parent.appendChild(v);setTimeout(()=>v.remove(),650);
 }
 function spray(rect,grade){
   if(reduced()||document.hidden||!rect)return;
@@ -53,8 +55,8 @@ function down(e){if(e.button!==0)return;const tile=e.target.closest?.('#board .c
  button.classList.add('lany-tactile-down');setTimeout(()=>button.classList.remove('lany-tactile-down'),220);
 }
 function up(){if(pressed){const old=pressed;pressed=null;old.classList.remove('lany-tap');}}
-function onMatch(indices,chain=1){const cells=[];
-  for(const idx of indices){let el=document.querySelector(`#board .cell[data-r="${Math.floor(idx/8)}"][data-c="${idx%8}"]`);if(el)cells.push(el)}
+function onMatch(indices,chain=1){const cells=[],tiles=document.getElementById('board')?.children;
+  for(const idx of indices){const el=tiles?.[idx];if(el)cells.push(el)}
   cells.forEach((el,i)=>{
     el.classList.add('lany-match-pop');
     face(el,'wink');
@@ -68,6 +70,7 @@ function onMatch(indices,chain=1){const cells=[];
   if(!reduced()&&showAccent){
     const ring=document.createElement('span');ring.className='lany-match-ring';
     ring.style.left=(rect.left+rect.width/2)+'px';ring.style.top=(rect.top+rect.height/2)+'px';
+    if(chain>=2)ring.classList.add('lany-chain-ring');
     ring.style.setProperty('--ring-size',Math.max(48,rect.width*2.3)+'px');
     const parent=getLayer();parent.append(ring);setTimeout(()=>ring.remove(),470);
   }
@@ -75,7 +78,7 @@ function onMatch(indices,chain=1){const cells=[];
   if(showAccent){
     spray(rect,grade);
     // Cascades retain the pop and expression; one bright badge is enough.
-    if(chain===1||chain>=3)burst(rect,grade==='small'?'burst-heart':'burst-star');
+    if(chain===1||chain>=2)burst(rect,grade==='small'?'burst-heart':'burst-star');
   }
 }
 }
@@ -140,17 +143,27 @@ function onSpecial(items,affected,comboCells,boardKinds,dwell=360){
  const maxDelay=Math.max(0,Math.min(140,dwell-160)),speed=maxDelay/140;
  const duration=Math.max(120,dwell-maxDelay-10);
  const fragment=document.createDocumentFragment(),nodes=[];
+ let animated=0;
  for(const [index,{axis,delay}] of hits){
   const rect=board.children[index]?.getBoundingClientRect();if(!rect)continue;
   const preview=document.createElement('span');preview.className='lany-special-cell-preview';preview.dataset.axis=axis;preview.dataset.index=String(index);
   preview.style.left=rect.left+'px';preview.style.top=rect.top+'px';preview.style.width=rect.width+'px';preview.style.height=rect.height+'px';
   fragment.appendChild(preview);nodes.push(preview);
-  if(!reduced()){
+  // Show every affected square; animate a bounded sample on board-wide clears.
+  if(!reduced()&&(hits.size<=32||animated<32&&index%2===0)){
+   animated++;
    const el=document.createElement('span');el.className='lany-special-cell-wave';el.dataset.axis=axis;el.dataset.index=String(index);
    el.style.left=rect.left+'px';el.style.top=rect.top+'px';el.style.width=rect.width+'px';el.style.height=rect.height+'px';
    el.style.setProperty('--special-delay',Math.round(delay*speed)+'ms');
    el.style.setProperty('--special-duration',duration+'ms');fragment.appendChild(el);nodes.push(el);
   }
+ }
+ if(!reduced())for(const item of items.slice(0,3)){
+   const rect=board.children[item.index]?.getBoundingClientRect();if(!rect)continue;
+   const pulse=document.createElement('span');pulse.className='lany-special-origin';
+   pulse.dataset.axis=[2,3,6,7].includes(item.special)?'line':'burst';
+   pulse.style.left=(rect.left+rect.width/2)+'px';pulse.style.top=(rect.top+rect.height/2)+'px';
+   fragment.appendChild(pulse);nodes.push(pulse);
  }
  parent.appendChild(fragment);
  setTimeout(()=>nodes.forEach(el=>el.remove()),dwell+20);

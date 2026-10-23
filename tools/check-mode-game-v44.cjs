@@ -12,7 +12,7 @@ assert(css.includes('body[data-campaign="normal"]:not(.lany-at-title)'));
 assert(css.includes('body[data-campaign="hard"]:not(.lany-at-title)'));
 assert(css.includes('../assets/v44/mode-hard-red.webp'));
 assert(fs.existsSync('web/assets/v44/mode-hard-red.webp'));
-assert(sw.includes('v107-forced-update-r1'));
+assert(sw.includes('v108-update-effects-r1'));
 assert(sw.includes('./assets/v44/mode-hard-red.webp'));
 assert(!fs.readdirSync('web/assets/v44').some(f=>f.endsWith('.svg')));
 console.log('v44 game modes and booster buttons: OK');

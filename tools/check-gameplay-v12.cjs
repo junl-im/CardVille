@@ -34,7 +34,7 @@ assert(shell.includes('if(!mobileFullscreen())return'),'Desktop fullscreen calls
 assert(css.includes('.lany-mobile-fullscreen{display:none!important}'),'Fullscreen button must hide on desktop');
 for(const name of ['lany-fall-in','lany-swap-reject','lanyDialogSpring','prefers-reduced-motion'])assert(css.includes(name),name+' missing');
 const polish=read('web/js/lany-polish.js');
-for(const name of ['function onFall','function invalidSwap','function onSwap','chain>=3','children.length>=8'])assert(polish.includes(name),name+' missing');
+for(const name of ['function onFall','function invalidSwap','function onSwap','chain>=3','badges.length>=8'])assert(polish.includes(name),name+' missing');
 assert(html.includes('LanyPolish?.onMatch(allCells,state.combo)'),'Chain context must reach VFX');
 assert(html.includes('const particleCount=particleReduced?0:'),'Reduce particles for phones and reduced motion');
 assert(html.includes('bar.replaceChildren(frag)'),'HUD must reuse dots');
@@ -42,3 +42,4 @@ assert(html.includes('campaignKey(key)')&&html.includes('`sc_${key}`')&&html.inc
 for(const [i,m] of [...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].entries())new vm.Script(m[1],{filename:'inline-'+i});
 for(const p of ['web/js/lany-polish.js','web/js/lany-shell.js','web/js/lany-tempo.js'])new vm.Script(read(p),{filename:p});
 console.log(JSON.stringify({pass:true,stages:250,firstGoal:levels[0].goal,tenthGoal:levels[9].goal,earlyCapProtected:true,combo8ForThree:score(3,8),mobileOnlyFullscreen:true,animations:true,saveKeysPreserved:true}));
+
