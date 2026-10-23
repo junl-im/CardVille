@@ -48,6 +48,18 @@ function spray(rect,grade){
   }
   parent.appendChild(group);setTimeout(()=>group.remove(),620);
 }
+function comboBloom(rect,chain){
+  if(chain<3||reduced()||document.hidden||!rect)return;
+  const parent=getLayer();
+  parent.querySelector('.lany-combo-bloom')?.remove();
+  const bloom=document.createElement('span');
+  bloom.className='lany-combo-bloom';
+  bloom.dataset.power=chain>=5?'high':'medium';
+  bloom.style.left=(rect.left+rect.width/2)+'px';
+  bloom.style.top=(rect.top+rect.height/2)+'px';
+  parent.appendChild(bloom);
+  setTimeout(()=>bloom.remove(),630);
+}
 let pressed=null;
 function down(e){if(e.button!==0)return;const tile=e.target.closest?.('#board .cell');
  if(tile&&!tile.classList.contains('locked')){pressed=tile;tile.classList.add('lany-tap');return;}
@@ -77,6 +89,7 @@ function onMatch(indices,chain=1){const cells=[],tiles=document.getElementById('
   const grade=chain>=3?'combo':cells.length>=5?'big':'small';
   if(showAccent){
     spray(rect,grade);
+    comboBloom(rect,chain);
     // Cascades retain the pop and expression; one bright badge is enough.
     if(chain===1||chain>=2)burst(rect,grade==='small'?'burst-heart':'burst-star');
   }

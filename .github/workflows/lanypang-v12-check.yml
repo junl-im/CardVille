@@ -108,6 +108,7 @@ jobs:
           python tests/verify-mode-soak-v105.py
           python tests/verify-move-stars-v106.py
           python tests/verify-update-effects-v108.py
+          python tests/verify-combo-bloom-v109.py
           python tests/verify-booster-feedback-v105.py
           python tests/verify-puzzle-readability-v105.py
           python tests/verify-idle-clock-v93.py

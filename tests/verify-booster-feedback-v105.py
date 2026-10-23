@@ -9,7 +9,7 @@ with sync_playwright() as pw:
         launch['executable_path']=os.environ['LANYPANG_CHROMIUM_EXECUTABLE']
     browser=pw.chromium.launch(**launch)
     page=browser.new_page(viewport={'width':390,'height':844},service_workers='block')
-    page.goto(base+'?v=2.3.54',wait_until='load')
+    page.goto(base+'?v=2.3.55',wait_until='load')
     page.evaluate('LanyShell.start();LanyShell.openPrep(1);LanyShell.playPrepared()')
     page.locator('#lany-go-intro').wait_for(state='hidden',timeout=5000)
     assert page.evaluate("activateBooster('time');document.querySelector('.lany-booster-feedback')?.textContent")=='이동 +5회'

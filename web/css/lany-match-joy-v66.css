@@ -25,3 +25,18 @@
 .score-float{font-size:1rem;color:#a44f7c;text-shadow:0 1px 1px #fff,0 2px 3px #fff9;white-space:nowrap}
 .combo-display{font-size:clamp(1.05rem,4vw,1.4rem);color:#8d4378;background:#fff7dbed;border:2px solid #fff;border-radius:999px;padding:4px 12px;text-shadow:none;box-shadow:0 2px 5px #6e536344}
 @media(prefers-reduced-motion:reduce){.lany-match-spray{display:none!important}.lany-vfx-layer .lany-vfx-pop{animation:none!important}}
+
+/* A single short bloom marks rare cascades without shaking the board. */
+.lany-combo-bloom{position:absolute;width:78px;height:78px;pointer-events:none;border-radius:50%;
+  background:repeating-conic-gradient(from 10deg,#fff4b8cc 0deg 9deg,transparent 9deg 42deg);
+  filter:drop-shadow(0 0 5px #fff8dc);animation:lany-combo-bloom .6s ease-out forwards}
+.lany-combo-bloom[data-power="high"]{width:98px;height:98px;
+  background:repeating-conic-gradient(from 10deg,#fff4b8dd 0deg 8deg,transparent 8deg 35deg)}
+@keyframes lany-combo-bloom{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.35) rotate(-18deg)}
+  28%{opacity:.82;transform:translate(-50%,-50%) scale(.82) rotate(0deg)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(1.35) rotate(22deg)}
+}
+.combo-display[data-chain="3"],.combo-display[data-chain="4"]{background:#e9fff2f2;color:#267765;border-color:#fff4b9}
+.combo-display[data-chain="5"],.combo-display[data-chain="6"]{background:#fff0d5f2;color:#a15164;border-color:#ffe69f}
+@media(prefers-reduced-motion:reduce){.lany-combo-bloom{display:none!important}}

@@ -8,7 +8,7 @@ with sync_playwright() as pw:
     page=browser.new_page(viewport={'width':390,'height':844},is_mobile=True,has_touch=True,service_workers='block')
     errors=[]
     page.on('pageerror',lambda error:errors.append(str(error)))
-    page.goto(base+'?v=2.3.54',wait_until='load')
+    page.goto(base+'?v=2.3.55',wait_until='load')
     page.evaluate("LanyShell.start();LanyShell.openPrep(1);LanyShell.playPrepared()")
     page.locator('#lany-go-intro').wait_for(state='hidden',timeout=5000)
     result=page.evaluate('''() => {
